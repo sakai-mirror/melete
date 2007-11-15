@@ -513,6 +513,9 @@ public class ListModulesPage implements Serializable{
 	    selclientId = cmdLink.getClientId(ctx);
 	    if (selclientId != null)
 	    {	
+	      int occurs = selclientId.split(":").length - 1;
+	      if (occurs == 5)
+	      {	  
 		  selclientId = selclientId.substring(selclientId.indexOf(':')+1);
 	      selclientId = selclientId.substring(selclientId.indexOf(':')+1);
 		  modId = selclientId.substring(0,selclientId.indexOf(':'));
@@ -521,6 +524,7 @@ public class ListModulesPage implements Serializable{
 		  selclientId = selclientId.substring(selclientId.indexOf(':')+1);
 		  sectionindex=selclientId.substring(0,selclientId.indexOf(':'));
 		  selSecIndex = Integer.parseInt(sectionindex);
+	      }
 	    }  
 		ModuleObjService mod = null;
 		SectionBean secBean = null;
