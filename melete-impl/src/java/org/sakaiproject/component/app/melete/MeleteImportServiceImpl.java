@@ -107,7 +107,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	protected int RESOURCE_LICENSE_PD_CODE = 2; //		Public Domain
 	protected int RESOURCE_LICENSE_CC_CODE = 3; //Creative Commons
 	protected int RESOURCE_LICENSE_FAIRUSE_CODE = 4; //FairUse Exception
-	
+
 	private String destinationContext;
 
 	public void setLogger(Log logger){
@@ -188,22 +188,40 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		Element generalElement = (Element)eleItem.selectNodes("./imsmd:lom/imsmd:general").get(0);
 
 		List moduleMetadataList = generalElement.elements();
-		for (Iterator iter = moduleMetadataList.iterator(); iter.hasNext();) {
-			Element metaElement = (Element) iter.next();
+		for (Iterator iter=moduleMetadataList.iterator();iter.hasNext();){
 
-			if (metaElement.getName().equals("description"))
-				{
-					String desc = metaElement.selectSingleNode( ".//imsmd:langstring").getText();
-					module.setDescription(desc.trim());
-				}
+            boolean keywords = false;
+            boolean descr = false;
+            Element metaElement = (Element) iter.next();
 
-			if (metaElement.getName().equals("keyword"))
-				{
-					String modkeyword = metaElement.selectSingleNode( ".//imsmd:langstring").getText();
-					if(modkeyword !=null) module.setKeywords(modkeyword.trim());
-					else module.setKeywords(module.getTitle());
-				}
-		 }
+            if (metaElement.getName().equals("description")){
+              String desc = metaElement.selectSingleNode( ".//imsmd:langstring").getText();
+              module.setDescription(desc.trim());
+              descr = true;
+            }
+            else
+            {
+              module.setDescription("     ");
+            }
+
+            if (metaElement.getName().equals("keyword")){
+              String modkeyword = metaElement.selectSingleNode( ".//imsmd:langstring").getText();
+              if(modkeyword !=null){
+                module.setKeywords(modkeyword.trim());
+                keywords = true;
+              }
+              else
+              {
+                module.setKeywords(module.getTitle());
+              }
+            }
+
+            if (!keywords)
+              module.setKeywords(module.getTitle());
+
+            if (!descr)
+              module.setDescription("    ");
+        }
 
 		createModule(module);
 		try{
@@ -353,7 +371,7 @@ if (logger.isDebugEnabled())
 
 		//String courseId = PortalService.getCurrentSiteId();
 		String courseId ="";
-                if (ToolManager.getCurrentPlacement()!=null) 
+                if (ToolManager.getCurrentPlacement()!=null)
                    courseId = ToolManager.getCurrentPlacement().getContext();
                 else
                    courseId =destinationContext;
@@ -486,7 +504,7 @@ if (logger.isDebugEnabled())
 
 						//create meleteResourceObject
 						List resElements = eleRes.elements();
-						createContentResource(module,section,meleteResource, hrefVal,resElements,null);
+						createContentResource(module,section,meleteResource, hrefVal,resElements);
 
 						} // resHrefAttr check end
 				} // webcontent check end
@@ -571,26 +589,47 @@ if (logger.isDebugEnabled())
 	 * @throws MeleteException
 	 * @throws Exception
 	 */
-	public void createContentResource(Module module,Section section,MeleteResource meleteResource, String hrefVal,List resElements, String fromCRName)
+	public void createContentResource(Module module,Section section,MeleteResource meleteResource, String hrefVal,List resElements)
 	throws MalformedURLException, UnknownHostException, MeleteException, Exception {
-		if (logger.isDebugEnabled())
-			logger.debug("Entering createSection...");
-
-		String courseId ="";
-                if (ToolManager.getCurrentPlacement()!=null)
-                   courseId =ToolManager.getCurrentPlacement().getContext();
-		else
-                   courseId = destinationContext;
 		String melResourceName = null;
 		String melResourceDescription = null;
 		String res_mime_type = null;
 		byte[] melContentData = null;
 		boolean encodingFlag = false;
 		String newResourceId = "";
+		String fromCRName = null;
+
+		if (logger.isDebugEnabled())
+			logger.debug("Entering createSection...");
+
+		String courseId ="";
+        if (ToolManager.getCurrentPlacement()!=null)
+        {
+        	courseId =ToolManager.getCurrentPlacement().getContext();
+        }
+		else
+		{
+			courseId = destinationContext;
+		}
+
+
+		//This code fixes resource description transfer for import from site
+		if (resElements == null)
+		{
+			 ContentResource cr = getMeleteCHService().getResource(hrefVal);
+		     if (cr == null) return;
+		     melResourceDescription = cr.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION);
+		     if (section.getContentType().equals("typeLink"))
+		     {
+		    	 hrefVal = new String(cr.getContent());
+		    	 fromCRName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
+		     }
+
+		}//End code
 
 		//html file
 		if (!(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:"))&&
-				(hrefVal.lastIndexOf('.') != -1	&& (hrefVal.substring(hrefVal.lastIndexOf('.') + 1).equalsIgnoreCase("html") 
+				(hrefVal.lastIndexOf('.') != -1	&& (hrefVal.substring(hrefVal.lastIndexOf('.') + 1).equalsIgnoreCase("html")
 				|| hrefVal.substring(hrefVal.lastIndexOf('.') + 1).equalsIgnoreCase("htm")))) {
 			//This is for typeEditor sections
 			section.setContentType("typeEditor");
@@ -619,7 +658,7 @@ if (logger.isDebugEnabled())
              melResourceDescription="compose content";
              // no need to perform check just add it for section_xxx.html files
              String addCollId = getMeleteCHService().getCollectionId(section.getContentType(), module.getModuleId());
-    		 ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,melResourceName,melResourceDescription);
+             ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,melResourceName,melResourceDescription);
              newResourceId = getMeleteCHService().addResourceItem(melResourceName, res_mime_type,addCollId,melContentData,res );
  			 meleteResource.setResourceId(newResourceId);
  			 sectionDB.insertMeleteResource((Section)section, (MeleteResource)meleteResource);
@@ -631,14 +670,14 @@ if (logger.isDebugEnabled())
 			if (hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")) {
 //				link
 				section.setContentType("typeLink");
-				// get url title if provided in IMS 
+				// get url title if provided in IMS
 				String urlTitle = "";
 				if(resElements != null){
 					for(int i=0; i < resElements.size(); i++)
 					{
 					Element urlTitleElement = (Element)resElements.get(i);
 					if(urlTitleElement.getQualifiedName().equalsIgnoreCase("imsmd:title")){
-						urlTitle = urlTitleElement.selectSingleNode( ".//imsmd:langstring").getText();					
+						urlTitle = urlTitleElement.selectSingleNode( ".//imsmd:langstring").getText();
 						break;
 						}
 					}
@@ -647,7 +686,7 @@ if (logger.isDebugEnabled())
 					if(!hrefVal.equals(fromCRName))
 						urlTitle = fromCRName;
 				}
-				
+
 				// make last part of link as title
 				if(urlTitle.equals(""))
 				{
@@ -657,8 +696,8 @@ if (logger.isDebugEnabled())
 						urlTitle = hrefVal.substring(0,hrefVal.lastIndexOf("/"));
 						urlTitle = urlTitle.substring(urlTitle.lastIndexOf("/")+1);
 					}
-					
-				}				
+
+				}
 				melResourceName = urlTitle;
 			}
            	else
@@ -666,9 +705,9 @@ if (logger.isDebugEnabled())
 					// uploaded file
 					section.setContentType("typeUpload");
 					melResourceName = hrefVal.substring(hrefVal.lastIndexOf("/") + 1);
-		
+
 				}
-	
+
 			// read resource description
 			if (resElements != null)
 			{
@@ -682,13 +721,6 @@ if (logger.isDebugEnabled())
 					}
 				}
 			}
-			// import from site --MALLIKA ... place holder for preserving description
-			else
-			{
-			//	ContentResource cr = getMeleteCHService().getResource(hrefVal);
-			//	melResourceDescription = cr.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION);
-			}
-
 			 // Everything here is going to uploads collection
 			  try{
 //			  check if the item has already been imported to this site (in uploads collection)
@@ -726,35 +758,35 @@ if (logger.isDebugEnabled())
 									melContentData = cr.getContent();
 									res_mime_type = cr.getContentType();
 						 		  }
-							
+
 								logger.debug("first add resource" + fileResourceName);
 								ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,fileResourceName,melResourceDescription);
 								newResourceId = getMeleteCHService().addResourceItem(fileResourceName, res_mime_type,uploadCollId,melContentData,res );
 								MeleteResource firstResource = new MeleteResource();
 								firstResource.setResourceId(newResourceId);
 				            	sectionDB.insertResource(firstResource);
-				            	   
+
 								// this section points to the link location of added resource item
 								String secondResName = getMeleteCHService().getResourceUrl(newResourceId);
 						 		melContentData =secondResName.getBytes();
-						 		res_mime_type=getMeleteCHService().MIME_TYPE_LINK;							 								 		
+						 		res_mime_type=getMeleteCHService().MIME_TYPE_LINK;
 							}
 						}
-						else 
-					  	{		
+						else
+					  	{
 					  	  res_mime_type=getMeleteCHService().MIME_TYPE_LINK;
 						  melContentData = new byte[hrefVal.length()];
 				          melContentData = hrefVal.getBytes();
-					  	}  
+					  	}
 					}
 					if (section.getContentType().equals("typeUpload"))
-					{	
+					{
 					  res_mime_type = melResourceName.substring(melResourceName.lastIndexOf(".")+1);
-					  res_mime_type = ContentTypeImageService.getContentType(res_mime_type);	
+					  res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
 			 		  if (resElements != null)
-			 		  {	  
+			 		  {
 			 			melContentData = readFromFile(new File(getUnzippeddirpath() + File.separator+ hrefVal));
-			 		  }	
+			 		  }
 			 		  else
 			 		  {
 			 			//This is executed by import from site
@@ -762,7 +794,7 @@ if (logger.isDebugEnabled())
 			 			ContentResource cr = getMeleteCHService().getResource(hrefVal);
 						melContentData = cr.getContent();
 			 		  }
-					}  
+					}
 			 		logger.debug("add resource again for" + melResourceName);
 			 		ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,melResourceName,melResourceDescription);
 			 		newResourceId = getMeleteCHService().addResourceItem(melResourceName, res_mime_type,uploadCollId,melContentData,res );
@@ -846,7 +878,7 @@ if (logger.isDebugEnabled())
                 String courseId ="";
                 if (ToolManager.getCurrentPlacement()!=null)
 		   courseId =ToolManager.getCurrentPlacement().getContext();
-                else 
+                else
                    courseId =destinationContext;
 		String imgSrcPath, imgName, imgLoc;
 
@@ -939,7 +971,7 @@ if (logger.isDebugEnabled())
 				String imgActualPath = "";
 			  if (!(imgSrcPath.startsWith("http://")|| imgSrcPath.startsWith("https://")) )
 			  {
-			  // if img src is in library or any other inside sakai path then don't process	
+			  // if img src is in library or any other inside sakai path then don't process
 				 if(imgSrcPath.indexOf("/access") !=-1)
 					{
 					String findEntity = imgSrcPath.substring(imgSrcPath.indexOf("/access")+7);
@@ -954,15 +986,15 @@ if (logger.isDebugEnabled())
 						    checkforimgs = checkforimgs.substring(endSrc);
 						    imgActualPath = ref.getId();
 						    contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, false);
-							
+
 						}
 						if (ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
 						{
-							
+
 							//Item resides in meleteDocs, so need not check under resources
 							checkforimgs = checkforimgs.substring(endSrc);
 							imgActualPath = ref.getId().replaceFirst("/content","");
-							contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, false);						
+							contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, false);
 						}
 					}
 			     }
@@ -1055,19 +1087,9 @@ if (logger.isDebugEnabled())
 					    		{
 					    			 toMres = new MeleteResource((MeleteResource)fromSec.getSectionResource().getResource());
 					    		     toMres.setResourceId(null);
-					    		     if (!toSec.getContentType().equals("typeLink"))
-					    		     {	 
-					    		       createContentResource(toMod,toSec,toMres,((MeleteResource)fromSec.getSectionResource().getResource()).getResourceId(),null,null);
-					    		     }
-					    		     else
-					    		     {
-					    		       ContentResource cr = getMeleteCHService().getResource(((MeleteResource)fromSec.getSectionResource().getResource()).getResourceId());
-					    		       if (cr == null) continue;
-					    		       String dispName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);		    		       
-					    		       createContentResource(toMod,toSec,toMres,new String(cr.getContent()), null,dispName);
-					    		     }
+					    		     createContentResource(toMod,toSec,toMres,((MeleteResource)fromSec.getSectionResource().getResource()).getResourceId(),null);
 					    		}
-                                                        if (fromModSeqXml!=null) 
+                                                        if (fromModSeqXml!=null)
 					    		fromModSeqXml = fromModSeqXml.replace(Integer.toString(fromSecId), Integer.toString(toSecId));
 
                               }
