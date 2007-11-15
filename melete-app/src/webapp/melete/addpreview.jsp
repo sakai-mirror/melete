@@ -48,10 +48,7 @@ function showIframe()
 				</td></tr>
 				<tr><td>
                 <h:inputHidden id="contentType" value="#{addSectionPage.section.contentType}"/>
-			    <style type="text/css">
-                li {list-style-image: none;}
-                </style>
-		        <h:outputText id="typeEditorContents" value="#{addSectionPage.previewContentData}" escape="false"  rendered="#{addSectionPage.shouldRenderEditor}"></h:outputText>		
+			     <h:outputText id="typeEditorContents" value="#{addSectionPage.previewContentData}" escape="false"  rendered="#{addSectionPage.shouldRenderEditor}"></h:outputText>		
 		        <br> 
 		        <h:outputText id="secinstLink" 
                            value="#{msgs.add_preview_clicking}" rendered="#{addSectionPage.shouldRenderLink}">
@@ -158,3 +155,4 @@ rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 4)&
 
 </body>
 </f:view>
+01

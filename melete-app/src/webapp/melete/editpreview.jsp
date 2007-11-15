@@ -53,10 +53,7 @@ function showIframe()
 			  </td></tr>
 			  <tr><td>
 		      <h:inputHidden id="contentType" value="#{editSectionPage.section.contentType}"/>
-				 <style type="text/css">
-                li {list-style-image: none;}
-                </style>
-		        <h:outputText id="typeEditorContents" value="#{editSectionPage.previewContentData}" escape="false"  rendered="#{editSectionPage.shouldRenderEditor}"></h:outputText>		
+			  <h:outputText id="typeEditorContents" value="#{editSectionPage.previewContentData}" escape="false"  rendered="#{editSectionPage.shouldRenderEditor}"></h:outputText>		
 		        <br> 
 		        <h:outputText id="secinstLink" 
                            value="#{msgs.edit_preview_clicking}" rendered="#{editSectionPage.shouldRenderLink}">
