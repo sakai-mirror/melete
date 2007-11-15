@@ -290,6 +290,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		logger.debug("time to get all collectionMap" + starttime);
 			 	ContentCollection c= getContentservice().getCollection(collId);
 			 	List	mem = c.getMemberResources();
+			 	if (mem == null) return null;
+			 	
 			 	ListIterator memIt = mem.listIterator();
 			 	while(memIt !=null && memIt.hasNext())
 			 	{
@@ -335,6 +337,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        		meleteSecurityService.pushAdvisor();
 	        	 	ContentCollection c= getContentservice().getCollection(collId);
 				 	List	mem = c.getMemberResources();
+				 	if (mem == null) return null;
+				 	
 				 	ListIterator memIt = mem.listIterator();
 				 	while(memIt !=null && memIt.hasNext())
 				 	{

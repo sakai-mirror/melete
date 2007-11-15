@@ -937,14 +937,14 @@ public abstract class SectionPage implements Serializable {
 	 * @return Returns the currSiteResourcesList.
 	 */
 	public ArrayList getCurrSiteResourcesList() {
-
+		try{
 		if(currSiteResourcesList ==null)
 		{
 			logger.debug("from getCurrSiteResourcesList - i am null");
 			// get current site upload collection
 			String uploadCollId = getMeleteCHService().getUploadCollectionId();
 
-			// get list of all resources for uploa type for the current site
+			// get list of all resources for upload type for the current site
 			currSiteResourcesList = new ArrayList();
 			Pattern p1 = Pattern.compile("-[0-9]*");
 			List allmembers = null;
@@ -974,6 +974,7 @@ public abstract class SectionPage implements Serializable {
 			}				
 			getListNav().setTotalSize(currSiteResourcesList.size()+1);		
 		}
+		} catch (Exception e){logger.error("error in creating list for server residing files" + e.toString());}
 		return currSiteResourcesList;
 	}
 
@@ -982,6 +983,7 @@ public abstract class SectionPage implements Serializable {
 	 */
 	public List getDisplayResourcesList()
 	{
+		try{
 		if(currSiteResourcesList == null) getCurrSiteResourcesList();
 		if(currSiteResourcesList != null)
 		{	
@@ -996,6 +998,7 @@ public abstract class SectionPage implements Serializable {
 				logger.debug("displayResourcesList" + displayResourcesList.size());
 			}
 		}
+		} catch (Exception e){logger.error("error in creating displayList for server residing files" + e.toString());}
 		return displayResourcesList;
 	}
 	
