@@ -661,13 +661,35 @@ if (logger.isDebugEnabled())
 				}				
 				melResourceName = urlTitle;
 			}
-           	else {
-				 //uploaded file
-				section.setContentType("typeUpload");
-				melResourceName = hrefVal.substring(hrefVal.lastIndexOf("/")+1);
-				
+           	else
+           		{
+					// uploaded file
+					section.setContentType("typeUpload");
+					melResourceName = hrefVal.substring(hrefVal.lastIndexOf("/") + 1);
+		
+				}
+	
+			// read resource description
+			if (resElements != null)
+			{
+				for (int i = 0; i < resElements.size(); i++)
+				{
+					Element resDescElement = (Element) resElements.get(i);
+					if (resDescElement.getQualifiedName().equalsIgnoreCase("imsmd:description"))
+					{
+						melResourceDescription = resDescElement.selectSingleNode(".//imsmd:langstring").getText();
+						break;
+					}
+				}
 			}
-			 //Everything here is going to uploads collection
+			// import from site --MALLIKA ... place holder for preserving description
+			else
+			{
+			//	ContentResource cr = getMeleteCHService().getResource(hrefVal);
+			//	melResourceDescription = cr.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION);
+			}
+
+			 // Everything here is going to uploads collection
 			  try{
 //			  check if the item has already been imported to this site (in uploads collection)
 		 		String checkResourceId = "/private/meleteDocs/"+courseId+"/uploads/"+melResourceName;

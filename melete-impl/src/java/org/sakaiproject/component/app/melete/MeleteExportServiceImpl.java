@@ -429,6 +429,11 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 				resource.addAttribute("identifier","RESOURCE"+ item_ref_num);
 				resource.addAttribute("type ","webcontent");
 				createResourceElement(section, resource, content_data1, resoucesDir, imagespath,(String)content_data.get(0),i);
+
+					//preserve resource description
+				if (content_data.get(1) != null && ((String)content_data.get(1)).length() != 0)
+					resource.add(createMetadataDescription((String)content_data.get(1)));
+
 				secElement.addAttribute("identifierref", resource.attributeValue("identifier"));
 				// add copyright information - rashmi
 				Element imsmdright = imsmdlom.addElement("imsmd:rights");
