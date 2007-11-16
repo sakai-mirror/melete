@@ -68,6 +68,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
       private String role;
       private String nullString = null;
       private String emptyString = "";
+      private ModuleDateBeanService nullMdbean = null;
       private int prevSectionSize;
       private int prevSeqNo;
       private int nextSeqNo;
@@ -112,6 +113,9 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 	  	return emptyString;
 	  }
 
+	  public ModuleDateBeanService getNullMdbean() {
+		  return nullMdbean;
+	  }
 
 	  public int getModuleId() {
         return this.moduleId;
@@ -171,7 +175,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
   	  	  this.nextSeqNo = getModuleService().getNextSeqNo(courseId,this.moduleSeqNo);
     	  }
   	  	  this.prevSectionSize = 0;
-  	  	  if (this.prevSeqNo > 0)
+  	  	  if ((this.prevSeqNo > 0)&&(this.prevSeqNo != this.moduleSeqNo))
   	  	  {
   	  	    this.prevMdbean = (ModuleDateBeanService) getModuleService().getModuleDateBeanBySeq(getCourseId(),prevSeqNo);
   	  	    if (this.prevMdbean != null)

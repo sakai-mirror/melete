@@ -21,7 +21,7 @@
 				<h:outputText value=" | "/>	
 		</h:column>
 	<h:column>
-     <h:commandLink id="nextMod" action="#{viewNextStepsPage.goNextModule}" immediate="true" rendered="#{viewNextStepsPage.moduleSeqNo != viewNextStepsPage.nextSeqNo}">
+     <h:commandLink id="nextMod" action="#{viewNextStepsPage.goNextModule}" immediate="true" rendered="#{viewNextStepsPage.moduleSeqNo < viewNextStepsPage.nextSeqNo}">
 			<h:outputText  value="#{msgs.view_navigate_ws_next}"/>	
 			 <f:param name="modseqno" value="#{viewNextStepsPage.nextSeqNo}" />
      	</h:commandLink>

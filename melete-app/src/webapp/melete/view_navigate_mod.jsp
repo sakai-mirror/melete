@@ -3,13 +3,13 @@
 
 <h:panelGrid columns="5"  style=" border-width:medium; border-color: #E2E4E8">
 	<h:column>
-     	<h:commandLink id="prevItem" action="#{viewModulesPage.goPrevSection}" immediate="true" rendered="#{(((viewModulesPage.prevMdbean.module.whatsNext == viewModulesPage.nullString)||(viewModulesPage.prevMdbean.module.whatsNext == viewModulesPage.emptyString))&&(viewModulesPage.moduleSeqNo > 1)&&(viewModulesPage.prevSectionSize > 0))}">
+     	<h:commandLink id="prevItem" action="#{viewModulesPage.goPrevSection}" immediate="true" rendered="#{((viewModulesPage.prevMdbean != viewModulesPage.nullMdbean)&&((viewModulesPage.prevMdbean.module.whatsNext == viewModulesPage.nullString)||(viewModulesPage.prevMdbean.module.whatsNext == viewModulesPage.emptyString))&&(viewModulesPage.moduleSeqNo > 1)&&(viewModulesPage.prevSectionSize > 0))}">
 			<h:outputText  value="#{msgs.view_navigate_mod_prev}"/>	
      	</h:commandLink>
-     	<h:commandLink id="goPrevWhatsNext" action="#{viewModulesPage.goPrevWhatsNext}" immediate="true" rendered="#{((viewModulesPage.prevMdbean.module.whatsNext != viewModulesPage.nullString)&&(viewModulesPage.prevMdbean.module.whatsNext != viewModulesPage.emptyString)&&(viewModulesPage.moduleSeqNo > 1))}">
+     	<h:commandLink id="goPrevWhatsNext" action="#{viewModulesPage.goPrevWhatsNext}" immediate="true" rendered="#{((viewModulesPage.prevMdbean != viewModulesPage.nullMdbean)&&(viewModulesPage.prevMdbean.module.whatsNext != viewModulesPage.nullString)&&(viewModulesPage.prevMdbean.module.whatsNext != viewModulesPage.emptyString)&&(viewModulesPage.moduleSeqNo > 1))}">
 			<h:outputText  value="#{msgs.view_navigate_mod_prev2}"/>	
      	</h:commandLink>
-     	<h:commandLink id="prevMod" action="#{viewModulesPage.goPrevNext}" immediate="true" rendered="#{(((viewModulesPage.prevMdbean.module.whatsNext == viewModulesPage.nullString)||(viewModulesPage.prevMdbean.module.whatsNext == viewModulesPage.emptyString))&&(viewModulesPage.moduleSeqNo > 1)&&(viewModulesPage.prevSectionSize == 0))}">
+     	<h:commandLink id="prevMod" action="#{viewModulesPage.goPrevNext}" immediate="true" rendered="#{((viewModulesPage.prevMdbean != viewModulesPage.nullMdbean)&&((viewModulesPage.prevMdbean.module.whatsNext == viewModulesPage.nullString)||(viewModulesPage.prevMdbean.module.whatsNext == viewModulesPage.emptyString))&&(viewModulesPage.moduleSeqNo > 1)&&(viewModulesPage.prevSectionSize == 0))}">
 			<h:outputText  value="#{msgs.view_navigate_mod_prev3}"/>	
 			 <f:param name="modseqno" value="#{viewModulesPage.prevSeqNo}" />
      	</h:commandLink>
