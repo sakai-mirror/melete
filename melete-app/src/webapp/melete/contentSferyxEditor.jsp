@@ -57,7 +57,7 @@ document.writeln('<PARAM NAME="scriptable" VALUE="true">');
 				document.writeln('<PARAM NAME ="absoluteDocumentTranslationURL" VALUE="<%=absloca%>">');
 				document.writeln('<PARAM NAME ="uploadedObjectsTranslationPath" VALUE="<%=docloca%>">');
 				document.writeln('<PARAM NAME ="variableName" VALUE="html_content">');
-				document.writeln('<PARAM NAME ="menusToRemove" VALUE="menuFile">');
+				document.writeln('<PARAM NAME ="menusToRemove" VALUE="menuFile,menuForm">');
 				document.writeln('<PARAM NAME ="statusbarVisible" VALUE="false">');
 				document.writeln('<PARAM NAME ="menuItemsToRemove" VALUE="insertFormFieldTextBoxMenuItem, insertFormFieldTextAreaMenuItem, insertFormFieldCheckBoxMenuItem, insertFormFieldRadioButtonMenuItem,insertFormFieldDropDownMenuItem, insertFormFieldPushButtonMenuItem,insertFormFieldImageButtonMenuItem,pagePropertiesMainMenuItem">');
 				document.writeln('<PARAM NAME ="toolbarItemsToRemove" VALUE="saveFileButton,openFileButton,newFileButton">');
