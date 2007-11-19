@@ -198,7 +198,7 @@ if (msg != null)
              </f:facet>
              
                 <h:inputText id="startDate"
-                           value="#{mdbean.moduleShdate.startDate}" required="true" >
+                           value="#{mdbean.moduleShdate.startDate}" >
             <f:convertDateTime pattern="MM/dd/yyyy hh:mm a"/>
             </h:inputText>
           
@@ -225,7 +225,7 @@ if (msg != null)
              </f:facet>
              
             <h:inputText id="endDate" 
-                           value="#{mdbean.moduleShdate.endDate}" required="true" >
+                           value="#{mdbean.moduleShdate.endDate}" >
                <f:convertDateTime pattern="MM/dd/yyyy hh:mm a"/>
             </h:inputText>
             <f:facet name="footer">

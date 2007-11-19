@@ -165,7 +165,7 @@ public class ModuleDB implements Serializable {
 			{
 			 Session session = hibernateUtil.currentSession();
 
-			   Query q=session.createQuery("select min(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId=ms.moduleId and ms.startDate < :currDate and ms.endDate > :currDate");
+			   Query q=session.createQuery("select min(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId=ms.moduleId and ((ms.startDate < :currDate and ms.endDate > :currDate) or (ms.startDate is null and ms.endDate is null) or (ms.startDate is null and ms.endDate > :currDate) or (ms.startDate < :currDate and ms.endDate is null))");
 			   q.setParameter("courseId",courseId);
 			   q.setParameter("currSeqNo", currSeqNo);
 			   q.setParameter("currDate", new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
@@ -175,7 +175,7 @@ public class ModuleDB implements Serializable {
 			   // if no sequence is found then this is the last module
 			  if(minsequence == null || minsequence.intValue() <= 0)
 			  {
-				System.out.println("Returning -1");  
+				System.out.println("Returning -1");
 			    return -1;
 	 		  }
 			  nextSeqNo = minsequence.intValue();
@@ -193,7 +193,7 @@ public class ModuleDB implements Serializable {
 		    return nextSeqNo ;
 
 	}
-	
+
 	public int getPrevSeqNo(String courseId, int currSeqNo)
 	{
 	 int prevSeqNo = -1;
@@ -201,7 +201,7 @@ public class ModuleDB implements Serializable {
 		{
 		 Session session = hibernateUtil.currentSession();
 
-		   Query q=session.createQuery("select max(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId=ms.moduleId and ms.startDate < :currDate and ms.endDate > :currDate");
+		   Query q=session.createQuery("select max(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId=ms.moduleId and ((ms.startDate < :currDate and ms.endDate > :currDate) or (ms.startDate is null and ms.endDate is null) or (ms.startDate is null and ms.endDate > :currDate) or (ms.startDate < :currDate and ms.endDate is null))");
 		   q.setParameter("courseId",courseId);
 		   q.setParameter("currSeqNo", currSeqNo);
 		   q.setParameter("currDate", new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
@@ -211,7 +211,7 @@ public class ModuleDB implements Serializable {
 		   // if no sequence is found then there is no module before this one
 		  if(maxsequence == null || maxsequence.intValue() <= 0)
 		  {
-			  System.out.println("Returning -1");  
+			  System.out.println("Returning -1");
 			    return -1;
  		  }
 		  prevSeqNo = maxsequence.intValue();
@@ -227,8 +227,8 @@ public class ModuleDB implements Serializable {
 	 		hibernateUtil.closeSession();
 	 	 }
 	    return prevSeqNo ;
-}	
-	
+}
+
 	   /**
 	 * Actually inserts a row with module information.
 	 * adds a row in module , moduleshdates , course module.
@@ -646,7 +646,6 @@ public class ModuleDB implements Serializable {
 			}
 			 else
 			 {
-			   System.out.println("Processing mod "+mod.getModuleId().intValue());
 
 			   updSeqXml = null;
 			   //Add sections to seqXml

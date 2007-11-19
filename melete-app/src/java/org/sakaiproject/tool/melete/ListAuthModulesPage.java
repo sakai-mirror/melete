@@ -871,14 +871,21 @@ public class ListAuthModulesPage implements Serializable
 			while (moduleIter.hasNext())
 			{
 				ModuleDateBean mdbean = (ModuleDateBean) moduleIter.next();
-				if (mdbean.getModuleShdate().getStartDate().compareTo(mdbean.getModuleShdate().getEndDate()) >= 0)
-				{
+				if ((mdbean.getModuleShdate().getStartDate() != null)&&(mdbean.getModuleShdate().getEndDate() != null))
+				{	
+				  if (mdbean.getModuleShdate().getStartDate().compareTo(mdbean.getModuleShdate().getEndDate()) >= 0)
+				  {
 					dateErrFlag = true;
 					mdbean.setDateFlag(true);
 					errModuleIds.add(mdbean);
 					/*
 					 * addDateErrorMessage(ctx); return "list_auth_modules";
 					 */
+				  }
+				  else
+				  {
+					mdbean.setDateFlag(false);
+				  }
 				}
 				else
 				{
