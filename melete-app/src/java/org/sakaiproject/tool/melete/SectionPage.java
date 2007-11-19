@@ -602,10 +602,25 @@ public abstract class SectionPage implements Serializable {
     	   			 throw new MeleteException("add_section_bad_url_format");
     	   		}
 
+    /*        	 if(!linkUrl.startsWith(serverConfigurationService.getServerUrl()) && getLinkUrl().startsWith("https://"))
+         	 	{
+	            		URL url = new URL(linkUrl);
+	                    HttpsURLConnection ucs = (HttpsURLConnection) url.openConnection();
+	                    ucs.setFollowRedirects(true);
+	                    ucs.setInstanceFollowRedirects(false);
+	                    String serverReplies = ucs.getResponseMessage();
+	                    // if link is ok server replies "OK" otherwise its null or "Not Found"
+	                    if(serverReplies != null && serverReplies.equals("OK"))
+	            		  		return "OK";
+	            		else return "Link possibly broken or not found";
+         	 	}	
+      */      	 
             	 if(!linkUrl.startsWith(serverConfigurationService.getServerUrl()))
             	 	{
 	            		URL url = new URL(linkUrl);
 	                    HttpURLConnection uc = (HttpURLConnection) url.openConnection();
+	                    uc.setFollowRedirects(true);
+	                    uc.setInstanceFollowRedirects(false);
 	                    String serverReplies = uc.getResponseMessage();
 	                    // if link is ok server replies "OK" otherwise its null or "Not Found"
 	                    if(serverReplies != null && serverReplies.equals("OK"))
