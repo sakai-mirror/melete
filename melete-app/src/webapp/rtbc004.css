@@ -58,7 +58,7 @@ a1:active 			{color : #000080;}
 					font-weight : bold;
 					color : #afb3c3;}
 				
-li 					{list-style-image : url('images/bullet.gif');}
+ul					{list-style-image : url('images/bullet.gif');}
 
 /* this group defines Main Table properties*/
 /*Defines properties for the Top Table Area*/

@@ -155,4 +155,3 @@ rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 4)&
 
 </body>
 </f:view>
-01

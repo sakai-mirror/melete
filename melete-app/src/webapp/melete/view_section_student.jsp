@@ -69,9 +69,6 @@ function showIframe()
 
 <tr>
 <td align="left">
-<style type="text/css">
-li {list-style-image: none;}
-</style>
   <h:inputHidden id="contentType" value="#{viewSectionsPage.section.contentType}"/>
 			
 	<br> 
