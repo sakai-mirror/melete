@@ -80,6 +80,7 @@ public class ListModulesPage implements Serializable{
       private Section nullSection = null;
       private List nullList = null;
       private String isNull = null;
+      private Date nullDate = null;
 
 
 	  //This needs to be set later using Utils.getBinding
@@ -91,7 +92,7 @@ public class ListModulesPage implements Serializable{
 	  	instFlag = true;
 	  	studFlag = false;
 	  	FacesContext context = FacesContext.getCurrentInstance();
-	  	context.getViewRoot().setTransient(true); 
+//	  	context.getViewRoot().setTransient(true);
 	  	Map sessionMap = context.getExternalContext().getSessionMap();
 	  	role = (String)sessionMap.get("role");
 	  	courseId = (String)sessionMap.get("courseId");
@@ -124,7 +125,7 @@ public class ListModulesPage implements Serializable{
 	  	studFlag = false;
 	  	nomodsFlag = false;
 	  	FacesContext context = FacesContext.getCurrentInstance();
-	  	context.getViewRoot().setTransient(true); 
+//	  	context.getViewRoot().setTransient(true);
 		if (getRole()!= null && getRole().equals("INSTRUCTOR"))
 		{
 	  		 ValueBinding binding = Util.getBinding("#{authorPreferences}");
@@ -234,6 +235,9 @@ public class ListModulesPage implements Serializable{
 	  	return nullSection;
 	  }
 
+	  public Date getNullDate() {
+		  return nullDate;
+	  }
 	  public void setNullSection(Section  nullSection) {
 	  	this.nullSection = nullSection;
 	  }
@@ -449,18 +453,18 @@ public class ListModulesPage implements Serializable{
 
         if (getRole()!= null && getRole().equals("INSTRUCTOR")){
         	if ((moduleDateBeans != null)&&(moduleDateBeans.size() > 0))
-        	{	
+        	{
 	        	mdbean = (ModuleDateBean) moduleDateBeans.get(selModIndex);
 	        	vmPage.setModuleId(mdbean.getModuleId());
 	        	vmPage.setMdbean(null);
 	        	vmPage.setPrevMdbean(null);
 	          	CourseModuleService cmod = (CourseModuleService) mdbean.getCmod();
 	        	vmPage.setModuleSeqNo(cmod.getSeqNo());
-        	}	
+        	}
 	        }
          else{
         	 if ((moduleDatePrivBeans != null)&&(moduleDatePrivBeans.size() > 0))
-        	 {	 
+        	 {
 	        	mdpbean = (ModuleDatePrivBean) moduleDatePrivBeans.get(selModIndex);
 	        	vmPage.setModuleId(mdpbean.getModuleId());
 	        	vmPage.setMdbean(null);
@@ -468,7 +472,7 @@ public class ListModulesPage implements Serializable{
 	           	//Change without having to iterate through cmods
 	        	CourseModuleService cmod = (CourseModuleService) mdpbean.getCmod();
 	        	vmPage.setModuleSeqNo(cmod.getSeqNo());
-        	 }	
+        	 }
 	        }
       }
 
@@ -509,13 +513,13 @@ public class ListModulesPage implements Serializable{
 		int selModIndex = 0;
 		String sectionindex = null;
 		int selSecIndex = 0;
-		
+
 	    selclientId = cmdLink.getClientId(ctx);
 	    if (selclientId != null)
-	    {	
+	    {
 	      int occurs = selclientId.split(":").length - 1;
 	      if (occurs == 5)
-	      {	  
+	      {
 		  selclientId = selclientId.substring(selclientId.indexOf(':')+1);
 	      selclientId = selclientId.substring(selclientId.indexOf(':')+1);
 		  modId = selclientId.substring(0,selclientId.indexOf(':'));
@@ -525,28 +529,28 @@ public class ListModulesPage implements Serializable{
 		  sectionindex=selclientId.substring(0,selclientId.indexOf(':'));
 		  selSecIndex = Integer.parseInt(sectionindex);
 	      }
-	    }  
+	    }
 		ModuleObjService mod = null;
 		SectionBean secBean = null;
 		int modSeqNo = 0;
 
 		if (getRole()!=null && getRole().equals("INSTRUCTOR")) {
 			if (moduleDateBeans != null)
-			{	
+			{
 		    	ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selModIndex);
 			    mod = mdbean.getModule();
 		        secBean = (SectionBean) mdbean.getSectionBeans().get(selSecIndex);
 		        modSeqNo = mdbean.getCmod().getSeqNo();
-			}    
+			}
 		}
 	    else {
 	    	if (moduleDatePrivBeans != null)
-	    	{	
+	    	{
 			    ModuleDatePrivBean mdpbean = (ModuleDatePrivBean) moduleDatePrivBeans.get(selModIndex);
 				mod = mdpbean.getModule();
 		        secBean = (SectionBean) mdpbean.getSectionBeans().get(selSecIndex);
 		        modSeqNo = mdpbean.getCmod().getSeqNo();
-	    	}    
+	    	}
 	    }
 
 
@@ -555,7 +559,7 @@ public class ListModulesPage implements Serializable{
 	    ViewSectionsPage vsPage = (ViewSectionsPage)
 	    binding.getValue(ctx);
 	    if (secBean != null)
-	    {	
+	    {
 	     Section sec = secBean.getSection();
 	    vsPage.setModuleId(sec.getModuleId());
 	    vsPage.setSectionId(sec.getSectionId());
