@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-cascade="save-update">
+  <class name="org.sakaiproject.component.app.melete.CcLicense" table="melete_cc_license">
+    <composite-id>
+    <key-property name="reqAttr" column="REQ_ATTR" type="boolean"/>	
+    <key-property name="allowCmrcl" column="ALLOW_CMRCL" type="boolean"/>	
+    <key-property name="allowMod" column="ALLOW_MOD" type="int" length="1"/>	
+    <key-property name="url" column="URL" type="string"  length="100"/>
+    <key-property name="name" column="NAME" type="string"  length="50"/>
+   	</composite-id>
+	</class>
+</hibernate-mapping>
