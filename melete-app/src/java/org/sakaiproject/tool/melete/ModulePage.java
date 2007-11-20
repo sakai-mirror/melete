@@ -301,7 +301,7 @@ public abstract class ModulePage implements Serializable{
   public ModuleShdatesService getModuleShdates() {
     if (null == moduleShdates) {
      moduleShdates = new ModuleShdates();
-	       GregorianCalendar cal = new GregorianCalendar();
+	/*       GregorianCalendar cal = new GregorianCalendar();
 	       cal.set(Calendar.HOUR,8);
 	       cal.set(Calendar.MINUTE,0);
 	       cal.set(Calendar.SECOND,0);
@@ -313,7 +313,7 @@ public abstract class ModulePage implements Serializable{
 	       cal.set(Calendar.SECOND,0);
 	       cal.set(Calendar.AM_PM,Calendar.PM);
 	       moduleShdates.setEndDate(cal.getTime());
-	         }
+	  */       }
 	    return moduleShdates;
 	  }
 

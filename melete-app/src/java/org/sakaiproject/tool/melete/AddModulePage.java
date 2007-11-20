@@ -96,18 +96,21 @@ public class AddModulePage extends ModulePage implements Serializable{
 
  //  validation to limit year to 4 digits
      	Calendar calstart = new GregorianCalendar();
-     	calstart.setTime(st);
+     	if (st != null) calstart.setTime(st);
      	Calendar calend = new GregorianCalendar();
-     	calend.setTime(end);
+     	if (end != null) calend.setTime(end);
 
 
 //      validation no 4 b
+     	if ((end != null)&&(st != null))
+     	{	
      	if(end.compareTo(st) < 0)
      	{
      		String errMsg = "";
 	     	errMsg = bundle.getString("end_date_before_start");
 	     	context.addMessage (null, new FacesMessage(errMsg));
 	     	return "add_module";
+     	}
      	}
 
 	   	// get course info from sessionmap
