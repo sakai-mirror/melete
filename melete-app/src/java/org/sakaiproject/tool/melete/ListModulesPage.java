@@ -30,6 +30,7 @@ import javax.faces.component.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.Map;
 import java.io.Serializable;
@@ -287,11 +288,12 @@ public class ListModulesPage implements Serializable{
 		}
 
 	  	//If list of modules returned is zero or if all of them are hidden
-	  	if ((moduleDateBeans.size() == 0)||(moduleDateBeans.size() == hideFlagSize))
+	  	if ((moduleDateBeans == null)||(moduleDateBeans.size() == 0)||(moduleDateBeans.size() == hideFlagSize))
 	  	{
 	  	  nomodsFlag = true;
 	  	  FacesContext ctx = FacesContext.getCurrentInstance();
   		  addNoModulesMessage(ctx);
+  		  moduleDateBeans = new ArrayList();
 	  	}
 		  	return moduleDateBeans;
 	  }
@@ -312,11 +314,12 @@ public class ListModulesPage implements Serializable{
 	  		//e.printStackTrace();
 	  		logger.error(e.toString());
 		}
-	  	if (moduleDatePrivBeans.size() == 0)
+	  	if ((moduleDatePrivBeans == null)||(moduleDatePrivBeans.size() == 0))
 	  	{
 	  	  nomodsFlag = true;
 	  	  FacesContext ctx = FacesContext.getCurrentInstance();
   		  addNoModulesMessage(ctx);
+  		  moduleDatePrivBeans = new ArrayList();
 	  	}
 		  	return moduleDatePrivBeans;
 	  }
