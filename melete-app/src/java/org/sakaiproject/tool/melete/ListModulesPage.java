@@ -273,13 +273,16 @@ public class ListModulesPage implements Serializable{
 	  	setCurrentTimestamp(new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
 	  	try {
 	  		moduleDateBeans = getModuleService().getModuleDateBeans(courseId);
-	  		for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext(); ) {
+	  		if ((moduleDateBeans != null)&&(moduleDateBeans.size() > 0))
+	  		{	
+	  		  for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext(); ) 
+	  		  {
 		        ModuleDateBean mdbean = (ModuleDateBean) i.next();
 		        if (mdbean.getModuleShdate().isHideFlag() == true)
 		        {
 		        	hideFlagSize = hideFlagSize + 1;
 		        }
-
+	  		  }
 	  		}
 	  	}catch (Exception e)
 		{
