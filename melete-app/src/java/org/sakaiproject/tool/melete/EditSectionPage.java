@@ -366,15 +366,13 @@ public class EditSectionPage extends SectionPage implements Serializable
 	 */
 	public String saveAndAddAnotherSection()
 	{
-		if (getSuccess() == false)
-		{
-			if (!saveHere().equals("failure"))
+		setSuccess(false);
+			if(!saveHere().equals("failure"))
 			{
 				setSuccess(true);
-			}
-			else
-				return "editmodulesections";
-		}
+			} 
+			else return "editmodulesections";
+		
 
 		// create new instance of section model
 		setSection(null);
@@ -399,15 +397,13 @@ public class EditSectionPage extends SectionPage implements Serializable
 	 */
 	public String Finish()
 	{
-		if (getSuccess() == false)
-		{
-			if (!saveHere().equals("failure"))
+		setSuccess(false);
+		
+			if(!saveHere().equals("failure"))
 			{
-				setSuccess(true);
-			}
-			else
-				return "editmodulesections";
-		}
+			setSuccess(true);
+			} else return "editmodulesections";
+		
 
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");

@@ -117,7 +117,7 @@ window.open('editpreviewEditor.jsf');
 						<h:outputText id="toc" value="#{msgs.editmodulesections_TOC}" />
 					</h:commandLink>
 				&raquo;  <h:outputText id="text4" value="#{editSectionPage.module.title}" /> &raquo; <h:outputText id="text4_1" value="#{editSectionPage.section.title}" /> &raquo; 
-	     		<h:commandLink id="addSectionFromEdit" action="#{editSectionPage.saveAndAddAnotherSection}">
+	     		<h:commandLink onmousedown="transferEditordata();" action="#{editSectionPage.saveAndAddAnotherSection}">
  					 <h:outputText id="text5" value="#{msgs.editmodulesections_add_new}"/>
 				</h:commandLink> 
 			</td>
