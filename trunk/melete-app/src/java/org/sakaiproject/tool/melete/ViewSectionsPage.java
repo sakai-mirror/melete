@@ -174,6 +174,9 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 
 	  public String getContentLink()
 	  {
+		String url = null;
+		if (this.section != null)
+		{	
 		SectionResourceService secRes = this.section.getSectionResource();
 		String resourceId = null;
 		if (secRes != null)
@@ -184,7 +187,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 			}
 		}
 	    ContentResource resource = null;
-    	String url = null;
+  
 
     	if (resourceId != null)
     	{
@@ -203,6 +206,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
         	  e.printStackTrace();
               }
     	}
+		}
     	 return url;
 
 	  }
