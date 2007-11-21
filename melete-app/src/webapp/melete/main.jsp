@@ -5,14 +5,12 @@
 </head>
 <body>
 <%
-System.out.println("MELETE MAIN PAGE CALLED!!!!");
-out.println("MELETE MAIN PAGE CALLED!!!!");
+
 final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 
 final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "meleteSiteAndUserInfo");
 String navpage = meleteSiteAndUserInfo.processNavigate();
 
-System.out.println("navpage is "+navpage);
 String navpageurl = navpage +".jsf";
 Iterator it = facesContext.getMessages();
 
@@ -27,7 +25,7 @@ if (it != null)
 }
 else
 {
-  System.out.println("Returned iterator is null");
+  
 }			
 %>
 <br />

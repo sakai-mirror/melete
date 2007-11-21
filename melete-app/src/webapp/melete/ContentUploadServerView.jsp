@@ -18,7 +18,6 @@
 	String status = (String)request.getAttribute("upload.status");
 		if( status != null && !status.equalsIgnoreCase("ok"))
 		{
-			System.out.println("import file too big");
 			final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 			ResourceBundle bundle = ResourceBundle.getBundle("org.sakaiproject.tool.melete.bundle.Messages", facesContext.getViewRoot().getLocale());
 			String infoMsg = bundle.getString("file_too_large");
