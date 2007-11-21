@@ -175,7 +175,6 @@ public class ModuleDB implements Serializable {
 			   // if no sequence is found then this is the last module
 			  if(minsequence == null || minsequence.intValue() <= 0)
 			  {
-				System.out.println("Returning -1");
 			    return -1;
 	 		  }
 			  nextSeqNo = minsequence.intValue();
@@ -211,7 +210,6 @@ public class ModuleDB implements Serializable {
 		   // if no sequence is found then there is no module before this one
 		  if(maxsequence == null || maxsequence.intValue() <= 0)
 		  {
-			  System.out.println("Returning -1");
 			    return -1;
  		  }
 		  prevSeqNo = maxsequence.intValue();
@@ -653,7 +651,6 @@ public class ModuleDB implements Serializable {
 			   {
 			   if (newSecList.size() > 0)
 			   {
-				 System.out.println("Sections table has extra sections");
 			     it = newSecList.iterator();
 			     updSeqXml = mod.getSeqXml();
 			     while (it.hasNext())
@@ -674,7 +671,6 @@ public class ModuleDB implements Serializable {
 			   {
 				 if (xtraXmlList.size() > 0)
 				 {
-				   System.out.println("XML sequence has extra entries");
 				   it = xtraXmlList.iterator();
 				   while (it.hasNext())
 				   {
@@ -698,7 +694,6 @@ public class ModuleDB implements Serializable {
 				 mod.setSeqXml(updSeqXml);
 				try
 				{
-				 System.out.println("Updating module in correctSections "+updSeqXml);
 				 updateModule(mod);
 			    }
 	    		catch (Exception ex)
@@ -1439,7 +1434,6 @@ public class ModuleDB implements Serializable {
 				if (occurs > 1)
 				{
 				  section_id = secBean.getSection().getSectionId();
-				  System.out.println("bring up section " + section_id);
 		          sectionsSeqXML = SectionUtil.bringOneLevelUp(sectionsSeqXML,section_id.toString());
 				}
 		      }

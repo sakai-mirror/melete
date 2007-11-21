@@ -14,7 +14,6 @@ String msg = null;
 if (request.getAttribute("msg") != null)
 {	
   msg = (String) request.getAttribute("msg");	
-  System.out.println("Msg here is "+msg);
 }  
 %>
 
@@ -28,7 +27,6 @@ if (request.getAttribute("msg") != null)
 <body onload="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');" >
 <h:form id="errormigrate">
 <%
-System.out.println("Msg in errorMigrate is "+msg);
 if (msg != null)
 {	
   final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
