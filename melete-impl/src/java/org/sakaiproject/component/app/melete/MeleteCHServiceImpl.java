@@ -198,11 +198,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         String collName ="";
         if(contentType.equals("typeEditor")){
 
-            if (ToolManager.getCurrentPlacement()!=null)
-	        addToCollection=ToolManager.getCurrentPlacement().getContext()+Entity.SEPARATOR+"module_"+ modId;
-            else 
-                addToCollection=getMeleteSecurityService().getMeleteImportService().getDestinationContext()+Entity.SEPARATOR+"module_"+ modId;
-
+        addToCollection=ToolManager.getCurrentPlacement().getContext()+Entity.SEPARATOR+"module_"+ modId;
+         
 	    collName = "module_"+ modId;
         }
         else {
@@ -225,11 +222,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	{
 		try{
             String uploadCollectionId;
-            if (ToolManager.getCurrentPlacement()!=null)
-	        uploadCollectionId=ToolManager.getCurrentPlacement().getContext()+Entity.SEPARATOR+"uploads";
-            else 
-                uploadCollectionId=getMeleteSecurityService().getMeleteImportService().getDestinationContext()+Entity.SEPARATOR+"uploads";
-
+            uploadCollectionId=ToolManager.getCurrentPlacement().getContext()+Entity.SEPARATOR+"uploads";
+          
 	    String collName = "uploads";
 	    // check if collection exists
 	    //read meletDocs dir name from web.xml
