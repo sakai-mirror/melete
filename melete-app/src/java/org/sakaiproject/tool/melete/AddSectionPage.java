@@ -156,6 +156,11 @@ public class AddSectionPage extends SectionPage implements Serializable{
 						String newResourceId = addResourceToMeleteCollection(uploadHomeDir,addCollId);
 						meleteResource.setResourceId(newResourceId);
 						}
+					// in case of Upload if change in resource properties save that
+					else 
+						{
+						getMeleteCHService().editResourceProperties(meleteResource.getResourceId(), secResourceName, secResourceDescription);
+						}
 					}
 
 			//step 3: insert section resource in melete table i.e. if new resource then insert in melete resource table
