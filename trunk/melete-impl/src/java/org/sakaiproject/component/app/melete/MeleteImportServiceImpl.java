@@ -138,6 +138,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		if (logger.isDebugEnabled())
 			logger.debug("Entering parseAndBuildModules");
 		setUnzippeddirpath(unZippedDirPath);
+		setDestinationContext(ToolManager.getCurrentPlacement().getContext());
 		Map uris = new HashMap();
 		uris.put("imscp", DEFAULT_NAMESPACE_URI);
 		uris.put("imsmd", IMSMD_NAMESPACE_URI);
@@ -371,10 +372,7 @@ if (logger.isDebugEnabled())
 
 		//String courseId = PortalService.getCurrentSiteId();
 		String courseId ="";
-                if (ToolManager.getCurrentPlacement()!=null)
-                   courseId = ToolManager.getCurrentPlacement().getContext();
-                else
-                   courseId =destinationContext;
+        courseId =destinationContext;
 
 		String userId = UserDirectoryService.getCurrentUser().getId();
 		String firstName = UserDirectoryService.getCurrentUser()
@@ -537,12 +535,14 @@ if (logger.isDebugEnabled())
 			 		return getMeleteCHService().getResourceUrl(checkResourceId);
 			 	}catch (IdUnusedException ex)
 				{
+			 		String uploadCollId = "";
 			 		//find mime type and get name and contents
 			 		if (imsImport)
 			 		{
 				 		  //This is executed by IMP import
 				 		  melContentData = readFromFile(new File(getUnzippeddirpath() + File.separator
 								+ hrefVal));
+				 		 uploadCollId = getMeleteCHService().getUploadCollectionId(destinationContext);
 			 		}
 			 		else
 			 		{
@@ -550,12 +550,12 @@ if (logger.isDebugEnabled())
 			 			logger.debug("reading resource properties in import from site");
 			 			ContentResource cr = getMeleteCHService().getResource(hrefVal);
 						melContentData = cr.getContent();
+						uploadCollId = getMeleteCHService().getUploadCollectionId();
 			 		}
 
 			 		res_mime_type = filename.substring(filename.lastIndexOf(".")+1);
 					res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
 
-				     String uploadCollId = getMeleteCHService().getUploadCollectionId();
 			 		 ResourcePropertiesEdit res = getMeleteCHService().fillEmbeddedImagesResourceProperties(filename);
 			 		 String newResourceId = getMeleteCHService().addResourceItem(filename, res_mime_type,uploadCollId,melContentData,res);
 			 		 // create melete resource object
@@ -603,14 +603,7 @@ if (logger.isDebugEnabled())
 			logger.debug("Entering createSection...");
 
 		String courseId ="";
-        if (ToolManager.getCurrentPlacement()!=null)
-        {
-        	courseId =ToolManager.getCurrentPlacement().getContext();
-        }
-		else
-		{
-			courseId = destinationContext;
-		}
+       	courseId = destinationContext;
 
 
 		//This code fixes resource description transfer for import from site
@@ -636,12 +629,14 @@ if (logger.isDebugEnabled())
 			res_mime_type= getMeleteCHService().MIME_TYPE_EDITOR;
 			String contentEditor = null;
 
+			String addCollId = "";
 			if (resElements != null)
 			{
                 //This part called by IMS import
 				contentEditor = new String(readFromFile(new File(getUnzippeddirpath() + File.separator + hrefVal)));
 //				 create objects for embedded images
 				contentEditor = createContentFile(contentEditor, (Module)module, (Section)section, resElements);
+				addCollId = getMeleteCHService().getCollectionId(section.getContentType(), module.getModuleId());
 			}
 			else
 			{
@@ -649,6 +644,7 @@ if (logger.isDebugEnabled())
 				  ContentResource cr = getMeleteCHService().getResource(hrefVal);
 				  contentEditor = new String(cr.getContent());
 				  contentEditor = createContentFile(contentEditor, (Module)module, (Section)section, null);
+				  addCollId = getMeleteCHService().getCollectionId(destinationContext, section.getContentType(), module.getModuleId());
 			}
 
              melContentData = new byte[contentEditor.length()];
@@ -657,7 +653,7 @@ if (logger.isDebugEnabled())
              melResourceName = "Section_" + section.getSectionId().toString();
              melResourceDescription="compose content";
              // no need to perform check just add it for section_xxx.html files
-             String addCollId = getMeleteCHService().getCollectionId(section.getContentType(), module.getModuleId());
+
              ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,melResourceName,melResourceDescription);
              newResourceId = getMeleteCHService().addResourceItem(melResourceName, res_mime_type,addCollId,melContentData,res );
  			 meleteResource.setResourceId(newResourceId);
@@ -732,7 +728,15 @@ if (logger.isDebugEnabled())
 				{
 			 		// actual insert
 			 		// if not found in meleteDocs collection include it
-				  	String uploadCollId = getMeleteCHService().getUploadCollectionId();
+			 		String uploadCollId = "";
+			 		if (resElements != null)
+			 		{
+			 			uploadCollId = getMeleteCHService().getUploadCollectionId();
+			 		}
+			 		else
+			 		{
+			 			uploadCollId = getMeleteCHService().getUploadCollectionId(destinationContext);
+			 		}
 				  	// data is generally large so read it only if need to insert
 					if(section.getContentType().equals("typeLink"))
 					{
@@ -875,12 +879,10 @@ if (logger.isDebugEnabled())
 		//save uploaded img inside content editor to destination directory
 		String checkforimgs = contentEditor;
 		int imgindex = -1;
-                String courseId ="";
-                if (ToolManager.getCurrentPlacement()!=null)
-		   courseId =ToolManager.getCurrentPlacement().getContext();
-                else
-                   courseId =destinationContext;
-		String imgSrcPath, imgName, imgLoc;
+        String imgSrcPath, imgName, imgLoc;
+		String courseId ="";
+
+		courseId =destinationContext;
 
 		Pattern p1 = Pattern.compile("<[iI][mM][gG]\\s|<[aA]\\s|<[eE][mM][bB][eE][dD]\\s");
 		Pattern pi = Pattern.compile(">|\\s[sS][rR][cC]\\s*=");
@@ -1218,6 +1220,12 @@ if (logger.isDebugEnabled())
 	{
 		return this.destinationContext;
 	}
+
+	public void setDestinationContext(String destinationContext)
+	{
+		this.destinationContext = destinationContext;
+	}
+
 	/**
 	 * @param moduleDB The moduleDB to set.
 	 */
