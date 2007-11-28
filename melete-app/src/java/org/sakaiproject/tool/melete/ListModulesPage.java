@@ -541,7 +541,7 @@ public class ListModulesPage implements Serializable{
 		int modSeqNo = 0;
 
 		if (getRole()!=null && getRole().equals("INSTRUCTOR")) {
-			if (moduleDateBeans != null)
+			if ((moduleDateBeans != null)&&(moduleDateBeans.size() > 0))
 			{
 		    	ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selModIndex);
 			    mod = mdbean.getModule();
@@ -550,7 +550,7 @@ public class ListModulesPage implements Serializable{
 			}
 		}
 	    else {
-	    	if (moduleDatePrivBeans != null)
+	    	if ((moduleDatePrivBeans != null)&&(moduleDatePrivBeans.size() > 0))
 	    	{
 			    ModuleDatePrivBean mdpbean = (ModuleDatePrivBean) moduleDatePrivBeans.get(selModIndex);
 				mod = mdpbean.getModule();
