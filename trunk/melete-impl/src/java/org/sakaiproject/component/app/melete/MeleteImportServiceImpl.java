@@ -409,7 +409,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 		Section section = new Section();
 		MeleteResource meleteResource = new MeleteResource();
-
+		boolean sectionTitleFlag = false;
+		boolean sectionCopyrightFlag= false;
+		
 		List elements = eleItem.elements();
 		for (Iterator iter = elements.iterator(); iter.hasNext();) {
 			Element element = (Element) iter.next();
@@ -417,6 +419,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			//title
 			if (element.getQualifiedName().equalsIgnoreCase("title")) {
 				section.setTitle(element.getTextTrim());
+				sectionTitleFlag = true;
 			}
 			//item
 			else if (element.getQualifiedName().equalsIgnoreCase("item")) {
@@ -447,13 +450,8 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					String licenseUrl = licenseElement.selectSingleNode( ".//imsmd:langstring").getText();
 					if(licenseUrl != null)
 						buildLicenseInformation(meleteResource,licenseUrl);
-					}
-					else
-					{
-						//default to no license
-						meleteResource.setLicenseCode(RESOURCE_LICENSE_CODE);
-						meleteResource.setCcLicenseUrl(RESOURCE_LICENSE_URL);
-					}
+						sectionCopyrightFlag = true;
+					}					
 				}
 			// license end
 		}
@@ -466,8 +464,16 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		section.setTextualContent(true);
 		section.setCreatedByFname(firstName);
 		section.setCreatedByLname(lastName);
-		section.setContentType("notype");
-
+		section.setContentType("notype");		
+		
+		if(!sectionTitleFlag)section.setTitle("Untitled Section");
+		
+		//default to no license
+		if(!sectionCopyrightFlag)
+		{		
+			meleteResource.setLicenseCode(RESOURCE_LICENSE_CODE);
+			meleteResource.setCcLicenseUrl(RESOURCE_LICENSE_URL);
+		}
 		// save section object
 		Integer new_section_id = sectionDB.addSection(module, section, true);
 		section.setSectionId(new_section_id);
@@ -477,7 +483,6 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		if (identifierref != null)
 		{
 			eleRes = getResource(identifierref.getValue(), document);
-
 			if (eleRes != null)
 			{				
 				Attribute resHrefAttr = eleRes.attribute("href");
