@@ -177,81 +177,81 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 //		create module object
 		Module module = new Module();
-		Element titleEle = (Element)eleItem.elements( "title" ).get(0);
-		if (titleEle != null)
+		boolean moduleTitleFlag = false;
+		if (eleItem.elements("title") != null && eleItem.elements("title").size() != 0)
 		{
-			String title = titleEle.getTextTrim();
-			if (title != null && title.length() !=0)module.setTitle(title);
-			else module.setTitle("Untitled Module");
+			Element titleEle = (Element) eleItem.elements("title").get(0);
+			if (titleEle != null)
+			{
+				String title = titleEle.getTextTrim();
+				if (title != null && title.length() != 0)
+				{
+					module.setTitle(title);
+					moduleTitleFlag = true;
+				}
+			}
 		}
-		else module.setTitle("Untitled Module");
+		if(!moduleTitleFlag) module.setTitle("Untitled Module");
+		
+		boolean keywords = false;
+		boolean descr = false;
+		if (eleItem.selectNodes("./imsmd:lom/imsmd:general") != null && eleItem.selectNodes("./imsmd:lom/imsmd:general").size() != 0)
+		{
+			Element generalElement = (Element) eleItem.selectNodes("./imsmd:lom/imsmd:general").get(0);
+			List moduleMetadataList = generalElement.elements();
+			for (Iterator iter = moduleMetadataList.iterator(); iter.hasNext();)
+			{				
+				Element metaElement = (Element) iter.next();
 
-		Element generalElement = (Element)eleItem.selectNodes("./imsmd:lom/imsmd:general").get(0);
-
-		List moduleMetadataList = generalElement.elements();
-		for (Iterator iter=moduleMetadataList.iterator();iter.hasNext();){
-
-            boolean keywords = false;
-            boolean descr = false;
-            Element metaElement = (Element) iter.next();
-
-            if (metaElement.getName().equals("description")){
-              String desc = metaElement.selectSingleNode( ".//imsmd:langstring").getText();
-              module.setDescription(desc.trim());
-              descr = true;
-            }
-            else
-            {
-              module.setDescription("     ");
-            }
-
-            if (metaElement.getName().equals("keyword")){
-              String modkeyword = metaElement.selectSingleNode( ".//imsmd:langstring").getText();
-              if(modkeyword !=null){
-                module.setKeywords(modkeyword.trim());
-                keywords = true;
-              }
-              else
-              {
-                module.setKeywords(module.getTitle());
-              }
-            }
-
-            if (!keywords)
-              module.setKeywords(module.getTitle());
-
-            if (!descr)
-              module.setDescription("    ");
-        }
-
+				if (metaElement.getName().equals("description"))
+				{
+					String desc = metaElement.selectSingleNode(".//imsmd:langstring").getText();
+					module.setDescription(desc.trim());
+					descr = true;
+				}
+				
+				if (metaElement.getName().equals("keyword"))
+				{
+					String modkeyword = metaElement.selectSingleNode(".//imsmd:langstring").getText();
+					if (modkeyword != null)
+					{
+						module.setKeywords(modkeyword.trim());
+						keywords = true;
+					}					
+				}				
+			}
+		}
+		if (!keywords) module.setKeywords(module.getTitle());
+		if (!descr) module.setDescription("    ");
 		createModule(module);
-		try{
-//		build sections
-		sectionUtil = new SubSectionUtilImpl();
-		seqDocument = sectionUtil.createSubSection4jDOM();
 
-		 for (Iterator iter = eleItem.elementIterator("item"); iter.hasNext();) {
-			Element element = (Element) iter.next();
-			if (element.attributeValue("identifier").startsWith("ITEM"))
+// 		build sections	
+		try
+		{
+			sectionUtil = new SubSectionUtilImpl();
+			seqDocument = sectionUtil.createSubSection4jDOM();
+
+			for (Iterator iter = eleItem.elementIterator("item"); iter.hasNext();)
 			{
-				logger.debug("import outside loop" + element.attributeValue("identifier"));
-				buildSection(element, document, module, addBlankSection(null));
+				Element element = (Element) iter.next();			
+				
+				if (element.attributeValue("identifier").startsWith("NEXTSTEPS"))
+					buildWhatsNext(element, document, module);
+				else buildSection(element, document, module, addBlankSection(null));
 			}
-//			next steps add by rashmi 05/03/06
-			else if (element.attributeValue("identifier").startsWith("NEXTSTEPS"))
-			{
-				buildWhatsNext(element,document,module);
-			}
+
+			// update module seqXml
+			logger.debug("checking seqXML now at the end of buildModule process" + seqDocument.asXML());
+			module.setSeqXml(seqDocument.asXML());
+			moduleDB.updateModule(module);
 		}
-
-	//update module seqXml
-		 logger.debug("checking seqXML now at the end of buildModule process" + seqDocument.asXML());
-		 module.setSeqXml(seqDocument.asXML());
-		 moduleDB.updateModule(module);
-		}catch(Exception e){e.printStackTrace();throw e;}
-if (logger.isDebugEnabled())
-	logger.debug("Exiting buildModule...");
-}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			throw e;
+		}
+		if (logger.isDebugEnabled()) logger.debug("Exiting buildModule...");
+	}
 
 	private Element addBlankSection(Element parentElement)
 	{
@@ -460,62 +460,61 @@ if (logger.isDebugEnabled())
 		// other attributes
 		logger.debug("setting section attribs");
 		String userId = UserDirectoryService.getCurrentUser().getEid();
-		String firstName = UserDirectoryService.getCurrentUser()
-				.getFirstName();
-		String lastName = UserDirectoryService.getCurrentUser()
-				.getLastName();
+		String firstName = UserDirectoryService.getCurrentUser().getFirstName();
+		String lastName = UserDirectoryService.getCurrentUser().getLastName();
 
 		section.setTextualContent(true);
 		section.setCreatedByFname(firstName);
 		section.setCreatedByLname(lastName);
 		section.setContentType("notype");
 
-//		 save section object
-		Integer new_section_id = sectionDB.addSection(module,section,true);
+		// save section object
+		Integer new_section_id = sectionDB.addSection(module, section, true);
 		section.setSectionId(new_section_id);
-		seqElement.addAttribute("id",new_section_id.toString());
+		seqElement.addAttribute("id", new_section_id.toString());
 
 		// now melete resource object
-		if (identifierref != null) {
+		if (identifierref != null)
+		{
 			eleRes = getResource(identifierref.getValue(), document);
-			if (eleRes != null) {
-				Attribute resTypeAttr = eleRes.attribute("type");
-				if (resTypeAttr != null
-						&& resTypeAttr.getValue().trim().equalsIgnoreCase(
-								"webcontent")) {
-					Attribute resHrefAttr = eleRes.attribute("href");
-					boolean refHrefValExis = false;
-					if (resHrefAttr != null) {
-						refHrefValExis = true;
-						String hrefVal = resHrefAttr.getValue();
 
-						//check if file is missing
-						if (hrefVal !=null && hrefVal.length() !=0 && !(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")))
+			if (eleRes != null)
+			{				
+				Attribute resHrefAttr = eleRes.attribute("href");
+				boolean refHrefValExis = false;
+				if (resHrefAttr != null)
+				{
+					refHrefValExis = true;
+					String hrefVal = resHrefAttr.getValue();
+
+					// check if file is missing
+					if (hrefVal != null && hrefVal.length() != 0
+							&& !(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")))
+					{
+						if (!checkFileExists(getUnzippeddirpath() + File.separator + hrefVal))
 						{
-							if (!checkFileExists(getUnzippeddirpath() + File.separator+ hrefVal))
-								{
-								logger.info("content file for section is missing so move ON");
-								return;
-								}
+							logger.info("content file for section is missing so move ON");
+							return;
 						}
-						// end missing file check
+					}
+					// end missing file check
 
-						//create meleteResourceObject
-						List resElements = eleRes.elements();
-						createContentResource(module,section,meleteResource, hrefVal,resElements);
+					// create meleteResourceObject
+					List resElements = eleRes.elements();
+					createContentResource(module, section, meleteResource, hrefVal, resElements);
 
-						} // resHrefAttr check end
-				} // webcontent check end
+				} // resHrefAttr check end
 			}
 		}
 
-		if (logger.isDebugEnabled())
-			logger.debug("Exiting buildSection...");
+		if (logger.isDebugEnabled()) logger.debug("Exiting buildSection...");
 	}
 
 	/**
 	 * creates section dependent file
-	 * @param hrefVal href value of the item
+	 * 
+	 * @param hrefVal
+	 *        href value of the item
 	 */
 	private String uploadSectionDependentFile(String hrefVal, String courseId, boolean imsImport) {
 		try {
@@ -809,11 +808,8 @@ if (logger.isDebugEnabled())
 		if (logger.isDebugEnabled())
 			logger.debug("Exiting createSection...");
 	}
-
-	/**
-	 * gets the resource element
-	 * @param resName resource name
-	 * @param document document
+	
+	/* @param document document
 	 * @return resource element
 	 * @throws Exception
 	 */
@@ -1027,19 +1023,8 @@ if (logger.isDebugEnabled())
 	public void copyModules(String fromContext, String toContext)
 	{
 		//Copy the uploads collection
-	/*	String fromColl = Entity.SEPARATOR+"private"+Entity.SEPARATOR+"meleteDocs"+Entity.SEPARATOR+fromContext+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR;
-		String toColl = Entity.SEPARATOR+"private"+Entity.SEPARATOR+"meleteDocs"+Entity.SEPARATOR+toContext;
-
-		getMeleteCHService().addCollectionToMeleteCollection(toColl+"/uploads/", "uploads");
-  	    	 ContentCollection toCollection = null;
-  	    	toCollection = getMeleteCHService().getCollection(toColl+"/uploads/");
-  	   		if ((toCollection == null)||(toCollection.getMemberResources().size() == 0))
-  	   		{
-  	   			getMeleteCHService().copyIntoFolder(fromColl, toColl);
-  	   		}*/
-  	    	//Begin import process
-		    this.destinationContext = toContext;
-  	    	buildModules(fromContext, toContext);
+	    this.destinationContext = toContext;
+  	   	buildModules(fromContext, toContext);
 	}
 
 	private void buildModules(String fromContext, String toContext)
@@ -1225,10 +1210,7 @@ if (logger.isDebugEnabled())
 	{
 		this.destinationContext = destinationContext;
 	}
-
-	/**
-	 * @param moduleDB The moduleDB to set.
-	 */
+	
 	public void setModuleDB(ModuleDB moduleDB) {
 		this.moduleDB = moduleDB;
 	}
