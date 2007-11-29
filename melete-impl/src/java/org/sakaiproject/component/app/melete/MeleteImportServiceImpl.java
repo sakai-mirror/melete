@@ -134,34 +134,136 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	 * @param unZippedDirPath unZipped fiels Directory Path
 	 * @exception throws exception
 	 */
-	public void parseAndBuildModules(Document document, String unZippedDirPath) throws Exception {
-		if (logger.isDebugEnabled())
-			logger.debug("Entering parseAndBuildModules");
+	public void parseAndBuildModules(Document document, String unZippedDirPath) throws Exception
+	{
+		if (logger.isDebugEnabled()) logger.debug("Entering parseAndBuildModules");
 		setUnzippeddirpath(unZippedDirPath);
 		setDestinationContext(ToolManager.getCurrentPlacement().getContext());
 		Map uris = new HashMap();
 		uris.put("imscp", DEFAULT_NAMESPACE_URI);
 		uris.put("imsmd", IMSMD_NAMESPACE_URI);
 
-		//organizations
-		XPath xpath = document
-				.createXPath("/imscp:manifest/imscp:organizations/imscp:organization");
-		xpath.setNamespaceURIs(uris);
+		try
+		{
+			// organizations
+			XPath xpath = document.createXPath("/imscp:manifest/imscp:organizations/imscp:organization");
+			xpath.setNamespaceURIs(uris);
 
-		Element eleOrg = (Element) xpath.selectSingleNode(document);
+			Element eleOrg = (Element) xpath.selectSingleNode(document);
 
-		//build module
-		//loop thru organization elements - item elements
-		List elements = eleOrg.elements();
-		for (Iterator iter = elements.iterator(); iter.hasNext();) {
-			Element element = (Element) iter.next();
-			buildModule(element, document);
+			// build module
+			// loop thru organization elements - item elements
+			List elements = eleOrg.elements();
+			for (Iterator iter = elements.iterator(); iter.hasNext();)
+			{
+				Element element = (Element) iter.next();
+				buildModule(element, document);
+			}
+		}
+		catch (Exception e)
+		{
+			// no organization tag so create one flat module
+			buildFlatModule(document);
 		}
 
-		if (logger.isDebugEnabled())
-			logger.debug("Exiting parseAndBuildModules");
+		if (logger.isDebugEnabled()) logger.debug("Exiting parseAndBuildModules");
 	}
 
+	/*
+	 * Builds one big module and each resource element becomes a section
+	 */
+	  private void buildFlatModule(Document document) throws Exception
+	  {
+		  if (logger.isDebugEnabled())
+				logger.debug("Entering buildFlatModule..." );
+
+//			create module object
+			Module module = new Module();
+			module.setTitle("Untitled Module");
+			module.setKeywords("Untitled Module");
+			module.setDescription("    ");
+			createModule(module);
+			
+			// read all resources tag and create section
+			Map uris = new HashMap();
+			uris.put("imscp", DEFAULT_NAMESPACE_URI);
+			uris.put("imsmd", IMSMD_NAMESPACE_URI);
+			
+			// resources
+			XPath xpath = document.createXPath("/imscp:manifest/imscp:resources");
+			xpath.setNamespaceURIs(uris);
+
+			Element eleAllResources = (Element) xpath.selectSingleNode(document);
+			
+			sectionUtil = new SubSectionUtilImpl();
+			seqDocument = sectionUtil.createSubSection4jDOM();
+			
+			// build section
+			// loop thru resources elements - resource elements
+			List elements = eleAllResources.elements();
+			for (Iterator iter = elements.iterator(); iter.hasNext();)
+			{
+				Element eleRes = (Element) iter.next();
+				Section section = buildDefaultSection(module,addBlankSection(null));
+				
+				MeleteResource meleteResource= new MeleteResource();
+				//default to no license
+				meleteResource.setLicenseCode(RESOURCE_LICENSE_CODE);
+				meleteResource.setCcLicenseUrl(RESOURCE_LICENSE_URL);
+				
+				Attribute resHrefAttr = eleRes.attribute("href");
+				
+				if (resHrefAttr != null)
+				{
+					String hrefVal = resHrefAttr.getValue();
+
+					// check if file is missing
+					if (hrefVal != null && hrefVal.length() != 0
+							&& !(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")))
+					{
+						if (!checkFileExists(getUnzippeddirpath() + File.separator + hrefVal))
+						{
+							logger.info("content file for section is missing so move ON");
+							return;
+						}
+					}
+					// end missing file check
+					
+					List resElements = eleRes.elements();
+					createContentResource(module, section, meleteResource, hrefVal, resElements);
+
+				} // resHrefAttr check end
+			}
+			// update module seqXml
+			logger.debug("checking seqXML now at the end of buildModule process" + seqDocument.asXML());
+			module.setSeqXml(seqDocument.asXML());
+			moduleDB.updateModule(module);
+	  }
+	  
+	  /*
+	   * build default section without reading ims item element
+	   */
+	  private Section buildDefaultSection(Module module, Element sectionElement) throws Exception
+	  {
+		  	String userId = UserDirectoryService.getCurrentUser().getEid();
+			String firstName = UserDirectoryService.getCurrentUser().getFirstName();
+			String lastName = UserDirectoryService.getCurrentUser().getLastName();
+
+			Section section = new Section(); 
+			section.setTextualContent(true);
+			section.setCreatedByFname(firstName);
+			section.setCreatedByLname(lastName);
+			section.setContentType("notype");		
+			section.setTitle("Untitled Section");			
+			
+			// save section object
+			Integer new_section_id = sectionDB.addSection(module, section, true);
+			section.setSectionId(new_section_id);
+			sectionElement.addAttribute("id", new_section_id.toString());
+			
+			return section;
+	  }
+	  
 	/**
 	 * Builds the module for each Item element under organization
 	 *
@@ -486,10 +588,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			if (eleRes != null)
 			{				
 				Attribute resHrefAttr = eleRes.attribute("href");
-				boolean refHrefValExis = false;
+		
 				if (resHrefAttr != null)
 				{
-					refHrefValExis = true;
 					String hrefVal = resHrefAttr.getValue();
 
 					// check if file is missing
