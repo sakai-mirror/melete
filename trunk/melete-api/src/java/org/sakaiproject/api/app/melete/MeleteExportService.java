@@ -98,7 +98,7 @@ public interface MeleteExportService{
 	 * @throws Exception
 	 */
 	public List generateOrganizationResourceItems(List modDateBeans,
-			File packagedir) throws Exception;
+			File packagedir, String title) throws Exception;
 
 	/**
 	 * creates file from input path to output path
@@ -112,11 +112,6 @@ public interface MeleteExportService{
 	 * deletes the file and its children
 	 * @param delfile - file to be deleted
 	 */
-	public void deleteFiles(File delfile);
-		
-	// remove after migrateProgram
-	public boolean checkFileExists(String filePath);
-	public String replace(String s, String one, String another);
-	public byte[] readFromFile(File contentfile) throws Exception;
+	public void deleteFiles(File delfile);		
 	
 }

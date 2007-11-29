@@ -54,10 +54,13 @@
         <property name="sectionService">
             <ref local="org.sakaiproject.api.app.melete.SectionService" />
         </property>	
-         <property name="meleteExportService">
+      <!--     <property name="meleteExportService">
             <ref local="org.sakaiproject.api.app.melete.MeleteExportService" />
-        </property> 
+        </property>-->
+                
 	</bean>	
+	
+	
 	
 		<bean id="org.sakaiproject.component.app.melete.MeleteLicenseDB"
 			class="org.sakaiproject.component.app.melete.MeleteLicenseDB"
@@ -102,7 +105,7 @@
 	</bean>
 	
 
-	<!--import export-->
+	<!--import export -->
 	<bean id="org.sakaiproject.api.app.melete.MeleteExportService"
 			class="org.sakaiproject.component.app.melete.MeleteExportServiceImpl"
 			init-method="init"
@@ -118,6 +121,24 @@
             <ref local="org.sakaiproject.component.app.melete.MeleteLicenseDB" />
         </property>
 	</bean>
+	
+	<!--import export class="org.sakaiproject.component.app.melete.MeleteExportServiceImpl"-->
+	<bean id="MeleteExportScormService"
+			class="org.sakaiproject.component.app.melete.MeleteScormExportServiceImpl"
+			init-method="init"
+			destroy-method="destroy"
+			singleton="true">
+	<property name="sectionDB">
+            <ref local="org.sakaiproject.component.app.melete.SectionDB" />
+        </property>      
+        <property name="meleteCHService">
+            <ref local="org.sakaiproject.api.app.melete.MeleteCHService" />
+        </property>
+        <property name="meleteLicenseDB">
+            <ref local="org.sakaiproject.component.app.melete.MeleteLicenseDB" />
+        </property>
+	</bean>
+	
 	
 	<bean id="org.sakaiproject.api.app.melete.MeleteImportService"
 			class="org.sakaiproject.component.app.melete.MeleteImportServiceImpl"

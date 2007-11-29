@@ -61,6 +61,7 @@ import org.sakaiproject.api.app.melete.MeleteCHService;
 import org.sakaiproject.api.app.melete.SectionObjService;
 import org.sakaiproject.api.app.melete.SectionService;
 import org.sakaiproject.api.app.melete.MeleteExportService;
+import org.sakaiproject.component.app.melete.MeleteUtil;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.component.app.melete.MeleteResource;
 import org.apache.commons.logging.Log;
@@ -97,6 +98,7 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 	private List modules = null;
 	private Module module = null;
 	private ModuleDateBean mdBean = null;
+	private MeleteUtil meleteUtil;
 
 	private static String dtdLocation;
 
@@ -638,11 +640,12 @@ public void restoreModules(List modules) throws Exception
 						    {
 							  if (contentType.equals("typeEditor"))
 							  {
-								processSection = meleteExportService.checkFileExists(rs.getString("content_path"));
+								//processSection = meleteExportService.checkFileExists(rs.getString("content_path"));
+								processSection = meleteUtil.checkFileExists(rs.getString("content_path"));
 							  }
 							  if (contentType.equals("typeUpload"))
 							  {
-								processSection = meleteExportService.checkFileExists(rs.getString("upload_path"));
+								processSection = meleteUtil.checkFileExists(rs.getString("upload_path"));
 							  }
 						    }
 
@@ -655,7 +658,7 @@ public void restoreModules(List modules) throws Exception
    	          				   //Use the info above to create resources for sections
    	          				if (contentType.equals("typeEditor"))
    	          				{
-   	          				  contentEditor = new String(meleteExportService.readFromFile(new File(rs.getString("content_path"))));
+   	          				  contentEditor = new String(meleteUtil.readFromFile(new File(rs.getString("content_path"))));
    	          				  //replace image path and create image files
    	          				  //Need to get homeDirpath
   							  contentEditor = replaceImagePath(meleteDocsDir,contentEditor,courseId);
@@ -716,7 +719,7 @@ public void restoreModules(List modules) throws Exception
       	          				  if (contentType.equals("typeUpload"))
       	          				  {
       	          				    secContentData = new byte[(int)fi.length()];
-      	          				    secContentData = meleteExportService.readFromFile(new File(rs.getString("upload_path")));
+      	          				    secContentData = meleteUtil.readFromFile(new File(rs.getString("upload_path")));
       	          				    if (logger.isDebugEnabled()) logger.debug("Secresourcename is "+secResourceName);
       	                            if (logger.isDebugEnabled()) logger.debug("upload section content data " + (int)fi.length());
       	                            String file_mime_type = secResourceName.substring(secResourceName.lastIndexOf(".")+1);
@@ -971,7 +974,7 @@ public void restoreModules(List modules) throws Exception
 				        {
  	                    	 // read data
  	                    	 byte[] data = null;
- 	                    	 boolean fileExists = meleteExportService.checkFileExists(meleteDocsDir+imgLoc);
+ 	                    	 boolean fileExists = meleteUtil.checkFileExists(meleteDocsDir+imgLoc);
  	                    	 if (fileExists)
  	                    	 {	 
  				               try{
@@ -1075,7 +1078,7 @@ public void restoreModules(List modules) throws Exception
 						{
 							replaceStr = replaceStr.replace(ServerConfigurationService.getServerUrl(), "");
 						}
-						modifiedSecContent = meleteExportService.replace(modifiedSecContent,patternStr, replaceStr);
+						modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replaceStr);
 					   }	
 
 					}
@@ -1171,8 +1174,8 @@ public void restoreModules(List modules) throws Exception
 	 * @param meleteExportService
 	 *
 	 */
-	public void setMeleteExportService(
-			MeleteExportService meleteExportService) {
-		this.meleteExportService = meleteExportService;
-	}
+//	public void setMeleteExportService(
+//			MeleteExportService meleteExportService) {
+//		this.meleteExportService = meleteExportService;
+//	}
 }
