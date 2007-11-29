@@ -53,6 +53,11 @@ The settings below need to be performed in the /melete-app/src/webapp/WEB-INF/we
 		     <param-name>packagingdir</param-name>
 		     <param-value>/var/melete/packagefiles</param-value>
 	      </context-param>		    
+        <!-- Settings for scorm packaging directory --> 
+        <context-param>
+		     <param-name>packagingscormdir</param-name>
+		     <param-value>/var/melete/packagefiles/packagefilesscorm</param-value>
+	      </context-param>		    
 		
 4. Max Upload size for IMS import file
 	By setting this sakai property, system administrators can set a different file upload 

@@ -98,6 +98,48 @@ function showprocessMsg()
 									</div>
 								</td>
 				    		</tr>
+				    		
+				    		
+				    		
+				    		
+				    		
+				    		<tr>
+		  						<th class="leftheader maintabledata5 style4" colspan="2" height="20"><h:outputText value="#{msgs.importexportmodules_exportscorm_modules}" /></th>
+		  					</tr>
+                  			<tr>
+                   				<td colspan="2" class="maintabledata3"><h:outputText value="#{msgs.importexportmodulesscorm_message}" /></td>
+                   				
+                  			</tr>                  			
+                  			<tr>
+                    			<td colspan="2" class="maintabledata3">&nbsp;</td>
+                    		</tr>
+                    		
+                    		<tr>
+                    			<td colspan="2" class="maintabledata7">
+									<div align="center">
+										<h:commandLink id="exportModuleScorm"  action="#{exportMeleteModules.exportScormModules}" >
+											<h:graphicImage id="exportModuleScormImg" value="#{msgs.im_export}" styleClass="BottomImgSpace" 
+											onmouseover="this.src = '#{msgs.im_export_over}'" 
+											onmouseout="this.src = '#{msgs.im_export}'" 
+											onmousedown="this.src = '#{msgs.im_export_down}'" 
+						   				  	onmouseup="this.src = '#{msgs.im_export_over}'"/>
+                						</h:commandLink>
+										<h:commandLink id="cancelScorm"  action="#{manageModulesPage.cancel}" immediate="true">
+											<h:graphicImage id="cancelScormImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
+											onmouseover="this.src = '#{msgs.im_cancel_over}'" 
+											onmouseout="this.src = '#{msgs.im_cancel}'" 
+											onmousedown="this.src = '#{msgs.im_cancel_down}'" 
+						   				  	onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
+                						</h:commandLink>
+									</div>
+								</td>
+				    		</tr>
+				    		
+				    		
+				    		
+				    		
+				    		
+				    		
                   			
 			  				<tr>
 			  					<th class="leftheader maintabledata5 style4" colspan="2" height="20"><h:outputText value="#{msgs.importexportmodules_import_ims}" /></th>
