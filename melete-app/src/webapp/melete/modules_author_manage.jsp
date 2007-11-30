@@ -74,10 +74,10 @@
 									   							alt="#{msgs.modules_author_manage_import_export}"
 									   							url="images/import1.gif"
 									   							styleClass="AuthImgClass"/>
-									   							<h:outputText id="import" value="#{msgs.modules_author_manage_export_import}" />
+									   							<h:outputText id="import" value="#{msgs.modules_author_manage_import_export}" />
 														</h:commandLink>
 							                    	</td>
-							                    	<td  align="left"><h:outputText value="#{msgs.modules_author_manage_export_import_modules}" /></td>
+							                    	<td  align="left"><h:outputText value="#{msgs.modules_author_manage_import_export_modules}" /></td>
 							                  	</tr>							                  	
 
 						              		</table>
