@@ -94,9 +94,7 @@ function showprocessMsg()
                 					<h:outputLabel id="processmsg" value="Processing..." styleClass="orange" style="visibility:hidden" /> 	     						                					
 								</td>
               				</tr>
-			  				<tr>
-			  					<td class="maintabledata5" colspan="2">&nbsp;</td>
-			  				</tr>
+			  				
 		  					<tr>
 		  						<th class="leftheader maintabledata5 style4" colspan="2" height="20"><h:outputText value="#{msgs.importexportmodules_export_modules}" /></th>
 		  					</tr>
