@@ -58,6 +58,45 @@ function showprocessMsg()
 						<!-- main page contents -->
 						<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/></br>
 						<table border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse" width="100%" id="AutoNumber1">
+						<tr>
+			  					<th class="leftheader maintabledata5 style4" colspan="2" height="20"><h:outputText value="#{msgs.importexportmodules_import_ims}" /></th>
+			  				</tr>
+                  			<tr>
+                    			<td colspan="2" class="maintabledata3"><h:outputText value="#{msgs.importexportmodules_message2}" /></td>
+                  			</tr>
+                  			<tr>
+                    			<td colspan="2" class="maintabledata3">
+                    				<h:outputText value="#{msgs.importexportmodules_upload_ims}" />
+                    				<input type="file" name="impfile" class="formtext">
+                    			</td>
+                  			</tr>
+                  			<tr>
+                  				<td colspan="2" class="maintabledata3">&nbsp;</td>
+                  			</tr>
+                  			<tr>
+                    			<td colspan="2" class="maintabledata7">
+	                    			<div align="center">
+										<h:commandLink id="importModule"  action="#{exportMeleteModules.importModules}" >
+											<h:graphicImage id="importModuleImg" value="#{msgs.im_import}" styleClass="BottomImgSpace" onclick="showprocessMsg()"
+											onmouseover="this.src = '#{msgs.im_import_over}'" 
+											onmouseout="this.src = '#{msgs.im_import}'" 
+											onmousedown="this.src = '#{msgs.im_import_down}'" 
+						   				  	onmouseup="this.src = '#{msgs.im_import_over}'"/>
+                						</h:commandLink>
+										<h:commandLink id="importcancel"  action="#{manageModulesPage.cancel}" immediate="true">
+											<h:graphicImage id="importcancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
+											onmouseover="this.src = '#{msgs.im_cancel_over}'" 
+											onmouseout="this.src = '#{msgs.im_cancel}'" 
+											onmousedown="this.src = '#{msgs.im_cancel_down}'" 
+						   				  	onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
+                						</h:commandLink>           
+                					</div>	
+                					<h:outputLabel id="processmsg" value="Processing..." styleClass="orange" style="visibility:hidden" /> 	     						                					
+								</td>
+              				</tr>
+			  				<tr>
+			  					<td class="maintabledata5" colspan="2">&nbsp;</td>
+			  				</tr>
 		  					<tr>
 		  						<th class="leftheader maintabledata5 style4" colspan="2" height="20"><h:outputText value="#{msgs.importexportmodules_export_modules}" /></th>
 		  					</tr>
@@ -134,52 +173,16 @@ function showprocessMsg()
 									</div>
 								</td>
 				    		</tr>
-				    		
+				            <tr>
+			  					<td class="maintabledata5" colspan="2">&nbsp;</td>
+			  				</tr>		
 				    		
 				    		
 				    		
 				    		
 				    		
                   			
-			  				<tr>
-			  					<th class="leftheader maintabledata5 style4" colspan="2" height="20"><h:outputText value="#{msgs.importexportmodules_import_ims}" /></th>
-			  				</tr>
-                  			<tr>
-                    			<td colspan="2" class="maintabledata3"><h:outputText value="#{msgs.importexportmodules_message2}" /></td>
-                  			</tr>
-                  			<tr>
-                    			<td colspan="2" class="maintabledata3">
-                    				<h:outputText value="#{msgs.importexportmodules_upload_ims}" />
-                    				<input type="file" name="impfile" class="formtext">
-                    			</td>
-                  			</tr>
-                  			<tr>
-                  				<td colspan="2" class="maintabledata3">&nbsp;</td>
-                  			</tr>
-                  			<tr>
-                    			<td colspan="2">
-	                    			<div align="center">
-										<h:commandLink id="importModule"  action="#{exportMeleteModules.importModules}" >
-											<h:graphicImage id="importModuleImg" value="#{msgs.im_import}" styleClass="BottomImgSpace" onclick="showprocessMsg()"
-											onmouseover="this.src = '#{msgs.im_import_over}'" 
-											onmouseout="this.src = '#{msgs.im_import}'" 
-											onmousedown="this.src = '#{msgs.im_import_down}'" 
-						   				  	onmouseup="this.src = '#{msgs.im_import_over}'"/>
-                						</h:commandLink>
-										<h:commandLink id="importcancel"  action="#{manageModulesPage.cancel}" immediate="true">
-											<h:graphicImage id="importcancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
-											onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-											onmouseout="this.src = '#{msgs.im_cancel}'" 
-											onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						   				  	onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-                						</h:commandLink>           
-                					<h:outputLabel id="processmsg" value="Processing..." styleClass="orange" style="visibility:hidden" /> 	     						                					
-									</div>	
-								</td>
-              				</tr>
-			  				<tr>
-			  					<td class="maintabledata5" colspan="2">&nbsp;</td>
-			  				</tr>
+			  				
 			  
 			  
            				</table>
