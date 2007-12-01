@@ -1,11 +1,11 @@
 INSTRUCTIONS TO UPGRADE FROM MELETE 2.3m2 >> MELETE 2.4
-For Sakai 2.4 OR a patched Sakai 2.3.x
+For a patched Sakai 2.3 OR Sakai 2.4
 -----------------------------------------------------
 SETUP INSTRUCTIONS
 
 1. Patch Instructions
-2. Melete Source
-3. Configuring Melete  
+2. Configuring Melete  
+3. Upload size settings for IMS import file
 4. Configuring Sferyx Editor (Optional)
 5. Oracle Code Configuration
 6. Compile Melete 
@@ -30,19 +30,11 @@ SETUP INSTRUCTIONS
 	
 	Instructions for running the path are in /patch/patch-SAK2.4_for_melete2.4.txt.	
 	
-2. Melete Source
-
-Melete is a lesson builder tool for Sakai (A.K.A. Modules). All the source code for the release is included in the .tar.gz and .zip files. To work with Melete source, you need the same development environment as Sakai, essentially Java 1.4 and Maven 1.0.2.
-
-	2.1. Make a backup of your existing Melete2.3m2 directory!
-
-	2.2. Unzip the melete 2.4 source code zip file and place the melete source under Sakai.
-	
-3. Configuring Melete 2.4 
+2. Configuring Melete 2.4 
 
     The settings below need to be performed in the /melete-app/src/webapp/WEB-INF/web.xml file.
 
-    3.1. Packagingdir settings
+    2.1. Packagingdir settings
 	
 	The dependency files for the export process are in the /melete/packagefiles directory in the melete source code. Copy the /melete directory and its contents into a directory. Ensure that this directory and its children have read and write permissions. Specify the absolute path to this directory in web.xml. 
 	
@@ -52,9 +44,14 @@ Melete is a lesson builder tool for Sakai (A.K.A. Modules). All the source code 
         <context-param>
 		     <param-name>packagingdir</param-name>
 		     <param-value>/var/melete/packagefiles</param-value>
+	      </context-param>	
+	       <!-- Settings for scorm packaging directory --> 
+        <context-param>
+		     <param-name>packagingscormdir</param-name>
+		     <param-value>/var/melete/packagefiles/packagefilesscorm</param-value>
 	      </context-param>		
 	      
-   3.2. Meletedocs settings
+   2.2. Meletedocs settings
             
 	Specify the absolute path to your current meleteDocs directory in the meleteDocsDir 
 	parameter of web.xml.
@@ -66,8 +63,16 @@ Melete is a lesson builder tool for Sakai (A.K.A. Modules). All the source code 
         <context-param>
 				 <param-name>meleteDocsDir</param-name>
 				 <param-value>/var/meleteDocs</param-value>
-		</context-param>	      
-		
+		</context-param>
+			      
+3. Upload size settings for IMS import file
+	
+	By setting this sakai property, system administrators can set a different file upload 
+	limit for Melete IMS CP import than the upload max limit for content files. If this 
+	property is not set, then melete assumes the max value as 50MB.
+
+	content.upload.ceiling=50		
+	
 4. Configuring Commercial Sferyx Editor (Optional)
 
                        ***** BEGIN OPTIONAL STEP ******
@@ -169,7 +174,9 @@ Melete is a lesson builder tool for Sakai (A.K.A. Modules). All the source code 
 		ALTER TABLE melete_module DROP COLUMN LICENSE_CODE;
 		DROP TABLE melete_module_license;
 	
-	    
+        NOTE: Melete stores content in the database tables as well as in the /private/meleteDocs folder in ContentHosting. 
+        Through Melete, users only have access to the /private/meleteDocs folder and not other parts of Resources.
+		    
 	
 8. Run migrate process 
 
@@ -186,7 +193,7 @@ This is a MANDATORY step. The migrate process moves Melete content that currentl
 	from the filesystem to contentHosting for all courses. Upon successful completion, 
 	you will see a message saying the process has completed. 
 
-	8.4. The melete.migrate property can now be removed from sakai.properties. 
+	8.4. Upon successful migration, please remove the melete.migrate property from sakai.properties.
    
    Troubleshooting:
    
@@ -203,3 +210,6 @@ This is a MANDATORY step. The migrate process moves Melete content that currentl
    
    Now, the process may be restarted by following the instructions above. The process 
    will restart from scratch and migrate content from the filesystem to contentHosting.
+
+For future development, tutorials and solutions to common setup problems, see:
+http://etudesproject.org/melete.htm   
