@@ -36,8 +36,8 @@ SETUP INSTRUCTIONS
 
     2.1. Packagingdir settings
 	
-	The dependency files for the export process are in the /melete/packagefiles directory in the melete source code. Copy the /melete directory and its contents into a directory. Ensure that this directory and its children have read and write permissions. Specify the absolute path to this directory in web.xml. 
-	
+	The dependency files for the export process are in the /var/melete/packagefiles directory in the Melete source code.
+    Copy the /var directory and its contents into a directory. 
 	Eg. If you are on unix/linux, and your packaging directory path is /var/melete/packagefiles, specify this in the following manner in web.xml
                
         <!-- Settings for packaging directory --> 
