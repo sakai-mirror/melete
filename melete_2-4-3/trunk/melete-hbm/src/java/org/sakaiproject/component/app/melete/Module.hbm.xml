@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.sakaiproject.component.app.melete.Module" table="melete_module"><!--dynamic-update="true"-->
+    <id name="moduleId" column="MODULE_ID" type="int" unsaved-value="null">
+      <generator class="hilo"/>
+    </id>
+    <version name="version" column="VERSION" />
+     <property name="title" column="TITLE" type="string"  length="50" not-null="true"/>
+	<property name="learnObj" column="LEARN_OBJ"  type="text"/>		
+	<!--size 500-->
+	<property name="description" column="DESCRIPTION"  type="text"  />				
+	<!--size 700-->
+	<property name="keywords" column="KEYWORDS" type="string"  length="250" not-null="true"/>
+	<property name="createdByFname" column="CREATED_BY_FNAME" type="string"  length="50" not-null="true" />
+	<property name="createdByLname" column="CREATED_BY_LNAME" type="string"   length="50" not-null="true"/>
+   <property name="userId" column="USER_ID" type="string"   length="99" not-null="true"/>	
+	<property name="modifiedByFname" column="MODIFIED_BY_FNAME" type="string"  length="50"/>
+	<property name="modifiedByLname" column="MODIFIED_BY_LNAME" type="string"   length="50" />
+	<property name="institute" column="INSTITUTE" type="string" length="50" />							
+		
+	<!--make sure if timestamp is correct-->
+	<property name="whatsNext" column="WHATS_NEXT"  type="text"  />						
+	<!--size 500-->
+	<property name="creationDate"  column="CREATION_DATE"  type="timestamp"  not-null="true"/>			
+	<property name="modificationDate"  column="MODIFICATION_DATE"  type="timestamp" />
+       <property name="seqXml" column="SEQ_XML"  type="text"  />										
+	<!--add url reference to cc_license_url at some point-->
+<!--<list name="sections" cascade="all-delete-orphan" table="melete_section" inverse="true" lazy="false" where="DELETE_FLAG=0">
+-->
+<!--lazy="true" -->
+	<!-- <key column="MODULE_ID" foreign-key="MODULE_ID_SEC"/>
+	 <list-index column="SEQ_NO" base="-1"></list-index>
+	  
+	<one-to-many class="org.sakaiproject.component.app.melete.Section"/>
+	</list>	-->
+	<map name="sections" cascade="all-delete-orphan" table="melete_section" inverse="true" lazy="false" where="DELETE_FLAG=0" sort="natural">
+	  <key column="MODULE_ID" foreign-key="MODULE_ID_SEC"/>
+	  <map-key column="SECTION_ID" type="int"/>
+	  <one-to-many class="org.sakaiproject.component.app.melete.Section"/>
+	
+	</map>
+
+	<!--<set name="moduleshdates" cascade="all-delete-orphan" inverse="true">
+	 <key column="MODULE_ID" foreign-key="MODULE_ID"></key>
+	<one-to-many class="org.sakaiproject.component.app.melete.ModuleShdates"/>
+	</set>	-->
+	
+	<one-to-one name="moduleshdate" class="org.sakaiproject.component.app.melete.ModuleShdates" lazy="false"/>
+
+	<set name="modulestudentprivs" cascade="all-delete-orphan" inverse="true" lazy="false">
+	 <key column="MODULE_ID" foreign-key="MODULE_ID"></key>
+	<one-to-many class="org.sakaiproject.component.app.melete.ModuleStudentPrivs"/>
+	</set>
+
+	<!--<set name="coursemodules" cascade="all-delete-orphan" inverse="true">
+	 <key column="MODULE_ID" foreign-key="MODULE_ID"></key>
+	<one-to-many class="org.sakaiproject.component.app.melete.CourseModule"/>
+	</set>-->
+	
+	<one-to-one name="coursemodule" class="org.sakaiproject.component.app.melete.CourseModule"/>
+
+</class>
+</hibernate-mapping>
+
+
+
