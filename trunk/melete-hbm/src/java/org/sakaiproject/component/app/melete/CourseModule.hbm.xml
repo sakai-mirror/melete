@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.sakaiproject.component.app.melete.CourseModule" table="melete_course_module">
+   <!-- <composite-id>-->
+     	
+<!--      <key-many-to-one name="course" class="org.sakaiproject.component.melete.Course" column="COURSE_ID" />-->
+      <!--<key-many-to-one name="module" class="org.sakaiproject.component.app.melete.Module" column="MODULE_ID" />-->
+      <!--<key-property name="module" column="MODULE_ID" type="int" length="11"/>
+      
+      </composite-id>-->
+   <id name="moduleId" column="MODULE_ID" type="int"  unsaved-value="null">
+         <generator class="foreign">
+           <param name="property">module</param>
+           </generator>
+    </id>      
+   <property name="courseId" column="COURSE_ID" type="string" length="99"/>
+   <property name="seqNo" column="SEQ_NO"  type="int"  length="2" not-null="true"/>
+   <property name="archvFlag" column="ARCHV_FLAG" type="boolean" />
+   <property name="dateArchived"  column="DATE_ARCHIVED"  type="timestamp"  />
+   <property name="deleteFlag" column="DELETE_FLAG" type="boolean" />		
+	
+   <one-to-one name="module" class="org.sakaiproject.component.app.melete.Module" constrained="true" lazy="false"/>
+	 </class>
+ </hibernate-mapping>
+	 
+	 
