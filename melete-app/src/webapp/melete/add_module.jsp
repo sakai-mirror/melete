@@ -26,8 +26,11 @@ function showSdateCal()
 {
   var string2 = "AddModuleForm:startDate";
   //alert(string2);
-
- var dt = new Date(document.getElementById(string2).value);
+  var string2val = document.getElementById(string2).value;
+  var dt;
+    if((null == string2val) || (string2val.length == 0)) dt = new Date();
+  else dt = new Date(document.getElementById(string2).value);
+  
    if (!isNaN(dt))
   { 
     var cal2 = new calendar2(document.getElementById(string2));
@@ -44,7 +47,12 @@ function showEdateCal()
 {
   var string2 = "AddModuleForm:endDate";
   //alert(string2);
- var dt = new Date(document.getElementById(string2).value);
+  // var dt = new Date(document.getElementById(string2).value);
+  var string2val = document.getElementById(string2).value;
+  var dt;
+    if((null == string2val) || (string2val.length == 0)) dt = new Date();
+  else dt = new Date(document.getElementById(string2).value);
+  
    if (!isNaN(dt))
   { 
     var cal2 = new calendar2(document.getElementById(string2));
