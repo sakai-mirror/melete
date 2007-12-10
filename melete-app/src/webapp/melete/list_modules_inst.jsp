@@ -126,7 +126,7 @@
            </h:column>
             <h:column>
                <h:outputText id="endDate0" 
-                           value="-"    rendered="#{((mdbean.moduleShdate.hideFlag == false)&&((mdbean.moduleShdate.endDate == listModulesPage.nullDate)||(mdbean.moduleShdate.startDate <= listModulesPage.currentTimestamp))&&((mdbean.moduleShdate.endDate == listModulesPage.nullDate)||(mdbean.moduleShdate.endDate >= listModulesPage.currentTimestamp)))}">
+                           value="-"    rendered="#{((mdbean.moduleShdate.hideFlag == false)&&(mdbean.moduleShdate.endDate == listModulesPage.nullDate)}">
               <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>
               <h:outputText id="endDate"
@@ -139,8 +139,7 @@
                              rendered="#{((mdbean.moduleShdate.hideFlag == false)&&((mdbean.moduleShdate.startDate > listModulesPage.currentTimestamp)||(mdbean.moduleShdate.endDate < listModulesPage.currentTimestamp)))}">      
                <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>            
-        </h:column>
-    
+        </h:column>   
           
     </h:dataTable>   
       <h:messages showDetail="true" showSummary="false" rendered="#{listModulesPage.nomodsFlag == true}" style="text-align:left"/>      
