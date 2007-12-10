@@ -13,7 +13,7 @@
 <f:view>
 <body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
 <a name="newanchor"></a>
-<h:form id="viewsectionform">       
+<h:form id="viewNSsectionform">       
 <table height="470" border="0" cellpadding="20"  width="100%" bordercolor="#EAEAEA" style="border-collapse: collapse" >
 <tr>
 	<td vAlign="top" width="100%"> 
