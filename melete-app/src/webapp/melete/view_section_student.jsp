@@ -16,7 +16,7 @@
 function showIframe()
 {
  
-	var str=document.getElementById("viewsectionform:contentType").value;
+	var str=document.getElementById("viewsectionStudentform:contentType").value;
 
 	if ((str.match("typeLink"))||(str.match("typeEditor")))
 	{
@@ -31,7 +31,7 @@ function showIframe()
 <f:view>
 <body onLoad="showIframe(),setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
 <a name="newanchor"></a>
-<h:form id="viewsectionform">
+<h:form id="viewsectionStudentform">
 <table height="470" border="0" cellpadding="20"  width="100%" bordercolor="#EAEAEA" style="border-collapse: collapse" >
 <tr>
 	<td vAlign="top" width="100%"> 
