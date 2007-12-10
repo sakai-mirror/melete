@@ -126,7 +126,7 @@
            </h:column>
             <h:column>
                <h:outputText id="endDate0" 
-                           value="-"    rendered="#{((mdbean.moduleShdate.hideFlag == false)&&(mdbean.moduleShdate.endDate == listModulesPage.nullDate)}">
+                           value="-"    rendered="#{((mdbean.moduleShdate.hideFlag == false)&&(mdbean.moduleShdate.endDate == listModulesPage.nullDate))}">
               <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>
               <h:outputText id="endDate"
