@@ -68,15 +68,7 @@
 						onmouseout="this.src = '#{msgs.im_set}'" 
 						onmousedown="this.src = '#{msgs.im_set_down}'" 
 						onmouseup="this.src = '#{msgs.im_set_over}'"/>
-                </h:commandLink>
-	<h:commandLink id="cancelButton" action="#{authorPreferences.backToPrefsPage}">
-					<h:graphicImage id="cancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace"
-						onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-						onmouseout="this.src = '#{msgs.im_cancel}'" 
-						onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
                 </h:commandLink>	
-	
 			</div></td>
               </tr>
 			 <tr><td  height="20" class="maintabledata5">&nbsp;</td></tr>
