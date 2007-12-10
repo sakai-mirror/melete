@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.sakaiproject.component.app.melete.MeleteResource" table="melete_resource">
+    <id name="resourceId" column="RESOURCE_ID" type="string"  length="255" unsaved-value="null" >
+		<generator class="assigned"/>        
+    </id>      
+    <version name="version" column="VERSION" />
+   <property name="licenseCode" column="LICENSE_CODE" type="int"   length="2" />				
+	<property name="ccLicenseUrl" column="CC_LICENSE_URL"  type="string"  length="70" />				
+	<property name="reqAttr" column="REQ_ATTR" type="boolean" />	
+	<property name="allowCmrcl" column="ALLOW_CMRCL" type="boolean" />					
+	<property name="allowMod" column="ALLOW_MOD" type="int"       length="1" />			
+	<property name="copyrightOwner" column="COPYRIGHT_OWNER"  type="string"  length="55" />			
+	<property name="copyrightYear" column="COPYRIGHT_YEAR"  type="string"  length="25" />	
+	 </class>
+ </hibernate-mapping>
+	 
