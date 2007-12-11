@@ -86,6 +86,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
       private String typeEditor;
       private String typeLink;
       private String typeUpload;
+      private String sectionContentType;
       String courseId;
 
       private ModuleService moduleService;
@@ -211,6 +212,16 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 
 	  }
 
+	  public String getSectionContentType()
+	  {
+		if(this.section != null && this.section.getContentType() != null)	  
+		  sectionContentType = this.section.getContentType();
+		else sectionContentType = "notype";
+		
+		return sectionContentType;
+	  }
+	  
+	  
 	  public String getLinkName()
 	  {
 		  return linkName;
@@ -449,18 +460,17 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 
     public SectionObjService getSection()
     {
-    	if (this.section == null)
-    	{
-    	  try {
-  	  	  this.section = (SectionObjService) getSectionService().getSection(this.sectionId);
-
-  	  	  }
-  	  	  catch (Exception e)
-          {
-  	 	  	logger.error(e.toString());
-          }
-    	}
-
+        try
+		{
+			if (this.section == null)
+			{
+				this.section = (SectionObjService) getSectionService().getSection(this.sectionId);
+			}
+		}
+		catch (Exception e)
+		{
+			logger.error(e.toString());
+		}
     	return this.section;
     }
 

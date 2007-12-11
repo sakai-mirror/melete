@@ -18,7 +18,7 @@ function showIframe()
  
 	var str=document.getElementById("viewsectionStudentform:contentType").value;
 
-	if ((str.match("typeLink"))||(str.match("typeEditor")))
+	if (str == null || (str.match("notype"))||(str.match("typeLink"))||(str.match("typeEditor")))
 	{
 		document.getElementById("iframe1").style.visibility="hidden";
 		document.getElementById("iframe1").style.display="none";
@@ -69,22 +69,22 @@ function showIframe()
 
 <tr>
 <td align="left">
-  <h:inputHidden id="contentType" value="#{viewSectionsPage.section.contentType}"/>
+  <h:inputHidden id="contentType" value="#{viewSectionsPage.sectionContentType}"/>
 			
 	<br> 
 		 <h:outputText id="secinstLink" 
-                           value="#{msgs.view_section_clicking}" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString))}">
+                           value="#{msgs.view_section_clicking}" rendered="#{((viewSectionsPage.sectionContentType != viewSectionsPage.nullString)&&(viewSectionsPage.sectionContentType == viewSectionsPage.typeLink)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString))}">
       </h:outputText> 
       <br>
       <br>
-	 <h:outputLink id="viewSectionLink"  value="#{viewSectionsPage.contentLink}" target="_blank" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString))}">
+	 <h:outputLink id="viewSectionLink"  value="#{viewSectionsPage.contentLink}" target="_blank" rendered="#{((viewSectionsPage.sectionContentType != viewSectionsPage.nullString)&&(viewSectionsPage.sectionContentType == viewSectionsPage.typeLink)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString))}">
       <h:outputText id="sectitleLink" 
                            value="#{viewSectionsPage.linkName}">
       </h:outputText>
     </h:outputLink>
       
-  <h:outputText value="#{viewSectionsPage.content}" escape="false" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeEditor)&&(viewSectionsPage.content != viewSectionsPage.nullString))}"/>
- <iframe   id="iframe1" src="<h:outputText value="#{viewSectionsPage.contentLink}" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeUpload)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString))}"/>" style="visibility:visible" scrolling="auto" width="100%"  height="700" border="0" frameborder="0"></iframe>
+  <h:outputText value="#{viewSectionsPage.content}" escape="false" rendered="#{((viewSectionsPage.sectionContentType != viewSectionsPage.nullString)&&(viewSectionsPage.sectionContentType == viewSectionsPage.typeEditor)&&(viewSectionsPage.content != viewSectionsPage.nullString))}"/>
+ <iframe   id="iframe1" src="<h:outputText value="#{viewSectionsPage.contentLink}" rendered="#{((viewSectionsPage.sectionContentType != viewSectionsPage.nullString)&&(viewSectionsPage.sectionContentType == viewSectionsPage.typeUpload)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString))}"/>" style="visibility:visible" scrolling="auto" width="100%"  height="700" border="0" frameborder="0"></iframe>
 	</td>
 	</tr>
 
