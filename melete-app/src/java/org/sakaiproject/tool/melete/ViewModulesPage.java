@@ -253,52 +253,41 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
      *  added seperate page for links and upload to show them in frame
      */
 
-    public String viewSection() {
+    public String viewSection()
+	{
 
-	  FacesContext ctx = FacesContext.getCurrentInstance();
-	  	 UIViewRoot root = ctx.getViewRoot();
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		UIViewRoot root = ctx.getViewRoot();
+		UIData table = null;
+		boolean isAuthor = getInstRole();
 
-	        UIData table = (UIData)
-	            root.findComponent("viewmoduleform").findComponent("tablesec");
+		if (isAuthor)
+			table = (UIData) root.findComponent("viewmoduleform").findComponent("tablesec");
+		else
+			table = (UIData) root.findComponent("viewmoduleStudentform").findComponent("tablesec");
 
-	    ValueBinding binding =
-	            Util.getBinding("#{viewSectionsPage}");
+		ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
 
-	    ViewSectionsPage vsPage = (ViewSectionsPage)
-	            binding.getValue(ctx);
+		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
 
-	            SectionBean secBean = (SectionBean) table.getRowData();
-	            vsPage.setSectionId(secBean.getSection().getSectionId());
-	            vsPage.setModuleId(secBean.getSection().getModuleId());
-	            vsPage.setModuleSeqNo(secBean.getSection().getModule().getCoursemodule().getSeqNo());
-	            vsPage.setSection(null);
-	            //added by rashmi on 6/14/05
-	            vsPage.setModule(null);
+		SectionBean secBean = (SectionBean) table.getRowData();
+		vsPage.setSectionId(secBean.getSection().getSectionId());
+		vsPage.setModuleId(secBean.getSection().getModuleId());
+		vsPage.setModuleSeqNo(secBean.getSection().getModule().getCoursemodule().getSeqNo());
+		vsPage.setSection(null);
+		// added by rashmi on 6/14/05
+		vsPage.setModule(null);
 
+		String retVal = "view_section_student";
+		if (isAuthor) retVal = "view_section";
 
-	     String retVal = "view_section_student";
-
-	    //03/10/05  rashmi - added seperate page for links and upload to show them in frame
-	    //3/21/05 - mallika - the if condition was slightly ambiguous, so needed to change that
-
-	    if (getInstRole() == true)
-	    {
-
-	      retVal = "view_section";
-
-	    }
-	    else
-	    {
-	      retVal = "view_section_student";
-
-	    }
-	  	return retVal;
-	  }
+		return retVal;
+	}
 
 
     /*
-     * add by rashmi to navigate to table of contents
-     */
+	 * add by rashmi to navigate to table of contents
+	 */
 
     public String goTOC()
 	{

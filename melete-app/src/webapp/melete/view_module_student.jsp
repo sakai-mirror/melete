@@ -15,7 +15,7 @@
 
 <f:view>
 <body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
-<h:form id="viewmoduleform">
+<h:form id="viewmoduleStudentform">
 <table width="100%"  border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse" >
 <tr>
 		<td width="1962" valign="top">
