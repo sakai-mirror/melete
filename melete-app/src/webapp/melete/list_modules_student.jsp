@@ -10,7 +10,7 @@
 </head>
 <f:view>
 <body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
-<h:form id="listmodulesform">
+<h:form id="listmodulesStudentform">
 <table border="0" height="350" cellpadding="0" cellspacing="0" class ="table3">
 <tr>
 		<td valign="top"> &nbsp;		
