@@ -29,7 +29,7 @@
 						<f:subview id="top">
 								<jsp:include page="topnavbar.jsp"/> 
 						</f:subview>
-						<div class="meletePortletToolBarMessage"><img src="images/folder_out.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.restore_modules_restoring_inactive}" /></div>
+						<div class="meletePortletToolBarMessage"><img src="images/folder_into.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.restore_modules_restoring_inactive}" /></div>
 					</td>
 				</tr>
 				<tr>

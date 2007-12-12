@@ -1275,7 +1275,7 @@ public class ModuleDB implements Serializable {
 					ModuleShdates moduleShdate = (ModuleShdates)(q.uniqueResult());
 
 				//	3a.set start date as restored_date and end_date as 1 yr more
-					GregorianCalendar cal = new GregorianCalendar();
+			/*		GregorianCalendar cal = new GregorianCalendar();
 				       cal.set(Calendar.HOUR,8);
 				       cal.set(Calendar.MINUTE,0);
 				       cal.set(Calendar.SECOND,0);
@@ -1287,6 +1287,7 @@ public class ModuleDB implements Serializable {
 				       cal.set(Calendar.SECOND,0);
 				       cal.set(Calendar.AM_PM,Calendar.PM);
 					moduleShdate.setEndDate(cal.getTime());
+				*/	
 
    			//4a. begin transaction
 		   			tx = session.beginTransaction();
@@ -1631,3 +1632,4 @@ public class ModuleDB implements Serializable {
 		}
 	}
 }
+

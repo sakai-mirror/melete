@@ -47,7 +47,7 @@
      </h:commandLink>
 	</h:column>
 <h:column>
-	<h:graphicImage id="inactiveImg" value="images/folder_into.gif" styleClass="AuthImgClass"/>
+	<h:graphicImage id="inactiveImg" value="images/folder_out.gif" styleClass="AuthImgClass"/>
   <h:commandLink id="inactiveAction" action="#{listAuthModulesPage.InactivateAction}">
   	<h:outputText  value="#{msgs.authnavbar_make_inactive}"/>
   </h:commandLink>

@@ -48,7 +48,7 @@
 								                    	<h:commandLink id="goto" action="#{manageModulesPage.goToRestoreModules}">
 															<h:graphicImage id="image"
 									   							alt="#{msgs.modules_author_manage_restore_inactive}"
-									   							url="images/folder_out.gif"
+									   							url="images/folder_into.gif"
 									   							 styleClass="AuthImgClass"/>
 									   							<h:outputText id="re" value="#{msgs.modules_author_manage_restore}" />
 														</h:commandLink>
