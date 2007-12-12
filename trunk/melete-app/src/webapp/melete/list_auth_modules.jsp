@@ -195,12 +195,12 @@ if (msg != null)
              <h:outputText id="t3" value="#{msgs.list_auth_modules_next_steps}" />
              </f:facet>
              
-			   <h:outputText value="     "/>
+			   <h:outputText id="emp_space3" value="     "/>
                <h:commandLink id="viewNextsteps" action="#{listAuthModulesPage.viewNextsteps}" >
 			   		   <h:graphicImage id="vns_gif" value="images/add.gif" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext == listAuthModulesPage.isNull}"/>      
 					   <h:graphicImage id="vns1_gif" value="images/view_next.gif" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext != listAuthModulesPage.isNull}"/>        		   
                 </h:commandLink>
-        	   <h:outputText value="     "/>
+        	   <h:outputText id="emp_space4" value="     "/>
         </h:column>    
        <h:column>
         <f:facet name="header">
@@ -260,14 +260,17 @@ if (msg != null)
 				   
  
     </br>
-	<h:outputText value="#{msgs.list_auth_modules_no_modules_available}" id="nomodmsg" rendered="#{listAuthModulesPage.nomodsFlag == true}" style="text-align:left"/>
+	<h:outputText id="nomodmsg" value="#{msgs.list_auth_modules_no_modules_available}" rendered="#{listAuthModulesPage.nomodsFlag == true}" style="text-align:left"/>
 	</td></tr>
 	  <tr > <td colspan="7" height="20" class="maintabledata5">&nbsp;  </td> </tr>
                  </table>
 </td>
 </tr>
-</table>	
- <h:outputText escape="false" value="#{msgs.list_auth_modules_modules_highlighted1}<font color=\"#FF0000\">#{msgs.list_auth_modules_modules_highlighted2}</font>#{msgs.list_auth_modules_modules_highlighted3}" id="redMsg" rendered="#{listAuthModulesPage.invFlag == true}"/>
+</table> 
+ 
+ <h:outputText id="modHighlightmsg1" escape="false" value="#{msgs.list_auth_modules_modules_highlighted1}"  rendered="#{listAuthModulesPage.invFlag == true}"/> 
+ <h:outputText id="modHighlightmsg2" escape="false" value="#{msgs.list_auth_modules_modules_highlighted2}" styleClass="RedClass" rendered="#{listAuthModulesPage.invFlag == true}"/>
+ <h:outputText id="modHighlightmsg3" escape="false" value="#{msgs.list_auth_modules_modules_highlighted3}"  rendered="#{listAuthModulesPage.invFlag == true}"/>
 <!--End Content-->
 
  <p> <h:outputLink styleClass="style3" value="#top" rendered="#{listModulesPage.nomodsFlag == false}">  <f:verbatim> <h:outputText value="#{msgs.list_auth_modules_back_to_top}" /> </f:verbatim> </h:outputLink>
