@@ -952,7 +952,8 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	private ModuleShdates getModuleShdates() {
 		if (moduleShdates == null) {
 			moduleShdates = new ModuleShdates();
-			GregorianCalendar cal = new GregorianCalendar();
+			//comment code below to not assign any dates on IMS CP import
+	/*		GregorianCalendar cal = new GregorianCalendar();
 			cal.set(Calendar.HOUR, 8);
 			cal.set(Calendar.MINUTE, 0);
 			cal.set(Calendar.SECOND, 0);
@@ -963,7 +964,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			cal.set(Calendar.MINUTE, 59);
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.AM_PM, Calendar.PM);
-			moduleShdates.setEndDate(cal.getTime());
+			moduleShdates.setEndDate(cal.getTime());*/
 		}
 		return moduleShdates;
 	}
