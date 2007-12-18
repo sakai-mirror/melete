@@ -16,14 +16,17 @@
 <h:form id="viewNSsectionform">       
 <table height="470" border="0" cellpadding="20"  width="100%" bordercolor="#EAEAEA" style="border-collapse: collapse" >
 <tr>
-	<td vAlign="top" width="100%"> 
-			<table  border="0" cellpadding="2" cellspacing="0" bordercolor="#EAEAEA" width="99%">
+	<td valign="top" width="100%"> 
+			<table  border="0" cellpadding="2" cellspacing="0" bordercolor="#EAEAEA" width="99%" style="border-collapse: collapse" >
 					<tr>
 					<td>
 								<f:subview id="top" rendered="#{viewNextStepsPage.instRole == true}">
 												  <jsp:include page="topnavbar.jsp"/> 
 									</f:subview>
-								<div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.view_whats_next_viewing}" /></div>	
+								<div class="meletePortletToolBarMessage">
+								<h:graphicImage id="previewtopimg" value="images/preview.png" styleClass="AuthMessageImgClass" rendered="#{viewNextStepsPage.instRole == true}"/>
+								<h:outputText value="#{msgs.view_whats_next_viewing}" rendered="#{viewNextStepsPage.instRole == true}"/>
+								</div>	
 					</td>
 				</tr>
 	<!--Page Content-->
