@@ -594,7 +594,7 @@ public void setSecpgroup(HtmlPanelGroup secpgroup)
 	 Class[] param = new Class[1];
 	 HtmlCommandLink modLink = new HtmlCommandLink();
      param[0] = new ActionEvent(modLink).getClass();
-     modLink.setId("modlink");
+     modLink.setId("modSeclink");
      modLink.setActionListener(app.createMethodBinding("#{viewModulesPage.viewModule}", param));
      modLink.setAction(app.createMethodBinding("#{viewModulesPage.redirectToViewModule}", null));
     //1a . add outputtext to display module title
