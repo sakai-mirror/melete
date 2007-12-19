@@ -150,6 +150,22 @@ public class Module implements Serializable,ModuleObjService {
         this.modulestudentprivs = modulestudentprivs;
     }
 
+    /** Copy constructor*/
+    public Module(Module oldModule)
+    {
+    	this.title = oldModule.getTitle();
+    	 this.learnObj = oldModule.getLearnObj();
+         this.description = oldModule.getDescription();
+         this.keywords = oldModule.getKeywords();
+         this.institute = oldModule.getInstitute();
+         this.whatsNext = oldModule.getWhatsNext();
+         this.seqXml = null;
+         this.moduleshdate = null;
+         this.coursemodule = null;
+         this.sections = null;
+         this.modulestudentprivs = null;         
+    }
+    
     public Integer getModuleId() {
         return this.moduleId;
     }

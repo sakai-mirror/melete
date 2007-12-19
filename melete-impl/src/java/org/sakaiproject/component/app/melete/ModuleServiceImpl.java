@@ -180,6 +180,12 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 		moduledb.sortSectionItem((Module)module,section_id,Direction);
 	}
 
+	public void copyModule(ModuleObjService module,String courseId,String userId) throws MeleteException
+	{
+		moduledb.copyModule((Module)module, courseId, userId);
+		
+	}
+	
 // mallika page stuff
 public List getModuleDateBeans(String courseId) {
   	if (moduledb == null) moduledb = ModuleDB.getModuleDB();

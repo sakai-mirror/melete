@@ -1359,7 +1359,32 @@ public class ListAuthModulesPage implements Serializable
 		return "list_auth_modules";
 	}
 
-	// sort code end
+	// copy modules and sections
+	public String duplicateAction()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");	
+		
+		try
+		{
+			resetSelectedLists();
+			UIViewRoot root = ctx.getViewRoot();
+			UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
+			ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
+			logger.debug("calling copy for " + mdbean.getModule().getTitle());
+			moduleService.copyModule((ModuleObjService) mdbean.getModule(), courseId, userId);
+		}
+		catch (MeleteException me)
+		{
+			logger.error(me.toString());
+			String msg = bundle.getString("copy_fail");
+			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
+		}
+	
+		return "list_auth_modules";
+	}	
+	// copy code end
+	
 	private void addMessage(FacesContext ctx, String msgName, String msgDetail, FacesMessage.Severity severity)
 	{
 		FacesMessage msg = new FacesMessage(msgName, msgDetail);

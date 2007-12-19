@@ -74,7 +74,7 @@ public class MeleteResource implements Serializable, MeleteResourceService {
 
     //copy constructor added by rashmi
     public MeleteResource( MeleteResource s1) {
-        this.resourceId = s1.resourceId;
+    //    this.resourceId = s1.resourceId;
         this.licenseCode = s1.licenseCode;
         this.ccLicenseUrl = s1.ccLicenseUrl;
         this.reqAttr = s1.reqAttr;

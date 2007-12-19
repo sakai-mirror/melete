@@ -69,6 +69,16 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     public ModuleShdates() {
     }
 
+    /** copy constructor */
+    public ModuleShdates(ModuleShdates oldModuleShdates)
+    {
+    	this.hideFlag = oldModuleShdates.isHideFlag();
+        this.startDate = oldModuleShdates.getStartDate();
+        this.endDate = oldModuleShdates.getEndDate();        
+        this.module = null;
+    }
+    
+    
     public Integer getModuleId() {
         return this.moduleId;
     }
