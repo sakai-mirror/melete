@@ -100,4 +100,6 @@ public interface ModuleService{
 	public void sortModule(ModuleObjService module,String course_id,String Direction) throws MeleteException;
 
 	public void sortSectionItem(ModuleObjService module,String section_id,String Direction) throws MeleteException;
+	
+	public void copyModule(ModuleObjService module,String courseId,String userId) throws MeleteException;
 }

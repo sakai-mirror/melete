@@ -24,6 +24,7 @@ package org.sakaiproject.component.app.melete;
 
 import java.io.File;
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -51,6 +52,10 @@ import org.sakaiproject.api.app.melete.SectionObjService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
 import org.hibernate.criterion.Restrictions;
 
+import org.sakaiproject.content.api.ContentResource;
+import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+import org.sakaiproject.user.cover.UserDirectoryService;
+import org.sakaiproject.api.app.melete.MeleteCHService;
 
 /* Mallika - 4/17/07 - added code to support subsections on list pages
  * Mallika -6/6/07 - consolidated methods
@@ -63,7 +68,9 @@ public class ModuleDB implements Serializable {
 	private int seqNumber;
 	private HibernateUtil hibernateUtil;
 	private List xmlSecList;
-
+	private SectionDB sectionDB;
+	private MeleteCHService meleteCHService;
+	
 	/** Dependency:  The logging service. */
 	private Log logger = LogFactory.getLog(ModuleDB.class);
 
@@ -1630,6 +1637,99 @@ public class ModuleDB implements Serializable {
 		}catch(Exception ex){
 		throw new MeleteException("sort_fail");
 		}
+	}
+	
+	public void copyModule(Module module, String courseId, String userId) throws MeleteException
+	{
+		try
+		{
+			//get module and its sections
+			Module copyMod = new Module(module);
+			String firstName = UserDirectoryService.getCurrentUser().getFirstName();
+			String lastName = UserDirectoryService.getCurrentUser().getLastName();
+			
+			DateFormat shortTime = DateFormat.getDateInstance(DateFormat.LONG);
+			
+			copyMod.setCreatedByFname(firstName);
+			copyMod.setCreatedByLname(lastName);
+			copyMod.setTitle(copyMod.getTitle() + " (Copied " + shortTime.format(new Date())+" )");
+			ModuleShdates CopyModuleshowdates = new ModuleShdates((ModuleShdates)module.getModuleshdate());
+			
+			// insert copy module with blank seq_xml and sections as null
+			addModule(copyMod, CopyModuleshowdates, userId, courseId);
+			
+			String copyModSeqXml = module.getSeqXml();
+			//get sections 
+			List<Section> toCopySections = getSections(module.getModuleId().intValue());
+			if (toCopySections != null && toCopySections.size() > 0)
+			{
+				for (Section toCopySection : toCopySections)
+				{
+					// with title as copy of xxx and sectionResource
+					Section copySection = new Section(toCopySection);
+					copySection.setCreatedByFname(firstName);
+					copySection.setCreatedByLname(lastName);
+					copySection.setModule(copyMod);
+					copySection.setTitle(copySection.getTitle() + " (Copied " + shortTime.format(new Date())+" )");
+					//insert section 
+					Integer copySectionId = sectionDB.addSection(copyMod, copySection, false);
+					copySection.setSectionId(copySectionId);
+					//copySection.setModule(copyMod);
+					
+					//if section content type is composed than create a new copy
+					if (toCopySection.getContentType().equals("typeEditor"))
+					{
+						
+						String copyModCollId = meleteCHService.getCollectionId( "typeEditor",copyMod.getModuleId() );
+    					String res_mime_type= meleteCHService.MIME_TYPE_EDITOR;
+						ContentResource  cr = meleteCHService.getResource(toCopySection.getSectionResource().getResource().getResourceId());
+	                  	byte[] secContentData = cr.getContent();
+	                  
+	                    boolean encodingFlag = true;
+	                    String secResourceName = "Section_" + copySectionId;
+	                    String secResourceDescription="compose content";
+	                    
+	                    ResourcePropertiesEdit res = meleteCHService.fillInSectionResourceProperties(encodingFlag,secResourceName,secResourceDescription);
+	                    String newResourceId = meleteCHService.addResourceItem(secResourceName, res_mime_type,copyModCollId,secContentData,res );
+	                   
+	                    MeleteResource copyMelResource = new MeleteResource((MeleteResource)toCopySection.getSectionResource().getResource());
+	                    copyMelResource.setResourceId(newResourceId);
+	                    sectionDB.insertMeleteResource(copySection, copyMelResource);
+					}
+					else {
+					//insert section resource with same melete resource
+					sectionDB.insertSectionResource(copySection, (MeleteResource) toCopySection.getSectionResource().getResource());
+					}
+					
+					//replace with new copied section
+					copyModSeqXml = copyModSeqXml.replace(toCopySection.getSectionId().toString(), copySectionId.toString());
+				}
+				// update module seq xml
+				copyMod.setSeqXml(copyModSeqXml);
+				updateModule(copyMod);
+			}
+
+		}
+		catch (Exception ex)
+		{
+			throw new MeleteException("copy_fail");
+		}
+	}
+
+	/**
+	 * @param sectionDB the sectionDB to set
+	 */
+	public void setSectionDB(SectionDB sectionDB)
+	{
+		this.sectionDB = sectionDB;
+	}
+
+	/**
+	 * @param meleteCHService the meleteCHService to set
+	 */
+	public void setMeleteCHService(MeleteCHService meleteCHService)
+	{
+		this.meleteCHService = meleteCHService;
 	}
 }
 

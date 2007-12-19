@@ -143,6 +143,19 @@ public class Section implements Serializable,SectionObjService {
         this.modificationDate = modificationDate;
     }
 
+    /** copy constructor */
+    public Section(Section oldSection) {
+           this.title = oldSection.getTitle();
+           this.instr = oldSection.getInstr();
+           this.contentType = oldSection.getContentType();
+           this.audioContent = oldSection.isAudioContent();
+           this.videoContent = oldSection.isVideoContent();
+           this.textualContent = oldSection.isTextualContent();
+           this.deleteFlag = oldSection.isDeleteFlag();
+           this.module = null;
+           this.sectionResource = null;
+    }
+    
     public Integer getSectionId() {
         return this.sectionId;
     }

@@ -188,20 +188,7 @@ if (msg != null)
             </h:column>
           </h:dataTable>
      
-        </h:column>
-  
-        <h:column>
-        <f:facet name="header">
-             <h:outputText id="t3" value="#{msgs.list_auth_modules_next_steps}" />
-             </f:facet>
-             
-			   <h:outputText id="emp_space3" value="     "/>
-               <h:commandLink id="viewNextsteps" action="#{listAuthModulesPage.viewNextsteps}" >
-			   		   <h:graphicImage id="vns_gif" value="images/add.gif" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext == listAuthModulesPage.isNull}"/>      
-					   <h:graphicImage id="vns1_gif" value="images/view_next.gif" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext != listAuthModulesPage.isNull}"/>        		   
-                </h:commandLink>
-        	   <h:outputText id="emp_space4" value="     "/>
-        </h:column>    
+        </h:column>      
        <h:column>
         <f:facet name="header">
              <h:outputText id="t4" value="#{msgs.list_auth_modules_start_date}" />
@@ -254,7 +241,21 @@ if (msg != null)
            </h:outputLink>                
             
         </h:column>
-    
+	   	<h:column>
+          <f:facet name="header">
+        	 <h:outputText id="t8" value="#{msgs.list_auth_modules_actions}" />
+          </f:facet>
+       
+           <h:commandLink id="viewNextsteps" action="#{listAuthModulesPage.viewNextsteps}" >
+			   <h:graphicImage id="vns_gif" value="images/add.gif" alt="#{msgs.list_auth_modules_next_steps}" title="#{msgs.list_auth_modules_next_steps}" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext == listAuthModulesPage.isNull}"/>      
+			   <h:graphicImage id="vns1_gif" value="images/view_next.gif" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext != listAuthModulesPage.isNull}"/>        		   
+           </h:commandLink>
+           <h:outputText id="emp_space4" value="     "/>
+		  <h:commandLink id="duplicateModule" action="#{listAuthModulesPage.duplicateAction}">
+		  	  <h:graphicImage id="duplicateImg" value="images/page_copy.png" styleClass="AuthImgClass"/>
+		  </h:commandLink>
+        </h:column>
+	    
           
     </h:dataTable>   
 				   
