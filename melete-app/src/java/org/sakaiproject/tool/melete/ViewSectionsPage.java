@@ -561,7 +561,11 @@ public String goNextModule()
         Util.getBinding("#{viewModulesPage}");
       ViewModulesPage vmPage = (ViewModulesPage)
         binding.getValue(context);
-    vmPage.setModuleId(nextMdBean.getModuleId());
+   
+    if (nextMdBean != null)
+    {
+    	vmPage.setModuleId(nextMdBean.getModuleId());
+    }
   	vmPage.setMdbean(null);
   	vmPage.setPrevMdbean(null);
     vmPage.setModuleSeqNo(this.nextSeqNo);
