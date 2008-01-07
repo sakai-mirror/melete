@@ -801,10 +801,13 @@ public class ListAuthModulesPage implements Serializable
 			{
 				delModBeans = new ArrayList();
 			}
-			for (ListIterator i = selectedModIndices.listIterator(); i.hasNext();)
-			{
+			if (selectedModIndices != null)
+			{	
+			  for (ListIterator i = selectedModIndices.listIterator(); i.hasNext();)
+			  {
 				mdbean = (ModuleDateBean) moduleDateBeans.get(((Integer) i.next()).intValue());
 				delModBeans.add(mdbean);
+			  }
 			}
 			ValueBinding binding = Util.getBinding("#{deleteModulePage}");
 			DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
