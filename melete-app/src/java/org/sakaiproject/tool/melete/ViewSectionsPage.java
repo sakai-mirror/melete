@@ -450,8 +450,16 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     	}
     	else
     	{
-    		return secElement.getParentNode().getNextSibling();
+    		if (secElement != null)
+    		{
+    			if (secElement.getParentNode() != null)
+    			{
+    				return secElement.getParentNode().getNextSibling();
+    			}
+    		}
+    		
     	}
+    	return null;
     }
 
     public void setModule(ModuleObjService module){
