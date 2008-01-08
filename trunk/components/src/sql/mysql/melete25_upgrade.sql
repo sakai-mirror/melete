@@ -1,0 +1,1 @@
+ alter table melete_module_shdates drop hide_flag;

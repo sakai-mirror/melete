@@ -159,16 +159,9 @@ if (msg != null)
       <h:outputText id="emp_spacemod" value=" "/>
       <h:outputText id="mod_seq" value="#{mdbean.cmod.seqNo}."/>
       <h:outputText id="emp_spacemod2" value=" "/>
-      <h:commandLink id="editHideMod" actionListener="#{listAuthModulesPage.editModule}" action="#{listAuthModulesPage.redirectToEditModule}"> 
-          
-            <h:outputText id="titlered" styleClass="RedClass" rendered="#{mdbean.moduleShdate.hideFlag == true}"
-                           value="#{mdbean.truncTitle}">
-                          
-             </h:outputText>   
-      </h:commandLink>
+      
       <h:commandLink id="editMod" actionListener="#{listAuthModulesPage.editModule}"  action="#{listAuthModulesPage.redirectToEditModule}">     
-                   <h:outputText id="title2" rendered="#{mdbean.moduleShdate.hideFlag == false}"
-                           value="#{mdbean.truncTitle}">
+                   <h:outputText id="title2" value="#{mdbean.truncTitle}">
                </h:outputText>
       </h:commandLink>
       <h:dataTable id="tablesec" rendered="#{((mdbean.moduleId == listAuthModulesPage.showModuleId)||(listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag))}"
@@ -269,9 +262,7 @@ if (msg != null)
 </tr>
 </table> 
  
- <h:outputText id="modHighlightmsg1" escape="false" value="#{msgs.list_auth_modules_modules_highlighted1}"  rendered="#{listAuthModulesPage.invFlag == true}"/> 
- <h:outputText id="modHighlightmsg2" escape="false" value="#{msgs.list_auth_modules_modules_highlighted2}" styleClass="RedClass" rendered="#{listAuthModulesPage.invFlag == true}"/>
- <h:outputText id="modHighlightmsg3" escape="false" value="#{msgs.list_auth_modules_modules_highlighted3}"  rendered="#{listAuthModulesPage.invFlag == true}"/>
+
 <!--End Content-->
 
  <p> <h:outputLink styleClass="style3" value="#top" rendered="#{listModulesPage.nomodsFlag == false}">  <f:verbatim> <h:outputText value="#{msgs.list_auth_modules_back_to_top}" /> </f:verbatim> </h:outputLink>
