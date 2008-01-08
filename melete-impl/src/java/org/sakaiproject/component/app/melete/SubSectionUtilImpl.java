@@ -215,7 +215,7 @@ public class SubSectionUtilImpl {
 				 for ( int i=0; i < children.getLength(); i++ ) {
 			        	org.w3c.dom.Node deleteThisElementChild = children.item(i);
 			        	if(deleteThisElementChild.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE)
-			        		deleteElementParent.appendChild(deleteThisElementChild.cloneNode(true)) ;
+			         		deleteElementParent.insertBefore(deleteThisElementChild.cloneNode(true), deleteThisElement) ;			          	
 				 }
 			}
 
