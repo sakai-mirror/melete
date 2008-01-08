@@ -46,7 +46,7 @@ import org.sakaiproject.util.ResourceLoader;
 
 /**
  * Gets the module beans for author
- * 
+ *
  * @version 1.00 08 Mar 2005
  * @author Mallika M Thoppay
  */
@@ -105,8 +105,6 @@ public class ListAuthModulesPage implements Serializable
 
 	private boolean selectedSection;
 
-	private boolean invFlag;
-
 	private boolean nomodsFlag;
 
 	private boolean expandAllFlag;
@@ -159,7 +157,6 @@ public class ListAuthModulesPage implements Serializable
 		Map sessionMap = context.getExternalContext().getSessionMap();
 		courseId = (String) sessionMap.get("courseId");
 		userId = (String) sessionMap.get("userId");
-		invFlag = false;
 		nomodsFlag = false;
 		setShowModuleId(-1);
 		count = 0;
@@ -187,7 +184,6 @@ public class ListAuthModulesPage implements Serializable
 	{
 		setShowModuleId(-1);
 		errModuleIds = null;
-		invFlag = false;
 		nomodsFlag = false;
 		count = 0;
 		selectedModIndex = -1;
@@ -383,10 +379,6 @@ public class ListAuthModulesPage implements Serializable
 					}
 				}
 
-				if (mdbean.getModuleShdate().isHideFlag() == true)
-				{
-					invFlag = true;
-				}
 
 			}
 		}
@@ -440,16 +432,6 @@ public class ListAuthModulesPage implements Serializable
 	public void setSelectedSection(boolean selectedSection)
 	{
 		this.selectedSection = selectedSection;
-	}
-
-	public boolean getInvFlag()
-	{
-		return invFlag;
-	}
-
-	public void setInvFlag(boolean invFlag)
-	{
-		this.invFlag = invFlag;
 	}
 
 	public boolean getNomodsFlag()
@@ -547,7 +529,7 @@ public class ListAuthModulesPage implements Serializable
 		if (moduleSelected)
 		{
 			if (moduleDateBeans != null)
-			{	
+			{
 			ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selectedModIndex);
 			ValueBinding binding = Util.getBinding("#{editModulePage}");
 			EditModulePage emPage = (EditModulePage) binding.getValue(ctx);
@@ -565,7 +547,7 @@ public class ListAuthModulesPage implements Serializable
 		if (sectionSelected)
 		{
 			if (moduleDateBeans != null)
-			{	
+			{
 			ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selectedModIndex);
 			SectionBean secBean = (SectionBean) mdbean.getSectionBeans().get(selectedSecIndex);
 			ValueBinding binding = Util.getBinding("#{editSectionPage}");
@@ -802,7 +784,7 @@ public class ListAuthModulesPage implements Serializable
 				delModBeans = new ArrayList();
 			}
 			if (selectedModIndices != null)
-			{	
+			{
 			  for (ListIterator i = selectedModIndices.listIterator(); i.hasNext();)
 			  {
 				mdbean = (ModuleDateBean) moduleDateBeans.get(((Integer) i.next()).intValue());
@@ -875,7 +857,7 @@ public class ListAuthModulesPage implements Serializable
 			{
 				ModuleDateBean mdbean = (ModuleDateBean) moduleIter.next();
 				if ((mdbean.getModuleShdate().getStartDate() != null)&&(mdbean.getModuleShdate().getEndDate() != null))
-				{	
+				{
 				  if (mdbean.getModuleShdate().getStartDate().compareTo(mdbean.getModuleShdate().getEndDate()) >= 0)
 				  {
 					dateErrFlag = true;
@@ -1366,8 +1348,8 @@ public class ListAuthModulesPage implements Serializable
 	public String duplicateAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");	
-		
+		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+
 		try
 		{
 			resetSelectedLists();
@@ -1383,11 +1365,11 @@ public class ListAuthModulesPage implements Serializable
 			String msg = bundle.getString("copy_fail");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 		}
-	
+
 		return "list_auth_modules";
-	}	
+	}
 	// copy code end
-	
+
 	private void addMessage(FacesContext ctx, String msgName, String msgDetail, FacesMessage.Severity severity)
 	{
 		FacesMessage msg = new FacesMessage(msgName, msgDetail);

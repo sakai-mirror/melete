@@ -51,30 +51,30 @@
                   var="mdbean"  rowClasses="row1,row2" columnClasses="titleWid,ModCheckClass,dateWid1,dateWid2"
                   border="0" width="100%" >
         <h:column> 
-            <h:commandLink id="viewSections" action="#{listModulesPage.showSections}"  rendered="#{(mdbean.moduleShdate.hideFlag == false)}">
+            <h:commandLink id="viewSections" action="#{listModulesPage.showSections}">
         <h:graphicImage id="exp_gif" value="images/expand.gif" rendered="#{((mdbean.moduleId != listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}" styleClass="ExpClass"/>
          <h:inputHidden id="moduleShowId" value="#{mdbean.moduleId}"/>
       </h:commandLink>
- <h:commandLink id="hideSections" action="#{listModulesPage.hideSections}"  rendered="#{(mdbean.moduleShdate.hideFlag == false)}">
+ <h:commandLink id="hideSections" action="#{listModulesPage.hideSections}">
         <h:graphicImage id="col_gif" value="images/collapse.gif" rendered="#{(((mdbean.moduleId == listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList))||((listModulesPage.expandAllFlag == listModulesPage.trueFlag)&&(mdbean.sectionBeans != listModulesPage.nullList)))}" styleClass="ExpClass"/>
          <h:inputHidden id="moduleHideId" value="#{mdbean.moduleId}"/>
       </h:commandLink>   
       <h:outputText id="emp_spacemod" value=" "/>
        <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}"  
-          rendered="#{(((mdbean.moduleShdate.hideFlag == false)&&(((mdbean.moduleShdate.startDate == listModulesPage.nullDate)||(mdbean.moduleShdate.startDate <= listModulesPage.currentTimestamp))&&((mdbean.moduleShdate.endDate == listModulesPage.nullDate)||(mdbean.moduleShdate.endDate >= listModulesPage.currentTimestamp)))))}">
+          rendered="#{(((((mdbean.moduleShdate.startDate == listModulesPage.nullDate)||(mdbean.moduleShdate.startDate <= listModulesPage.currentTimestamp))&&((mdbean.moduleShdate.endDate == listModulesPage.nullDate)||(mdbean.moduleShdate.endDate >= listModulesPage.currentTimestamp)))))}">
               <h:outputText id="title"
                            value="#{mdbean.truncTitle}">
          </h:outputText>             
        </h:commandLink>
       <h:commandLink id="viewModule2"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}"  
-         rendered="#{((mdbean.moduleShdate.hideFlag == false)&&((mdbean.moduleShdate.startDate > listModulesPage.currentTimestamp)||(mdbean.moduleShdate.endDate < listModulesPage.currentTimestamp)))}">      
+         rendered="#{(((mdbean.moduleShdate.startDate > listModulesPage.currentTimestamp)||(mdbean.moduleShdate.endDate < listModulesPage.currentTimestamp)))}">      
          <h:outputText id="title2"
                            value="#{mdbean.truncTitle}" styleClass="italics">
          </h:outputText>                 
        </h:commandLink>    
                 
           
-           <h:dataTable id="tablesec" rendered="#{(((mdbean.moduleId == listModulesPage.showModuleId)||(listModulesPage.expandAllFlag == listModulesPage.trueFlag))&&(mdbean.moduleShdate.hideFlag == false))}"
+           <h:dataTable id="tablesec" rendered="#{(((mdbean.moduleId == listModulesPage.showModuleId)||(listModulesPage.expandAllFlag == listModulesPage.trueFlag)))}"
                   value="#{mdbean.sectionBeans}"
                   var="section" columnClasses="SectionClass" rowClasses="#{mdbean.rowClasses}"  width="75%">
                    <h:column>
@@ -109,34 +109,34 @@
           </h:dataTable>
            </h:column>
            <h:column>
-               <h:graphicImage id="closed_gif" value="images/closed.gif" alt="#{msgs.list_modules_inst_closed}" rendered="#{((mdbean.moduleShdate.hideFlag == false)&&((mdbean.moduleShdate.startDate > listModulesPage.currentTimestamp)||(mdbean.moduleShdate.endDate < listModulesPage.currentTimestamp)))}" styleClass="ExpClass"/>
+               <h:graphicImage id="closed_gif" value="images/closed.gif" alt="#{msgs.list_modules_inst_closed}" rendered="#{(((mdbean.moduleShdate.startDate > listModulesPage.currentTimestamp)||(mdbean.moduleShdate.endDate < listModulesPage.currentTimestamp)))}" styleClass="ExpClass"/>
            </h:column>
            <h:column>
               <h:outputText id="startDate0" 
-                           value="-"    rendered="#{((mdbean.moduleShdate.hideFlag == false)&&(mdbean.moduleShdate.startDate == listModulesPage.nullDate))}">
+                           value="-"    rendered="#{((mdbean.moduleShdate.startDate == listModulesPage.nullDate))}">
             </h:outputText>
                   <h:outputText id="startDate" 
-                           value="#{mdbean.moduleShdate.startDate}"    rendered="#{((mdbean.moduleShdate.hideFlag == false)&&((mdbean.moduleShdate.startDate != listModulesPage.nullDate)&&(mdbean.moduleShdate.startDate <= listModulesPage.currentTimestamp))&&((mdbean.moduleShdate.endDate == listModulesPage.nullDate)||(mdbean.moduleShdate.endDate >= listModulesPage.currentTimestamp)))}">
+                           value="#{mdbean.moduleShdate.startDate}"    rendered="#{(((mdbean.moduleShdate.startDate != listModulesPage.nullDate)&&(mdbean.moduleShdate.startDate <= listModulesPage.currentTimestamp))&&((mdbean.moduleShdate.endDate == listModulesPage.nullDate)||(mdbean.moduleShdate.endDate >= listModulesPage.currentTimestamp)))}">
               <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>
             <h:outputText id="startDate2" styleClass="italics" 
-                           value="#{mdbean.moduleShdate.startDate}"     rendered="#{((mdbean.moduleShdate.hideFlag == false)&&((mdbean.moduleShdate.startDate > listModulesPage.currentTimestamp)||(mdbean.moduleShdate.endDate < listModulesPage.currentTimestamp)))}">      
+                           value="#{mdbean.moduleShdate.startDate}"     rendered="#{(((mdbean.moduleShdate.startDate > listModulesPage.currentTimestamp)||(mdbean.moduleShdate.endDate < listModulesPage.currentTimestamp)))}">      
               <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>            
            </h:column>
             <h:column>
                <h:outputText id="endDate0" 
-                           value="-"    rendered="#{((mdbean.moduleShdate.hideFlag == false)&&(mdbean.moduleShdate.endDate == listModulesPage.nullDate))}">
+                           value="-"    rendered="#{((mdbean.moduleShdate.endDate == listModulesPage.nullDate))}">
               <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>
               <h:outputText id="endDate"
                            value="#{mdbean.moduleShdate.endDate}"
-                              rendered="#{((mdbean.moduleShdate.hideFlag == false)&&((mdbean.moduleShdate.startDate == listModulesPage.nullDate)||(mdbean.moduleShdate.startDate <= listModulesPage.currentTimestamp))&&((mdbean.moduleShdate.endDate != listModulesPage.nullDate)&&(mdbean.moduleShdate.endDate >= listModulesPage.currentTimestamp)))}">
+                              rendered="#{(((mdbean.moduleShdate.startDate == listModulesPage.nullDate)||(mdbean.moduleShdate.startDate <= listModulesPage.currentTimestamp))&&((mdbean.moduleShdate.endDate != listModulesPage.nullDate)&&(mdbean.moduleShdate.endDate >= listModulesPage.currentTimestamp)))}">
                <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>
             <h:outputText id="endDate2" styleClass="italics" 
                            value="#{mdbean.moduleShdate.endDate}"
-                             rendered="#{((mdbean.moduleShdate.hideFlag == false)&&((mdbean.moduleShdate.startDate > listModulesPage.currentTimestamp)||(mdbean.moduleShdate.endDate < listModulesPage.currentTimestamp)))}">      
+                             rendered="#{(((mdbean.moduleShdate.startDate > listModulesPage.currentTimestamp)||(mdbean.moduleShdate.endDate < listModulesPage.currentTimestamp)))}">      
                <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>            
         </h:column>   

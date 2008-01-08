@@ -1153,7 +1153,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 				    //Copy module properties and insert, seqXml is null for now
 				    Module toMod = new Module(fromMod.getTitle(), fromMod.getLearnObj(), fromMod.getDescription(), fromMod.getKeywords(), fromMod.getCreatedByFname(), fromMod.getCreatedByLname(), fromMod.getUserId(), fromMod.getModifiedByFname(), fromMod.getModifiedByLname(), fromMod.getInstitute(), fromMod.getWhatsNext(), fromMod.getCreationDate(), fromMod.getModificationDate(), null);
-			        ModuleShdates toModshdate = new ModuleShdates(false, ((ModuleShdates)fromMod.getModuleshdate()).getStartDate(), ((ModuleShdates)fromMod.getModuleshdate()).getEndDate());
+			        ModuleShdates toModshdate = new ModuleShdates(((ModuleShdates)fromMod.getModuleshdate()).getStartDate(), ((ModuleShdates)fromMod.getModuleshdate()).getEndDate());
 				    moduleDB.addModule(toMod, toModshdate, fromMod.getUserId(), toContext);
 				    sectionList = fromMod.getSections();
 				    //Iterate throug sections of a module

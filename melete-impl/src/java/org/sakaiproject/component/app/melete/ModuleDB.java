@@ -70,7 +70,7 @@ public class ModuleDB implements Serializable {
 	private List xmlSecList;
 	private SectionDB sectionDB;
 	private MeleteCHService meleteCHService;
-	
+
 	/** Dependency:  The logging service. */
 	private Log logger = LogFactory.getLog(ModuleDB.class);
 
@@ -364,11 +364,10 @@ public class ModuleDB implements Serializable {
 			{
 		      Session session = hibernateUtil.currentSession();
 
-		      String queryString = "from Module module  where module.moduleshdate.hideFlag = :hfval and module.coursemodule.courseId = :courseId and module.coursemodule.archvFlag = 0 and module.coursemodule.deleteFlag = 0 order by module.coursemodule.seqNo";
+		      String queryString = "from Module module  where module.coursemodule.courseId = :courseId and module.coursemodule.archvFlag = 0 and module.coursemodule.deleteFlag = 0 order by module.coursemodule.seqNo";
 
 		      Query query = session.createQuery(queryString);
 		      query.setParameter("courseId",courseId);
-		      query.setParameter("hfval", new Boolean(false));
 		      modList = query.list();
 
 
@@ -1294,7 +1293,7 @@ public class ModuleDB implements Serializable {
 				       cal.set(Calendar.SECOND,0);
 				       cal.set(Calendar.AM_PM,Calendar.PM);
 					moduleShdate.setEndDate(cal.getTime());
-				*/	
+				*/
 
    			//4a. begin transaction
 		   			tx = session.beginTransaction();
@@ -1638,7 +1637,7 @@ public class ModuleDB implements Serializable {
 		throw new MeleteException("sort_fail");
 		}
 	}
-	
+
 	public void copyModule(Module module, String courseId, String userId) throws MeleteException
 	{
 		try
@@ -1647,19 +1646,19 @@ public class ModuleDB implements Serializable {
 			Module copyMod = new Module(module);
 			String firstName = UserDirectoryService.getCurrentUser().getFirstName();
 			String lastName = UserDirectoryService.getCurrentUser().getLastName();
-			
+
 			DateFormat shortTime = DateFormat.getDateInstance(DateFormat.LONG);
-			
+
 			copyMod.setCreatedByFname(firstName);
 			copyMod.setCreatedByLname(lastName);
 			copyMod.setTitle(copyMod.getTitle() + " (Copied " + shortTime.format(new Date())+" )");
 			ModuleShdates CopyModuleshowdates = new ModuleShdates((ModuleShdates)module.getModuleshdate());
-			
+
 			// insert copy module with blank seq_xml and sections as null
 			addModule(copyMod, CopyModuleshowdates, userId, courseId);
-			
+
 			String copyModSeqXml = module.getSeqXml();
-			//get sections 
+			//get sections
 			List<Section> toCopySections = getSections(module.getModuleId().intValue());
 			if (toCopySections != null && toCopySections.size() > 0)
 			{
@@ -1671,27 +1670,27 @@ public class ModuleDB implements Serializable {
 					copySection.setCreatedByLname(lastName);
 					copySection.setModule(copyMod);
 					copySection.setTitle(copySection.getTitle() + " (Copied " + shortTime.format(new Date())+" )");
-					//insert section 
+					//insert section
 					Integer copySectionId = sectionDB.addSection(copyMod, copySection, false);
 					copySection.setSectionId(copySectionId);
 					//copySection.setModule(copyMod);
-					
+
 					//if section content type is composed than create a new copy
 					if (toCopySection.getContentType().equals("typeEditor"))
 					{
-						
+
 						String copyModCollId = meleteCHService.getCollectionId( "typeEditor",copyMod.getModuleId() );
     					String res_mime_type= meleteCHService.MIME_TYPE_EDITOR;
 						ContentResource  cr = meleteCHService.getResource(toCopySection.getSectionResource().getResource().getResourceId());
 	                  	byte[] secContentData = cr.getContent();
-	                  
+
 	                    boolean encodingFlag = true;
 	                    String secResourceName = "Section_" + copySectionId;
 	                    String secResourceDescription="compose content";
-	                    
+
 	                    ResourcePropertiesEdit res = meleteCHService.fillInSectionResourceProperties(encodingFlag,secResourceName,secResourceDescription);
 	                    String newResourceId = meleteCHService.addResourceItem(secResourceName, res_mime_type,copyModCollId,secContentData,res );
-	                   
+
 	                    MeleteResource copyMelResource = new MeleteResource((MeleteResource)toCopySection.getSectionResource().getResource());
 	                    copyMelResource.setResourceId(newResourceId);
 	                    sectionDB.insertMeleteResource(copySection, copyMelResource);
@@ -1700,7 +1699,7 @@ public class ModuleDB implements Serializable {
 					//insert section resource with same melete resource
 					sectionDB.insertSectionResource(copySection, (MeleteResource) toCopySection.getSectionResource().getResource());
 					}
-					
+
 					//replace with new copied section
 					copyModSeqXml = copyModSeqXml.replace(toCopySection.getSectionId().toString(), copySectionId.toString());
 				}

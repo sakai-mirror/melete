@@ -268,30 +268,20 @@ public class ListModulesPage implements Serializable{
 	  	return isNull;
 	  }
 		  public List getModuleDateBeans() {
-	  	int hideFlagSize = 0;
 	   	setCurrentDate(Calendar.getInstance().getTime());
 	  	setCurrentTimestamp(new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
 	  	try {
 	  		moduleDateBeans = getModuleService().getModuleDateBeans(courseId);
-	  		if ((moduleDateBeans != null)&&(moduleDateBeans.size() > 0))
-	  		{	
-	  		  for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext(); ) 
-	  		  {
-		        ModuleDateBean mdbean = (ModuleDateBean) i.next();
-		        if (mdbean.getModuleShdate().isHideFlag() == true)
-		        {
-		        	hideFlagSize = hideFlagSize + 1;
-		        }
-	  		  }
-	  		}
+	  		
 	  	}catch (Exception e)
 		{
 	  		//e.printStackTrace();
 	  		logger.error(e.toString());
 		}
 
+
 	  	//If list of modules returned is zero or if all of them are hidden
-	  	if ((moduleDateBeans == null)||(moduleDateBeans.size() == 0)||(moduleDateBeans.size() == hideFlagSize))
+	  	if ((moduleDateBeans == null)||(moduleDateBeans.size() == 0))
 	  	{
 	  	  nomodsFlag = true;
 	  	  FacesContext ctx = FacesContext.getCurrentInstance();
@@ -306,7 +296,6 @@ public class ListModulesPage implements Serializable{
 	  }
 
 	  public List getModuleDatePrivBeans() {
-		int hideFlagSize = 0;
 	  	setCurrentDate(Calendar.getInstance().getTime());
 	  	setCurrentTimestamp(new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
 	  	try {
@@ -369,7 +358,7 @@ public class ListModulesPage implements Serializable{
 	        }
 	        else  table = (UIData)
             root.findComponent("listmodulesStudentform").findComponent("table");
-	        
+
 	        ValueBinding binding =
 	            Util.getBinding("#{listModulesPage}");
 	        ListModulesPage lmPage = (ListModulesPage)
