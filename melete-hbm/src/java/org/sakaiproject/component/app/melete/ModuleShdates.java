@@ -1,22 +1,22 @@
 /**********************************************************************************
 *
-* $Header: 
+* $Header:
 *
 ***********************************************************************************
 *
-* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project 
-*   
-* Licensed under the Apache License, Version 2.0 (the "License"); you 
-* may not use this file except in compliance with the License. You may 
-* obtain a copy of the License at 
-*   
-* http://www.apache.org/licenses/LICENSE-2.0 
-*   
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the License is distributed on an "AS IS" BASIS, 
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
-* implied. See the License for the specific language governing 
-* permissions and limitations under the License. 
+* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you
+* may not use this file except in compliance with the License. You may
+* obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+* implied. See the License for the specific language governing
+* permissions and limitations under the License.
 *
 **********************************************************************************/
 package org.sakaiproject.component.app.melete;
@@ -35,9 +35,6 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     private Integer moduleId;
 
     /** nullable persistent field */
-    private boolean hideFlag;
-
-    /** nullable persistent field */
     private Date startDate;
 
     /** nullable persistent field */
@@ -50,8 +47,7 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     private org.sakaiproject.component.app.melete.Module module;
 
     /** full constructor */
-    public ModuleShdates(boolean hideFlag, Date startDate, Date endDate, int version, org.sakaiproject.component.app.melete.Module module) {
-        this.hideFlag = hideFlag;
+    public ModuleShdates( Date startDate, Date endDate, int version, org.sakaiproject.component.app.melete.Module module) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.version = version;
@@ -59,12 +55,11 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     }
 
     /** Custom constructor */
-    public ModuleShdates(boolean hideFlag, Date startDate, Date endDate) {
-        this.hideFlag = hideFlag;
+    public ModuleShdates(Date startDate, Date endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
     }
-    
+
     /** default constructor */
     public ModuleShdates() {
     }
@@ -72,27 +67,18 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     /** copy constructor */
     public ModuleShdates(ModuleShdates oldModuleShdates)
     {
-    	this.hideFlag = oldModuleShdates.isHideFlag();
         this.startDate = oldModuleShdates.getStartDate();
-        this.endDate = oldModuleShdates.getEndDate();        
+        this.endDate = oldModuleShdates.getEndDate();
         this.module = null;
     }
-    
-    
+
+
     public Integer getModuleId() {
         return this.moduleId;
     }
 
     public void setModuleId(Integer moduleId) {
         this.moduleId = moduleId;
-    }
-
-    public boolean isHideFlag() {
-        return this.hideFlag;
-    }
-
-    public void setHideFlag(boolean hideFlag) {
-        this.hideFlag = hideFlag;
     }
 
     public Date getStartDate() {
