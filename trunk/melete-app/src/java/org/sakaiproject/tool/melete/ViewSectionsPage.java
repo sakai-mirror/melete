@@ -140,7 +140,11 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	   */
 	  public String getContent()
 	  {
-		SectionResourceService secRes = this.section.getSectionResource();
+		SectionResourceService secRes = null;
+		if (this.section != null)
+		{	
+		  secRes = this.section.getSectionResource();
+		}  
 		String resourceId = null;
 		if (secRes != null)
 		{
