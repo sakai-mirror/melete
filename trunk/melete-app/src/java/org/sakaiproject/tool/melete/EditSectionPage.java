@@ -789,8 +789,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 		{
 			logger.error("error in set server url for edit section content" + errMsg);
 			e.printStackTrace();
-			errMsg = bundle.getString(e.getMessage());
-			ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), errMsg));
+			if (e.getMessage() != null)
+			{	
+			  errMsg = bundle.getString(e.getMessage());
+			  ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), errMsg));
+			}  
 			return "editContentLinkServerView";
 		}
 		return "editmodulesections";
