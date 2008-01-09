@@ -426,6 +426,17 @@
             </managed-property>
 </managed-bean>  
 
+<managed-bean>
+          <description>move sections</description>
+          <managed-bean-name>moveSectionsPage</managed-bean-name>
+          <managed-bean-class>org.sakaiproject.tool.melete.MoveSectionsPage</managed-bean-class>
+          <managed-bean-scope>session</managed-bean-scope>    
+          	<managed-property>
+			<description>Service Dependency: Module service</description>
+			<property-name>moduleService</property-name>
+			<value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+		</managed-property>     
+</managed-bean>  
     <!-- i18n -->
 
 <managed-bean>
@@ -1036,7 +1047,11 @@
      <navigation-case>
 		   <from-outcome>addmodulesections</from-outcome>
         <to-view-id>/melete/addmodulesections.jsp</to-view-id>
-      </navigation-case>                                                                          
+      </navigation-case> 
+        <navigation-case>
+      <from-outcome>move_section</from-outcome>
+      <to-view-id>/melete/move_section.jsp</to-view-id>
+     </navigation-case>                                                                          
    </navigation-rule>
    
 <!--Rule for delete_module -->   
@@ -1069,7 +1084,7 @@
        <navigation-case>
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
-     </navigation-case>                                                                
+     </navigation-case>                                                                   
    </navigation-rule>   
 
 <!--Rule for confirm_delete_module -->
@@ -1218,7 +1233,15 @@
        <navigation-case>
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
-     </navigation-case>                                                               
+     </navigation-case>  
+      <navigation-case>
+		   <from-outcome>view_module_student</from-outcome>
+        <to-view-id>/melete/view_module_student.jsp</to-view-id>
+      </navigation-case>             
+  <navigation-case>
+		   <from-outcome>view_section_student</from-outcome>
+        <to-view-id>/melete/view_section_student.jsp</to-view-id>
+      </navigation-case>                                                                
    </navigation-rule>        
    
  <!--Rule for view_section -->  
@@ -1441,6 +1464,35 @@
         <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
       </navigation-case>    	
  </navigation-rule>  
+ 
+ <!--Rule for confirm_delete_module -->
+<navigation-rule>
+    <from-view-id>/melete/move_section.jsp</from-view-id>   
+     <navigation-case>
+		   <from-outcome>move_section</from-outcome>
+        <to-view-id>/melete/move_section.jsp</to-view-id>
+      </navigation-case>  
+    <navigation-case>
+		   <from-outcome>list_auth_modules</from-outcome>
+        <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
+      </navigation-case>        
+       <navigation-case>
+		   <from-outcome>list_modules_inst</from-outcome>
+        <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
+      </navigation-case>          
+    <navigation-case>
+		   <from-outcome>list_modules_student</from-outcome>
+        <to-view-id>/melete/list_modules_student.jsp</to-view-id>
+      </navigation-case>                                 
+   <navigation-case>
+		   <from-outcome>modules_author_manage</from-outcome>
+        <to-view-id>/melete/modules_author_manage.jsp</to-view-id>
+      </navigation-case>  
+       <navigation-case>
+      <from-outcome>author_preference</from-outcome>
+      <to-view-id>/melete/author_preference.jsp</to-view-id>
+     </navigation-case>                                                               
+   </navigation-rule>  
 <!-- remove Components and render-kit by rashmi as samigo tag is no longer used-->
  
 </faces-config>

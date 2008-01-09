@@ -1714,7 +1714,66 @@ public class ModuleDB implements Serializable {
 			throw new MeleteException("copy_fail");
 		}
 	}
+	
+	public void moveSection(Section section,Module selectedModule) throws MeleteException
+	{
+		try
+		{
+			Session session = hibernateUtil.currentSession();
+			Transaction tx = null;
+			try
+			{
+				// add section to selected Module
+				String selectedModSeqXml = selectedModule.getSeqXml();
+				SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
+				SectionUtil.addSectiontoList(selectedModSeqXml, section.getSectionId().toString());
+				selectedModSeqXml = SectionUtil.storeSubSections();
+				selectedModule.setSeqXml(selectedModSeqXml);
 
+				// delete section association from the previous module
+				Module prev_module = (Module) section.getModule();
+				String prevModSeqXml = prev_module.getSeqXml();
+				prevModSeqXml = SectionUtil.deleteSection(prevModSeqXml, section.getSectionId().toString());
+				prev_module.setSeqXml(prevModSeqXml);
+
+				section.setModule(selectedModule);
+				section.setModuleId(selectedModule.getModuleId().intValue());
+
+				// save object
+				tx = session.beginTransaction();
+				session.saveOrUpdate(section);
+				session.saveOrUpdate(prev_module);
+				session.saveOrUpdate(selectedModule);
+				tx.commit();
+
+			}
+			catch (StaleObjectStateException sose)
+			{
+				logger.error("stale object exception" + sose.toString());
+			}
+			catch (HibernateException he)
+			{
+				if (tx != null) tx.rollback();
+				logger.error(he.toString());
+				throw he;
+			}
+			catch (MeleteException me)
+			{
+				if (tx != null) tx.rollback();
+				throw me;
+			}
+			finally
+			{
+				hibernateUtil.closeSession();
+			}
+		}
+		catch (Exception e)
+		{
+			throw new MeleteException("move_section_fail");
+		}
+	}
+	
+	
 	/**
 	 * @param sectionDB the sectionDB to set
 	 */
