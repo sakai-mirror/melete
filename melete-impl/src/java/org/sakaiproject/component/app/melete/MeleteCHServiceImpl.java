@@ -623,11 +623,14 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		}
    			//          setup a security advisor
         		meleteSecurityService.pushAdvisor();
-        		resourceId = URLDecoder.decode(resourceId,"UTF-8");
-        		ContentResourceEdit edit = getContentservice().editResource(resourceId);
-        		edit.setContent(contentEditor.getBytes());
-        		edit.setContentLength(contentEditor.length());
-        		getContentservice().commitResource(edit);
+        		if (resourceId != null)
+        		{	
+        		  resourceId = URLDecoder.decode(resourceId,"UTF-8");
+        		  ContentResourceEdit edit = getContentservice().editResource(resourceId);
+        		  edit.setContent(contentEditor.getBytes());
+        		  edit.setContentLength(contentEditor.length());
+        		  getContentservice().commitResource(edit);
+        		}  
         		return;
 	    }
 	 	catch(Exception e)
