@@ -23,6 +23,7 @@
 package org.sakaiproject.api.app.melete;
 
 import java.util.*;
+
 import org.sakaiproject.api.app.melete.exception.MeleteException;
 
 /* Mallika - 3/22/05 - Added methods for moduledatebeanservice
@@ -102,4 +103,6 @@ public interface ModuleService{
 	public void sortSectionItem(ModuleObjService module,String section_id,String Direction) throws MeleteException;
 	
 	public void copyModule(ModuleObjService module,String courseId,String userId) throws MeleteException;
+	
+	public void moveSections(List sectionBeans,ModuleObjService selectedModule) throws MeleteException;
 }

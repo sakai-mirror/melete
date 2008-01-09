@@ -1370,6 +1370,57 @@ public class ListAuthModulesPage implements Serializable
 	}
 	// copy code end
 
+	public String MoveSectionAction()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");	
+		
+		try
+		{
+			if (count == 0 || moduleSelected)
+			{
+				String msg = bundle.getString("select_mv_section");
+				addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
+				resetSubSectionValues();
+				return "list_auth_modules";
+			}
+			
+			if (sectionSelected)
+			{
+				ModuleDateBean mdbean = null;
+				SectionBean secBean = null;
+				ArrayList<SectionBean> moveSectionBeans = new ArrayList<SectionBean>(0);
+				
+				for (ListIterator<SecModObj> i = selectedSecModIndices.listIterator(); i.hasNext();)
+				{
+					SecModObj smObj = i.next();
+					mdbean = (ModuleDateBean) moduleDateBeans.get((((Integer) smObj.getModObj())).intValue());
+					secBean = (SectionBean) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
+					moveSectionBeans.add(secBean);
+				}
+				ValueBinding binding = Util.getBinding("#{moveSectionsPage}");
+				MoveSectionsPage mvPage = (MoveSectionsPage) binding.getValue(ctx);
+				mvPage.resetValues();
+				mvPage.setSectionBeans(moveSectionBeans);		
+
+				count = 0;
+				sectionSelected = false;
+				selectedSecModIndices = null;
+				return "move_section";
+			}
+			
+		}
+		catch (Exception me)
+		{
+			logger.error(me.toString());
+			String msg = bundle.getString("copy_fail");
+			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
+		}
+	
+		return "list_auth_modules";
+	}	
+	// move sections code end
+	
 	private void addMessage(FacesContext ctx, String msgName, String msgDetail, FacesMessage.Severity severity)
 	{
 		FacesMessage msg = new FacesMessage(msgName, msgDetail);

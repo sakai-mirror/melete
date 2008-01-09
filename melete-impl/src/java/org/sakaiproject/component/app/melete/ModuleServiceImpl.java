@@ -186,6 +186,20 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 		
 	}
 	
+	public void moveSections(List sectionBeans,ModuleObjService selectedModule) throws MeleteException
+	{
+	  try{
+		  for (ListIterator<SectionBean> i = sectionBeans.listIterator(); i.hasNext(); )
+		  {
+			  SectionBean moveSectionBean = (SectionBean)i.next();
+			  moduledb.moveSection(moveSectionBean.getSection(), (Module)selectedModule);
+		  }
+		}catch (Exception ex)
+		{
+			throw new MeleteException("move_section_fail");
+		}
+	}
+	
 // mallika page stuff
 public List getModuleDateBeans(String courseId) {
   	if (moduledb == null) moduledb = ModuleDB.getModuleDB();
