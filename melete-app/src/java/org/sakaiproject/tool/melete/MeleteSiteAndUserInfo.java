@@ -233,7 +233,8 @@ public class MeleteSiteAndUserInfo {
 		String beginMigrate = ServerConfigurationService.getString("melete.migrate","false");
 		logger.info("Value of beginMigrate is "+beginMigrate);		
 
-	   
+	    moduleService.checkInstallation();
+	    
 		if ((isSuperUser()&&beginMigrate.equals("false")) || ((!isSuperUser())&&isUserAuthor()) || ((!isSuperUser())&&isUserStudent()))
 		{  
 				migrateResult = moduleService.getMigrateStatus();
