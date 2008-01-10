@@ -473,6 +473,80 @@ public void restoreModules(List modules) throws Exception
 	 * that may not be needed anymore
 	 */
 	
+	//This method checks to see if we have a new installation of Melete or an upgrade
+	//It queries the MELETE_MODULE table for its count. If it is zero, it assumes a new
+	//installation. After the query, it populates MELETE_MIGRATE_STATUS.
+	//As long as MELETE_MIGRATE_STATUS is not empty, the MELETE_MODULE table will not be
+	//queried
+	public void checkInstallation() throws Exception
+	{
+		Connection dbConnection = null;
+		int start_flag=0,complete_flag=0;
+		boolean migrateTableEmpty = true;
+		boolean moduleTableEmpty = true;
+		int moduleCount = 0;
+		
+		try {
+
+			dbConnection = SqlService.borrowConnection();
+	    	Statement stmt = dbConnection.createStatement();
+	    	ResultSet rs = null;
+
+            //This check is in place to ensure that the migration process does not start again
+	    	String sql = "select start_flag,complete_flag from melete_migrate_status";
+	    	rs = stmt.executeQuery(sql);
+	    	if (rs != null)
+	    	{
+	    		while (rs.next())
+	    		{
+	    			start_flag = rs.getInt("start_flag");
+	    			complete_flag = rs.getInt("complete_flag");
+	    			migrateTableEmpty = false;
+	    		}
+	    		rs.close();
+	    		stmt.close();
+	    		if (migrateTableEmpty == false) return;
+	    		if (migrateTableEmpty == true)
+	    		{
+	    			sql = "select count(*) as modulecount from melete_module";
+	    			stmt = dbConnection.createStatement();
+	    			rs = stmt.executeQuery(sql);
+	    	    	if (rs != null)
+	    	    	{
+	    	    		while (rs.next())
+	    	    		{
+	    	    			moduleCount = rs.getInt("modulecount");
+	    	    			moduleTableEmpty = false;
+	    	    		}
+	    	    		rs.close();
+	    	    		stmt.close();
+	    	    		//This means it is a new installation
+	    	    		if ((moduleTableEmpty == true)||((moduleTableEmpty == false)&&(moduleCount == 0)))
+	    	    		{
+	    	    			sql = "insert into melete_migrate_status(START_FLAG,COMPLETE_FLAG) values(1,1)";
+	    	    	    	dbConnection.setAutoCommit(true);
+	    	    	    	stmt = dbConnection.createStatement();
+	    	    	    	int insRes = stmt.executeUpdate(sql);
+	    	    	    	logger.info("New installation - MELETE_MIGRATE_STATUS was inserted into "+insRes);
+	    	    	    	stmt.close();
+	    	    		}
+	    	    	}	
+	    		}
+	    	}	
+		} catch (Exception e) {
+			if (logger.isErrorEnabled()) logger.error(e);
+			throw e;
+		} finally{
+			try{
+				if (dbConnection != null)
+					SqlService.returnConnection(dbConnection);
+			}catch (Exception e1){
+				if (logger.isErrorEnabled()) logger.error(e1);
+				throw e1;
+			}
+		}	 	    				
+	}
+	
 	public int getMigrateStatus() throws Exception
 	{
 		Connection dbConnection = null;

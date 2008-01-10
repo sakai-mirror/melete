@@ -91,7 +91,7 @@ public interface ModuleService{
 	public int getMigrateStatus() throws Exception;
     public int migrateMeleteDocs(String meleteDocsDir) throws Exception;
 	public boolean updateSeqXml(String courseId) throws Exception;
-
+	public void checkInstallation() throws Exception;
 
 
 	public void createSubSection(ModuleObjService module, List secBeans) throws MeleteException;

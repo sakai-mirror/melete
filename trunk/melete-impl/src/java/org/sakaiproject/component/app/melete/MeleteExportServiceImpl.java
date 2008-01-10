@@ -31,6 +31,7 @@ import org.sakaiproject.api.app.melete.MeleteExportService;
 import org.sakaiproject.api.app.melete.MeleteSecurityService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
 import org.sakaiproject.api.app.melete.util.XMLHelper;
+import org.sakaiproject.component.app.melete.MeleteUtil;
 import org.xml.sax.SAXException;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.util.Validator;
@@ -69,6 +70,8 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 	protected SectionDB sectionDB;
 	private SubSectionUtilImpl sectionUtil;
 	private org.w3c.dom.Element currItem = null;
+	protected MeleteUtil meleteUtil = new MeleteUtil();
+	
 	/**
 	 * Establish my logger component dependency.
 	 * @param logger the logger component.
@@ -315,7 +318,7 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 
 			if(linkData.startsWith(ServerConfigurationService.getServerUrl()) && linkData.indexOf("/access/content/group")!= -1)
 			{
-				String link_resource_id = replace(linkData,ServerConfigurationService.getServerUrl()+"/access/content","");
+				String link_resource_id = meleteUtil.replace(linkData,ServerConfigurationService.getServerUrl()+"/access/content","");
 
 				// read resource and create a file
 				ArrayList link_content = new ArrayList();
@@ -688,7 +691,7 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 						// not a site resource item so make it a full URL
 						String patternStr = imgSrcPath;
 						String replacementStr =ServerConfigurationService.getServerUrl() + imgSrcPath;
-						modifiedSecContent = replace(modifiedSecContent,patternStr, replacementStr);
+						modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
 						return modifiedSecContent;
 					}
 
@@ -704,7 +707,7 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 					Pattern pattern = Pattern.compile(Pattern.quote(patternStr));
 
 					// Replace all occurrences of pattern in input
-					modifiedSecContent = replace(modifiedSecContent,patternStr, replacementStr);
+					modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
 
 					//add image to resources element
 					Element file = resource.addElement("file");
@@ -715,7 +718,7 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 					//internal link resides somewhere within sakai
 					String patternStr = imgSrcPath;
 					String replacementStr =ServerConfigurationService.getServerUrl() + imgSrcPath;
-					modifiedSecContent = replace(modifiedSecContent,patternStr, replacementStr);
+					modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
 					return modifiedSecContent;
 				}
 
@@ -727,67 +730,6 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 		return modifiedSecContent;
 	}
 
-	public String replace(String s, String one, String another) {
-		// In a string replace one substring with another
-		if (s.equals(""))
-			return "";
-		if ((one == null)||(one.length() == 0))
-		{
-			return s;
-		}
-		String res = "";
-		int i = s.indexOf(one, 0);
-		int lastpos = 0;
-		while (i != -1) {
-			res += s.substring(lastpos, i) + another;
-			lastpos = i + one.length();
-			i = s.indexOf(one, lastpos);
-		}
-		res += s.substring(lastpos); // the rest
-		return res;
-}
-
-	/*
-	 * REMOVE WITH MELTEDOCS MIGRATION PROGRAMME
-	 */
-	public byte[] readFromFile(File contentfile) throws Exception{
-
-		FileInputStream fis = null;
-		try{
-			fis = new FileInputStream(contentfile);
-
-			byte buf[] = new byte[(int)contentfile.length()];
-			fis.read(buf);
-			return buf;
-	  	}catch(Exception ex){
-	  		throw ex;
-	  		}finally{
-	  		if (fis != null)
-	  			fis.close();
-	  		}
-	}
-
-	 public boolean checkFileExists(String filePath)
-	 {
-	 boolean success = false;
-	 try {
-	        File file = new File(filePath);
-
-	        // Create file if it does not exist
-	        success = file.exists();
-	        if (success) {
-
-	        } else {
- //	        	 File did not exist and was created
-	        	logger.info("File "+filePath+" does not exist");
-	        }
-	    } catch (Exception e) {
-	    	logger.error("error in checkFileExists"+ e.toString());
-	  		e.printStackTrace();
-	    }
-
-	    return success;
-	 }
 
 	/**
 	 * creates file from input path to output path

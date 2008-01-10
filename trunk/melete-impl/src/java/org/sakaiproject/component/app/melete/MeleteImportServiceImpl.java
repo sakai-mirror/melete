@@ -43,6 +43,7 @@ import org.dom4j.XPath;
 import org.sakaiproject.api.app.melete.MeleteCHService;
 import org.sakaiproject.api.app.melete.MeleteImportService;
 import org.sakaiproject.api.app.melete.MeleteSecurityService;
+import org.sakaiproject.component.app.melete.MeleteUtil;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.cover.ContentTypeImageService;
 import org.sakaiproject.content.cover.ContentHostingService;
@@ -109,6 +110,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	protected int RESOURCE_LICENSE_FAIRUSE_CODE = 4; //FairUse Exception
 
 	private String destinationContext;
+	protected MeleteUtil meleteUtil = new MeleteUtil();
 
 	public void setLogger(Log logger){
 		this.logger = logger;
@@ -221,7 +223,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					if (hrefVal != null && hrefVal.length() != 0
 							&& !(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")))
 					{
-						if (!checkFileExists(getUnzippeddirpath() + File.separator + hrefVal))
+						if (!meleteUtil.checkFileExists(getUnzippeddirpath() + File.separator + hrefVal))
 						{
 							logger.info("content file for section is missing so move ON");
 							return;
@@ -451,7 +453,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		if (identifierref != null) {
 			eleRes = getResource(identifierref.getValue(), document);
 			String hrefVal = eleRes.attributeValue("href");
-			String nextsteps = new String(readFromFile(new File(getUnzippeddirpath() + File.separator+ hrefVal)));
+			String nextsteps = new String(meleteUtil.readFromFile(new File(getUnzippeddirpath() + File.separator+ hrefVal)));
 			module.setWhatsNext(nextsteps);
 			ModuleDateBean mdbean = new ModuleDateBean();
 			mdbean.setModuleId(module.getModuleId().intValue());
@@ -597,7 +599,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					if (hrefVal != null && hrefVal.length() != 0
 							&& !(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")))
 					{
-						if (!checkFileExists(getUnzippeddirpath() + File.separator + hrefVal))
+						if (!meleteUtil.checkFileExists(getUnzippeddirpath() + File.separator + hrefVal))
 						{
 							logger.info("content file for section is missing so move ON");
 							return;
@@ -645,7 +647,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			 		if (imsImport)
 			 		{
 				 		  //This is executed by IMP import
-				 		  melContentData = readFromFile(new File(getUnzippeddirpath() + File.separator
+				 		  melContentData = meleteUtil.readFromFile(new File(getUnzippeddirpath() + File.separator
 								+ hrefVal));
 				 		 uploadCollId = getMeleteCHService().getUploadCollectionId(destinationContext);
 			 		}
@@ -738,7 +740,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			if (resElements != null)
 			{
                 //This part called by IMS import
-				contentEditor = new String(readFromFile(new File(getUnzippeddirpath() + File.separator + hrefVal)));
+				contentEditor = new String(meleteUtil.readFromFile(new File(getUnzippeddirpath() + File.separator + hrefVal)));
 //				 create objects for embedded images
 				contentEditor = createContentFile(contentEditor, (Module)module, (Section)section, resElements);
 				addCollId = getMeleteCHService().getCollectionId(section.getContentType(), module.getModuleId());
@@ -853,7 +855,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 							{
 								if(resElements != null){
 									String fileName = ((Element)resElements.get(0)).attributeValue("href");
-									melContentData = readFromFile(new File(getUnzippeddirpath() + File.separator+ fileName));
+									melContentData = meleteUtil.readFromFile(new File(getUnzippeddirpath() + File.separator+ fileName));
 									res_mime_type = fileName.substring(fileName.lastIndexOf(".")+1);
 									res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
 									}
@@ -894,7 +896,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					  res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
 			 		  if (resElements != null)
 			 		  {
-			 			melContentData = readFromFile(new File(getUnzippeddirpath() + File.separator+ hrefVal));
+			 			melContentData = meleteUtil.readFromFile(new File(getUnzippeddirpath() + File.separator+ hrefVal));
 			 		  }
 			 		  else
 			 		  {
@@ -1121,7 +1123,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				}
 				Pattern pattern = Pattern.compile(Pattern.quote(imgSrcPath));
 				// Replace all occurrences of pattern in input
-				contentEditor = replace(contentEditor,imgSrcPath, replacementStr);
+				contentEditor = meleteUtil.replace(contentEditor,imgSrcPath, replacementStr);
 
 			return contentEditor;
 	}
@@ -1224,71 +1226,6 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 	}
 	/*METHODS USED BY IMPORT FROM SITE END*/
-
-	 public boolean checkFileExists(String filePath)
-	 {
-	 boolean success = false;
-	 try {
-	        File file = new File(filePath);
-
-	        // Create file if it does not exist
-	        success = file.exists();
-	        if (success) {
-
-	        } else {
- //	        	 File did not exist and was created
-	        	logger.info("File "+filePath+" does not exist");
-	        }
-	    } catch (Exception e) {
-	    	logger.error("error in checkFileExists"+ e.toString());
-	  		e.printStackTrace();
-	    }
-
-	    return success;
-	 }
-
-	/**
-	 * reading characters from file
-	 * @param contentfile - file to read
-	 * @return content of the file
-	 */
-	public byte[] readFromFile(File contentfile) throws Exception{
-
-		FileInputStream fis = null;
-		try{
-			fis = new FileInputStream(contentfile);
-
-			byte buf[] = new byte[(int)contentfile.length()];
-			fis.read(buf);
-			return buf;
-	  	}catch(Exception ex){
-	  		throw ex;
-	  		}finally{
-	  		if (fis != null)
-	  			fis.close();
-	  		}
-	}
-
-
-	public String replace(String s, String one, String another) {
-		// In a string replace one substring with another
-		if (s.equals(""))
-			return "";
-		if ((one == null)||(one.length() == 0))
-		{
-			return s;
-		}
-		String res = "";
-		int i = s.indexOf(one, 0);
-		int lastpos = 0;
-		while (i != -1) {
-			res += s.substring(lastpos, i) + another;
-			lastpos = i + one.length();
-			i = s.indexOf(one, lastpos);
-		}
-		res += s.substring(lastpos); // the rest
-		return res;
-}
 
 	/**
 	 * deletes the file and its children

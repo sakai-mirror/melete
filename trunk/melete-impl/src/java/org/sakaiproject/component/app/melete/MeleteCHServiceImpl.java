@@ -35,6 +35,7 @@ import java.net.URLDecoder;
 
 import org.sakaiproject.api.app.melete.MeleteCHService;
 import org.sakaiproject.api.app.melete.MeleteSecurityService;
+import org.sakaiproject.component.app.melete.MeleteUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
@@ -88,6 +89,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	 private SectionDB sectiondb;
 	 /** Dependency: The Melete Security service. */
 	 private MeleteSecurityService meleteSecurityService;
+	 protected MeleteUtil meleteUtil = new MeleteUtil();
 
 	 /** This string starts the references to resources in this service. */
 		static final String REFERENCE_ROOT = Entity.SEPARATOR+"meleteDocs";
@@ -714,9 +716,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 						&& fileName.startsWith("file:/") )
 					{
 		              // word paste fix
-		             patternStr= replace(patternStr,"\\","/");
-		             contentEditor = replace(contentEditor,fileName,patternStr);
-		             checkforimgs =  replace(contentEditor,fileName,patternStr);
+		             patternStr= meleteUtil.replace(patternStr,"\\","/");
+		             contentEditor = meleteUtil.replace(contentEditor,fileName,patternStr);
+		             checkforimgs =  meleteUtil.replace(contentEditor,fileName,patternStr);
 
 		             fileName = patternStr;		           	 
 		  	  	    fileName = fileName.substring(fileName.lastIndexOf("/")+1);
@@ -766,15 +768,15 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 
 		         	// in content editor replace the file found with resource reference url
 		         	 String replaceStr = getResourceUrl(newEmbedResourceId);
-		         	 replaceStr = replace(replaceStr,ServerConfigurationService.getServerUrl(),"");
+		         	 replaceStr = meleteUtil.replace(replaceStr,ServerConfigurationService.getServerUrl(),"");
 		         	 logger.debug("repl;acestr in embedimage processing is " + replaceStr);
 		         	
 		         	 // Replace all occurrences of pattern in input
 		            Pattern pattern = Pattern.compile(patternStr);
 
 		            //Rashmi's change to fix infinite loop on uploading images
-		            contentEditor = replace(contentEditor,patternStr,replaceStr);
-		            checkforimgs = replace(contentEditor,patternStr,replaceStr);
+		            contentEditor = meleteUtil.replace(contentEditor,patternStr,replaceStr);
+		            checkforimgs = meleteUtil.replace(contentEditor,patternStr,replaceStr);
 		             }
 		             catch(FileNotFoundException ff)
 					 {
@@ -805,9 +807,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 						} 
 						
 					}
-					String replaceStr = replace(fileName,ServerConfigurationService.getServerUrl(),"");
-					contentEditor = replace(contentEditor,patternStr,replaceStr);
-			        checkforimgs = replace(checkforimgs,patternStr,replaceStr);
+					String replaceStr = meleteUtil.replace(fileName,ServerConfigurationService.getServerUrl(),"");
+					contentEditor = meleteUtil.replace(contentEditor,patternStr,replaceStr);
+			        checkforimgs = meleteUtil.replace(checkforimgs,patternStr,replaceStr);
 				}
 		            // iterate next
 		            checkforimgs =checkforimgs.substring(endSrc);
@@ -915,21 +917,6 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    }
 
 
-		private String replace(String s, String one, String another) {
-				// In a string replace one substring with another
-				if (s.equals(""))
-					return "";
-				String res = "";
-				int i = s.indexOf(one, 0);
-				int lastpos = 0;
-				while (i != -1) {
-					res += s.substring(lastpos, i) + another;
-					lastpos = i + one.length();
-					i = s.indexOf(one, lastpos);
-				}
-				res += s.substring(lastpos); // the rest
-				return res;
-	  }
 		
 	  public void copyIntoFolder(String fromColl,String toColl)
 	  {
