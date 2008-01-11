@@ -991,61 +991,19 @@ public void restoreModules(List modules) throws Exception
 
 			try {
 
-				Pattern p1 = Pattern.compile("<[iI][mM][gG]\\s|<[aA]\\s|<[eE][mM][bB][eE][dD]\\s");
-				Pattern pi = Pattern.compile(">|\\s[sS][rR][cC]\\s*=");
-				Pattern pa = Pattern.compile(">|\\s[hH][rR][eE][fF]\\s*=");
-				Pattern ps = Pattern.compile("\\S");
-				Pattern pe = Pattern.compile("\\s|>");
+				 int startSrc =0;
+				int endSrc = 0;
 
 				while(checkforimgs !=null) {
 
-				        // look for <img or <a
-				        Matcher m = p1.matcher(checkforimgs);
-					if (!m.find()) // found anything?
-					    break;
-					checkforimgs = checkforimgs.substring(m.start());
-					// look for src= or href=
-					if (checkforimgs.startsWith("<i") ||
-					    checkforimgs.startsWith("<I") ||
-					    checkforimgs.startsWith("<e") ||
-					    checkforimgs.startsWith("<E"))
-					    m = pi.matcher(checkforimgs);
-					else
-					    m = pa.matcher(checkforimgs);
-					// end = start+1 means that we found a >
-					// i.e. the attribute we're looking for isn't there
-					if (!m.find() || (m.end() == m.start() + 1)) {
-					    // prevent infinite loop by consuming the <
-					    checkforimgs = checkforimgs.substring(1);
-					    continue;
-					}
-
-					checkforimgs = checkforimgs.substring(m.end());
-
-					// look for start of arg, a non-whitespace
-				        m = ps.matcher(checkforimgs);
-					if (!m.find()) // found anything?
-					    break;
-
-					checkforimgs = checkforimgs.substring(m.start());
-
-					int startSrc = 0;
-					int endSrc = 0;
-
-					// handle either quoted or nonquoted arg
-					if (checkforimgs.startsWith("\"") ||
-					    checkforimgs.startsWith("\'")) {
-					    String quotestr = checkforimgs.substring(0,1);
-					    startSrc = 1;
-					    endSrc = checkforimgs.indexOf(quotestr, startSrc);
-					} else {
-					    startSrc = 0;
-					    // ends with whitespace or >
-					    m = pe.matcher(checkforimgs);
-					    if (!m.find()) // found anything?
-						continue;
-					    endSrc = m.start();
-					}
+					ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);	    			
+	    			checkforimgs = (String)embedData.get(0);
+	    			if (embedData.size() > 1)
+	    			{
+	    				startSrc = ((Integer)embedData.get(1)).intValue();
+	    				endSrc = ((Integer)embedData.get(2)).intValue();
+	    			}
+	    			if (endSrc <= 0) break;
 
 					imgSrcPath = checkforimgs.substring(startSrc, endSrc);
 					imgName = imgSrcPath.substring(imgSrcPath.lastIndexOf("/")+1);
@@ -1176,6 +1134,8 @@ public void restoreModules(List modules) throws Exception
 					   }	
 
 					}
+					checkforimgs =checkforimgs.substring(endSrc);
+		            startSrc=0; endSrc = 0;	
 				}
 			}catch (Exception e) {
 				throw e;
