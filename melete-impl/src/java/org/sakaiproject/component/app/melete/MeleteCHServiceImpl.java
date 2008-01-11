@@ -660,7 +660,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	         String UploadCollId = getUploadCollectionId();
 	         String fileName;
 			 int startSrc =0;
-			int endSrc = 0;
+			 int endSrc = 0;
 			
              // look for local embedded images
 	         try
@@ -699,7 +699,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		         while(checkforimgs !=null)
 		         {
 		           // look for a href and img tag       
-		        	ArrayList embedData = findEmbedItemPattern(checkforimgs);	    			
+		        	ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);	    			
 	    			checkforimgs = (String)embedData.get(0);
 	    			if (embedData.size() > 1)
 	    			{
@@ -822,76 +822,6 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    	return contentEditor;
 	    }
 
-	    /*
-	     * 
-	     */
-		protected ArrayList findEmbedItemPattern(String checkforimgs)
-		{
-			ArrayList returnData = new ArrayList();
-			Pattern p1 = Pattern.compile("<[iI][mM][gG]\\s|<[aA]\\s");
-			Pattern pi = Pattern.compile(">|\\s[sS][rR][cC]\\s*=");
-			Pattern pa = Pattern.compile(">|\\s[hH][rR][eE][fF]\\s*=");
-			Pattern ps = Pattern.compile("\\S");
-			Pattern pe = Pattern.compile("\\s|>");
-
-			int startSrc = 0;
-			int endSrc = 0;
-			
-			while(checkforimgs !=null) {
-
-			        // look for <img or <a
-			        Matcher m = p1.matcher(checkforimgs);
-				if (!m.find()) // found anything?
-				    break;
-				checkforimgs = checkforimgs.substring(m.start());
-				// look for src= or href=
-				if (checkforimgs.startsWith("<i") ||
-				    checkforimgs.startsWith("<I"))
-				    m = pi.matcher(checkforimgs);
-				else
-				    m = pa.matcher(checkforimgs);
-				// end = start+1 means that we found a >
-				// i.e. the attribute we're looking for isn't there
-				if (!m.find() || (m.end() == m.start() + 1)) {
-				    // prevent infinite loop by consuming the <
-				    checkforimgs = checkforimgs.substring(1);
-				    continue;
-				}
-
-				checkforimgs = checkforimgs.substring(m.end());
-
-				// look for start of arg, a non-whitespace
-			        m = ps.matcher(checkforimgs);
-				if (!m.find()) // found anything?
-				    break;
-				
-				checkforimgs = checkforimgs.substring(m.start());
-				
-				startSrc = 0;
-				endSrc = 0;
-
-				// handle either quoted or nonquoted arg
-				if (checkforimgs.startsWith("\"") ||
-				    checkforimgs.startsWith("\'")) {
-				    String quotestr = checkforimgs.substring(0,1);
-				    startSrc = 1;
-				    endSrc = checkforimgs.indexOf(quotestr, startSrc);
-				    break;
-				} else {
-				    startSrc = 0;
-				    // ends with whitespace or >
-				    m = pe.matcher(checkforimgs);
-				    if (!m.find()) // found anything?
-					continue;
-				    endSrc = m.start();
-				}
-			} //while end
-			returnData.add(checkforimgs);
-			if (endSrc != 0) {returnData.add(new Integer(startSrc)); returnData.add(new Integer(endSrc)); }
-			return returnData;
-		}
-		
-	    
 	    
 	    /*
 	     * get the URL for replaceStr of embedded images

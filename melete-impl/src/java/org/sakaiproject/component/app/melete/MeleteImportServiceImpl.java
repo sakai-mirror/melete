@@ -185,21 +185,21 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			module.setKeywords("Untitled Module");
 			module.setDescription("    ");
 			createModule(module);
-			
+
 			// read all resources tag and create section
 			Map uris = new HashMap();
 			uris.put("imscp", DEFAULT_NAMESPACE_URI);
 			uris.put("imsmd", IMSMD_NAMESPACE_URI);
-			
+
 			// resources
 			XPath xpath = document.createXPath("/imscp:manifest/imscp:resources");
 			xpath.setNamespaceURIs(uris);
 
 			Element eleAllResources = (Element) xpath.selectSingleNode(document);
-			
+
 			sectionUtil = new SubSectionUtilImpl();
 			seqDocument = sectionUtil.createSubSection4jDOM();
-			
+
 			// build section
 			// loop thru resources elements - resource elements
 			List elements = eleAllResources.elements();
@@ -207,14 +207,14 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			{
 				Element eleRes = (Element) iter.next();
 				Section section = buildDefaultSection(module,addBlankSection(null));
-				
+
 				MeleteResource meleteResource= new MeleteResource();
 				//default to no license
 				meleteResource.setLicenseCode(RESOURCE_LICENSE_CODE);
 				meleteResource.setCcLicenseUrl(RESOURCE_LICENSE_URL);
-				
+
 				Attribute resHrefAttr = eleRes.attribute("href");
-				
+
 				if (resHrefAttr != null)
 				{
 					String hrefVal = resHrefAttr.getValue();
@@ -230,7 +230,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 						}
 					}
 					// end missing file check
-					
+
 					List resElements = eleRes.elements();
 					createContentResource(module, section, meleteResource, hrefVal, resElements);
 
@@ -241,7 +241,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			module.setSeqXml(seqDocument.asXML());
 			moduleDB.updateModule(module);
 	  }
-	  
+
 	  /*
 	   * build default section without reading ims item element
 	   */
@@ -251,21 +251,21 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			String firstName = UserDirectoryService.getCurrentUser().getFirstName();
 			String lastName = UserDirectoryService.getCurrentUser().getLastName();
 
-			Section section = new Section(); 
+			Section section = new Section();
 			section.setTextualContent(true);
 			section.setCreatedByFname(firstName);
 			section.setCreatedByLname(lastName);
-			section.setContentType("notype");		
-			section.setTitle("Untitled Section");			
-			
+			section.setContentType("notype");
+			section.setTitle("Untitled Section");
+
 			// save section object
 			Integer new_section_id = sectionDB.addSection(module, section, true);
 			section.setSectionId(new_section_id);
 			sectionElement.addAttribute("id", new_section_id.toString());
-			
+
 			return section;
 	  }
-	  
+
 	/**
 	 * Builds the module for each Item element under organization
 	 *
@@ -296,7 +296,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			}
 		}
 		if(!moduleTitleFlag) module.setTitle("Untitled Module");
-		
+
 		boolean keywords = false;
 		boolean descr = false;
 		if (eleItem.selectNodes("./imsmd:lom/imsmd:general") != null && eleItem.selectNodes("./imsmd:lom/imsmd:general").size() != 0)
@@ -304,7 +304,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			Element generalElement = (Element) eleItem.selectNodes("./imsmd:lom/imsmd:general").get(0);
 			List moduleMetadataList = generalElement.elements();
 			for (Iterator iter = moduleMetadataList.iterator(); iter.hasNext();)
-			{				
+			{
 				Element metaElement = (Element) iter.next();
 
 				if (metaElement.getName().equals("description"))
@@ -313,7 +313,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					module.setDescription(desc.trim());
 					descr = true;
 				}
-				
+
 				if (metaElement.getName().equals("keyword"))
 				{
 					String modkeyword = metaElement.selectSingleNode(".//imsmd:langstring").getText();
@@ -321,15 +321,15 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					{
 						module.setKeywords(modkeyword.trim());
 						keywords = true;
-					}					
-				}				
+					}
+				}
 			}
 		}
 		if (!keywords) module.setKeywords(module.getTitle());
 		if (!descr) module.setDescription("    ");
 		createModule(module);
 
-// 		build sections	
+// 		build sections
 		try
 		{
 			sectionUtil = new SubSectionUtilImpl();
@@ -337,8 +337,8 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 			for (Iterator iter = eleItem.elementIterator("item"); iter.hasNext();)
 			{
-				Element element = (Element) iter.next();			
-				
+				Element element = (Element) iter.next();
+
 				if (element.attributeValue("identifier").startsWith("NEXTSTEPS"))
 					buildWhatsNext(element, document, module);
 				else buildSection(element, document, module, addBlankSection(null));
@@ -515,7 +515,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		MeleteResource meleteResource = new MeleteResource();
 		boolean sectionTitleFlag = false;
 		boolean sectionCopyrightFlag= false;
-		
+
 		List elements = eleItem.elements();
 		for (Iterator iter = elements.iterator(); iter.hasNext();) {
 			Element element = (Element) iter.next();
@@ -555,7 +555,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					if(licenseUrl != null)
 						buildLicenseInformation(meleteResource,licenseUrl);
 						sectionCopyrightFlag = true;
-					}					
+					}
 				}
 			// license end
 		}
@@ -568,13 +568,13 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		section.setTextualContent(true);
 		section.setCreatedByFname(firstName);
 		section.setCreatedByLname(lastName);
-		section.setContentType("notype");		
-		
+		section.setContentType("notype");
+
 		if(!sectionTitleFlag)section.setTitle("Untitled Section");
-		
+
 		//default to no license
 		if(!sectionCopyrightFlag)
-		{		
+		{
 			meleteResource.setLicenseCode(RESOURCE_LICENSE_CODE);
 			meleteResource.setCcLicenseUrl(RESOURCE_LICENSE_URL);
 		}
@@ -588,9 +588,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		{
 			eleRes = getResource(identifierref.getValue(), document);
 			if (eleRes != null)
-			{				
+			{
 				Attribute resHrefAttr = eleRes.attribute("href");
-		
+
 				if (resHrefAttr != null)
 				{
 					String hrefVal = resHrefAttr.getValue();
@@ -620,7 +620,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 	/**
 	 * creates section dependent file
-	 * 
+	 *
 	 * @param hrefVal
 	 *        href value of the item
 	 */
@@ -916,7 +916,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		if (logger.isDebugEnabled())
 			logger.debug("Exiting createSection...");
 	}
-	
+
 	/* @param document document
 	 * @return resource element
 	 * @throws Exception
@@ -989,60 +989,18 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 		courseId =destinationContext;
 
-		Pattern p1 = Pattern.compile("<[iI][mM][gG]\\s|<[aA]\\s|<[eE][mM][bB][eE][dD]\\s");
-		Pattern pi = Pattern.compile(">|\\s[sS][rR][cC]\\s*=");
-		Pattern pa = Pattern.compile(">|\\s[hH][rR][eE][fF]\\s*=");
-		Pattern ps = Pattern.compile("\\S");
-		Pattern pe = Pattern.compile("\\s|>");
+		int startSrc =0;
+		int endSrc = 0;
 
 		while (checkforimgs != null) {
-		        // look for <img or <a
-		        Matcher m = p1.matcher(checkforimgs);
-			if (!m.find()) // found anything?
-			    break;
-			checkforimgs = checkforimgs.substring(m.start());
-			// look for src= or href=
-			if (checkforimgs.startsWith("<i") ||
-				    checkforimgs.startsWith("<I") ||
-				    checkforimgs.startsWith("<e") ||
-				    checkforimgs.startsWith("<E"))
-				m = pi.matcher(checkforimgs);
-			else
-			    m = pa.matcher(checkforimgs);
-                       // end = start+1 means that we found a >
-                       // i.e. the attribute we're looking for isn't there
-                       if (!m.find() || (m.end() == m.start() + 1)) {
-			    // prevent infinite loop by consuming the <
-			    checkforimgs = checkforimgs.substring(1);
-			    continue;
+			ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
+			checkforimgs = (String)embedData.get(0);
+			if (embedData.size() > 1)
+			{
+				startSrc = ((Integer)embedData.get(1)).intValue();
+				endSrc = ((Integer)embedData.get(2)).intValue();
 			}
-
-			checkforimgs = checkforimgs.substring(m.end());
-
-			// look for start of arg, a non-whitespace
-			m = ps.matcher(checkforimgs);
-			if (!m.find()) // found anything?
-			    break;
-
-			checkforimgs = checkforimgs.substring(m.start());
-
-			int startSrc = 0;
-			int endSrc = 0;
-
-			// handle either quoted or nonquoted arg
-			if (checkforimgs.startsWith("\"") ||
-			    checkforimgs.startsWith("\'")) {
-			    String quotestr = checkforimgs.substring(0,1);
-			    startSrc = 1;
-			    endSrc = checkforimgs.indexOf(quotestr, startSrc);
-			} else {
-			    startSrc = 0;
-			    // ends with whitespace or >
-			    m = pe.matcher(checkforimgs);
-			    if (!m.find()) // found anything?
-				continue;
-			    endSrc = m.start();
-			}
+			if (endSrc <= 0) break;
 
 			imgSrcPath = checkforimgs.substring(startSrc, endSrc);
 
@@ -1109,6 +1067,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			     }
 			//Import from site ends here
 			imgindex = -1;
+            startSrc=0; endSrc = 0;
 		}
 		return contentEditor;
 	}
@@ -1254,7 +1213,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	{
 		this.destinationContext = destinationContext;
 	}
-	
+
 	public void setModuleDB(ModuleDB moduleDB) {
 		this.moduleDB = moduleDB;
 	}
