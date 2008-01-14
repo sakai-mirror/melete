@@ -20,6 +20,7 @@
 <tr>
 		<td width="1962" valign="top">
 			<table width="100%" border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse" >
+			<h:inputHidden id="hacktitle" value="#{viewModulesPage.mdbean.module.title}"/>
  <tr>
 			<td align="center">
 			<f:subview id="topmod">

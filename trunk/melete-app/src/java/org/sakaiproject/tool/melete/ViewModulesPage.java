@@ -425,8 +425,8 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     public String goPrevNext()
     {
     	FacesContext ctx = FacesContext.getCurrentInstance();
-    	this.moduleSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(((String)ctx.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue());
-        this.mdbean = null;
+    	this.moduleSeqNo = new Integer(((String)ctx.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue();
+    	this.mdbean = null;
         this.moduleId = 0;
 
     	if (getInstRole())
