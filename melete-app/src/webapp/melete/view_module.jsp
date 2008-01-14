@@ -32,7 +32,9 @@
 					</tr>		
 
 	<!--Page Content-->
-
+	<!-- The getmdbean method correctly determines the prev and next seq nos in the backing bean -->
+	<!-- The hidden field below has been added just to get the getmdbean method to execute first -->
+    <h:inputHidden id="hacktitle" value="#{viewModulesPage.mdbean.module.title}"/>
 		 <tr>
 			<td align="center">
 			<f:subview id="topmod">
