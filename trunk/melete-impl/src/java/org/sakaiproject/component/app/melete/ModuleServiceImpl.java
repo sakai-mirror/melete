@@ -98,7 +98,7 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 	private List modules = null;
 	private Module module = null;
 	private ModuleDateBean mdBean = null;
-	private MeleteUtil meleteUtil;
+	private MeleteUtil meleteUtil= new MeleteUtil();
 
 	private static String dtdLocation;
 
@@ -183,9 +183,9 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 	public void copyModule(ModuleObjService module,String courseId,String userId) throws MeleteException
 	{
 		moduledb.copyModule((Module)module, courseId, userId);
-		
+
 	}
-	
+
 	public void moveSections(List sectionBeans,ModuleObjService selectedModule) throws MeleteException
 	{
 	  try{
@@ -199,7 +199,7 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 			throw new MeleteException("move_section_fail");
 		}
 	}
-	
+
 // mallika page stuff
 public List getModuleDateBeans(String courseId) {
   	if (moduledb == null) moduledb = ModuleDB.getModuleDB();
@@ -450,7 +450,7 @@ public void restoreModules(List modules) throws Exception
 
 	  	return nextseq;
 	  }
-	 
+
 	 public int getPrevSeqNo(String courseId, int currSeqNo)
 	  {
 	  	int prevseq=0;
@@ -472,7 +472,7 @@ public void restoreModules(List modules) throws Exception
 	/*When removing this code, also make sure to remove the service associations in components.xml
 	 * that may not be needed anymore
 	 */
-	
+
 	//This method checks to see if we have a new installation of Melete or an upgrade
 	//It queries the MELETE_MODULE table for its count. If it is zero, it assumes a new
 	//installation. After the query, it populates MELETE_MIGRATE_STATUS.
@@ -485,7 +485,7 @@ public void restoreModules(List modules) throws Exception
 		boolean migrateTableEmpty = true;
 		boolean moduleTableEmpty = true;
 		int moduleCount = 0;
-		
+
 		try {
 
 			dbConnection = SqlService.borrowConnection();
@@ -530,9 +530,9 @@ public void restoreModules(List modules) throws Exception
 	    	    	    	logger.info("New installation - MELETE_MIGRATE_STATUS was inserted into "+insRes);
 	    	    	    	stmt.close();
 	    	    		}
-	    	    	}	
+	    	    	}
 	    		}
-	    	}	
+	    	}
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) logger.error(e);
 			throw e;
@@ -544,14 +544,14 @@ public void restoreModules(List modules) throws Exception
 				if (logger.isErrorEnabled()) logger.error(e1);
 				throw e1;
 			}
-		}	 	    				
+		}
 	}
-	
+
 	public int getMigrateStatus() throws Exception
 	{
 		Connection dbConnection = null;
 		int start_flag=0,complete_flag=0;
-		
+
 		try {
 
 			dbConnection = SqlService.borrowConnection();
@@ -570,7 +570,7 @@ public void restoreModules(List modules) throws Exception
 	    		}
 	    		rs.close();
 	    		stmt.close();
-	    		
+
 	    		if ((start_flag == 1)&&(complete_flag == 1))
 	    		{
 	    			logger.info("getMigrateStatus - The migrate process has completed");
@@ -580,7 +580,7 @@ public void restoreModules(List modules) throws Exception
 	    		{
 	    			return MIGRATE_INCOMPLETE;
 	    		}
-	    	}	
+	    	}
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) logger.error(e);
 			throw e;
@@ -592,10 +592,10 @@ public void restoreModules(List modules) throws Exception
 				if (logger.isErrorEnabled()) logger.error(e1);
 				throw e1;
 			}
-		}	 
+		}
 		return MIGRATE_INCOMPLETE;
 	}
-	
+
 
 	/*IF YOU ARE USING ORACLE, PLEASE REPLACE THE TWO METHODS BELOW (migrateMeleteDocs and
 	 * processLicenseInformation) WITH THE ORACLE VERSION. THE ORACLE VERSION IS LOCATED
@@ -633,7 +633,7 @@ public void restoreModules(List modules) throws Exception
 	    		}
 	    		rs.close();
 	    		stmt.close();
-	    		
+
 	    		if ((start_flag == 1)&&(complete_flag != 1))
 	    		{
 	    			logger.info("migrateMeleteDocs - The migrate process has already begun and is not yet complete");
@@ -650,9 +650,9 @@ public void restoreModules(List modules) throws Exception
 	    			return MIGRATE_FAILED;
 	    		}
 	    	}
-	    
+
 	    	logger.info("Migrate process begins");
-            
+
 	    	//Set start_flag to 1 to show that the migrate process has started
 	    	sql = "insert into melete_migrate_status(START_FLAG) values(1)";
 	    	dbConnection.setAutoCommit(true);
@@ -660,8 +660,8 @@ public void restoreModules(List modules) throws Exception
 	    	int insRes = stmt1.executeUpdate(sql);
 	    	logger.info("MELETE_MIGRATE_STATUS was inserted into "+insRes);
 	    	stmt1.close();
-	    	
-	    	
+
+
 	    	stmt = dbConnection.createStatement();
 	    	rs = null;
 
@@ -680,8 +680,8 @@ public void restoreModules(List modules) throws Exception
 			  colNames.add(new String("melete_module_bkup.allow_cmrcl"));
 			  colNames.add(new String("melete_module_bkup.allow_mod"));
 			  colNames.add(new String("melete_module_bkup.created_by_fname"));
-			  colNames.add(new String("melete_module_bkup.created_by_lname"));	
-			  colNames.add(new String("melete_module_bkup.creation_date"));		
+			  colNames.add(new String("melete_module_bkup.created_by_lname"));
+			  colNames.add(new String("melete_module_bkup.creation_date"));
 			  colNames.add(new String("melete_course_module.course_id"));
 
 			  modList = toList(rs, colNames);
@@ -699,10 +699,10 @@ public void restoreModules(List modules) throws Exception
 	    			Map modMap = (LinkedHashMap)i.next();
 	    		    modId = ((Integer)modMap.get("melete_module_bkup.module_id")).intValue();
 	    		    courseId = (String)modMap.get("melete_course_module.course_id");
-	    		 
+
                     SubSectionUtilImpl ssuImpl = new SubSectionUtilImpl();
           	        stmt = dbConnection.createStatement();
-          	        
+
           	        //For each module, get the sections in ascending seq order from the backup table
     	    		sql = "select section_id, content_type, content_path,upload_path,link "
    						 + " from melete_section_bkup where module_id = "
@@ -722,8 +722,8 @@ public void restoreModules(List modules) throws Exception
    	    		            secResourceDescription="";
    	    		            String contentType = rs.getString("content_type");
    	    		            int section_id = rs.getInt("section_id");
-   	    		            
-   	    		              
+
+
    	          				boolean processSection = true;
    	          				//The code below makes sure the processing continues even if there are missing files
    	          			    if (contentType.equals("typeLink"))
@@ -745,7 +745,7 @@ public void restoreModules(List modules) throws Exception
 
    	          			    if (processSection == true)
    	          			    {
-   	          			    
+
    	          				//Set license for each resource
    	          				meleteResource = new MeleteResource();
    	          				meleteResource = processLicenseInformation(modMap,meleteResource);
@@ -763,21 +763,21 @@ public void restoreModules(List modules) throws Exception
    		                      secContentData = contentEditor.getBytes();
    		                      encodingFlag = true;
    	          				}
-   	          				
+
 
    	  	                    newResourceId = null;
    	  	                    String checkResourceId = null;
    	  	                    //If the section is typeUpload or typeLink, check to see if its already in CH
    	  	                    if ((contentType.equals("typeUpload"))||(contentType.equals("typeLink")))
    	  	                    {
-   	  	                      File fi = null;	
+   	  	                      File fi = null;
    	  	                      if (contentType.equals("typeLink"))
 	          				  {
 	          				    secResourceName = rs.getString("link");
 	          				    if ((secResourceName != null)&&(secResourceName.trim().length() != 0))
-	          				    {	
+	          				    {
 	          				      checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+Validator.escapeResourceName(secResourceName);
-	          				    }  
+	          				    }
  	          				  }
    	  	                      if (contentType.equals("typeUpload"))
    	  	                      {
@@ -785,13 +785,13 @@ public void restoreModules(List modules) throws Exception
   	          					String uploadFileName = fi.getName();
   	          				    secResourceName = uploadFileName.substring(uploadFileName.lastIndexOf("/")+1);
   	          				    if ((secResourceName != null)&&(secResourceName.trim().length() != 0))
-  	          				    {	
+  	          				    {
   	          				      checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+secResourceName;
-  	          				    }  
+  	          				    }
    	  	                      }
-	          				    
+
    	  	                      if ((secResourceName != null)&&(secResourceName.trim().length() != 0))
-   	  	                      {	  
+   	  	                      {
    	  	                    	try
    	  	                    	{
    	  	                    	  getMeleteCHService().checkResource(checkResourceId);
@@ -818,11 +818,11 @@ public void restoreModules(List modules) throws Exception
       	                            if (logger.isDebugEnabled()) logger.debug("upload section content data " + (int)fi.length());
       	                            String file_mime_type = secResourceName.substring(secResourceName.lastIndexOf(".")+1);
       				                res_mime_type = ContentTypeImageService.getContentType(file_mime_type);
-      	          				  }   	  	                        	
+      	          				  }
    	  	                          try
       	  					      {
 
-   	  	   	          			    ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,secResourceName,secResourceDescription);  
+   	  	   	          			    ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,secResourceName,secResourceDescription);
    	  	   	          		        addCollId = getMeleteCHService().getCollectionId(courseId,contentType,modId);
    	  	   	          			    newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type,addCollId,secContentData,res );
       	  	            	        if (logger.isDebugEnabled()) logger.debug("Inserting section and resource into Melete tables");
@@ -841,14 +841,14 @@ public void restoreModules(List modules) throws Exception
    						        {
    							      logger.error(e2.toString());
    						        }
-   	  	                      } //End if secResourceName != null 
+   	  	                      } //End if secResourceName != null
    	  	                    }
    	  	                    else
    	  	                    {
    	  				          try
    	  					      {
 
-   	   	          			    ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,secResourceName,secResourceDescription);  
+   	   	          			    ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,secResourceName,secResourceDescription);
    	   	          		        addCollId = getMeleteCHService().getCollectionId(courseId,contentType,modId);
    	   	          			    newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type,addCollId,secContentData,res );
    	  	            	        meleteResource.setResourceId(newResourceId);
@@ -863,7 +863,7 @@ public void restoreModules(List modules) throws Exception
    	  				        	throw e;
    	          			      }
    	  	                    }
-   						
+
    	          			    }//End if processSection = true
    					     }//End while rs.next
    	          	    rs.close();
@@ -874,13 +874,13 @@ public void restoreModules(List modules) throws Exception
    	                moduledb.updateModule(module);
 				         }//End if rs!=null
 
-   			
+
 	    	logger.info("NUMBER OF MODULES MIGRATED: "+i.nextIndex());
 	    	logger.info("NUMBER OF MODULES REMAINING: "+(modList.size() - i.nextIndex()));
 	    	}//End modlist for loop
 	    	}//End modlist != null
 	    	processComplete = true;
-	    	
+
 	    	//Upon successful completion, update complete_flag in MELETE_MIGRATE_STATUS
 	    	sql = "update melete_migrate_status set COMPLETE_FLAG=1 where START_FLAG=1";
 	    	dbConnection.setAutoCommit(true);
@@ -900,7 +900,7 @@ public void restoreModules(List modules) throws Exception
 				throw e1;
 			}
 		}
-		
+
 		if (processComplete == true)
 		{
 			return MIGRATE_COMPLETE;
@@ -943,7 +943,7 @@ public void restoreModules(List modules) throws Exception
 		 	meleteSectionResource.setLicenseCode(licenseCodes);
 		 	meleteSectionResource.setCopyrightOwner(copyrightOwner);
 	 		meleteSectionResource.setCopyrightYear(copyrightYear);
-		 }	
+		 }
 		 else if(licenseCodes == FU_CODE)
 		 {
 			 meleteSectionResource.setCcLicenseUrl("Copyrighted Material - subject to fair use exception");
@@ -986,7 +986,7 @@ public void restoreModules(List modules) throws Exception
 			String imgSrcPath, imgName, imgLoc, rsrcName;
 			String modifiedSecContent = new String(secContent);
 
-			
+
 	        String replaceStr = null;
 
 			try {
@@ -996,7 +996,7 @@ public void restoreModules(List modules) throws Exception
 
 				while(checkforimgs !=null) {
 
-					ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);	    			
+					ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
 	    			checkforimgs = (String)embedData.get(0);
 	    			if (embedData.size() > 1)
 	    			{
@@ -1010,12 +1010,12 @@ public void restoreModules(List modules) throws Exception
 
 					if(imgSrcPath.indexOf("meleteDocs") != -1 || imgSrcPath.indexOf("/access/content/group/") != -1)
 					{
-					String newEmbedResourceId = "";	
+					String newEmbedResourceId = "";
 					if (imgSrcPath.indexOf("meleteDocs") != -1){
 						imgLoc = imgSrcPath.substring(imgSrcPath.indexOf("meleteDocs")+10);
 						if (logger.isDebugEnabled()) logger.debug("imgLoc is "+imgLoc);
                         rsrcName = imgSrcPath.substring(imgSrcPath.lastIndexOf("/")+1);
-						  
+
 			            try
  	                    {
 			            	  String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+rsrcName;
@@ -1028,7 +1028,7 @@ public void restoreModules(List modules) throws Exception
  	                    	 byte[] data = null;
  	                    	 boolean fileExists = meleteUtil.checkFileExists(meleteDocsDir+imgLoc);
  	                    	 if (fileExists)
- 	                    	 {	 
+ 	                    	 {
  				               try{
  				               File re = new File(meleteDocsDir+imgLoc);
 
@@ -1036,7 +1036,7 @@ public void restoreModules(List modules) throws Exception
  				               FileInputStream fis = new FileInputStream(re);
  				               fis.read(data);
  				               fis.close();
- 				              
+
  				               // add as a resource to uploads collection
  	 				           String file_mime_type = imgLoc.substring(imgLoc.lastIndexOf(".")+1);
  	 				           file_mime_type = ContentTypeImageService.getContentType("file_mime_type");
@@ -1045,14 +1045,14 @@ public void restoreModules(List modules) throws Exception
  	                           //get collection id where the embedded files will go
  	 					       String UploadCollId = getMeleteCHService().getUploadCollectionId(courseId);
  	 	                       newEmbedResourceId = getMeleteCHService().addResourceItem(rsrcName,file_mime_type,UploadCollId,data,res );
- 	 	                       
+
  	 	                       //add in melete resource database table also
  	 				           MeleteResource meleteResource = new MeleteResource();
  	 			               meleteResource.setResourceId(newEmbedResourceId);
  	 			               //set default license info to "I have not determined copyright yet" option
  	 			               meleteResource.setLicenseCode(0);
- 	 			               sectionService.insertResource(meleteResource); 				               
- 				             
+ 	 			               sectionService.insertResource(meleteResource);
+
  				               }
  				               catch (Exception e) {
  						     	logger.error(e.toString());
@@ -1100,7 +1100,7 @@ public void restoreModules(List modules) throws Exception
 
 				         	   // in content editor replace the file found with resource reference url
 				         	   //String replaceStr = getMeleteCHService().getResourceUrl(newEmbedResourceId);
-			            	  
+
 			         	   }
 				           catch (Exception e) {
 					     	logger.error(e.toString());
@@ -1108,12 +1108,12 @@ public void restoreModules(List modules) throws Exception
 	 	                catch(Exception e2)
 						{
 						    logger.error(e2.toString());
-						}						
+						}
 
 	 	               }
 					   ContentResource contResource = null;
 					   if ((newEmbedResourceId != null)&&(newEmbedResourceId.trim().length() > 0))
-					   {	   
+					   {
 		         	    try
 		                {
 		                   contResource = getMeleteCHService().getResource(newEmbedResourceId);
@@ -1122,7 +1122,7 @@ public void restoreModules(List modules) throws Exception
 		                catch (Exception e)
 		                {
 	             	       e.printStackTrace();
-	                     }								  		
+	                     }
 						String patternStr = imgSrcPath;
 						Pattern pattern = Pattern.compile(Pattern.quote(patternStr));
 //						Upon import, embedded media was getting full url without code below
@@ -1131,11 +1131,11 @@ public void restoreModules(List modules) throws Exception
 							replaceStr = replaceStr.replace(ServerConfigurationService.getServerUrl(), "");
 						}
 						modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replaceStr);
-					   }	
+					   }
 
 					}
 					checkforimgs =checkforimgs.substring(endSrc);
-		            startSrc=0; endSrc = 0;	
+		            startSrc=0; endSrc = 0;
 				}
 			}catch (Exception e) {
 				throw e;
