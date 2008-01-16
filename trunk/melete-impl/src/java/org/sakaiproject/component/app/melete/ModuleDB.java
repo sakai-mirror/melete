@@ -327,7 +327,7 @@ public class ModuleDB implements Serializable {
 	 	try
 		{
 	     Session session = hibernateUtil.currentSession();
-	      modList = getStudentModules(courseId);
+	      modList = getModules(courseId);
 	      Iterator i = modList.iterator();
 	      while (i.hasNext()) {
 	      	mdpBean = new ModuleDatePrivBean();
@@ -356,39 +356,6 @@ public class ModuleDB implements Serializable {
 	    return moduleDatePrivBeansList;
 	}
 
-	 public List getStudentModules(String courseId) throws HibernateException {
-		 	List modList = new ArrayList();
-		 	Module mod = null;
-
-		 	try
-			{
-		      Session session = hibernateUtil.currentSession();
-
-		      String queryString = "from Module module  where module.coursemodule.courseId = :courseId and module.coursemodule.archvFlag = 0 and module.coursemodule.deleteFlag = 0 order by module.coursemodule.seqNo";
-
-		      Query query = session.createQuery(queryString);
-		      query.setParameter("courseId",courseId);
-		      modList = query.list();
-
-
-		    }
-		    catch (HibernateException he)
-		    {
-			  logger.error(he.toString());
-		    }
-		    finally
-			{
-		    	try
-				  {
-			      	hibernateUtil.closeSession();
-				  }
-			      catch (HibernateException he)
-				  {
-					  logger.error(he.toString());
-				  }
-			}
-		    return modList;
-		  }
 
 	 public List getShownModulesAndDatesForInstructor(String courseId) throws HibernateException {
 	 	List moduleDateBeansList = new ArrayList();
@@ -555,7 +522,16 @@ public class ModuleDB implements Serializable {
 	   StringBuffer rowClassesBuf;
 	   List sectionBeanList = null;
 	   Map sectionMap = null;
-
+	   java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+	  	
+	   if (((mod.getModuleshdate().getStartDate() == null)||(mod.getModuleshdate().getStartDate().before((Date)currentTimestamp)))&&((mod.getModuleshdate().getEndDate() == null)||(mod.getModuleshdate().getEndDate().after((Date)currentTimestamp))))
+	   {
+		   mdBean.setVisibleFlag(true);
+	   }
+	   else
+	   {
+		   mdBean.setVisibleFlag(false);
+	   }
 	   mdBean.setModuleId(mod.getModuleId().intValue());
 	   mdBean.setModule((Module)mod);
 	   mdBean.setModuleShdate(mod.getModuleshdate());
@@ -1714,7 +1690,7 @@ public class ModuleDB implements Serializable {
 			throw new MeleteException("copy_fail");
 		}
 	}
-	
+
 	public void moveSection(Section section,Module selectedModule) throws MeleteException
 	{
 		try
@@ -1772,8 +1748,8 @@ public class ModuleDB implements Serializable {
 			throw new MeleteException("move_section_fail");
 		}
 	}
-	
-	
+
+
 	/**
 	 * @param sectionDB the sectionDB to set
 	 */
