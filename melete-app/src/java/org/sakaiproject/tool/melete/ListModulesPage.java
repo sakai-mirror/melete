@@ -64,8 +64,6 @@ public class ListModulesPage implements Serializable{
       private int showModuleId;
 
       private String formName;
-      private Date currentDate;
-      private Timestamp currentTimestamp;
       private boolean instFlag;
       private boolean studFlag;
       private String role;
@@ -268,8 +266,6 @@ public class ListModulesPage implements Serializable{
 	  	return isNull;
 	  }
 		  public List getModuleDateBeans() {
-	   	setCurrentDate(Calendar.getInstance().getTime());
-	  	setCurrentTimestamp(new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
 	  	try {
 	  		moduleDateBeans = getModuleService().getModuleDateBeans(courseId);
 	  		
@@ -296,8 +292,6 @@ public class ListModulesPage implements Serializable{
 	  }
 
 	  public List getModuleDatePrivBeans() {
-	  	setCurrentDate(Calendar.getInstance().getTime());
-	  	setCurrentTimestamp(new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
 	  	try {
 	  		moduleDatePrivBeans = getModuleService().getModuleDatePrivBeans(courseId);
 
@@ -319,21 +313,7 @@ public class ListModulesPage implements Serializable{
 	  public void setModuleDatePrivBeans(List moduleDatePrivBeansList) {
 	    moduleDatePrivBeans = moduleDatePrivBeansList;
 	  }
-	  public Date getCurrentDate() {
-	  	return currentDate;
-	  }
-
-	  public void setCurrentDate(Date currentDate) {
-	  	this.currentDate = currentDate;
-	  }
-
-	  public Date getCurrentTimestamp() {
-	  	return currentTimestamp;
-	  }
-
-	  public void setCurrentTimestamp(java.sql.Timestamp currentTimestamp) {
-	  	this.currentTimestamp = currentTimestamp;
-	  }
+	
 
 	  public int getShowModuleId() {
 	        return this.showModuleId;

@@ -54,13 +54,13 @@
          <h:inputHidden id="moduleHideId" value="#{mdbean.moduleId}"/>
       </h:commandLink> 
       <h:outputText id="emp_spacemod" value=" "/>
-         <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}" rendered="#{(((mdbean.moduleShdate.startDate == listModulesPage.nullDate)||(mdbean.moduleShdate.startDate <= listModulesPage.currentTimestamp))&&((mdbean.moduleShdate.endDate == listModulesPage.nullDate)||(mdbean.moduleShdate.endDate >= listModulesPage.currentTimestamp)))}">
+         <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}" rendered="#{mdbean.visibleFlag == listModulesPage.trueFlag}">
 
                   <h:outputText id="title"
                            value="#{mdbean.truncTitle}">
               </h:outputText>             
           </h:commandLink>
-          <h:outputText id="titleTxt2" value="#{mdbean.truncTitle}" rendered="#{((mdbean.moduleShdate.startDate > listModulesPage.currentTimestamp)||(mdbean.moduleShdate.endDate < listModulesPage.currentTimestamp))}"/>         
+          <h:outputText id="titleTxt2" value="#{mdbean.truncTitle}" rendered="#{mdbean.visibleFlag != listModulesPage.trueFlag}"/>         
         
         <h:dataTable id="tablesec" rendered="#{((mdbean.moduleId == listModulesPage.showModuleId)||(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}"
                   value="#{mdbean.sectionBeans}"
@@ -70,17 +70,17 @@
               <h:graphicImage id="bul_gif" value="images/bullet_black.gif"/>
               <h:outputText id="emp_space2" value=" "/>
 			  <h:outputText id="emp_space" value=" "/>
-             <h:commandLink id="viewSectionEditor"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}"  rendered="#{((section.section.contentType != listModulesPage.isNull && section.section.contentType == listModulesPage.typeLink)&&(((mdbean.moduleShdate.startDate == listModulesPage.nullDate)||(mdbean.moduleShdate.startDate <= listModulesPage.currentTimestamp))&&((mdbean.moduleShdate.endDate == listModulesPage.nullDate)||(mdbean.moduleShdate.endDate >= listModulesPage.currentTimestamp))))}">
+             <h:commandLink id="viewSectionEditor"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}"  rendered="#{((section.section.contentType != listModulesPage.isNull && section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}">
                <h:outputText id="sectitleEditor" 
                            value="#{section.truncTitle}">
                </h:outputText>
              </h:commandLink>
-             <h:commandLink id="viewSectionLink"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}"  rendered="#{((section.section.contentType != listModulesPage.isNull && section.section.contentType != listModulesPage.typeLink)&&(((mdbean.moduleShdate.startDate == listModulesPage.nullDate)||(mdbean.moduleShdate.startDate <= listModulesPage.currentTimestamp))&&((mdbean.moduleShdate.endDate == listModulesPage.nullDate)||(mdbean.moduleShdate.endDate >= listModulesPage.currentTimestamp))))}">
+             <h:commandLink id="viewSectionLink"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}"  rendered="#{((section.section.contentType != listModulesPage.isNull && section.section.contentType != listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}">
                <h:outputText id="sectitleLink" 
                            value="#{section.truncTitle}">
                </h:outputText>
              </h:commandLink>             
-             <h:outputText id="sectitleEditorTxt2" value="#{section.truncTitle}" rendered="#{((mdbean.moduleShdate.startDate > listModulesPage.currentTimestamp)||(mdbean.moduleShdate.endDate < listModulesPage.currentTimestamp))}"/>
+             <h:outputText id="sectitleEditorTxt2" value="#{section.truncTitle}" rendered="#{mdbean.visibleFlag != listModulesPage.trueFlag}"/>
              </h:column>
           </h:dataTable>
           </h:column>
