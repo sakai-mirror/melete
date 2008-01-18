@@ -113,7 +113,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 //       validation no 4 b
     	if ((end != null) && (st != null))
 		{
-			if (end.compareTo(st) < 0)
+			if (end.compareTo(st) <= 0)
 			{
 				errMsg = "";
 				errMsg = bundle.getString("end_date_before_start");

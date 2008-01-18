@@ -104,7 +104,7 @@ public class AddModulePage extends ModulePage implements Serializable{
 //      validation no 4 b
      	if ((end != null)&&(st != null))
      	{	
-     	if(end.compareTo(st) < 0)
+     	if(end.compareTo(st) <= 0)
      	{
      		String errMsg = "";
 	     	errMsg = bundle.getString("end_date_before_start");
