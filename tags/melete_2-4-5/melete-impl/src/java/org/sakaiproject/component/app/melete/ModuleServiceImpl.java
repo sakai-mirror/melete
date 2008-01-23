@@ -98,7 +98,7 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 	private List modules = null;
 	private Module module = null;
 	private ModuleDateBean mdBean = null;
-	private MeleteUtil meleteUtil;
+	private MeleteUtil meleteUtil = new MeleteUtil();
 
 	private static String dtdLocation;
 
