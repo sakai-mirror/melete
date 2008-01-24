@@ -34,9 +34,9 @@ function showIframe()
 <h:form id="viewsectionStudentform">
 <table height="470" border="0" cellpadding="20"  width="100%" bordercolor="#EAEAEA" style="border-collapse: collapse" >
 <tr>
-	<td vAlign="top" width="100%"> 
+	<td width="100%" valign="top"> 
 <!--Page Content-->
-<table  border="0" cellpadding="2" cellspacing="0" bordercolor="#EAEAEA" width="100%">
+<table  border="0" cellpadding="2" cellspacing="0" bordercolor="#EAEAEA" width="100%" style="border-collapse: collapse" >
 <tr>
 <td align="center">
 <f:subview id="topmod">
