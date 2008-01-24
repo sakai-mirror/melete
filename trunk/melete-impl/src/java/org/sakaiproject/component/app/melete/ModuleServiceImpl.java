@@ -200,6 +200,18 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 		}
 	}
 
+	public String printModule(ModuleObjService module) throws MeleteException
+	{
+		try{
+	
+		return moduledb.prepareModuleSectionsForPrint((Module)module);
+		}catch (Exception ex)
+		{
+			ex.printStackTrace();
+			throw new MeleteException("print_module_fail");
+		}
+	}
+	
 // mallika page stuff
 public List getModuleDateBeans(String courseId) {
   	if (moduledb == null) moduledb = ModuleDB.getModuleDB();
