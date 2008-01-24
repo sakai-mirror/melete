@@ -437,6 +437,18 @@
 			<value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
 		</managed-property>     
 </managed-bean>  
+
+<managed-bean>
+          <description>print module</description>
+          <managed-bean-name>printModulePage</managed-bean-name>
+          <managed-bean-class>org.sakaiproject.tool.melete.PrintModulePage</managed-bean-class>
+          <managed-bean-scope>session</managed-bean-scope>    
+          	<managed-property>
+			<description>Service Dependency: Module service</description>
+			<property-name>moduleService</property-name>
+			<value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+		</managed-property>     
+</managed-bean>  
     <!-- i18n -->
 
 <managed-bean>
@@ -1051,7 +1063,11 @@
         <navigation-case>
       <from-outcome>move_section</from-outcome>
       <to-view-id>/melete/move_section.jsp</to-view-id>
-     </navigation-case>                                                                          
+     </navigation-case>     
+        <navigation-case>
+      <from-outcome>print_module</from-outcome>
+      <to-view-id>/melete/print_module.jsp</to-view-id>
+     </navigation-case>                                                                      
    </navigation-rule>
    
 <!--Rule for delete_module -->   
@@ -1493,6 +1509,7 @@
       <to-view-id>/melete/author_preference.jsp</to-view-id>
      </navigation-case>                                                               
    </navigation-rule>  
+   
 <!-- remove Components and render-kit by rashmi as samigo tag is no longer used-->
  
 </faces-config>
