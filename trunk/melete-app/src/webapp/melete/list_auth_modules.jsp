@@ -75,6 +75,14 @@ function showEdateCal(index)
   }
 } 
 
+function OpenPrintWindow(windowURL,windowName)
+{
+var windowDefaults = "status=no, menubar=no, location=no, scrollbars=yes, resizeable=yes, width=700, height=500, left=20, top=20";
+var newWindow = window.open(windowURL, windowName,windowDefaults);
+if (window.focus) { newWindow.focus(); } ; // force the window to the front if the browser supports it
+return newWindow;
+
+}
 </script>
 </head>
 
@@ -238,15 +246,20 @@ if (msg != null)
           <f:facet name="header">
         	 <h:outputText id="t8" value="#{msgs.list_auth_modules_actions}" />
           </f:facet>
-       
+       	   <h:outputText id="emp_space6" value="  " styleClass="ExtraPaddingClass" />
            <h:commandLink id="viewNextsteps" action="#{listAuthModulesPage.viewNextsteps}" >
 			   <h:graphicImage id="vns_gif" value="images/add.gif" alt="#{msgs.list_auth_modules_next_steps}" title="#{msgs.list_auth_modules_next_steps}" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext == listAuthModulesPage.isNull}"/>      
 			   <h:graphicImage id="vns1_gif" value="images/view_next.gif" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext != listAuthModulesPage.isNull}"/>        		   
            </h:commandLink>
-           <h:outputText id="emp_space4" value="     "/>
+           <h:outputText id="emp_space4" value="  " styleClass="ExtraPaddingClass" />
 		  <h:commandLink id="duplicateModule" action="#{listAuthModulesPage.duplicateAction}">
 		  	  <h:graphicImage id="duplicateImg" value="images/page_copy.png" styleClass="AuthImgClass"/>
 		  </h:commandLink>
+		     <h:outputText id="emp_space5" value="  " styleClass="ExtraPaddingClass" />
+		     <h:outputLink id="printModuleLink" value="print_module" onclick="OpenPrintWindow(this.href,'Melete Print Window');this.href='#';">
+		    	<f:param id="printmoduleId" name="printModuleId" value="#{listAuthModulesPage.printModuleId}" />
+		  	  <h:graphicImage id="printImgLink" value="images/printer.png" styleClass="AuthImgClass"/>
+		  </h:outputLink>
         </h:column>
 	    
           
