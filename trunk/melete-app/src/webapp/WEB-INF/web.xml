@@ -31,6 +31,7 @@
 		<param-name>packagingscormdir</param-name>
 		<param-value>/var/melete/packagefiles/packagefilesscorm</param-value>
 	</context-param>
+
 	<!--Need to keep this for the migrate program-->
 	<context-param>
 		<param-name>meleteDocsDir</param-name>
