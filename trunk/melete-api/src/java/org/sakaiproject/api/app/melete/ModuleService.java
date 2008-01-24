@@ -105,4 +105,6 @@ public interface ModuleService{
 	public void copyModule(ModuleObjService module,String courseId,String userId) throws MeleteException;
 	
 	public void moveSections(List sectionBeans,ModuleObjService selectedModule) throws MeleteException;
+	
+	public String printModule(ModuleObjService module) throws MeleteException;
 }
