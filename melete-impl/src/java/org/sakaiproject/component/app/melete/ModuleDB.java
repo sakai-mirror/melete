@@ -56,7 +56,8 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.api.app.melete.MeleteCHService;
-
+import org.sakaiproject.entity.api.ResourceProperties;
+import org.sakaiproject.util.ResourceLoader;
 /* Mallika - 4/17/07 - added code to support subsections on list pages
  * Mallika -6/6/07 - consolidated methods
  * Mallika - 6/6/07 - Added methods for multiple indent (same as previous)
@@ -315,6 +316,7 @@ public class ModuleDB implements Serializable {
 	}
   }
 
+
    // end rashmi stuff
 	public List getModulesDatesPrivsForStudents(String courseId) throws HibernateException {
 		List moduleDatePrivBeansList = new ArrayList();
@@ -523,7 +525,7 @@ public class ModuleDB implements Serializable {
 	   List sectionBeanList = null;
 	   Map sectionMap = null;
 	   java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
-	  	
+
 	   if (((mod.getModuleshdate().getStartDate() == null)||(mod.getModuleshdate().getStartDate().before((Date)currentTimestamp)))&&((mod.getModuleshdate().getEndDate() == null)||(mod.getModuleshdate().getEndDate().after((Date)currentTimestamp))))
 	   {
 		   mdBean.setVisibleFlag(true);
@@ -1749,6 +1751,130 @@ public class ModuleDB implements Serializable {
 		}
 	}
 
+
+	public String prepareModuleSectionsForPrint(Module module) throws MeleteException
+	{
+		try
+		{
+			Session session = hibernateUtil.currentSession();
+			Transaction tx = null;
+			StringBuffer printText = null;
+			try
+			{
+				printText = new StringBuffer("<h3>" + module.getCoursemodule().getSeqNo() +"  " +module.getTitle() + "</h3>");
+				SubSectionUtilImpl ssuImpl = new SubSectionUtilImpl();
+				ssuImpl.traverseDom(module.getSeqXml(),new Integer(module.getCoursemodule().getSeqNo()).toString());
+				List<SecLevelObj> xmlSecList = ssuImpl.getXmlSecList();
+				Map printSections = module.getSections();
+
+				if(xmlSecList != null)
+		  		{
+		  			for (ListIterator<SecLevelObj> k = xmlSecList.listIterator(); k.hasNext(); ){
+		  		   		SecLevelObj slObj = k.next();
+		  		   		if (slObj != null)
+		  		   		{
+		  		   			Section sec =(Section)printSections.get(new Integer(slObj.getSectionId()));
+		  		   			printText.append("<div class=secrow0>")	;
+		  		   			printText.append("<h4>" +slObj.getDispSeq() +"  " + sec.getTitle()+"</h4>")	;
+		  		   		    if (sec.getInstr() != null && sec.getInstr().length() !=0 ) printText.append("<p> <i>Instructions:</i> " + sec.getInstr() + "</p>");
+							if (sec.getContentType() == null || sec.getContentType().equals("notype") || sec.getSectionResource() == null)
+							{
+								printText.append("</div>");
+								continue;
+							}
+							String resourceId = sec.getSectionResource().getResource().getResourceId();
+							ContentResource resource = meleteCHService.getResource(resourceId);
+							if (sec.getContentType().equals("typeEditor"))
+							{
+								byte[] data = resource.getContent();
+								printText.append("<p>" + new String(data) + "</p>");
+							}
+							if (sec.getContentType().equals("typeLink"))
+							{
+								String url = resource.getUrl();
+								url = url.replaceAll(" ", "%20");
+								printText.append("<p></p><a href=\"" + url + "\" target=\"_blank\">");
+								printText.append(resource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
+								printText.append("</a>");
+							}
+
+							if (sec.getContentType().equals("typeUpload"))
+							{
+								String url = resource.getUrl();
+								url = url.replaceAll(" ", "%20");
+								printText.append("<iframe id=\"iframe1\" src=\"" + url + "\" scrolling=\"auto\" width=\"100%\" border=\"0\" frameborder=\"0\"></iframe>");
+							}
+							printText.append("<p>" + getLicenseInformation((MeleteResource)sec.getSectionResource().getResource()) +"</p>");
+							printText.append("</div>");
+						}
+		  			}
+		  		}
+				return 	printText.toString();
+			}
+			catch (StaleObjectStateException sose)
+			{
+				logger.error("stale object exception" + sose.toString());
+			}
+			catch (HibernateException he)
+			{
+				if (tx != null) tx.rollback();
+				logger.error(he.toString());
+				throw he;
+			}
+			finally
+			{
+				hibernateUtil.closeSession();
+			}
+		}
+		catch (Exception e)
+		{
+			throw new MeleteException("print_module_fail");
+		}
+		return null;
+	}
+
+
+	private String getLicenseInformation(MeleteResource melResource)
+	{
+		ResourceLoader rl = new ResourceLoader("melete_license");
+		String licenseStr="";
+
+		if(melResource.getLicenseCode() == 1)
+		{
+		licenseStr = rl.getString("license_info_copyright");
+		if (melResource.getCopyrightYear() != null)
+			licenseStr += melResource.getCopyrightYear()+",";
+		licenseStr += melResource.getCopyrightOwner();
+		}
+
+		if(melResource.getLicenseCode() == 2)
+		{
+		licenseStr = rl.getString("license_info_dedicated_to");
+		if (melResource.getCopyrightYear() != null)
+			licenseStr += melResource.getCopyrightYear()+",";
+		if (melResource.getCopyrightOwner() != null)
+		licenseStr += melResource.getCopyrightOwner();
+		}
+
+		if(melResource.getLicenseCode() == 3)
+		{
+		licenseStr = rl.getString("license_info_licensed_under");
+		if (melResource.getCopyrightYear() != null)
+			licenseStr += melResource.getCopyrightYear()+",";
+		if (melResource.getCopyrightOwner() != null)
+		licenseStr += melResource.getCopyrightOwner();
+		}
+
+		if(melResource.getLicenseCode() == 4)
+		{
+		licenseStr = rl.getString("license_info_fairuse");
+		if (melResource.getCopyrightYear() != null)
+			licenseStr += melResource.getCopyrightYear()+",";
+		if (melResource.getCopyrightOwner() != null)
+		licenseStr += melResource.getCopyrightOwner();
+		}
+		return licenseStr;
+	}
 
 	/**
 	 * @param sectionDB the sectionDB to set
