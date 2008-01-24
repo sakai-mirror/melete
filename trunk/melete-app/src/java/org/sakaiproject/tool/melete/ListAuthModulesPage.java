@@ -134,6 +134,8 @@ public class ListAuthModulesPage implements Serializable
 	private boolean trueFlag = true;
 
 	private List nullList = null;
+	
+	private Integer printModuleId;
 
 	// added by rashmi on apr 8
 	private String isNull = null;
@@ -1420,6 +1422,30 @@ public class ListAuthModulesPage implements Serializable
 		return "list_auth_modules";
 	}	
 	// move sections code end
+
+	public Integer getPrintModuleId()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+
+		try
+		{
+			resetSelectedLists();
+			UIViewRoot root = ctx.getViewRoot();
+			UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
+			ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
+			printModuleId = mdbean.getModule().getModuleId();	
+			return printModuleId;
+		}
+		catch (Exception me)
+		{
+			logger.error(me.toString());
+			String msg = bundle.getString("print_fail");
+			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
+		}
+		return 0;
+	}
+	
 	
 	private void addMessage(FacesContext ctx, String msgName, String msgDetail, FacesMessage.Severity severity)
 	{

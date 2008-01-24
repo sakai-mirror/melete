@@ -439,6 +439,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     	}
     }
     public void viewModule(ActionEvent evt) {
+    	
     	FacesContext ctx = FacesContext.getCurrentInstance();
     	UICommand cmdLink = (UICommand)evt.getComponent();
     	List cList = cmdLink.getChildren();
@@ -451,6 +452,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     		  param = (UIParameter) cList.get(i);
     		}
     	}
+    	
     	ValueBinding binding =
             Util.getBinding("#{viewModulesPage}");
          ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(ctx);
@@ -460,10 +462,11 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 	  		ModuleService modServ = getModuleService();
 	  		CourseModule cMod = (CourseModule)modServ.getCourseModule(((Integer)param.getValue()).intValue(),courseId);
 	  		vmPage.setModuleSeqNo(cMod.getSeqNo());
+	  		
 		}
 		catch (Exception e)
 		{
-	  		//e.printStackTrace();
+	  		e.printStackTrace();
 	  		logger.error(e.toString());
 		}
     }
@@ -471,13 +474,9 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     public String redirectToViewModule(){
     	String retVal = "view_module_student";
 	    if (getInstRole() == true)
-	    {
+	    {	    	
 	    	retVal = "view_module";
-	    }
-	  else
-	    {
-	    	retVal = "view_module_student";
-	    }
+	    }	  
 	  	return retVal;
 
     }
