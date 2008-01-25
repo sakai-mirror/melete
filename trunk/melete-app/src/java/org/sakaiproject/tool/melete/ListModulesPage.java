@@ -98,7 +98,7 @@ public class ListModulesPage implements Serializable{
 	  	userId = (String)sessionMap.get("userId");
 	  	nomodsFlag = false;
 	  	setShowModuleId(-1);
-	  	if (getRole()!= null && getRole().equals("INSTRUCTOR"))
+	  	if (getRole()!= null)
 		{
 	  		 ValueBinding binding = Util.getBinding("#{authorPreferences}");
 	 		AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
@@ -114,6 +114,7 @@ public class ListModulesPage implements Serializable{
 		}
 	  	else
 	  	{
+
 	  	  expandAllFlag = true;
 	  	}
 	  }
@@ -125,11 +126,12 @@ public class ListModulesPage implements Serializable{
 	  	nomodsFlag = false;
 	  	FacesContext context = FacesContext.getCurrentInstance();
 //	  	context.getViewRoot().setTransient(true);
-		if (getRole()!= null && getRole().equals("INSTRUCTOR"))
+		if (getRole()!= null)
 		{
 	  		 ValueBinding binding = Util.getBinding("#{authorPreferences}");
 	 		AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
 	 		String expFlag = preferencePage.getUserView();
+
 	 		if (expFlag.equals("true"))
 	 		{
 	 	      expandAllFlag = true;
@@ -268,7 +270,7 @@ public class ListModulesPage implements Serializable{
 		  public List getModuleDateBeans() {
 	  	try {
 	  		moduleDateBeans = getModuleService().getModuleDateBeans(courseId);
-	  		
+
 	  	}catch (Exception e)
 		{
 	  		//e.printStackTrace();
@@ -313,7 +315,7 @@ public class ListModulesPage implements Serializable{
 	  public void setModuleDatePrivBeans(List moduleDatePrivBeansList) {
 	    moduleDatePrivBeans = moduleDatePrivBeansList;
 	  }
-	
+
 
 	  public int getShowModuleId() {
 	        return this.showModuleId;

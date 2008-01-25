@@ -4,19 +4,19 @@
 *
 ***********************************************************************************
 *
-* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project 
-*   
-* Licensed under the Apache License, Version 2.0 (the "License"); you 
-* may not use this file except in compliance with the License. You may 
-* obtain a copy of the License at 
-*   
-* http://www.apache.org/licenses/LICENSE-2.0 
-*   
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the License is distributed on an "AS IS" BASIS, 
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
-* implied. See the License for the specific language governing 
-* permissions and limitations under the License. 
+* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you
+* may not use this file except in compliance with the License. You may
+* obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+* implied. See the License for the specific language governing
+* permissions and limitations under the License.
 *
 **********************************************************************************/
 
@@ -48,6 +48,7 @@ public class NavPage implements Serializable {
 /** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(NavPage.class);
 	private String role;
+	private boolean isInstructor;
 	private boolean shouldRenderPreferences=false;
 
 	  public NavPage() { }
@@ -102,8 +103,11 @@ public class NavPage implements Serializable {
 	 * @return Returns the shouldRenderPreferences.
 	 */
 	public boolean isShouldRenderPreferences() {
+		FacesContext ctx = FacesContext.getCurrentInstance();
+	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
+		role = (String)sessionMap.get("role");
 		int count = ServerConfigurationService.getInt("melete.wysiwyg.editor.count", 0);
-		if(count == 0)
+		if((count == 0)||(role.equals("STUDENT")))
 			shouldRenderPreferences = false;
 		else shouldRenderPreferences = true;
 		return shouldRenderPreferences;
@@ -114,4 +118,14 @@ public class NavPage implements Serializable {
 	public void setShouldRenderPreferences(boolean shouldRenderPreferences) {
 		this.shouldRenderPreferences = shouldRenderPreferences;
 	}
+
+	public boolean getIsInstructor()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
+		role = (String)sessionMap.get("role");
+		if (role.equals("INSTRUCTOR")) return true;
+		else return false;
+	}
+
 }

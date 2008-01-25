@@ -1353,7 +1353,11 @@
       <navigation-case>
 		   <from-outcome>view_section_student</from-outcome>
         <to-view-id>/melete/view_section_student.jsp</to-view-id>
-      </navigation-case>                                                                     
+      </navigation-case>   
+      <navigation-case>
+      <from-outcome>author_preference</from-outcome>
+      <to-view-id>/melete/author_preference.jsp</to-view-id>
+     </navigation-case>                                                                   
    </navigation-rule>             
 
 
@@ -1375,7 +1379,11 @@
   <navigation-case>
 		   <from-outcome>list_modules_student</from-outcome>
         <to-view-id>/melete/list_modules_student.jsp</to-view-id>
-      </navigation-case>                                                                         
+      </navigation-case>   
+      <navigation-case>
+      <from-outcome>author_preference</from-outcome>
+      <to-view-id>/melete/author_preference.jsp</to-view-id>
+     </navigation-case>                                                                       
    </navigation-rule>           
    
 <!--Rule for view_section_student -->   
@@ -1396,7 +1404,11 @@
        <navigation-case>
 		   <from-outcome>list_modules_student</from-outcome>
         <to-view-id>/melete/list_modules_student.jsp</to-view-id>
-      </navigation-case>                                 
+      </navigation-case>
+      <navigation-case>
+      <from-outcome>author_preference</from-outcome>
+      <to-view-id>/melete/author_preference.jsp</to-view-id>
+     </navigation-case>                                  
    </navigation-rule>          
    
 
@@ -1454,7 +1466,11 @@
        <navigation-case>
 		   <from-outcome>list_modules_inst</from-outcome>
         <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
-      </navigation-case>                                        
+      </navigation-case>   
+       <navigation-case>
+		   <from-outcome>list_modules_student</from-outcome>
+        <to-view-id>/melete/list_modules_student.jsp</to-view-id>
+      </navigation-case>                                      
  </navigation-rule>      
    
    <navigation-rule>

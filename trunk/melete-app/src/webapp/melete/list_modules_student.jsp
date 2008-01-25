@@ -19,6 +19,14 @@
 <!--Page Content-->
 <table width="100%" border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
 <tr>
+					<td>
+						<f:subview id="top">
+							<jsp:include page="topnavbar.jsp"/> 
+						</f:subview>
+						<div class="meletePortletToolBarMessage"><img src="images/pen_red.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_auth_modules_authoring_options}" /> </div>
+				 </td>
+			</tr>
+<tr>
 <td class="maintabledata3">
 <h:messages showDetail="true" showSummary="false"/>
 
