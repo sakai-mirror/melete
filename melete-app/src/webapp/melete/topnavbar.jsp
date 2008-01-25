@@ -16,8 +16,8 @@ final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)faces
 
 <sakai:tool_bar id="topbar">
 <sakai:tool_bar_item id="viewItem" action="#{navPage.viewAction}" value="#{msgs.topnavbar_view}"  immediate="true"/>
-<sakai:tool_bar_item id="authorItem" action="#{navPage.authAction}" value="#{msgs.topnavbar_author}" immediate="true"/>
-<sakai:tool_bar_item id="manageItem" action="#{navPage.manageAction}" value="#{msgs.topnavbar_manage}"  immediate="true"/>
+<sakai:tool_bar_item id="authorItem" action="#{navPage.authAction}" value="#{msgs.topnavbar_author}" immediate="true"  rendered="#{navPage.isInstructor}"/>
+<sakai:tool_bar_item id="manageItem" action="#{navPage.manageAction}" value="#{msgs.topnavbar_manage}"  immediate="true"  rendered="#{navPage.isInstructor}"/>
 <sakai:tool_bar_item id="prefItem" action="#{navPage.PreferenceAction}" value="#{msgs.topnavbar_preferences}"   immediate="true"/>
 </sakai:tool_bar>
 <!-- End code to display images horizontally. -->
