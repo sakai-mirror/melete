@@ -92,9 +92,11 @@ public class Module implements Serializable,ModuleObjService {
 
     /** persistent field */
     private Set modulestudentprivs;
+    
+    private Map bookmarks;
 
     /** full constructor */
-    public Module(String title, String learnObj, String description, String keywords, String createdByFname, String createdByLname, String userId, String modifiedByFname, String modifiedByLname, String institute, String whatsNext, Date creationDate, Date modificationDate, String seqXml, int version, org.sakaiproject.component.app.melete.ModuleShdates moduleshdate, org.sakaiproject.component.app.melete.CourseModule coursemodule, Map sections, Set modulestudentprivs) {
+    public Module(String title, String learnObj, String description, String keywords, String createdByFname, String createdByLname, String userId, String modifiedByFname, String modifiedByLname, String institute, String whatsNext, Date creationDate, Date modificationDate, String seqXml, int version, org.sakaiproject.component.app.melete.ModuleShdates moduleshdate, org.sakaiproject.component.app.melete.CourseModule coursemodule, Map sections, Set modulestudentprivs, Map bookmarks) {
         this.title = title;
         this.learnObj = learnObj;
         this.description = description;
@@ -114,6 +116,7 @@ public class Module implements Serializable,ModuleObjService {
         this.coursemodule = coursemodule;
         this.sections = sections;
         this.modulestudentprivs = modulestudentprivs;
+        this.bookmarks = bookmarks;
     }
     
     /*Custom constructor*/
@@ -139,7 +142,7 @@ public class Module implements Serializable,ModuleObjService {
     }
 
     /** minimal constructor */
-    public Module(String title, String keywords, String createdByFname, String createdByLname, String userId, Date creationDate, Map sections, Set modulestudentprivs) {
+    public Module(String title, String keywords, String createdByFname, String createdByLname, String userId, Date creationDate, Map sections, Set modulestudentprivs, Map bookmarks) {
         this.title = title;
         this.keywords = keywords;
         this.createdByFname = createdByFname;
@@ -148,6 +151,7 @@ public class Module implements Serializable,ModuleObjService {
         this.creationDate = creationDate;
         this.sections = sections;
         this.modulestudentprivs = modulestudentprivs;
+        this.bookmarks = bookmarks;
     }
 
     /** Copy constructor*/
@@ -163,7 +167,8 @@ public class Module implements Serializable,ModuleObjService {
          this.moduleshdate = null;
          this.coursemodule = null;
          this.sections = null;
-         this.modulestudentprivs = null;         
+         this.modulestudentprivs = null;
+         this.bookmarks = null;
     }
     
     public Integer getModuleId() {
@@ -329,5 +334,15 @@ public class Module implements Serializable,ModuleObjService {
             .append("moduleId", getModuleId())
             .toString();
     }
+
+	public Map getBookmarks()
+	{
+		return this.bookmarks;
+	}
+
+	public void setBookmarks(Map bookmarks)
+	{
+		this.bookmarks = bookmarks;
+	}
 
 }
