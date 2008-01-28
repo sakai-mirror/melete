@@ -38,6 +38,13 @@ function showIframe()
 <!--Page Content-->
 <table  border="0" cellpadding="2" cellspacing="0" bordercolor="#EAEAEA" width="100%" style="border-collapse: collapse" >
 <tr>
+					<td>
+								<f:subview id="top">
+												  <jsp:include page="topnavbar.jsp"/> 
+									</f:subview>	
+					</td>
+				</tr>
+<tr>
 <td align="center">
 <f:subview id="topmod">
 	<jsp:include page="view_navigate.jsp"/>

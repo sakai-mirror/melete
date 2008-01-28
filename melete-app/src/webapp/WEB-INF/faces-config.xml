@@ -427,6 +427,18 @@
 </managed-bean>  
 
 <managed-bean>
+          <description>student preferences</description>
+          <managed-bean-name>studentPreferences</managed-bean-name>
+          <managed-bean-class>org.sakaiproject.tool.melete.StudentPreferencePage</managed-bean-class>
+          <managed-bean-scope>session</managed-bean-scope>
+           <managed-property>
+	    	            <description>Service Dependency: Melete Author Pref service</description>
+	    	            <property-name>authorPref</property-name>
+	    	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteAuthorPrefService"]}</value>
+            </managed-property>
+</managed-bean> 
+
+<managed-bean>
           <description>move sections</description>
           <managed-bean-name>moveSectionsPage</managed-bean-name>
           <managed-bean-class>org.sakaiproject.tool.melete.MoveSectionsPage</managed-bean-class>
@@ -1355,8 +1367,8 @@
         <to-view-id>/melete/view_section_student.jsp</to-view-id>
       </navigation-case>   
       <navigation-case>
-      <from-outcome>author_preference</from-outcome>
-      <to-view-id>/melete/author_preference.jsp</to-view-id>
+      <from-outcome>student_preference</from-outcome>
+      <to-view-id>/melete/student_preference.jsp</to-view-id>
      </navigation-case>                                                                   
    </navigation-rule>             
 
@@ -1381,8 +1393,8 @@
         <to-view-id>/melete/list_modules_student.jsp</to-view-id>
       </navigation-case>   
       <navigation-case>
-      <from-outcome>author_preference</from-outcome>
-      <to-view-id>/melete/author_preference.jsp</to-view-id>
+      <from-outcome>student_preference</from-outcome>
+      <to-view-id>/melete/student_preference.jsp</to-view-id>
      </navigation-case>                                                                       
    </navigation-rule>           
    
@@ -1406,8 +1418,8 @@
         <to-view-id>/melete/list_modules_student.jsp</to-view-id>
       </navigation-case>
       <navigation-case>
-      <from-outcome>author_preference</from-outcome>
-      <to-view-id>/melete/author_preference.jsp</to-view-id>
+      <from-outcome>student_preference</from-outcome>
+      <to-view-id>/melete/student_preference.jsp</to-view-id>
      </navigation-case>                                  
    </navigation-rule>          
    
@@ -1525,7 +1537,18 @@
       <to-view-id>/melete/author_preference.jsp</to-view-id>
      </navigation-case>                                                               
    </navigation-rule>  
-   
+ 
+ <navigation-rule>
+		<from-view-id>/melete/student_preference.jsp</from-view-id>
+		 <navigation-case>
+      <from-outcome>student_preference</from-outcome>
+      <to-view-id>/melete/student_preference.jsp</to-view-id>
+     </navigation-case>   
+       <navigation-case>
+		   <from-outcome>list_modules_student</from-outcome>
+        <to-view-id>/melete/list_modules_student.jsp</to-view-id>
+      </navigation-case>                                      
+ </navigation-rule>        
 <!-- remove Components and render-kit by rashmi as samigo tag is no longer used-->
  
 </faces-config>
