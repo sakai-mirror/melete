@@ -23,6 +23,7 @@ package org.sakaiproject.component.app.melete;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import org.sakaiproject.api.app.melete.SectionObjService;
@@ -92,9 +93,11 @@ public class Section implements Serializable,SectionObjService {
 
     /** nullable persistent field */
     private org.sakaiproject.component.app.melete.SectionResource sectionResource;
+    
+    private Map bookmarks;
 
     /** full constructor */
-    public Section(int moduleId, String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname, String instr, String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean deleteFlag, Date creationDate, Date modificationDate, int version, org.sakaiproject.component.app.melete.Module module, org.sakaiproject.component.app.melete.SectionResource sectionResource) {
+    public Section(int moduleId, String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname, String instr, String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean deleteFlag, Date creationDate, Date modificationDate, int version, org.sakaiproject.component.app.melete.Module module, org.sakaiproject.component.app.melete.SectionResource sectionResource, Map bookmarks) {
         this.moduleId = moduleId;
         this.title = title;
         this.createdByFname = createdByFname;
@@ -112,6 +115,7 @@ public class Section implements Serializable,SectionObjService {
         this.version = version;
         this.module = module;
         this.sectionResource = sectionResource;
+        this.bookmarks = bookmarks;
     }
     /** Custom constructor */
     public Section(String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname, String instr, String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean deleteFlag, Date creationDate, Date modificationDate) {
@@ -154,6 +158,7 @@ public class Section implements Serializable,SectionObjService {
            this.deleteFlag = oldSection.isDeleteFlag();
            this.module = null;
            this.sectionResource = null;
+           this.bookmarks = null;
     }
     
     public Integer getSectionId() {
@@ -306,5 +311,13 @@ public class Section implements Serializable,SectionObjService {
             .append("sectionId", getSectionId())
             .toString();
     }
+	public Map getBookmarks()
+	{
+		return this.bookmarks;
+	}
+	public void setBookmarks(Map bookmarks)
+	{
+		this.bookmarks = bookmarks;
+	}
 
 }

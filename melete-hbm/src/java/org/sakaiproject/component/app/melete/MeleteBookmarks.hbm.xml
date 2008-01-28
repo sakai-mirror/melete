@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.sakaiproject.component.app.melete.MeleteBookmarks" table="melete_bookmarks">
+	<id name="bookmarkId" column="BOOKMARK_ID" type="int" unsaved-value="null">
+      <generator class="hilo"/>
+    </id> 
+       <property name="userId" column="USER_ID" type="string" length="99"/>	
+       <property name="courseId" column="COURSE_ID" type="string" length="99"/>
+   <property name="moduleId" column="MODULE_ID"  type="int"  not-null="true"/>
+   <property name="sectionId" column="SECTION_ID"  type="int"  not-null="true"/>
+   	 
+ <many-to-one name="module"  class="org.sakaiproject.component.app.melete.Module" insert="false" update="false" column="MODULE_ID"  lazy="false"/>
+ <many-to-one name="section"  class="org.sakaiproject.component.app.melete.Section" insert="false" update="false" column="SECTION_ID"  lazy="false"/>
+
+     	
+	 </class>
+ </hibernate-mapping>
+	 
+	 

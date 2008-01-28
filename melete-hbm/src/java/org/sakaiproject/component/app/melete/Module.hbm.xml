@@ -62,7 +62,11 @@
 	</set>-->
 	
 	<one-to-one name="coursemodule" class="org.sakaiproject.component.app.melete.CourseModule"/>
-
+    <map name="bookmarks" cascade="all-delete-orphan" table="melete_bookmarks" inverse="true" lazy="false" sort="natural">
+	  <key column="MODULE_ID" foreign-key="MODULE_ID_BOOK_KEY"/>
+	  <map-key column="BOOKMARK_ID" type="int"/>
+	  <one-to-many class="org.sakaiproject.component.app.melete.MeleteBookmarks"/>
+	</map>
 </class>
 </hibernate-mapping>
 
