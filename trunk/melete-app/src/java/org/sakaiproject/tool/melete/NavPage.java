@@ -96,7 +96,11 @@ public class NavPage implements Serializable {
 
      public String PreferenceAction()
      {
-     	return "author_preference";
+ 		FacesContext ctx = FacesContext.getCurrentInstance();
+	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
+		role = (String)sessionMap.get("role");
+		if (role.equals("INSTRUCTOR")) return "author_preference";
+		else return "student_preference";
      }
 
 	/**
@@ -107,7 +111,7 @@ public class NavPage implements Serializable {
 	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
 		role = (String)sessionMap.get("role");
 		int count = ServerConfigurationService.getInt("melete.wysiwyg.editor.count", 0);
-		if((count == 0)||(role.equals("STUDENT")))
+		if (count == 0)
 			shouldRenderPreferences = false;
 		else shouldRenderPreferences = true;
 		return shouldRenderPreferences;
