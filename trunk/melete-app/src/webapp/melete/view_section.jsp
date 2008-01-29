@@ -34,7 +34,7 @@ function showIframe()
 	<td vAlign="top" width="100%"> 
 			<table  border="0" cellpadding="2" cellspacing="0" bordercolor="#EAEAEA" width="99%">
 					<tr>
-					<td>
+					<td colspan="2">
 								<f:subview id="top" rendered="#{viewSectionsPage.instRole == true}">
 												  <jsp:include page="topnavbar.jsp"/> 
 									</f:subview>
@@ -44,7 +44,7 @@ function showIframe()
 	<!--Page Content-->
 
 	<tr>
-		<td align="center">
+		<td colspan="2" align="center">
 					<f:subview id="topmod">
 						<jsp:include page="view_navigate.jsp"/>
 					</f:subview>
@@ -52,10 +52,10 @@ function showIframe()
 			</td>
 </tr> 
 <tr>
-		<td align="left">  &nbsp;		</td>
+		<td colspan="2" align="left">  &nbsp;		</td>
 </tr> 
 <tr>
-		<td align="left">  
+    	<td colspan="2" align="left">  
 		<h:outputText id="modtitle" value="#{viewSectionsPage.module.title}" styleClass="bold style6"></h:outputText>
 		</td>
 </tr> 
@@ -64,15 +64,24 @@ function showIframe()
 		<td align="left">  
 		  <h:outputText id="title" value="#{viewSectionsPage.section.title}" styleClass="bold style7"></h:outputText>     
 		</td>
+		<td align="right">
+		<h:commandLink id="bmarkLink" action="#{viewSectionsPage.createBookmark}" immediate="true">
+		  <h:outputText  id="bmarkText" value="#{msgs.bookmark_text}"/>
+	    </h:commandLink>    
+	    <h:outputText id="seperatorMsg" value=" | "/>
+	    <h:commandLink id="clearLink" action="#{viewSectionsPage.clearBookmark}" immediate="true">
+		  <h:outputText  id="clearText" value="#{msgs.clear_bookmark_text}"/>
+	    </h:commandLink>    
+		</td>
 </tr> 
 
 <tr>
-		<td align="left">  
+		<td colspan="2" align="left">  
 				<h:outputText value="#{msgs.view_section_instructions}"  rendered="#{((viewSectionsPage.section.instr != viewSectionsPage.nullString)&&(viewSectionsPage.section.instr != viewSectionsPage.emptyString))}"  styleClass="italics"></h:outputText> &nbsp;<h:outputText id="instr" value="#{viewSectionsPage.section.instr}"></h:outputText>     
 		</td>
 </tr> 
 <tr>
-	<td align="left">
+	<td colspan="2" align="left">
 		    <h:inputHidden id="contentType" value="#{viewSectionsPage.section.contentType}"/>
 			
 		<br> 
@@ -91,21 +100,20 @@ function showIframe()
  <iframe   id="iframe1" src="<h:outputText value="#{viewSectionsPage.contentLink}" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeUpload)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString))}"/>" style="visibility:visible" scrolling="auto" width="100%"  height="700" border="0" frameborder="0"></iframe>
 	</td>
 	</tr>
-</td>
-</tr>
+
 
  <tr>
-<td align="left"> &nbsp;</td>
+<td colspan="2" align="left"> &nbsp;</td>
 </tr>
 <tr>
-<td align="center">
+<td colspan="2" align="center">
 					<f:subview id="bottommod">
 						<jsp:include page="view_navigate.jsp"/>
 					</f:subview>
 </td>
 </tr>                
 <tr>
-<td>
+<td colspan="2">
 
 <table width="100%" height="20" border="0" cellpadding="3" cellspacing="0" >
    	<tr>

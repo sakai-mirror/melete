@@ -21,19 +21,49 @@
 
 package org.sakaiproject.api.app.melete;
 
-import java.util.List;
+
+
+
 /**
  *
  */
-public interface MeleteBookmarksService
+public interface MeleteBookmarksObjService
 {
 
-	public abstract void insertBookmark(MeleteBookmarksObjService mb) throws Exception;
+	/**
+	 * @return Returns the userId.
+	 */
+	public abstract String getUserId();
 
-	public abstract List getBookmarks(String userId, String courseId);
+	/**
+	 * @param userId The userId to set.
+	 */
+	public abstract void setUserId(String userId);
 
-	public abstract void deleteBookmark(MeleteBookmarksObjService mb)  throws Exception;
+	public abstract int getBookmarkId();
 
-	public abstract void deleteAllBookmarks(String userId, String courseId);
+	public abstract void setBookmarkId(int bookmarkId);
+
+	public abstract String getCourseId();
+
+	public abstract void setCourseId(String courseId);
+
+	public abstract int getModuleId();
+
+	public abstract void setModuleId(int moduleId);
+
+	public abstract int getSectionId();
+
+	public abstract void setSectionId(int sectionId);
+
+	public abstract org.sakaiproject.api.app.melete.ModuleObjService getModule();
+
+	public abstract void setModule(
+			org.sakaiproject.api.app.melete.ModuleObjService module);
+
+	public abstract org.sakaiproject.api.app.melete.SectionObjService getSection();
+
+	public abstract void setSection(
+			org.sakaiproject.api.app.melete.SectionObjService section);
 
 }

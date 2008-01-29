@@ -197,5 +197,20 @@
 			<ref local="org.sakaiproject.component.app.melete.MeleteUserPreferenceDB"/>
         </property>
 	</bean>
+    
+    <bean id="org.sakaiproject.component.app.melete.MeleteBookmarksDB"
+			class="org.sakaiproject.component.app.melete.MeleteBookmarksDB"
+			singleton="true">
+			<property name="hibernateUtil">
+            <ref local="org.sakaiproject.component.app.melete.HibernateUtil" />
+        </property>        
+	</bean>	
 	
+	<bean id="org.sakaiproject.api.app.melete.MeleteBookmarksService"
+				class="org.sakaiproject.component.app.melete.MeleteBookmarksServiceImpl"
+				singleton="true">	
+		<property name="bookmarksdb">
+			<ref local="org.sakaiproject.component.app.melete.MeleteBookmarksDB"/>
+        </property>
+	</bean>
 </beans>
