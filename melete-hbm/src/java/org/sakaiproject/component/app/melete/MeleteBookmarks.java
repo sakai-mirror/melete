@@ -1,54 +1,53 @@
 /**********************************************************************************
 *
-* $Header: 
+* $Header:
 *
 ***********************************************************************************
 *
-* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project 
-*   
-* Licensed under the Apache License, Version 2.0 (the "License"); you 
-* may not use this file except in compliance with the License. You may 
-* obtain a copy of the License at 
-*   
-* http://www.apache.org/licenses/LICENSE-2.0 
-*   
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the License is distributed on an "AS IS" BASIS, 
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
-* implied. See the License for the specific language governing 
-* permissions and limitations under the License. 
+* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you
+* may not use this file except in compliance with the License. You may
+* obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+* implied. See the License for the specific language governing
+* permissions and limitations under the License.
 *
 **********************************************************************************/
 package org.sakaiproject.component.app.melete;
 
 import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
-
-import org.sakaiproject.api.app.melete.MeleteBookmarksService;
+import org.sakaiproject.api.app.melete.MeleteBookmarksObjService;
 
 /** @author Hibernate CodeGenerator */
-public class MeleteBookmarks implements Serializable, MeleteBookmarksService {
+public class MeleteBookmarks implements Serializable, MeleteBookmarksObjService {
 
 	/** identifier field */
 	private int bookmarkId;
-    
+
     private String userId;
-    
+
     private String courseId;
-    
+
     /** nullable persistent field */
     private int moduleId;
-    
+
     /** nullable persistent field */
     private int sectionId;
-    
+
     /** nullable persistent field */
     private org.sakaiproject.component.app.melete.Module module;
-    
+
     /** nullable persistent field */
     private org.sakaiproject.component.app.melete.Section section;
 
-   
+
 	/** full constructor
 	 * @param userId
      * @param courseId
@@ -63,13 +62,13 @@ public class MeleteBookmarks implements Serializable, MeleteBookmarksService {
 		this.module = module;
 		this.section = section;
 	}
-		
+
 	/**
 	 *  default
 	 */
-	public MeleteBookmarks() {	
+	public MeleteBookmarks() {
 	}
-		
+
 
 	/**
 	 * {@inheritDoc}
@@ -177,5 +176,5 @@ public class MeleteBookmarks implements Serializable, MeleteBookmarksService {
 		this.section = (Section)section;
 	}
 
-	
+
 }
