@@ -7,6 +7,16 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
+<script type="text/javascript" language="javascript">
+function OpenPrintWindow(windowURL,windowName)
+{
+var windowDefaults = "status=no, menubar=no, location=no, scrollbars=yes, resizeable=yes, width=700, height=500, left=20, top=20";
+var newWindow = window.open(windowURL, windowName,windowDefaults);
+if (window.focus) { newWindow.focus(); } ; // force the window to the front if the browser supports it
+return newWindow;
+
+}
+</script>
 </head>
 <f:view>
 <body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
@@ -110,6 +120,13 @@
                <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>
          </h:column>
+		 <h:column rendered="#{listModulesPage.printable}">  
+         <h:outputText id="emp_space5" value="  " styleClass="ExtraPaddingClass" />
+	     <h:outputLink id="printModuleLink" value="print_module" onclick="OpenPrintWindow(this.href,'Melete Print Window');this.href='#';" rendered="#{mdbean.visibleFlag}">
+	    	<f:param id="printmoduleId" name="printModuleId" value="#{listModulesPage.printModuleId}" />
+	  	  	<h:graphicImage id="printImgLink" value="images/printer.png" styleClass="AuthImgClass"/>
+	 	 </h:outputLink>
+       </h:column>  
       </h:dataTable>   
       <h:messages showDetail="true" showSummary="false" rendered="#{listModulesPage.nomodsFlag == listModulesPage.trueFlag}" style="text-align:left"/>
 	  </td></tr>

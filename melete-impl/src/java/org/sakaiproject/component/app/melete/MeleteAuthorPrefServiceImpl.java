@@ -22,10 +22,12 @@
 package org.sakaiproject.component.app.melete;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.api.app.melete.MeleteAuthorPrefService;
+import org.sakaiproject.api.app.melete.MeleteSitePreferenceService;
 import org.sakaiproject.api.app.melete.MeleteUserPreferenceService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
 
@@ -58,6 +60,31 @@ public MeleteUserPreferenceService getUserChoice(String user_id)
 			}
 		return mup;
 	}
+
+public void insertUserSiteChoice(MeleteSitePreferenceService msp) throws Exception
+{
+	try{
+		userPrefdb.setSitePreferences((MeleteSitePreference)msp);
+	}catch(Exception e)
+		{
+		logger.error("melete user pref business --add editor choice failed");
+		 throw new MeleteException("add_editorchoice_fail");
+
+		}
+	return;
+}
+
+public MeleteSitePreferenceService getSiteChoice(String site_id)
+{
+	MeleteSitePreference msp = null;
+	try{
+		msp = userPrefdb.getSitePreferences(site_id);
+	}catch(Exception e)
+		{
+		logger.error("melete user pref business --get editor choice failed");
+		}
+	return msp;
+}
 
 /**
 	 * @param logger The logger to set.

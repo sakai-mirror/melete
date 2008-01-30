@@ -29,6 +29,8 @@ package org.sakaiproject.tool.melete;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
+
 import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.FacesMessage;
@@ -39,6 +41,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.api.app.melete.MeleteAuthorPrefService;
 import org.sakaiproject.component.app.melete.MeleteUserPreference;
+import org.sakaiproject.component.app.melete.MeleteSitePreference;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 
 public class AuthorPreferencePage {
@@ -46,7 +49,7 @@ public class AuthorPreferencePage {
   final static String FCKEDITOR = "FCK Editor";
   private String editorChoice;
   private String userEditor;
-  private String userView;
+  private String userView="true";
   private ArrayList availableEditors;
   private boolean displaySferyx=false;
 
@@ -55,6 +58,9 @@ public class AuthorPreferencePage {
   private boolean shouldRenderFCK=false;
   private MeleteAuthorPrefService authorPref;
   private MeleteUserPreference mup;
+  private MeleteSitePreference msp;
+  private String materialPrintable="false";
+  
   /** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(AuthorPreferencePage.class);
 
@@ -68,6 +74,8 @@ public class AuthorPreferencePage {
   		Map sessionMap = context.getExternalContext().getSessionMap();
 
   		mup = (MeleteUserPreference) getAuthorPref().getUserChoice((String)sessionMap.get("userId"));
+  		msp = (MeleteSitePreference) getAuthorPref().getSiteChoice((String)sessionMap.get("courseId"));
+  		  		
   		// if no choice is set then read default from sakai.properties
   		if ((mup == null)||(mup.getEditorChoice() == null))
   		{
@@ -87,23 +95,13 @@ public class AuthorPreferencePage {
   			shouldRenderSferyx = false;
   		  	shouldRenderFCK = true;
   		 }
-
-  		if (mup==null)
-  		{
-  			userView = "true";
-  		}
-  		else
-  		{
-  			if (mup.isViewExpChoice() == true)
-  			{
-  			  userView = "true";
-  			}
-  			else
-  			{
-  				userView = "false";
-  			}
-  		}
-
+  		
+  		if (mup != null && !mup.isViewExpChoice())
+  			userView = "false";  			  		
+  		
+  		if(msp != null && msp.isPrintable())
+  			materialPrintable = "true";
+  		
   	return;
   	}
 
@@ -210,8 +208,6 @@ public void setUserView(String userView) {
 }
 public String setUserChoice()
 {
-
-
 		FacesContext context = FacesContext.getCurrentInstance();
 		Map sessionMap = context.getExternalContext().getSessionMap();
 		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
@@ -232,9 +228,22 @@ public String setUserChoice()
 			else
 			{
 				mup.setViewExpChoice(false);
-			}
+			}			
+			
 		mup.setUserId((String)sessionMap.get("userId"));
 		authorPref.insertUserChoice(mup);
+		
+		// set Site Preferences
+		if(msp == null) {
+			msp = new MeleteSitePreference();
+			msp.setPrefSiteId((String)sessionMap.get("courseId"));
+		}
+		
+		//set print preference
+		if (materialPrintable.equals("true"))msp.setPrintable(true);
+		else msp.setPrintable(false);
+		
+		authorPref.insertUserSiteChoice(msp);
 		}
 		catch(Exception e)
 		{
@@ -249,6 +258,11 @@ public String setUserChoice()
 
 	return "author_preference";
 	//return "pref_editor";
+}
+
+public boolean isMaterialPrintable(String site_id)
+{
+	return getAuthorPref().getSiteChoice(site_id).isPrintable();
 }
 
 public String backToPrefsPage()
@@ -291,11 +305,27 @@ public void setDisplaySferyx(boolean displaySferyx) {
 	this.displaySferyx = displaySferyx;
 }
 
-public MeleteUserPreference getMup() {
-	return mup;
+public MeleteUserPreference getMup() {		
+		return mup;
 }
 
 public void setMup(MeleteUserPreference mup) {
 	this.mup = mup;
+}
+
+/**
+ * @return the materialPrintable
+ */
+public String getMaterialPrintable()
+{
+	return this.materialPrintable;
+}
+
+/**
+ * @param materialPrintable the materialPrintable to set
+ */
+public void setMaterialPrintable(String materialPrintable)
+{
+	this.materialPrintable = materialPrintable;
 }
 }

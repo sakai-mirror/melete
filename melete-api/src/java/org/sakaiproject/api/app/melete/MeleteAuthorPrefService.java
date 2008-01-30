@@ -21,6 +21,8 @@
 **********************************************************************************/
 package org.sakaiproject.api.app.melete;
 
+import java.util.Set;
+
 import org.sakaiproject.api.app.melete.MeleteUserPreferenceService;
 /*
 * author Rashmi - 10/11/06 
@@ -28,5 +30,6 @@ import org.sakaiproject.api.app.melete.MeleteUserPreferenceService;
 public interface MeleteAuthorPrefService{
 	public void insertUserChoice(MeleteUserPreferenceService mup) throws Exception;
 	public MeleteUserPreferenceService getUserChoice(String user_id);
-
+	public void insertUserSiteChoice(MeleteSitePreferenceService msp) throws Exception;
+	public MeleteSitePreferenceService getSiteChoice(String site_id);
 }

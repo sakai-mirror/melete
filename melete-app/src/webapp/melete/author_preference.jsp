@@ -31,34 +31,57 @@
 				</td>
         </tr>
         <tr>
-          <td class="maintabledata3" valign="top">
+          <td class="maintabledata3">
           	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-		  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
-		  	<tr><td  height="20" class="maintabledata5" ><h:outputText id="t1" value="#{msgs.author_preference_editor_select}" rendered="#{navPage.shouldRenderPreferences}" styleClass="tableheader2"/>          </td></tr>
-              <tr>
-                <td>
-						<table border="0" cellpadding="0" cellspacing="0" width="100%">
-						<tr>
-					<td>
-							<h:selectOneRadio value="#{authorPreferences.userEditor}" rendered="#{navPage.shouldRenderPreferences}" layout="pageDirection">
-										<f:selectItems value="#{authorPreferences.availableEditors}" />
-								</h:selectOneRadio>	
+		  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
+		  	<tr>
+		  		<td height="20" class="maintabledata5"><h:outputText id="t1_1" value="#{msgs.author_preference_global_preference}" styleClass="tableheader2"/> </td></tr>
+            <tr>
+                <td align="center">
+                	<table border="0" cellpadding="0" cellspacing="3" width="95%">
+                	<tr>
+                		<td>
+                		<h:outputText id="t1" value="#{msgs.author_preference_editor_select}" styleClass="bold"/>
+                	</td></tr>
+                	<tr>
+                	<td>
+						<h:selectOneRadio value="#{authorPreferences.userEditor}" layout="pageDirection">
+							<f:selectItems value="#{authorPreferences.availableEditors}" />
+						</h:selectOneRadio>	
 					</td>	
-					</tr>		
-					</table></td></tr>		
-			<tr><td  height="20" class="maintabledata5" ><h:outputText id="t2" value="#{msgs.author_preference_view_select}"  styleClass="tableheader2"/>          </td></tr>
-              <tr>
+			</tr>	
+			<tr>
+				 <td height="15"><h:outputText id="t2" value="#{msgs.author_preference_view_select}"  styleClass="bold"/>          </td>
+                </tr>
+                <tr>
                 <td>
-						<table border="0" cellpadding="0" cellspacing="0" width="100%">
+					<h:selectOneRadio value="#{authorPreferences.userView}" layout="pageDirection">
+						<f:selectItem itemLabel="Expanded" itemValue="true" />
+						<f:selectItem itemLabel="Collapsed" itemValue="false"/>
+					</h:selectOneRadio>	
+				</td></tr></table>
+				</td></tr>						
+				</table></td></tr>
+				<tr>
+					 <td class="maintabledata3" >
+          	    	  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber2">
 						<tr>
-					<td>
-							<h:selectOneRadio value="#{authorPreferences.userView}" layout="pageDirection">
-										<f:selectItem itemLabel="Expanded" itemValue="true" />
-										<f:selectItem itemLabel="Collapsed" itemValue="false"/>
+						<td  height="20" class="maintabledata5"><h:outputText id="t3_1" value="#{msgs.author_preference_site_preference}"  styleClass="tableheader2"/>          </td></tr>
+						<tr>
+							  <td align="center">
+                				<table border="0" cellpadding="0" cellspacing="3" width="95%">
+                				<tr><td>
+								 <h:outputText id="t3" value="#{msgs.author_preference_material_printable}"  styleClass="bold"/>          
+								 </td></tr>
+								<tr>
+						   <td>
+							<h:selectOneRadio value="#{authorPreferences.materialPrintable}" layout="pageDirection">
+										<f:selectItem itemLabel="#{msgs.author_preference_yes}" itemValue="true" />
+										<f:selectItem itemLabel="#{msgs.author_preference_no}" itemValue="false"/>
 								</h:selectOneRadio>	
-					</td>	
-					</tr>		
-					</table></td></tr>								
+					</td></tr></table>
+					</td></tr></table>
+					</td></tr>									
               <tr>
                 <td height="30" >         
                 <div align="center">				
