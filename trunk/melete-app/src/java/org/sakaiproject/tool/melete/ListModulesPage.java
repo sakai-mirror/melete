@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 import java.io.Serializable;
 
 import javax.faces.context.FacesContext;
@@ -43,9 +44,10 @@ import javax.faces.application.FacesMessage;
 import java.sql.Timestamp;
 import org.sakaiproject.api.app.melete.ModuleService;
 import org.sakaiproject.component.app.melete.*;
-
+import org.sakaiproject.authz.cover.AuthzGroupService;
+import org.sakaiproject.authz.api.AuthzGroup;
 import javax.faces.event.*;
-
+import org.sakaiproject.tool.cover.ToolManager;
 /**
  * @author Faculty
  *
@@ -80,7 +82,8 @@ public class ListModulesPage implements Serializable{
       private List nullList = null;
       private String isNull = null;
       private Date nullDate = null;
-
+      private Integer printModuleId =null;
+      private boolean printable;
 
 	  //This needs to be set later using Utils.getBinding
 	  String courseId;
@@ -559,4 +562,41 @@ public class ListModulesPage implements Serializable{
 	  	ctx.addMessage(null,msg);
 	  }
 
+	  public Integer getPrintModuleId()
+		{
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			try
+			{
+				UIViewRoot root = ctx.getViewRoot();
+				UIData table;
+				if (getRole() != null && getRole().equals("INSTRUCTOR"))
+				{
+					table = (UIData) root.findComponent("listmodulesform").findComponent("table");
+				}
+				else
+					table = (UIData) root.findComponent("listmodulesStudentform").findComponent("table");
+			ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
+			printModuleId = mdbean.getModule().getModuleId();
+			return printModuleId;
+			}
+			catch (Exception me)
+			{
+				logger.error(me.toString());				
+			}
+			return 0;
+		}
+	  
+	  public boolean isPrintable()
+	  {
+		  FacesContext ctx = FacesContext.getCurrentInstance();
+		  try{
+		   String site_id=ToolManager.getCurrentPlacement().getContext();
+		   ValueBinding binding = Util.getBinding("#{authorPreferences}");
+	 	   AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(ctx);
+	 	   printable = preferencePage.isMaterialPrintable(site_id);		 
+		  }
+		  catch(Exception e){e.printStackTrace();
+		  printable=false;}
+		  return printable;
+	  }
 }

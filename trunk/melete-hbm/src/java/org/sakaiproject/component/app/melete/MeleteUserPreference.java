@@ -37,22 +37,27 @@ public class MeleteUserPreference implements Serializable,MeleteUserPreferenceSe
     
     private boolean viewExpChoice;
 
+    private boolean printable;
+    
     private int prefId;
    
 	/** full constructor
 	 * @param userId
 	 * @param editorChoice
 	 */
-	public MeleteUserPreference(String userId, String editorChoice, boolean viewExpChoice) {
+	public MeleteUserPreference(String userId, String editorChoice, boolean viewExpChoice, boolean printable) {
 		this.userId = userId;
 		this.editorChoice = editorChoice;
 		this.viewExpChoice = viewExpChoice;
+		this.printable = printable;
 	}
 		
 	/**
 	 *  default
 	 */
-	public MeleteUserPreference() {	
+	public MeleteUserPreference() {
+		this.viewExpChoice = true;
+		this.printable = false;
 	}
 		
 	/**
@@ -105,4 +110,5 @@ public class MeleteUserPreference implements Serializable,MeleteUserPreferenceSe
 	public void setViewExpChoice(boolean viewExpChoice) {
 		this.viewExpChoice = viewExpChoice;
 	}
+	
 }

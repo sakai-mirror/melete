@@ -10,7 +10,7 @@
     </id> 
        <property name="userId" column="USER_ID" type="string" length="99"/>			 
        <property name="editorChoice" column="EDITOR_CHOICE" type="string" />	
-       <property name="viewExpChoice" column="EXP_CHOICE" type="boolean"/>		
+       <property name="viewExpChoice" column="EXP_CHOICE" type="boolean"/>       
 	 </class>
  </hibernate-mapping>
 	 

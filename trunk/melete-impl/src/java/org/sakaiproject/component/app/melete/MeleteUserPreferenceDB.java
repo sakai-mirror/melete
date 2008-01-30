@@ -18,6 +18,10 @@
  */
 package org.sakaiproject.component.app.melete;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -77,9 +81,10 @@ public class MeleteUserPreferenceDB {
 	      }
 	      else
 	      {
-	    	  session.update(mup);
+	    	 // session.saveOrUpdate(mup);
+	    	session.update(mup);
 	      }
-	      //session.saveOrUpdate(mup);
+	      
 	      tx.commit();
 
 	    }
@@ -92,6 +97,7 @@ public class MeleteUserPreferenceDB {
 	    catch (HibernateException he)
 	    {
 		  logger.error(he.toString());
+		  he.printStackTrace();
 		  throw he;
 	    }
 	    catch (Exception e) {
@@ -112,6 +118,81 @@ public class MeleteUserPreferenceDB {
 			  }
 		}
 	}
+	
+	public MeleteSitePreference getSitePreferences(String siteId)
+	{
+		MeleteSitePreference msp = null;
+		try{
+		     Session session = getHibernateUtil().currentSession();
+		     Query q=session.createQuery("select msp from MeleteSitePreference as msp where msp.prefSiteId =:siteId");
+			  q.setParameter("siteId",siteId);
+			 msp = (MeleteSitePreference)q.uniqueResult();
+
+		     getHibernateUtil().closeSession();
+
+		} catch(Exception ex)
+		{
+			ex.printStackTrace();
+			logger.error(ex.toString());
+		}
+		return msp;
+
+	}
+
+	public void setSitePreferences(MeleteSitePreference msp) throws Exception
+	{
+		Transaction tx = null;
+	 	try
+		{
+	      Session session = hibernateUtil.currentSession();
+	      tx = session.beginTransaction();
+
+	      Query q=session.createQuery("select msp1 from MeleteSitePreference as msp1 where msp1.prefSiteId =:siteId");
+		  q.setParameter("siteId",msp.getPrefSiteId());
+		  MeleteSitePreference find_msp = (MeleteSitePreference)q.uniqueResult();
+		 
+	      if(find_msp == null)
+	     	  session.save(msp);
+	      else 
+	      {
+	    	 find_msp.setPrintable(msp.isPrintable()); 
+	    	 session.update(find_msp);
+	      }
+
+	      tx.commit();
+	    }
+	 	catch(StaleObjectStateException sose)
+	     {
+			if(tx !=null) tx.rollback();
+			logger.error("stale object exception" + sose.toString());
+			throw sose;
+	     }
+	    catch (HibernateException he)
+	    {
+		  logger.error(he.toString());
+		  he.printStackTrace();
+		  throw he;
+	    }
+	    catch (Exception e) {
+	      if (tx!=null) tx.rollback();
+	      logger.error(e.toString());
+	      throw e;
+	    }
+	    finally
+		{
+	    	try
+			  {
+		      	hibernateUtil.closeSession();
+			  }
+		      catch (HibernateException he)
+			  {
+				  logger.error(he.toString());
+				  throw he;
+			  }
+		}
+	}
+	
+	
 	/**
 	 * @return Returns the hibernateUtil.
 	 */
@@ -131,6 +212,6 @@ public class MeleteUserPreferenceDB {
 	public void setLogger(Log logger) {
 		this.logger = logger;
 	}
-
+	
 
 }
