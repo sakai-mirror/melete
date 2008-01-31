@@ -192,7 +192,59 @@ public class MeleteUserPreferenceDB {
 		}
 	}
 	
-	
+	public void setSitePreferences(String site_id, boolean printFlag) 
+	{
+		Transaction tx = null;
+	 	try
+		{
+	      Session session = hibernateUtil.currentSession();
+	      tx = session.beginTransaction();
+
+	      Query q=session.createQuery("select msp1 from MeleteSitePreference as msp1 where msp1.prefSiteId =:siteId");
+		  q.setParameter("siteId",site_id);
+		  MeleteSitePreference find_msp = (MeleteSitePreference)q.uniqueResult();
+		 
+	      if(find_msp == null)
+	      {
+	    	  MeleteSitePreference msp = new MeleteSitePreference();
+	    	  msp.setPrefSiteId(site_id);
+	    	  msp.setPrintable(printFlag);
+	     	  session.save(msp);
+	      }
+	      else 
+	      {
+	    	 find_msp.setPrintable(printFlag); 
+	    	 session.update(find_msp);
+	      }
+
+	      tx.commit();
+	    }
+	 	catch(StaleObjectStateException sose)
+	     {
+			if(tx !=null) tx.rollback();
+			logger.error("stale object exception" + sose.toString());		
+	     }
+	    catch (HibernateException he)
+	    {
+		  logger.error(he.toString());
+		  he.printStackTrace();		 
+	    }
+	    catch (Exception e) {
+	      if (tx!=null) tx.rollback();
+	      logger.error(e.toString());	      
+	    }
+	    finally
+		{
+	    	try
+			  {
+		      	hibernateUtil.closeSession();
+			  }
+		      catch (HibernateException he)
+			  {
+				  logger.error(he.toString());				  
+			  }
+		}
+	}
 	/**
 	 * @return Returns the hibernateUtil.
 	 */

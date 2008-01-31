@@ -162,6 +162,11 @@
         <property name="meleteLicenseDB">
             <ref local="org.sakaiproject.component.app.melete.MeleteLicenseDB" />
         </property>
+        
+        <property name="meleteUserPrefDB">
+            <ref local="org.sakaiproject.component.app.melete.MeleteUserPreferenceDB" />
+        </property>
+        
 	</bean>
 	
 	<bean id="org.sakaiproject.api.app.melete.MeleteCHService"

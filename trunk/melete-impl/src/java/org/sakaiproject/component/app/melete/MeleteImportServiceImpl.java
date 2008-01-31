@@ -93,6 +93,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	protected ModuleShdates moduleShdates;
 	private MeleteCHService meleteCHService;
 	private MeleteLicenseDB meleteLicenseDB;
+	private MeleteUserPreferenceDB meleteUserPrefDB;
 
 	protected String unzippeddirpath = null;
 	private SubSectionUtilImpl sectionUtil;
@@ -1093,8 +1094,15 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		//Copy the uploads collection
 	    this.destinationContext = toContext;
   	   	buildModules(fromContext, toContext);
+  	   	setMeleteSitePreference(fromContext, toContext);  	   	
 	}
 
+	private void setMeleteSitePreference(String fromContext, String toContext)
+	{
+		MeleteSitePreference fromMsp = meleteUserPrefDB.getSitePreferences(fromContext);
+		meleteUserPrefDB.setSitePreferences(toContext,fromMsp.isPrintable());
+	}
+	
 	private void buildModules(String fromContext, String toContext)
 	{
 //		Get modules in site A
@@ -1260,5 +1268,19 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	 */
 	public void setMeleteLicenseDB(MeleteLicenseDB meleteLicenseDB) {
 		this.meleteLicenseDB = meleteLicenseDB;
+	}
+	/**
+	 * @return the meleteUserPrefDB
+	 */
+	public MeleteUserPreferenceDB getMeleteUserPrefDB()
+	{
+		return this.meleteUserPrefDB;
+	}
+	/**
+	 * @param meleteUserPrefDB the meleteUserPrefDB to set
+	 */
+	public void setMeleteUserPrefDB(MeleteUserPreferenceDB meleteUserPrefDB)
+	{
+		this.meleteUserPrefDB = meleteUserPrefDB;
 	}
 }
