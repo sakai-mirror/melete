@@ -93,6 +93,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
       private SectionService sectionService;
 
   	  private MeleteCHService meleteCHService;
+  	  private MeleteBookmarksService bookmarksService;
 
       /** Dependency:  The logging service. */
       protected Log logger = LogFactory.getLog(ViewSectionsPage.class);
@@ -591,6 +592,20 @@ public String goNextModule()
 	}
 }
 
+public String createBookmark()
+{
+	
+	return "view_section";
+	
+}
+
+public String clearBookmark()
+{
+
+	return "view_section";
+	
+}
+
 /*
  * section breadcrumps in format module title >> section title
  */
@@ -677,4 +692,14 @@ public MeleteCHService getMeleteCHService() {
 public void setMeleteCHService(MeleteCHService meleteCHService) {
 	this.meleteCHService = meleteCHService;
 }
+public MeleteBookmarksService getBookmarksService()
+{
+	return this.bookmarksService;
+}
+
+public void setBookmarksService(MeleteBookmarksService bookmarksService)
+{
+	this.bookmarksService = bookmarksService;
+}
+
 }
