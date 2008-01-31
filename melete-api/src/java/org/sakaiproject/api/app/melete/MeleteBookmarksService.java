@@ -34,6 +34,6 @@ public interface MeleteBookmarksService
 
 	public abstract void deleteBookmark(MeleteBookmarksObjService mb)  throws Exception;
 
-	public abstract void deleteAllBookmarks(String userId, String courseId);
+	public abstract void deleteAllBookmarks(String userId, String courseId) throws Exception;
 
 }

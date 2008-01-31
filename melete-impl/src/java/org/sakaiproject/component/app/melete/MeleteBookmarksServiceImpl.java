@@ -82,7 +82,7 @@ public void deleteBookmark(MeleteBookmarksObjService mb)  throws Exception
   /**
  * {@inheritDoc}
  */
-public void deleteAllBookmarks(String userId, String courseId)
+public void deleteAllBookmarks(String userId, String courseId) throws Exception
   {
 	try{
 		bookmarksdb.deleteAllBookmarks(userId, courseId);
