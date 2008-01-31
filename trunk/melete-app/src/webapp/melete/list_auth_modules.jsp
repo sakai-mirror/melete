@@ -197,7 +197,7 @@ if (msg != null)
              
                 <h:inputText id="startDate"
                            value="#{mdbean.moduleShdate.startDate}" >
-            <f:convertDateTime pattern="MM/dd/yyyy hh:mm a"/>
+            <f:convertDateTime pattern="M/d/yyyy hh:mm a"/>
             </h:inputText>
           
                            
@@ -224,7 +224,7 @@ if (msg != null)
              
             <h:inputText id="endDate" 
                            value="#{mdbean.moduleShdate.endDate}" >
-               <f:convertDateTime pattern="MM/dd/yyyy hh:mm a"/>
+               <f:convertDateTime pattern="M/d/yyyy hh:mm a"/>
             </h:inputText>
             <f:facet name="footer">
             <h:commandLink id="cancelChanges" action="#{listAuthModulesPage.cancelChanges}" immediate="true" rendered="#{listAuthModulesPage.nomodsFlag == false}">
