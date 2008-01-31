@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.sakaiproject.component.app.melete.MeleteSitePreference" table="melete_site_preference">
+	<id name="prefSiteId" column="PREF_SITE_ID" type="string" length="99" >
+      <generator class="assigned"/>   
+    </id>      
+       <property name="printable" column="PRINTABLE" type="boolean"/>
+	 </class>
+ </hibernate-mapping>
+	 
+	 
