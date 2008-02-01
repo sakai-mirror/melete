@@ -22,7 +22,7 @@
 package org.sakaiproject.component.app.melete;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -35,10 +35,10 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     private Integer moduleId;
 
     /** nullable persistent field */
-    private Date startDate;
+    private Timestamp startDate;
 
     /** nullable persistent field */
-    private Date endDate;
+    private Timestamp endDate;
 
     /** nullable persistent field */
     private int version;
@@ -47,7 +47,7 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     private org.sakaiproject.component.app.melete.Module module;
 
     /** full constructor */
-    public ModuleShdates( Date startDate, Date endDate, int version, org.sakaiproject.component.app.melete.Module module) {
+    public ModuleShdates( Timestamp startDate, Timestamp endDate, int version, org.sakaiproject.component.app.melete.Module module) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.version = version;
@@ -55,7 +55,7 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     }
 
     /** Custom constructor */
-    public ModuleShdates(Date startDate, Date endDate) {
+    public ModuleShdates(Timestamp startDate, Timestamp endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -81,19 +81,19 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
         this.moduleId = moduleId;
     }
 
-    public Date getStartDate() {
+    public Timestamp getStartDate() {
         return this.startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Timestamp startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public Timestamp getEndDate() {
         return this.endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
     }
 

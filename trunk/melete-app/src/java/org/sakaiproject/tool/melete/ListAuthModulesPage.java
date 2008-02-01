@@ -134,7 +134,7 @@ public class ListAuthModulesPage implements Serializable
 	private boolean trueFlag = true;
 
 	private List nullList = null;
-	
+
 	private Integer printModuleId;
 
 	// added by rashmi on apr 8
@@ -372,8 +372,8 @@ public class ListAuthModulesPage implements Serializable
 								if (errmdbean.getModuleId() == mdbean.getModuleId())
 								{
 									mdbean.setDateFlag(true);
-									mdbean.getModuleShdate().setStartDate(errmdbean.getModuleShdate().getStartDate());
-									mdbean.getModuleShdate().setEndDate(errmdbean.getModuleShdate().getEndDate());
+									mdbean.setStartDate(errmdbean.getStartDate());
+									mdbean.setEndDate(errmdbean.getEndDate());
 								}
 							}
 
@@ -858,9 +858,9 @@ public class ListAuthModulesPage implements Serializable
 			while (moduleIter.hasNext())
 			{
 				ModuleDateBean mdbean = (ModuleDateBean) moduleIter.next();
-				if ((mdbean.getModuleShdate().getStartDate() != null)&&(mdbean.getModuleShdate().getEndDate() != null))
+				if ((mdbean.getStartDate() != null)&&(mdbean.getEndDate() != null))
 				{
-				  if (mdbean.getModuleShdate().getStartDate().compareTo(mdbean.getModuleShdate().getEndDate()) >= 0)
+				  if (mdbean.getStartDate().compareTo(mdbean.getEndDate()) >= 0)
 				  {
 					dateErrFlag = true;
 					mdbean.setDateFlag(true);
@@ -1375,8 +1375,8 @@ public class ListAuthModulesPage implements Serializable
 	public String MoveSectionAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");	
-		
+		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+
 		try
 		{
 			if (count == 0 || moduleSelected)
@@ -1386,13 +1386,13 @@ public class ListAuthModulesPage implements Serializable
 				resetSubSectionValues();
 				return "list_auth_modules";
 			}
-			
+
 			if (sectionSelected)
 			{
 				ModuleDateBean mdbean = null;
 				SectionBean secBean = null;
 				ArrayList<SectionBean> moveSectionBeans = new ArrayList<SectionBean>(0);
-				
+
 				for (ListIterator<SecModObj> i = selectedSecModIndices.listIterator(); i.hasNext();)
 				{
 					SecModObj smObj = i.next();
@@ -1403,14 +1403,14 @@ public class ListAuthModulesPage implements Serializable
 				ValueBinding binding = Util.getBinding("#{moveSectionsPage}");
 				MoveSectionsPage mvPage = (MoveSectionsPage) binding.getValue(ctx);
 				mvPage.resetValues();
-				mvPage.setSectionBeans(moveSectionBeans);		
+				mvPage.setSectionBeans(moveSectionBeans);
 
 				count = 0;
 				sectionSelected = false;
 				selectedSecModIndices = null;
 				return "move_section";
 			}
-			
+
 		}
 		catch (Exception me)
 		{
@@ -1418,9 +1418,9 @@ public class ListAuthModulesPage implements Serializable
 			String msg = bundle.getString("copy_fail");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 		}
-	
+
 		return "list_auth_modules";
-	}	
+	}
 	// move sections code end
 
 	public Integer getPrintModuleId()
@@ -1434,7 +1434,7 @@ public class ListAuthModulesPage implements Serializable
 			UIViewRoot root = ctx.getViewRoot();
 			UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
 			ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
-			printModuleId = mdbean.getModule().getModuleId();	
+			printModuleId = mdbean.getModule().getModuleId();
 			return printModuleId;
 		}
 		catch (Exception me)
@@ -1445,8 +1445,8 @@ public class ListAuthModulesPage implements Serializable
 		}
 		return 0;
 	}
-	
-	
+
+
 	private void addMessage(FacesContext ctx, String msgName, String msgDetail, FacesMessage.Severity severity)
 	{
 		FacesMessage msg = new FacesMessage(msgName, msgDetail);
