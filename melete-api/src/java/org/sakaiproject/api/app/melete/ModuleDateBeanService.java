@@ -20,6 +20,7 @@
 *
 **********************************************************************************/
 package org.sakaiproject.api.app.melete;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,11 +52,6 @@ public interface ModuleDateBeanService {
 	public abstract void setModule(
 			org.sakaiproject.api.app.melete.ModuleObjService module);
 
-	public abstract org.sakaiproject.api.app.melete.ModuleShdatesService getModuleShdate();
-
-	public abstract void setModuleShdate(
-			org.sakaiproject.api.app.melete.ModuleShdatesService moduleShdate);
-
 	public abstract org.sakaiproject.api.app.melete.CourseModuleService getCmod();
 
 	public abstract void setCmod(
@@ -70,4 +66,14 @@ public interface ModuleDateBeanService {
 	public abstract String getRowClasses();
 
 	public abstract String toString();
+	
+	public abstract Date getStartDate();
+	
+	public abstract void setStartDate(Date startDate);
+
+
+	public abstract Date getEndDate();
+	
+	public abstract void setEndDate(Date endDate);
+	
 }

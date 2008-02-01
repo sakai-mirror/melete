@@ -459,7 +459,8 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			ModuleDateBean mdbean = new ModuleDateBean();
 			mdbean.setModuleId(module.getModuleId().intValue());
 			mdbean.setModule(module);
-			mdbean.setModuleShdate(module.getModuleshdate());
+		    mdbean.setStartDate(module.getModuleshdate().getStartDate());
+	        mdbean.setEndDate(module.getModuleshdate().getEndDate());
 			ArrayList mdbeanList = new ArrayList();
 			mdbeanList.add(mdbean);
 			moduleDB.updateModuleDateBeans(mdbeanList);
@@ -1094,7 +1095,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		//Copy the uploads collection
 	    this.destinationContext = toContext;
   	   	buildModules(fromContext, toContext);
-  	   	setMeleteSitePreference(fromContext, toContext);  	   	
+  	   	setMeleteSitePreference(fromContext, toContext);
 	}
 
 	private void setMeleteSitePreference(String fromContext, String toContext)
@@ -1102,7 +1103,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		MeleteSitePreference fromMsp = meleteUserPrefDB.getSitePreferences(fromContext);
 		meleteUserPrefDB.setSitePreferences(toContext,fromMsp.isPrintable());
 	}
-	
+
 	private void buildModules(String fromContext, String toContext)
 	{
 //		Get modules in site A

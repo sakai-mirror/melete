@@ -4,19 +4,19 @@
 *
 ***********************************************************************************
 *
-* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project 
-*   
-* Licensed under the Apache License, Version 2.0 (the "License"); you 
-* may not use this file except in compliance with the License. You may 
-* obtain a copy of the License at 
-*   
-* http://www.apache.org/licenses/LICENSE-2.0 
-*   
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the License is distributed on an "AS IS" BASIS, 
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
-* implied. See the License for the specific language governing 
-* permissions and limitations under the License. 
+* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you
+* may not use this file except in compliance with the License. You may
+* obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+* implied. See the License for the specific language governing
+* permissions and limitations under the License.
 *
 **********************************************************************************/
 package org.sakaiproject.tool.melete;
@@ -26,6 +26,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map;
+
+import org.sakaiproject.component.app.melete.ModuleShdates;
 import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.FacesMessage;
@@ -43,7 +45,8 @@ public class AddModulePage extends ModulePage implements Serializable{
 
     public AddModulePage(){
        	this.module = null;
-    	setModuleShdates(null);
+    	setStartDate(null);
+    	setEndDate(null);
     	setModuleDateBean(null);
     	setFormName("AddModuleForm");
     }
@@ -57,7 +60,8 @@ public class AddModulePage extends ModulePage implements Serializable{
 	public void setModuleNull()
 	{
 		this.module = null;
-		setModuleShdates(null);
+		setStartDate(null);
+		setEndDate(null);
 		resetModuleValues();
 	}
 
@@ -77,7 +81,7 @@ public class AddModulePage extends ModulePage implements Serializable{
     public String save()
 	{
     	Date  d = new Date();
-     	Date st = getModuleShdates().getStartDate();
+     	Date st = getStartDate();
 
         setSuccess(false);
         if(moduleService == null)
@@ -92,7 +96,7 @@ public class AddModulePage extends ModulePage implements Serializable{
      	mv.isValidTitle(module.getTitle());
 
      	// validation no 3
-       	Date end = getModuleShdates().getEndDate();
+       	Date end = getEndDate();
 
  //  validation to limit year to 4 digits
      	Calendar calstart = new GregorianCalendar();
@@ -103,7 +107,7 @@ public class AddModulePage extends ModulePage implements Serializable{
 
 //      validation no 4 b
      	if ((end != null)&&(st != null))
-     	{	
+     	{
      	if(end.compareTo(st) <= 0)
      	{
      		String errMsg = "";
@@ -128,8 +132,24 @@ public class AddModulePage extends ModulePage implements Serializable{
 				 	{
 						module.setKeywords(module.getTitle());
 					}
-
-			moduleService.insertProperties(getModule(),getModuleShdates(),userId,courseId);
+			ModuleShdates mshdates = new ModuleShdates();
+    	    if (getStartDate() != null)
+    	    {
+				mshdates.setStartDate(new java.sql.Timestamp(getStartDate().getTime()));
+		    }
+    	    else
+    	    {
+				mshdates.setStartDate(null);
+		    }
+    	    if (getEndDate() != null)
+    	    {
+				mshdates.setEndDate(new java.sql.Timestamp(getEndDate().getTime()));
+		    }
+    	    else
+    	    {
+				mshdates.setEndDate(null);
+		    }
+			moduleService.insertProperties(getModule(),mshdates,userId,courseId);
 			// add module to session
 			sessionMap.put("currModule",module);
 
