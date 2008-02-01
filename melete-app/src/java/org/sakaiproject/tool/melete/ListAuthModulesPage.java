@@ -374,8 +374,8 @@ public class ListAuthModulesPage implements Serializable
 								if (errmdbean.getModuleId() == mdbean.getModuleId())
 								{
 									mdbean.setDateFlag(true);
-									mdbean.getModuleShdate().setStartDate(errmdbean.getModuleShdate().getStartDate());
-									mdbean.getModuleShdate().setEndDate(errmdbean.getModuleShdate().getEndDate());
+									mdbean.setStartDate(errmdbean.getStartDate());
+									mdbean.setEndDate(errmdbean.getEndDate());
 								}
 							}
 
@@ -383,7 +383,7 @@ public class ListAuthModulesPage implements Serializable
 					}
 				}
 
-				if (mdbean.getModuleShdate().isHideFlag() == true)
+				if (mdbean.getModule().getModuleshdate().isHideFlag() == true)
 				{
 					invFlag = true;
 				}
@@ -871,9 +871,9 @@ public class ListAuthModulesPage implements Serializable
 			while (moduleIter.hasNext())
 			{
 				ModuleDateBean mdbean = (ModuleDateBean) moduleIter.next();
-				if ((mdbean.getModuleShdate().getStartDate() != null)&&(mdbean.getModuleShdate().getEndDate() != null))
-				{	
-				  if (mdbean.getModuleShdate().getStartDate().compareTo(mdbean.getModuleShdate().getEndDate()) >= 0)
+				if ((mdbean.getStartDate() != null)&&(mdbean.getEndDate() != null))
+				{
+				  if (mdbean.getStartDate().compareTo(mdbean.getEndDate()) >= 0)
 				  {
 					dateErrFlag = true;
 					mdbean.setDateFlag(true);
