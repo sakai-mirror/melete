@@ -456,7 +456,8 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			ModuleDateBean mdbean = new ModuleDateBean();
 			mdbean.setModuleId(module.getModuleId().intValue());
 			mdbean.setModule(module);
-			mdbean.setModuleShdate(module.getModuleshdate());
+		    mdbean.setStartDate(module.getModuleshdate().getStartDate());
+	        mdbean.setEndDate(module.getModuleshdate().getEndDate());
 			ArrayList mdbeanList = new ArrayList();
 			mdbeanList.add(mdbean);
 			moduleDB.updateModuleDateBeans(mdbeanList);

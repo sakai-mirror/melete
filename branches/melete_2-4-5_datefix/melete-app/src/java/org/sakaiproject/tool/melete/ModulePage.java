@@ -65,7 +65,6 @@ import org.sakaiproject.api.app.melete.*;
 public abstract class ModulePage implements Serializable{
 
     protected ModuleObjService module;
-    private ModuleShdatesService moduleShdates;
     protected ModuleDateBean mdBean;
 
     /** Dependency:  The logging service. */
@@ -87,6 +86,9 @@ public abstract class ModulePage implements Serializable{
 
     private String formName;
     protected int moduleNumber;
+
+    private Date startDate;
+    private Date endDate;
 
     public ModulePage(){}
 
@@ -290,41 +292,7 @@ public abstract class ModulePage implements Serializable{
 
   }
 
-  /**
-   *
-   * create an instance of moduleshdates.
-   * Revised to open a course for one year by default --Rashmi 12/6
-    * Revised on 12/20 Rashmi to set start default time as 8:00 am and
-   * end date time as 11:59 pm
-   */
 
-  public ModuleShdatesService getModuleShdates() {
-    if (null == moduleShdates) {
-     moduleShdates = new ModuleShdates();
-	/*       GregorianCalendar cal = new GregorianCalendar();
-	       cal.set(Calendar.HOUR,8);
-	       cal.set(Calendar.MINUTE,0);
-	       cal.set(Calendar.SECOND,0);
-	       cal.set(Calendar.AM_PM,Calendar.AM);
-	       moduleShdates.setStartDate(cal.getTime());
-	       cal.add(Calendar.YEAR, 1);
-	       cal.set(Calendar.HOUR,11);
-	       cal.set(Calendar.MINUTE,59);
-	       cal.set(Calendar.SECOND,0);
-	       cal.set(Calendar.AM_PM,Calendar.PM);
-	       moduleShdates.setEndDate(cal.getTime());
-	  */       }
-	    return moduleShdates;
-	  }
-
-  /**
-   *
-   * @return
-   *
-   */
-  public void setModuleShdates(ModuleShdatesService moduleShdates) {
-    this.moduleShdates = moduleShdates;
-  }
 
 
 
@@ -449,5 +417,25 @@ public ModuleDateBean getModuleDateBean() {
 
 	public void setLogger(Log logger) {
 		this.logger = logger;
+	}
+
+	public Date getEndDate()
+	{
+		return this.endDate;
+	}
+
+	public void setEndDate(Date endDate)
+	{
+		this.endDate = endDate;
+	}
+
+	public Date getStartDate()
+	{
+		return this.startDate;
+	}
+
+	public void setStartDate(Date startDate)
+	{
+		this.startDate = startDate;
 	}
  }

@@ -278,7 +278,7 @@ public class ListModulesPage implements Serializable{
 	  		  for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext(); ) 
 	  		  {
 		        ModuleDateBean mdbean = (ModuleDateBean) i.next();
-		        if (mdbean.getModuleShdate().isHideFlag() == true)
+		        if (mdbean.getModule().getModuleshdate().isHideFlag() == true)
 		        {
 		        	hideFlagSize = hideFlagSize + 1;
 		        }

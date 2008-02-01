@@ -161,13 +161,13 @@ if (msg != null)
       <h:outputText id="emp_spacemod2" value=" "/>
       <h:commandLink id="editHideMod" actionListener="#{listAuthModulesPage.editModule}" action="#{listAuthModulesPage.redirectToEditModule}"> 
           
-            <h:outputText id="titlered" styleClass="RedClass" rendered="#{mdbean.moduleShdate.hideFlag == true}"
+            <h:outputText id="titlered" styleClass="RedClass" rendered="#{mdbean.module.moduleshdate.hideFlag == true}"
                            value="#{mdbean.truncTitle}">
                           
              </h:outputText>   
       </h:commandLink>
       <h:commandLink id="editMod" actionListener="#{listAuthModulesPage.editModule}"  action="#{listAuthModulesPage.redirectToEditModule}">     
-                   <h:outputText id="title2" rendered="#{mdbean.moduleShdate.hideFlag == false}"
+                   <h:outputText id="title2" rendered="#{mdbean.module.moduleshdate.hideFlag == false}"
                            value="#{mdbean.truncTitle}">
                </h:outputText>
       </h:commandLink>
@@ -208,8 +208,8 @@ if (msg != null)
              </f:facet>
              
                 <h:inputText id="startDate"
-                           value="#{mdbean.moduleShdate.startDate}" >
-            <f:convertDateTime pattern="MM/dd/yyyy hh:mm a"/>
+                           value="#{mdbean.startDate}" >
+            <f:convertDateTime pattern="M/d/yyyy hh:mm a"/>
             </h:inputText>
           
                            
@@ -235,8 +235,8 @@ if (msg != null)
              </f:facet>
              
             <h:inputText id="endDate" 
-                           value="#{mdbean.moduleShdate.endDate}" >
-               <f:convertDateTime pattern="MM/dd/yyyy hh:mm a"/>
+                           value="#{mdbean.endDate}" >
+               <f:convertDateTime pattern="M/d/yyyy hh:mm a"/>
             </h:inputText>
             <f:facet name="footer">
             <h:commandLink id="cancelChanges" action="#{listAuthModulesPage.cancelChanges}" immediate="true" rendered="#{listAuthModulesPage.nomodsFlag == false}">

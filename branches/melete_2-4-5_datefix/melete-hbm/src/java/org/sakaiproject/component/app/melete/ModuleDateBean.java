@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.List;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.sakaiproject.api.app.melete.*;
+import java.util.Date;
 
 /** @author Hibernate CodeGenerator */
 /* Mallika - 3/22/05 - changed to implement moduledatebeanservice 
@@ -48,12 +49,13 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService {
     /** nullable persistent field */
     protected Module module;
     
-    /** nullable persistent field */
-    protected ModuleShdates moduleShdate;
-    
     protected CourseModule cmod;
     
     private List sectionBeans;
+    
+    protected Date startDate;
+    
+    protected Date endDate;
     
  
     public boolean isSelected()
@@ -86,10 +88,9 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService {
     }
 
     /** full constructor */
-    public ModuleDateBean(int moduleId, Module module, ModuleShdates moduleShdate,CourseModule cmod, List sectionBeans) {
+    public ModuleDateBean(int moduleId, Module module,CourseModule cmod, List sectionBeans) {
         this.moduleId = moduleId;
         this.module = module;
-        this.moduleShdate = moduleShdate;
         this.cmod = cmod;
         this.sectionBeans = sectionBeans;
     }
@@ -112,13 +113,7 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService {
     public void setModule(org.sakaiproject.api.app.melete.ModuleObjService module) {
         this.module = (Module) module;
     }
-    public org.sakaiproject.api.app.melete.ModuleShdatesService getModuleShdate() {
-        return this.moduleShdate;
-    }
-
-    public void setModuleShdate(org.sakaiproject.api.app.melete.ModuleShdatesService moduleShdate) {
-        this.moduleShdate = (ModuleShdates) moduleShdate;
-    }
+   
     public org.sakaiproject.api.app.melete.CourseModuleService getCmod() {
         return this.cmod;
     }
@@ -147,5 +142,26 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService {
             .append("moduleId", getModuleId())
             .toString();
     }
+
+	public Date getStartDate()
+	{
+		return this.startDate;
+	}
+
+	public void setStartDate(Date startDate)
+	{
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate()
+	{
+		return this.endDate;
+	}
+
+	public void setEndDate(Date endDate)
+	{
+		this.endDate = endDate;
+	}
+
 
 }
