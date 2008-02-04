@@ -11,13 +11,7 @@
         <locale-config>
             <default-locale>en</default-locale>
         </locale-config>
-    </application>
-	
- <validator>
-	<validator-id>Title</validator-id>
-	<validator-class>org.sakaiproject.tool.melete.ModuleValidator</validator-class>
-  </validator>
-    
+    </application>    
   
 	<!-- =================== MeleteSiteAndUserInfo ============== -->
 	<managed-bean>

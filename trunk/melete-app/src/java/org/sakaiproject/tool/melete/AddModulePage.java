@@ -92,9 +92,7 @@ public class AddModulePage extends ModulePage implements Serializable{
 
      	 //validation
      	module.setTitle(module.getTitle().trim());
-     	ModuleValidator mv = new ModuleValidator();
-     	mv.isValidTitle(module.getTitle());
-
+     
      	// validation no 3
        	Date end = getEndDate();
 

@@ -102,9 +102,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 	    // rashmi added validations start
 //     	validation
       	module.setTitle(module.getTitle().trim());
-      	ModuleValidator mv = new ModuleValidator();
-      	mv.isValidTitle(module.getTitle());
-
+     
       	// validation no 3
       	Date  d = new Date();
       	Date st = getStartDate();
