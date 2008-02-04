@@ -145,8 +145,7 @@ window.open('editpreviewEditor.jsf');
                                     <td align="left" valign="top"><h:outputText id="text7" value="#{msgs.editmodulesections_section_title}" /><span class="required">*</span></td>
                                     <td width="600" align="left" valign="top">
 									<h:inputText id="title" value="#{editSectionPage.section.title}" size="45"  required="true" styleClass="formtext">
-										<f:validateLength maximum="50" minimum="3" />
-										<f:validator validatorId="Title" />
+										<f:validateLength maximum="50" minimum="3" />									
 								     </h:inputText>
 									</td>
                                   </tr>
