@@ -262,7 +262,9 @@ public String setUserChoice()
 
 public boolean isMaterialPrintable(String site_id)
 {
-	return getAuthorPref().getSiteChoice(site_id).isPrintable();
+	MeleteSitePreference checkMsp = (MeleteSitePreference)getAuthorPref().getSiteChoice(site_id);
+	if(checkMsp != null)return checkMsp.isPrintable();
+	else return false;
 }
 
 public String backToPrefsPage()
