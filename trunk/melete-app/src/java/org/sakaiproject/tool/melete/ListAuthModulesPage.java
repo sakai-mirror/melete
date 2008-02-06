@@ -340,7 +340,7 @@ public class ListAuthModulesPage implements Serializable
 		try
 		{
 			ModuleService modServ = getModuleService();
-			moduleDateBeans = modServ.getModuleDateBeans(courseId);
+			moduleDateBeans = modServ.getModuleDateBeans(userId, courseId);
 			Iterator itr = context.getMessages();
 			while (itr.hasNext())
 			{

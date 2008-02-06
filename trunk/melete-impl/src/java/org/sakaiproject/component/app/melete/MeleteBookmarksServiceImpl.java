@@ -54,17 +54,7 @@ public void insertBookmark(MeleteBookmarksObjService mb) throws Exception
   /**
  * {@inheritDoc}
  */
-public List getBookmarks(String userId, String courseId)
-  {
-    List bookmarks = null;
-	try{
-		bookmarks = bookmarksdb.getBookmarks(userId, courseId);
-	}catch(Exception e)
-	{
-		logger.error("melete bookmarks business --get bookmarks failed");
-	}
-	return bookmarks;
-  }
+
 
   /**
  * {@inheritDoc}
@@ -76,6 +66,7 @@ public void deleteBookmark(MeleteBookmarksObjService mb)  throws Exception
 	}catch(Exception e)
 	{
 	  logger.error("melete bookmarks business --delete bookmark failed");
+	  throw new MeleteException("Clear_bookmarks_fail");
 	}
   }
 

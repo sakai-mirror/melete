@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 import java.io.*;
 
 import javax.faces.context.FacesContext;
+import javax.faces.application.FacesMessage;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 
@@ -45,8 +46,12 @@ import org.sakaiproject.api.app.melete.SectionService;
 //import org.sakaiproject.jsf.ToolBean;
 
 import org.sakaiproject.api.app.melete.MeleteCHService;
+import org.sakaiproject.api.app.melete.MeleteBookmarksService;
+import org.sakaiproject.api.app.melete.MeleteBookmarksObjService;
+
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
+import org.sakaiproject.util.ResourceLoader;
 
 
 import org.w3c.dom.Document;
@@ -74,6 +79,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	  /** identifier field */
 	  private int moduleId;
 	  private int sectionId;
+	  private int bookmarkId;
       private int moduleSeqNo;
       private int prevSecId;
       private int nextSecId;
@@ -88,6 +94,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
       private String typeUpload;
       private String sectionContentType;
       String courseId;
+      String userId;
 
       private ModuleService moduleService;
       private SectionService sectionService;
@@ -104,9 +111,12 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
       private org.w3c.dom.Document subSectionW3CDom;
       private String linkName;
 
+      private boolean bookmarkStatus;
+
 
 	  public ViewSectionsPage(){
 	  	courseId = null;
+	  	userId = null;
 	  }
 
 	  //Code to test
@@ -143,9 +153,9 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	  {
 		SectionResourceService secRes = null;
 		if (this.section != null)
-		{	
+		{
 		  secRes = this.section.getSectionResource();
-		}  
+		}
 		String resourceId = null;
 		if (secRes != null)
 		{
@@ -182,7 +192,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	  {
 		String url = null;
 		if (this.section != null)
-		{	
+		{
 		SectionResourceService secRes = this.section.getSectionResource();
 		String resourceId = null;
 		if (secRes != null)
@@ -193,7 +203,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 			}
 		}
 	    ContentResource resource = null;
-  
+
 
     	if (resourceId != null)
     	{
@@ -219,14 +229,14 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 
 	  public String getSectionContentType()
 	  {
-		if(this.section != null && this.section.getContentType() != null)	  
+		if(this.section != null && this.section.getContentType() != null)
 		  sectionContentType = this.section.getContentType();
 		else sectionContentType = "notype";
-		
+
 		return sectionContentType;
 	  }
-	  
-	  
+
+
 	  public String getLinkName()
 	  {
 		  return linkName;
@@ -462,7 +472,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     				return secElement.getParentNode().getNextSibling();
     			}
     		}
-    		
+
     	}
     	return null;
     }
@@ -531,7 +541,7 @@ public String goWhatsNext()
 	vnPage.setPrevModId(this.moduleId);
 	vnPage.setNextSeqNo(this.nextSeqNo);
 	vnPage.setModuleSeqNo(this.moduleSeqNo);
-	
+
     vnPage.setModule(this.module);
 
 	return "view_whats_next";
@@ -568,13 +578,13 @@ public String goNextModule()
 	this.section = null;
 	//this.module = null;
 	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(((String)context.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue());
-	ModuleDateBean nextMdBean = (ModuleDateBean) getModuleService().getModuleDateBeanBySeq(getCourseId(),nextSeqNo);
+	ModuleDateBean nextMdBean = (ModuleDateBean) getModuleService().getModuleDateBeanBySeq(getUserId(),getCourseId(),nextSeqNo);
 	this.module = null;
 	ValueBinding binding =
         Util.getBinding("#{viewModulesPage}");
       ViewModulesPage vmPage = (ViewModulesPage)
         binding.getValue(context);
-   
+
     if (nextMdBean != null)
     {
     	vmPage.setModuleId(nextMdBean.getModuleId());
@@ -594,16 +604,52 @@ public String goNextModule()
 
 public String createBookmark()
 {
-	
+	FacesContext context = FacesContext.getCurrentInstance();
+	Map sessionMap = context.getExternalContext().getSessionMap();
+	ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+
+	MeleteBookmarks mb = new MeleteBookmarks();
+	mb.setUserId(getUserId());
+	mb.setCourseId(getCourseId());
+	mb.setModuleId(this.moduleId);
+	mb.setSectionId(this.sectionId);
+	try
+	{
+	 bookmarksService.insertBookmark(mb);
+	 setBookmarkStatus(true);
+	}
+	catch(Exception e)
+	{
+		String errMsg = bundle.getString("Set_bookmarks_fail");
+		context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Set_prefs_fail",errMsg));
+	}
 	return "view_section";
-	
+
 }
 
 public String clearBookmark()
 {
+	FacesContext context = FacesContext.getCurrentInstance();
+	Map sessionMap = context.getExternalContext().getSessionMap();
+	ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 
+	MeleteBookmarks mb = new MeleteBookmarks();
+	mb.setUserId(getUserId());
+	mb.setCourseId(getCourseId());
+	mb.setModuleId(this.moduleId);
+	mb.setSectionId(this.sectionId);
+	try
+	{
+	 bookmarksService.deleteBookmark(mb);
+	 setBookmarkStatus(false);
+	}
+	catch(Exception e)
+	{
+		String errMsg = bundle.getString("Clear_bookmarks_fail");
+		context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Set_prefs_fail",errMsg));
+	}
 	return "view_section";
-	
+
 }
 
 /*
@@ -680,6 +726,17 @@ private String getCourseId()
 	}
 	return courseId;
 }
+private String getUserId()
+{
+	if (userId == null)
+	{
+	FacesContext context = FacesContext.getCurrentInstance();
+  	Map sessionMap = context.getExternalContext().getSessionMap();
+	userId = (String)sessionMap.get("userId");
+	}
+	return userId;
+}
+
 /**
  * @return Returns the meleteCHService.
  */
@@ -702,4 +759,23 @@ public void setBookmarksService(MeleteBookmarksService bookmarksService)
 	this.bookmarksService = bookmarksService;
 }
 
+public boolean isBookmarkStatus()
+{
+	return this.bookmarkStatus;
+}
+
+public void setBookmarkStatus(boolean bookmarkStatus)
+{
+	this.bookmarkStatus = bookmarkStatus;
+}
+
+public int getBookmarkId()
+{
+	return this.bookmarkId;
+}
+
+public void setBookmarkId(int bookmarkId)
+{
+	this.bookmarkId = bookmarkId;
+}
 }

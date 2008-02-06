@@ -47,13 +47,13 @@ public interface ModuleService{
 	
 	public void insertProperties(ModuleObjService module, ModuleShdatesService moduleshdates,String userId, String courseId);
 
-	public List getModuleDateBeans(String courseId);
+	public List getModuleDateBeans(String userId, String courseId);
 
 	public void setModuleDateBeans(List moduleDateBeansList);
 
-	public ModuleDateBeanService getModuleDateBean(String courseId,  int moduleId);
+	public ModuleDateBeanService getModuleDateBean(String userId, String courseId,  int moduleId);
 
-	public ModuleDateBeanService getModuleDateBeanBySeq(String courseId,  int seqNo);
+	public ModuleDateBeanService getModuleDateBeanBySeq(String userId, String courseId,  int seqNo);
 
 	public void setModuleDateBean(ModuleDateBeanService mdBean);
 
@@ -61,7 +61,7 @@ public interface ModuleService{
 
 	public void setModules(List modules) ;
 
-	public List getModuleDatePrivBeans(String courseId);
+	public List getModuleDatePrivBeans(String userId, String courseId);
 
 	public void setModuleDatePrivBeans(List moduleDatePrivBeansList) ;
 

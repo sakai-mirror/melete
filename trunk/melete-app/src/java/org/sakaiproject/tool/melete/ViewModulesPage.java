@@ -76,6 +76,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 
 //    This needs to be set later using Utils.getBinding
 	  String courseId;
+	  String userId;
 
 
 	  private ModuleService moduleService;
@@ -83,6 +84,8 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 	  protected Log logger = LogFactory.getLog(ViewModulesPage.class);
 
 	  public ViewModulesPage(){
+		  courseId = null;
+		  	userId = null;
 	  }
 
      /**
@@ -160,13 +163,14 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
  	  {
     	try {
     	String courseId = getCourseId();
+    	String userId = getUserId();
     	 if (this.moduleId > 0)
     	  {
-  	  	    this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBean(courseId,this.moduleId);
+  	  	    this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBean(userId, courseId,this.moduleId);
     	  }
     	  else
     	  {
-    		this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBeanBySeq(courseId,this.moduleSeqNo);
+    		this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBeanBySeq(userId, courseId,this.moduleSeqNo);
     	  }
     	  if (this.mdbean != null)
     	  {
@@ -177,7 +181,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
   	  	  this.prevSectionSize = 0;
   	  	  if ((this.prevSeqNo > 0)&&(this.prevSeqNo != this.moduleSeqNo))
   	  	  {
-  	  	    this.prevMdbean = (ModuleDateBeanService) getModuleService().getModuleDateBeanBySeq(getCourseId(),prevSeqNo);
+  	  	    this.prevMdbean = (ModuleDateBeanService) getModuleService().getModuleDateBeanBySeq(userId, courseId, prevSeqNo);
   	  	    if (this.prevMdbean != null)
   	  	    {
   	  	    if (this.prevMdbean.getSectionBeans() != null)
@@ -245,6 +249,17 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     	courseId = (String)sessionMap.get("courseId");
     	}
     	return courseId;
+    }
+    
+    private String getUserId()
+    {
+    	if (userId == null)
+    	{
+    	FacesContext context = FacesContext.getCurrentInstance();
+      	Map sessionMap = context.getExternalContext().getSessionMap();
+    	userId = (String)sessionMap.get("userId");
+    	}
+    	return userId;
     }
 
     /*

@@ -213,11 +213,11 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 	}
 	
 // mallika page stuff
-public List getModuleDateBeans(String courseId) {
+public List getModuleDateBeans(String userId, String courseId) {
   	if (moduledb == null) moduledb = ModuleDB.getModuleDB();
 
   	try {
-  		moduleDateBeans = moduledb.getShownModulesAndDatesForInstructor(courseId);
+  		moduleDateBeans = moduledb.getShownModulesAndDatesForInstructor(userId, courseId);
   	}catch (HibernateException e)
 	{
   		//e.printStackTrace();
@@ -230,11 +230,11 @@ public List getModuleDateBeans(String courseId) {
     moduleDateBeans = moduleDateBeansList;
   }
 
- public ModuleDateBeanService getModuleDateBean(String courseId,  int moduleId) {
+ public ModuleDateBeanService getModuleDateBean(String userId, String courseId,  int moduleId) {
   	if (moduledb == null) moduledb = ModuleDB.getModuleDB();
 
   	try {
-  		mdBean = moduledb.getModuleDateBean(courseId,  moduleId);
+  		mdBean = moduledb.getModuleDateBean(userId, courseId,  moduleId);
   	}catch (HibernateException e)
 	{
   		//e.printStackTrace();
@@ -243,11 +243,11 @@ public List getModuleDateBeans(String courseId) {
   	return mdBean;
   }
 
- public ModuleDateBeanService getModuleDateBeanBySeq(String courseId,  int seqNo) {
+ public ModuleDateBeanService getModuleDateBeanBySeq(String userId, String courseId,  int seqNo) {
 	  	if (moduledb == null) moduledb = ModuleDB.getModuleDB();
 
 	  	try {
-	  		mdBean = moduledb.getModuleDateBeanBySeq(courseId,  seqNo);
+	  		mdBean = moduledb.getModuleDateBeanBySeq(userId, courseId,  seqNo);
 	  	}catch (HibernateException e)
 		{
 	  		//e.printStackTrace();
@@ -277,9 +277,9 @@ public List getModuleDateBeans(String courseId) {
   }
 
 
-  public List getModuleDatePrivBeans(String courseId) {
+  public List getModuleDatePrivBeans(String userId, String courseId) {
   	try {
-  		moduleDatePrivBeans = moduledb.getModulesDatesPrivsForStudents(courseId);
+  		moduleDatePrivBeans = moduledb.getModulesDatesPrivsForStudents(userId, courseId);
   	}catch (HibernateException e)
 	{
   		//e.printStackTrace();
