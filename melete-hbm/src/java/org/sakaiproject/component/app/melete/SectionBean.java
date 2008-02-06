@@ -28,6 +28,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class SectionBean implements Serializable {
 
     protected boolean selected;
+    protected boolean bookmarkFlag;
     protected String truncTitle;   
     protected String displaySequence;
 
@@ -61,7 +62,17 @@ public class SectionBean implements Serializable {
     public void setDisplaySequence(String displaySequence)
     {
     	this.displaySequence = displaySequence;
-    }    
+    }   
+    
+    public boolean isBookmarkFlag()
+	{
+		return this.bookmarkFlag;
+	}
+
+	public void setBookmarkFlag(boolean bookmarkFlag)
+	{
+		this.bookmarkFlag = bookmarkFlag;
+	}    
     /** full constructor */
     public SectionBean(Section section) {
         this.section = (Section)section;

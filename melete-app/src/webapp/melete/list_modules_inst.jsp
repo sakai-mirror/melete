@@ -30,15 +30,24 @@ return newWindow;
 	<td width="1962" valign="top">
 <table width="100%" border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
 <tr>
-<td>
+<td colspan="2">
 <f:subview id="top">
 <jsp:include page="topnavbar.jsp"/> 
 </f:subview>
-<div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_modules_inst_viewing_student}" /> </div>
 </td>
 </tr>
 <tr>
-<td class="maintabledata3">
+<td align="left">
+<div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_modules_inst_viewing_student}" /> </div>
+</td>
+<td align="right">
+ <h:commandLink id="clearLink" action="#{listModulesPage.clearAllBookmarks}" immediate="true">
+		  <h:outputText  id="clearText" value="#{msgs.clear_bookmark_text}"/>
+	    </h:commandLink> 
+</td>
+</tr>
+<tr>
+<td colspan="2" class="maintabledata3">
 <h:messages showDetail="true" showSummary="false"/>
 <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" >
         <tr class="maintabledata5">
@@ -61,6 +70,8 @@ return newWindow;
                   var="mdbean"  rowClasses="row1,row2" columnClasses="titleWid,ModCheckClass,dateWid1,dateWid2"
                   border="0" width="100%" >
         <h:column> 
+          <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{mdbean.bookmarkFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
+      
             <h:commandLink id="viewSections" action="#{listModulesPage.showSections}">
         <h:graphicImage id="exp_gif" value="images/expand.gif" rendered="#{((mdbean.moduleId != listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}" styleClass="ExpClass"/>
          <h:inputHidden id="moduleShowId" value="#{mdbean.moduleId}"/>
@@ -89,8 +100,9 @@ return newWindow;
                   var="section" columnClasses="SectionClass" rowClasses="#{mdbean.rowClasses}"  width="75%">
                    <h:column>
                    <h:outputText value="   " styleClass="ExtraPaddingClass"/>
- <h:outputText id="emp_space" value="   "/>
-              <h:graphicImage id="bul_gif" value="images/bullet_black.gif"/>
+                 <h:outputText id="emp_space" value="   "/>
+                 <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{section.bookmarkFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
+               <h:graphicImage id="bul_gif" value="images/bullet_black.gif"/>
               <h:outputText id="emp_space2" value="   "/>
            <h:commandLink id="viewSectionEditor"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{((section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}">
                <h:outputText id="sectitleEditor" 

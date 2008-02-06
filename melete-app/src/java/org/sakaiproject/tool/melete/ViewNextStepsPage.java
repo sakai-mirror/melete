@@ -75,6 +75,7 @@ public class ViewNextStepsPage implements Serializable/*,ToolBean */{
 	  private ModuleObjService module;
 	  private ModuleService moduleService;
 	  String courseId;
+	  String userId;
 	  private boolean instRole;
 	  public HtmlPanelGroup secpgroup;
 
@@ -101,6 +102,8 @@ public class ViewNextStepsPage implements Serializable/*,ToolBean */{
 
 			setInstRole(false);
 		}
+		courseId = null;
+	  	userId = null;
 	  }
 
 
@@ -130,6 +133,7 @@ public class ViewNextStepsPage implements Serializable/*,ToolBean */{
 public String goPrevItem()
 {
 	FacesContext context = FacesContext.getCurrentInstance();
+	courseId = getCourseId();
 	if (this.prevSecId == 0)
 	{
 	  ValueBinding binding =
@@ -186,7 +190,7 @@ public String goNextModule()
 	FacesContext context = FacesContext.getCurrentInstance();
 	//this.module = null;
 	int nextSeqNo = new Integer(((String)context.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue();
-	ModuleDateBean nextMdBean = (ModuleDateBean) getModuleService().getModuleDateBeanBySeq(courseId,nextSeqNo);
+	ModuleDateBean nextMdBean = (ModuleDateBean) getModuleService().getModuleDateBeanBySeq(getUserId(), getCourseId(),nextSeqNo);
 	this.module = null;
 	ValueBinding binding =
         Util.getBinding("#{viewModulesPage}");
@@ -325,5 +329,24 @@ public void setModuleSeqNo(int moduleSeqNo)
 {
 	this.moduleSeqNo = moduleSeqNo;
 }
-
+private String getCourseId()
+{
+	if (courseId == null)
+	{
+	FacesContext context = FacesContext.getCurrentInstance();
+  	Map sessionMap = context.getExternalContext().getSessionMap();
+	courseId = (String)sessionMap.get("courseId");
+	}
+	return courseId;
+}
+private String getUserId()
+{
+	if (userId == null)
+	{
+	FacesContext context = FacesContext.getCurrentInstance();
+  	Map sessionMap = context.getExternalContext().getSessionMap();
+	userId = (String)sessionMap.get("userId");
+	}
+	return userId;
+}
 }

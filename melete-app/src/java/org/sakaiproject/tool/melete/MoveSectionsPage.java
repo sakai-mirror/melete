@@ -63,6 +63,10 @@ public class MoveSectionsPage implements Serializable
 	
 	private boolean nomodsFlag;
 	
+	private String courseId;
+	
+	private String userId;
+	
 	
 	/** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(MoveSectionsPage.class);
@@ -107,9 +111,7 @@ public class MoveSectionsPage implements Serializable
 		try
 		{
 			ModuleService moduleService = getModuleService();			
-			Map sessionMap = context.getExternalContext().getSessionMap();
-			String courseId = (String) sessionMap.get("courseId");
-			moduleDateBeans = moduleService.getModuleDateBeans(courseId);			
+			moduleDateBeans = moduleService.getModuleDateBeans(getUserId(), getCourseId());			
 			if(moduleDateBeans == null || moduleDateBeans.size() == 0)
 				nomodsFlag = true;				
 			else nomodsFlag = false;			
@@ -177,5 +179,26 @@ public class MoveSectionsPage implements Serializable
 	public boolean isNomodsFlag()
 	{
 		return this.nomodsFlag;
+	}
+	
+	private String getCourseId()
+	{
+		if (courseId == null)
+		{
+		FacesContext context = FacesContext.getCurrentInstance();
+	  	Map sessionMap = context.getExternalContext().getSessionMap();
+		courseId = (String)sessionMap.get("courseId");
+		}
+		return courseId;
+	}
+	private String getUserId()
+	{
+		if (userId == null)
+		{
+		FacesContext context = FacesContext.getCurrentInstance();
+	  	Map sessionMap = context.getExternalContext().getSessionMap();
+		userId = (String)sessionMap.get("userId");
+		}
+		return userId;
 	}
 }

@@ -70,6 +70,7 @@ public class ModuleDB implements Serializable {
 	private HibernateUtil hibernateUtil;
 	private List xmlSecList;
 	private SectionDB sectionDB;
+	private MeleteBookmarksDB bookmarksDB;
 	private MeleteCHService meleteCHService;
 
 	/** Dependency:  The logging service. */
@@ -318,14 +319,16 @@ public class ModuleDB implements Serializable {
 
 
    // end rashmi stuff
-	public List getModulesDatesPrivsForStudents(String courseId) throws HibernateException {
+	public List getModulesDatesPrivsForStudents(String userId, String courseId) throws HibernateException {
 		List moduleDatePrivBeansList = new ArrayList();
 	 	List modList = null;
 	 	ModuleDatePrivBean mdpBean = null;
 	 	Module mod = null;
 	 	Date currentDate = Calendar.getInstance().getTime();
+		List bookmarkList = null;
+	 	List moduleBookmarks = null;
 
-
+        bookmarkList = bookmarksDB.getBookmarks(userId, courseId, null);
 	 	try
 		{
 	     Session session = hibernateUtil.currentSession();
@@ -334,8 +337,22 @@ public class ModuleDB implements Serializable {
 	      while (i.hasNext()) {
 	      	mdpBean = new ModuleDatePrivBean();
 	      	mod = (Module) i.next();
-		   	populateModuleBean(mod, mdpBean);
-	       moduleDatePrivBeansList.add(mdpBean);
+	      	if ((bookmarkList == null)||(bookmarkList.size() == 0))
+	      	{
+		   	  populateModuleBean(mod, mdpBean, null);
+	      	}
+	      	else
+	      	{
+	      		moduleBookmarks = getModuleBookmarks(mod,bookmarkList);
+	      		if (moduleBookmarks.size() == 0)
+	      		{
+	      			populateModuleBean(mod, mdpBean, null);
+	      		}
+	      		else
+	      		{
+	      			populateModuleBean(mod, mdpBean, moduleBookmarks);
+	      		}
+	      	}       moduleDatePrivBeansList.add(mdpBean);
 	      	mod = null;
 	      }
 
@@ -358,15 +375,33 @@ public class ModuleDB implements Serializable {
 	    return moduleDatePrivBeansList;
 	}
 
+     private List getModuleBookmarks(Module mod, List bookmarkList)
+     {
+       MeleteBookmarks mb = null;
+       List moduleBookmarks = new ArrayList();
 
-	 public List getShownModulesAndDatesForInstructor(String courseId) throws HibernateException {
+       Iterator i = bookmarkList.iterator();
+       while (i.hasNext())
+       {
+    	   mb = (MeleteBookmarks) i.next();
+    	   if (mb.getModuleId() == mod.getModuleId().intValue())
+    	   {
+    		   moduleBookmarks.add(mb);
+    	   }
+       }
+       return moduleBookmarks;
+     }
+
+	 public List getShownModulesAndDatesForInstructor(String userId, String courseId) throws HibernateException {
 	 	List moduleDateBeansList = new ArrayList();
 	 	List modList = null;
 	 	ModuleDateBean mdBean = null;
 	 	Module mod = null;
+	 	List bookmarkList = null;
+	 	List moduleBookmarks = null;
 
-
-	 	try
+	 	bookmarkList = bookmarksDB.getBookmarks(userId, courseId, null);
+        try
 		{
 	     Session session = hibernateUtil.currentSession();
 	      modList = getModules(courseId);
@@ -374,7 +409,22 @@ public class ModuleDB implements Serializable {
 	      while (i.hasNext()) {
 	      	mdBean = new ModuleDateBean();
 	      	mod = (Module) i.next();
-		   	populateModuleBean(mod, mdBean);
+	      	if ((bookmarkList == null)||(bookmarkList.size() == 0))
+	      	{
+	      	  populateModuleBean(mod, mdBean, null);
+	      	}
+	      	else
+	      	{
+	      		moduleBookmarks = getModuleBookmarks(mod,bookmarkList);
+	      		if (moduleBookmarks.size() == 0)
+	      		{
+	      			populateModuleBean(mod, mdBean, null);
+	      		}
+	      		else
+	      		{
+	      			populateModuleBean(mod, mdBean, moduleBookmarks);
+	      		}
+	      	}
 		    moduleDateBeansList.add(mdBean);
 	      	mod = null;
 	      }
@@ -437,10 +487,12 @@ public class ModuleDB implements Serializable {
 	    return modList;
 	  }
 //
-	 public ModuleDateBean getModuleDateBean(String courseId,  int moduleId) throws HibernateException {
+	 public ModuleDateBean getModuleDateBean(String userId, String courseId,  int moduleId) throws HibernateException {
 	 	List modList = new ArrayList();
 	 	Module mod = null;
 	 	ModuleDateBean mdBean = null;
+		List bookmarkList = null;
+	 	List moduleBookmarks = null;
 
 	 	try
 		{
@@ -457,7 +509,23 @@ public class ModuleDB implements Serializable {
 	      while (i.hasNext()) {
 	        mdBean = new ModuleDateBean();
 	        mod = (Module) i.next();
-		   	populateModuleBean(mod, mdBean);
+	        bookmarkList = bookmarksDB.getBookmarks(userId, courseId, mod.getModuleId());
+	        if ((bookmarkList == null)||(bookmarkList.size() == 0))
+	      	{
+		   	  populateModuleBean(mod, mdBean, null);
+	      	}
+	      	else
+	      	{
+	      		moduleBookmarks = getModuleBookmarks(mod,bookmarkList);
+	      		if (moduleBookmarks.size() == 0)
+	      		{
+	      			populateModuleBean(mod, mdBean, null);
+	      		}
+	      		else
+	      		{
+	      			populateModuleBean(mod, mdBean, moduleBookmarks);
+	      		}
+	      	}
 	      }
 		}
 	    catch (Exception he)
@@ -477,10 +545,12 @@ public class ModuleDB implements Serializable {
 		}
 	    return mdBean;
 	  }
-	 public ModuleDateBean getModuleDateBeanBySeq(String courseId,  int seqNo) throws HibernateException {
+	 public ModuleDateBean getModuleDateBeanBySeq(String userId, String courseId,  int seqNo) throws HibernateException {
 		 	List modList = new ArrayList();
 		 	Module mod = null;
 		 	ModuleDateBean mdBean = null;
+			List bookmarkList = null;
+		 	List moduleBookmarks = null;
 
 		 	try
 			{
@@ -496,7 +566,23 @@ public class ModuleDB implements Serializable {
 		      while (i.hasNext()) {
 		        mdBean = new ModuleDateBean();
 		        mod = (Module) i.next();
-			   	populateModuleBean(mod, mdBean);
+		        bookmarkList = bookmarksDB.getBookmarks(userId, courseId, mod.getModuleId());
+		        if ((bookmarkList == null)||(bookmarkList.size() == 0))
+		      	{
+			   	  populateModuleBean(mod, mdBean, null);
+		      	}
+		      	else
+		      	{
+		      		moduleBookmarks = getModuleBookmarks(mod,bookmarkList);
+		      		if (moduleBookmarks.size() == 0)
+		      		{
+		      			populateModuleBean(mod, mdBean, null);
+		      		}
+		      		else
+		      		{
+		      			populateModuleBean(mod, mdBean, moduleBookmarks);
+		      		}
+		      	}
 		      }
 			}
 		    catch (Exception he)
@@ -517,7 +603,7 @@ public class ModuleDB implements Serializable {
 		    return mdBean;
 		  }
 
-	 private void populateModuleBean(Module mod, ModuleDateBean mdBean)
+	 private void populateModuleBean(Module mod, ModuleDateBean mdBean, List moduleBookmarks)
 	 {
 	   String modSeq;
 	   SubSectionUtilImpl ssuImpl;
@@ -540,6 +626,14 @@ public class ModuleDB implements Serializable {
 	   mdBean.setEndDate(mod.getModuleshdate().getEndDate());
 	   mdBean.setCmod(mod.getCoursemodule());
        mdBean.setTruncTitle(createTruncstr(mod.getTitle()));
+       if ((moduleBookmarks != null) && (moduleBookmarks.size() > 0))
+       {
+    	   mdBean.setBookmarkFlag(true);
+       }
+       else
+       {
+           mdBean.setBookmarkFlag(false);
+       }
 
        if (mdBean instanceof ModuleDatePrivBean)
        {
@@ -569,7 +663,7 @@ public class ModuleDB implements Serializable {
 	    rowClassesBuf = new StringBuffer();
 
 	    xmlSecList = correctSections(sectionMap,mod,xmlSecList);
-	    processSections(sectionMap, sectionBeanList,xmlSecList,rowClassesBuf);
+	    processSections(sectionMap, sectionBeanList,xmlSecList,rowClassesBuf, moduleBookmarks);
 	    mdBean.setSectionBeans(sectionBeanList);
 	    mdBean.setRowClasses(rowClassesBuf.toString());
 	    }
@@ -693,7 +787,7 @@ public class ModuleDB implements Serializable {
 		 return null;
 	 }
 
-	 private void processSections(Map sectionMap,List sectionBeanList,List xmlSecList,StringBuffer rowClassesBuf)
+	 private void processSections(Map sectionMap,List sectionBeanList,List xmlSecList,StringBuffer rowClassesBuf, List moduleBookmarks)
 	 {
 		Section sec = null;
 		SectionBean secBean = null;
@@ -713,6 +807,25 @@ public class ModuleDB implements Serializable {
    			secBean = new SectionBean(sec);
    			secBean.setTruncTitle(createTruncstr(sec.getTitle()));
    			secBean.setDisplaySequence(slObj.getDispSeq());
+   			secBean.setBookmarkFlag(false);
+   			if (moduleBookmarks != null)
+   			{
+   				if (moduleBookmarks.size() > 0)
+   				{
+   					for (ListIterator l = moduleBookmarks.listIterator(); l.hasNext();)
+   					{
+   						MeleteBookmarks mb = (MeleteBookmarks) l.next();
+   						if (mb != null)
+   						{
+   							if (mb.getSectionId() == slObj.getSectionId())
+   							{
+   								secBean.setBookmarkFlag(true);
+   								break;
+   							}
+   						}
+   					}
+   				}
+   			}
    			sectionBeanList.add(secBean);
    			rowClassesBuf.append("secrow"+slObj.getLevel()+",");
    			}
@@ -1905,6 +2018,11 @@ public class ModuleDB implements Serializable {
 	public void setMeleteCHService(MeleteCHService meleteCHService)
 	{
 		this.meleteCHService = meleteCHService;
+	}
+
+	public void setBookmarksDB(MeleteBookmarksDB bookmarksDB)
+	{
+		this.bookmarksDB = bookmarksDB;
 	}
 }
 

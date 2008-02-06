@@ -272,7 +272,7 @@ public class ListModulesPage implements Serializable{
 	  }
 		  public List getModuleDateBeans() {
 	  	try {
-	  		moduleDateBeans = getModuleService().getModuleDateBeans(courseId);
+	  		moduleDateBeans = getModuleService().getModuleDateBeans(userId, courseId);
 
 	  	}catch (Exception e)
 		{
@@ -298,7 +298,7 @@ public class ListModulesPage implements Serializable{
 
 	  public List getModuleDatePrivBeans() {
 	  	try {
-	  		moduleDatePrivBeans = getModuleService().getModuleDatePrivBeans(courseId);
+	  		moduleDatePrivBeans = getModuleService().getModuleDatePrivBeans(userId, courseId);
 
 	  	}catch (Exception e)
 		{
@@ -544,15 +544,18 @@ public class ListModulesPage implements Serializable{
 	    Util.getBinding("#{viewSectionsPage}");
 	    ViewSectionsPage vsPage = (ViewSectionsPage)
 	    binding.getValue(ctx);
+	    vsPage.setBookmarkStatus(false);
 	    if (secBean != null)
 	    {
 	     Section sec = secBean.getSection();
 	    vsPage.setModuleId(sec.getModuleId());
 	    vsPage.setSectionId(sec.getSectionId());
+	    vsPage.setBookmarkStatus(secBean.isBookmarkFlag());
 	    }
 	     vsPage.setSection(null);
 	    vsPage.setModule(null);
 	    vsPage.setModuleSeqNo(modSeqNo);
+
 
    }
 
@@ -581,11 +584,11 @@ public class ListModulesPage implements Serializable{
 			}
 			catch (Exception me)
 			{
-				logger.error(me.toString());				
+				logger.error(me.toString());
 			}
 			return 0;
 		}
-	  
+
 	  public boolean isPrintable()
 	  {
 		  FacesContext ctx = FacesContext.getCurrentInstance();
@@ -593,7 +596,7 @@ public class ListModulesPage implements Serializable{
 		   String site_id=ToolManager.getCurrentPlacement().getContext();
 		   ValueBinding binding = Util.getBinding("#{authorPreferences}");
 	 	   AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(ctx);
-	 	   printable = preferencePage.isMaterialPrintable(site_id);		 
+	 	   printable = preferencePage.isMaterialPrintable(site_id);
 		  }
 		  catch(Exception e){e.printStackTrace();
 		  printable=false;}

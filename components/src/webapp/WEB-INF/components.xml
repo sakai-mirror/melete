@@ -78,7 +78,10 @@
         <property name="sectionDB">
             <ref local="org.sakaiproject.component.app.melete.SectionDB" />
         </property>
-        
+       <property name="bookmarksDB">
+            <ref local="org.sakaiproject.component.app.melete.MeleteBookmarksDB" />
+        </property>
+              
          <property name="meleteCHService">
             <ref local="org.sakaiproject.api.app.melete.MeleteCHService" />
         </property>

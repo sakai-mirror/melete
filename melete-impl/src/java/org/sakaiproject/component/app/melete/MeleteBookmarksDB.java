@@ -20,6 +20,7 @@ package org.sakaiproject.component.app.melete;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -87,12 +88,21 @@ public class MeleteBookmarksDB {
 		}
 	}
 	
-	public List getBookmarks(String userId, String courseId)
+	public List getBookmarks(String userId, String courseId, Integer moduleId)
 	{
 		List mbList = new ArrayList();
 		try{
 		     Session session = getHibernateUtil().currentSession();
-		     Query q=session.createQuery("select mb from MeleteBookmarks as mb where mb.userId =:userId and mb.courseId = :courseId");
+		     Query q = null;
+		     if (moduleId == null)
+		     {	 
+		       q=session.createQuery("select mb from MeleteBookmarks as mb where mb.userId =:userId and mb.courseId = :courseId");
+		     }
+		     else
+		     {
+		       q=session.createQuery("select mb from MeleteBookmarks as mb where mb.userId =:userId and mb.courseId = :courseId and mb.moduleId = :moduleId");
+			   q.setParameter("moduleId", moduleId.intValue());   
+		     }
 			  q.setParameter("userId",userId);
 			  q.setParameter("courseId",courseId);
 			 mbList = q.list();
@@ -111,14 +121,29 @@ public class MeleteBookmarksDB {
 	public void deleteBookmark(MeleteBookmarks mb) throws Exception
 	{
 		Transaction tx = null;
+		Query q = null;
 	 	try
 		{
 
 	      Session session = hibernateUtil.currentSession();
+	      q=session.createQuery("select mb from MeleteBookmarks as mb where mb.userId =:userId and mb.courseId = :courseId and mb.moduleId = :moduleId and mb.sectionId = :sectionId");
+	     
+		  q.setParameter("userId",mb.getUserId());
+		  q.setParameter("courseId",mb.getCourseId());	  
+		  q.setParameter("moduleId", mb.getModuleId());   
+		  q.setParameter("sectionId", mb.getSectionId());   
+		  MeleteBookmarks mbObj = (MeleteBookmarks) q.uniqueResult();
+		 
 
 	      tx = session.beginTransaction();
-
-           session.delete(mb);
+	      
+	      ((Map)((Module)mbObj.getModule()).getBookmarks()).remove(new Integer(mbObj.getBookmarkId()));
+          session.saveOrUpdate(mbObj.getModule());
+          
+          ((Map)((Section)mbObj.getSection()).getBookmarks()).remove(new Integer(mbObj.getBookmarkId()));
+          session.saveOrUpdate(mbObj.getSection());
+          
+          session.delete(mbObj);
 	     
 	      tx.commit();
 
