@@ -41,8 +41,8 @@ return newWindow;
 <div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_modules_inst_viewing_student}" /> </div>
 </td>
 <td align="right">
- <h:commandLink id="clearLink" action="#{listModulesPage.clearAllBookmarks}" immediate="true">
-		  <h:outputText  id="clearText" value="#{msgs.clear_bookmark_text}"/>
+ <h:commandLink id="clearLink" action="#{listModulesPage.clearAllBookmarks}" immediate="true" rendered="#{listModulesPage.bookmarkStatus == listModulesPage.trueFlag}">
+		  <h:outputText  id="clearText" value="#{msgs.clear_all_bookmarks}"/>
 	    </h:commandLink> 
 </td>
 </tr>

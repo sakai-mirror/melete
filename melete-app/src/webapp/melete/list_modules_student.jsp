@@ -29,15 +29,22 @@ return newWindow;
 <!--Page Content-->
 <table width="100%" border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
 <tr>
-					<td>
+					<td colspan="2">
 						<f:subview id="top">
 							<jsp:include page="topnavbar.jsp"/> 
 						</f:subview>
-						<div class="meletePortletToolBarMessage"><img src="images/pen_red.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_auth_modules_authoring_options}" /> </div>
-				 </td>
+					 </td>
 			</tr>
 <tr>
-<td class="maintabledata3">
+  <td>&nbsp;</td>
+  <td align="right">
+  <h:commandLink id="clearLink" action="#{listModulesPage.clearAllBookmarks}" immediate="true" rendered="#{listModulesPage.bookmarkStatus == listModulesPage.trueFlag}">
+		  <h:outputText  id="clearText" value="#{msgs.clear_all_bookmarks}"/>
+	    </h:commandLink> 
+</td>
+</tr>			
+<tr>
+<td colspan="2" class="maintabledata3">
 <h:messages showDetail="true" showSummary="false"/>
 
 <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" >
@@ -62,7 +69,8 @@ return newWindow;
               columnClasses="titleWid,dateWid1,dateWid2"
                    border="0" width="100%" >
       <h:column>
-                                  
+  <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{mdbean.bookmarkFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
+                                       
     <h:commandLink id="viewSections" action="#{listModulesPage.showSections}">
         <h:graphicImage id="exp_gif" value="images/expand.gif" rendered="#{((mdbean.moduleId != listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}" styleClass="ExpClass"/>
          <h:inputHidden id="moduleShowId" value="#{mdbean.moduleId}"/>
@@ -85,9 +93,12 @@ return newWindow;
                   var="section" rowClasses="#{mdbean.rowClasses}" columnClasses="SectionClass" width="75%">
                     <h:column> 
 			  <h:outputText id="emp_space" value=" "/>
+			  <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{section.bookmarkFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
+             
               <h:graphicImage id="bul_gif" value="images/bullet_black.gif"/>
               <h:outputText id="emp_space2" value=" "/>
 			  <h:outputText id="emp_space" value=" "/>
+			 
              <h:commandLink id="viewSectionEditor"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}"  rendered="#{((section.section.contentType != listModulesPage.isNull && section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}">
                <h:outputText id="sectitleEditor" 
                            value="#{section.truncTitle}">
