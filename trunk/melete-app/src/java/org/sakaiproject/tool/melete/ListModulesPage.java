@@ -40,9 +40,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.application.FacesMessage;
 
+import org.sakaiproject.util.ResourceLoader;
 //import com.sun.faces.util.Util;
 import java.sql.Timestamp;
 import org.sakaiproject.api.app.melete.ModuleService;
+import org.sakaiproject.api.app.melete.MeleteBookmarksService;
 import org.sakaiproject.component.app.melete.*;
 import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzGroup;
@@ -78,6 +80,7 @@ public class ListModulesPage implements Serializable{
 
       private ModuleStudentPrivsService  nullMsp = null;
       private ModuleService moduleService;
+      private MeleteBookmarksService bookmarksService;
       private Section nullSection = null;
       private List nullList = null;
       private String isNull = null;
@@ -88,6 +91,9 @@ public class ListModulesPage implements Serializable{
 	  //This needs to be set later using Utils.getBinding
 	  String courseId;
 	  String userId;
+	  
+	  private boolean bookmarkStatus;
+
 
 	  public ListModulesPage(){
 
@@ -97,8 +103,8 @@ public class ListModulesPage implements Serializable{
 //	  	context.getViewRoot().setTransient(true);
 	  	Map sessionMap = context.getExternalContext().getSessionMap();
 	  	role = (String)sessionMap.get("role");
-	  	courseId = (String)sessionMap.get("courseId");
-	  	userId = (String)sessionMap.get("userId");
+	  	courseId = null;
+	  	userId = null;
 	  	nomodsFlag = false;
 	  	setShowModuleId(-1);
 	  	if (getRole()!= null)
@@ -270,25 +276,28 @@ public class ListModulesPage implements Serializable{
 	  {
 	  	return isNull;
 	  }
-		  public List getModuleDateBeans() {
-	  	try {
-	  		moduleDateBeans = getModuleService().getModuleDateBeans(userId, courseId);
+	  
+	  public List getModuleDateBeans() {
+	  
+	  	    try {
+	  		moduleDateBeans = getModuleService().getModuleDateBeans(getUserId(), getCourseId());
 
-	  	}catch (Exception e)
-		{
-	  		//e.printStackTrace();
-	  		logger.error(e.toString());
-		}
+	  	    }
+	  	    catch (Exception e)
+		    {
+	  		  //e.printStackTrace();
+	  		  logger.error(e.toString());
+		    }
 
 
-	  	//If list of modules returned is zero or if all of them are hidden
-	  	if ((moduleDateBeans == null)||(moduleDateBeans.size() == 0))
-	  	{
-	  	  nomodsFlag = true;
-	  	  FacesContext ctx = FacesContext.getCurrentInstance();
-  		  addNoModulesMessage(ctx);
-  		  moduleDateBeans = new ArrayList();
-	  	}
+	  	    //If list of modules returned is zero or if all of them are hidden
+	  	    if ((moduleDateBeans == null)||(moduleDateBeans.size() == 0))
+	  	    {
+	  	      nomodsFlag = true;
+	  	      FacesContext ctx = FacesContext.getCurrentInstance();
+  		      addNoModulesMessage(ctx);
+  		      moduleDateBeans = new ArrayList();
+	  	    }
 		  	return moduleDateBeans;
 	  }
 
@@ -298,7 +307,7 @@ public class ListModulesPage implements Serializable{
 
 	  public List getModuleDatePrivBeans() {
 	  	try {
-	  		moduleDatePrivBeans = getModuleService().getModuleDatePrivBeans(userId, courseId);
+	  		moduleDatePrivBeans = getModuleService().getModuleDatePrivBeans(getUserId(), getCourseId());
 
 	  	}catch (Exception e)
 		{
@@ -558,7 +567,24 @@ public class ListModulesPage implements Serializable{
 
 
    }
+      public String clearAllBookmarks()
+      {
+      	FacesContext context = FacesContext.getCurrentInstance();
+      	Map sessionMap = context.getExternalContext().getSessionMap();
+      	ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 
+      	try
+      	{
+      	 bookmarksService.deleteAllBookmarks(getUserId(),getCourseId());
+      	}
+      	catch(Exception e)
+      	{
+      		String errMsg = bundle.getString("Clear_bookmarks_fail");
+      		context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Set_prefs_fail",errMsg));
+      	}
+      	return "list_modules_inst";
+
+      }
 	  private void addNoModulesMessage(FacesContext ctx){
 	  	FacesMessage msg =
 	  		new FacesMessage("No modules", "No modules are available for the course at this time.");
@@ -602,4 +628,62 @@ public class ListModulesPage implements Serializable{
 		  printable=false;}
 		  return printable;
 	  }
+	  
+	  private String getCourseId()
+	  {
+	  	if (courseId == null)
+	  	{
+	  	FacesContext context = FacesContext.getCurrentInstance();
+	    	Map sessionMap = context.getExternalContext().getSessionMap();
+	  	courseId = (String)sessionMap.get("courseId");
+	  	}
+	  	return courseId;
+	  }
+	  
+	  private String getUserId()
+	  {
+	  	if (userId == null)
+	  	{
+	  	FacesContext context = FacesContext.getCurrentInstance();
+	    	Map sessionMap = context.getExternalContext().getSessionMap();
+	  	userId = (String)sessionMap.get("userId");
+	  	}
+	  	return userId;
+	  }
+	public MeleteBookmarksService getBookmarksService()
+	{
+		return this.bookmarksService;
+	}
+
+	public void setBookmarksService(MeleteBookmarksService bookmarksService)
+	{
+		this.bookmarksService = bookmarksService;
+	}
+
+	public boolean isBookmarkStatus()
+	{
+		 List bookmarksList = null;
+		  try {
+		  		bookmarksList = getBookmarksService().getBookmarks(getUserId(), getCourseId(), null);
+
+		  	}catch (Exception e)
+			{
+		  		//e.printStackTrace();
+		  		logger.error(e.toString());
+			}
+		  	
+		  	if ((bookmarksList == null)||(bookmarksList.size() == 0))
+		  	{
+		  	  return false;
+		  	}
+		  	else
+		  	{
+		  	  return true;
+		  	}
+	}
+
+	public void setBookmarkStatus(boolean bookmarkStatus)
+	{
+		this.bookmarkStatus = bookmarkStatus;
+	}
 }

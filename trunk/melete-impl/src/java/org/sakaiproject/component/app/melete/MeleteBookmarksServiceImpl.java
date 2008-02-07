@@ -50,6 +50,17 @@ public void insertBookmark(MeleteBookmarksObjService mb) throws Exception
 	}
 	return;
   }
+public List getBookmarks(String userId, String courseId, Integer moduleId)
+{
+  List bookmarks = null;
+	try{
+		bookmarks = bookmarksdb.getBookmarks(userId, courseId, moduleId);
+	}catch(Exception e)
+	{
+		logger.error("melete bookmarks business --get bookmarks failed");
+	}
+	return bookmarks;
+}
 
   /**
  * {@inheritDoc}

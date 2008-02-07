@@ -38,14 +38,14 @@ function showIframe()
 <!--Page Content-->
 <table  border="0" cellpadding="2" cellspacing="0" bordercolor="#EAEAEA" width="100%" style="border-collapse: collapse" >
 <tr>
-					<td>
+					<td colspan="2">
 								<f:subview id="top">
 												  <jsp:include page="topnavbar.jsp"/> 
 									</f:subview>	
 					</td>
 				</tr>
 <tr>
-<td align="center">
+<td colspan="2" align="center">
 <f:subview id="topmod">
 	<jsp:include page="view_navigate.jsp"/>
 </f:subview>
@@ -53,9 +53,9 @@ function showIframe()
 	<h:panelGroup id="bcsecpgroup" binding="#{viewSectionsPage.secpgroup}"/>
 </td>
 </tr>    
-	<tr>	<td>&nbsp;</td>		</tr>     
+	<tr>	<td colspan="2">&nbsp;</td>		</tr>     
 <tr>
-<td align="left">
+<td colspan="2" align="left">
 	 <h:outputText id="modtitle" value="#{viewSectionsPage.module.title}" styleClass="bold style6" >
 </h:outputText>
 
@@ -67,15 +67,26 @@ function showIframe()
  <h:outputText id="title" value="#{viewSectionsPage.section.title}" styleClass="bold style7"></h:outputText>     
 
 </td>
+<td align="right">
+		<h:commandLink id="bmarkLink" action="#{viewSectionsPage.createBookmark}" immediate="true" rendered="#{viewSectionsPage.bookmarkStatus == false}">
+		  <h:outputText  id="bmarkText1" value="#{msgs.bookmark_text}"/>
+	    </h:commandLink>    
+	     <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{viewSectionsPage.bookmarkStatus == true}" styleClass="ExpClass"/>        
+	    <h:outputText  id="bmarkText2" value="#{msgs.bookmark_text}" rendered="#{viewSectionsPage.bookmarkStatus == true}"/>
+	    <h:outputText id="seperatorMsg" value=" | "  rendered="#{viewSectionsPage.bookmarkStatus == true}"/>
+	    <h:commandLink id="clearLink" action="#{viewSectionsPage.clearBookmark}" immediate="true"  rendered="#{viewSectionsPage.bookmarkStatus == true}">
+		  <h:outputText  id="clearText" value="#{msgs.clear_bookmark_text}"/>
+	    </h:commandLink>    
+		</td>
 </tr>    
 <tr>
-<td align="left">
+<td colspan="2" align="left">
 <h:outputText value="#{msgs.view_section_student_instructions}"  rendered="#{((viewSectionsPage.section.instr != viewSectionsPage.nullString)&&(viewSectionsPage.section.instr != viewSectionsPage.emptyString))}" styleClass="italics"></h:outputText> &nbsp; <h:outputText id="instr" value="#{viewSectionsPage.section.instr}" rendered="#{((viewSectionsPage.section.instr != viewSectionsPage.nullString)&&(viewSectionsPage.section.instr != viewSectionsPage.emptyString))}"></h:outputText>  
 </td>
 </tr>    
 
 <tr>
-<td align="left">
+<td colspan="2" align="left">
   <h:inputHidden id="contentType" value="#{viewSectionsPage.section.contentType}"/>
 			
 	<br> 
@@ -97,12 +108,12 @@ function showIframe()
 
 
 <tr>
-<td align="left">
+<td colspan="2" align="left">
 &nbsp;
 </td>
 	</tr>
 	<tr>
-<td align="center">
+<td colspan="2" align="center">
 <f:subview id="bottommod">
 	<jsp:include page="view_navigate.jsp"/>
 </f:subview>
