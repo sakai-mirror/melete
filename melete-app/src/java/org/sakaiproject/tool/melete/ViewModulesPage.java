@@ -289,6 +289,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 		vsPage.setSectionId(secBean.getSection().getSectionId());
 		vsPage.setModuleId(secBean.getSection().getModuleId());
 		vsPage.setModuleSeqNo(secBean.getSection().getModule().getCoursemodule().getSeqNo());
+		vsPage.setBookmarkStatus(secBean.isBookmarkFlag());
 		vsPage.setSection(null);
 		// added by rashmi on 6/14/05
 		vsPage.setModule(null);

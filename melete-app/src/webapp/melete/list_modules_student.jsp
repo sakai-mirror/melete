@@ -69,7 +69,7 @@ return newWindow;
               columnClasses="titleWid,dateWid1,dateWid2"
                    border="0" width="100%" >
       <h:column>
-  <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{mdbean.bookmarkFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
+  <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{((mdbean.bookmarkFlag == listModulesPage.trueFlag)&&(mdbean.moduleId != listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}" styleClass="ExpClass"/>
                                        
     <h:commandLink id="viewSections" action="#{listModulesPage.showSections}">
         <h:graphicImage id="exp_gif" value="images/expand.gif" rendered="#{((mdbean.moduleId != listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}" styleClass="ExpClass"/>
@@ -79,7 +79,6 @@ return newWindow;
         <h:graphicImage id="col_gif" value="images/collapse.gif" rendered="#{(((mdbean.moduleId == listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList))||((listModulesPage.expandAllFlag == listModulesPage.trueFlag)&&(mdbean.sectionBeans != listModulesPage.nullList)))}" styleClass="ExpClass"/>
          <h:inputHidden id="moduleHideId" value="#{mdbean.moduleId}"/>
       </h:commandLink> 
-      <h:outputText id="emp_spacemod" value=" "/>
          <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}" rendered="#{mdbean.visibleFlag == listModulesPage.trueFlag}">
 
                   <h:outputText id="title"
@@ -92,13 +91,10 @@ return newWindow;
                   value="#{mdbean.sectionBeans}"
                   var="section" rowClasses="#{mdbean.rowClasses}" columnClasses="SectionClass" width="75%">
                     <h:column> 
-			  <h:outputText id="emp_space" value=" "/>
 			  <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{section.bookmarkFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
-             
+             <h:outputText id="emp_space" value=" " styleClass="ExtraPaddingClass" rendered="#{((mdbean.bookmarkFlag == listModulesPage.trueFlag)&&(section.bookmarkFlag != listModulesPage.trueFlag))}"/>
               <h:graphicImage id="bul_gif" value="images/bullet_black.gif"/>
-              <h:outputText id="emp_space2" value=" "/>
-			  <h:outputText id="emp_space" value=" "/>
-			 
+             
              <h:commandLink id="viewSectionEditor"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}"  rendered="#{((section.section.contentType != listModulesPage.isNull && section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}">
                <h:outputText id="sectitleEditor" 
                            value="#{section.truncTitle}">
