@@ -61,7 +61,10 @@
 			<h:dataTable id="tablesec"  value="#{viewModulesPage.mdbean.sectionBeans}" var="sectionBean" columnClasses="SectionClass" rowClasses="#{viewModulesPage.mdbean.rowClasses}" rendered="#{viewModulesPage.sectionSize > 0}" styleClass="SectionTableClass">
           	
 		  <h:column>
-					   <h:graphicImage id="bul_gif" value="images/bullet_black.gif" rendered="#{sectionBean.section.title != viewModulesPage.nullString}"/>
+		      <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{sectionBean.bookmarkFlag == true}" styleClass="ExpClass"/>
+          	   <h:outputText id="emp_space" value=" " styleClass="ExtraPaddingClass" rendered="#{((viewModulesPage.mdbean.bookmarkFlag == true)&&(sectionBean.bookmarkFlag != true))}"/>
+            
+          	   <h:graphicImage id="bul_gif" value="images/bullet_black.gif" rendered="#{sectionBean.section.title != viewModulesPage.nullString}"/>
 					  <h:commandLink id="viewSectionEditor"  action="#{viewModulesPage.viewSection}" rendered="#{sectionBean.section.title != viewModulesPage.nullString}">
 							  <h:outputText id="sectitleEditor" value="#{sectionBean.section.title}" > </h:outputText>
 					  </h:commandLink>

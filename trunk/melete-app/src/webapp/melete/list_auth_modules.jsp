@@ -164,9 +164,7 @@ if (msg != null)
         <h:graphicImage id="col_gif" value="images/collapse.gif" rendered="#{(((mdbean.moduleId == listAuthModulesPage.showModuleId)&&(mdbean.sectionBeans != listAuthModulesPage.nullList))||((listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag)&&(mdbean.sectionBeans != listAuthModulesPage.nullList)))}" styleClass="ExpClass"/>
          <h:inputHidden id="moduleHideId" value="#{mdbean.moduleId}"/>
       </h:commandLink>    
-      <h:outputText id="emp_spacemod" value=" "/>
       <h:outputText id="mod_seq" value="#{mdbean.cmod.seqNo}."/>
-      <h:outputText id="emp_spacemod2" value=" "/>
       
       <h:commandLink id="editMod" actionListener="#{listAuthModulesPage.editModule}"  action="#{listAuthModulesPage.redirectToEditModule}">     
                    <h:outputText id="title2" value="#{mdbean.truncTitle}">
@@ -177,10 +175,8 @@ if (msg != null)
                   var="sectionBean" columnClasses="SectionClass" rowClasses="#{mdbean.rowClasses}" width="300">
                <h:column>
               <h:selectBooleanCheckbox value="#{sectionBean.selected}"  valueChangeListener="#{listAuthModulesPage.selectedSection}"/> 
-               <h:outputText id="emp_space" value=" "/>
                <h:outputText id="disp_seq" value="#{sectionBean.displaySequence}"/>
-              <h:outputText id="emp_space2" value=" "/>
-       
+              
               <h:commandLink id="editSec" actionListener="#{listAuthModulesPage.editSection}"  action="#{listAuthModulesPage.redirectToEditSection}">   
                  <h:outputText id="sectitle" 
                             value="#{sectionBean.truncTitle}">
