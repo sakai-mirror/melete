@@ -849,50 +849,79 @@ public class ListAuthModulesPage implements Serializable
 		FacesContext ctx = null;
 		ResourceLoader bundle = null;
 		boolean dateErrFlag = false;
+		boolean yearTooBigFlag = false;
 		errModuleIds = new ArrayList();
 		try
 		{
 			Iterator moduleIter = moduleDateBeans.iterator();
 			ctx = FacesContext.getCurrentInstance();
 			bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+			Calendar stCal = null;
+			Calendar enCal = null;
 			while (moduleIter.hasNext())
 			{
 				ModuleDateBean mdbean = (ModuleDateBean) moduleIter.next();
+				mdbean.setDateFlag(false);
+				if (mdbean.getStartDate() != null)
+				{
+					stCal = Calendar.getInstance();	
+					stCal.setTime(mdbean.getStartDate());
+					if (stCal.get(Calendar.YEAR) > 9999)
+					{
+					  yearTooBigFlag = true;
+					  mdbean.setDateFlag(true);
+					}
+				}
+				if (mdbean.getEndDate() != null)
+				{
+					enCal = Calendar.getInstance();	
+					enCal.setTime(mdbean.getEndDate());
+					if (enCal.get(Calendar.YEAR) > 9999)
+					{
+					  yearTooBigFlag = true;
+					  mdbean.setDateFlag(true);
+					}
+				}
 				if ((mdbean.getStartDate() != null)&&(mdbean.getEndDate() != null))
 				{
 				  if (mdbean.getStartDate().compareTo(mdbean.getEndDate()) >= 0)
 				  {
 					dateErrFlag = true;
 					mdbean.setDateFlag(true);
-					errModuleIds.add(mdbean);
 					/*
 					 * addDateErrorMessage(ctx); return "list_auth_modules";
 					 */
 				  }
-				  else
+				  
+			     }
+				if (mdbean.isDateFlag() == true)
 				  {
-					mdbean.setDateFlag(false);
+					  errModuleIds.add(mdbean);
 				  }
-				}
-				else
-				{
-					mdbean.setDateFlag(false);
-				}
 			}
-			getModuleService().updateProperties(moduleDateBeans);
-
-			if (dateErrFlag == true)
-			{
+			  getModuleService().updateProperties(moduleDateBeans);
+		  
+			
+			if ((yearTooBigFlag == true)||(dateErrFlag == true))
+			{	
+			  if (yearTooBigFlag == true)
+			  {
+			  String msg = bundle.getString("year_toobig_error");
+			  addMessage(ctx, "Year Error", msg, FacesMessage.SEVERITY_ERROR);
+			  }
+			  if (dateErrFlag == true)
+			  {
 				String msg = bundle.getString("date_error");
 				addMessage(ctx, "Date Error", msg, FacesMessage.SEVERITY_ERROR);
-			}
+			  }
+			}  
 			else
 			{
 				String msg = bundle.getString("changes_saved");
 				addMessage(ctx, "Changes Saved", msg, FacesMessage.SEVERITY_INFO);
 			}
-
-		}
+			}
+	
 		catch (Exception e)
 		{
 			// e.printStackTrace();
