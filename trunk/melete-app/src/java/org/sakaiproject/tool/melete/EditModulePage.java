@@ -109,7 +109,10 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
       	Date end = getEndDate();
 
 //       validation no 4 b
-    	if ((end != null) && (st != null))
+      	 boolean dateResult = validateDates(context, bundle, st, end);
+         if (dateResult == false) return "failure";
+         
+    	/*if ((end != null) && (st != null))
 		{
 			if (end.compareTo(st) <= 0)
 			{
@@ -120,7 +123,8 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 				context.addMessage(null, msg);
 				return "failure";
 			}
-		}
+		}*/
+     	
  	    // rashmi added validations end
 
 	     // actual update
@@ -154,9 +158,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 		{
 			logger.error("show error message for"+me.toString()+me.getMessage()+",");
 			errMsg = bundle.getString(me.getMessage());
-			FacesMessage msg = new FacesMessage(errMsg);
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			context.addMessage (null, msg);
+			addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
 			return "failure";
 		}
 		catch(Exception ex)
@@ -166,14 +168,14 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 			logger.error(ex.toString());
 			errMsg = "";
 			errMsg = bundle.getString("edit_module_fail");
-	     	context.addMessage (null, new FacesMessage(errMsg));
+			addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
 			return "failure";
 		}
 		if (callFromAddContent == false)
 		{
-		  FacesMessage msg = new FacesMessage(bundle.getString("edit_module_success"));
-		  msg.setSeverity(FacesMessage.SEVERITY_INFO);
-		  context.addMessage(null,msg);
+		  String msg="";	
+		  msg = bundle.getString("edit_module_success");
+		  addMessage(context, "Info Message", msg, FacesMessage.SEVERITY_INFO);
 		}
 		setSuccess(true);
 		return "success";
