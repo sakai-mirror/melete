@@ -97,23 +97,8 @@ public class AddModulePage extends ModulePage implements Serializable{
        	Date end = getEndDate();
 
  //  validation to limit year to 4 digits
-     	Calendar calstart = new GregorianCalendar();
-     	if (st != null) calstart.setTime(st);
-     	Calendar calend = new GregorianCalendar();
-     	if (end != null) calend.setTime(end);
-
-
-//      validation no 4 b
-     	if ((end != null)&&(st != null))
-     	{
-     	if(end.compareTo(st) <= 0)
-     	{
-     		String errMsg = "";
-	     	errMsg = bundle.getString("end_date_before_start");
-	     	context.addMessage (null, new FacesMessage(errMsg));
-	     	return "add_module";
-     	}
-     	}
+        boolean dateResult = validateDates(context, bundle, st, end);
+        if (dateResult == false) return "add_module";
 
 	   	// get course info from sessionmap
 	      Map sessionMap = context.getExternalContext().getSessionMap();
@@ -156,7 +141,7 @@ public class AddModulePage extends ModulePage implements Serializable{
 		{
 			//logger.error("mbusiness insert module failed:" + ex.toString());
 			String errMsg = bundle.getString("add_module_fail");
-	     	context.addMessage (null, new FacesMessage(errMsg));
+			addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
 			return "add_module";
 		}
 		setSuccess(true);

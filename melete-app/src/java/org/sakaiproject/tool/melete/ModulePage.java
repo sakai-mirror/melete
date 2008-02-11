@@ -35,6 +35,7 @@ import javax.faces.validator.ValidatorException;
 import javax.faces.component.*;
 import javax.faces.event.*;
 
+import org.sakaiproject.util.ResourceLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.component.app.melete.Module;
@@ -126,7 +127,59 @@ public abstract class ModulePage implements Serializable{
 	}
 	return showDates;
 }
-
+    protected boolean validateDates(FacesContext context, ResourceLoader bundle, Date st, Date end)
+    {
+	   Calendar calstart = new GregorianCalendar();
+     	Calendar calend = new GregorianCalendar();
+     
+     	boolean errorFlag = false;
+     	if ((st != null) || (end!= null))
+     	{	
+     	  if (st != null)
+		  {
+     		calstart.setTime(st);
+			if (calstart.get(Calendar.YEAR) > 9999)
+			{
+				String errMsg = bundle.getString("year_toobig_error");
+				addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
+				errorFlag = true;
+			}
+		  }
+     	  if (end != null)
+		  {
+     		calend.setTime(end);
+			if (calend.get(Calendar.YEAR) > 9999)
+			{
+				String errMsg = bundle.getString("year_toobig_error");
+				addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
+				errorFlag = true;
+			}
+		  }
+		
+  //      validation no 4 b
+     	  if ((end != null)&&(st != null))
+     	  {
+     	  if(end.compareTo(st) <= 0)
+     	  {
+     		String errMsg = "";
+	     	errMsg = bundle.getString("end_date_before_start");
+	     	addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
+	     	errorFlag = true; 	
+     	  }
+     	  }
+     	}
+     	//If there is an error, validation fails and the method returns false
+     	//If there are no errors, validation passes and the method returns true;
+     	if (errorFlag == true) return false;
+     	return true;
+    }
+    
+    protected void addMessage(FacesContext context, String msgName, String msgDetail, FacesMessage.Severity severity)
+	{
+		FacesMessage msg = new FacesMessage(msgName, msgDetail);
+		msg.setSeverity(severity);
+		context.addMessage(null, msg);
+	}
     /**
      *
      * This is the most critical function. It actually submits the form and sends
