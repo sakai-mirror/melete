@@ -36,9 +36,10 @@ public class ModuleDatePrivBean extends ModuleDateBean implements Serializable {
     private List sectionBeans;
 
     /** full constructor */
-    public ModuleDatePrivBean(int moduleId, org.sakaiproject.component.app.melete.Module module, org.sakaiproject.component.app.melete.ModuleStudentPrivs moduleStudentPriv) {
+    public ModuleDatePrivBean(int moduleId, org.sakaiproject.component.app.melete.Module module, org.sakaiproject.component.app.melete.ModuleShdates moduleShdate, org.sakaiproject.component.app.melete.ModuleStudentPrivs moduleStudentPriv) {
         this.moduleId = moduleId;
         this.module = module;
+        this.moduleShdate = moduleShdate;
         this.moduleStudentPriv = moduleStudentPriv;
     }
 

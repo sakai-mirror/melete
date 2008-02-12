@@ -622,8 +622,7 @@ public class ModuleDB implements Serializable {
 	   }
 	   mdBean.setModuleId(mod.getModuleId().intValue());
 	   mdBean.setModule((Module)mod);
-	   mdBean.setStartDate(mod.getModuleshdate().getStartDate());
-	   mdBean.setEndDate(mod.getModuleshdate().getEndDate());
+	   mdBean.setModuleShdate(mod.getModuleshdate());
 	   mdBean.setCmod(mod.getCoursemodule());
        mdBean.setTruncTitle(createTruncstr(mod.getTitle()));
        if ((moduleBookmarks != null) && (moduleBookmarks.size() > 0))
@@ -984,23 +983,10 @@ public class ModuleDB implements Serializable {
                 //	    Getting the set of show hides dates associated with this module
 	            ModuleShdates mshdates = (ModuleShdates) mdbean.getModule().getModuleshdate();
 
-        	    if (mdbean.getStartDate() != null)
-        	    {
-        	    	mshdates.setStartDate(new java.sql.Timestamp(mdbean.getStartDate().getTime()));
-        	    }
-        	    else
-        	    {
-					mshdates.setStartDate(null);
-			    }
-        	    if (mdbean.getEndDate() != null)
-        	    {
-					mshdates.setEndDate(new java.sql.Timestamp(mdbean.getEndDate().getTime()));
-			    }
-        	    else
-        	    {
-					mshdates.setEndDate(null);
-			    }
+        	    mshdates.setStartDate(mdbean.getModuleShdate().getStartDate());
+        	    mshdates.setEndDate(mdbean.getModuleShdate().getEndDate());
         	    session.saveOrUpdate(mshdates);
+        	    
         	    tx.commit();
 	            //session.flush();
 	           }

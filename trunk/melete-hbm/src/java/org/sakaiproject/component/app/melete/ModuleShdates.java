@@ -22,7 +22,7 @@
 package org.sakaiproject.component.app.melete;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -35,10 +35,10 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     private Integer moduleId;
 
     /** nullable persistent field */
-    private Timestamp startDate;
+    private Date startDate;
 
     /** nullable persistent field */
-    private Timestamp endDate;
+    private Date endDate;
 
     /** nullable persistent field */
     private int version;
@@ -47,7 +47,7 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     private org.sakaiproject.component.app.melete.Module module;
 
     /** full constructor */
-    public ModuleShdates( Timestamp startDate, Timestamp endDate, int version, org.sakaiproject.component.app.melete.Module module) {
+    public ModuleShdates(Date startDate, Date endDate, int version, org.sakaiproject.component.app.melete.Module module) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.version = version;
@@ -55,7 +55,7 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     }
 
     /** Custom constructor */
-    public ModuleShdates(Timestamp startDate, Timestamp endDate) {
+    public ModuleShdates(Date startDate, Date endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -81,19 +81,20 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
         this.moduleId = moduleId;
     }
 
-    public Timestamp getStartDate() {
+
+    public Date getStartDate() {
         return this.startDate;
     }
 
-    public void setStartDate(Timestamp startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public Timestamp getEndDate() {
+    public Date getEndDate() {
         return this.endDate;
     }
 
-    public void setEndDate(Timestamp endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 

@@ -459,8 +459,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			ModuleDateBean mdbean = new ModuleDateBean();
 			mdbean.setModuleId(module.getModuleId().intValue());
 			mdbean.setModule(module);
-		    mdbean.setStartDate(module.getModuleshdate().getStartDate());
-	        mdbean.setEndDate(module.getModuleshdate().getEndDate());
+			mdbean.setModuleShdate(module.getModuleshdate());
 			ArrayList mdbeanList = new ArrayList();
 			mdbeanList.add(mdbean);
 			moduleDB.updateModuleDateBeans(mdbeanList);
@@ -1164,7 +1163,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
                   			    //rollback and delete section
                   			    try
                   			    {
-                  			      sectionDB.deleteSection(toSec);
+                  			      sectionDB.deleteSection(toSec, null);
                   			    }
                   			    catch (Exception ex2)
                   			    {

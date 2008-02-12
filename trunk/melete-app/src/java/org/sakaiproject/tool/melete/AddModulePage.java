@@ -26,8 +26,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map;
-
-import org.sakaiproject.component.app.melete.ModuleShdates;
 import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.FacesMessage;
@@ -45,8 +43,7 @@ public class AddModulePage extends ModulePage implements Serializable{
 
     public AddModulePage(){
        	this.module = null;
-    	setStartDate(null);
-    	setEndDate(null);
+    	setModuleShdates(null);
     	setModuleDateBean(null);
     	setFormName("AddModuleForm");
     }
@@ -60,8 +57,7 @@ public class AddModulePage extends ModulePage implements Serializable{
 	public void setModuleNull()
 	{
 		this.module = null;
-		setStartDate(null);
-		setEndDate(null);
+		setModuleShdates(null);
 		resetModuleValues();
 	}
 
@@ -81,7 +77,7 @@ public class AddModulePage extends ModulePage implements Serializable{
     public String save()
 	{
     	Date  d = new Date();
-     	Date st = getStartDate();
+     	Date st = getModuleShdates().getStartDate();
 
         setSuccess(false);
         if(moduleService == null)
@@ -94,7 +90,7 @@ public class AddModulePage extends ModulePage implements Serializable{
      	module.setTitle(module.getTitle().trim());
      
      	// validation no 3
-       	Date end = getEndDate();
+       	Date end = getModuleShdates().getEndDate();
 
  //  validation to limit year to 4 digits
         boolean dateResult = validateDates(context, bundle, st, end);
@@ -115,24 +111,8 @@ public class AddModulePage extends ModulePage implements Serializable{
 				 	{
 						module.setKeywords(module.getTitle());
 					}
-			ModuleShdates mshdates = new ModuleShdates();
-    	    if (getStartDate() != null)
-    	    {
-				mshdates.setStartDate(new java.sql.Timestamp(getStartDate().getTime()));
-		    }
-    	    else
-    	    {
-				mshdates.setStartDate(null);
-		    }
-    	    if (getEndDate() != null)
-    	    {
-				mshdates.setEndDate(new java.sql.Timestamp(getEndDate().getTime()));
-		    }
-    	    else
-    	    {
-				mshdates.setEndDate(null);
-		    }
-			moduleService.insertProperties(getModule(),mshdates,userId,courseId);
+
+			moduleService.insertProperties(getModule(),getModuleShdates(),userId,courseId);
 			// add module to session
 			sessionMap.put("currModule",module);
 

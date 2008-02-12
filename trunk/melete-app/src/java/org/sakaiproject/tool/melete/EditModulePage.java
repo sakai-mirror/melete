@@ -105,8 +105,8 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
      
       	// validation no 3
       	Date  d = new Date();
-      	Date st = getStartDate();
-      	Date end = getEndDate();
+      	Date st = getModuleShdates().getStartDate();
+      	Date end = getModuleShdates().getEndDate();
 
 //       validation no 4 b
       	 boolean dateResult = validateDates(context, bundle, st, end);
@@ -141,8 +141,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 			ModuleDateBean mdbean = new ModuleDateBean();
 			mdbean.setModuleId(getModule().getModuleId().intValue());
 			mdbean.setModule((Module)getModule());
-			mdbean.setStartDate(getStartDate());
-			mdbean.setEndDate(getEndDate());
+			mdbean.setModuleShdate((ModuleShdates)getModuleShdates());
 			mdbean.setDateFlag(false);
 			ArrayList mdbeanList = new ArrayList();
 			mdbeanList.add(mdbean);
@@ -244,8 +243,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
     	resetModuleValues();
     	setModuleDateBean(mdbean);
     	setModule(mdbean.getModule());
-    	setStartDate(mdbean.getStartDate());
-    	setEndDate(mdbean.getEndDate());
+    	setModuleShdates(mdbean.getModuleShdate());
     }
 
  }
