@@ -28,11 +28,13 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dom4j.Element;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
+import org.sakaiproject.api.app.melete.MeleteCHService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
 
 /**
@@ -619,8 +621,88 @@ public class SectionDB implements Serializable {
 			ex.printStackTrace();
 			throw new MeleteException("add_section_fail");
 			}
+	}	
+	
+	public List<String> checkInSectionResources(String selResourceId, String courseId)
+	{
+		
+		try{
+		     Session session = hibernateUtil.currentSession();
+		     
+		     String queryString = "Select a from Section a, SectionResource b, CourseModule c where a.sectionId = b.sectionId AND " + 
+		     					   "a.moduleId = c.moduleId AND c.courseId=:courseId AND c.deleteFlag=0" + 
+		     					   " AND b.resource.resourceId=:resourceId AND a.deleteFlag=0" ;
+		     
+		     Query query = session.createQuery(queryString);
+		     query.setParameter("courseId",courseId);
+		     query.setParameter("resourceId",selResourceId);
+		     List result_list = query.list();
+		     if (result_list == null) return null;
+		     logger.debug("result_list for sec resources " + result_list.size() + result_list.toString());
+		     List foundResources = new ArrayList<String> (0);
+		     for(Iterator<Section> itr=result_list.listIterator(); itr.hasNext();)
+		     {
+		    	 Section sec = itr.next();
+		    	 String foundAt = sec.getModule().getTitle() +" >> " + sec.getTitle();
+		    	 foundResources.add(foundAt);
+		     }
+		     return foundResources;		    
+		}
+		catch(Exception ex){
+			logger.error(ex.toString());
+			return null;
+			}
+	
 	}
+	
+	public void deleteResourceInUse(String delResourceId,String courseId) throws MeleteException
+	{
+		try
+		{
+			Session session = hibernateUtil.currentSession();
+			Transaction tx = null;
+			try
+			{
+				String queryString = "update SectionResource secResource set secResource.resource.resourceId = null where secResource.sectionId IN "
+						+ "(select a.sectionId from Section a, CourseModule b where a.moduleId = b.moduleId AND b.courseId=:courseId) "
+						+ "AND secResource.resource.resourceId=:resourceId";
 
+				tx = session.beginTransaction();
+				int delResources = session.createQuery(queryString).setString("courseId", courseId).setString("resourceId", delResourceId)
+						.executeUpdate();
+
+				logger.debug(delResources + "section resources are set to null");
+
+				MeleteResource melRes = (MeleteResource) session.get(org.sakaiproject.component.app.melete.MeleteResource.class, delResourceId);
+				session.delete(melRes);
+
+				// complete transaction
+				tx.commit();
+			}
+			catch (StaleObjectStateException sose)
+			{
+				logger.error("stale object exception" + sose.toString());
+			}
+			catch (HibernateException he)
+			{
+				if (tx != null) tx.rollback();
+				logger.error(he.toString());
+				he.printStackTrace();
+				throw he;
+			}
+			finally
+			{
+				hibernateUtil.closeSession();
+			}
+		}
+		catch (Exception ex)
+		{
+			logger.error(ex.toString());
+			throw new MeleteException("delete_resource_fail");
+		}
+	
+	}
+	
 	/**
 	 * @return Returns the hibernateUtil.
 	 */
@@ -628,7 +710,8 @@ public class SectionDB implements Serializable {
 		return hibernateUtil;
 	}
 	/**
-	 * @param hibernateUtil The hibernateUtil to set.
+	 * @param hibernateUtil
+	 *        The hibernateUtil to set.
 	 */
 	public void setHibernateUtil(HibernateUtil hibernateUtil) {
 		this.hibernateUtil = hibernateUtil;

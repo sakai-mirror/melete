@@ -51,8 +51,16 @@
 				    <f:facet name="header">
 							 <h:outputText id="t2" value="#{msgs.edit_list_resources_actions2}" />
 					 </f:facet>
-				     <h:commandLink id="linkaction" actionListener="#{editSectionPage.selectedResourceReplaceAction}"  action="#{editSectionPage.redirectLink}" immediate="true" ondblclick="this.style=bgcolor:blue">
+					 <h:graphicImage id="linkgif" alt="" value="images/link2me.png" styleClass="AuthImgClass" />
+				      <h:outputText id="emp_space-3" value=" " />
+				     <h:commandLink id="linkaction" actionListener="#{editSectionPage.selectedResourceReplaceAction}"  action="#{editSectionPage.redirectLink}" immediate="true" onfocus="this.style.bgcolor='blue'">
 				    	<h:outputText value="#{msgs.edit_list_resources_link}" />
+					 </h:commandLink>	
+					 <h:outputText id="emp_space-1" value="     "  styleClass="ExtraPaddingClass" />
+					 <h:graphicImage id="delgif" alt="" value="images/delete.gif" styleClass="AuthImgClass" />
+					 <h:outputText id="emp_space-2" value=" " />
+					 <h:commandLink id="deleteaction" actionListener="#{editSectionPage.selectedResourceDeleteAction}"  action="#{editSectionPage.redirectDeleteLink}" immediate="true" >
+				    		 <h:outputText id="deltext" value="#{msgs.edit_list_resources_del}"  />
 					 </h:commandLink>	
 				    </h:column>
               </h:dataTable>   

@@ -362,6 +362,11 @@ width: 200px}
 
 .RedClass 			{color: #FF0000;  }
 
+.RedBorderClass {color:#FF0000;
+				border-collapse: collapse;
+				}
+
+
 .DatePickerClass	{  
 width: 16;  
 height: 16;  border: 0;  

@@ -198,8 +198,7 @@ window.open('editpreviewEditor.jsf');
 												<f:selectItem itemValue="notype" itemLabel="#{msgs.editmodulesections_choose_one}"/>	
 											    <f:selectItem itemValue="typeEditor" itemLabel="#{msgs.editmodulesections_compose}"/>	
 												<f:selectItem itemValue="typeUpload"  itemLabel="#{msgs.editmodulesections_upload_local}"/> 
-												<f:selectItem itemValue="typeLink"   itemLabel="#{msgs.editmodulesections_link_url}"/>
-												<f:selectItem itemValue="typeExistLink"   itemLabel="#{msgs.editmodulesections_link_url_server}"/>
+												<f:selectItem itemValue="typeLink"   itemLabel="#{msgs.editmodulesections_link_url}"/>												
 											 </h:selectOneMenu>
 											 </td>
 											 </tr>
@@ -211,11 +210,7 @@ window.open('editpreviewEditor.jsf');
 											  <f:subview id="ContentUploadView" rendered="#{editSectionPage.shouldRenderUpload}">
 												<jsp:include page="editContentUploadView.jsp"/> 
 											</f:subview>	
-											<!-- resource listing begin-->											
-											 	<f:subview id="ResourceListingForm" rendered="#{editSectionPage.shouldRenderResources}" >	
-																	<jsp:include page="edit_list_section_resources_NoContent.jsp"/> 
-													</f:subview>																							
-				<!-- resource listing end-->			
+											
 														</td></tr>	
 												<tr> 
 										 <td colspan="2" align="center"> 										

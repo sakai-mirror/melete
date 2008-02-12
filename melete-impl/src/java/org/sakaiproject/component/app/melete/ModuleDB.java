@@ -58,6 +58,8 @@ import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.api.app.melete.MeleteCHService;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.util.ResourceLoader;
+import org.dom4j.Element;
+
 /* Mallika - 4/17/07 - added code to support subsections on list pages
  * Mallika -6/6/07 - consolidated methods
  * Mallika - 6/6/07 - Added methods for multiple indent (same as previous)
@@ -403,12 +405,14 @@ public class ModuleDB implements Serializable {
 	 	bookmarkList = bookmarksDB.getBookmarks(userId, courseId, null);
         try
 		{
-	     Session session = hibernateUtil.currentSession();
+	 	  Session session = hibernateUtil.currentSession();
 	      modList = getModules(courseId);
 	      Iterator i = modList.iterator();
+
 	      while (i.hasNext()) {
 	      	mdBean = new ModuleDateBean();
 	      	mod = (Module) i.next();
+
 	      	if ((bookmarkList == null)||(bookmarkList.size() == 0))
 	      	{
 	      	  populateModuleBean(mod, mdBean, null);
@@ -425,9 +429,11 @@ public class ModuleDB implements Serializable {
 	      			populateModuleBean(mod, mdBean, moduleBookmarks);
 	      		}
 	      	}
+
 		    moduleDateBeansList.add(mdBean);
 	      	mod = null;
 	      }
+
 	    }
 	    catch (Exception he)
 	    {
@@ -986,7 +992,7 @@ public class ModuleDB implements Serializable {
         	    mshdates.setStartDate(mdbean.getModuleShdate().getStartDate());
         	    mshdates.setEndDate(mdbean.getModuleShdate().getEndDate());
         	    session.saveOrUpdate(mshdates);
-        	    
+
         	    tx.commit();
 	            //session.flush();
 	           }

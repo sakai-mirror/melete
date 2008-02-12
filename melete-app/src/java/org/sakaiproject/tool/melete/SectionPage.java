@@ -948,6 +948,12 @@ public abstract class SectionPage implements Serializable {
 		return expandAllFlag;
 	}
 
+	public void refreshCurrSiteResourcesList(){
+		currSiteResourcesList = null;
+		getCurrSiteResourcesList();
+		return;
+	}
+	
 	/**
 	 * @return Returns the currSiteResourcesList.
 	 */
