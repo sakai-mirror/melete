@@ -35,6 +35,7 @@ import org.sakaiproject.api.app.melete.ModuleService;
 import org.sakaiproject.api.app.melete.SectionObjService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
 import org.sakaiproject.component.app.melete.MeleteResource;
+import org.sakaiproject.component.app.melete.ModuleDateBean;
 import org.sakaiproject.component.app.melete.Section;
 import org.sakaiproject.component.app.melete.SectionResource;
 import org.sakaiproject.component.cover.ServerConfigurationService;
@@ -96,7 +97,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		setModule(section.getModule());
 		setSection(section);
 		setSecResource(section.getSectionResource());
-		if (secResource != null)
+		if (secResource != null && secResource.getResource() != null)
 		{
 			setMeleteResource((MeleteResource) secResource.getResource());
 			setContentResourceData(meleteResource.getResourceId());
@@ -252,6 +253,30 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return;
 	}
 
+	public void selectedResourceDeleteAction(ActionEvent evt)
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		Map sessionMap = ctx.getExternalContext().getSessionMap();
+		String courseId = (String)sessionMap.get("courseId");
+		UIViewRoot root = ctx.getViewRoot();
+		UIData table = (UIData) root.findComponent("ServerViewForm:ResourceListingForm").findComponent("table");
+		DisplaySecResources selectedDr = (DisplaySecResources) table.getRowData();
+		logger.debug("selected row to delete " + selectedDr.getResource_id());
+		 
+		ValueBinding binding =Util.getBinding("#{deleteResourcePage}");
+		DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
+		delResPage.resetValues();
+		if(section.getContentType().equals("typeUpload"))
+			delResPage.setFromPage("editContentUploadServerView");
+		else if (section.getContentType().equals("typeLink"))
+			delResPage.setFromPage("editContentLinkServerView");		
+		
+		delResPage.setResourceName(selectedDr.getResource_title());
+		delResPage.processDeletion(selectedDr.getResource_id(), courseId);		
+		return;
+	}
+	
+	
 	public String saveHere()
 	{
 		checkUploadExists();
@@ -488,6 +513,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 		// return "#";
 	}
 
+	public String redirectDeleteLink()
+	{
+		 return "delete_resource";
+	}
+	
 	/*
 	 * on clicking expandAll resource listing shows
 	 */

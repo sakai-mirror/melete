@@ -822,6 +822,35 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    	return contentEditor;
 	    }
 
+	    public List findAllEmbeddedImages(String sec_resId) throws Exception
+	    {
+	    	ContentResource cr = getResource(sec_resId);
+	    	String checkforImgs = new String(cr.getContent());
+	    	List secEmbedData = new ArrayList<String> (0);
+	    	int startSrc=0, endSrc=0;
+	    	if (checkforImgs == null || checkforImgs.length() == 0) return null;
+	    	while(checkforImgs != null)
+	    	{
+	    		 // look for a href and img tag       
+	        	ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforImgs);	    			
+    			checkforImgs = (String)embedData.get(0);
+    			if (embedData.size() > 1)
+    			{
+    				startSrc = ((Integer)embedData.get(1)).intValue();
+    				endSrc = ((Integer)embedData.get(2)).intValue();
+    			}
+    			if (endSrc <= 0) break;
+    			// find filename
+    			secEmbedData.add(checkforImgs.substring(startSrc, endSrc));
+    			// iterate next
+    			checkforImgs =checkforImgs.substring(endSrc);
+	            startSrc=0; endSrc = 0;
+	    	}
+	    	return secEmbedData;
+	    }
+	    
+	    
+	    
 	    
 	    /*
 	     * get the URL for replaceStr of embedded images
@@ -953,6 +982,43 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    }   	    
    	    return toCollection;
 	  }
+	  
+	  
+	  public void removeResource(String delRes_id) throws Exception
+	  {
+		  if (!isUserAuthor())
+	        {
+	        		logger.info("User is not authorized to perform del resource function");
+	        }
+	   			//          setup a security advisor
+	        meleteSecurityService.pushAdvisor();		
+		    try
+	   	    {
+		    	getContentservice().checkResource(delRes_id);
+		    	getContentservice().removeResource(delRes_id);	    	
+	   		}
+	   	    catch(IdUnusedException e1)
+		    {
+	   		  logger.error("IdUnusedException thrown: "+e1.getMessage());
+		    }
+	   	    catch(TypeException e1)
+	        {
+	          logger.error("TypeException thrown: "+e1.getMessage());
+	        }
+	   	    catch(PermissionException e1)
+	        {
+	          logger.error("Permission to get uploads collection is denied");
+	        }
+	   	    catch (Exception e)
+		    {
+		        throw new MeleteException("delete_resource_fail");
+		    }
+		    finally
+		    {
+		       meleteSecurityService.popAdvisor();
+		    }   	    
+	  }
+	  
 	  
 	    /**
 	     * @return Returns the logger.

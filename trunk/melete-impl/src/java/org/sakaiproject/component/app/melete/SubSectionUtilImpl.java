@@ -443,6 +443,15 @@ public class SubSectionUtilImpl {
 	}
 	
 	
+	public List getAllSections(String modSeqXml) throws Exception
+	{
+		List allsections = null;
+		subSection4jDOM = DocumentHelper.parseText(modSeqXml);
+		Element root = subSection4jDOM.getRootElement();
+		allsections = subSection4jDOM.selectNodes("//section");	
+		return allsections;
+	}
+	
 }
 
 class SecLevelObj{

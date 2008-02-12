@@ -464,6 +464,23 @@
 			<value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
 		</managed-property>     
 </managed-bean>  
+
+ <managed-bean>
+      <description>Manages the DeleteResource page</description>
+      <managed-bean-name>deleteResourcePage</managed-bean-name>
+      <managed-bean-class>org.sakaiproject.tool.melete.DeleteResourcePage</managed-bean-class>
+      <managed-bean-scope>session</managed-bean-scope>
+	  <managed-property>
+            <description>Service Dependency: Section service</description>
+            <property-name>sectionService</property-name>
+            <value>#{Components["org.sakaiproject.api.app.melete.SectionService"]}</value>
+        </managed-property>   
+        <managed-property>
+	    	            <description>Service Dependency: Melete CH service</description>
+	    	            <property-name>meleteCHService</property-name>
+	    	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteCHService"]}</value>
+            </managed-property>   
+      </managed-bean>  	
     <!-- i18n -->
 
 <managed-bean>
@@ -688,7 +705,7 @@
       <from-outcome>editContentLinkServerView</from-outcome>
       <to-view-id>/melete/editContentLinkServerView.jsp</to-view-id>
       <redirect/>
-    </navigation-case>
+    </navigation-case>     
     <navigation-case>
       <from-outcome>editpreview</from-outcome>
       <to-view-id>/melete/editpreview.jsp</to-view-id>
@@ -731,6 +748,11 @@
   <navigation-rule>
     <from-view-id>/melete/editContentUploadServerView.jsp</from-view-id>
      <navigation-case>
+      <from-outcome>delete_resource</from-outcome>
+      <to-view-id>/melete/delete_resource.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>   
+     <navigation-case>
       <from-outcome>editmodulesections</from-outcome>
       <to-view-id>/melete/editmodulesections.jsp</to-view-id>
       <redirect/>
@@ -743,6 +765,11 @@
     
   <navigation-rule>
     <from-view-id>/melete/editContentLinkServerView.jsp</from-view-id>
+      <navigation-case>
+      <from-outcome>delete_resource</from-outcome>
+      <to-view-id>/melete/delete_resource.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>    
      <navigation-case>
       <from-outcome>editmodulesections</from-outcome>
       <to-view-id>/melete/editmodulesections.jsp</to-view-id>
@@ -753,6 +780,21 @@
       <to-view-id>/melete/editContentLinkServerView.jsp</to-view-id>
     </navigation-case>    
     </navigation-rule>     
+    
+    <navigation-rule>
+    <from-view-id>/melete/delete_resource.jsp</from-view-id>         
+     <navigation-case>
+      <from-outcome>editContentUploadServerView</from-outcome>
+      <to-view-id>/melete/editContentUploadServerView.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>    
+    <navigation-case>
+      <from-outcome>editContentLinkServerView</from-outcome>
+      <to-view-id>/melete/editContentLinkServerView.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>    
+    </navigation-rule>
+    
     
   <!-- preview section -->
   <navigation-rule>

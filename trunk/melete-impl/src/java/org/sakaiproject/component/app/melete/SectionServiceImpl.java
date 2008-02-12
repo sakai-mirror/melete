@@ -23,18 +23,22 @@ package org.sakaiproject.component.app.melete;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dom4j.Element;
+import org.hibernate.Session;
 import org.sakaiproject.api.app.melete.MeleteResourceService;
 import org.sakaiproject.api.app.melete.SectionResourceService;
 import org.sakaiproject.api.app.melete.SectionService;
 import org.sakaiproject.api.app.melete.ModuleObjService;
 import org.sakaiproject.api.app.melete.SectionObjService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
+import org.sakaiproject.api.app.melete.MeleteCHService;
 
 /**
  * @author Rashmi
@@ -55,7 +59,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 	 private Section section = null;
 	 private Log logger = LogFactory.getLog(SectionServiceImpl.class);
 	 private MeleteLicenseDB meleteLicenseDB;
-
+	 private MeleteCHService meleteCHService;
 		/*******************************************************************************
 		* Init and Destroy
 		*******************************************************************************/
@@ -358,6 +362,61 @@ public class SectionServiceImpl implements Serializable, SectionService{
 		return mr;
 	  }
 
+	  public List<String> findResourceInUse(String selResourceId, String courseId)
+	  {
+		  try{
+			  List<String> resourceUseList = null;
+			  //found in section resources so break
+			  resourceUseList = sectiondb.checkInSectionResources(selResourceId, courseId);
+			  if (resourceUseList != null && resourceUseList.size() > 0) return resourceUseList;
+			  
+			  logger.debug("now looking in embed data as section resources don't have it");
+			  String lookingFor = "/access/meleteDocs/content" + selResourceId;
+			  //find in embedded data
+			  long starttime = System.currentTimeMillis();
+			  resourceUseList = new ArrayList<String>(0);
+			  List<Module> modList = moduleDB.getModules(courseId);
+			  Iterator<Module> i = modList.iterator();
+			  while (i.hasNext())
+			  {
+				Module mod = i.next();
+				
+				String modSeqXml = mod.getSeqXml();
+				SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
+				List<Element> allsec = SectionUtil.getAllSections(modSeqXml);
+				for (Iterator<Element> itr = allsec.iterator(); itr.hasNext();)
+				{
+					Section sec = sectiondb.getSection(Integer.parseInt(((Element) itr.next()).attributeValue("id")));
+					if (!sec.getContentType().equals("typeEditor")) continue;
+					List<String> secEmbed = meleteCHService.findAllEmbeddedImages(sec.getSectionResource().getResource().getResourceId());
+				
+					if (secEmbed != null && secEmbed.contains(lookingFor)) {
+						String foundAt = sec.getModule().getTitle() + " >> " + sec.getTitle();
+						resourceUseList.add(foundAt);
+						long endtime = System.currentTimeMillis();
+						logger.debug("found in " +(endtime - starttime));	
+						return  resourceUseList;
+					}
+				}
+					
+			}
+				long endtime = System.currentTimeMillis();
+				
+				logger.debug("time to process all files to get all embedded data" +(endtime - starttime));			
+			return null;
+			
+		  }catch(Exception ex)
+			{
+				logger.error("SectionServiceImpl --find resource in use failed" );
+				return null;
+			}
+	  }
+	  
+	  public void deleteResourceInUse(String delResourceId,String courseId) throws Exception
+	  {
+		  sectiondb.deleteResourceInUse(delResourceId, courseId);
+	  }
+	  
 	/**
 	 * @return Returns the sectiondb.
 	 */
@@ -398,5 +457,13 @@ public class SectionServiceImpl implements Serializable, SectionService{
 	 */
 	public void setMeleteLicenseDB(MeleteLicenseDB meleteLicenseDB) {
 		this.meleteLicenseDB = meleteLicenseDB;
+	}
+	
+	/**
+	 * @param meleteCHService the meleteCHService to set
+	 */
+	public void setMeleteCHService(MeleteCHService meleteCHService)
+	{
+		this.meleteCHService = meleteCHService;
 	}
 }

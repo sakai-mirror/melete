@@ -104,7 +104,7 @@ function fillupload()
 							                    	<h:panelGrid id="uploadSView2" columns="1" width="100%">	
 															<h:column>						                    													
 																<f:subview id="ResourceListingForm" >	
-																					<jsp:include page="edit_list_section_resources.jsp"/> 
+																		<jsp:include page="edit_list_section_resources.jsp"/> 
 																</f:subview>																																	
 														</h:column>
 														</h:panelGrid>
