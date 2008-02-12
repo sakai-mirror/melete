@@ -157,7 +157,7 @@ function showEdateCal()
 				</td>
                 <td width="472" align="left" valign="top">
 					  <a name="startCalender"></a> <h:inputText id="startDate" 
-                           value="#{addModulePage.startDate}" size="22" styleClass="formtext" tabindex="4">
+                           value="#{addModulePage.moduleShdates.startDate}" size="22" styleClass="formtext" tabindex="4">
 		        	      <f:convertDateTime pattern="M/d/yyyy hh:mm a"/>
         		    </h:inputText>
 		            <h:outputLink id="viewsdateCal" onclick="showSdateCal()" value="#startCalender" tabindex="5">
@@ -173,7 +173,7 @@ function showEdateCal()
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.add_module_end_date}" /></td>
                 <td width="472" align="left" valign="top">
 				<a name="endCalender"></a><h:inputText id="endDate" 
-                           value="#{addModulePage.endDate}" size="22" styleClass="formtext" tabindex="6">
+                           value="#{addModulePage.moduleShdates.endDate}" size="22" styleClass="formtext" tabindex="6">
              			  <f:convertDateTime pattern="M/d/yyyy hh:mm a"/>
           		 </h:inputText>
           <h:outputLink id="viewedateCal" onclick="showEdateCal()" value="#endCalender" tabindex="7">

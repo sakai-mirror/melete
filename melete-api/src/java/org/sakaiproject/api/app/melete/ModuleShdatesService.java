@@ -21,7 +21,7 @@
 **********************************************************************************/
 package org.sakaiproject.api.app.melete;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Filename:
@@ -31,13 +31,14 @@ import java.sql.Timestamp;
  * Copyright 2004, Foothill College
  */
 public interface ModuleShdatesService {
-	public abstract Timestamp getStartDate();
 
-	public abstract void setStartDate(Timestamp startDate);
+	public abstract Date getStartDate();
 
-	public abstract Timestamp getEndDate();
+	public abstract void setStartDate(Date startDate);
 
-	public abstract void setEndDate(Timestamp endDate);
+	public abstract Date getEndDate();
+
+	public abstract void setEndDate(Date endDate);
 
 	public abstract int getVersion();
 

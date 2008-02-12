@@ -372,8 +372,8 @@ public class ListAuthModulesPage implements Serializable
 								if (errmdbean.getModuleId() == mdbean.getModuleId())
 								{
 									mdbean.setDateFlag(true);
-									mdbean.setStartDate(errmdbean.getStartDate());
-									mdbean.setEndDate(errmdbean.getEndDate());
+									mdbean.getModuleShdate().setStartDate(errmdbean.getModuleShdate().getStartDate());
+									mdbean.getModuleShdate().setEndDate(errmdbean.getModuleShdate().getEndDate());
 								}
 							}
 
@@ -862,29 +862,29 @@ public class ListAuthModulesPage implements Serializable
 			{
 				ModuleDateBean mdbean = (ModuleDateBean) moduleIter.next();
 				mdbean.setDateFlag(false);
-				if (mdbean.getStartDate() != null)
+				if (mdbean.getModuleShdate().getStartDate() != null)
 				{
 					stCal = Calendar.getInstance();	
-					stCal.setTime(mdbean.getStartDate());
+					stCal.setTime(mdbean.getModuleShdate().getStartDate());
 					if (stCal.get(Calendar.YEAR) > 9999)
 					{
 					  yearTooBigFlag = true;
 					  mdbean.setDateFlag(true);
 					}
 				}
-				if (mdbean.getEndDate() != null)
+				if (mdbean.getModuleShdate().getEndDate() != null)
 				{
 					enCal = Calendar.getInstance();	
-					enCal.setTime(mdbean.getEndDate());
+					enCal.setTime(mdbean.getModuleShdate().getEndDate());
 					if (enCal.get(Calendar.YEAR) > 9999)
 					{
 					  yearTooBigFlag = true;
 					  mdbean.setDateFlag(true);
 					}
 				}
-				if ((mdbean.getStartDate() != null)&&(mdbean.getEndDate() != null))
+				if ((mdbean.getModuleShdate().getStartDate() != null)&&(mdbean.getModuleShdate().getEndDate() != null))
 				{
-				  if (mdbean.getStartDate().compareTo(mdbean.getEndDate()) >= 0)
+				  if (mdbean.getModuleShdate().getStartDate().compareTo(mdbean.getModuleShdate().getEndDate()) >= 0)
 				  {
 					dateErrFlag = true;
 					mdbean.setDateFlag(true);
