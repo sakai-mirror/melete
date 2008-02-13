@@ -50,6 +50,8 @@ import org.sakaiproject.api.app.melete.exception.MeleteException;
 
 public class SectionDB implements Serializable {
 	private HibernateUtil hibernateUtil;
+	private MeleteBookmarksDB bookmarksDB;
+	
 	 /** Dependency: a logger component. */
 	 private Log logger = LogFactory.getLog(SectionDB.class);
 
@@ -218,7 +220,7 @@ public class SectionDB implements Serializable {
 			}
 	}
 
-	 public void deleteSection(Section sec) throws MeleteException
+	 public void deleteSection(Section sec, String userId) throws MeleteException
 	 {
 		 try{
 		       Transaction tx = null;
@@ -262,6 +264,16 @@ public class SectionDB implements Serializable {
 			{
 		      	hibernateUtil.closeSession();
     		  }
+		    if (userId != null)
+		    {	
+		    MeleteBookmarks mb = new MeleteBookmarks();
+			mb.setUserId(userId);
+			mb.setCourseId(sec.getModule().getCoursemodule().getCourseId());
+			mb.setModuleId(sec.getModuleId());
+			mb.setSectionId(sec.getSectionId());
+			bookmarksDB.deleteBookmark(mb);
+		    }
+			
 		}
 	      catch (Exception ex)
 		  {
@@ -716,6 +728,11 @@ public class SectionDB implements Serializable {
 	public void setHibernateUtil(HibernateUtil hibernateUtil) {
 		this.hibernateUtil = hibernateUtil;
 	}
+	
+	public void setBookmarksDB(MeleteBookmarksDB bookmarksDB)
+	{
+		this.bookmarksDB = bookmarksDB;
+	}	
 
 	/**
 	 * @param logger The logger to set.

@@ -51,8 +51,8 @@ public interface SectionService{
    
    public List getSortSections(ModuleObjService module);
    
-   public void deleteSection(SectionObjService sec);
-   public void deleteSections(List sectionBeans) throws Exception;
+   public void deleteSection(SectionObjService sec, String userId);
+   public void deleteSections(List sectionBeans, String userId) throws Exception;
 
    public ArrayList getMeleteLicenses();
    public String[] getCCLicenseURL(boolean reqAttr, boolean allowCmrcl, int allowMod);

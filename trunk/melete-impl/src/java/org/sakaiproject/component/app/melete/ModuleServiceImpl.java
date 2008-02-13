@@ -311,7 +311,7 @@ public List getModuleDateBeans(String userId, String courseId) {
 
 
 // end - mallika
-  public void deleteModules(List moduleDateBeans, String courseId)
+  public void deleteModules(List moduleDateBeans, String courseId, String userId)
   {
 	  List cmodList = null;
 
@@ -335,7 +335,7 @@ public List getModuleDateBeans(String userId, String courseId) {
 			  {
 				  try
 					{
-				  		moduledb.deleteModule(cmod);
+				  		moduledb.deleteModule(cmod, userId);
 					}
 				  	catch (Exception ex)
 					{
