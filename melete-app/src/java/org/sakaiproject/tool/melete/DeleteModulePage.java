@@ -64,6 +64,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 	private List moduleDateBeans = null;
 	private List sectionBeans = null;
 	String courseId;
+	String userId;
 	private boolean sameModuleSectionSelected;
 	
     public DeleteModulePage(){
@@ -72,9 +73,8 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
     	this.moduleDateBeans = null;
     	this.sectionBeans = null;
     	sameModuleSectionSelected = false;
-    	FacesContext context = FacesContext.getCurrentInstance();
-    	Map sessionMap = context.getExternalContext().getSessionMap();
-    	courseId = (String)sessionMap.get("courseId");
+    	courseId = null;
+    	userId = null;
     }
 
   	/*
@@ -194,11 +194,11 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			{	
 				 // check if sections of selected module are selected too
 				if(sectionBeans != null)CheckSectionsSelected();
-				moduleService.deleteModules(this.moduleDateBeans,courseId);
+				moduleService.deleteModules(this.moduleDateBeans,getCourseId(), getUserId());
 			}
 			if (getSectionSelected() == true)
 			{	
-			   sectionService.deleteSections(this.sectionBeans);
+			   sectionService.deleteSections(this.sectionBeans, getUserId());
 			}	
 		}
 		catch(MeleteException me)
@@ -235,12 +235,12 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			{		
 				 // check if sections of selected module are selected too
 		        removeSectionsSelectedToModule();
-				moduleService.deleteModules(this.moduleDateBeans,courseId);	
+				moduleService.deleteModules(this.moduleDateBeans,getCourseId(), getUserId());	
 				sameModuleSectionSelected = false;
 			}
 			if (getSectionSelected() == true)
 			{				
-			   sectionService.deleteSections(this.sectionBeans);			   
+			   sectionService.deleteSections(this.sectionBeans, getUserId());			   
 			}	 
 		}		
 		catch(Exception ex)
@@ -279,6 +279,26 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		sameModuleSectionSelected = false;
 		return "list_auth_modules";
 	}
+	private String getCourseId()
+	{
+		if (courseId == null)
+		{
+		FacesContext context = FacesContext.getCurrentInstance();
+	  	Map sessionMap = context.getExternalContext().getSessionMap();
+		courseId = (String)sessionMap.get("courseId");
+		}
+		return courseId;
+	}
+	private String getUserId()
+	{
+		if (userId == null)
+		{
+		FacesContext context = FacesContext.getCurrentInstance();
+	  	Map sessionMap = context.getExternalContext().getSessionMap();
+		userId = (String)sessionMap.get("userId");
+		}
+		return userId;
+	}	
 	/**
 	 * @return Returns the ModuleService.
 	 */

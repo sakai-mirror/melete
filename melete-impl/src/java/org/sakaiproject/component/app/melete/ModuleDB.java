@@ -1105,8 +1105,9 @@ public class ModuleDB implements Serializable {
 
 
 
-	 public void deleteModule(CourseModule cmod) throws Exception {
+	 public void deleteModule(CourseModule cmod, String userId) throws Exception {
 	     	Transaction tx = null;
+	     	Integer modModuleId = null;
 		 	try
 			{
 
@@ -1117,7 +1118,7 @@ public class ModuleDB implements Serializable {
 
 		      cmod.setDeleteFlag(true);
 		      modSeqNo = cmod.getSeqNo();
-		      Integer modModuleId = cmod.getModuleId();
+		      modModuleId = cmod.getModuleId();
 		     cmod.setSeqNo(-1);
 		      session.saveOrUpdate(cmod);
 
@@ -1175,6 +1176,14 @@ public class ModuleDB implements Serializable {
 					  throw he;
 				  }
 			}
+		    if (userId != null)
+		    {
+		    MeleteBookmarks mb = new MeleteBookmarks();
+			mb.setUserId(userId);
+			mb.setCourseId(cmod.getCourseId());
+			mb.setModuleId(modModuleId);
+			bookmarksDB.deleteBookmark(mb);
+		    }
 
 	     }
 

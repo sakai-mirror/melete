@@ -80,7 +80,7 @@ public interface ModuleService{
 
 	public CourseModuleService getCourseModule(int moduleId,  String courseId) throws Exception;
 
-	public void deleteModules(List moduleDateBeans, String courseId);
+	public void deleteModules(List moduleDateBeans, String courseId, String userId);
 
 	public int getMaxSeqNo(String courseId);
 	public int getNextSeqNo(String courseId, int currSeqNo);

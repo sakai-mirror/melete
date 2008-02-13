@@ -146,11 +146,11 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			}
 	}
 
-	public void deleteSection(SectionObjService sec)
+	public void deleteSection(SectionObjService sec, String userId)
 	{
 		try
 		{
-	  		sectiondb.deleteSection((Section)sec);
+	  		sectiondb.deleteSection((Section)sec, userId);
 		}
 	  	catch (Exception ex)
 		{
@@ -158,7 +158,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 		}
 
 	}
-	public void deleteSections(List sectionBeans) throws MeleteException
+	public void deleteSections(List sectionBeans, String userId) throws MeleteException
 	{
 		 List secList = null;
 		 for (ListIterator i = sectionBeans.listIterator(); i.hasNext(); )
@@ -166,7 +166,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			SectionBean secbean = (SectionBean)i.next();
 
 			Section sec = (Section) secbean.getSection();
-  		    sectiondb.deleteSection(sec);
+  		    sectiondb.deleteSection(sec, userId);
 	      }
 	}
 

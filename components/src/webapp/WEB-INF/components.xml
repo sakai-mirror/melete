@@ -113,6 +113,9 @@
 			<property name="hibernateUtil">
             <ref local="org.sakaiproject.component.app.melete.HibernateUtil" />
         </property>
+          <property name="bookmarksDB">
+            <ref local="org.sakaiproject.component.app.melete.MeleteBookmarksDB" />
+        </property>
 	</bean>
 	
 
