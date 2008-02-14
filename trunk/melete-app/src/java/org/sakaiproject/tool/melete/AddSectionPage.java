@@ -25,17 +25,27 @@ package org.sakaiproject.tool.melete;
 import java.util.*;
 import java.io.File;
 import java.io.Serializable;
+
+import javax.faces.component.UICommand;
+import javax.faces.component.UIData;
 import javax.faces.component.UIInput;
+import javax.faces.component.UIParameter;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.application.FacesMessage;
+
+import org.sakaiproject.tool.melete.SectionPage.DisplaySecResources;
 import org.sakaiproject.util.ResourceLoader;
 
 import org.sakaiproject.api.app.melete.exception.MeleteException;
 import org.sakaiproject.component.app.melete.MeleteResource;
 import org.sakaiproject.content.api.ContentResourceEdit;
-import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+import org.sakaiproject.content.api.ContentResource;
+import org.sakaiproject.entity.api.ResourceProperties;
 
 
 //import org.sakaiproject.jsf.ToolBean;
@@ -126,9 +136,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		     String uploadHomeDir = context.getExternalContext().getInitParameter("uploadDir");
 
 			String addCollId = getMeleteCHService().getCollectionId( section.getContentType(), module.getModuleId());
-			if(section.getContentType().equals("typeExistUpload")) section.setContentType("typeUpload");
-			if(section.getContentType().equals("typeExistLink")) section.setContentType("typeLink");
-
+	
 			// step 1: insert section
 			Integer newSectionId = sectionService.insertSection(module,section);
 			section.setSectionId(newSectionId);
@@ -149,18 +157,9 @@ public class AddSectionPage extends SectionPage implements Serializable{
 				else
 					{
 			//	Step 2.2: add the new resource to course site module /uploads collection
-				// in case of upload, resource is added on clicking Continue	
-					if(!section.getContentType().equals("typeUpload"))
-						{
-						selResourceIdFromList = null;
-						String newResourceId = addResourceToMeleteCollection(uploadHomeDir,addCollId);
-						meleteResource.setResourceId(newResourceId);
-						}
-					// in case of Upload if change in resource properties save that
-					else 
-						{
-						getMeleteCHService().editResourceProperties(meleteResource.getResourceId(), secResourceName, secResourceDescription);
-						}
+				// in case of upload and link, resource is added on clicking Continue	
+					getMeleteCHService().editResourceProperties(meleteResource.getResourceId(), secResourceName, secResourceDescription);
+			
 					}
 
 			//step 3: insert section resource in melete table i.e. if new resource then insert in melete resource table
@@ -208,7 +207,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	 */
 	public String redirectLink()
 	{
-		return "addmodulesections";
+		return "ContentLinkServerView";
 	}
 
 	/*
@@ -327,6 +326,126 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	  {
 	  		selResourceIdFromList = null;
 	  		renderSelectedResource = false;
+	  		setLinkUrl(currLinkUrl);
 	  		return "addmodulesections";
 	  }
+	  
+	  public void selectedResourceDeleteAction(ActionEvent evt)
+		{
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			Map sessionMap = ctx.getExternalContext().getSessionMap();
+			String courseId = (String)sessionMap.get("courseId");
+			UIViewRoot root = ctx.getViewRoot();
+			UIData table = (UIData) root.findComponent("ServerViewForm:ResourceListingForm").findComponent("table");
+			DisplaySecResources selectedDr = (DisplaySecResources) table.getRowData();
+			logger.debug("selected row to delete " + selectedDr.getResource_id());
+			 
+			ValueBinding binding =Util.getBinding("#{deleteResourcePage}");
+			DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
+			delResPage.resetValues();
+			if(section.getContentType().equals("typeUpload"))
+				delResPage.setFromPage("ContentUploadServerView");
+			else if (section.getContentType().equals("typeLink"))
+				delResPage.setFromPage("ContentLinkServerView");		
+			
+			delResPage.setResourceName(selectedDr.getResource_title());
+			delResPage.processDeletion(selectedDr.getResource_id(), courseId);		
+			return;
+		}
+	
+	  public String redirectDeleteLink()
+		{
+			 return "delete_resource";
+		}
+	  
+	  public String gotoServerLinkView()
+	  {
+			expandAllFlag = true;
+			renderSelectedResource = false;
+			selResourceIdFromList = null;			
+			setLinkUrl(null);			
+			refreshCurrSiteResourcesList();
+			return "ContentLinkServerView";
+	  }
+	  
+	  public String setServerUrl()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+		String errMsg = null;
+		logger.debug("set server url of add page");
+		try
+		{
+			// new link provided
+			if (selResourceIdFromList == null)
+			{
+				if (getLinkUrl().equals("http://") || getLinkUrl().equals("https://"))
+				{
+					errMsg = bundle.getString("select_or_cancel");
+					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "select_or_cancel", errMsg));
+					return "ContentLinkServerView";
+				}
+				String addCollectionId = getMeleteCHService().getUploadCollectionId();
+				String newResourceId = addResourceToMeleteCollection(null, addCollectionId);
+				meleteResource.setResourceId(newResourceId);
+				currLinkUrl = getLinkUrl();
+			}
+			logger.debug("currlink value in setServer is" + currLinkUrl);
+			createLinkUrl();	
+			ctx.renderResponse();
+		}
+			catch (Exception e)
+			{
+				logger.error("error in set server url for edit section content" + errMsg);
+				e.printStackTrace();
+				if (e.getMessage() != null)
+				{	
+				  errMsg = bundle.getString(e.getMessage());
+				  ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), errMsg));
+				}  
+				return "ContentLinkServerView";
+			}
+			return "addmodulesections";
+		}
+	 
+	  public void selectedResourceAction(ActionEvent evt) {
+	    	FacesContext ctx = FacesContext.getCurrentInstance();
+	    	UICommand cmdLink = (UICommand)evt.getComponent();
+
+	      	List cList = cmdLink.getChildren();
+	    	UIParameter param = (UIParameter) cList.get(0);
+	    	selResourceIdFromList = (String)param.getValue();
+	    	if (logger.isDebugEnabled()) logger.debug("selected resource id by user is " + selResourceIdFromList);
+
+	    	// populate properties panel with the selected resource
+	    	try{
+	    			ContentResource cr= getMeleteCHService().getResource(selResourceIdFromList);
+			    	this.secResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
+			    	this.secResourceDescription = cr.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION);
+			    	if(cr.getContentLength() > 0)
+						currLinkUrl = new String(cr.getContent());
+	    		//get resource object
+			    	MeleteResource existResource = (MeleteResource)sectionService.getMeleteResource(selResourceIdFromList);
+			    	//just take resource properties from this object as its assoc with another section
+			    	if(existResource != null)
+			    		{
+			    		meleteResource = existResource;
+			    		getM_license().setInitialValues(formName, sectionService, existResource);
+
+					// render selected file name
+			    		selectedResourceName = secResourceName;
+			    		renderSelectedResource = true;
+			    		if (logger.isDebugEnabled()) logger.debug("values changed in resource action for res name and desc" + secResourceName + secResourceDescription);
+			    	}
+			    	ctx.renderResponse();
+	    	}
+
+	    	catch(Exception ex)
+			{
+	    		ex.printStackTrace();
+	    		logger.error("error while accessing content resource");
+			}
+			return;
+		}
+
 }

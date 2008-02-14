@@ -212,8 +212,7 @@ function contentChangeSubmit()
 												<f:selectItem itemValue="notype" itemLabel="#{msgs.addmodulesections_choose_one}"/>	
 											    <f:selectItem itemValue="typeEditor" itemLabel="#{msgs.addmodulesections_compose}"/>	
 												<f:selectItem itemValue="typeUpload"  itemLabel="#{msgs.addmodulesections_upload_local}"/> 										
-												<f:selectItem itemValue="typeLink"   itemLabel="#{msgs.addmodulesections_link_url}"/>
-												<f:selectItem itemValue="typeExistLink"   itemLabel="#{msgs.addmodulesections_link_url_server}"/>
+												<f:selectItem itemValue="typeLink"   itemLabel="#{msgs.addmodulesections_link_url}"/>												
 											 </h:selectOneMenu>
 										</td>
 										</tr>
@@ -221,12 +220,7 @@ function contentChangeSubmit()
 										 <td colspan="2">
 											 <f:subview id="ContentLinkView" rendered="#{addSectionPage.shouldRenderLink}">
 												<jsp:include page="ContentLinkView.jsp"/> 
-											</f:subview>	
-											<!-- resource listing begin-->											
-											 	<f:subview id="ResourceListingForm" rendered="#{addSectionPage.shouldRenderResources}" >	
-																	<jsp:include page="list_section_resources.jsp"/> 
-													</f:subview>											
-				<!-- resource listing end-->			
+											</f:subview>											
 												</td></tr>	
 												<tr> 
 										 <td colspan="2" align="center"> 

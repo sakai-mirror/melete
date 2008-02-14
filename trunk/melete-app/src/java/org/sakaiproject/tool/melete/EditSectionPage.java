@@ -62,22 +62,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 	private String secResourceDescription1;
 
 	private boolean shouldRenderContentTypeSelect = false;
-
-	// rendering flags
-	private String currLinkUrl;
-
-	private String displayCurrLink;
-
+	
 	// picking from server
 	private String editSelection;
-
-	private SectionResourceLicenseSelector m_selected_license;
-
-	private String selectedResourceName;
-
-	private String selectedResourceDescription;
-
-	private MeleteResource selectedResource;
 
 	private String containCollectionId;
 
@@ -551,35 +538,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	public void setModuleService(ModuleService moduleService)
 	{
 		this.moduleService = moduleService;
-	}
-
-	public String getDisplayCurrLink()
-	{
-		if (currLinkUrl != null && currLinkUrl.length() > 50)
-			displayCurrLink = currLinkUrl.substring(0, 50) + "...";
-		else
-			displayCurrLink = currLinkUrl;
-
-		return displayCurrLink;
-	}
-
-	/**
-	 * @return Returns the currLinkUrl.
-	 */
-	public String getCurrLinkUrl()
-	{
-		if (!(getLinkUrl().equals("http://") || getLinkUrl().equals("https://"))) currLinkUrl = getLinkUrl();
-		return currLinkUrl;
-	}
-
-	/**
-	 * @param currLinkUrl
-	 *        The currLinkUrl to set.
-	 */
-	public void setCurrLinkUrl(String currLinkUrl)
-	{
-		this.currLinkUrl = currLinkUrl;
-	}
+	}	
 
 	/**
 	 * @return Returns the editSelection.
@@ -619,58 +578,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 	public void setM_selected_license(SectionResourceLicenseSelector m_selected_license)
 	{
 		this.m_selected_license = m_selected_license;
-	}
-
-	/**
-	 * @return Returns the selectedResource.
-	 */
-	public MeleteResource getSelectedResource()
-	{
-		if (selectedResource == null) selectedResource = new MeleteResource();
-		return selectedResource;
-	}
-
-	/**
-	 * @param selectedResource
-	 *        The selectedResource to set.
-	 */
-	public void setSelectedResource(MeleteResource selectedResource)
-	{
-		this.selectedResource = selectedResource;
-	}
-
-	/**
-	 * @return Returns the selectedResourceDescription.
-	 */
-	public String getSelectedResourceDescription()
-	{
-		return selectedResourceDescription;
-	}
-
-	/**
-	 * @param selectedResourceDescription
-	 *        The selectedResourceDescription to set.
-	 */
-	public void setSelectedResourceDescription(String selectedResourceDescription)
-	{
-		this.selectedResourceDescription = selectedResourceDescription;
-	}
-
-	/**
-	 * @return Returns the selectedResourceName.
-	 */
-	public String getSelectedResourceName()
-	{
-		return selectedResourceName;
-	}
-
-	/**
-	 * @param selectedResourceName
-	 *        The selectedResourceName to set.
-	 */
-	public void setSelectedResourceName(String selectedResourceName)
-	{
-		this.selectedResourceName = selectedResourceName;
 	}
 
 	public String gotoServerView()
@@ -810,7 +717,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 				secResourceName = selectedResourceName;
 				secResourceDescription = selectedResourceDescription;
 				setM_license(m_selected_license);
-				currLinkUrl = new String(getMeleteCHService().getResource(selResourceIdFromList).getContent());
+				ContentResource cr = getMeleteCHService().getResource(selResourceIdFromList);
+				if(cr.getContentLength() > 0)
+					currLinkUrl = new String(cr.getContent());
 			}
 			meleteResource = selectedResource;
 			ctx.renderResponse();
