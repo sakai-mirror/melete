@@ -39,14 +39,14 @@
 					 <tr><td height="20" colspan="2"> 
 														<h:outputText id="editlinkText6" value="#{msgs.editcontentlinkserverview_provide}" />
 														<h:outputText id="editlinkText7" value=" " styleClass="ExtraPaddingClass"/>
-														 <h:inputText id="link" value="#{editSectionPage.linkUrl}" size="40" /> 	
+														 <h:inputText id="link" value="#{addSectionPage.linkUrl}" size="40" /> 	
 					</td></tr>	
 					 <tr><td colspan="2"> &nbsp; </td></tr>	
 					</table> </td></tr>       
 					     <tr>
 					          	<td  colspan="2">
 					          	<div align="center">
-											<h:commandLink id="addButton_1"  action="#{editSectionPage.setServerUrl}" >
+											<h:commandLink id="addButton_1" action="#{addSectionPage.setServerUrl}">
 												<h:graphicImage id="addImg2_1" value="#{msgs.im_continue}" styleClass="BottomImgSpace"
 												onmouseover="this.src = '#{msgs.im_continue_over}'" 
 												onmouseout="this.src = '#{msgs.im_continue}'" 
@@ -54,7 +54,7 @@
 												onmouseup="this.src = '#{msgs.im_continue_over}'"/>
 										</h:commandLink> 
 				
-									<h:commandLink id="cancelButton_1"  action="#{editSectionPage.cancelServerFile}"  immediate="true">
+									<h:commandLink id="cancelButton_1" action="#{addSectionPage.cancelServerFile}" immediate="true">
 										<h:graphicImage id="cancelImg_1" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
 											onmouseover="this.src = '#{msgs.im_cancel_over}'" 
 											onmouseout="this.src = '#{msgs.im_cancel}'" 
@@ -74,21 +74,24 @@
 										<table width="100%" border="0" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >											
 							               	<tr valign="top">
 							                   	<td colspan="2">	
-							                   		<h:outputText value="#{msgs.edit_list_resources_selected_res}"  rendered="#{editSectionPage.renderSelectedResource}" styleClass="blue" />
-    												<h:outputText value="#{editSectionPage.selectedResourceName}" rendered="#{editSectionPage.renderSelectedResource}" styleClass="bold"/>
-												<h:outputText value="#{msgs.edit_list_resources_selected_res_1}"  rendered="#{editSectionPage.renderSelectedResource}" styleClass="blue"/>
+							                   		<h:outputText value="#{msgs.edit_list_resources_selected_res}"  rendered="#{addSectionPage.renderSelectedResource}" styleClass="blue" />
+    												<h:outputText value="#{addSectionPage.selectedResourceName}" rendered="#{addSectionPage.renderSelectedResource}" styleClass="bold"/>
+												<h:outputText value="#{msgs.edit_list_resources_selected_res_1}"  rendered="#{addSectionPage.renderSelectedResource}" styleClass="blue"/>
 											</td>  </tr>
 									<tr><td height="20" colspan="2" class="maintabledata8"> <h:outputText id="Stext3" value="#{msgs.edit_list_resources_select}" styleClass="bold"/> </td></tr>										   	<tr valign="top">
 							                    	<td colspan="2">		                    	
 														<h:panelGrid id="uploadSView1" columns="1" width="100%">	
 														<h:column>
 																			<f:subview id="ResourceListingForm" >	
-																					<jsp:include page="edit_list_section_resources.jsp"/> 
+																					<jsp:include page="list_section_resources.jsp"/> 
 																</f:subview>		
 														</h:column>													
 														</h:panelGrid>
 							                    	</td>							                    	
 							                  	</tr>						
+		             	         	</td>
+			                  	</tr>
+			              		</table>		
 		             	         	</td>
 			                  	</tr>
 			              		</table>
@@ -97,7 +100,7 @@
 			            <tr>
 					          	<td  colspan="2">
 					          	<div align="center">
-											<h:commandLink id="addButton"  action="#{editSectionPage.setServerUrl}" >
+											<h:commandLink id="addButton" action="#{addSectionPage.setServerUrl}">
 						<h:graphicImage id="addImg2" value="#{msgs.im_continue}" styleClass="BottomImgSpace"
 						onmouseover="this.src = '#{msgs.im_continue_over}'" 
 						onmouseout="this.src = '#{msgs.im_continue}'" 
@@ -106,7 +109,7 @@
 				/>
 				</h:commandLink> 
 				
-				<h:commandLink id="cancelButton"  action="#{editSectionPage.cancelServerFile}"  immediate="true">
+				<h:commandLink id="cancelButton"  action="#{addSectionPage.cancelServerFile}"  immediate="true">
 					<h:graphicImage id="cancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
 						onmouseover="this.src = '#{msgs.im_cancel_over}'" 
 						onmouseout="this.src = '#{msgs.im_cancel}'" 

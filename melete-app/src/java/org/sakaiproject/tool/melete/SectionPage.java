@@ -4,19 +4,19 @@
 *
 ***********************************************************************************
 *
-* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project 
-*   
-* Licensed under the Apache License, Version 2.0 (the "License"); you 
-* may not use this file except in compliance with the License. You may 
-* obtain a copy of the License at 
-*   
-* http://www.apache.org/licenses/LICENSE-2.0 
-*   
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the License is distributed on an "AS IS" BASIS, 
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
-* implied. See the License for the specific language governing 
-* permissions and limitations under the License. 
+* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you
+* may not use this file except in compliance with the License. You may
+* obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+* implied. See the License for the specific language governing
+* permissions and limitations under the License.
 *
 **********************************************************************************/
 package org.sakaiproject.tool.melete;
@@ -132,8 +132,18 @@ public abstract class SectionPage implements Serializable {
 	  protected String secResourceDescription;
 	  protected MeleteResource meleteResource;
 	  protected String FCK_CollId;
-	  
-	  
+
+	 protected String currLinkUrl;
+     protected String displayCurrLink;
+     
+     protected String selectedResourceName;
+
+     protected String selectedResourceDescription;
+
+ 	protected MeleteResource selectedResource;
+ 	
+ 	protected SectionResourceLicenseSelector m_selected_license;
+
     public SectionPage()
             {
             module=null;
@@ -404,7 +414,7 @@ public abstract class SectionPage implements Serializable {
                     hiddenUpload = hiddenUpload.substring(hiddenUpload.lastIndexOf(File.separator)+1);
             }
     	}catch(Exception ex){
-    		logger.error("error accessing hidden upload field");}
+    		logger.debug("error accessing hidden upload field");}
             return hiddenUpload;
     }
 
@@ -433,7 +443,7 @@ public abstract class SectionPage implements Serializable {
             shouldRenderResources = contentTypeRadio.getValue().equals("typeExistUpload") ||
             							contentTypeRadio.getValue().equals("typeExistLink");
             shouldRenderNotype = contentTypeRadio.getValue().equals("notype");
-          
+
             selResourceIdFromList = null;
             secResourceName = null;
             secResourceDescription = null;
@@ -457,26 +467,26 @@ public abstract class SectionPage implements Serializable {
 	    		ValueBinding binding = Util.getBinding("#{authorPreferences}");
 	    		AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
 	    		String usereditor = preferencePage.getUserEditor();
-	    		
+
 		           if(contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor") != null && usereditor.equals(preferencePage.FCKEDITOR))
 		                {
 		                contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor").setRendered(shouldRenderEditor);
 		                 setFCKCollectionAttrib();
 		                }
-	           
+
 		           if(contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView") != null && usereditor.equals(preferencePage.SFERYX))
 		           		{
 		           		preferencePage.setDisplaySferyx(true);
 		           		contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView").setRendered(shouldRenderEditor);
 		           		}
-	            }       
-            
+	            }
+
             if(contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm") != null)
             {
             	expandAllFlag=true;
             	section.setContentType((String)contentTypeRadio.getValue());
                 getCurrSiteResourcesList();
-              contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm").setRendered(shouldRenderResources);              
+              contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm").setRendered(shouldRenderResources);
             }
     }
 
@@ -521,10 +531,10 @@ public abstract class SectionPage implements Serializable {
 	    		     	{
 	    		     		throw new MeleteException("add_section_bad_url");
 	    		     	}
-	    		  */   	
-	                    if ((secResourceName == null)||(secResourceName.trim().length()==0)) 
+	    		  */
+	                    if ((secResourceName == null)||(secResourceName.trim().length()==0))
 	                    	throw new MeleteException("URL_title_reqd");
-	                    
+
 	                    secContentData = new byte[linkUrl.length()];
 	                    secContentData = linkUrl.getBytes();
 	            }
@@ -571,7 +581,7 @@ public abstract class SectionPage implements Serializable {
             		contentEditor =  getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir,contentEditor);
             		getMeleteCHService().editResource(resourceId, contentEditor);
 	            }
-	            
+
 	            if(section.getContentType().equals("typeLink") || section.getContentType().equals("typeUpload"))
 	            {
 	                  getMeleteCHService().editResourceProperties(resourceId,secResourceName,secResourceDescription);
@@ -613,8 +623,8 @@ public abstract class SectionPage implements Serializable {
 	                    if(serverReplies != null && serverReplies.equals("OK"))
 	            		  		return "OK";
 	            		else return "Link possibly broken or not found";
-         	 	}	
-      */      	 
+         	 	}
+      */
             	 if(!linkUrl.startsWith(serverConfigurationService.getServerUrl()))
             	 	{
 	            		URL url = new URL(linkUrl);
@@ -704,7 +714,7 @@ public abstract class SectionPage implements Serializable {
 		  	rbPage.setRemoteFiles(null);
 		  	rbPage.setRemoteLinkFiles(null);
   		}
-  	
+
     if (logger.isDebugEnabled()) logger.debug("!!!!!!!!!reseting section values done !!!!!!!");
     }
 
@@ -781,7 +791,7 @@ public abstract class SectionPage implements Serializable {
             return access;
     }
 
-   
+
 
     /**
      * @return Returns the m_license.
@@ -843,11 +853,11 @@ public abstract class SectionPage implements Serializable {
               // filename on the client
              secResourceName = fi.getName();
              if (secResourceName.indexOf("/") != -1)
-             {	 
+             {
                secResourceName = secResourceName.substring(secResourceName.lastIndexOf("/")+1);
-             }  
+             }
              if (secResourceName.indexOf("\\") != -1)
-             {	 
+             {
                secResourceName = secResourceName.substring(secResourceName.lastIndexOf("\\")+1);
              }
              if (logger.isDebugEnabled()) logger.debug("Rsrc name is "+secResourceName);
@@ -953,7 +963,7 @@ public abstract class SectionPage implements Serializable {
 		getCurrSiteResourcesList();
 		return;
 	}
-	
+
 	/**
 	 * @return Returns the currSiteResourcesList.
 	 */
@@ -970,19 +980,19 @@ public abstract class SectionPage implements Serializable {
 			Pattern p1 = Pattern.compile("-[0-9]*");
 			List allmembers = null;
 			if(section == null || section.getContentType() == null) return null;
-			
+
 			//to create list of resource whose type is typeUpload
 				if(section.getContentType().equals("typeUpload") || section.getContentType().equals("typeExistUpload"))
 				{
 					allmembers = getMeleteCHService().getListofImagesFromCollection(uploadCollId);
 				}
-				
+
 				if(section.getContentType().equals("typeLink") || section.getContentType().equals("typeExistLink"))
 				{
 					allmembers = getMeleteCHService().getListofLinksFromCollection(uploadCollId);
 				}
-				
-			if(allmembers == null) return null;	
+
+			if(allmembers == null) return null;
 			Iterator allmembers_iter = allmembers.iterator();
 			while(allmembers_iter != null && allmembers_iter.hasNext())
 			{
@@ -992,8 +1002,8 @@ public abstract class SectionPage implements Serializable {
 				if (displayName.length() > 50) displayName = displayName.substring(0,50) + "...";
 				String rUrl = cr.getUrl().replaceAll(" ", "%20");
 				currSiteResourcesList.add(new DisplaySecResources(displayName, cr.getId(),rUrl));
-			}				
-			getListNav().setTotalSize(currSiteResourcesList.size()+1);		
+			}
+			getListNav().setTotalSize(currSiteResourcesList.size()+1);
 		}
 		} catch (Exception e){logger.error("error in creating list for server residing files" + e.toString());}
 		return currSiteResourcesList;
@@ -1007,10 +1017,10 @@ public abstract class SectionPage implements Serializable {
 		try{
 		if(currSiteResourcesList == null) getCurrSiteResourcesList();
 		if(currSiteResourcesList != null)
-		{	
+		{
 			int fromIndex = getListNav().getCurrIndex();
 			int toIndex = getListNav().getEndIndex();
-		
+
 			logger.debug("from and to index and total size" + fromIndex + "," +toIndex +"," +currSiteResourcesList.size());
 			displayResourcesList = null;
 			if(toIndex > fromIndex)
@@ -1023,47 +1033,6 @@ public abstract class SectionPage implements Serializable {
 		return displayResourcesList;
 	}
 	
-	/*
-	 *  action listener for currenet site resource listings. It sets the variable
-	 */
-	public void selectedResourceAction(ActionEvent evt) {
-    	FacesContext ctx = FacesContext.getCurrentInstance();
-    	UICommand cmdLink = (UICommand)evt.getComponent();
-
-      	List cList = cmdLink.getChildren();
-    	UIParameter param = (UIParameter) cList.get(0);
-    	selResourceIdFromList = (String)param.getValue();
-    	if (logger.isDebugEnabled()) logger.debug("selected resource id by user is " + selResourceIdFromList);
-
-    	// populate properties panel with the selected resource
-    	try{
-    			ContentResource cr= getMeleteCHService().getResource(selResourceIdFromList);
-		    	this.secResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
-		    	this.secResourceDescription = cr.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION);
-
-    		//get resource object
-		    	MeleteResource existResource = (MeleteResource)sectionService.getMeleteResource(selResourceIdFromList);
-		    	//just take resource properties from this object as its assoc with another section
-		    	if(existResource != null)
-		    		{
-		    		meleteResource = existResource;
-		    		getM_license().setInitialValues(formName, sectionService, existResource);
-
-				// render selected file name
-		    		renderSelectedResource = true;
-		    		if (logger.isDebugEnabled()) logger.debug("values changed in resource action for res name and desc" + secResourceName + secResourceDescription);
-		    	}
-		    	ctx.renderResponse();
-    	}
-
-    	catch(Exception ex)
-		{
-    		ex.printStackTrace();
-    		logger.error("error while accessing content resource");
-		}
-		return;
-	}
-
 	 //Mallika - 10/13/06 - new method to check if uploads directory exists
     public void checkUploadExists()
     {
@@ -1220,15 +1189,15 @@ public abstract class SectionPage implements Serializable {
 			}
 		});
 	}
-     
-     
+
+
 	/**
 	 * @return Returns the fCK_CollId.
 	 */
 	public String getFCK_CollId() {
 		return FCK_CollId;
 	}
-	
+
 	/**
 	 * @return Returns the listNav.
 	 */
@@ -1251,7 +1220,7 @@ public abstract class SectionPage implements Serializable {
 	public String getSelResourceIdFromList() {
 		return selResourceIdFromList;
 	}
-	
+
 	/**
 	 * @return Returns the uploadFileName.
 	 */
@@ -1265,6 +1234,87 @@ public abstract class SectionPage implements Serializable {
 	public void setUploadFileName(String uploadFileName) {
 		this.uploadFileName = uploadFileName;
 	}
+
+	public String getDisplayCurrLink()
+	{
+		if (currLinkUrl != null && currLinkUrl.length() > 50)
+			displayCurrLink = currLinkUrl.substring(0, 50) + "...";
+		else
+			displayCurrLink = currLinkUrl;
+
+		return displayCurrLink;
+	}
+
+	/**
+	 * @return Returns the currLinkUrl.
+	 */
+	public String getCurrLinkUrl()
+	{
+		if (!(getLinkUrl().equals("http://") || getLinkUrl().equals("https://"))) currLinkUrl = getLinkUrl();
+		return currLinkUrl;
+	}
+
+	/**
+	 * @param currLinkUrl
+	 *        The currLinkUrl to set.
+	 */
+	public void setCurrLinkUrl(String currLinkUrl)
+	{
+		this.currLinkUrl = currLinkUrl;
+	}
+	
+	/**
+	 * @return Returns the selectedResource.
+	 */
+	public MeleteResource getSelectedResource()
+	{
+		if (selectedResource == null) selectedResource = new MeleteResource();
+		return selectedResource;
+	}
+
+	/**
+	 * @param selectedResource
+	 *        The selectedResource to set.
+	 */
+	public void setSelectedResource(MeleteResource selectedResource)
+	{
+		this.selectedResource = selectedResource;
+	}
+
+	/**
+	 * @return Returns the selectedResourceDescription.
+	 */
+	public String getSelectedResourceDescription()
+	{
+		return selectedResourceDescription;
+	}
+
+	/**
+	 * @param selectedResourceDescription
+	 *        The selectedResourceDescription to set.
+	 */
+	public void setSelectedResourceDescription(String selectedResourceDescription)
+	{
+		this.selectedResourceDescription = selectedResourceDescription;
+	}
+
+	/**
+	 * @return Returns the selectedResourceName.
+	 */
+	public String getSelectedResourceName()
+	{
+		return selectedResourceName;
+	}
+
+	/**
+	 * @param selectedResourceName
+	 *        The selectedResourceName to set.
+	 */
+	public void setSelectedResourceName(String selectedResourceName)
+	{
+		this.selectedResourceName = selectedResourceName;
+	}
+	
 	
 	/*
 	 *
@@ -1321,5 +1371,5 @@ public abstract class SectionPage implements Serializable {
 		}
 	}
 
-	
+
 }
