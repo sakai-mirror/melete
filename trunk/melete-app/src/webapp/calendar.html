@@ -25,18 +25,23 @@ var NUM_WEEKSTART = 1;
 // path to the directory where calendar images are stored. trailing slash req.
 var STR_ICONPATH = './images/';
 
-//alert('url string is '+String(window.location));
+
 var re_url = new RegExp('datetime=(\\-?\\d+)');
-//alert(re_url.exec(String(window.location)));
+
 var reampm_url = new RegExp('ampmval=(\\-?\\w+)');
-//alert('ampm is '+reampm_url.exec(String(window.location)));
+
 var dt_current = (re_url.exec(String(window.location))
 	? new Date(new Number(RegExp.$1)) : new Date());
-	//alert('In calendar '+dt_current);
 
 var ampm_val = (reampm_url.exec(String(window.location))
-	? new String(RegExp.$1) : "AM");
-	//alert('In calendar ampm is '+ampm_val);
+	? new String(RegExp.$1) : "notampm");
+	
+	if ((ampm_val != "AM")&&(ampm_val != "PM"))
+	{
+	  if (dt_current.getHours() > 12) ampm_val="PM";
+	  else ampm_val="AM";
+	}  
+
 var re_id = new RegExp('id=(\\d+)');
 var num_id = (re_id.exec(String(window.location))
 	? new Number(RegExp.$1) : 0);
@@ -76,8 +81,7 @@ dt_firstday.setDate(1 - (7 + dt_firstday.getDay() - NUM_WEEKSTART) % 7);
 // function passing selected date to calling window
 function set_datetime(n_datetime, b_close) {
 	if (!obj_caller) return;
-    //alert(document.cal.ampm.value);
-
+ 
 
    var caltime = document.cal.hr.value+':'+document.cal.min.value+':00';
 
@@ -88,14 +92,12 @@ function set_datetime(n_datetime, b_close) {
 
    	if (!dt_datetime) return;
    	if (b_close) {
-   	//alert('after bclose '+dt_datetime);
    		window.close();
 
    		obj_caller.target.value = (document.cal
    			? obj_caller.gen_tsmp(dt_datetime) + ' ' + document.cal.ampm.value
    			: obj_caller.gen_date(dt_datetime) + ' ' + document.cal.ampm.value
    		);
-   		//alert(obj_caller.target.value);
    	}
 	else obj_caller.popup(dt_datetime.valueOf());
 
@@ -185,11 +187,14 @@ if (obj_caller && obj_caller.time_comp)
 
 	document.write('<form onsubmit="javascript:set_datetime('+dt_current.valueOf()+', true)" name="cal"><tr><td colspan="7" bgcolor="#87CEFA"><font color="White" face="tahoma, verdana" size="2">Time: ');
 	document.write('<select name="hr">');
+	var actual_hours;
+	if (dt_current_day.getHours() > 12) actual_hours = dt_current_day.getHours() - 12;
+	else actual_hours = dt_current_day.getHours();
 	for (var i=1;i<13;i++)
 	{
 	  if (i < 10)
 	  {
-	      if (i == dt_current_day.getHours())
+	      if (i == actual_hours)
 	      {
 	        document.write('<option value=\"0'+i+'\" selected>0'+i);
 	      }
