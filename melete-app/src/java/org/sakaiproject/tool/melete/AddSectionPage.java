@@ -157,11 +157,18 @@ public class AddSectionPage extends SectionPage implements Serializable{
 				else
 					{
 			//	Step 2.2: add the new resource to course site module /uploads collection
-				// in case of upload and link, resource is added on clicking Continue	
+				// in case of upload and link, resource is added on clicking Continue
+					selResourceIdFromList = null;
+					if(section.getContentType().equals("typeEditor"))
+					{
+						   String newResourceId = addResourceToMeleteCollection(uploadHomeDir,addCollId);
+						   meleteResource.setResourceId(newResourceId);
+					}
 					getMeleteCHService().editResourceProperties(meleteResource.getResourceId(), secResourceName, secResourceDescription);
 			
 					}
-
+				logger.debug("check resourceId in add section page before inserting" + meleteResource.getResourceId());	
+					
 			//step 3: insert section resource in melete table i.e. if new resource then insert in melete resource table
 			//	otherwise just insert in sectionResource table
 				if(selResourceIdFromList == null) sectionService.insertMeleteResource(section, meleteResource);
