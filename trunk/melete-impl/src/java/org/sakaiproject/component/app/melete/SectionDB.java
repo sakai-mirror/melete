@@ -414,6 +414,7 @@ public class SectionDB implements Serializable {
 				// update Section
 				tx = session.beginTransaction();
 			//save resource
+				logger.debug("inserting mel resource" + melResource.toString());
 				session.save(melResource);
 //				 save sectionResource
 		 		 session.save(secResource);
