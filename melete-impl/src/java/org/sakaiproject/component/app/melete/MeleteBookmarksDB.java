@@ -89,20 +89,41 @@ public class MeleteBookmarksDB {
 		}
 	}
 
+	public List getBookmarks(String userId, String courseId)
+	{
+		List mbList = getBookmarks(userId, courseId, null, null);
+		return mbList;
+	}
+	
 	public List getBookmarks(String userId, String courseId, Integer moduleId)
+	{
+		List mbList = getBookmarks(userId, courseId, moduleId, null);
+		return mbList;
+	}
+	
+	public List getBookmarks(String userId, String courseId, Integer moduleId, Integer sectionId)
 	{
 		List mbList = new ArrayList();
 		try{
 		     Session session = getHibernateUtil().currentSession();
 		     Query q = null;
-		     if (moduleId == null)
+		     if ((moduleId == null)&&(sectionId == null))
 		     {
 		       q=session.createQuery("select mb from MeleteBookmarks as mb where mb.userId =:userId and mb.courseId = :courseId");
 		     }
 		     else
 		     {
-		       q=session.createQuery("select mb from MeleteBookmarks as mb where mb.userId =:userId and mb.courseId = :courseId and mb.moduleId = :moduleId");
-			   q.setParameter("moduleId", moduleId.intValue());
+		       if (sectionId == null)
+		       {	   
+		         q=session.createQuery("select mb from MeleteBookmarks as mb where mb.userId =:userId and mb.courseId = :courseId and mb.moduleId = :moduleId");
+			     q.setParameter("moduleId", moduleId.intValue());
+		       }
+		       else
+		       {	   
+			     q=session.createQuery("select mb from MeleteBookmarks as mb where mb.userId =:userId and mb.courseId = :courseId and mb.moduleId = :moduleId and mb.sectionId = :sectionId");
+				 q.setParameter("moduleId", moduleId.intValue());
+				 q.setParameter("sectionId", sectionId.intValue());
+			   }		    	   
 		     }
 			  q.setParameter("userId",userId);
 			  q.setParameter("courseId",courseId);

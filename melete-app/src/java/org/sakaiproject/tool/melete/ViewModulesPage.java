@@ -325,6 +325,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
  	           vsPage.setSectionId(secBean.getSection().getSectionId());
  	            vsPage.setModuleId(secBean.getSection().getModuleId());
  	            vsPage.setModuleSeqNo(secBean.getSection().getModule().getCoursemodule().getSeqNo());
+ 	            vsPage.setBookmarkStatus(secBean.isBookmarkFlag());
  	            vsPage.setSection(null);
  	            //added by rashmi on 6/14/05
  	            vsPage.setModule(null);
@@ -362,6 +363,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
  	            vsPage.setSectionId(secBean.getSection().getSectionId());
  	            vsPage.setModuleId(secBean.getSection().getModuleId());
  	            vsPage.setModuleSeqNo(secBean.getSection().getModule().getCoursemodule().getSeqNo());
+ 	            vsPage.setBookmarkStatus(secBean.isBookmarkFlag());
  	            vsPage.setSection(null);
  	            //added by rashmi on 6/14/05
  	            vsPage.setModule(null);
@@ -476,7 +478,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
          vmPage.setMdbean(null);
          try {
 	  		ModuleService modServ = getModuleService();
-	  		CourseModule cMod = (CourseModule)modServ.getCourseModule(((Integer)param.getValue()).intValue(),courseId);
+	  		CourseModule cMod = (CourseModule)modServ.getCourseModule(((Integer)param.getValue()).intValue(),getCourseId());
 	  		vmPage.setModuleSeqNo(cMod.getSeqNo());
 	  		
 		}

@@ -91,7 +91,7 @@ public class ListModulesPage implements Serializable{
 	  //This needs to be set later using Utils.getBinding
 	  String courseId;
 	  String userId;
-	  
+
 	  private boolean bookmarkStatus;
 
 
@@ -276,9 +276,9 @@ public class ListModulesPage implements Serializable{
 	  {
 	  	return isNull;
 	  }
-	  
+
 	  public List getModuleDateBeans() {
-	  
+
 	  	    try {
 	  		moduleDateBeans = getModuleService().getModuleDateBeans(getUserId(), getCourseId());
 
@@ -628,7 +628,7 @@ public class ListModulesPage implements Serializable{
 		  printable=false;}
 		  return printable;
 	  }
-	  
+
 	  private String getCourseId()
 	  {
 	  	if (courseId == null)
@@ -639,7 +639,7 @@ public class ListModulesPage implements Serializable{
 	  	}
 	  	return courseId;
 	  }
-	  
+
 	  private String getUserId()
 	  {
 	  	if (userId == null)
@@ -664,14 +664,14 @@ public class ListModulesPage implements Serializable{
 	{
 		 List bookmarksList = null;
 		  try {
-		  		bookmarksList = getBookmarksService().getBookmarks(getUserId(), getCourseId(), null);
+		  		bookmarksList = getBookmarksService().getBookmarks(getUserId(), getCourseId());
 
 		  	}catch (Exception e)
 			{
 		  		//e.printStackTrace();
 		  		logger.error(e.toString());
 			}
-		  	
+
 		  	if ((bookmarksList == null)||(bookmarksList.size() == 0))
 		  	{
 		  	  return false;
