@@ -136,6 +136,7 @@ SETUP INSTRUCTIONS
 	
 	OR
 	
+	--Remove this step for Melete2.5 since MELETE_MIGRATE_STATUS will be autocreated.
 	When tomcat starts, hibernate will generate the melete tables 
 	on its own by reading xml files. If you have hibernate create tables for you,
 	please also run the /components/src/sql/mysql/melete24mig.sql script manually since some 
