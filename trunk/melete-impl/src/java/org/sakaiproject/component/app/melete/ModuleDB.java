@@ -330,7 +330,7 @@ public class ModuleDB implements Serializable {
 		List bookmarkList = null;
 	 	List moduleBookmarks = null;
 
-        bookmarkList = bookmarksDB.getBookmarks(userId, courseId, null);
+        bookmarkList = bookmarksDB.getBookmarks(userId, courseId);
 	 	try
 		{
 	     Session session = hibernateUtil.currentSession();
@@ -402,7 +402,7 @@ public class ModuleDB implements Serializable {
 	 	List bookmarkList = null;
 	 	List moduleBookmarks = null;
 
-	 	bookmarkList = bookmarksDB.getBookmarks(userId, courseId, null);
+	 	bookmarkList = bookmarksDB.getBookmarks(userId, courseId);
         try
 		{
 	 	  Session session = hibernateUtil.currentSession();

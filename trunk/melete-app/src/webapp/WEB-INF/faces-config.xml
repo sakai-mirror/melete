@@ -326,6 +326,11 @@
             <property-name>moduleService</property-name>
             <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
         </managed-property>
+          <managed-property>
+	            <description>Service Dependency: Melete Bookmarks service</description>
+	            <property-name>bookmarksService</property-name>
+	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteBookmarksService"]}</value>
+            </managed-property> 
   </managed-bean>                 
   <managed-bean>
           <description>date comparator</description>

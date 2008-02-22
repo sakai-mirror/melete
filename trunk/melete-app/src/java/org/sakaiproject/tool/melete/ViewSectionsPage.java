@@ -483,7 +483,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 
     public SectionObjService getSection()
     {
-        try
+    	 try
 		{
 			if (this.section == null)
 			{
@@ -519,6 +519,22 @@ public String goPrevNext()
 	this.moduleId = new Integer(((String)context.getExternalContext().getRequestParameterMap().get("modid"))).intValue();
 	this.sectionId = new Integer(((String)context.getExternalContext().getRequestParameterMap().get("secid"))).intValue();
 	this.module = null;
+	List sectionBookmarks = bookmarksService.getBookmarks(getUserId(), getCourseId(), this.moduleId, this.sectionId);
+	if (sectionBookmarks == null)
+	{
+		this.bookmarkStatus = false;
+	}
+	else
+	{
+		if (sectionBookmarks.size() == 0)
+		{
+			this.bookmarkStatus = false;
+		}
+		else
+		{
+			this.bookmarkStatus = true;
+		}
+	}
 	if (getInstRole())
 	{
 			return "view_section";

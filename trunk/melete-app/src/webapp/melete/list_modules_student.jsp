@@ -111,19 +111,19 @@ return newWindow;
           </h:column>
            <h:column>
             <h:outputText id="startDate0" 
-                           value="-"    rendered="#{(mdbean.startDate == listModulesPage.nullDate)}">
+                           value="-"    rendered="#{(mdbean.moduleShdate.startDate == listModulesPage.nullDate)}">
             </h:outputText>
                 <h:outputText id="startDate" 
-                           value="#{mdbean.startDate}" rendered="#{(mdbean.startDate != listModulesPage.nullDate)}">
+                           value="#{mdbean.moduleShdate.startDate}" rendered="#{(mdbean.moduleShdate.startDate != listModulesPage.nullDate)}">
               <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>
           </h:column>
       <h:column>
        <h:outputText id="endDate0" 
-                           value="-"    rendered="#{(mdbean.endDate == listModulesPage.nullDate)}">
+                           value="-"    rendered="#{(mdbean.moduleShdate.endDate == listModulesPage.nullDate)}">
             </h:outputText>
                <h:outputText id="endDate"
-                           value="#{mdbean.endDate}" rendered="#{(mdbean.endDate != listModulesPage.nullDate)}">
+                           value="#{mdbean.moduleShdate.endDate}" rendered="#{(mdbean.moduleShdate.endDate != listModulesPage.nullDate)}">
                <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>
          </h:column>
