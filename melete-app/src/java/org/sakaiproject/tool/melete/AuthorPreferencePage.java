@@ -60,7 +60,7 @@ public class AuthorPreferencePage {
   private MeleteUserPreference mup;
   private MeleteSitePreference msp;
   private String materialPrintable="false";
-  
+
   /** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(AuthorPreferencePage.class);
 
@@ -70,12 +70,12 @@ public class AuthorPreferencePage {
 
   private void getUserChoice()
   {
-   		FacesContext context = FacesContext.getCurrentInstance();
+		FacesContext context = FacesContext.getCurrentInstance();
   		Map sessionMap = context.getExternalContext().getSessionMap();
 
   		mup = (MeleteUserPreference) getAuthorPref().getUserChoice((String)sessionMap.get("userId"));
   		msp = (MeleteSitePreference) getAuthorPref().getSiteChoice((String)sessionMap.get("courseId"));
-  		  		
+
   		// if no choice is set then read default from sakai.properties
   		if ((mup == null)||(mup.getEditorChoice() == null))
   		{
@@ -95,13 +95,15 @@ public class AuthorPreferencePage {
   			shouldRenderSferyx = false;
   		  	shouldRenderFCK = true;
   		 }
-  		
+
   		if (mup != null && !mup.isViewExpChoice())
-  			userView = "false";  			  		
-  		
+  			userView = "false";
+  		else
+  			userView = "true";
+
   		if(msp != null && msp.isPrintable())
   			materialPrintable = "true";
-  		
+
   	return;
   	}
 
@@ -228,21 +230,21 @@ public String setUserChoice()
 			else
 			{
 				mup.setViewExpChoice(false);
-			}			
-			
+			}
+
 		mup.setUserId((String)sessionMap.get("userId"));
 		authorPref.insertUserChoice(mup);
-		
+
 		// set Site Preferences
 		if(msp == null) {
 			msp = new MeleteSitePreference();
 			msp.setPrefSiteId((String)sessionMap.get("courseId"));
 		}
-		
+
 		//set print preference
 		if (materialPrintable.equals("true"))msp.setPrintable(true);
 		else msp.setPrintable(false);
-		
+
 		authorPref.insertUserSiteChoice(msp);
 		}
 		catch(Exception e)
@@ -307,7 +309,7 @@ public void setDisplaySferyx(boolean displaySferyx) {
 	this.displaySferyx = displaySferyx;
 }
 
-public MeleteUserPreference getMup() {		
+public MeleteUserPreference getMup() {
 		return mup;
 }
 
