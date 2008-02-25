@@ -442,10 +442,14 @@ border: 0;}
    width:45%;
  }
 .TitleWid3 {   width:75%; }
-.ActionWid {width:25%;}
+.ActionWid {width:40%;
+white-space:nowrap;}
+
+.listActionWid {width:15%;
+white-space:nowrap;}
 
 .TitleWid4 {   width:65%; }
-.ActionWid2 {width:35%;
+.ActionWid2 {width:45%;
 white-space:nowrap;}
 
  .DateWid1
@@ -539,6 +543,7 @@ font-size: 12px;
    .ModCheckClass {
    vertical-align: top;
 	align:center;
+	white-space:nowrap;
    }
    .LicHelpImgClass {
    border: 0;

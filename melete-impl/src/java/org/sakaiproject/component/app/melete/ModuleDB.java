@@ -1903,12 +1903,14 @@ public class ModuleDB implements Serializable {
 		  		   		if (slObj != null)
 		  		   		{
 		  		   			Section sec =(Section)printSections.get(new Integer(slObj.getSectionId()));
-		  		   			printText.append("<div class=secrow0>")	;
+		  		   			
 		  		   			printText.append("<h4>" +slObj.getDispSeq() +"  " + sec.getTitle()+"</h4>")	;
-		  		   		    if (sec.getInstr() != null && sec.getInstr().length() !=0 ) printText.append("<p> <i>Instructions:</i> " + sec.getInstr() + "</p>");
-							if (sec.getContentType() == null || sec.getContentType().equals("notype") || sec.getSectionResource() == null)
+		  		   			if(sec.getSectionResource() != null)
+		  		   				printText.append("<p><i>" +getLicenseInformation((MeleteResource)sec.getSectionResource().getResource())+"</i></p>");
+
+		  		   			if (sec.getInstr() != null && sec.getInstr().length() !=0 ) printText.append("<p> <i>Instructions:</i> " + sec.getInstr() + "</p>");
+							if (sec.getContentType() == null || sec.getContentType().equals("notype") || sec.getSectionResource() == null || sec.getSectionResource().getResource() == null)
 							{
-								printText.append("</div>");
 								continue;
 							}
 							String resourceId = sec.getSectionResource().getResource().getResourceId();
@@ -1933,8 +1935,7 @@ public class ModuleDB implements Serializable {
 								url = url.replaceAll(" ", "%20");
 								printText.append("<iframe id=\"iframe1\" src=\"" + url + "\" scrolling=\"auto\" width=\"100%\" border=\"0\" frameborder=\"0\"></iframe>");
 							}
-							printText.append("<p>" + getLicenseInformation((MeleteResource)sec.getSectionResource().getResource()) +"</p>");
-							printText.append("</div>");
+						
 						}
 		  			}
 		  		}
@@ -1957,6 +1958,7 @@ public class ModuleDB implements Serializable {
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			throw new MeleteException("print_module_fail");
 		}
 		return null;
@@ -1967,7 +1969,9 @@ public class ModuleDB implements Serializable {
 	{
 		ResourceLoader rl = new ResourceLoader("melete_license");
 		String licenseStr="";
-
+		
+		if(melResource == null)return licenseStr;
+		
 		if(melResource.getLicenseCode() == 1)
 		{
 		licenseStr = rl.getString("license_info_copyright");

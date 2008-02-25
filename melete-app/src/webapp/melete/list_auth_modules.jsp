@@ -127,7 +127,7 @@ if (msg != null)
 			<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 			 <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" > 
                    <tr class="maintabledata3">
-				   <td colspan="7">
+				   <td colspan="7" white-space="nowrap">
 				     <h:dataTable id="table" 
                   value="#{listAuthModulesPage.moduleDateBeans}"
                   var="mdbean"   border="0"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ModCheckClass,TitleWid,ModCheckClass,ModCheckClass,ModCheckClass,ModCheckClass,ModCheckClass" 
@@ -210,7 +210,7 @@ if (msg != null)
              </f:facet>
           
            <h:outputLink id="viewsdateCal" onclick="showSdateCal(#{listAuthModulesPage.table.rowIndex})" value="#">
-            <h:graphicImage id="sdateCal" value="images/date.png" styleClass="DatePickerClass"/>
+            <h:graphicImage id="sdateCal" value="images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            </h:outputLink>            
         </h:column>
         <h:column>
@@ -234,7 +234,7 @@ if (msg != null)
              <h:outputText id="t7" value="" />
              </f:facet>
           <h:outputLink id="viewedateCal" onclick="showEdateCal(#{listAuthModulesPage.table.rowIndex})" value="#">
-            <h:graphicImage id="edateCal" value="images/date.png" styleClass="DatePickerClass"/>
+            <h:graphicImage id="edateCal" value="images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            </h:outputLink>                
             
         </h:column>
@@ -244,17 +244,17 @@ if (msg != null)
           </f:facet>
        	   <h:outputText id="emp_space6" value="  " styleClass="ExtraPaddingClass" />
            <h:commandLink id="viewNextsteps" action="#{listAuthModulesPage.viewNextsteps}" >
-			   <h:graphicImage id="vns_gif" value="images/add.gif" alt="#{msgs.list_auth_modules_next_steps}" title="#{msgs.list_auth_modules_next_steps}" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext == listAuthModulesPage.isNull}"/>      
-			   <h:graphicImage id="vns1_gif" value="images/view_next.gif" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext != listAuthModulesPage.isNull}"/>        		   
+			   <h:graphicImage id="vns_gif" value="images/add.gif" alt="#{msgs.list_auth_modules_alt_add_steps}" title="#{msgs.list_auth_modules_alt_add_steps}" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext == listAuthModulesPage.isNull}"/>      
+			   <h:graphicImage id="vns1_gif" value="images/view_next.gif" alt="#{msgs.list_auth_modules_alt_next_steps}" title="#{msgs.list_auth_modules_alt_next_steps}" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext != listAuthModulesPage.isNull}"/>        		   
            </h:commandLink>
            <h:outputText id="emp_space4" value="  " styleClass="ExtraPaddingClass" />
 		  <h:commandLink id="duplicateModule" action="#{listAuthModulesPage.duplicateAction}">
-		  	  <h:graphicImage id="duplicateImg" value="images/page_copy.png" styleClass="AuthImgClass"/>
+		  	  <h:graphicImage id="duplicateImg" value="images/page_copy.png" alt="#{msgs.list_auth_modules_alt_duplicate}" title="#{msgs.list_auth_modules_alt_duplicate}" styleClass="AuthImgClass"/>
 		  </h:commandLink>
 		     <h:outputText id="emp_space5" value="  " styleClass="ExtraPaddingClass" />
 		     <h:outputLink id="printModuleLink" value="print_module" onclick="OpenPrintWindow(this.href,'Melete Print Window');this.href='#';">
 		    	<f:param id="printmoduleId" name="printModuleId" value="#{listAuthModulesPage.printModuleId}" />
-		  	  <h:graphicImage id="printImgLink" value="images/printer.png" styleClass="AuthImgClass"/>
+		  	  <h:graphicImage id="printImgLink" value="images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 		  </h:outputLink>
         </h:column>
 	    

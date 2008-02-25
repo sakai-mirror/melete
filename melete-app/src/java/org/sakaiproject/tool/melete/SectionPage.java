@@ -135,6 +135,7 @@ public abstract class SectionPage implements Serializable {
 
 	 protected String currLinkUrl;
      protected String displayCurrLink;
+     protected String newURLTitle;
      
      protected String selectedResourceName;
 
@@ -1315,6 +1316,21 @@ public abstract class SectionPage implements Serializable {
 		this.selectedResourceName = selectedResourceName;
 	}
 	
+	/**
+	 * @return the newURLTitle
+	 */
+	public String getNewURLTitle()
+	{
+		return this.newURLTitle;
+	}
+
+	/**
+	 * @param newURLTitle the newURLTitle to set
+	 */
+	public void setNewURLTitle(String newURLTitle)
+	{
+		this.newURLTitle = newURLTitle;
+	}
 	
 	/*
 	 *
