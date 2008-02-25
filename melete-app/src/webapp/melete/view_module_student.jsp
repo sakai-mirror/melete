@@ -60,8 +60,8 @@
                	  <h:column>
                	     <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{sectionBean.bookmarkFlag == true}" styleClass="ExpClass"/>
 					     <h:outputText id="emp_space" value=" " styleClass="ExtraPaddingClass" rendered="#{((viewModulesPage.mdbean.bookmarkFlag == true)&&(sectionBean.bookmarkFlag != true))}"/>
-            		   <h:outputText id="disp_seq" value="#{sectionBean.displaySequence}"/>
-                        <h:commandLink id="viewSectionEditor"  action="#{viewModulesPage.viewSection}" rendered="#{sectionBean.section.title != viewModulesPage.nullString}">
+            		  <h:graphicImage id="bul_gif" value="images/bullet_black.gif" rendered="#{sectionBean.section.title != viewModulesPage.nullString}"/>
+			          <h:commandLink id="viewSectionEditor"  action="#{viewModulesPage.viewSection}" rendered="#{sectionBean.section.title != viewModulesPage.nullString}">
 										  <h:outputText id="sectitleEditor" value="#{sectionBean.section.title}" > </h:outputText>
 					  </h:commandLink>
 			</h:column>
