@@ -673,6 +673,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		currSiteResourcesList = null;
 		logger.debug("setting currsiteResourceList to null");
 		getCurrSiteResourcesList();
+		newURLTitle ="";
+		if(displayCurrLink == null)	newURLTitle = secResourceName;
 		return "editContentLinkServerView";
 	}
 
@@ -698,9 +700,16 @@ public class EditSectionPage extends SectionPage implements Serializable
 				 * if(!check.equals("OK")) { errMsg = bundle.getString("add_section_bad_url"); ctx.addMessage (null, new
 				 * FacesMessage(FacesMessage.SEVERITY_ERROR,"add_section_bad_url",errMsg)); return "editContentLinkServerView"; }
 				 */
-				secResourceName = "";
-				secResourceDescription = "";
+				/*secResourceName = "";
+				secResourceDescription = "";*/
 				setM_license(null);
+				if(newURLTitle == null || newURLTitle.length() == 0)
+				{
+					errMsg = bundle.getString("URL_title_reqd");
+					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "URL_title_reqd", errMsg));
+					return "editContentLinkServerView";
+				}
+				secResourceName = newURLTitle;				
 				createLinkUrl();
 				String res_mime_type = getMeleteCHService().MIME_TYPE_LINK;
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, secResourceDescription);
@@ -782,4 +791,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		this.shouldRenderLocalUpload = shouldRenderLocalUpload;
 	}
+
+	
 }

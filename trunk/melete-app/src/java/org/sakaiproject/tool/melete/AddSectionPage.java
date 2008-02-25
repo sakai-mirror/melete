@@ -372,6 +372,8 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			selResourceIdFromList = null;			
 			setLinkUrl(null);			
 			refreshCurrSiteResourcesList();
+			newURLTitle="";
+			if(displayCurrLink == null || displayCurrLink.length() == 0) newURLTitle = secResourceName;
 			return "ContentLinkServerView";
 	  }
 	  
@@ -392,6 +394,15 @@ public class AddSectionPage extends SectionPage implements Serializable{
 					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "select_or_cancel", errMsg));
 					return "ContentLinkServerView";
 				}
+				
+				if(newURLTitle == null || newURLTitle.length() == 0)
+				{
+					errMsg = bundle.getString("URL_title_reqd");
+					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "URL_title_reqd", errMsg));
+					return "editContentLinkServerView";
+				}
+				
+				secResourceName = newURLTitle;	
 				String addCollectionId = getMeleteCHService().getUploadCollectionId();
 				String newResourceId = addResourceToMeleteCollection(null, addCollectionId);
 				meleteResource.setResourceId(newResourceId);

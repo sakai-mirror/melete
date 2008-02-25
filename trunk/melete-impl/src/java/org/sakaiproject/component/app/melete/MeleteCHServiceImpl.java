@@ -404,6 +404,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	 */
 	 public void editResourceProperties(String selResourceIdFromList, String secResourceName, String secResourceDescription)
 	{
+		 if(selResourceIdFromList == null || selResourceIdFromList.length() == 0) return;
 	 	try
 	    {
         	if (!isUserAuthor())

@@ -41,6 +41,12 @@
 														<h:outputText id="editlinkText7" value=" " styleClass="ExtraPaddingClass"/>
 														 <h:inputText id="link" value="#{editSectionPage.linkUrl}" size="40" /> 	
 					</td></tr>	
+					<tr><td height="20" colspan="2"> 
+														<h:outputText id="editlinkText_6" value="#{msgs.resources_proper_pan_URL}" /> <h:outputText value="*" styleClass="required"/>
+			 											<h:outputText id="editlinkText_7" value=" " styleClass="ExtraPaddingClass"/>
+			 											<h:outputText id="editlinkText_7_1" value=" " styleClass="ExtraPaddingClass"/>
+														 <h:inputText id="link_title" value="#{editSectionPage.newURLTitle}" size="40" /> 	
+					</td></tr>	
 					 <tr><td colspan="2"> &nbsp; </td></tr>	
 					</table> </td></tr>       
 					     <tr>
