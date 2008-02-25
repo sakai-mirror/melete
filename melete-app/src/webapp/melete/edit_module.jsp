@@ -164,7 +164,7 @@ function showEdateCal()
                 <td width="472" align="left" valign="top">					
 					  <a name="startCalender"></a><h:inputText id="startDate" 
                            value="#{editModulePage.moduleShdates.startDate}" size="22" styleClass="formtext">
-		        	      <f:convertDateTime pattern="MM/dd/yyyy hh:mm a"/>
+		        	      <f:convertDateTime pattern="M/d/yyyy hh:mm a"/>
         		    </h:inputText>
 		            <h:outputLink id="viewsdateCal" onclick="showSdateCal()" value="#startCalender">
         	    		<h:graphicImage id="sdateCal"  value="images/date.png" styleClass="DatePickerClass"/>
@@ -180,7 +180,7 @@ function showEdateCal()
                 <td width="472" align="left" valign="top">
 					 <a name="endCalender"></a> <h:inputText id="endDate" 
                            value="#{editModulePage.moduleShdates.endDate}"  size="22" styleClass="formtext">
-               <f:convertDateTime pattern="MM/dd/yyyy hh:mm a"/>
+               <f:convertDateTime pattern="M/d/yyyy hh:mm a"/>
             </h:inputText>
           <h:outputLink id="viewedateCal" onclick="showEdateCal()" value="#endCalender">
             <h:graphicImage id="edateCal"  value="images/date.png"  styleClass="DatePickerClass"/>
