@@ -247,6 +247,13 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 	}
 
 	/*
+	 * navigation rule to go to manage content page
+	 */
+	public String goToManageContent(){
+		return "manage_content";
+	}
+	
+	/*
 	 * navigation rule for Return
 	 */
 	public String returnToModules(){

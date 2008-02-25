@@ -941,7 +941,20 @@
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
      </navigation-case> 
+     <navigation-case>
+		  <from-outcome>manage_content</from-outcome>
+		  <to-view-id>/melete/manage_content.jsp</to-view-id>
+     </navigation-case>
    </navigation-rule>    
+   
+   <!--manage_content-->
+   <navigation-rule>
+    <from-view-id>/melete/manage_content.jsp</from-view-id>
+     <navigation-case>
+		  <from-outcome>manage_content</from-outcome>
+		  <to-view-id>/melete/manage_content.jsp</to-view-id>
+     </navigation-case>
+   </navigation-rule>  
    
    <!--restore modules -->
    <navigation-rule>
