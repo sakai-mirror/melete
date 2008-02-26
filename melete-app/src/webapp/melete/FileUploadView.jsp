@@ -22,5 +22,5 @@ function fillupload()
 	</td></tr>
 	<tr>
 	<td>&nbsp;</td>
-	<td>	<h:outputText id="note" value="Note: You cannot upload files that are larger than #{manageContentPage.maxUploadSize}MB."  styleClass="comment red"/></td></tr>
+	<td>	<h:outputText id="note" value="Note: You cannot upload files that are larger than #{manageResourcesPage.maxUploadSize}MB."  styleClass="comment red"/></td></tr>
 </table>
