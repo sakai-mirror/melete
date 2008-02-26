@@ -486,6 +486,13 @@
 	    	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteCHService"]}</value>
             </managed-property>   
       </managed-bean>  	
+ 
+ <managed-bean>
+      <description>Manages the Manage Content page</description>
+      <managed-bean-name>manageResourcesPage</managed-bean-name>
+      <managed-bean-class>org.sakaiproject.tool.melete.ManageResourcesPage</managed-bean-class>
+      <managed-bean-scope>session</managed-bean-scope> 
+</managed-bean>  	     
     <!-- i18n -->
 
 <managed-bean>

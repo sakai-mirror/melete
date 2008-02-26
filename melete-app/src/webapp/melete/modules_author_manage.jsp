@@ -43,9 +43,21 @@
 					            <tr>
 						              <td width="100%" valign="top">
 											<table width="100%" border="1" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >
+											<tr rowspan="5" valign="top">
+							                    	<td align="center" class="menu left">
+								                    	<h:commandLink id="contentgoto" action="#{manageModulesPage.goToManageContent}">
+															<h:graphicImage id="image0"
+									   							alt="#{msgs.modules_author_manage_content}"
+									   							url="images/manage_content.png"
+									   							 styleClass="AuthImgClass"/>
+									   							<h:outputText id="co" value="#{msgs.modules_author_manage_content}" />
+														</h:commandLink>
+							                    	</td>
+							                    	<td  align="left"><h:outputText value="#{msgs.modules_author_manage_content_text}" /></td>
+							                  	</tr>
 							                  	<tr rowspan="5" valign="top">
 							                    	<td align="center" class="menu left">
-								                    	<h:commandLink id="goto" action="#{manageModulesPage.goToRestoreModules}">
+								                    	<h:commandLink id="restoregoto" action="#{manageModulesPage.goToRestoreModules}">
 															<h:graphicImage id="image"
 									   							alt="#{msgs.modules_author_manage_restore_inactive}"
 									   							url="images/folder_into.gif"
