@@ -1845,12 +1845,26 @@ public class ModuleDB implements Serializable {
 
 				section.setModule(selectedModule);
 				section.setModuleId(selectedModule.getModuleId().intValue());
-
+				
 				// save object
 				tx = session.beginTransaction();
 				session.saveOrUpdate(section);
 				session.saveOrUpdate(prev_module);
 				session.saveOrUpdate(selectedModule);
+				//Code that moves the bookmarks 
+				Map bookmarks = section.getBookmarks();
+				int bookmarkSize = bookmarks.size();
+		    	if (bookmarkSize > 0)
+		    	{
+		    		Iterator keyValuePairs = bookmarks.entrySet().iterator();
+		    		while (keyValuePairs.hasNext())
+		    		{
+		    		  Map.Entry entry = (Map.Entry) keyValuePairs.next();
+		    		  MeleteBookmarks mb = (MeleteBookmarks) entry.getValue();
+		    		  mb.setModuleId(selectedModule.getModuleId().intValue());
+		    		  session.saveOrUpdate(mb);
+		    		}
+		    	}	
 				tx.commit();
 
 			}
