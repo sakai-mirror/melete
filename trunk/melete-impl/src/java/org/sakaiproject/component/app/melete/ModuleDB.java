@@ -1781,33 +1781,39 @@ public class ModuleDB implements Serializable {
 					Integer copySectionId = sectionDB.addSection(copyMod, copySection, false);
 					copySection.setSectionId(copySectionId);
 					//copySection.setModule(copyMod);
-
-					//if section content type is composed than create a new copy
-					if (toCopySection.getContentType().equals("typeEditor"))
+					logger.debug("check content type in copy module" + toCopySection.getContentType());
+					if (toCopySection.getContentType() != null && !toCopySection.getContentType().equals("notype"))
 					{
+						logger.debug("assumption is there is a type");
+						// if section content type is composed than create a new copy
+						if (toCopySection.getContentType().equals("typeEditor"))
+						{
 
-						String copyModCollId = meleteCHService.getCollectionId( "typeEditor",copyMod.getModuleId() );
-    					String res_mime_type= meleteCHService.MIME_TYPE_EDITOR;
-						ContentResource  cr = meleteCHService.getResource(toCopySection.getSectionResource().getResource().getResourceId());
-	                  	byte[] secContentData = cr.getContent();
+							String copyModCollId = meleteCHService.getCollectionId("typeEditor", copyMod.getModuleId());
+							String res_mime_type = meleteCHService.MIME_TYPE_EDITOR;
+							ContentResource cr = meleteCHService.getResource(toCopySection.getSectionResource().getResource().getResourceId());
+							byte[] secContentData = cr.getContent();
 
-	                    boolean encodingFlag = true;
-	                    String secResourceName = "Section_" + copySectionId;
-	                    String secResourceDescription="compose content";
+							boolean encodingFlag = true;
+							String secResourceName = "Section_" + copySectionId;
+							String secResourceDescription = "compose content";
 
-	                    ResourcePropertiesEdit res = meleteCHService.fillInSectionResourceProperties(encodingFlag,secResourceName,secResourceDescription);
-	                    String newResourceId = meleteCHService.addResourceItem(secResourceName, res_mime_type,copyModCollId,secContentData,res );
+							ResourcePropertiesEdit res = meleteCHService.fillInSectionResourceProperties(encodingFlag, secResourceName,
+									secResourceDescription);
+							String newResourceId = meleteCHService
+									.addResourceItem(secResourceName, res_mime_type, copyModCollId, secContentData, res);
 
-	                    MeleteResource copyMelResource = new MeleteResource((MeleteResource)toCopySection.getSectionResource().getResource());
-	                    copyMelResource.setResourceId(newResourceId);
-	                    sectionDB.insertMeleteResource(copySection, copyMelResource);
+							MeleteResource copyMelResource = new MeleteResource((MeleteResource) toCopySection.getSectionResource().getResource());
+							copyMelResource.setResourceId(newResourceId);
+							sectionDB.insertMeleteResource(copySection, copyMelResource);
+						}
+						else
+						{
+							// insert section resource with same melete resource
+							sectionDB.insertSectionResource(copySection, (MeleteResource) toCopySection.getSectionResource().getResource());
+						}
 					}
-					else {
-					//insert section resource with same melete resource
-					sectionDB.insertSectionResource(copySection, (MeleteResource) toCopySection.getSectionResource().getResource());
-					}
-
-					//replace with new copied section
+					// replace with new copied section
 					copyModSeqXml = copyModSeqXml.replace(toCopySection.getSectionId().toString(), copySectionId.toString());
 				}
 				// update module seq xml
@@ -1818,6 +1824,7 @@ public class ModuleDB implements Serializable {
 		}
 		catch (Exception ex)
 		{
+			ex.printStackTrace();
 			throw new MeleteException("copy_fail");
 		}
 	}
