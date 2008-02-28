@@ -99,11 +99,11 @@
               </tr>
 			 <tr><td  height="20" class="maintabledata5">&nbsp;</td></tr>
 			 <tr>
-			 <td align="center">
-			  <f:subview id="FileUploadView" rendered="#{manageResourcesPage.shouldRenderUpload}">
-					<jsp:include page="FileUploadView.jsp"/> 
-			  </f:subview>	
-			</td>
+        		 <td align="center">
+				  <f:subview id="DeleteResourceView">
+						<jsp:include page="manage_delete_resources.jsp"/> 
+				  </f:subview>	
+				</td>
 			</tr>									
             </table>
           </td>
