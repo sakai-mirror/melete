@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
-<html">
+<html>
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
@@ -42,8 +42,9 @@
                 	<tr>
                 		<td colspan="2">
                 		<h:outputText id="t1" value="#{msgs.manage_content_add_item}" />
-                	
+       
 						  <h:selectOneMenu id="fileType" value="#{manageResourcesPage.fileType}"  >
+
 						    <f:selectItem itemValue="upload" itemLabel="#{msgs.manage_content_upload}"/>	
 							<f:selectItem itemValue="link" itemLabel="#{msgs.manage_content_link}"/>	
 						 </h:selectOneMenu>
@@ -74,7 +75,7 @@
               <tr>
                 <td height="30" >         
                 <div align="center">	
-                <h:commandLink id="continueButton"  action="#{manageResourcesPage.addItems}"  immediate="true" tabindex="9">
+                <h:commandLink id="continueButton"  action="#{manageResourcesPage.addItems}"  tabindex="9">
 					<h:graphicImage id="continueImg" value="#{msgs.im_continue}" styleClass="BottomImgSpace" 
 						onmouseover="this.src = '#{msgs.im_continue_over}'" 
 						onmouseout="this.src = '#{msgs.im_continue}'" 
@@ -97,6 +98,7 @@
                 </h:commandLink>	
 			</div></td>
               </tr>
+			 
 			 <tr><td  height="20" class="maintabledata5">&nbsp;</td></tr>
 			 <tr>
         		 <td align="center">
@@ -105,6 +107,7 @@
 				  </f:subview>	
 				</td>
 			</tr>									
+
             </table>
           </td>
         </tr>

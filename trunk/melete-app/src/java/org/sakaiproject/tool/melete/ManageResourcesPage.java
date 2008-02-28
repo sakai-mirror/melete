@@ -36,8 +36,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.component.UIData;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+
 import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
+
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.logging.Log;
@@ -50,8 +52,8 @@ import org.sakaiproject.api.app.melete.MeleteCHService;
 
 public class ManageResourcesPage {
   private String fileType;
-  private int numberItems;
-  private boolean shouldRenderUpload;
+  private String numberItems;
+  private int maxUploadSize;
   
   /** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(ManageResourcesPage.class);
@@ -76,8 +78,12 @@ public class ManageResourcesPage {
    
 public String addItems()
 {
-	shouldRenderUpload = true;
-	return "manage_content";
+	FacesContext ctx = FacesContext.getCurrentInstance();
+	ValueBinding binding =
+        Util.getBinding("#{addResourcesPage}");
+    AddResourcesPage arPage = (AddResourcesPage)binding.getValue(ctx);
+    arPage.setNumberItems(Integer.parseInt(this.numberItems));
+	return "file_upload_view";
 }
 public String getFileType()
 {
@@ -89,25 +95,16 @@ public void setFileType(String fileType)
 	this.fileType = fileType;
 }
 
-public int getNumberItems()
+public String getNumberItems()
 {
 	return this.numberItems;
 }
 
-public void setNumberItems(int numberItems)
+public void setNumberItems(String numberItems)
 {
 	this.numberItems = numberItems;
 }
 
-public boolean isShouldRenderUpload()
-{
-	return this.shouldRenderUpload;
-}
-
-public void setShouldRenderUpload(boolean shouldRenderUpload)
-{
-	this.shouldRenderUpload = shouldRenderUpload;
-}
 
 // code for delete Resource
 public String sortResourcesAsc()
@@ -118,6 +115,7 @@ public String sortResourcesAsc()
 	return "#";
 }
 
+
 public String sortResourcesDesc()
 {	
 	sortAscFlag=true;
@@ -125,6 +123,7 @@ public String sortResourcesDesc()
 	sortList();
 	return "#";
 }
+
 
 public void refreshCurrSiteResourcesList()
 {	
@@ -359,3 +358,4 @@ public RemoteFilesListingNav getListNav() {
 }
 
 }
+
