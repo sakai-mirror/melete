@@ -3,7 +3,7 @@
 
  
  <!-- navigation with showing 15 recs --> 
- <h:panelGrid id="selresNavigationPanel" columns="2"  width="auto" border="0" columnClasses="TitleWid4,ActionWid2" rendered="#{manageResourcesPage.listNav.displayNav}" >
+ <h:panelGrid id="selresNavigationPanel" columns="2"  width="100%" border="0" columnClasses="TitleWid4,ActionWid2" rendered="#{manageResourcesPage.listNav.displayNav}" >
 <h:column/>
 <h:column>
  <h:outputText id="nav_spaces_left1" value="" styleClass="ExtraPaddingClass" />
@@ -13,7 +13,7 @@
 <h:column/>
    	<h:column>
    		<h:graphicImage id="leftImg_disable" value="images/nav_left_disable.jpg" alt="#{msgs.list_section_resources_previous}" styleClass="ModCheckClass" style="border:0" rendered="#{!manageResourcesPage.listNav.displayPrev}" />
-		<h:commandLink id="prev_nav"  action="#{manageResourcesPage.listNav.goPrev}" rendered="#{manageResourcesPage.listNav.displayPrev}">		
+		<h:commandLink id="prev_nav"  action="#{manageResourcesPage.listNav.goPrev}" immediate="true" rendered="#{manageResourcesPage.listNav.displayPrev}">		
 						 <h:graphicImage id="leftImg" value="images/nav_left.jpg" alt="#{msgs.list_section_resources_previous2}" styleClass="ModCheckClass" style="border:0" />
 		   </h:commandLink>		 
 		   	 <h:outputText id="nav_spaces_left" value="" styleClass="ExtraPaddingClass" />
@@ -21,14 +21,14 @@
 								<f:selectItem itemValue="15" itemLabel="#{msgs.list_section_resources_show15}"/>	
 		 </h:selectOneMenu>
 		 <h:outputText id="nav_spaces" value="" styleClass="ExtraPaddingClass" />
-				<h:commandLink id="next_nav" action="#{manageResourcesPage.listNav.goNext}" rendered="#{manageResourcesPage.listNav.displayNext}">
+				<h:commandLink id="next_nav" action="#{manageResourcesPage.listNav.goNext}" rendered="#{manageResourcesPage.listNav.displayNext}" immediate="true">
 							 <h:graphicImage id="rightImg" value="images/nav_right.jpg" alt="#{msgs.list_section_resources_next}" styleClass="ModCheckClass" style="border:0" />
 			   </h:commandLink>	 
 			   <h:graphicImage id="rightImg_disable" value="images/nav_right_disable.jpg" alt="#{msgs.list_section_resources_next2}" styleClass="ModCheckClass" style="border:0" rendered="#{!manageResourcesPage.listNav.displayNext}"/> 
    	  </h:column>											
 </h:panelGrid> 
    <!-- navigation ends -->   
- 	 <h:dataTable id="table" value="#{manageResourcesPage.displayResourcesList}"  var="list_resources"  border="0" headerClass="tableheader2" columnClasses="ModCheckClass,TitleWid3,ActionWid"  rowClasses="row1,row2" width="100%" onclick="this.styleClass='blue';">
+ 	 <h:dataTable id="table" value="#{manageResourcesPage.displayResourcesList}"  var="list_resources"  border="0" headerClass="tableheader2" columnClasses="ModCheckClass,TitleWid3,ActionWid2"  rowClasses="row1,row2" width="100%" onclick="this.styleClass='blue';">
 		  <h:column>
 			   <f:facet name="header">
 					<h:panelGroup>
