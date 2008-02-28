@@ -43,7 +43,7 @@
                 		<td colspan="2">
                 		<h:outputText id="t1" value="#{msgs.manage_content_add_item}" />
                 	
-						  <h:selectOneMenu id="fileType" value="#{manageResourcesPage.fileType}" valueChangeListener="#{addSectionPage.showHideContent}" onchange="contentChangeSubmit();this.form.submit();" >
+						  <h:selectOneMenu id="fileType" value="#{manageResourcesPage.fileType}"  >
 						    <f:selectItem itemValue="upload" itemLabel="#{msgs.manage_content_upload}"/>	
 							<f:selectItem itemValue="link" itemLabel="#{msgs.manage_content_link}"/>	
 						 </h:selectOneMenu>
@@ -53,7 +53,7 @@
                 		<td colspan="2">
                 		<h:outputText id="t2" value="#{msgs.manage_content_number}"/>
                 	
-						  <h:selectOneMenu id="number" value="#{manageResourcesPage.numberItems}" valueChangeListener="#{addSectionPage.showHideContent}" onchange="contentChangeSubmit();this.form.submit();" >
+						  <h:selectOneMenu id="number" value="#{manageResourcesPage.numberItems}" >
 						    <f:selectItem itemValue="1" itemLabel="#{msgs.manage_content_one}"/>	
 							<f:selectItem itemValue="2" itemLabel="#{msgs.manage_content_two}"/>	
 							<f:selectItem itemValue="3" itemLabel="#{msgs.manage_content_three}"/>	
@@ -75,21 +75,21 @@
                 <td height="30" >         
                 <div align="center">	
                 <h:commandLink id="continueButton"  action="#{manageResourcesPage.addItems}"  immediate="true" tabindex="9">
-					<h:graphicImage id="continueImg" value="#{msgs.im_continue}" styleClass="BottomImgSpace" onclick="clearmessage()"
+					<h:graphicImage id="continueImg" value="#{msgs.im_continue}" styleClass="BottomImgSpace" 
 						onmouseover="this.src = '#{msgs.im_continue_over}'" 
 						onmouseout="this.src = '#{msgs.im_continue}'" 
 						onmousedown="this.src = '#{msgs.im_continue_down}'" 
 						onmouseup="this.src = '#{msgs.im_continue_over}'"/>
                 </h:commandLink>				
 				<h:commandLink id="cancelButton"  action="#{manageResourcesPage.cancel}"  immediate="true" tabindex="9">
-					<h:graphicImage id="cancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" onclick="clearmessage()"
+					<h:graphicImage id="cancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace"
 						onmouseover="this.src = '#{msgs.im_cancel_over}'" 
 						onmouseout="this.src = '#{msgs.im_cancel}'" 
 						onmousedown="this.src = '#{msgs.im_cancel_down}'" 
 						onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
                 </h:commandLink>	
                 <h:commandLink id="finishButton"  action="#{manageResourcesPage.finish}"  immediate="true" tabindex="9">
-					<h:graphicImage id="finishImg" value="#{msgs.im_finish}" styleClass="BottomImgSpace" onclick="clearmessage()"
+					<h:graphicImage id="finishImg" value="#{msgs.im_finish}" styleClass="BottomImgSpace" 
 						onmouseover="this.src = '#{msgs.im_finish_over}'" 
 						onmouseout="this.src = '#{msgs.im_finish}'" 
 						onmousedown="this.src = '#{msgs.im_finish_down}'" 
