@@ -44,7 +44,7 @@ import org.sakaiproject.util.ResourceLoader;
 public class DeleteResourcePage implements Serializable{
 
 	 /** Dependency:  The logging service. */
-	protected Log logger = LogFactory.getLog(DeleteModulePage.class);
+	protected Log logger = LogFactory.getLog(DeleteResourcePage.class);
 	private SectionService sectionService;
 	private MeleteCHService meleteCHService;
 	
@@ -89,28 +89,38 @@ public class DeleteResourcePage implements Serializable{
   	public String deleteResource()
   	{
   		FacesContext context = FacesContext.getCurrentInstance();
-		try
-		{
-			// delete from content resource
-			meleteCHService.removeResource(this.delResourceId);
-			sectionService.deleteResourceInUse(this.delResourceId, this.courseId);
-			if (fromPage.startsWith("edit"))
-			{
-				ValueBinding binding = Util.getBinding("#{editSectionPage}");
-				EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
-				logger.debug("calling refresh of list ");
-				editPage.refreshCurrSiteResourcesList();
-			}
-			else
-			{
-				ValueBinding binding = Util.getBinding("#{addSectionPage}");
-				AddSectionPage addPage = (AddSectionPage) binding.getValue(context);
-				addPage.refreshCurrSiteResourcesList();
-			}		
-			return fromPage;
-		}
+  		try
+  		{
+  			if(delResourceId != null)
+  			{
+  				// delete from content resource
+  				meleteCHService.removeResource(this.delResourceId);
+  				sectionService.deleteResourceInUse(this.delResourceId, this.courseId);
+  				logger.debug("delete resource is done now move back to page");
+  			}
+  			if (fromPage.startsWith("edit"))
+  			{
+  				ValueBinding binding = Util.getBinding("#{editSectionPage}");
+  				EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
+  				editPage.refreshCurrSiteResourcesList();
+  			}
+  			else if(fromPage.startsWith("manage"))
+  			{				
+  				ValueBinding binding = Util.getBinding("#{manageResourcesPage}");
+  				ManageResourcesPage managePage = (ManageResourcesPage) binding.getValue(context);
+  				managePage.refreshCurrSiteResourcesList();				
+  			}
+  			else
+  			{
+  				ValueBinding binding = Util.getBinding("#{addSectionPage}");
+  				AddSectionPage addPage = (AddSectionPage) binding.getValue(context);
+  				addPage.refreshCurrSiteResourcesList();
+  			}		
+  			return fromPage;
+  		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			logger.error("error in delete resource" + e.toString());
 			ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 			String errMsg = bundle.getString(e.getMessage());

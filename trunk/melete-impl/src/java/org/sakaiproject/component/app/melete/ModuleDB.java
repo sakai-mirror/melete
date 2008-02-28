@@ -1781,10 +1781,8 @@ public class ModuleDB implements Serializable {
 					Integer copySectionId = sectionDB.addSection(copyMod, copySection, false);
 					copySection.setSectionId(copySectionId);
 					//copySection.setModule(copyMod);
-					logger.debug("check content type in copy module" + toCopySection.getContentType());
 					if (toCopySection.getContentType() != null && !toCopySection.getContentType().equals("notype"))
 					{
-						logger.debug("assumption is there is a type");
 						// if section content type is composed than create a new copy
 						if (toCopySection.getContentType().equals("typeEditor"))
 						{

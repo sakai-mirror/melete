@@ -492,6 +492,11 @@
       <managed-bean-name>manageResourcesPage</managed-bean-name>
       <managed-bean-class>org.sakaiproject.tool.melete.ManageResourcesPage</managed-bean-class>
       <managed-bean-scope>session</managed-bean-scope> 
+       <managed-property>
+	    	            <description>Service Dependency: Melete CH service</description>
+	    	            <property-name>meleteCHService</property-name>
+	    	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteCHService"]}</value>
+            </managed-property>   
 </managed-bean>  	     
     <!-- i18n -->
 
@@ -586,8 +591,7 @@
     </navigation-case>
     <navigation-case>
       <from-outcome>ContentUploadServerView</from-outcome>
-      <to-view-id>/melete/ContentUploadServerView.jsp</to-view-id>
-      <redirect/>
+      <to-view-id>/melete/ContentUploadServerView.jsp</to-view-id>   
     </navigation-case>
     <navigation-case>
       <from-outcome>ContentLinkServerView</from-outcome>
@@ -838,6 +842,10 @@
       <from-outcome>ContentLinkServerView</from-outcome>
       <to-view-id>/melete/ContentLinkServerView.jsp</to-view-id>
     </navigation-case>   
+    <navigation-case>
+      <from-outcome>manage_content</from-outcome>
+      <to-view-id>/melete/manage_content.jsp</to-view-id>      
+    </navigation-case>   
     </navigation-rule>
     
     
@@ -961,6 +969,11 @@
 		  <from-outcome>manage_content</from-outcome>
 		  <to-view-id>/melete/manage_content.jsp</to-view-id>
      </navigation-case>
+     <navigation-case>
+      <from-outcome>delete_resource</from-outcome>
+      <to-view-id>/melete/delete_resource.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>   
    </navigation-rule>  
    
    <!--restore modules -->

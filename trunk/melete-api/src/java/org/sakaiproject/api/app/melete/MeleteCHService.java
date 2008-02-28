@@ -53,6 +53,7 @@ public interface MeleteCHService{
 	 
      public List getListofImagesFromCollection(String collId);
 	 public List getListofLinksFromCollection(String collId);
+	 public List getListofMediaFromCollection(String collId);
 	 public String findLocalImagesEmbeddedInEditor(String uploadHomeDir, String contentEditor)throws MeleteException;
 	 public ContentResource getResource(String resourceId) throws Exception;
 	 public void checkResource(String resourceId) throws Exception;
