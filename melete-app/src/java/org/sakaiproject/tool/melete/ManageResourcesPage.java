@@ -53,7 +53,7 @@ import org.sakaiproject.api.app.melete.MeleteCHService;
 public class ManageResourcesPage {
   private String fileType;
   private String numberItems;
-  private int maxUploadSize;
+
   
   /** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(ManageResourcesPage.class);
