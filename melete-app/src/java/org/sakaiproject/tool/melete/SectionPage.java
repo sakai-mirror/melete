@@ -71,6 +71,7 @@ import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.tool.cover.SessionManager;
+import org.sakaiproject.tool.melete.ManageResourcesPage.DisplayResources;
 
 /**
  * @author Rashmi
@@ -119,8 +120,8 @@ public abstract class SectionPage implements Serializable {
 	 protected String access;
 	  private SectionResourceLicenseSelector m_license;
 	  protected SectionResourceService secResource;
-	  protected ArrayList currSiteResourcesList;
-	  private List displayResourcesList;
+	  protected List<DisplaySecResources> currSiteResourcesList;
+	  private List<DisplaySecResources> displayResourcesList;
 	  private RemoteFilesListingNav listNav;
 	  private String linkUrl;
 	  private byte[] secContentData;
@@ -968,7 +969,7 @@ public abstract class SectionPage implements Serializable {
 	/**
 	 * @return Returns the currSiteResourcesList.
 	 */
-	public ArrayList getCurrSiteResourcesList() {
+	public List<DisplaySecResources> getCurrSiteResourcesList() {
 		try{
 		if(currSiteResourcesList ==null)
 		{
@@ -977,9 +978,9 @@ public abstract class SectionPage implements Serializable {
 			String uploadCollId = getMeleteCHService().getUploadCollectionId();
 
 			// get list of all resources for upload type for the current site
-			currSiteResourcesList = new ArrayList();
-			Pattern p1 = Pattern.compile("-[0-9]*");
-			List allmembers = null;
+			currSiteResourcesList = new ArrayList<DisplaySecResources>();
+		
+			List<ContentResource> allmembers = null;
 			if(section == null || section.getContentType() == null) return null;
 
 			//to create list of resource whose type is typeUpload
@@ -994,16 +995,17 @@ public abstract class SectionPage implements Serializable {
 				}
 
 			if(allmembers == null) return null;
-			Iterator allmembers_iter = allmembers.iterator();
+			Iterator<ContentResource> allmembers_iter = allmembers.iterator();
 			while(allmembers_iter != null && allmembers_iter.hasNext())
 			{
-				ContentResource cr = (ContentResource)allmembers_iter.next();
+				ContentResource cr = allmembers_iter.next();
 				String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 //							 duplicate listing
 				if (displayName.length() > 50) displayName = displayName.substring(0,50) + "...";
 				String rUrl = cr.getUrl().replaceAll(" ", "%20");
 				currSiteResourcesList.add(new DisplaySecResources(displayName, cr.getId(),rUrl));
 			}
+			java.util.Collections.sort(currSiteResourcesList);
 			getListNav().setTotalSize(currSiteResourcesList.size()+1);
 		}
 		} catch (Exception e){logger.error("error in creating list for server residing files" + e.toString());}
@@ -1337,7 +1339,7 @@ public abstract class SectionPage implements Serializable {
 	 * inner class to set required content resource values for display
 	 *
 	 */
-	public class DisplaySecResources
+	public class DisplaySecResources implements Comparable<DisplaySecResources>
 	{
 		String resource_title;
 		String resource_id;
@@ -1384,6 +1386,15 @@ public abstract class SectionPage implements Serializable {
 		 */
 		public void setResource_url(String resource_url) {
 			this.resource_url = resource_url;
+		}
+		
+		public int compareTo(DisplaySecResources n) {
+			int res = resource_title.compareTo(n.getResource_title());			
+			return res;
+		}
+		
+		public String toString() {
+			return resource_title;		
 		}
 	}
 
