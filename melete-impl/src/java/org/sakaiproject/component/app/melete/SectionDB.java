@@ -687,7 +687,7 @@ public class SectionDB implements Serializable {
 				logger.debug(delResources + "section resources are set to null");
 
 				MeleteResource melRes = (MeleteResource) session.get(org.sakaiproject.component.app.melete.MeleteResource.class, delResourceId);
-				session.delete(melRes);
+				if(melRes != null)session.delete(melRes);
 
 				// complete transaction
 				tx.commit();
@@ -711,6 +711,7 @@ public class SectionDB implements Serializable {
 		catch (Exception ex)
 		{
 			logger.error(ex.toString());
+			ex.printStackTrace();
 			throw new MeleteException("delete_resource_fail");
 		}
 	

@@ -34,6 +34,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.component.UIInput;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
@@ -250,6 +251,10 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 	 * navigation rule to go to manage content page
 	 */
 	public String goToManageContent(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{manageResourcesPage}");
+		ManageResourcesPage managePage = (ManageResourcesPage) binding.getValue(context);
+		managePage.refreshCurrSiteResourcesList();
 		return "manage_content";
 	}
 	

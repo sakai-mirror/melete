@@ -31,7 +31,8 @@ public class RemoteFilesListingNav {
 	private int displayStartIndex;
 	private int displayEndIndex;
 	private boolean displayNav;
-
+	private String fromPage;
+	
 	public RemoteFilesListingNav()
 	{
 		totalSize = 0;
@@ -39,6 +40,7 @@ public class RemoteFilesListingNav {
 		chunkSize = 0;
 		displayPrev = false;
 		displayNext = false;
+		fromPage ="#";
 	}
 
 	public RemoteFilesListingNav(int totalSize,int currIndex,int chunkSize)
@@ -49,6 +51,7 @@ public class RemoteFilesListingNav {
 		this.endIndex = currIndex + chunkSize;
 		displayPrev = false;
 		displayNext = false;
+		fromPage ="#";
 	}
 
 	public int getCurrIndex()
@@ -70,11 +73,19 @@ public class RemoteFilesListingNav {
 		return endIndex;
 	}
 
+	public void resetCurrIndex()
+	{
+		this.currIndex  = 0;
+		this.endIndex = currIndex + chunkSize;
+		displayPrev = false;
+		displayNext = false;
+	}
+	
 	public String goPrev()
 	{
 		currIndex = currIndex - chunkSize;
 		endIndex = currIndex + chunkSize;
-		return "#";
+		return fromPage;
 	}
 
 	public String goNext()
@@ -84,7 +95,7 @@ public class RemoteFilesListingNav {
 		if(endIndex >= totalSize-1)
 			endIndex = totalSize-1;
 
-		return "#";
+		return fromPage;
 	}
 
 	/**
@@ -152,5 +163,13 @@ public class RemoteFilesListingNav {
 	 */
 	public void setDisplayNav(boolean displayNav) {
 		this.displayNav = displayNav;
+	}
+
+	/**
+	 * @param fromPage the fromPage to set
+	 */
+	public void setFromPage(String fromPage)
+	{
+		this.fromPage = fromPage;
 	}
 }
