@@ -14,8 +14,8 @@
 <script language="javascript1.2">
 function fillupload()
 {
-	var k =document.getElementById("file1").value;		
-	document.getElementById("AddSectionForm:ContentUploadView:filename").value=k;
+	//var k =document.getElementById("file1").value;		
+	//document.getElementById("AddSectionForm:ContentUploadView:filename").value=k;
 }
 function loadInputs()
 {
@@ -24,8 +24,7 @@ function loadInputs()
   for (i=2; i<=str; i++)
   {
    document.getElementById("choose"+i).style.display='block';
-  }  
-  
+  }   
 }
 function showInputs()
 {
@@ -41,6 +40,16 @@ function showInputs()
     document.getElementById("choose"+i).style.display='none';
   }
 
+}
+function clearItem(id)
+{
+  alert('In clearItem '+id);
+  document.getElementById("upload"+id).innerHTML="<INPUT TYPE=\"FILE\" id=\"file"+id+"\" NAME=\"file"+id+"\" /> <img src=\"images/remove_item.png\"/> <a id=\"remove"+id+"\" href=\"#\" onClick=\"javascript:clearItem("+id+")\">Remove item</a>";
+  document.getElementById("choose"+id).style.display='none';
+  var str=document.getElementById("FileUploadForm:number").selectedIndex;
+  alert('str is '+str);
+  if (str > 1) document.getElementById("FileUploadForm:number").selectedIndex=str-1;
+  else document.getElementById("FileUploadForm:number").selectedIndex=1;
 }
 </script>
 </head>
@@ -94,21 +103,31 @@ function showInputs()
 			<p>
 			<div id="choose1" style="display:block">
 			Choose a file
-			<INPUT TYPE="FILE" id="file1" NAME="file1" onChange="javascript:fillupload()"/>
+			<span id="upload1"><INPUT TYPE="FILE" id="file1" NAME="file1" />
 			<img src="images/remove_item.png"/>
-			<a id="remove1" href="FileUploadView.jsp" onClick="javascript:clearItem()">Remove item</a>
+			<a id="remove1" href="#" onClick="javascript:clearItem(1)">Remove item</a>
+			</span>
 			</div>
-			<br>
+		
 			<div id="choose2" style="display:none">Choose a file
-			<INPUT TYPE="FILE" id="file2" NAME="file2" onChange="javascript:fillupload()"/>
+			<span id="upload2"><INPUT TYPE="FILE" id="file2" NAME="file2" />
+			<img src="images/remove_item.png"/>
+			<a id="remove2" href="#" onClick="javascript:clearItem(2)">Remove item</a>
+			</span>
 			</div>
-			<br>
+		
 			<div id="choose3" style="display:none">Choose a file
-			<INPUT TYPE="FILE" id="file3" NAME="file3" onChange="javascript:fillupload()"/>
+			<span id="upload3"><INPUT TYPE="FILE" id="file3" NAME="file3" />
+			<img src="images/remove_item.png"/>
+			<a id="remove3" href="#" onClick="javascript:clearItem(3)">Remove item</a>
+			</span>
 			</div>
-			<br>
+		
 			<div id="choose4" style="display:none">Choose a file
-			<INPUT TYPE="FILE" id="file4" NAME="file4" onChange="javascript:fillupload()"/>
+			<span id="upload4"><INPUT TYPE="FILE" id="file4" NAME="file4" />
+			<img src="images/remove_item.png"/>
+			<a id="remove4" href="#" onClick="javascript:clearItem(4)">Remove item</a>
+			</span>
 			</div>
 			</p>
 	        </td>
