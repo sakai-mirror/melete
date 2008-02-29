@@ -1001,6 +1001,10 @@
 		  <from-outcome>file_upload_view</from-outcome>
 		  <to-view-id>/melete/FileUploadView.jsp</to-view-id>
      </navigation-case>
+     <navigation-case>
+		  <from-outcome>link_upload_view</from-outcome>
+		  <to-view-id>/melete/LinkUploadView.jsp</to-view-id>
+     </navigation-case>
    </navigation-rule>
 
    <!--FileUploadView-->
@@ -1035,6 +1039,40 @@
 		  <to-view-id>/melete/FileUploadView.jsp</to-view-id>
      </navigation-case>     
    </navigation-rule>  
+   
+  <!--LinkUploadView-->
+    <navigation-rule>
+    <from-view-id>/melete/LinkUploadView.jsp</from-view-id>
+     <navigation-case>
+		  <from-outcome>manage_content</from-outcome>
+		  <to-view-id>/melete/manage_content.jsp</to-view-id>
+     </navigation-case>
+     <navigation-case>
+		  <from-outcome>link_upload_view</from-outcome>
+		  <to-view-id>/melete/LinkUploadView.jsp</to-view-id>
+     </navigation-case>
+	<navigation-case>
+   		<from-outcome>list_modules_inst</from-outcome>
+   		<to-view-id>/melete/list_modules_inst.jsp</to-view-id>
+   	</navigation-case>
+   	<navigation-case>
+   		<from-outcome>list_auth_modules</from-outcome>
+   		<to-view-id>/melete/list_auth_modules.jsp</to-view-id>
+   	</navigation-case>
+   	<navigation-case>
+   		<from-outcome>modules_author_manage</from-outcome>
+   		<to-view-id>/melete/modules_author_manage.jsp</to-view-id>
+   	</navigation-case>
+   	<navigation-case>
+   		<from-outcome>author_preference</from-outcome>
+   		<to-view-id>/melete/author_preference.jsp</to-view-id>
+   	</navigation-case>
+   	<navigation-case>
+		  <from-outcome>link_upload_view</from-outcome>
+		  <to-view-id>/melete/LinkUploadView.jsp</to-view-id>
+     </navigation-case>     
+   </navigation-rule>  
+      
    
    <!--restore modules -->
    <navigation-rule>
