@@ -11,7 +11,7 @@
         <locale-config>
             <default-locale>en</default-locale>
         </locale-config>
-    </application>    
+    </application>  
   
 	<!-- =================== MeleteSiteAndUserInfo ============== -->
 	<managed-bean>
