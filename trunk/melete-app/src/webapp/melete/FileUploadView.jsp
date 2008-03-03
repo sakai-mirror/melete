@@ -83,7 +83,7 @@ function clearItem(id)
             <tr>
             	<td colspan="2">
             	<h:inputHidden id="numitems" value="#{addResourcesPage.numberItems}" />
-              		<h:outputText id="t2" value="#{msgs.manage_content_number}"/>
+              		<h:outputText id="t2" value="#{msgs.manage_content_number_files}"/>
                 	
 						  <h:selectOneMenu id="number" value="#{addResourcesPage.numberItems}" onchange="showInputs();" >
 						    <f:selectItem itemValue="1" itemLabel="#{msgs.manage_content_one}"/>	
@@ -99,6 +99,20 @@ function clearItem(id)
 						 </h:selectOneMenu>
 				</td>	
 			</tr>	
+			<tr>
+			  <td>
+			  <br>
+			  </td>
+			</tr>
+			<tr>
+		  		<td height="20" class="maintabledata5">&nbsp;
+		  		</td>
+		  	</tr>
+		  	<tr>
+			  <td>
+			  <br>
+			  </td>
+			</tr>
           <tr>
 		    <td colspan="2">
 			<p>
