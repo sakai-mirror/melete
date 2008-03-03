@@ -29,9 +29,11 @@ import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
+import javax.faces.model.SelectItem;
 import javax.faces.component.html.*;
 import javax.faces.component.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -45,6 +47,7 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ValueChangeEvent;
 
 import org.sakaiproject.component.app.melete.*;
+import org.sakaiproject.api.app.melete.ModuleObjService;
 import org.sakaiproject.api.app.melete.ModuleService;
 import org.sakaiproject.api.app.melete.SectionService;
 
@@ -61,11 +64,15 @@ public class MoveSectionsPage implements Serializable
 	
 	private List<ModuleDateBean> moduleDateBeans;	
 	
+	private ArrayList<SelectItem> availableModules;
+	
 	private boolean nomodsFlag;
 	
 	private String courseId;
 	
 	private String userId;
+	
+	private String selectId ;
 	
 	
 	/** Dependency:  The logging service. */
@@ -82,6 +89,8 @@ public class MoveSectionsPage implements Serializable
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 		try{
+			if(selectId != null) selectedModule = moduleService.getModule(new Integer(selectId).intValue());
+			
 			if(selectedModule == null)
 			{
 				String msg = bundle.getString("select_one_move_section");
@@ -103,42 +112,45 @@ public class MoveSectionsPage implements Serializable
 		return "list_auth_modules";
 	}
 	
-	public List<ModuleDateBean> getModuleDateBeans()
+	public List<SelectItem> getAvailableModules()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 		
 		try
 		{
-			ModuleService moduleService = getModuleService();			
-			moduleDateBeans = moduleService.getModuleDateBeans(getUserId(), getCourseId());			
-			if(moduleDateBeans == null || moduleDateBeans.size() == 0)
-				nomodsFlag = true;				
-			else nomodsFlag = false;			
+			if(availableModules == null)
+			{
+				availableModules = new ArrayList<SelectItem>(0);
+				ModuleService moduleService = getModuleService();			
+				moduleDateBeans = moduleService.getModuleDateBeans(getUserId(), getCourseId());			
+				if(moduleDateBeans == null || moduleDateBeans.size() == 0)
+				{
+					nomodsFlag = true;
+					return availableModules;
+				}
+				nomodsFlag = false;
+				for(ModuleDateBean md:moduleDateBeans)
+				{
+					availableModules.add(new SelectItem(new Integer(md.getModuleId()).toString(),md.getModule().getTitle()));
+				}
+				selectId = new Integer(moduleDateBeans.get(0).getModuleId()).toString();
+			}
 		}catch(Exception ex)
 		{
 			String msg = bundle.getString("move_section_fail");
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"move_section_fail",msg));		
 		}
-		return moduleDateBeans;
-	}
-	
-	public void selectedModuleChange(ValueChangeEvent event) throws AbortProcessingException
-	{
-		FacesContext context = FacesContext.getCurrentInstance();	
-		UIViewRoot root = context.getViewRoot();
-		UIData table = (UIData) root.findComponent("moveSectionsForm").findComponent("table");
-		ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
-		logger.debug("module selected" + mdbean.getModule().getTitle());
-		selectedModule = mdbean.getModule();
-		
-	}
+		return availableModules;
+}
 	
 	public void resetValues()
 	{
-		moduleDateBeans = null;
+		moduleDateBeans = null;	
+		availableModules = null;
 		selectedModule = null;
 		sectionBeans = null;
+		selectId = null;
 	}
 	
 	/**
@@ -200,5 +212,21 @@ public class MoveSectionsPage implements Serializable
 		userId = (String)sessionMap.get("userId");
 		}
 		return userId;
+	}	
+
+	/**
+	 * @return the selectId
+	 */
+	public String getSelectId()
+	{
+		return this.selectId;
+	}
+
+	/**
+	 * @param selectId the selectId to set
+	 */
+	public void setSelectId(String selectId)
+	{
+		this.selectId = selectId;	
 	}
 }

@@ -192,7 +192,8 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 		  for (ListIterator<SectionBean> i = sectionBeans.listIterator(); i.hasNext(); )
 		  {
 			  SectionBean moveSectionBean = (SectionBean)i.next();
-			  moduledb.moveSection(moveSectionBean.getSection(), (Module)selectedModule);
+			  if(moveSectionBean.getSection().getModuleId() != selectedModule.getModuleId().intValue())
+				  moduledb.moveSection(moveSectionBean.getSection(), (Module)selectedModule);
 		  }
 		}catch (Exception ex)
 		{
