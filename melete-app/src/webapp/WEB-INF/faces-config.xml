@@ -504,6 +504,11 @@
       <managed-bean-name>addResourcesPage</managed-bean-name>
       <managed-bean-class>org.sakaiproject.tool.melete.AddResourcesPage</managed-bean-class>
       <managed-bean-scope>session</managed-bean-scope> 
+       <managed-property>
+	    	            <description>Service Dependency: Melete CH service</description>
+	    	            <property-name>meleteCHService</property-name>
+	    	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteCHService"]}</value>
+            </managed-property>
  </managed-bean>  	     
     <!-- i18n -->
 

@@ -50,9 +50,7 @@ function showInputs()
 }
 function clearItem(id)
 {
-  alert('In clearItem '+id);
   var str=document.getElementById("LinkUploadForm:number").selectedIndex;
-  alert('str is '+str);
   document.getElementById("link"+id).value='';
   document.getElementById("title"+id).value='';
   document.getElementById("remove"+id).innerHTML="<a  href=\"#\" onClick=\"javascript:clearItem("+id+")\">Remove item</a>";  
@@ -425,6 +423,13 @@ function clearItem(id)
 			</table>
 	        </td>
 	     </tr>	
+         <tr>
+	       <td colspan="2">
+	       <b><span class="required">* Required</span></b>
+	       <br>
+	       <br>
+	       </td>
+	     </tr>	     
 	     <tr>
 	       <td colspan="2">
 	       <div align="center">
