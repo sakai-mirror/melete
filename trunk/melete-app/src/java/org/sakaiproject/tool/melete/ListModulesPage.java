@@ -76,6 +76,7 @@ public class ListModulesPage implements Serializable{
       private String typeUpload;
       private boolean nomodsFlag;
       private boolean expandAllFlag;
+      private boolean closedModulesFlag;
       private boolean trueFlag = true;
 
       private ModuleStudentPrivsService  nullMsp = null;
@@ -106,6 +107,7 @@ public class ListModulesPage implements Serializable{
 	  	courseId = null;
 	  	userId = null;
 	  	nomodsFlag = false;
+	  	closedModulesFlag = false;
 	  	setShowModuleId(-1);
 	  	if (getRole()!= null)
 		{
@@ -133,6 +135,7 @@ public class ListModulesPage implements Serializable{
 	  	instFlag = true;
 	  	studFlag = false;
 	  	nomodsFlag = false;
+	  	closedModulesFlag = false;
 	  	FacesContext context = FacesContext.getCurrentInstance();
 //	  	context.getViewRoot().setTransient(true);
 		if (getRole()!= null)
@@ -297,6 +300,18 @@ public class ListModulesPage implements Serializable{
 	  	      FacesContext ctx = FacesContext.getCurrentInstance();
   		      addNoModulesMessage(ctx);
   		      moduleDateBeans = new ArrayList();
+	  	    }
+	  	    else
+	  	    {
+	  	    	for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();)
+				{
+					ModuleDateBean mdbean = (ModuleDateBean) i.next();
+					if (mdbean.isVisibleFlag() == false)
+					{
+						closedModulesFlag = true;
+						break;
+					}
+				}	
 	  	    }
 		  	return moduleDateBeans;
 	  }
@@ -685,5 +700,15 @@ public class ListModulesPage implements Serializable{
 	public void setBookmarkStatus(boolean bookmarkStatus)
 	{
 		this.bookmarkStatus = bookmarkStatus;
+	}
+
+	public boolean isClosedModulesFlag()
+	{
+		return this.closedModulesFlag;
+	}
+
+	public void setClosedModulesFlag(boolean closedModulesFlag)
+	{
+		this.closedModulesFlag = closedModulesFlag;
 	}
 }
