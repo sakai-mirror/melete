@@ -44,20 +44,24 @@ function showInputs()
 }
 function clearItem(id)
 {
-  alert('In clearItem '+id);
   document.getElementById("upload"+id).innerHTML="<INPUT TYPE=\"FILE\" id=\"file"+id+"\" NAME=\"file"+id+"\" /> <img src=\"images/remove_item.png\"/> <a id=\"remove"+id+"\" href=\"#\" onClick=\"javascript:clearItem("+id+")\">Remove item</a>";
-  document.getElementById("choose"+id).style.display='none';
   var str=document.getElementById("FileUploadForm:number").selectedIndex;
-  alert('str is '+str);
-  if (str > 1) document.getElementById("FileUploadForm:number").selectedIndex=str-1;
-  else document.getElementById("FileUploadForm:number").selectedIndex=0;
+  if (str >= 1) 
+  {
+      document.getElementById("choose"+id).style.display='none';
+    document.getElementById("FileUploadForm:number").selectedIndex=str-1;
+  }  
+  else 
+  {
+    document.getElementById("FileUploadForm:number").selectedIndex=0;
+  }  
 }
 </script>
 </head>
 
 <f:view>
 <body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onload="loadInputs();setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');" >
- <h:form id="FileUploadForm">
+ <h:form id="FileUploadForm"  enctype="multipart/form-data">
  <table>
 	<tr>
 		<td valign="top"></td>
@@ -117,71 +121,79 @@ function clearItem(id)
 		    <td colspan="2">
 			<p>
 			<div id="choose1" style="display:block">
-			Choose a file
+			<b><span class="required">* </span></b>Choose a file
 			<span id="upload1"><INPUT TYPE="FILE" id="file1" NAME="file1" />
 			<img src="images/remove_item.png"/>
 			<a id="remove1" href="#" onClick="javascript:clearItem(1)">Remove item</a>
 			</span>
 			</div>
 		
-			<div id="choose2" style="display:none">Choose a file
+			<div id="choose2" style="display:none">
+			<b><span class="required">* </span></b>Choose a file
 			<span id="upload2"><INPUT TYPE="FILE" id="file2" NAME="file2" />
 			<img src="images/remove_item.png"/>
 			<a id="remove2" href="#" onClick="javascript:clearItem(2)">Remove item</a>
 			</span>
 			</div>
 		
-			<div id="choose3" style="display:none">Choose a file
+			<div id="choose3" style="display:none">
+			<b><span class="required">* </span></b>Choose a file
 			<span id="upload3"><INPUT TYPE="FILE" id="file3" NAME="file3" />
 			<img src="images/remove_item.png"/>
 			<a id="remove3" href="#" onClick="javascript:clearItem(3)">Remove item</a>
 			</span>
 			</div>
 		
-			<div id="choose4" style="display:none">Choose a file
+			<div id="choose4" style="display:none">
+			<b><span class="required">* </span></b>Choose a file
 			<span id="upload4"><INPUT TYPE="FILE" id="file4" NAME="file4" />
 			<img src="images/remove_item.png"/>
 			<a id="remove4" href="#" onClick="javascript:clearItem(4)">Remove item</a>
 			</span>
 			</div>
 
-            <div id="choose5" style="display:block">
-			Choose a file
+            <div id="choose5" style="display:none">
+			<b><span class="required">* </span></b>Choose a file
 			<span id="upload5"><INPUT TYPE="FILE" id="file5" NAME="file5" />
 			<img src="images/remove_item.png"/>
 			<a id="remove5" href="#" onClick="javascript:clearItem(5)">Remove item</a>
 			</span>
 			</div>
 		
-			<div id="choose6" style="display:none">Choose a file
+			<div id="choose6" style="display:none">
+			<b><span class="required">* </span></b>Choose a file
 			<span id="upload6"><INPUT TYPE="FILE" id="file6" NAME="file6" />
 			<img src="images/remove_item.png"/>
 			<a id="remove6" href="#" onClick="javascript:clearItem(6)">Remove item</a>
 			</span>
 			</div>
 		
-			<div id="choose7" style="display:none">Choose a file
+			<div id="choose7" style="display:none">
+			<b><span class="required">* </span></b>Choose a file
 			<span id="upload7"><INPUT TYPE="FILE" id="file7" NAME="file7" />
 			<img src="images/remove_item.png"/>
 			<a id="remove7" href="#" onClick="javascript:clearItem(7)">Remove item</a>
 			</span>
 			</div>
 		
-			<div id="choose8" style="display:none">Choose a file
+			<div id="choose8" style="display:none">
+			<b><span class="required">* </span></b>Choose a file
 			<span id="upload8"><INPUT TYPE="FILE" id="file8" NAME="file8" />
 			<img src="images/remove_item.png"/>
 			<a id="remove8" href="#" onClick="javascript:clearItem(8)">Remove item</a>
 			</span>
 			</div>			
 			
-            <div id="choose9" style="display:none">Choose a file
+            <div id="choose9" style="display:none">
+            <b><span class="required">* </span></b>Choose a file
 			<span id="upload9"><INPUT TYPE="FILE" id="file9" NAME="file9" />
 			<img src="images/remove_item.png"/>
 			<a id="remove9" href="#" onClick="javascript:clearItem(9)">Remove item</a>
 			</span>
 			</div>	
 			
-			<div id="choose10" style="display:none">Choose a file
+			<div id="choose10" style="display:none">
+			<b><span class="required">* </span></b>Choose a file
 			<span id="upload10"><INPUT TYPE="FILE" id="file10" NAME="file10" />
 			<img src="images/remove_item.png"/>
 			<a id="remove10" href="#" onClick="javascript:clearItem(10)">Remove item</a>
@@ -190,6 +202,14 @@ function clearItem(id)
 			</p>
 	        </td>
 	     </tr>	
+	     <tr>
+	       <td colspan="2">
+	       <b><span class="required">* Required</span></b>
+	       <br>
+	       <span class="required">Note: You cannot upload files larger than 5MB.</span>
+	       <br>
+	       </td>
+	     </tr>
 	     <tr>
 	       <td colspan="2">
 	       <div align="center">

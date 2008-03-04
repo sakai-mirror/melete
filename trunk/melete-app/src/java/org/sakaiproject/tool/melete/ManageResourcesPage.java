@@ -83,8 +83,16 @@ public String addItems()
         Util.getBinding("#{addResourcesPage}");
     AddResourcesPage arPage = (AddResourcesPage)binding.getValue(ctx);
     arPage.setNumberItems(Integer.parseInt(this.numberItems));
-	if (this.fileType.equals("upload")) return "file_upload_view";
-	if (this.fileType.equals("link")) return "link_upload_view";
+	if (this.fileType.equals("upload")) 
+	{
+		arPage.setFileType("upload");
+		return "file_upload_view";
+	}
+	if (this.fileType.equals("link")) 
+	{
+		arPage.setFileType("link");
+		return "link_upload_view";
+	}
 	return "manage_content";
 }
 public String getFileType()
