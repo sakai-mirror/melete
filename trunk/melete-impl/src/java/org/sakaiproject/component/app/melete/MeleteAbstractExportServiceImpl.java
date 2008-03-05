@@ -382,7 +382,11 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 
 					ArrayList img_content = new ArrayList();
 					byte[] img_data =setContentResourceData(img_resource_id, img_content);
-					if(img_data == null) continue;
+					if(img_data == null) {
+						checkforimgs =checkforimgs.substring(endSrc);
+			            startSrc=0; endSrc = 0;
+						continue;
+					}
 					imgName= (String)img_content.get(0);
 					imgName = Validator.escapeResourceName(imgName);
 					createFileFromContent(img_data,imagesDir.getAbsolutePath()+File.separator+ imgName);
