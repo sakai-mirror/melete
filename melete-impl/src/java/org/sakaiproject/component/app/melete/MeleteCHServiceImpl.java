@@ -274,12 +274,57 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	 
 	/*
 	 * for remote browser listing for sferyx editor just get the image files
-	 */
+	 **/
 	 public List getListofImagesFromCollection(String collId)
+	{
+		try
+		{
+			// setup a security advisor
+			meleteSecurityService.pushAdvisor();
+
+			long starttime = System.currentTimeMillis();
+			logger.debug("time to get all collectionMap" + starttime);
+			ContentCollection c = getContentservice().getCollection(collId);
+			List mem = c.getMemberResources();
+			if (mem == null) return null;
+
+			ListIterator memIt = mem.listIterator();
+			while (memIt != null && memIt.hasNext())
+			{
+				ContentEntity ce = (ContentEntity) memIt.next();
+				if (ce.isResource())
+				{
+					String contentextension = ((ContentResource) ce).getProperties().getProperty(ce.getProperties().getNamePropContentType());
+
+					if (!contentextension.startsWith("image"))
+					{
+						memIt.remove();
+					}
+				}
+				else memIt.remove();
+			}
+			long endtime = System.currentTimeMillis();
+			logger.debug("end time to get all collectionMap" + (endtime - starttime));
+			return mem;
+		}
+		catch (Exception e)
+		{
+			logger.error(e.toString());
+		}
+		finally
+		{
+			// clear the security advisor
+			meleteSecurityService.popAdvisor();
+		}
+
+		return null;
+	}
+	 
+	 public List getListofFilesFromCollection(String collId)
 	 {
 	   try
 	    {
-      			//          setup a security advisor
+      			// setup a security advisor
         		meleteSecurityService.pushAdvisor();
     
         		long starttime = System.currentTimeMillis();
@@ -381,7 +426,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				 		ContentEntity ce = (ContentEntity)memIt.next();
 				 		if (ce.isResource())
 				 		{
-				 		String contentextension = ((ContentResource)ce).getContentType();
+				 		String contentextension = ((ContentResource)ce).getContentType();				 		
 				 		if(contentextension.equals(MIME_TYPE_EDITOR))
 				 			 memIt.remove();
 				 		}else  memIt.remove();

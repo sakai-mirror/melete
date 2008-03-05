@@ -72,7 +72,7 @@ public class MoveSectionsPage implements Serializable
 	
 	private String userId;
 	
-	private String selectId ;
+	private Integer selectId ;
 	
 	
 	/** Dependency:  The logging service. */
@@ -132,9 +132,9 @@ public class MoveSectionsPage implements Serializable
 				nomodsFlag = false;
 				for(ModuleDateBean md:moduleDateBeans)
 				{
-					availableModules.add(new SelectItem(new Integer(md.getModuleId()).toString(),md.getModule().getTitle()));
+					availableModules.add(new SelectItem(new Integer(md.getModuleId()),md.getModule().getTitle()));
 				}
-				selectId = new Integer(moduleDateBeans.get(0).getModuleId()).toString();
+				selectId = new Integer(moduleDateBeans.get(0).getModuleId());
 			}
 		}catch(Exception ex)
 		{
@@ -217,7 +217,7 @@ public class MoveSectionsPage implements Serializable
 	/**
 	 * @return the selectId
 	 */
-	public String getSelectId()
+	public Integer getSelectId()
 	{
 		return this.selectId;
 	}
@@ -225,7 +225,7 @@ public class MoveSectionsPage implements Serializable
 	/**
 	 * @param selectId the selectId to set
 	 */
-	public void setSelectId(String selectId)
+	public void setSelectId(Integer selectId)
 	{
 		this.selectId = selectId;	
 	}

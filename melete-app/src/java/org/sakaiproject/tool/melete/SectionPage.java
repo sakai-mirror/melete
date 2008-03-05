@@ -29,6 +29,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -123,6 +125,7 @@ public abstract class SectionPage implements Serializable {
 	  protected List<DisplaySecResources> currSiteResourcesList;
 	  private List<DisplaySecResources> displayResourcesList;
 	  private RemoteFilesListingNav listNav;
+	  private boolean sortAscFlag;
 	  private String linkUrl;
 	  private byte[] secContentData;
 	  protected String selResourceIdFromList;
@@ -160,7 +163,43 @@ public abstract class SectionPage implements Serializable {
             expandAllFlag = true;
             secResource = null;
             meleteResource = null;
+            sortAscFlag = true;
             }
+    
+    
+    static Comparator<DisplaySecResources> SectionResourcesComparatorDesc = new Comparator<DisplaySecResources>() {
+        public int compare(DisplaySecResources o1, DisplaySecResources o2) {
+               return -1 * (o1.compareTo(o2));      
+        }
+     };  
+    
+     public String sortResourcesAsc()
+     {
+     	sortAscFlag=false;	
+     	listNav.resetCurrIndex();
+     	sortList();
+     	return "#";
+     }
+
+
+     public String sortResourcesDesc()
+     {	
+     	sortAscFlag=true;
+     	listNav.resetCurrIndex();
+     	sortList();
+     	return "#";
+     }
+    
+     private void sortList()
+     {
+     	if(sortAscFlag) java.util.Collections.sort(currSiteResourcesList);
+     	else Collections.sort(currSiteResourcesList,SectionResourcesComparatorDesc);
+     }
+    
+     public boolean getSortAscFlag()
+     {
+    	 return this.sortAscFlag;
+     }
     /**
        * @return Returns the ModuleService.
        */
@@ -986,7 +1025,7 @@ public abstract class SectionPage implements Serializable {
 			//to create list of resource whose type is typeUpload
 				if(section.getContentType().equals("typeUpload") || section.getContentType().equals("typeExistUpload"))
 				{
-					allmembers = getMeleteCHService().getListofImagesFromCollection(uploadCollId);
+					allmembers = getMeleteCHService().getListofFilesFromCollection(uploadCollId);
 				}
 
 				if(section.getContentType().equals("typeLink") || section.getContentType().equals("typeExistLink"))
