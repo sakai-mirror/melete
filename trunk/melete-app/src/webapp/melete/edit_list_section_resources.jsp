@@ -33,10 +33,13 @@
 				  <h:column>
 					   <f:facet name="header">
 							<h:panelGroup>
-								<h:commandLink id="collapseAllAction" action="#{editSectionPage.collapseAllResources}" immediate="true">
-								    <h:graphicImage id="col_all_gif" alt="#{msgs.edit_list_resources_collapse_all}" title="#{msgs.edit_list_resources_collapse_all2}" value="images/collapse-expand.gif" rendered="#{editSectionPage.expandAllFlag}" styleClass="ExpClass"/>
+								<h:commandLink id="ascType" action="#{editSectionPage.sortResourcesAsc}" immediate="true" rendered="#{editSectionPage.sortAscFlag}">
+								    <h:graphicImage id="asc_Type_img" alt="#{msgs.manage_res_list_alt_asc}" title="#{msgs.manage_res_list_alt_asc}" value="images/sortascending.gif" styleClass="ExpClass"/>
+								 </h:commandLink>     
+								 <h:commandLink id="descType" action="#{editSectionPage.sortResourcesDesc}" immediate="true" rendered="#{!editSectionPage.sortAscFlag}">
+								    <h:graphicImage id="des_Type_img" alt="#{msgs.manage_res_list_alt_desc}" title="#{msgs.manage_res_list_alt_desc}" value="images/sortdescending.gif" styleClass="ExpClass"/>
 								 </h:commandLink>          
-											    <h:outputText value="#{msgs.edit_list_resources_title2}" />
+							    <h:outputText value="#{msgs.edit_list_resources_title2}" />
 							 </h:panelGroup> 
 						 </f:facet>
 					 <h:outputText id="emp_space" value="     "  styleClass="ExtraPaddingClass" rendered="#{curr_resources.resource_id != editSectionPage.selResourceIdFromList}"/>	

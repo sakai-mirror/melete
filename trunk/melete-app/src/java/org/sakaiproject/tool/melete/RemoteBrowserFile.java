@@ -1,24 +1,24 @@
 /**********************************************************************************
-*
-* $Header: /usr/src/sakai/melete-2.4/melete-app/src/java/org/sakaiproject/tool/melete/RemoteBrowserFile.java,v 1.6 2007/05/07 21:55:42 mallikat Exp $
-*
-***********************************************************************************
-*
-* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project 
-*   
-* Licensed under the Apache License, Version 2.0 (the "License"); you 
-* may not use this file except in compliance with the License. You may 
-* obtain a copy of the License at 
-*   
-* http://www.apache.org/licenses/LICENSE-2.0 
-*   
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the License is distributed on an "AS IS" BASIS, 
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
-* implied. See the License for the specific language governing 
-* permissions and limitations under the License. 
-*
-**********************************************************************************/
+ *
+ * $Header: /usr/src/sakai/melete-2.4/melete-app/src/java/org/sakaiproject/tool/melete/RemoteBrowserFile.java,v 1.6 2007/05/07 21:55:42 mallikat Exp $
+ *
+ ***********************************************************************************
+ *
+ * Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project 
+ *   
+ * Licensed under the Apache License, Version 2.0 (the "License"); you 
+ * may not use this file except in compliance with the License. You may 
+ * obtain a copy of the License at 
+ *   
+ * http://www.apache.org/licenses/LICENSE-2.0 
+ *   
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
+ * implied. See the License for the specific language governing 
+ * permissions and limitations under the License. 
+ *
+ **********************************************************************************/
 
 package org.sakaiproject.tool.melete;
 
@@ -44,47 +44,58 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.Entity;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.tool.cover.ToolManager;
+import org.sakaiproject.tool.melete.SectionPage.DisplaySecResources;
 
 /**
- * @author Rashmi
- * Created on Jan 7, 2005
- *
- * To get the server side files for wysiwyg editor remote browse
- *
- * revised on 3/17/05 by rashmi to get home directory from web.xml
- * and file separator linux and window compatibility
- * Mallika - 3/7/06 - Removing instr_id from path
+ * @author Rashmi Created on Jan 7, 2005 To get the server side files for wysiwyg editor remote browse 
  */
 class FileExtensionFilter implements FilenameFilter
 {
-	private String ext="*";
-	private String ext1=".gif";
-	private String ext2=".jpg";
-	   public FileExtensionFilter(String ext){
-	     this.ext = ext;
-	   }
-	   public boolean accept(File dir, String name){
-	     if (name.endsWith(ext1) ||name.endsWith(ext2) )
-	       return true;
-	     return false;
-	   }
+	private String ext = "*";
+
+	private String ext1 = ".gif";
+
+	private String ext2 = ".jpg";
+
+	public FileExtensionFilter(String ext)
+	{
+		this.ext = ext;
+	}
+
+	public boolean accept(File dir, String name)
+	{
+		if (name.endsWith(ext1) || name.endsWith(ext2)) return true;
+		return false;
+	}
 
 }
-public class RemoteBrowserFile {
-	private String fileName;
-	private long size;
-	private Date modifiedDate;
-	String instr_id="1";
-    String course_id="0";
 
-    private ServerConfigurationService serverConfigurationService;
-    protected Log logger = LogFactory.getLog(RemoteBrowserFile.class);
-    private String remoteDirLocation;
-    private String commonDirLocation;
-    private MeleteCHService meleteCHService;
-    private ArrayList remoteFiles = null;
-    private ArrayList remoteLinkFiles = null;
-    
+public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
+{
+	private String fileName;
+
+	private long size;
+
+	private Date modifiedDate;
+
+	String instr_id = "1";
+
+	String course_id = "0";
+
+	private ServerConfigurationService serverConfigurationService;
+
+	protected Log logger = LogFactory.getLog(RemoteBrowserFile.class);
+
+	private String remoteDirLocation;
+
+	private String commonDirLocation;
+
+	private MeleteCHService meleteCHService;
+
+	private ArrayList remoteFiles = null;
+
+	private ArrayList remoteLinkFiles = null;
+
 	public RemoteBrowserFile()
 	{
 		this.fileName = null;
@@ -106,6 +117,12 @@ public class RemoteBrowserFile {
 		this.modifiedDate = new Date();
 	}
 
+	public int compareTo(RemoteBrowserFile n)
+	{
+		int res = fileName.compareTo(n.getFileName());
+		return res;
+	}
+
 	public String getFileName()
 	{
 		return fileName;
@@ -120,6 +137,7 @@ public class RemoteBrowserFile {
 	{
 		return modifiedDate;
 	}
+
 	public void setFileName(String fileName)
 	{
 		this.fileName = fileName;
@@ -140,8 +158,8 @@ public class RemoteBrowserFile {
 	 */
 	public String getRemoteDirLocation()
 	{
-		if (logger.isDebugEnabled()) logger.debug("###########getRemoteDirLocation"+serverConfigurationService.getServerUrl());
-		return serverConfigurationService.getServerUrl()+"/sakai-melete-tool/melete/remotefilebrowser.jsf";
+		if (logger.isDebugEnabled()) logger.debug("###########getRemoteDirLocation" + serverConfigurationService.getServerUrl());
+		return serverConfigurationService.getServerUrl() + "/sakai-melete-tool/melete/remotefilebrowser.jsf";
 	}
 
 	/**
@@ -149,114 +167,131 @@ public class RemoteBrowserFile {
 	 */
 	public String getCommonDirLocation()
 	{
-		return serverConfigurationService.getServerUrl()+"/sakai-melete-tool/melete/commonfilebrowser.jsf";
+		return serverConfigurationService.getServerUrl() + "/sakai-melete-tool/melete/commonfilebrowser.jsf";
 	}
 
 	/*
 	 * new method to get files from collection
 	 */
-	 public List getRemoteBrowserFiles()
+	public List getRemoteBrowserFiles()
 	{
-	 	if (remoteFiles == null)
-	 	{
-	 	remoteFiles = new ArrayList();
-		try{
-		// 1. get upload collection
-			String uploadCollId = getMeleteCHService().getUploadCollectionId();
-	    // 2. list resources under collection
-			List allImgMembers = getMeleteCHService().getListofImagesFromCollection(uploadCollId);
-		// 3. add resources info in remoteFiles array as obj of RemoteBrowserFile
-			ListIterator allmembers_iter = allImgMembers.listIterator();
-			while (allmembers_iter != null && allmembers_iter.hasNext())
+		if (remoteFiles == null)
+		{
+			remoteFiles = new ArrayList<RemoteBrowserFile>();
+			try
 			{
-				ContentResource cr = (ContentResource)allmembers_iter.next();
-				String displayName = cr.getUrl().replaceFirst(serverConfigurationService.getServerUrl(),""); 
-				RemoteBrowserFile ob = new RemoteBrowserFile(displayName, cr.getContentLength());
-				remoteFiles.add(ob);
-			}
-
-		}catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	 	}
-		return remoteFiles;
-	}
-
-
-	 /*
-		 * new method to get links from collection
-		 */
-		 public List getRemoteBrowserLinkFiles()
-		{
-		 	if(remoteLinkFiles == null)
-		 	{
-			remoteLinkFiles = new ArrayList();
-			try{
-			// 1. get upload collection
+				// 1. get upload collection
 				String uploadCollId = getMeleteCHService().getUploadCollectionId();
-		    // 2. list resources under collection
-				List allImgMembers = getMeleteCHService().getListofLinksFromCollection(uploadCollId);
-			// 3. add resources info in remoteFiles array as obj of RemoteBrowserFile
+				// 2. list resources under collection
+				List allImgMembers = getMeleteCHService().getListofImagesFromCollection(uploadCollId);
+				// 3. add resources info in remoteFiles array as obj of RemoteBrowserFile
 				ListIterator allmembers_iter = allImgMembers.listIterator();
 				while (allmembers_iter != null && allmembers_iter.hasNext())
 				{
-					ContentResource cr = (ContentResource)allmembers_iter.next();
-					String displayName = cr.getUrl().replaceFirst(serverConfigurationService.getServerUrl(),"");
+					ContentResource cr = (ContentResource) allmembers_iter.next();
+					String displayName = cr.getUrl().replaceFirst(serverConfigurationService.getServerUrl(), "");
 					RemoteBrowserFile ob = new RemoteBrowserFile(displayName, cr.getContentLength());
-					remoteLinkFiles.add(ob);
+					remoteFiles.add(ob);
 				}
-
-			}catch(Exception e)
+				java.util.Collections.sort(remoteFiles);
+			}
+			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
-		 	}
-			return remoteLinkFiles;
 		}
+		return remoteFiles;
+	}
+
+	/*
+	 * new method to get links from collection
+	 */
+	public List getRemoteBrowserLinkFiles()
+	{
+		if (remoteLinkFiles == null)
+		{
+			remoteLinkFiles = new ArrayList();
+			try
+			{
+				// 1. get upload collection
+				String uploadCollId = getMeleteCHService().getUploadCollectionId();
+				// 2. list resources under collection
+				// List allImgMembers = getMeleteCHService().getListofLinksFromCollection(uploadCollId);
+				List allImgMembers = getMeleteCHService().getListofMediaFromCollection(uploadCollId);
+
+				// 3. add resources info in remoteFiles array as obj of RemoteBrowserFile
+				ListIterator allmembers_iter = allImgMembers.listIterator();
+				while (allmembers_iter != null && allmembers_iter.hasNext())
+				{
+					ContentResource cr = (ContentResource) allmembers_iter.next();
+					String displayName = cr.getUrl().replaceFirst(serverConfigurationService.getServerUrl(), "");
+					RemoteBrowserFile ob = new RemoteBrowserFile(displayName, cr.getContentLength());
+					remoteLinkFiles.add(ob);
+				}
+				java.util.Collections.sort(remoteLinkFiles);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		return remoteLinkFiles;
+	}
 
 	/**
 	 * @return Returns the serverConfigurationService.
 	 */
-	public ServerConfigurationService getServerConfigurationService() {
+	public ServerConfigurationService getServerConfigurationService()
+	{
 		return serverConfigurationService;
 	}
+
 	/**
-	 * @param serverConfigurationService The serverConfigurationService to set.
+	 * @param serverConfigurationService
+	 *        The serverConfigurationService to set.
 	 */
-	public void setServerConfigurationService(
-			ServerConfigurationService serverConfigurationService) {
+	public void setServerConfigurationService(ServerConfigurationService serverConfigurationService)
+	{
 		this.serverConfigurationService = serverConfigurationService;
 	}
+
 	/**
-	 * @param logger The logger to set.
+	 * @param logger
+	 *        The logger to set.
 	 */
-	public void setLogger(Log logger) {
+	public void setLogger(Log logger)
+	{
 		this.logger = logger;
 	}
 
 	/**
 	 * @return Returns the meleteCHService.
 	 */
-	public MeleteCHService getMeleteCHService() {
+	public MeleteCHService getMeleteCHService()
+	{
 		return meleteCHService;
 	}
 
-	public void setMeleteCHService(MeleteCHService meleteCHService) {
+	public void setMeleteCHService(MeleteCHService meleteCHService)
+	{
 		this.meleteCHService = meleteCHService;
 	}
 
 	/**
-	 * @param remoteFiles The remoteFiles to set.
+	 * @param remoteFiles
+	 *        The remoteFiles to set.
 	 */
-	public void setRemoteFiles(ArrayList remoteFiles) {
+	public void setRemoteFiles(ArrayList remoteFiles)
+	{
 		this.remoteFiles = remoteFiles;
 	}
+
 	/**
-	 * @param remoteLinkFiles The remoteLinkFiles to set.
+	 * @param remoteLinkFiles
+	 *        The remoteLinkFiles to set.
 	 */
-	public void setRemoteLinkFiles(ArrayList remoteLinkFiles) {
+	public void setRemoteLinkFiles(ArrayList remoteLinkFiles)
+	{
 		this.remoteLinkFiles = remoteLinkFiles;
 	}
 }
-

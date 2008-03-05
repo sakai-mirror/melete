@@ -42,9 +42,13 @@
 				  <h:column>
 					   <f:facet name="header">
 							<h:panelGroup>
-								<h:commandLink id="collapseAllAction" action="#{addSectionPage.collapseAllResources}" immediate="true">
-								    <h:graphicImage id="col_all_gif" alt="#{msgs.list_section_resources_collapse}" title="#{msgs.list_section_resources_collapse2}" value="images/collapse-expand.gif" rendered="#{addSectionPage.shouldRenderResources && addSectionPage.expandAllFlag}" styleClass="ExpClass"/>
-								 </h:commandLink>           
+								<h:commandLink id="ascType" action="#{addSectionPage.sortResourcesAsc}" immediate="true" rendered="#{addSectionPage.sortAscFlag}">
+								    <h:graphicImage id="asc_Type_img" alt="#{msgs.manage_res_list_alt_asc}" title="#{msgs.manage_res_list_alt_asc}" value="images/sortascending.gif" styleClass="ExpClass"/>
+								 </h:commandLink>     
+								 <h:commandLink id="descType" action="#{addSectionPage.sortResourcesDesc}" immediate="true" rendered="#{!addSectionPage.sortAscFlag}">
+								    <h:graphicImage id="des_Type_img" alt="#{msgs.manage_res_list_alt_desc}" title="#{msgs.manage_res_list_alt_desc}" value="images/sortdescending.gif" styleClass="ExpClass"/>
+								 </h:commandLink>        
+					            
 							  <h:outputText value="#{msgs.list_section_resources_title2}" />
 							 </h:panelGroup> 
 						 </f:facet>
