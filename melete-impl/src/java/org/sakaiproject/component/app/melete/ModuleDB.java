@@ -251,7 +251,7 @@ public class ModuleDB implements Serializable {
 	 * Murthy 03/08/05 --  set modification date commented
 	 * Rashmi - 07/07/07 - removed season and yr from method signature
 	 */
-	public void addModule(Module module, ModuleShdates moduleshowdates, String userId, String courseId)
+	public void addModule(Module module, ModuleShdates moduleshowdates, String userId, String courseId) throws Exception
 	{
 
 	try{
@@ -315,7 +315,7 @@ public class ModuleDB implements Serializable {
 	}catch(Exception ex){
    // Throw application specific error
 		logger.error("error at module db level");
-		//ex.printStackTrace();
+		throw new MeleteException("add_module_fail");
 	}
   }
 

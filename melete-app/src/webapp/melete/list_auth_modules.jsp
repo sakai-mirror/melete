@@ -169,7 +169,7 @@ if (msg != null)
       <h:outputText id="emp_spacemod2" value=" "/>
       
       <h:commandLink id="editMod" actionListener="#{listAuthModulesPage.editModule}"  action="#{listAuthModulesPage.redirectToEditModule}">     
-                   <h:outputText id="title2" value="#{mdbean.truncTitle}">
+                   <h:outputText id="title2" value="#{mdbean.module.title}">
                </h:outputText>
       </h:commandLink>
       <h:dataTable id="tablesec" rendered="#{((mdbean.moduleId == listAuthModulesPage.showModuleId)||(listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag))}"
@@ -183,7 +183,7 @@ if (msg != null)
               
               <h:commandLink id="editSec" actionListener="#{listAuthModulesPage.editSection}"  action="#{listAuthModulesPage.redirectToEditSection}">   
                  <h:outputText id="sectitle" 
-                            value="#{sectionBean.truncTitle}">
+                            value="#{sectionBean.section.title}">
                 </h:outputText>
               </h:commandLink>
             </h:column>
@@ -260,6 +260,7 @@ if (msg != null)
 		    	<f:param id="printmoduleId" name="printModuleId" value="#{listAuthModulesPage.printModuleId}" />
 		  	  <h:graphicImage id="printImgLink" value="images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 		  </h:outputLink>
+		    <h:outputText id="emp_space6" value="  " styleClass="ExtraPaddingClass" />
         </h:column>
 	    
           

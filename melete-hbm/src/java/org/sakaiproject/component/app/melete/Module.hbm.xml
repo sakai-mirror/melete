@@ -9,7 +9,7 @@
       <generator class="hilo"/>
     </id>
     <version name="version" column="VERSION" />
-     <property name="title" column="TITLE" type="string"  length="50" not-null="true"/>
+     <property name="title" column="TITLE" type="string"  length="255" not-null="true"/>
 	<property name="learnObj" column="LEARN_OBJ"  type="text"/>		
 	<!--size 500-->
 	<property name="description" column="DESCRIPTION"  type="text"  />				

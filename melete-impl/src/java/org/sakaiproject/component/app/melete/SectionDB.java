@@ -34,6 +34,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 import org.sakaiproject.api.app.melete.MeleteCHService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
 
@@ -106,6 +107,11 @@ public class SectionDB implements Serializable {
 		     {
 				logger.error("stale object exception" + sose.toString());
 		     }
+			catch(ConstraintViolationException cve)
+			{
+				logger.error("constraint voilation exception" + cve.getConstraintName());	
+				throw cve;
+			}
 			catch(HibernateException he)
 				     {
 						if(tx !=null) tx.rollback();
