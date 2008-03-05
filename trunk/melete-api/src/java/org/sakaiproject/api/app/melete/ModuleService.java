@@ -45,7 +45,7 @@ public interface ModuleService{
 	
 	public void setDtdLocation(String dtdLocation);
 	
-	public void insertProperties(ModuleObjService module, ModuleShdatesService moduleshdates,String userId, String courseId);
+	public void insertProperties(ModuleObjService module, ModuleShdatesService moduleshdates,String userId, String courseId) throws Exception;
 
 	public List getModuleDateBeans(String userId, String courseId);
 

@@ -82,10 +82,10 @@ return newWindow;
          <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}" rendered="#{mdbean.visibleFlag == listModulesPage.trueFlag}">
 
                   <h:outputText id="title"
-                           value="#{mdbean.truncTitle}">
+                           value="#{mdbean.module.title}">
               </h:outputText>             
           </h:commandLink>
-          <h:outputText id="titleTxt2" value="#{mdbean.truncTitle}" rendered="#{mdbean.visibleFlag != listModulesPage.trueFlag}"/>         
+          <h:outputText id="titleTxt2" value="#{mdbean.module.title}" rendered="#{mdbean.visibleFlag != listModulesPage.trueFlag}"/>         
         
         <h:dataTable id="tablesec" rendered="#{((mdbean.moduleId == listModulesPage.showModuleId)||(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}"
                   value="#{mdbean.sectionBeans}"
@@ -97,15 +97,15 @@ return newWindow;
              
              <h:commandLink id="viewSectionEditor"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}"  rendered="#{((section.section.contentType != listModulesPage.isNull && section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}">
                <h:outputText id="sectitleEditor" 
-                           value="#{section.truncTitle}">
+                           value="#{section.section.title}">
                </h:outputText>
              </h:commandLink>
              <h:commandLink id="viewSectionLink"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}"  rendered="#{((section.section.contentType != listModulesPage.isNull && section.section.contentType != listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}">
                <h:outputText id="sectitleLink" 
-                           value="#{section.truncTitle}">
+                           value="#{section.section.title}">
                </h:outputText>
              </h:commandLink>             
-             <h:outputText id="sectitleEditorTxt2" value="#{section.truncTitle}" rendered="#{mdbean.visibleFlag != listModulesPage.trueFlag}"/>
+             <h:outputText id="sectitleEditorTxt2" value="#{section.section.title}" rendered="#{mdbean.visibleFlag != listModulesPage.trueFlag}"/>
              </h:column>
           </h:dataTable>
           </h:column>

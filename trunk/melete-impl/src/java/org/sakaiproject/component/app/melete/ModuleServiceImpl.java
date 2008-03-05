@@ -143,9 +143,9 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 	 * @see org.foothillglobalaccess.melete.ModuleService#insertProperties(org.foothillglobalaccess.melete.Module, org.foothillglobalaccess.melete.ModuleShdates, int, int)
 	 * creates the course object and calls methods to actually insert a module.
 	 */
-	public void insertProperties(ModuleObjService module, ModuleShdatesService moduleshdates,String userId, String courseId)
+	public void insertProperties(ModuleObjService module, ModuleShdatesService moduleshdates,String userId, String courseId) throws Exception
 	{
-	  try{
+	 
 	  // module object and moduleshdates are provided by ui pages
 
 		Module module1 = (Module)module;
@@ -153,10 +153,7 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 
 	// insert new module
 		moduledb.addModule(module1, moduleshdates1, userId, courseId);
-	   }catch(Exception ex)
-		{
-		   //
-		}
+	
 	}
 
 

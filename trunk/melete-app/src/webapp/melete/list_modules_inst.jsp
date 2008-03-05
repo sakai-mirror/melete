@@ -83,13 +83,13 @@ return newWindow;
        <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}"  
           rendered="#{mdbean.visibleFlag == listModulesPage.trueFlag}">
               <h:outputText id="title"
-                           value="#{mdbean.truncTitle}">
+                           value="#{mdbean.module.title}">
          </h:outputText>             
        </h:commandLink>
       <h:commandLink id="viewModule2"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}"  
          rendered="#{mdbean.visibleFlag != listModulesPage.trueFlag}">      
          <h:outputText id="title2"
-                           value="#{mdbean.truncTitle}" styleClass="italics">
+                           value="#{mdbean.module.title}" styleClass="italics">
          </h:outputText>                 
        </h:commandLink>    
                 
@@ -105,23 +105,23 @@ return newWindow;
               
            <h:commandLink id="viewSectionEditor"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{((section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}">
                <h:outputText id="sectitleEditor" 
-                           value="#{section.truncTitle}">
+                           value="#{section.section.title}">
                </h:outputText>
              </h:commandLink>
             <h:commandLink id="viewSectionEditor2"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{((section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag != listModulesPage.trueFlag))}">
                <h:outputText id="sectitleEditor2" 
-                           value="#{section.truncTitle}" styleClass="italics">
+                           value="#{section.section.title}" styleClass="italics">
                </h:outputText>
              </h:commandLink>             
            <h:commandLink id="viewSectionLink"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}" rendered="#{((section.section.contentType != listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}">
                <h:outputText id="sectitleLink" 
-                           value="#{section.truncTitle}">
+                           value="#{section.section.title}">
                </h:outputText>
              </h:commandLink> 
           
            <h:commandLink id="viewSectionLink2"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}" rendered="#{((section.section.contentType != listModulesPage.typeLink)&&(mdbean.visibleFlag != listModulesPage.trueFlag))}">
                <h:outputText id="sectitleLink2" 
-                           value="#{section.truncTitle}" styleClass="italics">
+                           value="#{section.section.title}" styleClass="italics">
                </h:outputText>
              </h:commandLink>                           
             

@@ -1111,86 +1111,84 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		int fromSecId, toSecId;
 		List fromModuleList = moduleDB.getModules(fromContext);
 		//Iterate through all modules in site A
-		if (fromModuleList != null)
+		if (fromModuleList == null || fromModuleList.size() <= 0) return;
+
+		for (ListIterator i = fromModuleList.listIterator(); i.hasNext(); )
 		{
-			if (fromModuleList.size() > 0)
+			Module fromMod = (Module) i.next();
+			String fromModSeqXml = fromMod.getSeqXml();
+
+			//Copy module properties and insert, seqXml is null for now
+			Module toMod = new Module(fromMod.getTitle(), fromMod.getLearnObj(), fromMod.getDescription(), fromMod.getKeywords(), fromMod.getCreatedByFname(), fromMod.getCreatedByLname(), fromMod.getUserId(), fromMod.getModifiedByFname(), fromMod.getModifiedByLname(), fromMod.getInstitute(), fromMod.getWhatsNext(), fromMod.getCreationDate(), fromMod.getModificationDate(), null);
+			ModuleShdates toModshdate = new ModuleShdates(((ModuleShdates)fromMod.getModuleshdate()).getStartDate(), ((ModuleShdates)fromMod.getModuleshdate()).getEndDate());
+			try{
+			moduleDB.addModule(toMod, toModshdate, fromMod.getUserId(), toContext);
+			}catch(Exception ex3){logger.error("error importing module");}
+			sectionList = fromMod.getSections();
+			//Iterate throug sections of a module
+			if (sectionList != null)
 			{
-				for (ListIterator i = fromModuleList.listIterator(); i.hasNext(); )
+				int mapSize = sectionList.size();
+				if (mapSize > 0)
 				{
-					Module fromMod = (Module) i.next();
-				    String fromModSeqXml = fromMod.getSeqXml();
+					Iterator keyValuePairs = sectionList.entrySet().iterator();
+					while (keyValuePairs.hasNext())
+					{
+						Map.Entry entry = (Map.Entry) keyValuePairs.next();
+						Section fromSec = (Section) entry.getValue();
+						fromSecId = fromSec.getSectionId().intValue();
+						Section toSec = new Section(fromSec.getTitle(), fromSec.getCreatedByFname(), fromSec.getCreatedByLname(), fromSec.getModifiedByFname(), fromSec.getModifiedByLname(), fromSec.getInstr(), fromSec.getContentType(), fromSec.isAudioContent(), fromSec.isVideoContent(), fromSec.isTextualContent(), fromSec.isDeleteFlag(), fromSec.getCreationDate(), fromSec.getModificationDate());
+						try
+						{
+							//Insert into the SECTION table
+							sectionDB.addSection(toMod, toSec, false);
+							toSecId = toSec.getSectionId().intValue();
+							//Replace old references of sections to new references in SEQ xml
+							//TODO : Move the update seqxml lower down so sequence does not update
+							//if exception is thrown
+							if(!toSec.getContentType().equals("notype"))
+							{
+								toMres = new MeleteResource((MeleteResource)fromSec.getSectionResource().getResource());
+								toMres.setResourceId(null);
+								createContentResource(toMod,toSec,toMres,((MeleteResource)fromSec.getSectionResource().getResource()).getResourceId(),null);
+							}
+							if (fromModSeqXml!=null)
+								fromModSeqXml = fromModSeqXml.replace(Integer.toString(fromSecId), Integer.toString(toSecId));
 
-				    //Copy module properties and insert, seqXml is null for now
-				    Module toMod = new Module(fromMod.getTitle(), fromMod.getLearnObj(), fromMod.getDescription(), fromMod.getKeywords(), fromMod.getCreatedByFname(), fromMod.getCreatedByLname(), fromMod.getUserId(), fromMod.getModifiedByFname(), fromMod.getModifiedByLname(), fromMod.getInstitute(), fromMod.getWhatsNext(), fromMod.getCreationDate(), fromMod.getModificationDate(), null);
-			        ModuleShdates toModshdate = new ModuleShdates(((ModuleShdates)fromMod.getModuleshdate()).getStartDate(), ((ModuleShdates)fromMod.getModuleshdate()).getEndDate());
-				    moduleDB.addModule(toMod, toModshdate, fromMod.getUserId(), toContext);
-				    sectionList = fromMod.getSections();
-				    //Iterate throug sections of a module
-				    if (sectionList != null)
-				    {
-				    	int mapSize = sectionList.size();
-				    	if (mapSize > 0)
-				    	{
-				    		Iterator keyValuePairs = sectionList.entrySet().iterator();
-				    		while (keyValuePairs.hasNext())
-				    		{
-				    		  Map.Entry entry = (Map.Entry) keyValuePairs.next();
-				    		  Section fromSec = (Section) entry.getValue();
-				    		  fromSecId = fromSec.getSectionId().intValue();
-				    		  Section toSec = new Section(fromSec.getTitle(), fromSec.getCreatedByFname(), fromSec.getCreatedByLname(), fromSec.getModifiedByFname(), fromSec.getModifiedByLname(), fromSec.getInstr(), fromSec.getContentType(), fromSec.isAudioContent(), fromSec.isVideoContent(), fromSec.isTextualContent(), fromSec.isDeleteFlag(), fromSec.getCreationDate(), fromSec.getModificationDate());
-                              try
-                              {
-                            	//Insert into the SECTION table
-				    		    sectionDB.addSection(toMod, toSec, false);
-				    		    toSecId = toSec.getSectionId().intValue();
-				    		    //Replace old references of sections to new references in SEQ xml
-				    		    //TODO : Move the update seqxml lower down so sequence does not update
-				    		    //if exception is thrown
-					    		if(!toSec.getContentType().equals("notype"))
-					    		{
-					    			 toMres = new MeleteResource((MeleteResource)fromSec.getSectionResource().getResource());
-					    		     toMres.setResourceId(null);
-					    		     createContentResource(toMod,toSec,toMres,((MeleteResource)fromSec.getSectionResource().getResource()).getResourceId(),null);
-					    		}
-                                                        if (fromModSeqXml!=null)
-					    		fromModSeqXml = fromModSeqXml.replace(Integer.toString(fromSecId), Integer.toString(toSecId));
+						}
+						catch(Exception ex)
+						{
+							logger.error("error in inserting section "+ ex.toString());
+							ex.printStackTrace();
+							//rollback and delete section
+							try
+							{
+								sectionDB.deleteSection(toSec, null);
+							}
+							catch (Exception ex2)
+							{
+								logger.error("Error in deleting section "+ex2.toString());
+							}
+						}
 
-                              }
-                              catch(Exception ex)
-                  			  {
-                  			    logger.error("error in inserting section "+ ex.toString());
-					    ex.printStackTrace();
-                  			    //rollback and delete section
-                  			    try
-                  			    {
-                  			      sectionDB.deleteSection(toSec, null);
-                  			    }
-                  			    catch (Exception ex2)
-                  			    {
-                  			    	logger.error("Error in deleting section "+ex2.toString());
-                  			    }
-                  			  }
+					}
 
-				    		}
+					//Finally, update the seqXml for the module
+					toMod.setSeqXml(fromModSeqXml);
+					try
+					{
+						moduleDB.updateModule(toMod);
+					}
+					catch (Exception ex)
+					{
+						logger.error("error in updating module");
+					}
 
-				    		//Finally, update the seqXml for the module
-				    		toMod.setSeqXml(fromModSeqXml);
-				    		try
-				    		{
-				    		  moduleDB.updateModule(toMod);
-				    		}
-				    		catch (Exception ex)
-				 		    {
-				    			logger.error("error in updating module");
-				 		    }
-
-				    	}
-				    }
-
-			    }
+				}
 			}
-		}
 
+		}
+			
 	}
 	/*METHODS USED BY IMPORT FROM SITE END*/
 

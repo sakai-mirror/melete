@@ -157,9 +157,8 @@ function contentChangeSubmit()
                                   <tr>
                                     <td align="left" valign="top"><h:outputText id="text7" value="#{msgs.addmodulesections_section_title}" /><span class="required">*</span></td>
                                     <td width="600" align="left" valign="top">
-										<h:inputText id="title" value="#{addSectionPage.section.title}" size="45" required="true" styleClass="formtext" title="Title" tabindex="1">
-										<f:validateLength maximum="50" minimum="3" />										
-								     </h:inputText>
+										<h:inputText id="title" value="#{addSectionPage.section.title}" size="45" required="true" styleClass="formtext" title="Title" tabindex="1"/>
+										
 									</td>
                                   </tr>
                                   <tr>

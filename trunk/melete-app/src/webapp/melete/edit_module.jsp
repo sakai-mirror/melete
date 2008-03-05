@@ -119,9 +119,8 @@ function showEdateCal()
               <tr>
                 <td  align="left" valign="top"> <h:outputText value="#{msgs.edit_module_module_title}" /> <span class="required">*</span>  </td>
                 <td  align="left" valign="top">  
-						<h:inputText id="title" size="45" value="#{editModulePage.module.title}" required="true" styleClass="formtext">
-						<f:validateLength maximum="50" minimum="3" />					
-					</h:inputText>
+						<h:inputText id="title" size="45" value="#{editModulePage.module.title}" required="true" styleClass="formtext" />											
+					
 				</td>
               </tr>
              
