@@ -3,6 +3,7 @@
 
 <link href="rtbc004.css" type="text/css" rel="stylesheet" />
 
+
 <title>Melete - Modules: Student View</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
@@ -90,11 +91,10 @@ function showIframe()
   <h:inputHidden id="contentType" value="#{viewSectionsPage.section.contentType}"/>
 			
 	<br> 
-		 <h:outputText id="secinstLink" 
-                           value="#{msgs.view_section_clicking}" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString))}">
+		 <h:outputText escape="false" id="secinstLink" 
+                           value="#{msgs.view_section_clicking}<BR><BR>" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString))}">
       </h:outputText> 
-      <br>
-      <br>
+     
 	 <h:outputLink id="viewSectionLink"  value="#{viewSectionsPage.contentLink}" target="_blank" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString))}">
       <h:outputText id="sectitleLink" 
                            value="#{viewSectionsPage.linkName}">
