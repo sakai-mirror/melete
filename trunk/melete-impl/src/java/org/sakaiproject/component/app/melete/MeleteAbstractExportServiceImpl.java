@@ -313,6 +313,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 		catch(IdUnusedException unuse){
 			// if file not found exception or content is missing continue working
 			logger.error("error in reading resource content in export section");
+			return null;
 			}
 		catch(Exception e){
 			logger.error("error in reading resource in export section");

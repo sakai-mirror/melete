@@ -322,6 +322,7 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 
 				// read resource and create a file
 				ArrayList link_content = new ArrayList();
+				logger.debug("calling secContent from create resource ");
 				byte[] linkdata =setContentResourceData(link_resource_id, link_content);
 				if(linkdata == null) {resource =null;return;}
 				if(!((String)link_content.get(2)).equals(getMeleteCHService().MIME_TYPE_LINK))
@@ -422,8 +423,10 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 			if(section.getSectionResource() != null)
 			{
 				MeleteResource meleteResource = (MeleteResource)section.getSectionResource().getResource();
+				if(meleteResource == null) return k;
 				String content_resource_id = meleteResource.getResourceId();
 				ArrayList content_data = new ArrayList();
+				logger.debug("calling secContent from create section");
 				byte[] content_data1 =setContentResourceData(content_resource_id,content_data);
 
 				if(content_data1 == null || content_data == null) return k;
@@ -510,8 +513,8 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 							Section probSection = sectionDB.getSection(Integer.parseInt(currItem.getAttribute("id")));
 							probEncounteredSections += module.getTitle() +" section: "+ probSection.getTitle();
 							logger.debug("problems found in impl" + probEncounteredSections);
-							throw new MeleteException(probEncounteredSections);
-						//	continue;
+					//		throw new MeleteException(probEncounteredSections);
+							continue;
 							}
 					}
 					//		 add next steps as the last section of the module by rashmi
@@ -586,6 +589,7 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 		catch(IdUnusedException unuse){
 			// if file not found exception or content is missing continue working
 			logger.error("error in reading resource content in export section");
+			return null;
 			}
 		catch(Exception e){
 			logger.error("error in reading resource in export section");
@@ -654,8 +658,13 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 					}
 
 					ArrayList img_content = new ArrayList();
+					logger.debug("calling secContent from replace Image");
 					byte[] img_data =setContentResourceData(img_resource_id, img_content);
-					if(img_data == null) continue;
+					if(img_data == null){
+						 checkforimgs =checkforimgs.substring(endSrc);
+				         startSrc=0; endSrc = 0;
+						continue;
+					}
 					imgName= (String)img_content.get(0);
 					imgName = Validator.escapeResourceName(imgName);
 					createFileFromContent(img_data,imagesDir.getAbsolutePath()+File.separator+ imgName);
