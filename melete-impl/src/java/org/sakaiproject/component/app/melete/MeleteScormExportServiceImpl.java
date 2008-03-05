@@ -178,6 +178,7 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
             if(section.getSectionResource() != null)
             {
                 MeleteResource meleteResource = (MeleteResource)section.getSectionResource().getResource();
+                if(meleteResource == null) return k;
                 String content_resource_id = meleteResource.getResourceId();
                 ArrayList content_data = new ArrayList();
                 byte[] content_data1 =setContentResourceData(content_resource_id,content_data);
