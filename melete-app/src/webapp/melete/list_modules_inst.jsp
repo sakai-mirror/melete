@@ -10,10 +10,14 @@
 <script type="text/javascript" language="javascript">
 function OpenPrintWindow(windowURL,windowName)
 {
-var windowDefaults = "status=no, menubar=no, location=no, scrollbars=yes, resizeable=yes, width=700, height=500, left=20, top=20";
-var newWindow = window.open(windowURL, windowName,windowDefaults);
-if (window.focus) { newWindow.focus(); } ; // force the window to the front if the browser supports it
-return newWindow;
+	var _info = navigator.userAgent;
+  	var _ie = (_info.indexOf("MSIE") > 0 && _info.indexOf("Win") > 0 && _info.indexOf("Windows 3.1") < 0);
+	var windowDefaults = "status=no, menubar=no, location=no, scrollbars=yes, resizeable=yes, width=700, height=700, left=20, top=20";
+	var newWindow;
+	if(!_ie) newWindow = window.open(windowURL,windowName,windowDefaults);
+	else newWindow = window.open(windowURL,null,windowDefaults);
+	if (window.focus) { newWindow.focus(); } ; // force the window to the front if the browser supports it
+	return newWindow;
 
 }
 </script>
