@@ -786,7 +786,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		         while(checkforimgs !=null)
 		         {
 		           // look for a href and img tag       
-		        	ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);	    			
+		        	ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
+		        
 	    			checkforimgs = (String)embedData.get(0);
 	    			if (embedData.size() > 1)
 	    			{
@@ -797,7 +798,19 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    			// find filename
 	    			fileName = checkforimgs.substring(startSrc, endSrc);
 	    			 String patternStr = fileName;
-	    			logger.debug("processing embed src" + fileName); 
+	    			logger.debug("processing embed src" + fileName);
+	    			
+	    			// process links and append http:// protocol if not provided
+	    			String foundLink = (String)embedData.get(3);
+	    			if(foundLink != null && foundLink.equals("link") && !(fileName.startsWith("http://") || fileName.startsWith("https://") || fileName.startsWith("mailto:") || fileName.startsWith("#")) )
+	    			{
+	    				logger.debug("processing embed link src for appending protocol");
+	    				patternStr= "http://" + patternStr;
+	    				contentEditor = meleteUtil.replace(contentEditor,fileName,patternStr);
+	 		            checkforimgs =  meleteUtil.replace(checkforimgs,fileName,patternStr);
+	 		           fileName = patternStr;	
+	    			}
+	    			
 	    			//process for local uploaded files
 					if(fileName != null && fileName.trim().length() > 0&& (!(fileName.equals(File.separator))) 
 						&& fileName.startsWith("file:/") )
