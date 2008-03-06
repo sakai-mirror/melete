@@ -25,6 +25,10 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
 
 import org.sakaiproject.util.ResourceLoader;
 
@@ -85,83 +89,162 @@ public class AddResourcesPage {
 	  String secResourceName;
 	  String secContentMimeType;
 
+	  FacesContext context = FacesContext.getCurrentInstance();
+	  ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+	  String addCollId = getMeleteCHService().getUploadCollectionId();
 
-	  if(this.fileType.equals("upload"))
+	  //Code that validates required fields
+	  int emptyCounter = 0;
+	  String linkValue, titleValue;
+	  boolean emptyLinkFlag = false;
+	  boolean emptyTitleFlag = false;
+	  for (int i=1; i<=10; i++)
+	  {
+		if (this.fileType.equals("upload"))
+		{
+			org.apache.commons.fileupload.FileItem fi = (org.apache.commons.fileupload.FileItem) context.getExternalContext().getRequestMap().get("file"+i);
+			if(fi == null || fi.getName() == null || fi.getName().length() ==0)
+            {
+		    emptyCounter = emptyCounter + 1;
+		    }
+		 }
+		if (this.fileType.equals("link"))
+		{
+			linkValue = (String)context.getExternalContext().getRequestMap().get("link"+i);
+			titleValue = (String)context.getExternalContext().getRequestMap().get("title"+i);
+			if (((linkValue == null)||(linkValue.trim().length() == 0))&&((titleValue == null)||(titleValue.trim().length() == 0)))
+			{
+			  emptyCounter = emptyCounter + 1;
+			}
+			else
+			{
+				if (((linkValue == null)||(linkValue.trim().length() == 0))&&((titleValue != null)&&(titleValue.trim().length() > 0)))
+				{
+					emptyLinkFlag = true;
+					break;
+				}
+				if (((linkValue != null)&&(linkValue.trim().length() > 0))&&((titleValue == null)||(titleValue.trim().length() == 0)))
+				{
+					emptyTitleFlag = true;
+					break;
+				}
+			}
+		}
+
+	  }
+	  try
+	  {
+		if (this.fileType.equals("upload"))
+		{
+			if (emptyCounter == 10) throw new MeleteException("all_uploads_empty");
+		}
+		if (this.fileType.equals("link"))
+		{
+			if (emptyCounter == 10) throw new MeleteException("all_links_empty");
+			if (emptyLinkFlag == true) throw new MeleteException("link_empty");
+			if (emptyTitleFlag == true) throw new MeleteException("title_empty");
+		}
+	  }
+	  catch (MeleteException mex)
       {
-             for (int i=1; i<=10; i++)
-             {
-               try
-               {
-                 FacesContext context = FacesContext.getCurrentInstance();
-                 org.apache.commons.fileupload.FileItem fi = (org.apache.commons.fileupload.FileItem) context.getExternalContext().getRequestMap().get("file"+i);
+		  String errMsg = bundle.getString(mex.getMessage());
+	      context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
+		  return "failure";
+      }
 
-                 if(fi !=null && fi.getName() != null && fi.getName().length() !=0)
+      for (int i=1; i<=10; i++)
+      {
+    	try
+        {
+        if(this.fileType.equals("upload"))
+        {
+              org.apache.commons.fileupload.FileItem fi = (org.apache.commons.fileupload.FileItem) context.getExternalContext().getRequestMap().get("file"+i);
+
+              if(fi !=null && fi.getName() != null && fi.getName().length() !=0)
+              {
+                 Util.validateUploadFileName(fi.getName());
+                 // filename on the client
+                 secResourceName = fi.getName();
+                 if (secResourceName.indexOf("/") != -1)
                  {
-                   validateUploadFileName(fi.getName());
-                   // filename on the client
-                   secResourceName = fi.getName();
-                   if (secResourceName.indexOf("/") != -1)
-                   {
-                     secResourceName = secResourceName.substring(secResourceName.lastIndexOf("/")+1);
-                   }
-                   if (secResourceName.indexOf("\\") != -1)
-                   {
-                     secResourceName = secResourceName.substring(secResourceName.lastIndexOf("\\")+1);
-                   }
-                   if (logger.isDebugEnabled()) logger.debug("Rsrc name is "+secResourceName);
-                   if (logger.isDebugEnabled()) logger.debug("upload section content data " + (int)fi.getSize());
-                   secContentData= new byte[(int)fi.getSize()];
-                   InputStream is = fi.getInputStream();
-                   is.read(secContentData);
+                   secResourceName = secResourceName.substring(secResourceName.lastIndexOf("/")+1);
+                 }
+                 if (secResourceName.indexOf("\\") != -1)
+                 {
+                   secResourceName = secResourceName.substring(secResourceName.lastIndexOf("\\")+1);
+                 }
 
-                   secContentMimeType = fi.getContentType();
-                   if (logger.isDebugEnabled()) logger.debug("file upload success" + secContentMimeType);
-                   if (logger.isDebugEnabled()) logger.debug("new names for upload content is" + secContentMimeType +"," + secResourceName);
-                   ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false,secResourceName,"");
-                   if (logger.isDebugEnabled()) logger.debug("add resource now " + secContentData );
-                   try
-                   {
-        	         String newResourceId = getMeleteCHService().addResourceItem(secResourceName,secContentMimeType,getMeleteCHService().getUploadCollectionId(),secContentData,res );
-   		           }
-   		           catch(MeleteException me)
-   			       {
-   			         logger.error("error in creating resource for section content");
-   			         throw me;
-   			       }
-   		           catch(Exception e)
-   			       {
-   			         logger.error("error in creating resource for section content");
-   			         e.printStackTrace();
-   			         throw new MeleteException("add_section_fail");
-   			       }
-                  }
-                  else
-                  {
-                      logger.info("File being uploaded is NULL");
-                      continue;
-                  }
-                }
-               	catch(Exception e)
-                {
-                    logger.error("file upload FAILED" + e.toString());
-                }
+                 if (logger.isDebugEnabled()) logger.debug("Rsrc name is "+secResourceName);
+                 if (logger.isDebugEnabled()) logger.debug("upload section content data " + (int)fi.getSize());
 
+                 secContentData= new byte[(int)fi.getSize()];
+                 InputStream is = fi.getInputStream();
+                 is.read(secContentData);
+
+                 secContentMimeType = fi.getContentType();
+
+                 if (logger.isDebugEnabled()) logger.debug("file upload success" + secContentMimeType);
+                 if (logger.isDebugEnabled()) logger.debug("new names for upload content is" + secContentMimeType +"," + secResourceName);
+
+                 addItem(secResourceName,secContentMimeType, addCollId, secContentData);
+               }
+               else
+               {
+                  logger.info("File being uploaded is NULL");
+                  continue;
+                }
+            }//End if filetype is upload
+            if (this.fileType.equals("link"))
+            {
+              secContentMimeType=getMeleteCHService().MIME_TYPE_LINK;
+              String linkUrl = (String) context.getExternalContext().getRequestMap().get("link"+i);
+              secResourceName = (String) context.getExternalContext().getRequestMap().get("title"+i);
+              Util.validateLink(linkUrl);
+
+              if ((linkUrl != null)&&(linkUrl.trim().length() > 0)&&(secResourceName != null)&&(secResourceName.trim().length() > 0))
+              {
+                secContentData = new byte[linkUrl.length()];
+                secContentData = linkUrl.getBytes();
+                addItem(secResourceName,secContentMimeType, addCollId, secContentData);
+              }
+             }//End if filetype is link
+            }
+            catch (MeleteException mex)
+            {
+              String errMsg = bundle.getString(mex.getMessage());
+      	      context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
+			  return "failure";
+            }
+            catch(Exception e)
+            {
+              logger.error("file upload FAILED" + e.toString());
              }
-        }
+           }
+
 	    return "manage_content";
       }
 
-  public boolean validateUploadFileName(String name) throws MeleteException
-  {
-    if (logger.isDebugEnabled()) logger.debug("file name for validation is" + name);
-        if(name.indexOf("#") != -1)
-  	  	{
-  	  	logger.error("embedded FILE contains hash or other characters " + name);
-	    throw new MeleteException("embed_img_bad_filename");
-  	  	}
-     return true;
-  }
 
+  private void addItem(String secResourceName, String secContentMimeType,String addCollId, byte[] secContentData) throws MeleteException
+  {
+	  ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false,secResourceName,"");
+      if (logger.isDebugEnabled()) logger.debug("add resource now " + secContentData );
+      try
+      {
+        String newResourceId = getMeleteCHService().addResourceItem(secResourceName,secContentMimeType, addCollId, secContentData,res );
+      }
+      catch(MeleteException me)
+	  {
+	     logger.error("error in creating resource for section content");
+	     throw me;
+	  }
+      catch(Exception e)
+	  {
+	     logger.error("error in creating resource for section content");
+	     e.printStackTrace();
+	     throw new MeleteException("add_item_fail");
+	   }
+  }
 
 public MeleteCHService getMeleteCHService()
 {
