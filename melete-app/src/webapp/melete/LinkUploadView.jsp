@@ -70,7 +70,7 @@ function clearItem(id)
 
 <f:view>
 <body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onload="loadInputs();setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');" >
- <h:form id="LinkUploadForm">
+ <h:form id="LinkUploadForm" enctype="multipart/form-data">
  <table>
 	<tr>
 		<td valign="top"></td>

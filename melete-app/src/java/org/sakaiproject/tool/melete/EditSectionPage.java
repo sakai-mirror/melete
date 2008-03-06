@@ -62,7 +62,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	private String secResourceDescription1;
 
 	private boolean shouldRenderContentTypeSelect = false;
-	
+
 	// picking from server
 	private String editSelection;
 
@@ -249,21 +249,21 @@ public class EditSectionPage extends SectionPage implements Serializable
 		UIData table = (UIData) root.findComponent("ServerViewForm:ResourceListingForm").findComponent("table");
 		DisplaySecResources selectedDr = (DisplaySecResources) table.getRowData();
 		logger.debug("selected row to delete " + selectedDr.getResource_id());
-		 
+
 		ValueBinding binding =Util.getBinding("#{deleteResourcePage}");
 		DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
 		delResPage.resetValues();
 		if(section.getContentType().equals("typeUpload"))
 			delResPage.setFromPage("editContentUploadServerView");
 		else if (section.getContentType().equals("typeLink"))
-			delResPage.setFromPage("editContentLinkServerView");		
-		
+			delResPage.setFromPage("editContentLinkServerView");
+
 		delResPage.setResourceName(selectedDr.getResource_title());
-		delResPage.processDeletion(selectedDr.getResource_id(), courseId);		
+		delResPage.processDeletion(selectedDr.getResource_id(), courseId);
 		return;
 	}
-	
-	
+
+
 	public String saveHere()
 	{
 		checkUploadExists();
@@ -382,9 +382,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 			if(!saveHere().equals("failure"))
 			{
 				setSuccess(true);
-			} 
+			}
 			else return "editmodulesections";
-		
+
 
 		// create new instance of section model
 		setSection(null);
@@ -410,12 +410,12 @@ public class EditSectionPage extends SectionPage implements Serializable
 	public String Finish()
 	{
 		setSuccess(false);
-		
+
 			if(!saveHere().equals("failure"))
 			{
 			setSuccess(true);
 			} else return "editmodulesections";
-		
+
 
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
@@ -504,7 +504,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		 return "delete_resource";
 	}
-	
+
 	/*
 	 * on clicking expandAll resource listing shows
 	 */
@@ -538,7 +538,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	public void setModuleService(ModuleService moduleService)
 	{
 		this.moduleService = moduleService;
-	}	
+	}
 
 	/**
 	 * @return Returns the editSelection.
@@ -695,7 +695,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "select_or_cancel", errMsg));
 					return "editContentLinkServerView";
 				}
-				String check = validateLink();
+				Util.validateLink(getLinkUrl());
 				/*
 				 * if(!check.equals("OK")) { errMsg = bundle.getString("add_section_bad_url"); ctx.addMessage (null, new
 				 * FacesMessage(FacesMessage.SEVERITY_ERROR,"add_section_bad_url",errMsg)); return "editContentLinkServerView"; }
@@ -709,7 +709,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "URL_title_reqd", errMsg));
 					return "editContentLinkServerView";
 				}
-				secResourceName = newURLTitle;				
+				secResourceName = newURLTitle;
 				createLinkUrl();
 				String res_mime_type = getMeleteCHService().MIME_TYPE_LINK;
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, secResourceDescription);
@@ -738,10 +738,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 			logger.error("error in set server url for edit section content" + errMsg);
 			e.printStackTrace();
 			if (e.getMessage() != null)
-			{	
+			{
 			  errMsg = bundle.getString(e.getMessage());
 			  ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), errMsg));
-			}  
+			}
 			return "editContentLinkServerView";
 		}
 		return "editmodulesections";
@@ -792,5 +792,5 @@ public class EditSectionPage extends SectionPage implements Serializable
 		this.shouldRenderLocalUpload = shouldRenderLocalUpload;
 	}
 
-	
+
 }

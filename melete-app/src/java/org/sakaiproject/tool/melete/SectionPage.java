@@ -566,9 +566,9 @@ public abstract class SectionPage implements Serializable {
 	            if(section.getContentType().equals("typeLink"))
 	            {
 	                    res_mime_type=getMeleteCHService().MIME_TYPE_LINK;
-	                    String check = validateLink();
-	                    if (logger.isDebugEnabled()) logger.debug("check value from validating link" + check);
-	    	/*	     	if(!check.equals("OK"))
+	                    Util.validateLink(getLinkUrl());
+	          /*          if (logger.isDebugEnabled()) logger.debug("check value from validating link" + check);
+	    		     	if(!check.equals("OK"))
 	    		     	{
 	    		     		throw new MeleteException("add_section_bad_url");
 	    		     	}
@@ -639,65 +639,6 @@ public abstract class SectionPage implements Serializable {
 				throw new MeleteException("add_section_fail");
 				}
 	}
-   /*
-     * this method guesses if the link provided by user is broken or not.
-     * if its a valid http:// url then returns "OK" other wise error message.
-     */
-    protected String validateLink() throws MeleteException
-    {
-    	if (logger.isDebugEnabled()) logger.debug("validating link");
-    	String errMsg = null;
-            try{
-            	if( !(getLinkUrl().startsWith("http://") || getLinkUrl().startsWith("https://")))
-    	   		{
-    	   			 throw new MeleteException("add_section_bad_url_format");
-    	   		}
-
-    /*        	 if(!linkUrl.startsWith(serverConfigurationService.getServerUrl()) && getLinkUrl().startsWith("https://"))
-         	 	{
-	            		URL url = new URL(linkUrl);
-	                    HttpsURLConnection ucs = (HttpsURLConnection) url.openConnection();
-	                    ucs.setFollowRedirects(true);
-	                    ucs.setInstanceFollowRedirects(false);
-	                    String serverReplies = ucs.getResponseMessage();
-	                    // if link is ok server replies "OK" otherwise its null or "Not Found"
-	                    if(serverReplies != null && serverReplies.equals("OK"))
-	            		  		return "OK";
-	            		else return "Link possibly broken or not found";
-         	 	}
-      */
-            	 if(!linkUrl.startsWith(serverConfigurationService.getServerUrl()))
-            	 	{
-	            		URL url = new URL(linkUrl);
-	                    HttpURLConnection uc = (HttpURLConnection) url.openConnection();
-	                    uc.setFollowRedirects(true);
-	                    uc.setInstanceFollowRedirects(false);
-	                    String serverReplies = uc.getResponseMessage();
-	                    // if link is ok server replies "OK" otherwise its null or "Not Found"
-	                    if(serverReplies != null && serverReplies.equals("OK"))
-	            		  		return "OK";
-	            		else return "Link possibly broken or not found";
-            	 	}	else return "OK";
-             }
-            catch(MalformedURLException me)
-            {
-                    logger.error(me.toString());
-                    errMsg = "add_section_bad_url";
-                    throw new MeleteException(errMsg);
-            }
-            catch(UnknownHostException ue)
-            {
-                    logger.error(ue.toString());
-                    errMsg = "add_section_bad_url";
-                    throw new MeleteException(errMsg);
-            }
-            catch(Exception e)
-            {
-                    logger.error(e.toString());
-                    errMsg = "add_section_bad_link";
-                    throw new MeleteException(errMsg);
-            }
-    }
 
 
     public abstract String saveHere();
@@ -799,21 +740,7 @@ public abstract class SectionPage implements Serializable {
        }
 
 
-      /*
-       * validate uploaded file name to see there are no reserver characters
-       * only allowed pattern is [a-zA-z0-9]_-.
-       * revised on 3/31 to remove path name
-       */
-      public boolean validateUploadFileName(String name) throws MeleteException
-      {
-        if (logger.isDebugEnabled()) logger.debug("file name for validation is" + name);
-	        if(name.indexOf("#") != -1)
-	  	  	{
-	  	  	logger.error("embedded FILE contains hash or other characters " + name);
-		    throw new MeleteException("embed_img_bad_filename");
-	  	  	}
-         return true;
-      }
+
 
 
 //melete 3.0 work
@@ -890,7 +817,8 @@ public abstract class SectionPage implements Serializable {
 
          if(fi !=null && fi.getName() != null && fi.getName().length() !=0)
              {
-         		validateUploadFileName(fi.getName());
+
+         	 Util.validateUploadFileName(fi.getName());
               // filename on the client
              secResourceName = fi.getName();
              if (secResourceName.indexOf("/") != -1)
