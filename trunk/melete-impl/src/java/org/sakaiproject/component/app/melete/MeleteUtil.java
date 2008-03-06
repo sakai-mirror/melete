@@ -88,9 +88,9 @@ public class MeleteUtil {
 
 			int startSrc = 0;
 			int endSrc = 0;
-
+			String foundPattern = null;
 			while(checkforimgs !=null) {
-
+					foundPattern = null;
 			        // look for <img or <a
 			        Matcher m = p1.matcher(checkforimgs);
 				if (!m.find()) // found anything?
@@ -104,11 +104,13 @@ public class MeleteUtil {
 				    m = pi.matcher(checkforimgs);
 				else
 				    m = pa.matcher(checkforimgs);
+							
+				if(m.pattern().pattern().equals(pa.pattern())){foundPattern = "link";}
 				// end = start+1 means that we found a >
 				// i.e. the attribute we're looking for isn't there
 				if (!m.find() || (m.end() == m.start() + 1)) {
 				    // prevent infinite loop by consuming the <
-				    checkforimgs = checkforimgs.substring(1);
+				    checkforimgs = checkforimgs.substring(1);				    
 				    continue;
 				}
 
@@ -138,10 +140,12 @@ public class MeleteUtil {
 				    if (!m.find()) // found anything?
 					continue;
 				    endSrc = m.start();
-				}
+				}		
+				
 			} //while end
 			returnData.add(checkforimgs);
-			if (endSrc != 0) {returnData.add(new Integer(startSrc)); returnData.add(new Integer(endSrc)); }
+			if (endSrc != 0) {returnData.add(new Integer(startSrc)); returnData.add(new Integer(endSrc)); returnData.add(foundPattern);}
+			
 			return returnData;
 		}
 
