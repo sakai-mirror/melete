@@ -98,7 +98,7 @@ function clearItem(id)
             	<h:inputHidden id="numitems" value="#{addResourcesPage.numberItems}" />
               		<h:outputText id="t2" value="#{msgs.manage_content_number_links}"/>
                 	
-						  <h:selectOneMenu id="number" value="#{addResourcesPage.numberItems}" onchange="showInputs();" >
+						  <h:selectOneMenu id="number" value="#{addResourcesPage.numberItems}" onchange="this.form.submit();" >
 						    <f:selectItem itemValue="1" itemLabel="#{msgs.manage_content_one}"/>	
 							<f:selectItem itemValue="2" itemLabel="#{msgs.manage_content_two}"/>	
 							<f:selectItem itemValue="3" itemLabel="#{msgs.manage_content_three}"/>	
@@ -129,298 +129,27 @@ function clearItem(id)
           <tr>
 		    <td colspan="2">
 	
-			<table>
-			<tr id="urlrow1">
-			  <td width="15%" align="left">
-			  <img src="images/url.gif"/>
-			  <b><span class="required">*</span></b> URL 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="link1" size="40">
-			  </td>
-			  <td width="35%">
-			  <img src="images/remove_item.png"/>
-			  <span id="remove1">
-			  <a  href="#" onClick="javascript:clearItem(1)">Remove item</a>
-			  </span>
-			  </td>
-		      <td width="10%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="titlerow1">
-			  <td width="15%" align="left">
-			  <b><span class="required">*</span></b> Title 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="title1" size="40">
-			  </td>
-			  <td width="45%">
-		      &nbsp;
-		      </td>
-			</tr>		
-			<tr id="urlrow2" style="display:none">
-			  <td width="15%" align="left">
-			  <img src="images/url.gif"/>
-			  <b><span class="required">*</span></b> URL 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="link2" size="40">
-			  </td>
-			  <td width="35%">
-			  <img src="images/remove_item.png"/>
-			  <span id="remove2">
-			  <a href="#" onClick="javascript:clearItem(2)">Remove item</a>
-			  </span>
-			  </td>
-		      <td width="10%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="titlerow2" style="display:none">
-			  <td width="15%" align="left">
-			  <b><span class="required">*</span></b> Title 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="title2" size="40">
-			  </td>
-			  <td width="45%">
-		      &nbsp;
-		      </td>
-			</tr>			
-            <tr id="urlrow3" style="display:none">
-			  <td width="15%" align="left">
-			  <img src="images/url.gif"/>
-			  <b><span class="required">*</span></b> URL 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="link3" size="40">
-			  </td>
-			  <td width="35%">
-			  <img src="images/remove_item.png"/>
-			  <span id="remove3">
-			  <a href="#" onClick="javascript:clearItem(3)">Remove item</a>
-			  </span>
-			  </td>
-		      <td width="10%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="titlerow3" style="display:none">
-			  <td width="15%" align="left">
-			  <b><span class="required">*</span></b> Title 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="title3" size="40">
-			  </td>
-			  <td width="45%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="urlrow4" style="display:none">
-			  <td width="15%" align="left">
-			  <img src="images/url.gif"/>
-			  <b><span class="required">*</span></b> URL 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="link4" size="40">
-			  </td>
-			  <td width="35%">
-			  <img src="images/remove_item.png"/>
-			  <span id="remove4">
-			  <a href="#" onClick="javascript:clearItem(4)">Remove item</a>
-			  </span>
-			  </td>
-		      <td width="10%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="titlerow4" style="display:none">
-			  <td width="15%" align="left">
-			  <b><span class="required">*</span></b> Title 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="title4" size="40">
-			  </td>
-			  <td width="45%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="urlrow5" style="display:none">
-			  <td width="15%" align="left">
-			  <img src="images/url.gif"/>
-			  <b><span class="required">*</span></b> URL 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="link5" size="40">
-			  </td>
-			  <td width="35%">
-			  <img src="images/remove_item.png"/>
-			  <span id="remove5">
-			  <a href="#" onClick="javascript:clearItem(5)">Remove item</a>
-			  </span>
-			  </td>
-		      <td width="10%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="titlerow5" style="display:none">
-			  <td width="15%" align="left">
-			  <b><span class="required">*</span></b> Title 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="title5" size="40">
-			  </td>
-			  <td width="45%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="urlrow6" style="display:none">
-			  <td width="15%" align="left">
-			  <img src="images/url.gif"/>
-			  <b><span class="required">*</span></b> URL 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="link6" size="40">
-			  </td>
-			  <td width="35%">
-			  <img src="images/remove_item.png"/>
-			  <span id="remove6">
-			  <a href="#" onClick="javascript:clearItem(6)">Remove item</a>
-			  </span>
-			  </td>
-		      <td width="10%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="titlerow6" style="display:none">
-			  <td width="15%" align="left">
-			  <b><span class="required">*</span></b> Title 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="title6" size="40">
-			  </td>
-			  <td width="45%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="urlrow7" style="display:none">
-			  <td width="15%" align="left">
-			  <img src="images/url.gif"/>
-			  <b><span class="required">*</span></b> URL 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="link7" size="40">
-			  </td>
-			  <td width="35%">
-			  <img src="images/remove_item.png"/>
-			  <span id="remove7">
-			  <a href="#" onClick="javascript:clearItem(7)">Remove item</a>
-			  </span>
-			  </td>
-		      <td width="10%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="titlerow7" style="display:none">
-			  <td width="15%" align="left">
-			  <b><span class="required">*</span></b> Title 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="title7" size="40">
-			  </td>
-			  <td width="45%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="urlrow8" style="display:none">
-			  <td width="15%" align="left">
-			  <img src="images/url.gif"/>
-			  <b><span class="required">*</span></b> URL 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="link8" size="40">
-			  </td>
-			  <td width="35%">
-			  <img src="images/remove_item.png"/>
-			  <span id="remove8">
-			  <a href="#" onClick="javascript:clearItem(8)">Remove item</a>
-			  </span>
-			  </td>
-		      <td width="10%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="titlerow8" style="display:none">
-			  <td width="15%" align="left">
-			  <b><span class="required">*</span></b> Title 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="title8" size="40">
-			  </td>
-			  <td width="45%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="urlrow9" style="display:none">
-			  <td width="15%" align="left">
-			  <img src="images/url.gif"/>
-			  <b><span class="required">*</span></b> URL 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="link9" size="40">
-			  </td>
-			  <td width="35%">
-			  <img src="images/remove_item.png"/>
-			  <span id="remove9">
-			  <a href="#" onClick="javascript:clearItem(9)">Remove item</a>
-			  </span>
-			  </td>
-		      <td width="10%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="titlerow9" style="display:none">
-			  <td width="15%" align="left">
-			  <b><span class="required">*</span></b> Title 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="title9" size="40">
-			  </td>
-			  <td width="45%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="urlrow10" style="display:none">
-			  <td width="15%" align="left">
-			  <img src="images/url.gif"/>
-			  <b><span class="required">*</span></b> URL 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="link10" size="40">
-			  </td>
-			  <td width="35%">
-			  <img src="images/remove_item.png"/>
-			  <span id="remove10">
-			  <a href="#" onClick="javascript:clearItem(10)">Remove item</a>
-			  </span>
-			  </td>
-		      <td width="10%">
-		      &nbsp;
-		      </td>
-			</tr>
-            <tr id="titlerow10" style="display:none">
-			  <td width="15%" align="left">
-			  <b><span class="required">*</span></b> Title 
-			  </td>
-			  <td width="40%">
-			    <input type="text" id="title10" size="40">
-			  </td>
-			  <td width="45%">
-		      &nbsp;
-		      </td>
-			</tr>																											
-			</table>
+			<h:dataTable id="utTable"  value="#{addResourcesPage.utList}" var="ut" border="0" styleClass="maintabledata1" columnClasses="UrlTitleClass"  width="80%" binding="#{addResourcesPage.table}">
+			 
+			   <h:column>
+			   <h:graphicImage id="contenttype_gif" alt="#{msgs.link_upload_view_content}" value="images/url.gif" styleClass="ExpClass"/>
+			    <h:outputText escape="false" value="&nbsp;*&nbsp;" styleClass="required"/>
+		       <h:outputText id="urltext" escape="false" value="#{msgs.link_upload_view_url}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />
+                
+                <h:inputText id="url" size="40" value="#{ut.url}" required="true"/>
+                <h:outputText id="spc" escape="false" value="&nbsp;" />
+                 <h:outputLink id="removeLink" value="remove_link" onclick="clearItem(#{addResourcesPage.table.rowIndex});this.href='#';" >
+                    <h:graphicImage id="remove_gif" alt="#{msgs.link_upload_remove_item}" value="images/remove_item.png" styleClass="ExpClass"/>
+                    <h:outputText 	id="remove_text" value="#{msgs.link_upload_remove_item}"/>		
+                  </h:outputLink>
+                <h:outputText id="brval" escape="false" value="<BR>" />
+                 <h:outputText escape="false" value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;" styleClass="required"/>
+                <h:outputText id="titletext" escape="false" value="#{msgs.link_upload_view_title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/>
+               
+                <h:inputText id="title" size="40" value="#{ut.title}"  required="true"/>
+              </h:column>  
+             
+	        </h:dataTable>
 	        </td>
 	     </tr>	
          <tr>
@@ -433,7 +162,7 @@ function clearItem(id)
 	     <tr>
 	       <td colspan="2">
 	       <div align="center">
-	       <h:commandLink id="continueButton"  action="#{addResourcesPage.addItems}"  immediate="true" tabindex="9">
+	       <h:commandLink id="continueButton"  action="#{addResourcesPage.addItems}"  tabindex="9">
 					<h:graphicImage id="continueImg" value="#{msgs.im_continue}" styleClass="BottomImgSpace" onclick="clearmessage()"
 						onmouseover="this.src = '#{msgs.im_continue_over}'" 
 						onmouseout="this.src = '#{msgs.im_continue}'" 

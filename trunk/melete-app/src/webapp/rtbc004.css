@@ -553,7 +553,13 @@ font-size: 12px;
 border:0; 
 align:bottom;
 }
- 
+
+.UrlTitleClass {
+border: 0;
+height: 16;
+width: 16;
+}
+
 .meletePortletToolBarMessage{
 background-color:#FFFFFF;
 display:block;
