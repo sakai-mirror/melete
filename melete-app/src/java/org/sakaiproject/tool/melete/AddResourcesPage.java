@@ -24,11 +24,13 @@ package org.sakaiproject.tool.melete;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import javax.faces.component.*;
 
 import org.sakaiproject.util.ResourceLoader;
 
@@ -46,23 +48,25 @@ import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 
 public class AddResourcesPage {
   private String fileType;
-  private int numberItems;
+  private String numberItems;
   private int maxUploadSize;
+  private List utList;
   protected MeleteCHService meleteCHService;
+  private UIData table;
 
   /** Dependency:  The logging service. */
-	protected Log logger = LogFactory.getLog(AddResourcesPage.class);
+  protected Log logger = LogFactory.getLog(AddResourcesPage.class);
 
   public AddResourcesPage()
   {
   }
 
-  public int getNumberItems()
+  public String getNumberItems()
   {
 	return this.numberItems;
   }
 
-  public void setNumberItems(int numberItems)
+  public void setNumberItems(String numberItems)
   {
 	this.numberItems = numberItems;
   }
@@ -265,4 +269,58 @@ public void setFileType(String fileType)
 {
 	this.fileType = fileType;
 }
+
+public List getUtList()
+{
+	utList = new ArrayList();
+	if (this.fileType.equals("link"))
+	{
+		for (int i=0; i< Integer.parseInt(this.numberItems); i++)
+		{
+			UrlTitleObj utObj = new UrlTitleObj("hello","hello");
+			utList.add(utObj);
+		}
+	}
+	return this.utList;
 }
+
+public void setUtList(List utList)
+{
+	this.utList = utList;
+}
+public class UrlTitleObj{
+	String url,title;
+	public UrlTitleObj(String url, String title)
+	{
+		this.url = url;
+		this.title = title;
+	}
+	public String getUrl()
+	{
+		return this.url;
+	}
+	public void setUrl(String url)
+	{
+		this.url = url;
+	}
+	public String getTitle()
+	{
+		return this.title;
+	}
+	public void setTitle(String title)
+	{
+		this.title = title;
+	}
+}
+public UIData getTable()
+{
+	return this.table;
+}
+
+public void setTable(UIData table)
+{
+	this.table = table;
+}
+
+}
+
