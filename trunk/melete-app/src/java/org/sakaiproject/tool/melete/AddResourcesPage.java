@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
+import java.util.Iterator;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -89,6 +90,12 @@ public class AddResourcesPage {
         return sz;
   }
 
+  public void resetValues()
+  {
+	  this.utList = null;
+	  this.numberItems = null;
+	  this.fileType = null;
+  }
   public String addItems()
   {
 	  byte[] secContentData;
@@ -104,6 +111,7 @@ public class AddResourcesPage {
 	  String linkValue, titleValue;
 	  boolean emptyLinkFlag = false;
 	  boolean emptyTitleFlag = false;
+
 	  for (int i=1; i<=10; i++)
 	  {
 		if (this.fileType.equals("upload"))
@@ -114,8 +122,8 @@ public class AddResourcesPage {
 		    emptyCounter = emptyCounter + 1;
 		    }
 		 }
-		
-		
+
+
 	  }
 	  try
 	  {
@@ -123,7 +131,7 @@ public class AddResourcesPage {
 		{
 			if (emptyCounter == 10) throw new MeleteException("all_uploads_empty");
 		}
-		
+
 	  }
 	  catch (MeleteException mex)
       {
@@ -174,11 +182,29 @@ public class AddResourcesPage {
                   continue;
                 }
             }//End if filetype is upload
+        }
+        catch (MeleteException mex)
+        {
+          String errMsg = bundle.getString(mex.getMessage());
+  	      context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
+		  return "failure";
+        }
+        catch(Exception e)
+        {
+          logger.error("file upload FAILED" + e.toString());
+         }
+      }
+      Iterator utIterator = utList.iterator();
+      while (utIterator.hasNext())
+      {
+    	  UrlTitleObj utObj = (UrlTitleObj) utIterator.next();
+    	  try
+    	  {
             if (this.fileType.equals("link"))
             {
               secContentMimeType=getMeleteCHService().MIME_TYPE_LINK;
-              String linkUrl = (String) context.getExternalContext().getRequestMap().get("link"+i);
-              secResourceName = (String) context.getExternalContext().getRequestMap().get("title"+i);
+              String linkUrl = utObj.getUrl();
+              secResourceName = utObj.getTitle();
               Util.validateLink(linkUrl);
 
               if ((linkUrl != null)&&(linkUrl.trim().length() > 0)&&(secResourceName != null)&&(secResourceName.trim().length() > 0))
@@ -225,7 +251,35 @@ public class AddResourcesPage {
 	     throw new MeleteException("add_item_fail");
 	   }
   }
-  
+
+  public void updateNumber(ValueChangeEvent event)throws AbortProcessingException
+  {
+          UIInput numberItemsInput = (UIInput)event.getComponent();
+
+          this.numberItems = (String)numberItemsInput.getValue();
+
+          if (Integer.parseInt(this.numberItems) > this.utList.size())
+          {
+        	  int newItemsCount = Integer.parseInt(this.numberItems) - this.utList.size();
+        	  for (int i=0; i< newItemsCount; i++)
+        	  {
+        		UrlTitleObj utObj = new UrlTitleObj("","");
+      			this.utList.add(utObj);
+        	  }
+          }
+          if (Integer.parseInt(this.numberItems) < this.utList.size())
+          {
+        	  int listSize = this.utList.size();
+        	   for (int i=Integer.parseInt(this.numberItems); i< listSize; i++)
+        	  {
+
+        		  this.utList.remove(Integer.parseInt(this.numberItems));
+        	  }
+          }
+
+
+  }
+
   public void removeLink(ActionEvent evt)
   {
 	  FacesContext ctx = FacesContext.getCurrentInstance();
@@ -236,13 +290,27 @@ public class AddResourcesPage {
 	  String rowId = selclientId.substring(0,selclientId.indexOf(':'));
 	  this.removeLinkIndex = Integer.parseInt(rowId);
 	  this.numberItems = String.valueOf(Integer.parseInt(this.numberItems) - 1);
-	  this.utList.remove(this.removeLinkIndex);
-	  
+	  if (Integer.parseInt(this.numberItems) == 1)
+	  {
+		  this.utList = new ArrayList();
+		  this.utList.add(new UrlTitleObj("",""));
+	  }
+	  else
+	  {
+	    this.utList.remove(this.removeLinkIndex);
+	  }
+
   }
-  
+
   public String redirectToLinkUpload()
   {
 	  return "link_upload_view";
+  }
+
+  public String cancel()
+  {
+	  resetValues();
+	  return "manage_content";
   }
 
 public MeleteCHService getMeleteCHService()
@@ -268,13 +336,13 @@ public void setFileType(String fileType)
 public List getUtList()
 {
 	if (this.utList == null)
-	{	
+	{
 	utList = new ArrayList();
 	if (this.fileType.equals("link"))
 	{
 		for (int i=0; i< Integer.parseInt(this.numberItems); i++)
 		{
-			UrlTitleObj utObj = new UrlTitleObj("hello","hello");
+			UrlTitleObj utObj = new UrlTitleObj("","");
 			utList.add(utObj);
 		}
 	}
