@@ -65,12 +65,17 @@ function clearItem(id)
     document.getElementById("LinkUploadForm:number").selectedIndex=0;
   }  
 }
+function submitaction()
+{
+  
+  document.forms[0].submit();
+}
 </script>
 </head>
 
 <f:view>
 <body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onload="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');" >
- <h:form id="LinkUploadForm" enctype="multipart/form-data">
+ <h:form id="LinkUploadForm" enctype="multipart/form-data" >
  <table>
 	<tr>
 		<td valign="top"></td>
@@ -98,7 +103,7 @@ function clearItem(id)
             	<h:inputHidden id="numitems" value="#{addResourcesPage.numberItems}" />
               		<h:outputText id="t2" value="#{msgs.manage_content_number_links}"/>
                 	
-						  <h:selectOneMenu id="number" value="#{addResourcesPage.numberItems}" onchange="this.form.submit();" >
+						  <h:selectOneMenu id="number" value="#{addResourcesPage.numberItems}" onchange="submitaction();" valueChangeListener="#{addResourcesPage.updateNumber}"  >
 						    <f:selectItem itemValue="1" itemLabel="#{msgs.manage_content_one}"/>	
 							<f:selectItem itemValue="2" itemLabel="#{msgs.manage_content_two}"/>	
 							<f:selectItem itemValue="3" itemLabel="#{msgs.manage_content_three}"/>	
