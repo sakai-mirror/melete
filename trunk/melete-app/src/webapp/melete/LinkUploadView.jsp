@@ -69,7 +69,7 @@ function clearItem(id)
 </head>
 
 <f:view>
-<body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onload="loadInputs();setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');" >
+<body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onload="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');" >
  <h:form id="LinkUploadForm" enctype="multipart/form-data">
  <table>
 	<tr>
@@ -129,7 +129,7 @@ function clearItem(id)
           <tr>
 		    <td colspan="2">
 	
-			<h:dataTable id="utTable"  value="#{addResourcesPage.utList}" var="ut" border="0" styleClass="maintabledata1" columnClasses="UrlTitleClass"  width="80%" binding="#{addResourcesPage.table}">
+			<h:dataTable id="utTable"  value="#{addResourcesPage.utList}" var="ut" border="0" styleClass="maintabledata1"   width="80%" binding="#{addResourcesPage.table}">
 			 
 			   <h:column>
 			   <h:graphicImage id="contenttype_gif" alt="#{msgs.link_upload_view_content}" value="images/url.gif" styleClass="ExpClass"/>
@@ -138,10 +138,10 @@ function clearItem(id)
                 
                 <h:inputText id="url" size="40" value="#{ut.url}" required="true"/>
                 <h:outputText id="spc" escape="false" value="&nbsp;" />
-                 <h:outputLink id="removeLink" value="remove_link" onclick="clearItem(#{addResourcesPage.table.rowIndex});this.href='#';" >
-                    <h:graphicImage id="remove_gif" alt="#{msgs.link_upload_remove_item}" value="images/remove_item.png" styleClass="ExpClass"/>
+                 <h:commandLink id="removeLink"  actionListener="#{addResourcesPage.removeLink}" action="#{addResourcesPage.redirectToLinkUpload}">  
+                   <h:graphicImage id="remove_gif" alt="#{msgs.link_upload_remove_item}" value="images/remove_item.png" styleClass="ExpClass"/>
                     <h:outputText 	id="remove_text" value="#{msgs.link_upload_remove_item}"/>		
-                  </h:outputLink>
+                  </h:commandLink>
                 <h:outputText id="brval" escape="false" value="<BR>" />
                  <h:outputText escape="false" value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;" styleClass="required"/>
                 <h:outputText id="titletext" escape="false" value="#{msgs.link_upload_view_title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/>

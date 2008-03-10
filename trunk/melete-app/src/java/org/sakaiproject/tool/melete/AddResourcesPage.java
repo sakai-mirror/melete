@@ -37,6 +37,7 @@ import org.sakaiproject.util.ResourceLoader;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.faces.event.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,6 +51,7 @@ public class AddResourcesPage {
   private String fileType;
   private String numberItems;
   private int maxUploadSize;
+  private int removeLinkIndex;
   private List utList;
   protected MeleteCHService meleteCHService;
   private UIData table;
@@ -112,29 +114,8 @@ public class AddResourcesPage {
 		    emptyCounter = emptyCounter + 1;
 		    }
 		 }
-		if (this.fileType.equals("link"))
-		{
-			linkValue = (String)context.getExternalContext().getRequestMap().get("link"+i);
-			titleValue = (String)context.getExternalContext().getRequestMap().get("title"+i);
-			if (((linkValue == null)||(linkValue.trim().length() == 0))&&((titleValue == null)||(titleValue.trim().length() == 0)))
-			{
-			  emptyCounter = emptyCounter + 1;
-			}
-			else
-			{
-				if (((linkValue == null)||(linkValue.trim().length() == 0))&&((titleValue != null)&&(titleValue.trim().length() > 0)))
-				{
-					emptyLinkFlag = true;
-					break;
-				}
-				if (((linkValue != null)&&(linkValue.trim().length() > 0))&&((titleValue == null)||(titleValue.trim().length() == 0)))
-				{
-					emptyTitleFlag = true;
-					break;
-				}
-			}
-		}
-
+		
+		
 	  }
 	  try
 	  {
@@ -142,12 +123,7 @@ public class AddResourcesPage {
 		{
 			if (emptyCounter == 10) throw new MeleteException("all_uploads_empty");
 		}
-		if (this.fileType.equals("link"))
-		{
-			if (emptyCounter == 10) throw new MeleteException("all_links_empty");
-			if (emptyLinkFlag == true) throw new MeleteException("link_empty");
-			if (emptyTitleFlag == true) throw new MeleteException("title_empty");
-		}
+		
 	  }
 	  catch (MeleteException mex)
       {
@@ -249,6 +225,25 @@ public class AddResourcesPage {
 	     throw new MeleteException("add_item_fail");
 	   }
   }
+  
+  public void removeLink(ActionEvent evt)
+  {
+	  FacesContext ctx = FacesContext.getCurrentInstance();
+      UICommand cmdLink = (UICommand)evt.getComponent();
+	  String selclientId = cmdLink.getClientId(ctx);
+	  selclientId = selclientId.substring(selclientId.indexOf(':')+1);
+	  selclientId = selclientId.substring(selclientId.indexOf(':')+1);
+	  String rowId = selclientId.substring(0,selclientId.indexOf(':'));
+	  this.removeLinkIndex = Integer.parseInt(rowId);
+	  this.numberItems = String.valueOf(Integer.parseInt(this.numberItems) - 1);
+	  this.utList.remove(this.removeLinkIndex);
+	  
+  }
+  
+  public String redirectToLinkUpload()
+  {
+	  return "link_upload_view";
+  }
 
 public MeleteCHService getMeleteCHService()
 {
@@ -272,6 +267,8 @@ public void setFileType(String fileType)
 
 public List getUtList()
 {
+	if (this.utList == null)
+	{	
 	utList = new ArrayList();
 	if (this.fileType.equals("link"))
 	{
@@ -280,6 +277,7 @@ public List getUtList()
 			UrlTitleObj utObj = new UrlTitleObj("hello","hello");
 			utList.add(utObj);
 		}
+	}
 	}
 	return this.utList;
 }
