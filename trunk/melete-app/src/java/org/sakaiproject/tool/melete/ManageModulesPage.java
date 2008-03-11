@@ -270,6 +270,10 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 	 * @return
 	 */
 	public String importExportModules(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{exportMeleteModules}");
+		ExportMeleteModules exportModules = (ExportMeleteModules) binding.getValue(context);
+		exportModules.resetValues();
 		return "importexportmodules";
 	}
 
