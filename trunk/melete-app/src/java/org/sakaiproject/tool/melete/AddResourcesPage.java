@@ -263,7 +263,7 @@ public class AddResourcesPage {
         	  int newItemsCount = Integer.parseInt(this.numberItems) - this.utList.size();
         	  for (int i=0; i< newItemsCount; i++)
         	  {
-        		UrlTitleObj utObj = new UrlTitleObj("","");
+        		UrlTitleObj utObj = new UrlTitleObj("http://","");
       			this.utList.add(utObj);
         	  }
           }
@@ -289,15 +289,15 @@ public class AddResourcesPage {
 	  selclientId = selclientId.substring(selclientId.indexOf(':')+1);
 	  String rowId = selclientId.substring(0,selclientId.indexOf(':'));
 	  this.removeLinkIndex = Integer.parseInt(rowId);
-	  this.numberItems = String.valueOf(Integer.parseInt(this.numberItems) - 1);
-	  if (Integer.parseInt(this.numberItems) == 1)
-	  {
-		  this.utList = new ArrayList();
-		  this.utList.add(new UrlTitleObj("",""));
-	  }
+	  if (Integer.parseInt(this.numberItems) > 1)
+	  {	  
+	    this.numberItems = String.valueOf(Integer.parseInt(this.numberItems) - 1);
+	    this.utList.remove(this.removeLinkIndex);
+	  }  
 	  else
 	  {
-	    this.utList.remove(this.removeLinkIndex);
+		  this.utList = new ArrayList();
+		  this.utList.add(new UrlTitleObj("http://",""));
 	  }
 
   }
@@ -342,7 +342,7 @@ public List getUtList()
 	{
 		for (int i=0; i< Integer.parseInt(this.numberItems); i++)
 		{
-			UrlTitleObj utObj = new UrlTitleObj("","");
+			UrlTitleObj utObj = new UrlTitleObj("http://","");
 			utList.add(utObj);
 		}
 	}
