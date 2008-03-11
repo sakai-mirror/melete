@@ -99,18 +99,35 @@ function showprocessMsg()
 		  						<th class="leftheader maintabledata5 style4" colspan="2" height="20"><h:outputText value="#{msgs.importexportmodules_export_modules}" /></th>
 		  					</tr>
                   			<tr>
-                   				<td colspan="2" class="maintabledata3"><h:outputText value="#{msgs.importexportmodules_message1}" /></td>
-                  			</tr>
-                  			<!--
+                   				<td colspan="2" class="maintabledata3">
+                   				<table border="0" width="100%">
+                   				<tr><td>
+                   				<h:outputText value="#{msgs.importexportmodules_export_message}" /></td>
+                  				</tr>
+                  				<tr>
+                  				<td>
+                  				    <h:selectOneRadio id="select_export_format" value="#{exportMeleteModules.selectFormat}" layout="pageDirection" rendered="#{!exportMeleteModules.noFlag}">
+                  				    	<f:selectItem itemValue="IMS" itemLabel="#{msgs.importexportmodules_exportims_modules}" />
+                  				    	<f:selectItem itemValue="SCORM" itemLabel="#{msgs.importexportmodules_exportscorm_modules}" />
+                  				    </h:selectOneRadio>
+                  				</td>
+                  				</tr>
+                  				</table></td></tr>
                   			<tr>
-                    			<td colspan="2" class="maintabledata3">File Exported
-									<select name="select" class="formtext">
-                      				<option selected>Select one or all Modules</option>
-                     	 			<option>All Modules</option>
-                      				</select>
-                      			</td>
-                  			</tr>
-                  			-->
+                    			<td colspan="2" class="maintabledata3">
+                    			<table border="0" width="100%">
+                    				<tr><td>
+                    				 <h:outputText value="#{msgs.importexportmodules_export_one_more_msg}" />
+                    			</td></tr>
+                  				<tr><td>
+										<h:selectManyListbox id="oneormoremodules" value="#{exportMeleteModules.selectedModules}" disabled="#{exportMeleteModules.noFlag}" size="3">
+											<f:selectItems value="#{exportMeleteModules.availableModules}" />
+										</h:selectManyListbox>
+								</td></tr>
+                  				<tr><td>		
+										<h:outputText value="#{msgs.importexportmodules_export_one_more_select_msg}" />
+                      			</td></tr>
+                  			</table></td></tr>
                   			<tr>
                     			<td colspan="2" class="maintabledata3">&nbsp;</td>
                     		</tr>
@@ -135,54 +152,11 @@ function showprocessMsg()
 									</div>
 								</td>
 				    		</tr>
-				    		
-				    		
-				    		
-				    		
-				    		
-				    		<tr>
-		  						<th class="leftheader maintabledata5 style4" colspan="2" height="20"><h:outputText value="#{msgs.importexportmodules_exportscorm_modules}" /></th>
-		  					</tr>
-                  			<tr>
-                   				<td colspan="2" class="maintabledata3"><h:outputText value="#{msgs.importexportmodulesscorm_message}" /></td>
-                   				
-                  			</tr>                  			
-                  			<tr>
-                    			<td colspan="2" class="maintabledata3">&nbsp;</td>
-                    		</tr>
-                    		
-                    		<tr>
-                    			<td colspan="2" class="maintabledata7">
-									<div align="center">
-										<h:commandLink id="exportModuleScorm"  action="#{exportMeleteModules.exportScormModules}" >
-											<h:graphicImage id="exportModuleScormImg" value="#{msgs.im_export}" styleClass="BottomImgSpace" 
-											onmouseover="this.src = '#{msgs.im_export_over}'" 
-											onmouseout="this.src = '#{msgs.im_export}'" 
-											onmousedown="this.src = '#{msgs.im_export_down}'" 
-						   				  	onmouseup="this.src = '#{msgs.im_export_over}'"/>
-                						</h:commandLink>
-										<h:commandLink id="cancelScorm"  action="#{manageModulesPage.cancel}" immediate="true">
-											<h:graphicImage id="cancelScormImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
-											onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-											onmouseout="this.src = '#{msgs.im_cancel}'" 
-											onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						   				  	onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-                						</h:commandLink>
-									</div>
-								</td>
-				    		</tr>
+				    
 				            <tr>
 			  					<td class="maintabledata5" colspan="2">&nbsp;</td>
 			  				</tr>		
-				    		
-				    		
-				    		
-				    		
-				    		
-                  			
-			  				
-			  
-			  
+				    	
            				</table>
    
             

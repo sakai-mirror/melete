@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.sakaiproject.util.ResourceLoader;
@@ -53,8 +54,11 @@ import org.sakaiproject.api.app.melete.ModuleService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
 import org.sakaiproject.api.app.melete.util.XMLHelper;
 import org.sakaiproject.component.app.melete.MeleteScormExportServiceImpl;
+import org.sakaiproject.component.app.melete.ModuleDateBean;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.util.Validator;
+import org.sakaiproject.component.app.melete.Module;
+import javax.faces.model.SelectItem;
 
 /**
  * <p>
@@ -80,7 +84,12 @@ public class ExportMeleteModules {
 	/** Dependency: The module service. */
 	ModuleService moduleService;
 	private int uploadmax;
-
+	private List<Module> modList;
+	private List<SelectItem> availableModules;
+	private List<String> selectedModules;
+	private boolean noFlag;
+	private String selectFormat;
+	
 	final static int BUFFER = 2048;
 	final static String IMS_MANIFEST_FILENAME = "imsmanifest.xml";
 	final static String SCORM2004_BASE_FILENAME = "SCORM2004base.zip";
@@ -90,286 +99,314 @@ public class ExportMeleteModules {
 	public ExportMeleteModules() {
 	}
 
+	public void resetValues()
+	{
+		modList = null;
+		availableModules = null;
+		selectedModules=null;	
+		noFlag = false;
+		selectFormat = "IMS";
+	
+	}
+	
+	
+	public List getAvailableModules()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader(
+				"org.sakaiproject.tool.melete.bundle.Messages");
+		
+		if(availableModules == null)
+		{
+		String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
+		modList = getModuleService().getModules(courseId);
+		availableModules = new ArrayList<SelectItem>(0);
+		if(modList == null || modList.size() == 0)
+		{
+			String nomsg = bundle.getString("no_course_modules_available");
+			noFlag = true;
+			availableModules.add(new SelectItem("no",nomsg));
+			return availableModules;
+		}
+		
+		String allmsg = bundle.getString("importexportmodules_export_one_more_select");
+		availableModules.add(new SelectItem("all",allmsg));
+		
+		for(Module mod:modList)
+			availableModules.add(new SelectItem(mod.getModuleId().toString(),mod.getTitle()));
+				
+		}
+		return availableModules;
+	}
+	
+	private List<Module> createSelectedList()
+	{		
+		if(selectedModules == null || selectedModules.size() == 0)return null;
+		if(selectedModules.size() == 1 && selectedModules.get(0).equals("all")) 
+			return modList;
+		
+		List<Module> returnList = new ArrayList<Module>(0);
+		for(String sel:selectedModules)
+		{
+			if(sel.equals("all"))continue;
+			
+			for(Module m :modList){
+				if(m.getModuleId().toString().equals(sel))
+				{
+					returnList.add(m);
+					break;
+				}
+			}
+		}
+		return returnList;
+	}
+	
+	public String exportModules()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader(
+		"org.sakaiproject.tool.melete.bundle.Messages");
+
+		try {
+			List<Module>selectList = createSelectedList();
+
+			if (selectList != null && selectList.size() > 0) {				
+				if(selectFormat.startsWith("IMS")) exportIMSModules(selectList);
+				else exportScormModules(selectList);
+				
+			}
+			else {
+				// add message for no modules
+				String moModMsg = bundle
+				.getString("no_course_modules_available");
+				FacesMessage msg = new FacesMessage(null, moModMsg);
+				msg.setSeverity(FacesMessage.SEVERITY_INFO);
+				context.addMessage(null, msg);
+			}
+		} catch (Exception e) {
+			if (logger.isErrorEnabled())
+				logger.error(this.getClass().getName() + " : " + e.toString());
+
+			e.printStackTrace();
+			String errMsg = bundle.getString("error_exporting");
+			if (e instanceof MeleteException) {
+				errMsg = errMsg + e.getMessage() + ". "
+				+ bundle.getString("error_contact_admin");
+			}
+			FacesMessage msg = new FacesMessage(null, errMsg);
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			context.addMessage(null, msg);
+		}
+
+
+		return "importexportmodules";
+	}
 	/**
 	 * exports the modules according to imsglobal content packaging specs 1.1.4
 	 *
 	 * @return navigation page
 	 */
-	public String exportModules() {
+	public void exportIMSModules(List<Module> selectList) throws Exception{
 		if (logger.isDebugEnabled())
-			logger.debug("Starting exportModules....");
+			logger.debug("Starting export IMS Modules....");
 
 		FacesContext context = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader(
-				"org.sakaiproject.tool.melete.bundle.Messages");
-
+			
+		String packagingdirpath = context.getExternalContext()
+		.getInitParameter("packagingdir");
+		String instr_id = getMeleteSiteAndUserInfo().getCurrentUser().getId();
+		String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
+		
+		File packagedir = null;
 		try {
-			String packagingdirpath = context.getExternalContext()
-					.getInitParameter("packagingdir");
-			String instr_id = getMeleteSiteAndUserInfo().getCurrentUser()
-					.getId();
-			String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
+			File basePackDir = new File(packagingdirpath);
+			if (!basePackDir.exists())
+				basePackDir.mkdirs();
+			
+			String exisXmlFile = basePackDir.getAbsolutePath()
+			+ File.separator + IMS_MANIFEST_FILENAME;
+			File manifestFile = new File(exisXmlFile);
+		
 
-			List modList = getModuleService().getModules(courseId);
+			Element manifest = createManifestMetadata(manifestFile,
+					meleteExportService);
 
-			if (modList != null && modList.size() > 0) {
-				File basePackDir = new File(packagingdirpath);
-				if (!basePackDir.exists())
-					basePackDir.mkdirs();
+			String title = getMeleteSiteAndUserInfo().getCourseTitle();
 
-				String exisXmlFile = basePackDir.getAbsolutePath()
-						+ File.separator + IMS_MANIFEST_FILENAME;
-				File manifestFile = new File(exisXmlFile);
-				File packagedir = null;
+			packagedir = new File(basePackDir.getAbsolutePath()
+					+ File.separator + courseId + "_" + instr_id
+					+ File.separator + title.replace(' ', '_'));
+			// delete exisiting files
+			meleteExportService.deleteFiles(packagedir);
 
-				try {
-					Element manifest = createManifestMetadata(manifestFile,
-							meleteExportService);
+			if (!packagedir.exists())
+				packagedir.mkdirs();
 
-					String title = getMeleteSiteAndUserInfo().getCourseTitle();
+			// copy the schema files
+			File schemaFilesDir = basePackDir;
+			String imscp_v1p1 = schemaFilesDir.getAbsolutePath()
+			+ File.separator + "imscp_v1p1.xsd";
+			File imscp_v1p1_File = new File(imscp_v1p1);
+			meleteExportService.createFile(imscp_v1p1_File
+					.getAbsolutePath(), packagedir.getAbsolutePath()
+					+ File.separator + "imscp_v1p1.xsd");
 
-					packagedir = new File(basePackDir.getAbsolutePath()
-							+ File.separator + courseId + "_" + instr_id
-							+ File.separator + title.replace(' ', '_'));
-					// delete exisiting files
-					meleteExportService.deleteFiles(packagedir);
+			String imsmd_v1p2 = schemaFilesDir.getAbsolutePath()
+			+ File.separator + "imsmd_v1p2.xsd";
+			File imsmd_v1p2_File = new File(imsmd_v1p2);
+			meleteExportService.createFile(imsmd_v1p2_File
+					.getAbsolutePath(), packagedir.getAbsolutePath()
+					+ File.separator + "imsmd_v1p2.xsd");
 
-					if (!packagedir.exists())
-						packagedir.mkdirs();
+			String imsxml = schemaFilesDir.getAbsolutePath()
+			+ File.separator + "xml.xsd";
+			File xml_File = new File(imsxml);
+			meleteExportService.createFile(xml_File.getAbsolutePath(),
+					packagedir.getAbsolutePath() + File.separator
+					+ "xml.xsd");
 
-					// copy the schema files
-					File schemaFilesDir = basePackDir;
-					String imscp_v1p1 = schemaFilesDir.getAbsolutePath()
-							+ File.separator + "imscp_v1p1.xsd";
-					File imscp_v1p1_File = new File(imscp_v1p1);
-					meleteExportService.createFile(imscp_v1p1_File
-							.getAbsolutePath(), packagedir.getAbsolutePath()
-							+ File.separator + "imscp_v1p1.xsd");
+			List orgResElements = meleteExportService
+			.generateOrganizationResourceItems(selectList,
+					packagedir, title);
 
-					String imsmd_v1p2 = schemaFilesDir.getAbsolutePath()
-							+ File.separator + "imsmd_v1p2.xsd";
-					File imsmd_v1p2_File = new File(imsmd_v1p2);
-					meleteExportService.createFile(imsmd_v1p2_File
-							.getAbsolutePath(), packagedir.getAbsolutePath()
-							+ File.separator + "imsmd_v1p2.xsd");
-
-					String imsxml = schemaFilesDir.getAbsolutePath()
-							+ File.separator + "xml.xsd";
-					File xml_File = new File(imsxml);
-					meleteExportService.createFile(xml_File.getAbsolutePath(),
-							packagedir.getAbsolutePath() + File.separator
-									+ "xml.xsd");
-
-					List orgResElements = meleteExportService
-							.generateOrganizationResourceItems(modList,
-									packagedir, title);
-
-					if (orgResElements != null && orgResElements.size() > 0) {
-						manifest.add((Element) orgResElements.get(0));
-						manifest.add((Element) orgResElements.get(1));
-					}
-
-					// create xml document and add element
-					Document document = XMLHelper.createXMLDocument(manifest);
-
-					String newXmlFile = packagedir.getAbsolutePath()
-							+ File.separator + IMS_MANIFEST_FILENAME;
-					// generate xml file
-					XMLHelper.generateXMLFile(newXmlFile, document);
-
-					// validate new manifest xml
-					XMLHelper.parseFile(new File(newXmlFile));
-
-					title = Validator.escapeResourceName(title);
-					String outputfilename = packagedir.getParentFile()
-							.getAbsolutePath()
-							+ File.separator + title.replace(' ', '_') + ".zip";;
-					File zipfile = new File(outputfilename);
-					// create zip
-					createZip(packagedir, zipfile);
-
-					// download zip
-					download(new File(zipfile.getAbsolutePath()));
-
-					FacesContext facesContext = FacesContext
-							.getCurrentInstance();
-					facesContext.responseComplete();
-
-				} catch (Exception e) {
-					throw e;
-				} finally {
-					// delete the files - Directory courseid_instructorid and
-					// it's child
-					if (packagedir != null && packagedir.exists())
-						meleteExportService.deleteFiles(packagedir
-								.getParentFile());
-
-				}
-			} else {
-				// add message for no modules
-				String moModMsg = bundle
-						.getString("no_course_modules_available");
-				FacesMessage msg = new FacesMessage(null, moModMsg);
-				msg.setSeverity(FacesMessage.SEVERITY_INFO);
-				context.addMessage(null, msg);
+			if (orgResElements != null && orgResElements.size() > 0) {
+				manifest.add((Element) orgResElements.get(0));
+				manifest.add((Element) orgResElements.get(1));
 			}
+
+			// create xml document and add element
+			Document document = XMLHelper.createXMLDocument(manifest);
+
+			String newXmlFile = packagedir.getAbsolutePath()
+			+ File.separator + IMS_MANIFEST_FILENAME;
+			// generate xml file
+			XMLHelper.generateXMLFile(newXmlFile, document);
+
+			// validate new manifest xml
+			XMLHelper.parseFile(new File(newXmlFile));
+
+			title = Validator.escapeResourceName(title);
+			String outputfilename = packagedir.getParentFile()
+			.getAbsolutePath()
+			+ File.separator + title.replace(' ', '_') + ".zip";;
+			File zipfile = new File(outputfilename);
+			// create zip
+			createZip(packagedir, zipfile);
+
+			// download zip
+			download(new File(zipfile.getAbsolutePath()));
+
+			FacesContext facesContext = FacesContext
+			.getCurrentInstance();
+			facesContext.responseComplete();
+
 		} catch (Exception e) {
-			if (logger.isErrorEnabled())
-				logger.error(this.getClass().getName() + " : " + e.toString());
+			throw e;
+		} finally {
+			// delete the files - Directory courseid_instructorid and
+			// it's child
+			if (packagedir != null && packagedir.exists())
+				meleteExportService.deleteFiles(packagedir
+						.getParentFile());
 
-			e.printStackTrace();
-			String errMsg = bundle.getString("error_exporting");
-			if (e instanceof MeleteException) {
-				errMsg = errMsg + e.getMessage() + ". "
-						+ bundle.getString("error_contact_admin");
-			}
-			FacesMessage msg = new FacesMessage(null, errMsg);
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			context.addMessage(null, msg);
 		}
 
 		if (logger.isDebugEnabled())
 			logger.debug("Exiting exportModules....");
-		return "importexportmodules";
+
 	}
 
 	/**
 	 * exports the modules according to ADL SCORM 2004 3rd Edition
-	 *
+	 * 
 	 * @return navigation page
 	 */
-	public String exportScormModules() {
-		if (logger.isDebugEnabled())
-			logger.debug("Starting exportModules....");
-
+	public void exportScormModules(List<Module> selectList) throws Exception
+	{
+		if (logger.isDebugEnabled()) logger.debug("Starting exportModules....");
 		FacesContext context = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader(
-				"org.sakaiproject.tool.melete.bundle.Messages");
+		String instr_id = getMeleteSiteAndUserInfo().getCurrentUser().getId();
+		String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
 
-		try {
-			String packagingdirpath = context.getExternalContext()
-					.getInitParameter("packagingscormdir");
-			String instr_id = getMeleteSiteAndUserInfo().getCurrentUser()
-					.getId();
-			String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
+		String packagingdirpath = context.getExternalContext().getInitParameter("packagingscormdir");
+		File packagedir = null;
+		try
+		{
+			File basePackDir = new File(packagingdirpath);
+			if (!basePackDir.exists()) basePackDir.mkdirs();
+		
+			String title = getMeleteSiteAndUserInfo().getCourseTitle();
+			packagedir = new File(basePackDir.getAbsolutePath() + File.separator + courseId + "_" + instr_id + File.separator
+					+ title.replace(' ', '_') + "scorm");
+			// delete exisiting files
+			meleteExportScormService.deleteFiles(packagedir);
 
-			List modList = getModuleService().getModules(courseId);
+			if (!packagedir.exists()) packagedir.mkdirs();
 
-			if (modList != null && modList.size() > 0) {
-				File basePackDir = new File(packagingdirpath);
-				if (!basePackDir.exists())
-					basePackDir.mkdirs();
-				File packagedir = null;
-				String title = getMeleteSiteAndUserInfo().getCourseTitle();
-				try {
+			// 1- unzip the SCORM2004_BASE_FILENAME in the packagedir
+			// Directory
+			File scorm2004BaseFile = new File(basePackDir.getAbsolutePath() + File.separator + SCORM2004_BASE_FILENAME);
+			unZipFile(scorm2004BaseFile, packagedir.getAbsolutePath());
 
-					packagedir = new File(basePackDir.getAbsolutePath()
-							+ File.separator + courseId + "_" + instr_id
-							+ File.separator + title.replace(' ', '_')
-							+ "scorm");
-					// delete exisiting files
-					meleteExportScormService.deleteFiles(packagedir);
+			// 2- Get the manifestBaseFile
+			String exisXmlFile = packagedir.getAbsolutePath() + File.separator + IMS_MANIFEST_FILENAME;
+			File manifestFile = new File(exisXmlFile);
 
-					if (!packagedir.exists())
-						packagedir.mkdirs();
+			Element manifest = createManifestMetadata(manifestFile, meleteExportScormService);
 
-					// 1- unzip the SCORM2004_BASE_FILENAME in the packagedir
-					// Directory
-					File scorm2004BaseFile = new File(basePackDir
-							.getAbsolutePath()
-							+ File.separator + SCORM2004_BASE_FILENAME);
-					unZipFile(scorm2004BaseFile, packagedir.getAbsolutePath());
+			// copy the schema files
+			File schemaFilesDir = basePackDir;
 
-					// 2- Get the manifestBaseFile
-					String exisXmlFile = packagedir.getAbsolutePath()
-							+ File.separator + IMS_MANIFEST_FILENAME;
-					File manifestFile = new File(exisXmlFile);
+			List orgResElements = meleteExportScormService.generateOrganizationResourceItems(selectList, packagedir, title);
 
-					Element manifest = createManifestMetadata(manifestFile,
-							meleteExportScormService);
-
-					// copy the schema files
-					File schemaFilesDir = basePackDir;
-
-					List orgResElements = meleteExportScormService
-							.generateOrganizationResourceItems(modList,
-									packagedir, title);
-
-					if (orgResElements != null && orgResElements.size() > 0) {
-						manifest.add((Element) orgResElements.get(0));
-						manifest.add((Element) orgResElements.get(1));
-					}
-
-					// create xml document and add element
-					Document document = XMLHelper.createXMLDocument(manifest);
-
-					String newXmlFile = packagedir.getAbsolutePath()
-							+ File.separator + IMS_MANIFEST_FILENAME;
-					// generate xml file
-					XMLHelper.generateXMLFile(newXmlFile, document);
-
-					// validate new manifest xml
-					XMLHelper.parseFile(new File(newXmlFile));
-					
-					title = Validator.escapeResourceName(title);
-					String outputfilename = packagedir.getParentFile()
-							.getAbsolutePath()
-							+ File.separator
-							+ title.replace(' ', '_')
-							+ "_scorm.zip";
-
-					File zipfile = new File(outputfilename);
-					// create zip
-					createZip(packagedir, zipfile);
-
-					// download zip
-					download(new File(zipfile.getAbsolutePath()));
-
-					FacesContext facesContext = FacesContext
-							.getCurrentInstance();
-					facesContext.responseComplete();
-
-				} catch (Exception e) {
-					throw e;
-				} finally {
-					// delete the files - Directory courseid_instructorid and
-					// it's child
-					if (packagedir != null && packagedir.exists())
-						meleteExportScormService.deleteFiles(packagedir
-								.getParentFile());
-
-				}
-			} else {
-				// add message for no modules
-				String moModMsg = bundle
-						.getString("no_course_modules_available");
-				FacesMessage msg = new FacesMessage(null, moModMsg);
-				msg.setSeverity(FacesMessage.SEVERITY_INFO);
-				context.addMessage(null, msg);
+			if (orgResElements != null && orgResElements.size() > 0)
+			{
+				manifest.add((Element) orgResElements.get(0));
+				manifest.add((Element) orgResElements.get(1));
 			}
-		} catch (Exception e) {
-			if (logger.isErrorEnabled())
-				logger.error(this.getClass().getName() + " : " + e.toString());
 
-			e.printStackTrace();
-			String errMsg = bundle.getString("error_exporting");
-			if (e instanceof MeleteException) {
-				errMsg = errMsg + e.getMessage() + ". "
-						+ bundle.getString("error_contact_admin");
-			}
-			FacesMessage msg = new FacesMessage(null, errMsg);
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			context.addMessage(null, msg);
+			// create xml document and add element
+			Document document = XMLHelper.createXMLDocument(manifest);
+
+			String newXmlFile = packagedir.getAbsolutePath() + File.separator + IMS_MANIFEST_FILENAME;
+			// generate xml file
+			XMLHelper.generateXMLFile(newXmlFile, document);
+
+			// validate new manifest xml
+			XMLHelper.parseFile(new File(newXmlFile));
+
+			title = Validator.escapeResourceName(title);
+			String outputfilename = packagedir.getParentFile().getAbsolutePath() + File.separator + title.replace(' ', '_') + "_scorm.zip";
+
+			File zipfile = new File(outputfilename);
+			// create zip
+			createZip(packagedir, zipfile);
+
+			// download zip
+			download(new File(zipfile.getAbsolutePath()));
+
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.responseComplete();
+
 		}
+		catch (Exception e)
+		{
+			throw e;
+		}
+		finally
+		{
+			// delete the files - Directory courseid_instructorid and
+			// it's child
+			if (packagedir != null && packagedir.exists()) meleteExportScormService.deleteFiles(packagedir.getParentFile());
 
-		if (logger.isDebugEnabled())
-			logger.debug("Exiting exportModules....");
-		return "importexportmodules";
+		}
+		if (logger.isDebugEnabled()) logger.debug("Exiting exportModules....");
+
 	}
 
 	/**
 	 * imports the modules according to imsglobal content packaging specs 1.1.4
-	 *
+	 * 
 	 * @return navigation page
 	 */
 	public String importModules() {
@@ -880,5 +917,48 @@ public class ExportMeleteModules {
 	 */
 	public void setMeleteImportService(MeleteImportService meleteImportService) {
 		this.meleteImportService = meleteImportService;
+	}
+
+
+	/**
+	 * @return the selectedModules
+	 */
+	public List getSelectedModules()
+	{
+		return this.selectedModules;
+	}
+
+
+	/**
+	 * @param selectedModules the selectedModules to set
+	 */
+	public void setSelectedModules(List selectedModules)
+	{
+		this.selectedModules = selectedModules;
+		logger.debug("set list is" + selectedModules.toString());
+	}
+
+	/**
+	 * @return the noFlag
+	 */
+	public boolean isNoFlag()
+	{
+		return this.noFlag;
+	}
+
+	/**
+	 * @return the selectFormat
+	 */
+	public String getSelectFormat()
+	{
+		return this.selectFormat;
+	}
+
+	/**
+	 * @param selectFormat the selectFormat to set
+	 */
+	public void setSelectFormat(String selectFormat)
+	{
+		this.selectFormat = selectFormat;
 	}
 }
