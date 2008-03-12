@@ -322,10 +322,12 @@ public class AddResourcesPage {
 
   public String cancel()
   {
-	  cancelResetValues();
-	  if (this.fileType.equals("upload")) return "file_upload_view";
-	  if (this.fileType.equals("link")) return "link_upload_view";
-	  return "file_upload_view";
+	  FacesContext ctx = FacesContext.getCurrentInstance();
+      ValueBinding binding =Util.getBinding("#{manageResourcesPage}");
+  	  ManageResourcesPage manResPage = (ManageResourcesPage) binding.getValue(ctx);
+  	  manResPage.refreshCurrSiteResourcesList();
+  	  manResPage.resetValues();
+	  return "manage_content";
   }
 
 public MeleteCHService getMeleteCHService()

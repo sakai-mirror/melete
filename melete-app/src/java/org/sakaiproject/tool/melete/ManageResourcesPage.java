@@ -105,8 +105,7 @@ public void resetValues()
 
 public String cancel()
 {
-	resetValues();
-	return "manage_content";
+	return "modules_author_manage";
 }
 public String getFileType()
 {

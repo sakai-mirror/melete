@@ -89,13 +89,6 @@
 						onmousedown="this.src = '#{msgs.im_cancel_down}'" 
 						onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
                 </h:commandLink>	
-                <h:commandLink id="finishButton"  action="#{manageResourcesPage.finish}"  immediate="true" tabindex="9">
-					<h:graphicImage id="finishImg" value="#{msgs.im_finish}" styleClass="BottomImgSpace" 
-						onmouseover="this.src = '#{msgs.im_finish_over}'" 
-						onmouseout="this.src = '#{msgs.im_finish}'" 
-						onmousedown="this.src = '#{msgs.im_finish_down}'" 
-						onmouseup="this.src = '#{msgs.im_finish_over}'"/>
-                </h:commandLink>	
 			</div></td>
               </tr>
 			 
