@@ -13,61 +13,8 @@
 
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <script language="javascript1.2">
-function fillupload()
-{
-	//var k =document.getElementById("file1").value;		
-	//document.getElementById("AddSectionForm:ContentUploadView:filename").value=k;
-}
-function loadInputs()
-{
-  var str=document.getElementById("LinkUploadForm:numitems").value;
-  document.getElementById("LinkUploadForm:number").selectedIndex=str-1;
-  for (i=2; i<=str; i++)
-  {
-   document.getElementById("urlrow"+i).style.display='block';
-   document.getElementById("titlerow"+i).style.display='block';
-  }   
-}
-function showInputs()
-{
-  var str=document.getElementById("LinkUploadForm:number").value;
-  
-  for (i=2; i<=str; i++)
-  {
-   document.getElementById("urlrow"+i).style.display='block';
-   document.getElementById("titlerow"+i).style.display='block';
-  }
-  
-  for (i=parseInt(str)+1; i<=10; i++)
-  {
-   document.getElementById("link"+i).value='';
-   document.getElementById("title"+i).value='';
-    document.getElementById("remove"+i).innerHTML="<a  href=\"#\" onClick=\"javascript:clearItem("+i+")\">Remove item</a>";
-   document.getElementById("urlrow"+i).style.display='none';
-   document.getElementById("titlerow"+i).style.display='none';
-  }
-
-}
-function clearItem(id)
-{
-  var str=document.getElementById("LinkUploadForm:number").selectedIndex;
-  document.getElementById("link"+id).value='';
-  document.getElementById("title"+id).value='';
-  document.getElementById("remove"+id).innerHTML="<a  href=\"#\" onClick=\"javascript:clearItem("+id+")\">Remove item</a>";  
-  if (str >= 1)
-  {
-    document.getElementById("urlrow"+id).style.display='none';
-    document.getElementById("titlerow"+id).style.display='none';
-    document.getElementById("LinkUploadForm:number").selectedIndex=str-1;
-  }  
-  else
-  { 
-    document.getElementById("LinkUploadForm:number").selectedIndex=0;
-  }  
-}
 function submitaction()
 {
-  
   document.forms[0].submit();
 }
 </script>

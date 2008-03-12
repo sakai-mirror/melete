@@ -39,6 +39,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.event.*;
+import javax.faces.el.ValueBinding;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -95,6 +96,11 @@ public class AddResourcesPage {
 	  this.utList = null;
 	  this.numberItems = null;
 	  this.fileType = null;
+  }
+  public void cancelResetValues()
+  {
+	  this.utList = null;
+	  this.numberItems = "1";
   }
   public String addItems()
   {
@@ -229,6 +235,11 @@ public class AddResourcesPage {
              }
            }
       }
+      FacesContext ctx = FacesContext.getCurrentInstance();
+      ValueBinding binding =Util.getBinding("#{manageResourcesPage}");
+  	  ManageResourcesPage manResPage = (ManageResourcesPage) binding.getValue(ctx);
+  	  manResPage.refreshCurrSiteResourcesList();
+  	  manResPage.resetValues();
 	    return "manage_content";
       }
 
@@ -311,8 +322,10 @@ public class AddResourcesPage {
 
   public String cancel()
   {
-	  resetValues();
-	  return "manage_content";
+	  cancelResetValues();
+	  if (this.fileType.equals("upload")) return "file_upload_view";
+	  if (this.fileType.equals("link")) return "link_upload_view";
+	  return "file_upload_view";
   }
 
 public MeleteCHService getMeleteCHService()
