@@ -82,6 +82,7 @@ public String addItems()
 	ValueBinding binding =
         Util.getBinding("#{addResourcesPage}");
     AddResourcesPage arPage = (AddResourcesPage)binding.getValue(ctx);
+    arPage.resetValues();
     arPage.setNumberItems(this.numberItems);
 	if (this.fileType.equals("upload")) 
 	{
@@ -93,6 +94,18 @@ public String addItems()
 		arPage.setFileType("link");
 		return "link_upload_view";
 	}
+	return "manage_content";
+}
+
+public void resetValues()
+{
+	this.fileType = "upload";
+	this.numberItems = "1";
+}
+
+public String cancel()
+{
+	resetValues();
 	return "manage_content";
 }
 public String getFileType()
