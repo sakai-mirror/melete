@@ -194,6 +194,8 @@ public class AddResourcesPage {
           logger.error("file upload FAILED" + e.toString());
          }
       }
+      if(this.fileType.equals("link"))
+      {
       Iterator utIterator = utList.iterator();
       while (utIterator.hasNext())
       {
@@ -226,7 +228,7 @@ public class AddResourcesPage {
               logger.error("file upload FAILED" + e.toString());
              }
            }
-
+      }
 	    return "manage_content";
       }
 
