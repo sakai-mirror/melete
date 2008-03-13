@@ -89,7 +89,7 @@ public class ExportMeleteModules {
 	private List<String> selectedModules;
 	private boolean noFlag;
 	private String selectFormat;
-	
+
 	final static int BUFFER = 2048;
 	final static String IMS_MANIFEST_FILENAME = "imsmanifest.xml";
 	final static String SCORM2004_BASE_FILENAME = "SCORM2004base.zip";
@@ -103,19 +103,19 @@ public class ExportMeleteModules {
 	{
 		modList = null;
 		availableModules = null;
-		selectedModules=null;	
+		selectedModules=null;
 		noFlag = false;
 		selectFormat = "IMS";
-	
+
 	}
-	
-	
+
+
 	public List getAvailableModules()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader(
 				"org.sakaiproject.tool.melete.bundle.Messages");
-		
+
 		if(availableModules == null)
 		{
 		String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
@@ -128,28 +128,28 @@ public class ExportMeleteModules {
 			availableModules.add(new SelectItem("no",nomsg));
 			return availableModules;
 		}
-		
+
 		String allmsg = bundle.getString("importexportmodules_export_one_more_select");
 		availableModules.add(new SelectItem("all",allmsg));
-		
+
 		for(Module mod:modList)
 			availableModules.add(new SelectItem(mod.getModuleId().toString(),mod.getTitle()));
-				
+
 		}
 		return availableModules;
 	}
-	
+
 	private List<Module> createSelectedList()
-	{		
+	{
 		if(selectedModules == null || selectedModules.size() == 0)return null;
-		if(selectedModules.size() == 1 && selectedModules.get(0).equals("all")) 
+		if(selectedModules.size() == 1 && selectedModules.get(0).equals("all"))
 			return modList;
-		
+
 		List<Module> returnList = new ArrayList<Module>(0);
 		for(String sel:selectedModules)
 		{
 			if(sel.equals("all"))continue;
-			
+
 			for(Module m :modList){
 				if(m.getModuleId().toString().equals(sel))
 				{
@@ -160,7 +160,7 @@ public class ExportMeleteModules {
 		}
 		return returnList;
 	}
-	
+
 	public String exportModules()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -170,10 +170,10 @@ public class ExportMeleteModules {
 		try {
 			List<Module>selectList = createSelectedList();
 
-			if (selectList != null && selectList.size() > 0) {				
+			if (selectList != null && selectList.size() > 0) {
 				if(selectFormat.startsWith("IMS")) exportIMSModules(selectList);
 				else exportScormModules(selectList);
-				
+
 			}
 			else {
 				// add message for no modules
@@ -211,22 +211,22 @@ public class ExportMeleteModules {
 			logger.debug("Starting export IMS Modules....");
 
 		FacesContext context = FacesContext.getCurrentInstance();
-			
+
 		String packagingdirpath = context.getExternalContext()
 		.getInitParameter("packagingdir");
 		String instr_id = getMeleteSiteAndUserInfo().getCurrentUser().getId();
 		String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
-		
+
 		File packagedir = null;
 		try {
 			File basePackDir = new File(packagingdirpath);
 			if (!basePackDir.exists())
 				basePackDir.mkdirs();
-			
+
 			String exisXmlFile = basePackDir.getAbsolutePath()
 			+ File.separator + IMS_MANIFEST_FILENAME;
 			File manifestFile = new File(exisXmlFile);
-		
+
 
 			Element manifest = createManifestMetadata(manifestFile,
 					meleteExportService);
@@ -318,7 +318,7 @@ public class ExportMeleteModules {
 
 	/**
 	 * exports the modules according to ADL SCORM 2004 3rd Edition
-	 * 
+	 *
 	 * @return navigation page
 	 */
 	public void exportScormModules(List<Module> selectList) throws Exception
@@ -328,13 +328,13 @@ public class ExportMeleteModules {
 		String instr_id = getMeleteSiteAndUserInfo().getCurrentUser().getId();
 		String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
 
-		String packagingdirpath = context.getExternalContext().getInitParameter("packagingscormdir");
+		String packagingdirpath = context.getExternalContext().getInitParameter("packagingdir") + File.separator + "packagefilesscorm";
 		File packagedir = null;
 		try
 		{
 			File basePackDir = new File(packagingdirpath);
 			if (!basePackDir.exists()) basePackDir.mkdirs();
-		
+
 			String title = getMeleteSiteAndUserInfo().getCourseTitle();
 			packagedir = new File(basePackDir.getAbsolutePath() + File.separator + courseId + "_" + instr_id + File.separator
 					+ title.replace(' ', '_') + "scorm");
@@ -406,7 +406,7 @@ public class ExportMeleteModules {
 
 	/**
 	 * imports the modules according to imsglobal content packaging specs 1.1.4
-	 * 
+	 *
 	 * @return navigation page
 	 */
 	public String importModules() {
