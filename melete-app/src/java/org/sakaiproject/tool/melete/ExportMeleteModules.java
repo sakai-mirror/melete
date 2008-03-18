@@ -106,7 +106,8 @@ public class ExportMeleteModules {
 		selectedModules=null;
 		noFlag = false;
 		selectFormat = "IMS";
-
+		selectedModules = new ArrayList<String>(0);
+		selectedModules.add("all");
 	}
 
 
