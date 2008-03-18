@@ -134,8 +134,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	   //   save section
 		    if (logger.isDebugEnabled()) logger.debug("AddSectionpage:inserting section");
 		     String uploadHomeDir = context.getExternalContext().getInitParameter("uploadDir");
-
-			String addCollId = getMeleteCHService().getCollectionId( section.getContentType(), module.getModuleId());
+		    String addCollId = getMeleteCHService().getCollectionId( section.getContentType(), module.getModuleId());
 	
 			// step 1: insert section
 			Integer newSectionId = sectionService.insertSection(module,section);
@@ -164,11 +163,10 @@ public class AddSectionPage extends SectionPage implements Serializable{
 						   String newResourceId = addResourceToMeleteCollection(uploadHomeDir,addCollId);
 						   meleteResource.setResourceId(newResourceId);
 					}
-					getMeleteCHService().editResourceProperties(meleteResource.getResourceId(), secResourceName, secResourceDescription);
+					else getMeleteCHService().editResourceProperties(meleteResource.getResourceId(), secResourceName, secResourceDescription);
 			
 					}
-				logger.debug("check resourceId in add section page before inserting" + meleteResource.getResourceId());	
-					
+								
 			//step 3: insert section resource in melete table i.e. if new resource then insert in melete resource table
 			//	otherwise just insert in sectionResource table
 				if(selResourceIdFromList == null) sectionService.insertMeleteResource(section, meleteResource);
