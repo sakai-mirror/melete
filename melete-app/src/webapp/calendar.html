@@ -34,14 +34,8 @@ var dt_current = (re_url.exec(String(window.location))
 	? new Date(new Number(RegExp.$1)) : new Date());
 
 var ampm_val = (reampm_url.exec(String(window.location))
-	? new String(RegExp.$1) : "notampm");
-	
-	if ((ampm_val != "AM")&&(ampm_val != "PM"))
-	{
-	  if (dt_current.getHours() > 12) ampm_val="PM";
-	  else ampm_val="AM";
-	}  
-
+	? new String(RegExp.$1) : "AM");
+	//alert('In calendar ampm is '+ampm_val);
 var re_id = new RegExp('id=(\\d+)');
 var num_id = (re_id.exec(String(window.location))
 	? new Number(RegExp.$1) : 0);
@@ -78,6 +72,7 @@ var dt_firstday = new Date(dt_current);
 dt_firstday.setDate(1);
 dt_firstday.setDate(1 - (7 + dt_firstday.getDay() - NUM_WEEKSTART) % 7);
 
+
 // function passing selected date to calling window
 function set_datetime(n_datetime, b_close) {
 	if (!obj_caller) return;
@@ -98,6 +93,9 @@ function set_datetime(n_datetime, b_close) {
    			? obj_caller.gen_tsmp(dt_datetime) + ' ' + document.cal.ampm.value
    			: obj_caller.gen_date(dt_datetime) + ' ' + document.cal.ampm.value
    		);
+   		obj_caller.target.onchange();
+
+   		//alert(obj_caller.target.value);
    	}
 	else obj_caller.popup(dt_datetime.valueOf());
 
@@ -152,6 +150,7 @@ document.write('</tr>');
 
 // print calendar table
 var dt_current_day = new Date(dt_firstday);
+
 while (dt_current_day.getMonth() == dt_current.getMonth() ||
 	dt_current_day.getMonth() == dt_firstday.getMonth()) {
 	// print row heder
@@ -179,22 +178,21 @@ while (dt_current_day.getMonth() == dt_current.getMonth() ||
 
 		document.write(dt_current_day.getDate()+'</font></a></td>');
 		dt_current_day.setDate(dt_current_day.getDate()+1);
+
 	}
 	// print row footer
 	document.write('</tr>');
 }
 if (obj_caller && obj_caller.time_comp)
 
+
 	document.write('<form onsubmit="javascript:set_datetime('+dt_current.valueOf()+', true)" name="cal"><tr><td colspan="7" bgcolor="#87CEFA"><font color="White" face="tahoma, verdana" size="2">Time: ');
 	document.write('<select name="hr">');
-	var actual_hours;
-	if (dt_current_day.getHours() > 12) actual_hours = dt_current_day.getHours() - 12;
-	else actual_hours = dt_current_day.getHours();
 	for (var i=1;i<13;i++)
 	{
 	  if (i < 10)
 	  {
-	      if (i == actual_hours)
+	      if (i == dt_current.getHours())
 	      {
 	        document.write('<option value=\"0'+i+'\" selected>0'+i);
 	      }
@@ -215,7 +213,7 @@ if (obj_caller && obj_caller.time_comp)
 	  }
 	  else
 	  {
-	    if (i == dt_current_day.getHours())
+	    if (i == dt_current.getHours())
 	    {
 	      document.write('<option value=\"'+i+'\" selected>'+i);
 	    }
@@ -231,7 +229,7 @@ if (obj_caller && obj_caller.time_comp)
 	{
 	  if (i < 10)
 	  {
-	  	  if (i == dt_current_day.getMinutes())
+	  	  if (i == dt_current.getMinutes())
 	  	  {
 	  	    document.write('<option value=\"0'+i+'\" selected>0'+i);
 	  	  }
@@ -242,7 +240,7 @@ if (obj_caller && obj_caller.time_comp)
 	  }
 	  	  else
 	  	  {
-	  	  if (i == dt_current_day.getMinutes())
+	  	  if (i == dt_current.getMinutes())
 	  	  {
 	  	    document.write('<option value=\"'+i+'\" selected>'+i);
 	  	  }
@@ -258,7 +256,7 @@ if (obj_caller && obj_caller.time_comp)
 	{
 	  if (i < 10)
 	  	  {
-	  	  if (i == dt_current_day.getSeconds())
+	  	  if (i == dt_current.getSeconds())
 	  	  {
 	  	    document.write('<option value=\"0'+i+'\" selected>0'+i);
 	  	  }
@@ -269,7 +267,7 @@ if (obj_caller && obj_caller.time_comp)
 	  	  }
 	  	  else
 	  	  {
-	  	  if (i == dt_current_day.getSeconds())
+	  	  if (i == dt_current.getSeconds())
 	  	  {
 	  	     document.write('<option value=\"'+i+'\" selected>'+i);
 	  	  }
