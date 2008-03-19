@@ -19,14 +19,16 @@ var RE_NUM = /^\-?\d+$/;
 function calendar2(obj_target) {
 
 	// assigning methods
-	this.gen_date = cal_gen_date2;
-	this.gen_time = cal_gen_time2;
+	this.gen_date = ambrosia_format_date; //cal_gen_date2;
+	this.gen_time = ambrosia_format_time; // cal_gen_time2;
 	this.gen_tsmp = cal_gen_tsmp2;
-	this.prs_date = cal_prs_date2;
-	this.prs_time = cal_prs_time2;
-	this.prs_tsmp = cal_prs_tsmp2;
-	this.prs_ampm = cal_prs_ampm2;
+	this.prs_date = ambrosia_parse_date; // cal_prs_date2;
+	this.prs_time = ambrosia_parse_time; // cal_prs_time2;
+	this.prs_tsmp = ambrosia_parse_timeStamp; // cal_prs_tsmp2;
+	this.prs_ampm = ambrosia_parse_am_pm; // cal_prs_ampm2;
 	this.popup    = cal_popup2;
+	this.month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	this.gen_now = ambrosia_now;
 
 	// validate input parameters
 	if (!obj_target)
@@ -42,6 +44,15 @@ function calendar2(obj_target) {
 	calendars[this.id] = this;
 }
 
+function ambrosia_now()
+{
+	var rv = new Date();
+	rv.setHours(12);
+	rv.setMinutes(0);
+	rv.setSeconds(0);
+	rv.setMilliseconds(0);
+	return rv;
+}
 
 function cal_popup2 (str_datetime) {
 
@@ -71,17 +82,119 @@ return(this.gen_date(dt_datetime) + ' ' + this.gen_time(dt_datetime));
 
 }
 
+function ambrosia_format_date(timeStamp)
+{
+	var rv = this.month_names[timeStamp.getMonth()];
+	rv += " ";
+	rv += timeStamp.getDate();
+	rv += ", ";
+	rv += timeStamp.getFullYear();
+	return rv;
+}
+
+function ambrosia_format_time(timeStamp)
+{
+	var hours = timeStamp.getHours();
+	//if (hours == 0) hours = 12;
+	var rv = hours + ":";
+	rv += (timeStamp.getMinutes() < 10 ? "0" : "") + timeStamp.getMinutes();
+	return rv;
+}
+
+function ambrosia_parse_timeStamp(displayStr)
+{
+	if (displayStr == null) return this.gen_now();
+
+	var time = parseInt(displayStr, 10);
+	if (!isNaN(time) && (time >= 0)) return new Date(time);
+
+	var displayParts = displayStr.split(" ");
+	if (displayParts.length != 5) this.gen_now();
+
+	var datePart = displayParts[0] + " " + displayParts[1] + " " + displayParts[2];
+	var timePart = displayParts[3] + " " + displayParts[4];
+	return this.prs_time(timePart, this.prs_date(datePart));
+}
+
+function ambrosia_parse_am_pm(displayStr)
+{
+	if (displayStr == null) return this.gen_now();
+
+	var time = parseInt(displayStr, 10);
+	if (!isNaN(time) && (time >= 0)) return new Date(time);
+	
+	var displayParts = displayStr.split(" ");
+	return displayParts[displayParts.length-1];
+}
+
+function ambrosia_parse_date(displayStr)
+{
+	var displayParts = displayStr.split(" ");
+	var rv = this.gen_now();
+	if (displayParts.length == 3)
+	{
+		var month = -1;
+		for (var i = 0; i <= 11; i++)
+		{
+			if (this.month_names[i].toLowerCase() == displayParts[0].toLowerCase())
+			{
+				month = i;
+				break;
+			}
+		}
+		if (month == -1) return rv;
+
+		var day = parseInt(displayParts[1], 10);
+		if (isNaN(day)) return rv;
+		
+		var year = parseInt(displayParts[2], 10);
+		if (isNaN(year)) return rv;
+
+		rv.setYear(year);
+		rv.setMonth(month);
+		rv.setDate(day);
+	}
+
+	return rv;
+}
+
+function ambrosia_parse_time(displayStr, timeStamp)
+{
+	var displayParts = displayStr.split(":");
+	if ((displayParts.length == 2) || (displayParts.length == 3))
+	{
+		var hour = parseInt(displayParts[0], 10);
+		if (isNaN(hour)) return timeStamp;
+		if ((hour < 0) || (hour > 12)) return timeStamp;
+		//if (hour == 12) hour = 0;
+		
+		var minute = parseInt(displayParts[1], 10);
+		if (isNaN(minute)) return timeStamp;
+		if ((minute < 0) || (minute > 59)) return timeStamp;
+		
+		timeStamp.setHours(hour);
+		timeStamp.setMinutes(minute);
+		timeStamp.setSeconds(0);
+		timeStamp.setMilliseconds(0);		
+	}
+	
+	return timeStamp;
+}
+
 // date generating function
-function cal_gen_date2 (dt_datetime) {
+/*function cal_gen_date2 (dt_datetime) {
 //alert('In gen_date2 '+dt_datetime);
 	return (
 		(dt_datetime.getMonth() < 9 ? '0' : '') + (dt_datetime.getMonth() + 1) + "/"
 		+ (dt_datetime.getDate() < 10 ? '0' : '') + dt_datetime.getDate() + "/"
 		+ dt_datetime.getFullYear()
 	);
-}
+}*/
+
+
+
 // time generating function
-function cal_gen_time2 (dt_datetime) {
+/*function cal_gen_time2 (dt_datetime) {
 //alert('In gen_time2');
 	return (
 		(dt_datetime.getHours() < 10 ? '0' : '') + dt_datetime.getHours() + ":"
@@ -89,11 +202,12 @@ function cal_gen_time2 (dt_datetime) {
 		//+ ":"
 		//+ (dt_datetime.getSeconds() < 10 ? '0' : '') + (dt_datetime.getSeconds())
 	);
-}
+}*/
+
+
 
 // timestamp parsing function
-function cal_prs_tsmp2 (str_datetime) {
-//alert('In prs_tsmp2 '+str_datetime);
+/*function cal_prs_tsmp2 (str_datetime) {
 	// if no parameter specified return current timestamp
 	if (!str_datetime)
 		return (new Date());
@@ -103,39 +217,33 @@ function cal_prs_tsmp2 (str_datetime) {
 		return new Date(str_datetime);
 		
 	// else treat as date in string format
-	//alert('In prs_tsmp2 date is string');
 	var arr_datetime = str_datetime.split(' ');
-	//alert('In prs_tsmp2 ampm is '+arr_datetime[2]);
-	//alert('In prs_tsmp2 time is '+arr_datetime[1]);
-	//alert('In prs_tsmp2 date is '+arr_datetime[0]);
 	//return this.prs_time(arr_datetime[1], this.prs_date(arr_datetime[0]))+' '+arr_datetime[2];
 	return this.prs_time(arr_datetime[1], this.prs_date(arr_datetime[0]));
-}
+}*/
+
+
 
 // ampm parsing function
-function cal_prs_ampm2 (str_datetime) {
-//alert('In prs_ampm2 '+str_datetime);
+/*function cal_prs_ampm2 (str_datetime) {
 	// if no parameter specified return current timestamp
 	if (!str_datetime)
-		return (new Date());
+		return (this.gen_now());
 
 	// if positive integer treat as milliseconds from epoch
 	if (RE_NUM.exec(str_datetime))
 		return new Date(str_datetime);
 		
 	// else treat as date in string format
-	//alert('In prs_tsmp2 date is string');
 	var arr_datetime = str_datetime.split(' ');
-	//alert('In prs_ampm2 ampm is '+arr_datetime[2]);
-	//alert('In prs_ampm2 time is '+arr_datetime[1]);
-	//alert('In prs_ampm2 date is '+arr_datetime[0]);
 	//return this.prs_time(arr_datetime[1], this.prs_date(arr_datetime[0]))+' '+arr_datetime[2];
 	return arr_datetime[2];
-}
+}*/
+
 
 
 // date parsing function
-function cal_prs_date2 (str_date) {
+/*function cal_prs_date2 (str_date) {
 
 	var arr_date = str_date.split('/');
 
@@ -161,10 +269,12 @@ function cal_prs_date2 (str_date) {
 	if (dt_date.getMonth() != (arr_date[0]-1)) return //alert ("Invalid day of month value: '" + arr_date[1] + "'.\nAllowed range is 01-"+dt_numdays.getDate()+".");
 
 	return (dt_date)
-}
+}*/
+
+
 
 // time parsing function
-function cal_prs_time2 (str_time, dt_date) {
+/*function cal_prs_time2 (str_time, dt_date) {
 
 	if (!dt_date) return null;
 	var arr_time = String(str_time ? str_time : '').split(':');
@@ -181,18 +291,18 @@ function cal_prs_time2 (str_time, dt_date) {
 		if (arr_time[1] < 60) dt_date.setMinutes(arr_time[1]);
 		else return cal_error ("Invalid minutes value: '" + arr_time[1] + "'.\nAllowed range is 00-59.");
 	else return cal_error ("Invalid minutes value: '" + arr_time[1] + "'.\nAllowed values are unsigned integers.");
-	/*
-	if (!arr_time[2]) dt_date.setSeconds(0);
-	else if (RE_NUM.exec(arr_time[2]))
-		if (arr_time[2] < 60) dt_date.setSeconds(arr_time[2]);
-		else return cal_error ("Invalid seconds value: '" + arr_time[2] + "'.\nAllowed range is 00-59.");
-	else return cal_error ("Invalid seconds value: '" + arr_time[2] + "'.\nAllowed values are unsigned integers.");
+	
+	//if (!arr_time[2]) dt_date.setSeconds(0);
+	//else if (RE_NUM.exec(arr_time[2]))
+	//	if (arr_time[2] < 60) dt_date.setSeconds(arr_time[2]);
+	//	else return cal_error ("Invalid seconds value: '" + arr_time[2] + "'.\nAllowed range is 00-59.");
+	//else return cal_error ("Invalid seconds value: '" + arr_time[2] + "'.\nAllowed values are unsigned integers.");
 
 	dt_date.setMilliseconds(0);
-	*/
+	
 	
 	return dt_date;
-}
+}*/
 
 function cal_error (str_message) {
 	//alert (str_message);
