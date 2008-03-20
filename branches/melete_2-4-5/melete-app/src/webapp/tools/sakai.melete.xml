@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<registration>
+	<!--moved to legacy\component\src\config\registration.xml	
+	<function name="melete.author" />
+	<function name="melete.student" />
+	-->
+	<tool
+			id="sakai.melete"
+			title="Modules"
+			description="Modules - Melete Lesson Builder for creating and organizing learning sequences.">
+			
+			<category name="course" />
+			<category name="project" />
+	</tool>
+
+</registration>
