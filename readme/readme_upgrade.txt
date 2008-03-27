@@ -1,40 +1,22 @@
 INSTRUCTIONS TO UPGRADE FROM MELETE 2.3m2 >> MELETE 2.4
-For a patched Sakai 2.3 OR Sakai 2.4
+For Sakai 2.5
 -----------------------------------------------------
 SETUP INSTRUCTIONS
 
-1. Patch Instructions
-2. Configuring Melete  
-3. Upload size settings for IMS import file
-4. Configuring Sferyx Editor (Optional)
-5. Oracle Code Configuration
-6. Compile Melete 
-7. Database Configuration
-8. Run migrate process
+1. Configuring Melete  
+2. Upload size settings for IMS import file
+3. Configuring Sferyx Editor (Optional)
+4. Oracle Code Configuration
+5. Compile Melete 
+6. Database Configuration
+7. Run migrate process
 ---------------------------------
 
-1. Patch Instructions
-   a. Sakai 2.3.x Patch Instructions
-	** SKIP this step if you will run Melete with Sakai 2.4.**
-	
-	If you are using Sakai 2.3, you need to execute a patch that enables Sakai
-	2.3 to run with Melete 2.4. The patch is at /patch/melete24patchsak23.sh.
-	
-	Instructions for running the path are in /patch/patch-SAK2.3_for_melete2.4.txt.
-   
-   b. Sakai 2.4.x Patch Instructions
-	** SKIP this step if you will run Melete with Sakai 2.3.**
-	
-	If you are using Sakai 2.4, you need to execute a patch that enables Sakai
-	2.4 to run with Melete 2.4. The patch is at /patch/melete24patchsak24.sh.
-	
-	Instructions for running the path are in /patch/patch-SAK2.4_for_melete2.4.txt.	
-	
-2. Configuring Melete 2.4 
+1. Configuring Melete 2.4 
 
     The settings below need to be performed in the /melete-app/src/webapp/WEB-INF/web.xml file.
 
-    2.1. Packagingdir settings
+    1.1. Packagingdir settings
 	
 	The dependency files for the export process are in the /var/melete/packagefiles directory in the Melete source code.
     Copy the /var directory and its contents into a directory. 
@@ -51,7 +33,7 @@ SETUP INSTRUCTIONS
 		     <param-value>/var/melete/packagefiles/packagefilesscorm</param-value>
 	      </context-param>		
 	      
-   2.2. Meletedocs settings
+   1.2. Meletedocs settings
             
 	Specify the absolute path to your current meleteDocs directory in the meleteDocsDir 
 	parameter of web.xml.
@@ -65,7 +47,7 @@ SETUP INSTRUCTIONS
 				 <param-value>/var/meleteDocs</param-value>
 		</context-param>
 			      
-3. Upload size settings for IMS import file
+2. Upload size settings for IMS import file
 	
 	By setting this sakai property, system administrators can set a different file upload 
 	limit for Melete IMS CP import than the upload max limit for content files. If this 
@@ -73,11 +55,11 @@ SETUP INSTRUCTIONS
 
 	content.upload.ceiling=50		
 	
-4. Configuring Commercial Sferyx Editor (Optional)
+3. Configuring Commercial Sferyx Editor (Optional)
 
                        ***** BEGIN OPTIONAL STEP ******
 					   
-   4.1 SFERYX SOURCE
+   3.1 SFERYX SOURCE
 		a. Purchase a license and binary source for Sferyx (http://www.sferyx.com)
 		b. Add the purchased applet jar file under /melete-app/src/webapp. 
 		c. Change settings in melete web.xml for enabling uploads of embedded media
@@ -101,7 +83,7 @@ SETUP INSTRUCTIONS
 						<param-value>/var/uploads</param-value>
 				</init-param>	      
 
-	4.2. DEFAULT MELETE EDITOR 
+	3.2. DEFAULT MELETE EDITOR 
 		 This is done by specifying the following property. For example, if the 
 		 default Melete editor is Sferyx,
 		
@@ -109,7 +91,7 @@ SETUP INSTRUCTIONS
 		
 		If this property is NOT set, the code uses the editor specified by the wysiwyg.editor property.
 		
-	4.3. LIST OF AVAILABLE MELETE EDITORS 
+	3.3. LIST OF AVAILABLE MELETE EDITORS 
 		The preference feature allows users to select the editor for Melete content authoring. 
 		List the editor choices for users in sakai.properties as specified below. For example, 
 		if the user has two choices, Sferyx and FCK Editor, the settings will be as follows:
@@ -123,7 +105,7 @@ SETUP INSTRUCTIONS
 		
                               ***** END OF OPTIONAL STEP **********
 
-5. Oracle Code Configuration
+4. Oracle Code Configuration
    ** SKIP this step if you are NOT using Oracle.**
    
    If you are using Oracle, due to differences in Oracle query behavior, you will need to 
@@ -132,16 +114,16 @@ SETUP INSTRUCTIONS
    in /melete-impl/src/java/org/sakaiproject/component/app/melete/ModuleServiceImpl.java
    with their corresponding Oracle versions, located at /patch/migrate_oracle.txt
    
-6. Compile Melete
+5. Compile Melete
      On the command prompt, go to the melete source directory which you placed 
 	under sakai and run maven commands just like you did for sakai.
 	
-	To build, run 'maven sakai:build' and then to deploy 'maven sakai:deploy'
+	To build, run 'mvn clean install' and then to deploy 'mvn sakai:deploy'
 	
 	(for more instructions, see section titled 'Sakai Maven Goals' in the 
 	"How we build Sakai Using Maven" document provided by Sakai lead developers)
 
-7. Database Configuration
+6. Database Configuration
   
 	* Melete works with HSQLDB, Oracle or Mysql4.1 Database. The driver used is 
 	the MySql Connector/J 3.1.12 (same as Sakai). It has been tested just on Mysql, 
@@ -178,22 +160,22 @@ SETUP INSTRUCTIONS
         Through Melete, users only have access to the /private/meleteDocs folder and not other parts of Resources.
 		    
 	
-8. Run migrate process 
+7. Run migrate process 
 
 This is a MANDATORY step. The migrate process moves Melete content that currently resides in your meleteDocs directory to ContentHosting. It can only be run by administrators. Depending on amount of content, migration can take a few hours. 
 
-	8.1. In sakai.properties, specify the following property and set it to true.
+	7.1. In sakai.properties, specify the following property and set it to true.
 
  	  melete.migrate=true
    
-	8.2. Start tomcat. Make sure there are no errors in the logs as tomcat starts. 
+	7.2. Start tomcat. Make sure there are no errors in the logs as tomcat starts. 
 		Log in as administrator. 
 
-	8.3. Click on the Modules link in any of your courses. Melete content will migrate 
+	7.3. Click on the Modules link in any of your courses. Melete content will migrate 
 	from the filesystem to contentHosting for all courses. Upon successful completion, 
 	you will see a message saying the process has completed. 
 
-	8.4. Upon successful migration, please remove the melete.migrate property from sakai.properties.
+	7.4. Upon successful migration, please remove the melete.migrate property from sakai.properties.
    
    Troubleshooting:
    
