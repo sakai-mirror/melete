@@ -66,7 +66,6 @@ public class Section implements Serializable,SectionObjService {
     /** persistent field */
     private String contentType;
 
-  
     /** nullable persistent field */
     private boolean audioContent;
 
@@ -75,6 +74,9 @@ public class Section implements Serializable,SectionObjService {
 
     /** nullable persistent field */
     private boolean textualContent;
+    
+    /** nullable persistent field */
+    private boolean openWindow;
 
     /** nullable persistent field */
     private boolean deleteFlag;
@@ -97,7 +99,7 @@ public class Section implements Serializable,SectionObjService {
     private Map bookmarks;
 
     /** full constructor */
-    public Section(int moduleId, String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname, String instr, String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean deleteFlag, Date creationDate, Date modificationDate, int version, org.sakaiproject.component.app.melete.Module module, org.sakaiproject.component.app.melete.SectionResource sectionResource, Map bookmarks) {
+    public Section(int moduleId, String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname, String instr, String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean openWindow, boolean deleteFlag, Date creationDate, Date modificationDate, int version, org.sakaiproject.component.app.melete.Module module, org.sakaiproject.component.app.melete.SectionResource sectionResource, Map bookmarks) {
         this.moduleId = moduleId;
         this.title = title;
         this.createdByFname = createdByFname;
@@ -109,6 +111,7 @@ public class Section implements Serializable,SectionObjService {
         this.audioContent = audioContent;
         this.videoContent = videoContent;
         this.textualContent = textualContent;
+        this.openWindow = openWindow;
         this.deleteFlag = deleteFlag;
         this.creationDate = creationDate;
         this.modificationDate = modificationDate;
@@ -118,7 +121,7 @@ public class Section implements Serializable,SectionObjService {
         this.bookmarks = bookmarks;
     }
     /** Custom constructor */
-    public Section(String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname, String instr, String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean deleteFlag, Date creationDate, Date modificationDate) {
+    public Section(String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname, String instr, String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean openWindow, boolean deleteFlag, Date creationDate, Date modificationDate) {
         this.title = title;
         this.createdByFname = createdByFname;
         this.createdByLname = createdByLname;
@@ -129,6 +132,7 @@ public class Section implements Serializable,SectionObjService {
         this.audioContent = audioContent;
         this.videoContent = videoContent;
         this.textualContent = textualContent;
+        this.openWindow = openWindow;
         this.deleteFlag = deleteFlag;
         this.creationDate = creationDate;
         this.modificationDate = modificationDate;
@@ -155,6 +159,7 @@ public class Section implements Serializable,SectionObjService {
            this.audioContent = oldSection.isAudioContent();
            this.videoContent = oldSection.isVideoContent();
            this.textualContent = oldSection.isTextualContent();
+           this.openWindow = oldSection.isOpenWindow();
            this.deleteFlag = oldSection.isDeleteFlag();
            this.module = null;
            this.sectionResource = null;
@@ -258,6 +263,15 @@ public class Section implements Serializable,SectionObjService {
     public void setTextualContent(boolean textualContent) {
         this.textualContent = textualContent;
     }
+    
+    public boolean isOpenWindow() {
+        return this.openWindow;
+    }
+
+    public void setOpenWindow(boolean openWindow) {
+        this.openWindow = openWindow;
+    }    
+    
     public boolean isDeleteFlag() {
         return this.deleteFlag;
     }

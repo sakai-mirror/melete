@@ -20,7 +20,8 @@
 	<property name="contentType" column="CONTENT_TYPE" type="string"  length="10" not-null="true"/>			
 	<property name="audioContent" column="AUDIO_CONTENT" type="boolean"/>		
 	<property name="videoContent" column="VIDEO_CONTENT" type="boolean"/>		
-	<property name="textualContent" column="TEXTUAL_CONTENT" type="boolean"/>	
+	<property name="textualContent" column="TEXTUAL_CONTENT" type="boolean"/>
+	<property name="openWindow" column="OPEN_WINDOW" type="boolean" />	
 	<property name="deleteFlag" column="DELETE_FLAG" type="boolean" />				
 	<property name="creationDate"  column="CREATION_DATE"  type="timestamp" not-null="true"/>			
 	<property name="modificationDate"  column="MODIFICATION_DATE"  type="timestamp"  not-null="true"/>
