@@ -10,8 +10,14 @@
 			<h:commandLink id="serverViewButton"  action="#{addSectionPage.gotoServerView}" >
 					<h:graphicImage id="replaceImg2" value="images/replace2.gif" styleClass="AuthImgClass"/>
 					<h:outputText value="#{msgs.contentuploadview_select}" />
-             </h:commandLink>	
-          </h:column>      
+             </h:commandLink>
+        </h:column>
+        <h:column>     	
+        <h:outputText id="extraspacesUpload2" value="" styleClass="LotsofPaddingClass" />	
+             <h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{addSectionPage.section.openWindow}" rendered="#{addSectionPage.shouldRenderUpload}">
+		  </h:selectBooleanCheckbox>
+		  <h:outputText id="editlinkText_8" value="#{msgs.editcontentlinkserverview_openwindow}" rendered="#{addSectionPage.shouldRenderUpload}"/>
+        </h:column>      
 </h:panelGrid>
 		
 		

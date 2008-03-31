@@ -47,6 +47,12 @@
 			 											<h:outputText id="editlinkText_7_1" value=" " styleClass="ExtraPaddingClass"/>
 														 <h:inputText id="link_title" value="#{editSectionPage.newURLTitle}" size="40" /> 	
 					</td></tr>	
+					<tr><td height="20" colspan="2"> 
+														<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{editSectionPage.section.openWindow}">
+														 </h:selectBooleanCheckbox>
+														 <h:outputText id="editlinkText_8" value="#{msgs.editcontentlinkserverview_openwindow}" />
+									                   					
+					</td></tr>
 					 <tr><td colspan="2"> &nbsp; </td></tr>	
 					</table> </td></tr>       
 					     <tr>

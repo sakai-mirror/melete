@@ -14,6 +14,11 @@
 					<h:outputText value="#{msgs.editcontentuploadview_replace}"/>
                 </h:commandLink>		
 	</h:column>		
-	<h:column/>				
-	</h:panelGrid>
+	 <h:column>     	
+        <h:outputText id="extraspacesUpload2" value="" styleClass="LotsofPaddingClass" />	
+             <h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{editSectionPage.section.openWindow}" rendered="#{editSectionPage.shouldRenderUpload}">
+		  </h:selectBooleanCheckbox>
+		  <h:outputText id="editlinkText_8" value="#{msgs.editcontentlinkserverview_openwindow}" rendered="#{editSectionPage.shouldRenderUpload}"/>
+        </h:column>     
+   </h:panelGrid>
 	

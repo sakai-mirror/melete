@@ -1137,7 +1137,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 						Map.Entry entry = (Map.Entry) keyValuePairs.next();
 						Section fromSec = (Section) entry.getValue();
 						fromSecId = fromSec.getSectionId().intValue();
-						Section toSec = new Section(fromSec.getTitle(), fromSec.getCreatedByFname(), fromSec.getCreatedByLname(), fromSec.getModifiedByFname(), fromSec.getModifiedByLname(), fromSec.getInstr(), fromSec.getContentType(), fromSec.isAudioContent(), fromSec.isVideoContent(), fromSec.isTextualContent(), fromSec.isDeleteFlag(), fromSec.getCreationDate(), fromSec.getModificationDate());
+						Section toSec = new Section(fromSec.getTitle(), fromSec.getCreatedByFname(), fromSec.getCreatedByLname(), fromSec.getModifiedByFname(), fromSec.getModifiedByLname(), fromSec.getInstr(), fromSec.getContentType(), fromSec.isAudioContent(), fromSec.isVideoContent(), fromSec.isTextualContent(), fromSec.isOpenWindow(), fromSec.isDeleteFlag(), fromSec.getCreationDate(), fromSec.getModificationDate());
 						try
 						{
 							//Insert into the SECTION table
