@@ -1,0 +1,129 @@
+BODY {
+	SCROLLBAR-FACE-COLOR: #afb3c3; FONT-SIZE: 10pt; MARGIN: 0px; SCROLLBAR-HIGHLIGHT-COLOR: #000000; SCROLLBAR-SHADOW-COLOR: #afb3c3; SCROLLBAR-3DLIGHT-COLOR: #afb3c3; SCROLLBAR-ARROW-COLOR: #ffffff; SCROLLBAR-TRACK-COLOR: #ffffff; FONT-FAMILY: Verdana, Arial, sans-serif; SCROLLBAR-DARKSHADOW-COLOR: #000000; BACKGROUND-COLOR: #ffffff
+}
+P {
+	FONT-SIZE: 10pt; FONT-FAMILY: Verdana, Arial, sans-serif
+}
+TD {
+	FONT-SIZE: 10pt; FONT-FAMILY: Verdana, Arial, sans-serif
+}
+A:link {
+	COLOR: #000080; TEXT-DECORATION: underline
+}
+A:visited {
+	COLOR: #000080; TEXT-DECORATION: underline
+}
+A:hover {
+	COLOR: #000080; TEXT-DECORATION: underline
+}
+A:active {
+	COLOR: #000080; TEXT-DECORATION: underline
+}
+H1 {
+	FONT-WEIGHT: bold; FONT-SIZE: 20px; COLOR: #afb3c3
+}
+H2 {
+	FONT-WEIGHT: bold; FONT-SIZE: 18px; COLOR: #afb3c3
+}
+H3 {
+	FONT-WEIGHT: bold; FONT-SIZE: 16px; COLOR: #afb3c3
+}
+H4 {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #afb3c3; BORDER-BOTTOM: #afb3c3 1px dotted
+}
+H5 {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #afb3c3
+}
+H6 {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; COLOR: #afb3c3
+}
+LI {
+	LIST-STYLE-IMAGE: url(images/bullet.gif)
+}
+.toptable {
+	BACKGROUND: #afb3c3; COLOR: #ffffff; LINE-HEIGHT: normal; FONT-FAMILY: Verdana, Arial, sans-serif; TEXT-ALIGN: left
+}
+.toptable2 {
+	FONT-SIZE: 10px; BACKGROUND: #000000; COLOR: #ffffff; FONT-FAMILY: Verdana, Arial, sans-serif; TEXT-ALIGN: left
+}
+.copyrighttable {
+	FONT-SIZE: 10px; BACKGROUND: #000000; COLOR: #ffffff; FONT-FAMILY: Verdana, Arial, sans-serif; TEXT-ALIGN: center
+}
+.leftside {
+	PADDING-RIGHT: 5px; PADDING-LEFT: 5px; BACKGROUND: #ffffff; PADDING-BOTTOM: 5px; LINE-HEIGHT: normal; PADDING-TOP: 5px; FONT-FAMILY: Verdana, Arial, sans-serif
+}
+.leftnav {
+	BORDER-RIGHT: #6e7592 1px dotted; PADDING-RIGHT: 5px; PADDING-LEFT: 5px; BACKGROUND: #ffffff; PADDING-BOTTOM: 5px; LINE-HEIGHT: normal; PADDING-TOP: 5px; FONT-FAMILY: Verdana, Arial, sans-serif
+}
+.special {
+	BORDER-RIGHT: #6e7592 1px dotted; PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; BORDER-LEFT: #6e7592 1px dotted; PADDING-TOP: 5px; BORDER-BOTTOM: #6e7592 1px dotted
+}
+.rightside {
+	PADDING-RIGHT: 30px; PADDING-LEFT: 20px; BACKGROUND: #ffffff; PADDING-BOTTOM: 10px; BORDER-LEFT: #6e7592 1px dotted; LINE-HEIGHT: 20px; PADDING-TOP: 10px; FONT-FAMILY: Verdana, Arial, sans-serif; TEXT-ALIGN: justify
+}
+.buttonarea {
+	PADDING-RIGHT: 4px; PADDING-LEFT: 4px; BACKGROUND: #ffffff; PADDING-BOTTOM: 4px; BORDER-LEFT: #6e7592 1px dotted; PADDING-TOP: 4px; BORDER-BOTTOM: #6e7592 1px dotted
+}
+.button:link {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; FONT-WEIGHT: bold; FONT-SIZE: 12px; PADDING-BOTTOM: 2px; COLOR: #6e7592; PADDING-TOP: 2px; FONT-FAMILY: Verdana, Arial, sans-serif; LETTER-SPACING: 3px; BACKGROUND-COLOR: #ffffff; TEXT-DECORATION: none
+}
+.button:visited {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; FONT-WEIGHT: bold; FONT-SIZE: 12px; PADDING-BOTTOM: 2px; COLOR: #6e7592; PADDING-TOP: 2px; FONT-FAMILY: Verdana, Arial, sans-serif; LETTER-SPACING: 3px; BACKGROUND-COLOR: #ffffff; TEXT-DECORATION: none
+}
+.button:hover {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; FONT-WEIGHT: bold; FONT-SIZE: 12px; PADDING-BOTTOM: 2px; COLOR: #7ba59a; PADDING-TOP: 2px; FONT-FAMILY: Verdana, Arial, sans-serif; LETTER-SPACING: 3px; BACKGROUND-COLOR: #ffffff; TEXT-DECORATION: none
+}
+.button:active {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; FONT-WEIGHT: bold; FONT-SIZE: 12px; PADDING-BOTTOM: 2px; COLOR: #6e7592; PADDING-TOP: 2px; FONT-FAMILY: Verdana, Arial, sans-serif; LETTER-SPACING: 3px; BACKGROUND-COLOR: #ffffff; TEXT-DECORATION: none
+}
+.menutable {
+	FONT-SIZE: 12px; COLOR: #000080; FONT-FAMILY: Verdana, Arial, sans-serif; TEXT-ALIGN: left
+}
+.menutable:link {
+	COLOR: #000080; TEXT-DECORATION: underline
+}
+.menutable:visited {
+	COLOR: #000080; TEXT-DECORATION: underline
+}
+.menutable:hover {
+	COLOR: #000080; TEXT-DECORATION: none
+}
+.menutable:active {
+	COLOR: #000080; TEXT-DECORATION: underline
+}
+.copyrighttable:link {
+	COLOR: #ffffff; TEXT-DECORATION: underline
+}
+.copyrighttable:visited {
+	COLOR: #ffffff; TEXT-DECORATION: underline
+}
+.copyrighttable:hover {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+.copyrighttable:active {
+	COLOR: #ffffff; TEXT-DECORATION: underline
+}
+.toptable2:link {
+	COLOR: #ffffff; TEXT-DECORATION: underline
+}
+.toptable2:visited {
+	COLOR: #afb3c3; TEXT-DECORATION: none
+}
+.toptable2:hover {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+.toptable2:active {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+.top:link {
+	COLOR: #6e7592; TEXT-DECORATION: underline
+}
+.top:visited {
+	COLOR: #9fb1af; TEXT-DECORATION: none
+}
+.top:hover {
+	COLOR: #ffffff; TEXT-DECORATION: underline overline
+}
+.top:active {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
