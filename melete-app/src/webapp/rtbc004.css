@@ -374,6 +374,8 @@ vertical-align: middle;  align:center;  }
 .ExpClass			{ border: 0;}
 
 .ExtraPaddingClass {padding:8px;}
+.MediumPaddingClass {padding:60px;}
+.LotsofPaddingClass {padding:110px;}
 
 .ViewSectionTableClass {padding:8px;
 hspace:5;

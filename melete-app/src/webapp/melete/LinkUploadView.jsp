@@ -17,6 +17,15 @@ function submitaction()
 {
   document.forms[0].submit();
 }
+function setRequired(id)
+{
+  var title_string = "LinkUploadForm:utTable:"+index+":title";
+  var title_string_val = document.getElementById("title_string").value;
+  if((null == title_string_val) || (title_string_val.length == 0)) 
+  {
+    document.getElementById("title_string").value = '      ';
+  }    
+}
 </script>
 </head>
 
@@ -90,7 +99,7 @@ function submitaction()
                 
                 <h:inputText id="url" size="40" value="#{ut.url}" required="true"/>
                 <h:outputText id="spc" escape="false" value="&nbsp;" />
-                 <h:commandLink id="removeLink"  actionListener="#{addResourcesPage.removeLink}" action="#{addResourcesPage.redirectToLinkUpload}">  
+                 <h:commandLink id="removeLink"  onclick="setRequired(#{addResourcesPage.table.rowIndex});" actionListener="#{addResourcesPage.removeLink}" action="#{addResourcesPage.redirectToLinkUpload}">  
                    <h:graphicImage id="remove_gif" alt="#{msgs.link_upload_remove_item}" value="images/remove_item.png" styleClass="ExpClass"/>
                     <h:outputText 	id="remove_text" value="#{msgs.link_upload_remove_item}"/>		
                   </h:commandLink>

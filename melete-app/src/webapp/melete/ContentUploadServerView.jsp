@@ -62,8 +62,16 @@ function fillupload()
 																			<INPUT TYPE="FILE" id="file1" NAME="file1" style="visibility:visible" onChange="javascript:fillupload()"/>
 						</td></tr>	
 						<tr><td  colspan="2"> 
-							<h:outputText id="note" value="#{msgs.editcontentuploadserverview_note} #{addSectionPage.maxUploadSize}MB."  styleClass="comment red"/>							<h:inputHidden id="filename" value="#{addSectionPage.hiddenUpload}" />						
+							<h:outputText id="note" value="#{msgs.editcontentuploadserverview_note} #{addSectionPage.maxUploadSize}MB."  styleClass="comment red"/>							<h:inputHidden id="filename" value="#{addSectionPage.hiddenUpload}" />
+							<h:outputText id="brval" value="<BR>" escape="false"/>
+							<h:outputText id="somespaces1" value=" " styleClass="MediumPaddingClass" />
+							<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{addSectionPage.section.openWindow}" rendered="#{addSectionPage.shouldRenderUpload}">
+	                        </h:selectBooleanCheckbox>
+		                    <h:outputText id="editlinkText_8" value="#{msgs.editcontentlinkserverview_openwindow}" rendered="#{addSectionPage.shouldRenderUpload}"/>
+							
 					</td></tr>	
+					
+					
 					</table> </td></tr>        
 					     <tr>
 					          	<td  colspan="2">
