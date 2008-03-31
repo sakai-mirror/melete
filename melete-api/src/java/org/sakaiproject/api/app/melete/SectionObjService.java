@@ -78,6 +78,10 @@ public interface SectionObjService {
 	public abstract boolean isTextualContent();
 
 	public abstract void setTextualContent(boolean textualContent);
+	
+	public abstract boolean isOpenWindow();
+
+	public abstract void setOpenWindow(boolean openWindow);	
 
 	public abstract boolean isDeleteFlag();
 
