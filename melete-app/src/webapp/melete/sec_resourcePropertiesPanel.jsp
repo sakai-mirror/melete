@@ -15,14 +15,6 @@
 		<h:column>				
 					 <h:inputText id="res_name" size="45" value="#{addSectionPage.secResourceName}" styleClass="formtext" rendered="#{addSectionPage.shouldRenderLink}" />
 		</h:column>
-		<h:column rendered="#{addSectionPage.shouldRenderLink}">
-		  
-		</h:column>
-		<h:column rendered="#{addSectionPage.shouldRenderLink}">
-		<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{addSectionPage.section.openWindow}" rendered="#{addSectionPage.shouldRenderLink}">
-		  </h:selectBooleanCheckbox>
-		  <h:outputText id="editlinkText_8" value="#{msgs.editcontentlinkserverview_openwindow}" rendered="#{addSectionPage.shouldRenderLink}"/>
-		</h:column>
 		<h:column>
 					 <h:outputText value="#{msgs.resources_proper_pan_description}" rendered="#{addSectionPage.shouldRenderLink || addSectionPage.shouldRenderUpload || addSectionPage.shouldRenderResources}"/>
 		</h:column>	

@@ -594,6 +594,12 @@ color: #5A6D95;
    width:50%;
 	align:right;
 }
+.col30 {
+	width:30%;
+}
+.col50 {
+	width:50%;
+}
 
 .placeCenter{
 	align:center;
