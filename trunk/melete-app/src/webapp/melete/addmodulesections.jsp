@@ -220,12 +220,14 @@ function contentChangeSubmit()
 											 <f:subview id="ContentLinkView" rendered="#{addSectionPage.shouldRenderLink}">
 												<jsp:include page="ContentLinkView.jsp"/> 
 											</f:subview>											
-												</td></tr>	
-												<tr> 
+				                           <f:subview id="ContentUploadView" rendered="#{addSectionPage.shouldRenderUpload}">
+											<jsp:include page="ContentUploadView.jsp"/> 
+											</f:subview>						     
+									     </td>
+									     </tr>
+									     <tr>			
 										 <td colspan="2" align="center"> 
-										 <f:subview id="ContentUploadView" rendered="#{addSectionPage.shouldRenderUpload}">
-																		<jsp:include page="ContentUploadView.jsp"/> 
-												</f:subview>			
+												
 											<f:subview id="contentEditorView" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
 														<jsp:include page="contentSferyxEditor.jsp"/> 
 													<h:inputHidden id="contentTextArea" value="#{addSectionPage.contentEditor}" />
