@@ -104,8 +104,8 @@ SETUP INSTRUCTIONS
 	
 4. Database Configuration
 
-	* Melete works with HSQLDB, Oracle or Mysql4.1 Database. The driver used is 
-	the MySql Connector/J 3.1.12 (same as Sakai). It has been tested just on Mysql, 
+	* Melete works with HSQLDB, Oracle or Mysql4.1/5.0.x Database. The driver used is 
+	the same as Sakai. It has been tested just on Mysql, 
 	but it has been deployed successfully with Oracle at many universities. 
 	
 	* Melete shares the same database as Sakai's and adds a few tables to the database. 
