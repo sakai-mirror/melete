@@ -9,11 +9,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.dom4j.DocumentHelper;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.Element;
+import org.dom4j.Namespace;
+import org.dom4j.QName;
 import org.sakaiproject.api.app.melete.MeleteExportService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
+import org.sakaiproject.api.app.melete.util.XMLHelper;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.util.Validator;
+import org.xml.sax.SAXException;
 
 /**
  * SCORM 2004 3rd Edition Asset Export Implementation
@@ -56,6 +63,171 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
 	String getLangString(){
         return langString;
     }
+    /**
+	 * creates document root element "manifest" and adds the namespaces
+	 *
+	 * @return returns the manifest element
+	 * @throws  Exception
+	 */
+	public Element createManifest() throws Exception {
+		Element root = DocumentHelper.createElement("manifest");
+		//Set up the necessary namespaces
+		root.setQName(new QName("manifest", new Namespace(null,	DEFAULT_NAMESPACE_URI)));
+		root.add(new Namespace("imsmd",getMetaDataNameSpace()));
+		root.add(new Namespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
+
+		/*root.addAttribute("xsi:schemaLocation",
+				"http://www.imsglobal.org/xsd/imscp_v1p1 "
+						+ "http://www.imsglobal.org/xsd/imscp_v1p1.xsd "
+						+ "http://www.imsglobal.org/xsd/imsmd_v1p2 "
+						+ "http://www.imsglobal.org/xsd/imsmd_v1p2.xsd ");
+		*/
+
+		root.addAttribute("identifier", "Manifest-" + getUUID().toString());
+		root.addAttribute("version", "IMS CP 1.1.4");
+		return root;
+	}
+
+	/**
+	 * creates document root element "manifest" from the default manifest file
+	 * and adds the namespaces
+	 * @param xmlFile - Default manifest file
+	 * @return returns the manifest element
+	 * @throws  Exception
+	 */
+	public Element getManifest(File xmlFile) throws Exception {
+		try {
+			Document document = XMLHelper.getSaxReader().read(xmlFile);
+			Element root = document.getRootElement();
+			Element rootnew = root.createCopy();
+			List childEleList  = rootnew.elements();
+			childEleList.clear();
+
+			this.DEFAULT_NAMESPACE_URI = rootnew.getNamespaceURI();
+
+			List nslist = rootnew.declaredNamespaces();
+
+			for (int i=0; i<nslist.size(); i++){
+				if (((Namespace)nslist.get(i)).getPrefix().equals("imsmd")){
+					setMetaDataNameSpace(((Namespace)nslist.get(i)).getURI());
+					break;
+				}
+			}
+			rootnew.addAttribute("identifier", "Manifest-" + getUUID().toString());
+			return rootnew;
+		} catch (DocumentException de) {
+			throw de;
+		} catch (SAXException se) {
+			throw se;
+		}catch (Exception e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * create manifest metadata element with schema and schemaversion elements
+	 *
+	 * @return - returns metadata element
+	 */
+	public Element createManifestMetadata() {
+        Element metadata = createDefaultNSElement("metadata", "metadata");
+
+        //schema element
+        Element schema = createDefaultNSElement("schema", "schema");
+        schema.setText(getSchema());
+        metadata.add(schema);
+
+        //schema version element
+        Element schemaVersion = createDefaultNSElement("schemaversion", "schemaversion");
+        schemaVersion.setText(getSchemaVersion());
+        metadata.add(schemaVersion);
+
+        return metadata;
+    }
+
+
+	/**
+	 * creates the default namespace element
+	 * @param elename - element name
+	 * @param qname - qualified name
+	 * @return - returns the default namespace element
+	 */
+	public Element createDefaultNSElement(String elename, String qname) {
+		Element metadata = DocumentHelper.createElement(elename);
+        metadata.setQName(new QName(qname,new Namespace(null, DEFAULT_NAMESPACE_URI)));
+		return metadata;
+	}
+
+
+	/**
+	 * creates the LOM metadata element
+	 * @param elename - element name
+	 * @param qname - qualified name
+	 * @return - returns the metadata element
+	 */
+	public Element createLOMElement(String elename, String qname) {
+
+		Element imsmdlom = DocumentHelper.createElement(elename);
+		imsmdlom.setQName(new QName(qname,new Namespace("imsmd", getMetaDataNameSpace())));
+
+		return imsmdlom;
+	}
+
+	/**
+	 * creates metadata title element
+	 * @param title - title
+	 * @return - returns the title element
+	 */
+	public Element createMetadataTitle(String title) {
+		//imsmd:title
+        Element imsmdtitle = createLOMElement("imsmd:title", "title");
+
+        //imsmd:langstring
+        Element imsmdlangstring = createLOMElement("imsmd:" + getLangString(), getLangString());
+        //imsmdlangstring.addAttribute("xml:lang", "en-US");
+        imsmdlangstring.setText(title);
+
+        imsmdtitle.add(imsmdlangstring);
+
+        return imsmdtitle;
+	}
+
+	/**
+	 * creates metadata description element
+	 * @param description - description
+	 * @return - returns the metadata description element
+	 */
+	public Element createMetadataDescription(String description) {
+		//imsmd:description
+		Element mdDesc = createLOMElement("imsmd:description", "description");
+
+		//imsmd:langstring
+		Element mdLangString = createLOMElement("imsmd:" + getLangString(), getLangString());
+		//mdLangString.addAttribute("xml:lang", "en-US");
+		mdLangString.setText(description);
+
+		mdDesc.add(mdLangString);
+
+		return mdDesc;
+	}
+
+	/*
+	 * create keyword element
+	 * add by rashmi
+	 */
+	public Element createMetadataKeyword(String keyword) {
+		//imsmd:keyword
+		Element mdKeyword = createLOMElement("imsmd:keyword", "keyword");
+
+		//imsmd:langstring
+		Element mdLangString = createLOMElement("imsmd:" + getLangString(), getLangString());
+		//mdLangString.addAttribute("xml:lang", "en-US");
+		mdLangString.setText(keyword);
+
+		mdKeyword.add(mdLangString);
+
+		return mdKeyword;
+	}
 
     @Override
 	public Element createMetadataCopyright(int licenseCode)

@@ -49,50 +49,33 @@ import org.doomdark.uuid.UUIDGenerator;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class MeleteExportServiceImpl implements MeleteExportService{
+public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl implements MeleteExportService{
 
-	/** Dependency:  The logging service. */
-	protected Log logger = LogFactory.getLog(MeleteExportServiceImpl.class);
 
-	/**default namespace and metadata namespace*/
-	protected String DEFAULT_NAMESPACE_URI = "http://www.imsglobal.org/xsd/imscp_v1p1";
-	protected String IMSMD_NAMESPACE_URI ="http://www.imsglobal.org/xsd/imsmd_v1p2";
-
-	protected int RESOURCE_LICENSE_CODE = 0; //not determined yet
-	protected String RESOURCE_LICENSE_URL = "I have not determined copyright yet"; //No license
-	protected int RESOURCE_LICENSE_COPYRIGHT_CODE = 1; //Copyright of author
-	protected int RESOURCE_LICENSE_PD_CODE = 2; //		Public Domain
-	protected int RESOURCE_LICENSE_CC_CODE = 3; //Creative Commons
-	protected int RESOURCE_LICENSE_FAIRUSE_CODE = 4; //FairUse Exception
-
-	private MeleteCHService meleteCHService;
-	private MeleteLicenseDB meleteLicenseDB;
-	protected SectionDB sectionDB;
-	private SubSectionUtilImpl sectionUtil;
-	private org.w3c.dom.Element currItem = null;
-	protected MeleteUtil meleteUtil = new MeleteUtil();
+	String metaDataNameSpace = "http://www.imsglobal.org/xsd/imsmd_v1p2";
+	String schema = "IMS Content";
+	String schemaVersion = "1.1.4";
+	String langString = "langstring";
 	
-	/**
-	 * Establish my logger component dependency.
-	 * @param logger the logger component.
-	 */
-	public void setLogger(Log logger){
-		this.logger = logger;
-	}
-	/**
-	 * Final initialization, once all dependencies are set.
-	 */
-	public void init(){
-		logger.debug(this +".init()");
-	}
-
-	/**
-	 * Final cleanup.
-	 */
-	public void destroy(){
-		logger.debug(this +".destroy()");
-	}
-
+	String getMetaDataNameSpace(){
+        return metaDataNameSpace;
+    }
+	
+	void setMetaDataNameSpace(String metaDataNameSpace){
+        this.metaDataNameSpace = metaDataNameSpace;
+    }
+		
+	String getSchema(){
+        return schema;
+    }
+	
+	String getSchemaVersion(){
+        return schemaVersion;
+    }
+	
+	String getLangString(){
+        return langString;
+    }
 
 	/**
 	 * creates document root element "manifest" and adds the namespaces
@@ -104,7 +87,7 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 		Element root = DocumentHelper.createElement("manifest");
 		//Set up the necessary namespaces
 		root.setQName(new QName("manifest", new Namespace(null,	DEFAULT_NAMESPACE_URI)));
-		root.add(new Namespace("imsmd",IMSMD_NAMESPACE_URI));
+		root.add(new Namespace("imsmd",getMetaDataNameSpace()));
 		root.add(new Namespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
 
 		/*root.addAttribute("xsi:schemaLocation",
@@ -140,7 +123,7 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 
 			for (int i=0; i<nslist.size(); i++){
 				if (((Namespace)nslist.get(i)).getPrefix().equals("imsmd")){
-					this.IMSMD_NAMESPACE_URI = ((Namespace)nslist.get(i)).getURI();
+					setMetaDataNameSpace(((Namespace)nslist.get(i)).getURI());
 					break;
 				}
 			}
@@ -165,12 +148,12 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 
         //schema element
         Element schema = createDefaultNSElement("schema", "schema");
-        schema.setText("IMS Content");
+        schema.setText(getSchema());
         metadata.add(schema);
 
         //schema version element
         Element schemaVersion = createDefaultNSElement("schemaversion", "schemaversion");
-        schemaVersion.setText("1.1.4");
+        schemaVersion.setText(getSchemaVersion());
         metadata.add(schemaVersion);
 
         return metadata;
@@ -199,7 +182,7 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 	public Element createLOMElement(String elename, String qname) {
 
 		Element imsmdlom = DocumentHelper.createElement(elename);
-		imsmdlom.setQName(new QName(qname,new Namespace("imsmd", IMSMD_NAMESPACE_URI)));
+		imsmdlom.setQName(new QName(qname,new Namespace("imsmd", getMetaDataNameSpace())));
 
 		return imsmdlom;
 	}
@@ -214,7 +197,7 @@ public class MeleteExportServiceImpl implements MeleteExportService{
         Element imsmdtitle = createLOMElement("imsmd:title", "title");
 
         //imsmd:langstring
-        Element imsmdlangstring = createLOMElement("imsmd:langstring", "langstring");
+        Element imsmdlangstring = createLOMElement("imsmd:"+getLangString(), getLangString());
         //imsmdlangstring.addAttribute("xml:lang", "en-US");
         imsmdlangstring.setText(title);
 
@@ -233,7 +216,7 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 		Element mdDesc = createLOMElement("imsmd:description", "description");
 
 		//imsmd:langstring
-		Element mdLangString = createLOMElement("imsmd:langstring", "langstring");
+		Element mdLangString = createLOMElement("imsmd:"+getLangString(), getLangString());
 		//mdLangString.addAttribute("xml:lang", "en-US");
 		mdLangString.setText(description);
 
@@ -251,7 +234,7 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 		Element mdKeyword = createLOMElement("imsmd:keyword", "keyword");
 
 		//imsmd:langstring
-		Element mdLangString = createLOMElement("imsmd:langstring", "langstring");
+		Element mdLangString = createLOMElement("imsmd:"+getLangString(), getLangString());
 		//mdLangString.addAttribute("xml:lang", "en-US");
 		mdLangString.setText(keyword);
 
@@ -270,14 +253,14 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 		Element mdCopyright = createLOMElement("imsmd:copyrightandotherrestrictions", "copyrightandotherrestrictions");
 
 		Element mdSource = createLOMElement("imsmd:source", "source");
-		Element mdLangString = createLOMElement("imsmd:langstring", "langstring");
+		Element mdLangString = createLOMElement("imsmd:"+getLangString(), getLangString());
 		mdLangString.setText("Melete");
 		mdSource.add(mdLangString);
 		mdCopyright.add(mdSource);
 		// if public domain then no restrictions are applied
 		// and for all other licenses restrictions are applied
 		Element mdValue = createLOMElement("imsmd:value", "value");
-		Element mdLangString1 = createLOMElement("imsmd:langstring", "langstring");
+		Element mdLangString1 = createLOMElement("imsmd:"+getLangString(), getLangString());
 		if(licenseCode != RESOURCE_LICENSE_PD_CODE)
 			mdLangString1.setText("yes");
 		else mdLangString1.setText("no");
@@ -287,31 +270,12 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 		return mdCopyright;
 	}
 
-	/*
-	 * create license url for manifest file
-	 * add by rashmi
-	 */
-	private String createLicenseUrl (int lcode, String lurl, String owner, String year)
-	{
-		if(lcode == RESOURCE_LICENSE_CODE) return RESOURCE_LICENSE_URL;
-		if (lcode == RESOURCE_LICENSE_COPYRIGHT_CODE) return lurl;
 
-		if(lcode == RESOURCE_LICENSE_PD_CODE || lcode == RESOURCE_LICENSE_CC_CODE)
-		{
-			lurl = meleteLicenseDB.fetchCcLicenseName(lurl);
-			if(lcode == RESOURCE_LICENSE_CC_CODE)
-						lurl = "Creative Commons " + lurl;
-		}
-		if(owner != null && (owner=owner.trim()).length() !=0) {lurl = lurl + "," + owner;}
-		if(year != null && (year = year.trim()).length() !=0) {lurl = lurl + "," + year;}
-
-		return lurl;
-	}
 
 	/*
 	 *  process section type and create resource element object
 	 */
-	private void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String sectionFileName,int i) throws Exception
+	void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String sectionFileName,int i) throws Exception
 	{
 		if (section.getContentType().equals("typeLink")){
 			String linkData = new String(content_data1);
@@ -343,7 +307,7 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 			if(!sectionFileName.equals(linkData))
 			{
 			Element urlTitle = createLOMElement("imsmd:title", "title");
-			Element imsmdlangstring = createLOMElement("imsmd:langstring", "langstring");
+			Element imsmdlangstring = createLOMElement("imsmd:"+getLangString(), getLangString());
 	        imsmdlangstring.setText(sectionFileName);
 	        urlTitle.add(imsmdlangstring);
 	        resource.add(urlTitle);
@@ -447,7 +411,7 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 
 				// add license description
 				Element mdLicenseDesc = createLOMElement("imsmd:description", "description");
-				Element mdLangString2 = createLOMElement("imsmd:langstring", "langstring");
+				Element mdLangString2 = createLOMElement("imsmd:"+getLangString(), getLangString());
 				String lurl = createLicenseUrl(meleteResource.getLicenseCode(),meleteResource.getCcLicenseUrl(),meleteResource.getCopyrightOwner(),meleteResource.getCopyrightYear());
 				mdLangString2.setText(lurl);
 				mdLicenseDesc.add(mdLangString2);
@@ -569,288 +533,5 @@ public class MeleteExportServiceImpl implements MeleteExportService{
 
 	}
 
-	/*
-	 * get resource information from content resource object
-	 */
-	private byte[] setContentResourceData(String resourceId, ArrayList data)throws Exception
-	{
-		try{
-			if(resourceId != null)
-	    	{
-			resourceId = URLDecoder.decode(resourceId,"UTF-8");
-	       	ContentResource cr = getMeleteCHService().getResource(resourceId);
-	       	if(cr == null)return null;
 
-	       	data.add(cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
-	       	data.add(cr.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION));
-	       	data.add(cr.getContentType());
-	       	return cr.getContent();
-	    	}
-		}
-		catch(IdUnusedException unuse){
-			// if file not found exception or content is missing continue working
-			logger.error("error in reading resource content in export section");
-			return null;
-			}
-		catch(Exception e){
-			logger.error("error in reading resource in export section");
-			throw e;
-		}
-		return null;
-	}
-
-	/**
-	 * replace image path in the section content for uploaded images thru
-	 * content editor and create the image files under resources/images
-	 * @param secContent
-	 * @param imagespath
-	 * @param resource
-	 * @return the content with modifed image path
-	 */
-	private String replaceImagePath(String secContent, String imagespath, Element resource)throws Exception{
-		StringBuffer strBuf = new StringBuffer();
-		String checkforimgs = secContent;
-		int imgindex = -1;
-
-		String imgSrcPath, imgName, imgLoc;
-		String modifiedSecContent = new String(secContent);
-	//	meletedocsdirpath = meleteDocsDirPath;
-
-		try {
-			File imagesDir = new File(imagespath);
-
-			if (!imagesDir.exists())
-				imagesDir.mkdir();
-
-			int startSrc =0;
-			int endSrc = 0;
-
-			while(checkforimgs !=null) {
-
-				ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);	    			
-    			checkforimgs = (String)embedData.get(0);
-    			if (embedData.size() > 1)
-    			{
-    				startSrc = ((Integer)embedData.get(1)).intValue();
-    				endSrc = ((Integer)embedData.get(2)).intValue();
-    			}
-    			if (endSrc <= 0) break;
-    			
-				imgSrcPath = checkforimgs.substring(startSrc, endSrc);
-				if(imgSrcPath.indexOf("/access") !=-1)
-				{
-				String findEntity = imgSrcPath.substring(imgSrcPath.indexOf("/access")+7);
-				Reference ref = EntityManager.newReference(findEntity);
-				logger.debug("ref properties" + ref.getType() +"," +ref.getId());
-
-				if(ref.getType().equals(ContentHostingService.APPLICATION_ID) || ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
-				{
-					String img_resource_id =ref.getId() ;
-					if(ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
-						img_resource_id =img_resource_id.replaceFirst("/content","");
-
-					if(ref.getType().equals(ContentHostingService.APPLICATION_ID) && !ref.getId().startsWith("/group"))
-					{
-						// not a site resource item so make it a full URL
-						String patternStr = imgSrcPath;
-						String replacementStr =ServerConfigurationService.getServerUrl() + imgSrcPath;
-						modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
-						return modifiedSecContent;
-					}
-
-					ArrayList img_content = new ArrayList();
-					logger.debug("calling secContent from replace Image");
-					byte[] img_data =setContentResourceData(img_resource_id, img_content);
-					if(img_data == null){
-						 checkforimgs =checkforimgs.substring(endSrc);
-				         startSrc=0; endSrc = 0;
-						continue;
-					}
-					imgName= (String)img_content.get(0);
-					imgName = Validator.escapeResourceName(imgName);
-					createFileFromContent(img_data,imagesDir.getAbsolutePath()+File.separator+ imgName);
-
-					String patternStr = imgSrcPath;
-					String replacementStr = "images/"+ imgName;
-					Pattern pattern = Pattern.compile(Pattern.quote(patternStr));
-
-					// Replace all occurrences of pattern in input
-					modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
-
-					//add image to resources element
-					Element file = resource.addElement("file");
-					file.addAttribute("href", "resources/images/"+ imgName);
-					}
-				}
-				else if(imgSrcPath.startsWith("/")){
-					//internal link resides somewhere within sakai
-					String patternStr = imgSrcPath;
-					String replacementStr =ServerConfigurationService.getServerUrl() + imgSrcPath;
-					modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
-					return modifiedSecContent;
-				}
-//				 iterate next
-	            checkforimgs =checkforimgs.substring(endSrc);
-	            startSrc=0; endSrc = 0;
-			}
-		}catch (Exception e) {
-			throw e;
-		}
-
-		return modifiedSecContent;
-	}
-
-
-	/**
-	 * creates file from input path to output path
-	 * @param inputpath - input path for file
-	 * @param outputpath - output path for file
-	 * @throws Exception
-	 */
-	public void createFile(String inputurl, String outputurl)throws Exception{
-		FileInputStream in = null;
-		FileOutputStream out = null;
-		try {
-			File inputFile = new File(inputurl);
-			File outputFile = new File(outputurl);
-			in = new FileInputStream(inputFile);
-			out = new FileOutputStream(outputFile);
-			int c;
-			int len;
-			byte buf[] = new byte[102400];
-			while ((len = in.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
-		} catch (FileNotFoundException e) {
-			logger.error(e.toString());
-		} catch (IOException e) {
-			throw e;
-		} finally{
-			try {
-				if (in != null)
-					in.close();
-			} catch (IOException e1) {
-			}
-			try {
-				if (out != null)
-					out.close();
-			} catch (IOException e2) {
-			}
-		}
-	}
-
-	/**
-	 * creates file from input path to output path
-	 * @param inputpath - input path for file
-	 * @param outputpath - output path for file
-	 * @throws Exception
-	 */
-	public void createFileFromContent(byte[] content, String outputurl)throws Exception{
-		FileOutputStream fout = new FileOutputStream(new File(outputurl));
-		try {
-			fout.write(content);
-			fout.flush();
-		} catch (IOException e) {
-			throw e;
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			if (fout != null)
-				fout.close();
-		}
-	}
-
-	/**
-	 * deletes the file and its children
-	 * @param delfile - file to be deleted
-	 */
-	public void deleteFiles(File delfile){
-
-		if (delfile.isDirectory()){
-			File files[] = delfile.listFiles();
-			int i = files.length;
-			while (i > 0)
-				deleteFiles(files[--i]);
-
-			delfile.delete();
-		}else
-			delfile.delete();
-
-	}
-
-	/**
-	 * gets UUID
-	 * @return - returns the UUID
-	 */
-	private UUID getUUID() {
-		return UUIDGenerator.getInstance().generateRandomBasedUUID();
-	}
-
-
-	/**
-	 * creates organizations element
-	 * @return returns organizations element
-	 */
-	private Element createOrganizations(){
-		return createDefaultNSElement("organizations", "organizations");
-	}
-
-
-	/**
-	 * creates resources element
-	 * @return returns resources element
-	 */
-	private Element createResources(){
-
-		return createDefaultNSElement("resources", "resources");
-	}
-
-	/**
-	 * add organization for melete modules
-	 * @param organizations - organizations element
-	 */
-	private Element addOrganization(Element organizations) {
-		Element organization = organizations.addElement("organization");
-		organization.addAttribute("identifier", "MF01_ORG1_MELETE");
-		organization.addAttribute("structure", "hierarchical");
-
-		return organization;
-	}
-
-	/**
-	 * @return Returns the meleteCHService.
-	 */
-	public MeleteCHService getMeleteCHService() {
-		return meleteCHService;
-	}
-	/**
-	 * @return Returns the meleteLicenseDB.
-	 */
-	public MeleteLicenseDB getMeleteLicenseDB() {
-		return meleteLicenseDB;
-	}
-	/**
-	 * @return Returns the sectionDB.
-	 */
-	public SectionDB getSectionDB() {
-		return sectionDB;
-	}
-	/**
-	 * @param sectionDB The sectionDB to set.
-	 */
-	public void setSectionDB(SectionDB sectionDB) {
-		this.sectionDB = sectionDB;
-	}
-	/**
-	 * @param meleteCHService The meleteCHService to set.
-	 */
-	public void setMeleteCHService(MeleteCHService meleteCHService) {
-		this.meleteCHService = meleteCHService;
-	}
-	/**
-	 * @param meleteLicenseDB The meleteLicenseDB to set.
-	 */
-	public void setMeleteLicenseDB(MeleteLicenseDB meleteLicenseDB) {
-		this.meleteLicenseDB = meleteLicenseDB;
-	}
 }
