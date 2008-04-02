@@ -18,6 +18,12 @@ import org.sakaiproject.util.Validator;
 /**
  * SCORM 2004 3rd Edition Asset Export Implementation
  * @author CRIM
+ * Mallika M Thoppay, 4/2/08 - The SCORM export process requires that all root level <item> elements either have an identifierref attribute
+ * or the element's child elements have the identifierref attribute. It is ok to have an identifierref
+ * attribute both for a child <item> element and its nested child <item> elements (supports subsections), however
+ * you cannot have a main <item> element *and* its child <item> element have an identifierref attribute(empty module
+ * with next steps scenario). To ensure all of these requirements are met, generateOrganizationResourceItems, createSectionElement
+ * and createResourceElement methods have been changed.
  */
 public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImpl implements MeleteExportService{
 
@@ -140,6 +146,20 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
             File resfile = new File(resoucesDir+ "/"+ fileName);
             createFileFromContent(content_data1, resfile.getAbsolutePath());
         }
+        else if (section.getContentType().equals("notype"))
+        {
+        	 Element file = resource.addElement("file");
+             String fileName = sectionFileName;
+
+             file.addAttribute("href", "resources/"+ fileName);
+             resource.addAttribute("href", "resources/"+ fileName);
+
+             //read the content to modify the path for images
+
+                  //create the file
+             File resfile = new File(resoucesDir+ "/"+fileName);
+             createFileFromContent(new String("  ").getBytes(), resfile.getAbsolutePath());
+        }
     }
 
     @Override
@@ -208,6 +228,17 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
 
                 secElement.add(imsmdlom);
             }   // end if contents
+            else
+            {
+            	 Element resource = resources.addElement("resource");
+                 resource.addAttribute("identifier","RESOURCE"+ item_ref_num);
+                 resource.addAttribute("type ","webcontent");
+                 resource.addAttribute("adlcp:scormType","asset");
+                 createResourceElement(section, resource, null, resoucesDir, imagespath,"nocontent.html",i);
+                 secElement.addAttribute("identifierref", resource.attributeValue("identifier"));
+
+
+            }
     return k;
     }
 
@@ -273,31 +304,49 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
                         //  continue;
                             }
                     }
-                    //       add next steps as the last section of the module by rashmi
-                    if (module.getWhatsNext() != null && module.getWhatsNext().trim().length() > 0)
-                    {
-                        Element whatsNextElement = modMainItem.addElement("item");
-                        whatsNextElement.addAttribute("identifier", "NEXTSTEPS"+ ++k);
-
-                        Element nextTitleEle = whatsNextElement.addElement("title");
-                        nextTitleEle.setText("NEXTSTEPS");
-
-                        Element resource = resources.addElement("resource");
-                        resource.addAttribute("identifier","RESOURCE"+ k);
-                        resource.addAttribute("type ","webcontent");
-                        resource.addAttribute("adlcp:scormType","asset");
-
-//                      create the file
-                        File resfile = new File(resoucesDir+ "/module_"+ i +"_nextsteps.html");
-                        createFileFromContent( module.getWhatsNext().getBytes(), resfile.getAbsolutePath());
-                        whatsNextElement.addAttribute("identifierref", resource.attributeValue("identifier"));
-                        Element file = resource.addElement("file");
-                        file.addAttribute("href", "resources/module_"+ i +"_nextsteps.html");
-                        resource.addAttribute("href", "resources/module_"+ i +"_nextsteps.html");
-                    }
-                // add next steps end
-
                 }
+                else
+                {
+                	if (module.getWhatsNext() == null || module.getWhatsNext().trim().length() == 0)
+                    {
+                	 Element resource = resources.addElement("resource");
+                     resource.addAttribute("identifier","RESOURCE"+ ++k);
+                     resource.addAttribute("type ","webcontent");
+                     resource.addAttribute("adlcp:scormType","asset");
+
+                     File resfile = new File(resoucesDir+ "/nocontent.html");
+                     createFileFromContent(new String("  ").getBytes(), resfile.getAbsolutePath());
+                     Element file = resource.addElement("file");
+                     file.addAttribute("href", "resources/nocontent.html");
+                     resource.addAttribute("href", "resources/nocontent.html");
+                     modMainItem.addAttribute("identifierref", resource.attributeValue("identifier"));
+
+                    }
+                }
+                //       add next steps as the last section of the module by rashmi
+                if (module.getWhatsNext() != null && module.getWhatsNext().trim().length() > 0)
+                {
+                    Element whatsNextElement = modMainItem.addElement("item");
+                    whatsNextElement.addAttribute("identifier", "NEXTSTEPS"+ ++k);
+
+                    Element nextTitleEle = whatsNextElement.addElement("title");
+                    nextTitleEle.setText("NEXTSTEPS");
+
+                    Element resource = resources.addElement("resource");
+                    resource.addAttribute("identifier","RESOURCE"+ k);
+                    resource.addAttribute("type ","webcontent");
+                    resource.addAttribute("adlcp:scormType","asset");
+
+//                  create the file
+                    File resfile = new File(resoucesDir+ "/module_"+ i +"_nextsteps.html");
+                    createFileFromContent( module.getWhatsNext().getBytes(), resfile.getAbsolutePath());
+                    whatsNextElement.addAttribute("identifierref", resource.attributeValue("identifier"));
+                    Element file = resource.addElement("file");
+                    file.addAttribute("href", "resources/module_"+ i +"_nextsteps.html");
+                    resource.addAttribute("href", "resources/module_"+ i +"_nextsteps.html");
+                }
+            // add next steps end
+
                 //add module description thru metadata
                 Element imsmdlom = createLOMElement("imsmd:lom", "lom");
                 Element imsmdgeneral = imsmdlom.addElement("imsmd:general");
