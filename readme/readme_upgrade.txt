@@ -10,6 +10,7 @@ SETUP INSTRUCTIONS
 5. Compile Melete 
 6. Database Configuration
 7. Run migrate process
+8. Adding melete icon to sakai site left menu
 ---------------------------------
 
 1. Configuring Melete 2.4 
@@ -193,5 +194,17 @@ This is a MANDATORY step. The migrate process moves Melete content that currentl
    Now, the process may be restarted by following the instructions above. The process 
    will restart from scratch and migrate content from the filesystem to contentHosting.
 
+8. Adding melete icon to sakai site left menu
+ 
+     If you are using sakai's default cascading style sheet create the icons folder under tomcat/webapps/library/skin/default/
+     and copy the image modules-menu.png from melete-app/src/webapp/images/sakai-menu to
+     tomcat/webapps/library/skin/default/icons. 
+ 
+     Add the below line to tomcat/webapps/library/skin/default/portal.css
+        
+     .icon-sakai-melete-tool{
+     	background-image: url(icons/modules-menu.png);
+     }
+     
 For future development, tutorials and solutions to common setup problems, see:
 http://etudesproject.org/melete.htm   
