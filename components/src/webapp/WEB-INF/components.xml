@@ -32,7 +32,10 @@
         </property>		
     <property name="meleteImportService">
             <ref local="org.sakaiproject.api.app.melete.MeleteImportService" />
-        </property>         			
+        </property>       
+      <property name="meleteExportService">
+            <ref local="org.sakaiproject.api.app.melete.MeleteExportService" />
+        </property>         	  			
 	</bean>
 	
 	<!-- common -->

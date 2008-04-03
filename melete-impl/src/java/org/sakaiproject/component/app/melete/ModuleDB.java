@@ -280,8 +280,6 @@ public class ModuleDB implements Serializable {
 		//create instance of coursemodules
 		 CourseModule coursemodule = new CourseModule();
 		 coursemodule.setCourseId(courseId);
-
-
 		 coursemodule.setModule(module);
   		 coursemodule.setSeqNo(seq);
   		 coursemodule.setDeleteFlag(false);
@@ -299,6 +297,7 @@ public class ModuleDB implements Serializable {
 		 session.saveOrUpdate(module);
 
 		  tx.commit();
+		  logger.debug("add module success" + module.getModuleId() + module.getCoursemodule().getCourseId());
 		  return ;
 
 	     }
@@ -317,6 +316,7 @@ public class ModuleDB implements Serializable {
 		logger.error("error at module db level");
 		throw new MeleteException("add_module_fail");
 	}
+	
   }
 
 

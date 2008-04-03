@@ -48,5 +48,6 @@ public interface MeleteImportService{
 	public void parseAndBuildModules(Document document, String unZippedDirPath) throws Exception;
 	public void copyModules(String fromContext, String toContext);
 	public String getDestinationContext();
+	public void mergeAndBuildModules(Document ArchiveDoc, String unZippedDirPath, String fromSiteId) throws Exception;
 
 }

@@ -39,6 +39,9 @@ import java.util.regex.Pattern;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.dom4j.Namespace;
+import org.dom4j.Node;
+import org.dom4j.QName;
 import org.dom4j.XPath;
 import org.sakaiproject.api.app.melete.MeleteCHService;
 import org.sakaiproject.api.app.melete.MeleteImportService;
@@ -130,6 +133,137 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		logger.debug(this +".destroy()");
 	}
 
+	private void buildModuleTitle(Element titleEle, Module module)
+	{
+		boolean moduleTitleFlag = false;
+		if (titleEle != null)
+		{			
+			String title = titleEle.getTextTrim();
+			if (title != null && title.length() != 0)
+			{
+				module.setTitle(title);
+				moduleTitleFlag = true;
+			}
+		}		
+		if(!moduleTitleFlag) module.setTitle("Untitled Module");
+		return;
+	}
+	
+	private boolean buildModuleDescription(Element descEle, Module module)
+	{
+		boolean descr = false;
+		if (descEle != null)
+		{
+			String desc = descEle.element("imsmd:langstring").getText();
+			module.setDescription(desc.trim());
+			descr = true;
+		}
+		return descr;
+	}
+
+	private boolean buildModuleKeyword(Element keywordEle, Module module)
+	{
+		boolean keywords = false;
+		
+		if (keywordEle != null)
+		{
+			String modkeyword = keywordEle.element("imsmd:langstring").getText();
+			module.setKeywords(modkeyword.trim());
+			keywords = true;
+		}
+		return keywords;
+	}
+	
+
+	private void removeNamespaces(Element elem)
+	{
+		elem.setQName(QName.get(elem.getName(), Namespace.NO_NAMESPACE, elem.getQualifiedName()));
+		Node n = null;
+		for (int i = 0; i < elem.content().size(); i++)
+		{
+			n = (Node) elem.content().get(i);
+			if (n.getNodeType() == Node.ATTRIBUTE_NODE) ((Attribute) n).setNamespace(Namespace.NO_NAMESPACE);
+			if (n.getNodeType() == Node.ELEMENT_NODE) removeNamespaces((Element) n);
+		}
+	}
+	 
+	public void mergeAndBuildModules(Document ArchiveDoc, String unZippedDirPath, String fromSiteId) throws Exception
+	{
+		if (logger.isDebugEnabled()) logger.debug("Entering mergeAndBuildModules");
+		setUnzippeddirpath(unZippedDirPath);
+		setDestinationContext(fromSiteId);
+		try
+		{
+			Element rootEle = ArchiveDoc.getRootElement();
+		
+			Map uris = new HashMap();
+			uris.put("imscp", DEFAULT_NAMESPACE_URI);
+			uris.put("imsmd", IMSMD_NAMESPACE_URI);
+
+			// organizations
+			List elements = rootEle.selectNodes("//organization/item");
+			logger.debug("sz of elements is" + elements.size());
+
+			for (Iterator iter = elements.iterator(); iter.hasNext();)
+			{
+				Element element = (Element) iter.next();
+			
+				//build module
+				Module module = new Module();
+				boolean keywords = false;
+				boolean descr = false;
+				for (Iterator iter1 = element.elementIterator(); iter1.hasNext();)
+				{
+					Element childele = (Element) iter1.next();
+			
+					if (childele.getName().equals("title")) buildModuleTitle(childele, module);
+					if (childele.getName().equals("imsmd:lom"))
+					{
+						List<Element> modulegeneralList = childele.elements();
+						List moduleMetadataList = modulegeneralList.get(0).elements();
+						
+						for (Iterator iter2 = moduleMetadataList.iterator(); iter2.hasNext();)
+						{
+							Element metaElement = (Element) iter2.next();
+			
+							if (metaElement.getName().equals("imsmd:description")) descr = buildModuleDescription(metaElement, module);
+							if (!descr) module.setDescription("    ");
+							if (metaElement.getName().equals("imsmd:keyword")) keywords = buildModuleKeyword(metaElement, module);
+							if (!keywords) module.setKeywords(module.getTitle());
+						}
+					}
+					
+				}
+				createModule(module);
+			// build sections
+
+				sectionUtil = new SubSectionUtilImpl();
+				seqDocument = sectionUtil.createSubSection4jDOM();
+
+				for (Iterator iter3 = element.elementIterator("item"); iter3.hasNext();)
+				{
+					Element itemelement = (Element) iter3.next();
+
+					if (itemelement.attributeValue("identifier").startsWith("NEXTSTEPS"))
+						mergeWhatsNext(itemelement, ArchiveDoc, module);
+					else mergeSection(itemelement, ArchiveDoc, module, addBlankSection(null));
+				}
+
+				// update module seqXml
+				logger.debug("checking seqXML now at the end of buildModule process" + seqDocument.asXML());
+				module.setSeqXml(seqDocument.asXML());
+				moduleDB.updateModule(module);
+				
+			}
+		}
+		catch (Exception e)
+		{
+			// no organization tag so create one flat module
+			e.printStackTrace();
+		}
+
+		if (logger.isDebugEnabled()) logger.debug("Exiting mergeAndBuildModules");
+	}
 	/**
 	 * Parses the manifest and build modules
 	 *
@@ -467,6 +601,20 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 	}
 
+	private void mergeWhatsNext(Element eleItem,Document  document,Module module) throws Exception
+	{
+		Attribute identifierref = eleItem.attribute("identifierref");
+		Element eleRes;
+
+		if (identifierref != null) {
+			eleRes = getMergeResource(identifierref.getValue(), document);
+			String hrefVal = eleRes.attributeValue("href");
+			String nextsteps = new String(meleteUtil.readFromFile(new File(getUnzippeddirpath() + File.separator+ hrefVal)));
+			module.setWhatsNext(nextsteps);
+			moduleDB.updateModule(module);
+		}
+
+	}
 	/**
 	 * creates the module
 	 * @param module Module
@@ -619,6 +767,144 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		if (logger.isDebugEnabled()) logger.debug("Exiting buildSection...");
 	}
 
+	/**
+	 * Builds section for each item under module item
+	 * @param eleItem item element
+	 * @param document document
+	 * @param module Module
+	 * @throws Exception
+	 */
+	private void mergeSection(Element eleItem, Document document, Module module, Element seqElement)
+			throws Exception {
+		if (logger.isDebugEnabled()) logger.debug("Entering buildSection...");
+
+		Attribute identifier = eleItem.attribute("identifier");
+		logger.debug("importing ITEM " + identifier.getValue());
+
+		Attribute identifierref = eleItem.attribute("identifierref");
+		Element eleRes;
+
+		Section section = new Section();
+		MeleteResource meleteResource = new MeleteResource();
+		boolean sectionTitleFlag = false;
+		boolean sectionCopyrightFlag = false;
+
+		List elements = eleItem.elements();
+		for (Iterator iter = elements.iterator(); iter.hasNext();)
+		{
+			Element element = (Element) iter.next();
+
+			// title
+			if (element.getQualifiedName().equalsIgnoreCase("title"))
+			{
+				section.setTitle(element.getTextTrim());
+				sectionTitleFlag = true;
+			}
+			// item
+			else if (element.getQualifiedName().equalsIgnoreCase("item"))
+			{
+				// call recursive here
+				buildSection(element, document, module, addBlankSection(seqElement));
+			}
+			// metadata
+			else if (element.getName().equalsIgnoreCase("imsmd:lom"))
+			{
+				// section instructions
+				List<Element> modulegeneralList = element.elements();
+				List moduleMetadataList = modulegeneralList.get(0).elements();
+
+				for (Iterator iter2 = moduleMetadataList.iterator(); iter2.hasNext();)
+				{
+					Element metaElement = (Element) iter2.next();
+	
+					if (metaElement.getName().equals("imsmd:description"))
+					{
+						String instr = metaElement.element("imsmd:langstring").getText();
+						section.setInstr(instr.trim());
+					}
+				}
+
+				// read license information
+				List rightList = modulegeneralList.get(1).elements();
+				for (Iterator iter3 = rightList.iterator(); iter3.hasNext();)
+				{
+					Element rightsElement = (Element) iter3.next();
+	
+					if (rightsElement.getName().equals("imsmd:description"))
+					{
+						String licenseUrl = rightsElement.element("imsmd:langstring").getText();
+						if (licenseUrl != null)
+						{
+							buildLicenseInformation(meleteResource, licenseUrl);
+							sectionCopyrightFlag = true;
+						}
+					}
+				}
+
+			}
+			// license end
+		}
+		// other attributes
+		logger.debug("setting section attribs");
+		String userId = UserDirectoryService.getCurrentUser().getEid();
+		String firstName = UserDirectoryService.getCurrentUser().getFirstName();
+		String lastName = UserDirectoryService.getCurrentUser().getLastName();
+
+		section.setTextualContent(true);
+		section.setCreatedByFname(firstName);
+		section.setCreatedByLname(lastName);
+		section.setContentType("notype");
+
+		if (!sectionTitleFlag) section.setTitle("Untitled Section");
+
+		// default to no license
+		if (!sectionCopyrightFlag)
+		{
+			meleteResource.setLicenseCode(RESOURCE_LICENSE_CODE);
+			meleteResource.setCcLicenseUrl(RESOURCE_LICENSE_URL);
+		}
+		// save section object
+		Integer new_section_id = sectionDB.addSection(module, section, true);
+		section.setSectionId(new_section_id);
+		seqElement.addAttribute("id", new_section_id.toString());
+
+		// now melete resource object
+		if (identifierref != null)
+		{
+			eleRes = getMergeResource(identifierref.getValue(), document);
+			if (eleRes != null)
+			{
+				Attribute resHrefAttr = eleRes.attribute("href");
+
+				if (resHrefAttr != null)
+				{
+					String hrefVal = resHrefAttr.getValue();
+
+					// check if file is missing
+					if (hrefVal != null && hrefVal.length() != 0
+							&& !(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")))
+					{
+						if (!meleteUtil.checkFileExists(getUnzippeddirpath() + File.separator + hrefVal))
+						{
+							logger.info("content file for section is missing so move ON");
+							return;
+						}
+					}
+					// end missing file check
+
+					// create meleteResourceObject
+					List resElements = eleRes.elements();
+					createContentResource(module, section, meleteResource, hrefVal, resElements);
+
+				} // resHrefAttr check end
+			}
+		}
+
+		if (logger.isDebugEnabled()) logger.debug("Exiting mergeSection...");
+	}
+	
+	
+	
 	/**
 	 * creates section dependent file
 	 *
@@ -944,6 +1230,25 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 		return eleRes;
 	}
+
+	private Element getMergeResource(String resName, Document document) throws Exception
+	{
+		if (logger.isDebugEnabled()) logger.debug("Entering getResource...");
+
+		Map uris = new HashMap();
+		uris.put("imscp", DEFAULT_NAMESPACE_URI);
+		uris.put("imsmd", IMSMD_NAMESPACE_URI);
+
+		// resource
+		XPath xpath = document.createXPath("//resource[@identifier = '" + resName + "']");
+		xpath.setNamespaceURIs(uris);
+
+		Element eleRes = (Element) xpath.selectSingleNode(document);
+
+		if (logger.isDebugEnabled()) logger.debug("Exiting getResource...");
+
+		return eleRes;
+}
 
 
 	/**
