@@ -18,6 +18,7 @@
  */
 package org.sakaiproject.component.app.melete;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import java.util.Stack;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.sakaiproject.api.app.melete.MeleteExportService;
 import org.sakaiproject.api.app.melete.MeleteSecurityService;
 import org.sakaiproject.api.app.melete.ModuleService;
 import org.sakaiproject.api.app.melete.MeleteImportService;
@@ -34,6 +36,10 @@ import org.sakaiproject.authz.cover.FunctionManager;
 import org.sakaiproject.tool.cover.ToolManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dom4j.Attribute;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Namespace;
+import org.dom4j.QName;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.entity.api.Entity;
@@ -52,8 +58,11 @@ import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Node;
+import org.sakaiproject.site.cover.SiteService;
+import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.util.Xml;
 
 /*
  * MeleteSecurityService is the implementation of MeleteSecurityService
@@ -67,6 +76,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 
 	private ModuleService moduleService;
 	private MeleteImportService meleteImportService;
+	private MeleteExportService meleteExportService;
 
 	// Note: security needs a proper Resource reference
 
@@ -432,8 +442,8 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	 */
 	public String getLabel()
 	{
-		return null;
-	}
+		return "melete";
+	}	
 
 	/**
 	 * {@inheritDoc}
@@ -441,7 +451,35 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	public String merge(String siteId, Element root, String archivePath, String fromSiteId, Map attachmentNames, Map userIdTrans,
 			Set userListAllowImport)
 	{
-		return null;
+		logger.debug("merge of melete" + siteId +"," +fromSiteId + ","+root.toString());
+		try{
+		org.w3c.dom.Document w3doc = Xml.createDocument();
+		org.w3c.dom.Element w3root = (org.w3c.dom.Element)w3doc.importNode(root, true);
+		w3doc.appendChild(w3root);
+		
+		//convert to dom4j doc
+		org.dom4j.io.DOMReader domReader = new org.dom4j.io.DOMReader();
+		org.dom4j.Document domDoc =	domReader.read(w3doc);
+		logger.debug("archive str " + archivePath + archivePath.lastIndexOf(File.separator));
+		archivePath = archivePath.substring(0,archivePath.lastIndexOf("/"));
+		getMeleteImportService().mergeAndBuildModules(domDoc,archivePath,siteId);
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return "merging melete content \n";
+	}
+	
+	private void removeNamespaces(org.dom4j.Element elem)
+	{
+		elem.setQName(org.dom4j.QName.get(elem.getName(), org.dom4j.Namespace.NO_NAMESPACE, elem.getQualifiedName()));
+		org.dom4j.Node n = null;
+		for (int i = 0; i < elem.content().size(); i++)
+		{
+			n = (org.dom4j.Node) elem.content().get(i);
+			if (n.getNodeType() == org.dom4j.Node.ATTRIBUTE_NODE) ((Attribute) n).setNamespace(org.dom4j.Namespace.NO_NAMESPACE);
+			if (n.getNodeType() == org.dom4j.Node.ELEMENT_NODE) removeNamespaces((org.dom4j.Element) n);
+		}
 	}
 
 	/**
@@ -449,7 +487,69 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	 */
 	public String archive(String siteId, Document doc, Stack stack, String archivePath, List attachments)
 	{
-		return null;
+		logger.debug("siteid as arg in archive function is " + siteId);
+		int count = 0;
+		try
+		{
+			Element modulesElement = doc.createElement(MeleteSecurityService.class.getName());
+		
+			if (siteId != null && siteId.length() > 0)
+			{									
+				List<Module> selectList = getModuleService().getModules(siteId);
+				File basePackDir = new File(archivePath);
+				List orgResElements = getMeleteExportService()
+					.generateOrganizationResourceItems(selectList,
+							basePackDir, SiteService.getSite(siteId).getTitle());
+						
+					if (orgResElements != null && orgResElements.size() > 0) {
+						org.dom4j.Document document4jmelete = DocumentHelper.createDocument();
+						org.dom4j.Element document4jmeleteRoot = document4jmelete.getRootElement();
+						org.dom4j.Element organizationNewElement = (org.dom4j.Element)((org.dom4j.Element)orgResElements.get(0)).createCopy();
+						organizationNewElement.setParent(document4jmeleteRoot);
+					//	removeNamespaces(organizationNewElement);
+						document4jmelete.add(organizationNewElement);
+						count = organizationNewElement.elements().size();						
+						String xmlstr = document4jmelete.asXML();
+						
+						// read organizations 4j document as w3c document 
+						org.w3c.dom.Document meletew3cDocument = Xml.readDocumentFromString(xmlstr);
+						org.w3c.dom.Element meletew3cElement = (org.w3c.dom.Element)meletew3cDocument.getFirstChild();
+						org.w3c.dom.Element meletew3cNewElement = (org.w3c.dom.Element)((Element) stack.peek()).getOwnerDocument().importNode(meletew3cElement,true);
+						logger.debug("namespace thingie for org element" +meletew3cNewElement.getNamespaceURI() + meletew3cNewElement.getPrefix());
+						modulesElement.appendChild(meletew3cNewElement);
+											
+						// now resources document
+						org.dom4j.Document documentRes4jmelete = DocumentHelper.createDocument();
+						org.dom4j.Element documentRes4jmeleteRoot = documentRes4jmelete.getRootElement();
+						org.dom4j.Element ResourcesNewElement = (org.dom4j.Element)((org.dom4j.Element)orgResElements.get(1)).createCopy();
+						ResourcesNewElement.setParent(documentRes4jmeleteRoot);
+					//	removeNamespaces(ResourcesNewElement);
+						documentRes4jmelete.add(ResourcesNewElement);
+						xmlstr = documentRes4jmelete.asXML();
+						
+						org.w3c.dom.Document meletew3cResDocument = Xml.readDocumentFromString(xmlstr);
+						org.w3c.dom.Element meletew3cElement1 = (org.w3c.dom.Element)meletew3cResDocument.getFirstChild();
+						org.w3c.dom.Element meletew3cNewElement1 = (org.w3c.dom.Element)((Element) stack.peek()).getOwnerDocument().importNode(meletew3cElement1,true);
+						modulesElement.appendChild(meletew3cNewElement1);					
+						
+						((Element) stack.peek()).appendChild(modulesElement);
+						stack.push(modulesElement);	
+				}				
+			}
+	//		stack.pop();
+		}
+		catch (IdUnusedException iue)
+		{
+			logger.error("error in melete during site archive");
+			return "error archiving modules";
+		}
+		catch (Exception ex)
+		{
+			logger.error("error in melete during site archive" + ex.toString());
+			ex.printStackTrace();
+			return "error archiving modules";
+		}
+		return "archiving modules: (" +count + ") modules archived successfully. \n";
 	}
 
 	/**
@@ -457,7 +557,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	 */
 	public boolean willArchiveMerge()
 	{
-		return false;
+		return true;
 	}
 
     public String[] myToolIds()
@@ -499,5 +599,24 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		MeleteImportService meleteImportService) {
 	this.meleteImportService = meleteImportService;
     }
+
+
+	/**
+	 * @return the meleteExportService
+	 */
+	public MeleteExportService getMeleteExportService()
+	{
+		return this.meleteExportService;
+	}
+
+
+	/**
+	 * @param meleteExportService the meleteExportService to set
+	 */
+	public void setMeleteExportService(MeleteExportService meleteExportService)
+	{
+		this.meleteExportService = meleteExportService;
+	}
  
+     
 }
