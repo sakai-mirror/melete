@@ -37,6 +37,8 @@ import org.dom4j.Element;
  */
 public interface MeleteExportService{
 	
+	public void initValues();
+	
 		/**
 	 * creates document root element "manifest" and adds the namespaces
 	 *

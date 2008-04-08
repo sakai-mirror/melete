@@ -228,7 +228,7 @@ public class ExportMeleteModules {
 			+ File.separator + IMS_MANIFEST_FILENAME;
 			File manifestFile = new File(exisXmlFile);
 
-
+			meleteExportService.initValues();
 			Element manifest = createManifestMetadata(manifestFile,
 					meleteExportService);
 
@@ -353,6 +353,7 @@ public class ExportMeleteModules {
 			String exisXmlFile = packagedir.getAbsolutePath() + File.separator + IMS_MANIFEST_FILENAME;
 			File manifestFile = new File(exisXmlFile);
 
+			meleteExportScormService.initValues();
 			Element manifest = createManifestMetadata(manifestFile, meleteExportScormService);
 
 			// copy the schema files
