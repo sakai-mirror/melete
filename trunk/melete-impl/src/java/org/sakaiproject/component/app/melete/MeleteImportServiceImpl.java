@@ -238,6 +238,8 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			// build sections
 
 				sectionUtil = new SubSectionUtilImpl();
+		//		String moduleDtdLocation = new String(meleteUtil.readFromFile(new File(getUnzippeddirpath() + File.separator + "moduleSeqdtdLocation.txt")));
+		//		sectionUtil.setDtdLocation(moduleDtdLocation);
 				seqDocument = sectionUtil.createSubSection4jDOM();
 
 				for (Iterator iter3 = element.elementIterator("item"); iter3.hasNext();)

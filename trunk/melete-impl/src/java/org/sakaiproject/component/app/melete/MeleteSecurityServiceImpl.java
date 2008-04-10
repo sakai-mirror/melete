@@ -468,20 +468,17 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 			e.printStackTrace();
 		}
 		return "merging melete content \n";
-	}
-	
-	private void removeNamespaces(org.dom4j.Element elem)
-	{
-		elem.setQName(org.dom4j.QName.get(elem.getName(), org.dom4j.Namespace.NO_NAMESPACE, elem.getQualifiedName()));
-		org.dom4j.Node n = null;
-		for (int i = 0; i < elem.content().size(); i++)
-		{
-			n = (org.dom4j.Node) elem.content().get(i);
-			if (n.getNodeType() == org.dom4j.Node.ATTRIBUTE_NODE) ((Attribute) n).setNamespace(org.dom4j.Namespace.NO_NAMESPACE);
-			if (n.getNodeType() == org.dom4j.Node.ELEMENT_NODE) removeNamespaces((org.dom4j.Element) n);
-		}
-	}
+	}	
 
+	private String createdom4jtree(org.dom4j.Element oneelement)
+	{
+	org.dom4j.Document document4jmelete = DocumentHelper.createDocument();
+	org.dom4j.Element document4jmeleteRoot = document4jmelete.getRootElement();
+	org.dom4j.Element organizationNewElement = oneelement.createCopy();
+	organizationNewElement.setParent(document4jmeleteRoot);
+	document4jmelete.add(organizationNewElement);
+	return document4jmelete.asXML();
+	}
 	/**
 	 * {@inheritDoc}
 	 */
@@ -502,30 +499,16 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 							basePackDir, SiteService.getSite(siteId).getTitle());
 						
 					if (orgResElements != null && orgResElements.size() > 0) {
-						org.dom4j.Document document4jmelete = DocumentHelper.createDocument();
-						org.dom4j.Element document4jmeleteRoot = document4jmelete.getRootElement();
-						org.dom4j.Element organizationNewElement = (org.dom4j.Element)((org.dom4j.Element)orgResElements.get(0)).createCopy();
-						organizationNewElement.setParent(document4jmeleteRoot);
-					//	removeNamespaces(organizationNewElement);
-						document4jmelete.add(organizationNewElement);
-						count = organizationNewElement.elements().size();						
-						String xmlstr = document4jmelete.asXML();
 						
+						String xmlstr =  createdom4jtree((org.dom4j.Element)(org.dom4j.Element)orgResElements.get(0));
 						// read organizations 4j document as w3c document 
 						org.w3c.dom.Document meletew3cDocument = Xml.readDocumentFromString(xmlstr);
 						org.w3c.dom.Element meletew3cElement = (org.w3c.dom.Element)meletew3cDocument.getFirstChild();
 						org.w3c.dom.Element meletew3cNewElement = (org.w3c.dom.Element)((Element) stack.peek()).getOwnerDocument().importNode(meletew3cElement,true);
-						logger.debug("namespace thingie for org element" +meletew3cNewElement.getNamespaceURI() + meletew3cNewElement.getPrefix());
 						modulesElement.appendChild(meletew3cNewElement);
 											
 						// now resources document
-						org.dom4j.Document documentRes4jmelete = DocumentHelper.createDocument();
-						org.dom4j.Element documentRes4jmeleteRoot = documentRes4jmelete.getRootElement();
-						org.dom4j.Element ResourcesNewElement = (org.dom4j.Element)((org.dom4j.Element)orgResElements.get(1)).createCopy();
-						ResourcesNewElement.setParent(documentRes4jmeleteRoot);
-					//	removeNamespaces(ResourcesNewElement);
-						documentRes4jmelete.add(ResourcesNewElement);
-						xmlstr = documentRes4jmelete.asXML();
+						xmlstr =  createdom4jtree((org.dom4j.Element)(org.dom4j.Element)orgResElements.get(1));
 						
 						org.w3c.dom.Document meletew3cResDocument = Xml.readDocumentFromString(xmlstr);
 						org.w3c.dom.Element meletew3cElement1 = (org.w3c.dom.Element)meletew3cResDocument.getFirstChild();
