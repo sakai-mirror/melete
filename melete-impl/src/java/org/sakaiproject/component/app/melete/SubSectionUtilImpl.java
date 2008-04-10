@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project 
-*   
-* Licensed under the Apache License, Version 2.0 (the "License"); you 
-* may not use this file except in compliance with the License. You may 
-* obtain a copy of the License at 
-*   
-* http://www.apache.org/licenses/LICENSE-2.0 
-*   
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the License is distributed on an "AS IS" BASIS, 
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
-* implied. See the License for the specific language governing 
-* permissions and limitations under the License. 
+ * Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you
+* may not use this file except in compliance with the License. You may
+* obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+* implied. See the License for the specific language governing
+* permissions and limitations under the License.
  * Created on Apr 9, 2007
  *  @author Rashmi
  *
@@ -29,7 +29,10 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
+import org.dom4j.DocumentType;
 import org.dom4j.Element;
+import org.dom4j.dtd.ElementDecl;
+import org.dom4j.dtd.AttributeDecl;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
 import org.sakaiproject.util.Xml;
 import org.w3c.dom.Node;
@@ -47,21 +50,27 @@ public class SubSectionUtilImpl {
 	 private List xmlSecList;
 	 private org.w3c.dom.Element currParent;
 	 private org.w3c.dom.Element currLastSection;
-	 private static String dtdLocation;
-	 
+
 	 public SubSectionUtilImpl() {
 		 xmlSecList = new ArrayList();
 	 }
-	 
-	 public void setDtdLocation(String dtdLocation)
+
+
+	 private void setInternalDTD()
 	 {
-		 this.dtdLocation = dtdLocation;
+		 DocumentType docType = subSection4jDOM.getDocType();
+		 List internalDTDList = new ArrayList();
+		 internalDTDList.add(new ElementDecl("module","(section+)"));
+		 internalDTDList.add(new ElementDecl("section","(section*)"));
+		 internalDTDList.add(new AttributeDecl("section","id","ID","#REQUIRED","ID"));
+		 docType.setInternalDeclarations(internalDTDList);
 	 }
-	 
+
 	 private void createInitialModule()
 	{
 		subSection4jDOM = DocumentHelper.createDocument();
-		subSection4jDOM.addDocType("module","",dtdLocation);
+		subSection4jDOM.addDocType("module","","");
+		setInternalDTD();
 		Element root = subSection4jDOM.addElement( "module" );
         subSection4jDOM.setRootElement(root);
 	}
@@ -75,12 +84,12 @@ public class SubSectionUtilImpl {
 	}
 
 	public Element addBlankSection()
-	{		
+	{
 		Element rootModule = subSection4jDOM.getRootElement();
 		Element newSectionElement = rootModule.addElement("section");
 		return newSectionElement;
-	}	
-	
+	}
+
 	public String storeSubSections()
 	{
 		if(subSection4jDOM == null) return null;
@@ -98,12 +107,15 @@ public class SubSectionUtilImpl {
 				}
 			// add section to existing list
 			subSection4jDOM = DocumentHelper.parseText(sectionsSeqXML);
+			//The parseText call loses the internal DTD definition, so need to set it again
+			setInternalDTD();
 			Element thisElement = subSection4jDOM.elementByID(section_id);
-			
+
 			//This code checks to see if this section id already exists in the xml string
 			if(thisElement == null) addSection(section_id);
-		   else logger.error("Trying to insert duplicate section "+section_id);		 		
-		}	
+			else logger.error("Trying to insert duplicate section "+section_id);
+
+		}
 		catch(DocumentException de)
 		{
 			logger.error("error reading subsections xml string" + de.toString());
@@ -133,14 +145,14 @@ public class SubSectionUtilImpl {
 			return null;
 		}
 	}
-	
+
 	public String MakeSubSection(String sectionsSeqXML, String section_id) throws MeleteException
 	{
 		try{
 			org.w3c.dom.Document subSectionW3CDOM =Xml.readDocumentFromString(sectionsSeqXML);
 			org.w3c.dom.Element root = subSectionW3CDOM.getDocumentElement();
 			org.w3c.dom.Element indentthisElement = subSectionW3CDOM.getElementById(section_id);
-			
+
 	//		root.selectSingleNode("//*[@id='" + section_id +"']");
 			if(!indentthisElement.getParentNode().getFirstChild().equals(indentthisElement))
 			{
@@ -149,7 +161,7 @@ public class SubSectionUtilImpl {
 				indentParent.appendChild(indentthisElement);
 			}
 			return writeDocumentToString(subSectionW3CDOM);
-		}		
+		}
 		catch (Exception ex)
 		{
 			logger.error("some other error on reading subsections xml string" + ex.toString());
@@ -157,7 +169,7 @@ public class SubSectionUtilImpl {
 			throw new MeleteException("indent_right_fail");
 		}
 	}
-	
+
 	public String bringOneLevelUp(String sectionsSeqXML, String section_id) throws MeleteException
 	{
 		try{
@@ -186,8 +198,8 @@ public class SubSectionUtilImpl {
 				//Insert the new node, inbetween or end of list, takes null or bringUpBeforeThisElement
 				makeSiblingOf.getParentNode().insertBefore(newNode,bringUpBeforeThisElement);
 				//Delete node from original position
-				bringUpThisElement.getParentNode().removeChild(bringUpThisElement);	
-						
+				bringUpThisElement.getParentNode().removeChild(bringUpThisElement);
+
 			return writeDocumentToString(subSectionW3CDOM);
 		}
 		catch (MeleteException mex)
@@ -215,7 +227,7 @@ public class SubSectionUtilImpl {
 				 for ( int i=0; i < children.getLength(); i++ ) {
 			        	org.w3c.dom.Node deleteThisElementChild = children.item(i);
 			        	if(deleteThisElementChild.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE)
-			         		deleteElementParent.insertBefore(deleteThisElementChild.cloneNode(true), deleteThisElement) ;			          	
+			         		deleteElementParent.insertBefore(deleteThisElementChild.cloneNode(true), deleteThisElement) ;
 				 }
 			}
 
@@ -264,7 +276,7 @@ public class SubSectionUtilImpl {
 	                throw new MeleteException("move_up_fail");
 	            }
 	    }
-	
+
 	public String moveUpSection(String sectionsSeqXML, String section_id) throws MeleteException
 	{
 		try{
@@ -280,7 +292,7 @@ public class SubSectionUtilImpl {
 			moveUpThisElementParent.insertBefore(cloneMoveElement, beforeElement);
 			moveUpThisElementParent.removeChild(moveUpThisElement);
 			}
-			
+
 			return writeDocumentToString(subSectionW3CDOM);
 		}
 		catch (Exception ex)
@@ -299,7 +311,7 @@ public class SubSectionUtilImpl {
 			org.w3c.dom.Element moveDownThisElement = subSectionW3CDOM.getElementById(section_id);
 			org.w3c.dom.Node afterElementParent = moveDownThisElement.getParentNode();
 			if(!afterElementParent.getLastChild().equals(moveDownThisElement))
-			{			
+			{
 			org.w3c.dom.Node afterElement = moveDownThisElement.getNextSibling();
 			org.w3c.dom.Node cloneafterElement = afterElement.cloneNode(true);
 			afterElementParent.insertBefore(cloneafterElement, moveDownThisElement);
@@ -314,7 +326,7 @@ public class SubSectionUtilImpl {
 			throw new MeleteException("move_down_fail");
 		}
 	}
-	
+
 	public String moveAllDownSection(String sectionsSeqXML, String section_id)
 	throws MeleteException
 	        {
@@ -326,12 +338,12 @@ public class SubSectionUtilImpl {
 	                org.w3c.dom.Node afterElementParent =moveDownThisElement.getParentNode();
 	                org.w3c.dom.Node LastChildOfafterElementParent=afterElementParent.getLastChild();
 	                org.w3c.dom.Node cloneLastChildElement = LastChildOfafterElementParent.cloneNode(true);
-	                
+
 	                if(!LastChildOfafterElementParent.equals(moveDownThisElement))
 	                {
 	                	afterElementParent.replaceChild(cloneMoveElement,LastChildOfafterElementParent);
 	                	org.w3c.dom.Node newLastChild=afterElementParent.getLastChild();
-	                	afterElementParent.insertBefore(cloneLastChildElement,newLastChild);	
+	                	afterElementParent.insertBefore(cloneLastChildElement,newLastChild);
 	                	afterElementParent.removeChild(moveDownThisElement);
 	                }
 	                return writeDocumentToString(subSectionW3CDOM);
@@ -345,23 +357,23 @@ public class SubSectionUtilImpl {
 	            }
 	    }
 /*
- * 
+ *
  */
 	public org.w3c.dom.Element getNextSection(org.w3c.dom.Element currItem) throws Exception
-	{		
-		if(currItem == null) 
+	{
+		if(currItem == null)
 			{
 			currParent = subSectionW3CDOM.getDocumentElement();
 			currLastSection = (org.w3c.dom.Element)currParent.getLastChild();
 			return (org.w3c.dom.Element)currParent.getFirstChild();
-			}		
-				
+			}
+
 		if (currItem.hasChildNodes())
 			{
 			currParent = currItem;
 			return (org.w3c.dom.Element)currItem.getFirstChild();
 			}
-		
+
 		if (currItem.equals((org.w3c.dom.Element)currParent.getLastChild()))
 		{
 			while(true)
@@ -372,7 +384,7 @@ public class SubSectionUtilImpl {
 				currItem = (org.w3c.dom.Element)currParent.getNextSibling();
 				if (currItem == null) {
 					logger.debug("going a level up to fetch sibling");
-					currItem = currParent; 
+					currItem = currParent;
 					currParent = (org.w3c.dom.Element)currItem.getParentNode();
 					continue;
 				}
@@ -383,9 +395,9 @@ public class SubSectionUtilImpl {
 		}
 		else return (org.w3c.dom.Element)currItem.getNextSibling();
 	}
-	
+
 	/*
-	 * 
+	 *
 	 */
 	public org.w3c.dom.Document getSubSectionW3CDOM(String sectionsSeqXML)
 	{
@@ -405,17 +417,17 @@ public class SubSectionUtilImpl {
 		if(subSection4jDOM == null) createInitialModule();
 		return subSection4jDOM;
 	}
-	
+
 	public void traverseDom(String sectionsSeqXML,String dispSeq)
 	{
 		if (sectionsSeqXML != null)
-		{	
+		{
 		  getSubSectionW3CDOM(sectionsSeqXML);
 		  if (subSectionW3CDOM != null)
-		  {	  
+		  {
 		  processDom(subSectionW3CDOM.getDocumentElement(),0,dispSeq,1);
 		  }
-		}  
+		}
 	}
 
 	private void processDom(org.w3c.dom.Node node, int level, String dispSeq, int displayNum)
@@ -441,17 +453,18 @@ public class SubSectionUtilImpl {
 	public List getXmlSecList() {
 		return xmlSecList;
 	}
-	
-	
+
+
 	public List getAllSections(String modSeqXml) throws Exception
 	{
 		List allsections = null;
 		subSection4jDOM = DocumentHelper.parseText(modSeqXml);
+		setInternalDTD();
 		Element root = subSection4jDOM.getRootElement();
-		allsections = subSection4jDOM.selectNodes("//section");	
+		allsections = subSection4jDOM.selectNodes("//section");
 		return allsections;
 	}
-	
+
 }
 
 class SecLevelObj{

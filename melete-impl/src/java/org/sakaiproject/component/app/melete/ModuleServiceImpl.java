@@ -100,7 +100,6 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 	private ModuleDateBean mdBean = null;
 	private MeleteUtil meleteUtil= new MeleteUtil();
 
-	private static String dtdLocation;
 
 	//constants
 	public final static int NO_CODE = 0;
@@ -133,11 +132,6 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 		this.logger = logger;
 	}
 
-	public void setDtdLocation(String dtdLocation)
-	{
-	  SubSectionUtilImpl ssuImpl = new SubSectionUtilImpl();
- 	  ssuImpl.setDtdLocation(dtdLocation);
-	}
 
 	/*
 	 * @see org.foothillglobalaccess.melete.ModuleService#insertProperties(org.foothillglobalaccess.melete.Module, org.foothillglobalaccess.melete.ModuleShdates, int, int)
@@ -145,7 +139,7 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 	 */
 	public void insertProperties(ModuleObjService module, ModuleShdatesService moduleshdates,String userId, String courseId) throws Exception
 	{
-	 
+
 	  // module object and moduleshdates are provided by ui pages
 
 		Module module1 = (Module)module;
@@ -153,7 +147,7 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 
 	// insert new module
 		moduledb.addModule(module1, moduleshdates1, userId, courseId);
-	
+
 	}
 
 
@@ -201,7 +195,7 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 	public String printModule(ModuleObjService module) throws MeleteException
 	{
 		try{
-	
+
 		return moduledb.prepareModuleSectionsForPrint((Module)module);
 		}catch (Exception ex)
 		{
@@ -209,7 +203,7 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 			throw new MeleteException("print_module_fail");
 		}
 	}
-	
+
 // mallika page stuff
 public List getModuleDateBeans(String userId, String courseId) {
   	if (moduledb == null) moduledb = ModuleDB.getModuleDB();
