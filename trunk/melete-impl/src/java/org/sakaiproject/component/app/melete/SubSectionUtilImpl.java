@@ -29,10 +29,7 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
-import org.dom4j.DocumentType;
 import org.dom4j.Element;
-import org.dom4j.dtd.ElementDecl;
-import org.dom4j.dtd.AttributeDecl;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
 import org.sakaiproject.util.Xml;
 import org.w3c.dom.Node;
@@ -61,22 +58,10 @@ public class SubSectionUtilImpl {
 		 this.dtdLocation = dtdLocation;
 	 }
 	 
-	 private void setInternalDTD()
-	 {
-		 DocumentType docType = subSection4jDOM.getDocType();
-		 List internalDTDList = new ArrayList();
-		 internalDTDList.add(new ElementDecl("module","(section+)"));
-		 internalDTDList.add(new ElementDecl("section","(section*)"));
-		 internalDTDList.add(new AttributeDecl("section","id","ID","#REQUIRED","ID"));
-		 docType.setInternalDeclarations(internalDTDList);
-	 }
-	 
 	 private void createInitialModule()
 	{
 		subSection4jDOM = DocumentHelper.createDocument();
-		//subSection4jDOM.addDocType("module","",dtdLocation);
-		subSection4jDOM.addDocType("module","","");
-		setInternalDTD();
+		subSection4jDOM.addDocType("module","",dtdLocation);
 		Element root = subSection4jDOM.addElement( "module" );
         subSection4jDOM.setRootElement(root);
 	}
@@ -113,14 +98,11 @@ public class SubSectionUtilImpl {
 				}
 			// add section to existing list
 			subSection4jDOM = DocumentHelper.parseText(sectionsSeqXML);
-			//The parseText call loses the internal DTD definition, so need to set it again
-			setInternalDTD();
 			Element thisElement = subSection4jDOM.elementByID(section_id);
 			
 			//This code checks to see if this section id already exists in the xml string
 			if(thisElement == null) addSection(section_id);
-			else logger.error("Trying to insert duplicate section "+section_id);
-			   
+		   else logger.error("Trying to insert duplicate section "+section_id);		 		
 		}	
 		catch(DocumentException de)
 		{
@@ -465,7 +447,6 @@ public class SubSectionUtilImpl {
 	{
 		List allsections = null;
 		subSection4jDOM = DocumentHelper.parseText(modSeqXml);
-		setInternalDTD();
 		Element root = subSection4jDOM.getRootElement();
 		allsections = subSection4jDOM.selectNodes("//section");	
 		return allsections;
