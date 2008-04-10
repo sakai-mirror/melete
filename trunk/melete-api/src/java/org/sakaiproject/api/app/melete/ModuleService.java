@@ -37,14 +37,13 @@ import org.sakaiproject.api.app.melete.exception.MeleteException;
  */
 
 public interface ModuleService{
-	
+
 	public static final int MIGRATE_IN_PROCESS=0;
 	public static final int MIGRATE_FAILED=1;
 	public static final int MIGRATE_COMPLETE=2;
 	public static final int MIGRATE_INCOMPLETE=3;
-	
-	public void setDtdLocation(String dtdLocation);
-	
+
+
 	public void insertProperties(ModuleObjService module, ModuleShdatesService moduleshdates,String userId, String courseId) throws Exception;
 
 	public List getModuleDateBeans(String userId, String courseId);
@@ -101,10 +100,10 @@ public interface ModuleService{
 	public void sortModule(ModuleObjService module,String course_id,String Direction) throws MeleteException;
 
 	public void sortSectionItem(ModuleObjService module,String section_id,String Direction) throws MeleteException;
-	
+
 	public void copyModule(ModuleObjService module,String courseId,String userId) throws MeleteException;
-	
+
 	public void moveSections(List sectionBeans,ModuleObjService selectedModule) throws MeleteException;
-	
+
 	public String printModule(ModuleObjService module) throws MeleteException;
 }

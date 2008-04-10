@@ -201,8 +201,7 @@ public class MeleteSiteAndUserInfo {
 			sessionMap.put("institute", "Foothill College");
             sessionMap.put("maxSize", String.valueOf(getMaxUploadSize()));
 
-            moduleService.setDtdLocation(context.getExternalContext().getInitParameter("packagingdir")+File.separator+"moduleSeq.dtd");
-			logger.debug("Is Author is "+ isUserAuthor());
+            logger.debug("Is Author is "+ isUserAuthor());
 
 
 			if (isUserAuthor()){
@@ -217,7 +216,7 @@ public class MeleteSiteAndUserInfo {
 		}
 	}
 
-   
+
 	/**
 	 * Navigates to related landing page based on user is either student or author
 	 * @return the name the page to naviagate
@@ -231,12 +230,12 @@ public class MeleteSiteAndUserInfo {
 
 		int migrateResult=-1;
 		String beginMigrate = ServerConfigurationService.getString("melete.migrate","false");
-		logger.info("Value of beginMigrate is "+beginMigrate);		
+		logger.info("Value of beginMigrate is "+beginMigrate);
 
 	    moduleService.checkInstallation();
-	    
+
 		if ((isSuperUser()&&beginMigrate.equals("false")) || ((!isSuperUser())&&isUserAuthor()) || ((!isSuperUser())&&isUserStudent()))
-		{  
+		{
 				migrateResult = moduleService.getMigrateStatus();
 				try
 				{
@@ -249,8 +248,8 @@ public class MeleteSiteAndUserInfo {
 				  {
 					String errMsg = bundle.getString("migration_process_incomplete");
 					context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_incomplete",errMsg));
-					return "error_migration"; 
-				  }				
+					return "error_migration";
+				  }
 				}
 				catch (Exception ex)
 				{
@@ -260,25 +259,25 @@ public class MeleteSiteAndUserInfo {
 				   return "error_migration";
 				}
 		}
-		else 
+		else
 		{
 			if (!isSuperUser() && !isUserAuthor() && !isUserStudent())
-			{		
+			{
 				String errMsg = bundle.getString("access_denied");
 				context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"access_denied",errMsg));
 				return "error_migration";
-			}	
-		}						
-		
+			}
+		}
+
 		migrateResult=-1;
 		//Only invoke program for admins
 		if (isSuperUser())
 		{
-		 
+
 		  if (beginMigrate.equals("true"))
 		  {
 			logger.info("User is admin, invoking migrateMeleteDocs");
-				  
+
 		    try
 		    {
 		      migrateResult = moduleService.migrateMeleteDocs(context.getExternalContext().getInitParameter("meleteDocsDir"));
@@ -286,20 +285,20 @@ public class MeleteSiteAndUserInfo {
 		      {
 		    	  String errMsg = bundle.getString("migration_in_process");
 		    	  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_in_process",errMsg));
-		    	  return "error_migration"; 
+		    	  return "error_migration";
 		      }
 		      if (migrateResult == moduleService.MIGRATE_FAILED)
 		      {
 		    	  String errMsg = bundle.getString("migration_process_fail");
 		    	  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_fail",errMsg));
-		    	  return "error_migration"; 
-		      }		   
+		    	  return "error_migration";
+		      }
 		      if (migrateResult == moduleService.MIGRATE_COMPLETE)
 			  {
 				  String successMsg = bundle.getString("migration_process_success");
 				  context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_INFO,"migration_process_success",successMsg));
-				  return "list_auth_modules";	
-			  }	      
+				  return "list_auth_modules";
+			  }
 		    }
 		    catch (Exception ex)
 		    {
@@ -307,12 +306,12 @@ public class MeleteSiteAndUserInfo {
 				context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_fail",errMsg));
 				return "error_migration";
 		    }
-		  }				
+		  }
 		}
-			
+
 		} catch (Exception e) {
 			String errMsg = bundle.getString("migration_process_fail");
-			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_fail",errMsg));			
+			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_fail",errMsg));
 			logger.error(e.toString());
 		}
 		return "error_migration";
