@@ -306,8 +306,17 @@ public class EditSectionPage extends SectionPage implements Serializable
 				try
 				{
 					if (logger.isDebugEnabled()) logger.debug("Ist step of edit - check meleteResource" + meleteResource.getResourceId());
-					getMeleteCHService().checkResource(meleteResource.getResourceId());
-					editMeleteCollectionResource(uploadHomeDir, meleteResource.getResourceId());
+					//The condition below was put in to handle ME-639
+					if (meleteResource.getResourceId() != null)
+					{	
+					  getMeleteCHService().checkResource(meleteResource.getResourceId());
+					  editMeleteCollectionResource(uploadHomeDir, meleteResource.getResourceId());
+					}  
+					else
+					{
+						if (logger.isDebugEnabled()) logger.debug("Resource ID is null");
+						throw new Exception();
+					}
 				}
 				catch (Exception e)
 				{
