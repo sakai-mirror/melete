@@ -360,13 +360,15 @@ public class ListModulesPage implements Serializable{
 	  	ModuleDateBean mdbean = null;
 	  	FacesContext ctx = FacesContext.getCurrentInstance();
 	  	 UIViewRoot root = ctx.getViewRoot();
-	        UIData table ;
+	        UIData table = null;
 	        if (getRole()!= null && getRole().equals("INSTRUCTOR")){
 	        table = (UIData)
 	            root.findComponent("listmodulesform").findComponent("table");
 	        }
-	        else  table = (UIData)
+	        if (getRole()!= null && getRole().equals("STUDENT")){
+	        table = (UIData)
             root.findComponent("listmodulesStudentform").findComponent("table");
+	        }
 
 	        ValueBinding binding =
 	            Util.getBinding("#{listModulesPage}");
