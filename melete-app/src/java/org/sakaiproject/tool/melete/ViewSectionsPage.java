@@ -516,8 +516,22 @@ public String goPrevNext()
 	FacesContext context = FacesContext.getCurrentInstance();
 	this.section = null;
 	//this.module = null;
-	this.moduleId = new Integer(((String)context.getExternalContext().getRequestParameterMap().get("modid"))).intValue();
-	this.sectionId = new Integer(((String)context.getExternalContext().getRequestParameterMap().get("secid"))).intValue();
+	String moduleIdStr = (String)context.getExternalContext().getRequestParameterMap().get("modid");
+	String sectionIdStr = (String)context.getExternalContext().getRequestParameterMap().get("secid");
+	if (moduleIdStr != null)
+	{
+		if (moduleIdStr.trim().length() > 0)
+		{	
+		  this.moduleId = new Integer(moduleIdStr).intValue();
+		}  
+	}
+	if (sectionIdStr != null)
+	{
+		if (sectionIdStr.trim().length() > 0)
+		{
+	      this.sectionId = new Integer(sectionIdStr).intValue();
+		}
+	}		
 	this.module = null;
 	List sectionBookmarks = bookmarksService.getBookmarks(getUserId(), getCourseId(), this.moduleId, this.sectionId);
 	if (sectionBookmarks == null)
@@ -568,7 +582,14 @@ public String goPrevModule()
 	FacesContext context = FacesContext.getCurrentInstance();
 	this.section = null;
 	//this.module = null;
-	this.moduleId = new Integer(((String)context.getExternalContext().getRequestParameterMap().get("modid"))).intValue();
+	String moduleIdStr = (String)context.getExternalContext().getRequestParameterMap().get("modid");
+	if (moduleIdStr != null)
+	{
+		if (moduleIdStr.trim().length() > 0)
+		{	
+		  this.moduleId = new Integer(moduleIdStr).intValue();
+		}  
+	}	
 	this.module = null;
 	ValueBinding binding =
         Util.getBinding("#{viewModulesPage}");
