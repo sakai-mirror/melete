@@ -20,7 +20,7 @@
 			<table  border="0" cellpadding="2" cellspacing="0" bordercolor="#EAEAEA" width="99%" style="border-collapse: collapse" >
 					<tr>
 					<td>
-								<f:subview id="top" rendered="#{viewNextStepsPage.instRole == true}">
+								<f:subview id="top">
 												  <jsp:include page="topnavbar.jsp"/> 
 									</f:subview>
 								<div class="meletePortletToolBarMessage">
