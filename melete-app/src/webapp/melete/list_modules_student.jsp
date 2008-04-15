@@ -71,7 +71,8 @@ function OpenPrintWindow(windowURL,windowName)
                   value="#{listModulesPage.moduleDatePrivBeans}"
                   var="mdbean"   rowClasses="row1,row2" 
               columnClasses="titleWid,dateWid1,dateWid2"
-                   border="0" width="100%" >
+                   border="0" width="100%" 
+                   binding="#{listModulesPage.modTable}">
       <h:column>
   <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{((mdbean.bookmarkFlag == listModulesPage.trueFlag)&&(mdbean.moduleId != listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}" styleClass="ExpClass"/>
                                        
@@ -84,7 +85,7 @@ function OpenPrintWindow(windowURL,windowName)
          <h:inputHidden id="moduleHideId" value="#{mdbean.moduleId}"/>
       </h:commandLink> 
          <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}" rendered="#{mdbean.visibleFlag == listModulesPage.trueFlag}">
-
+              <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
                   <h:outputText id="title"
                            value="#{mdbean.module.title}">
               </h:outputText>             
@@ -93,18 +94,24 @@ function OpenPrintWindow(windowURL,windowName)
         
         <h:dataTable id="tablesec" rendered="#{((mdbean.moduleId == listModulesPage.showModuleId)||(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}"
                   value="#{mdbean.sectionBeans}"
-                  var="section" rowClasses="#{mdbean.rowClasses}" columnClasses="SectionClass" width="75%">
+                  var="section" rowClasses="#{mdbean.rowClasses}" columnClasses="SectionClass" width="75%" binding="#{listModulesPage.secTable}">
                     <h:column> 
 			  <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{section.bookmarkFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
              <h:outputText id="emp_space" value=" " styleClass="ExtraPaddingClass" rendered="#{((mdbean.bookmarkFlag == listModulesPage.trueFlag)&&(section.bookmarkFlag != listModulesPage.trueFlag))}"/>
               <h:graphicImage id="bul_gif" value="images/bullet_black.gif"/>
              
              <h:commandLink id="viewSectionEditor"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}"  rendered="#{((section.section.contentType != listModulesPage.isNull && section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}">
+               <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
+               <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
+             
                <h:outputText id="sectitleEditor" 
                            value="#{section.section.title}">
                </h:outputText>
              </h:commandLink>
              <h:commandLink id="viewSectionLink"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}"  rendered="#{((section.section.contentType != listModulesPage.isNull && section.section.contentType != listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}">
+                <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
+               <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
+             
                <h:outputText id="sectitleLink" 
                            value="#{section.section.title}">
                </h:outputText>

@@ -173,19 +173,22 @@ if (msg != null)
       <h:outputText id="emp_spacemod2" value=" "/>
       
       <h:commandLink id="editMod" actionListener="#{listAuthModulesPage.editModule}"  action="#{listAuthModulesPage.redirectToEditModule}">     
+             <f:param name="modidx" value="#{listAuthModulesPage.table.rowIndex}" />
                    <h:outputText id="title2" value="#{mdbean.module.title}">
                </h:outputText>
       </h:commandLink>
       <h:dataTable id="tablesec" rendered="#{((mdbean.moduleId == listAuthModulesPage.showModuleId)||(listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag))}"
                   value="#{mdbean.sectionBeans}"
-                  var="sectionBean" columnClasses="SectionClass" rowClasses="#{mdbean.rowClasses}" width="300">
+                  var="sectionBean" columnClasses="SectionClass" rowClasses="#{mdbean.rowClasses}" width="300" binding="#{listAuthModulesPage.secTable}">
                <h:column>
               <h:selectBooleanCheckbox value="#{sectionBean.selected}"  valueChangeListener="#{listAuthModulesPage.selectedSection}"/> 
                <h:outputText id="emp_space" value=" "/>
                <h:outputText id="disp_seq" value="#{sectionBean.displaySequence}"/>
                <h:outputText id="emp_space2" value=" "/>
               
-              <h:commandLink id="editSec" actionListener="#{listAuthModulesPage.editSection}"  action="#{listAuthModulesPage.redirectToEditSection}">   
+              <h:commandLink id="editSec" actionListener="#{listAuthModulesPage.editSection}"  action="#{listAuthModulesPage.redirectToEditSection}">
+                <f:param name="modidx" value="#{listAuthModulesPage.table.rowIndex}" />
+               <f:param name="secidx" value="#{listAuthModulesPage.secTable.rowIndex}" />   
                  <h:outputText id="sectitle" 
                             value="#{sectionBean.section.title}">
                 </h:outputText>
