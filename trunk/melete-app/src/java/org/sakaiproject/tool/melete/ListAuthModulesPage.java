@@ -141,6 +141,7 @@ public class ListAuthModulesPage implements Serializable
 	private String isNull = null;
 
 	private UIData table;
+	private UIData secTable;
 
 	public UIData getTable()
 	{
@@ -717,12 +718,8 @@ public class ListAuthModulesPage implements Serializable
 	{
 		resetSelectedLists();
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		UICommand cmdLink = (UICommand) evt.getComponent();
-		String selclientId = cmdLink.getClientId(ctx);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		String modId = selclientId.substring(0, selclientId.indexOf(':'));
-		int selModIndex = Integer.parseInt(modId);
+		Map params = ctx.getExternalContext().getRequestParameterMap();
+		int selModIndex = Integer.parseInt((String) params.get("modidx"));
 
 		ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selModIndex);
 		ValueBinding binding = Util.getBinding("#{editModulePage}");
@@ -740,16 +737,10 @@ public class ListAuthModulesPage implements Serializable
 	{
 		resetSelectedLists();
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		UICommand cmdLink = (UICommand) evt.getComponent();
-		String selclientId = cmdLink.getClientId(ctx);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		String modId = selclientId.substring(0, selclientId.indexOf(':'));
-		int selModIndex = Integer.parseInt(modId);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		String sectionindex = selclientId.substring(0, selclientId.indexOf(':'));
-		int selSecIndex = Integer.parseInt(sectionindex);
+		Map params = ctx.getExternalContext().getRequestParameterMap();
+	  	int selModIndex = Integer.parseInt((String) params.get("modidx"));
+	  	int selSecIndex = Integer.parseInt((String) params.get("secidx"));
+
 		ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selModIndex);
 		SectionBean secBean = (SectionBean) mdbean.getSectionBeans().get(selSecIndex);
 
@@ -864,7 +855,7 @@ public class ListAuthModulesPage implements Serializable
 				mdbean.setDateFlag(false);
 				if (mdbean.getModuleShdate().getStartDate() != null)
 				{
-					stCal = Calendar.getInstance();	
+					stCal = Calendar.getInstance();
 					stCal.setTime(mdbean.getModuleShdate().getStartDate());
 					if (stCal.get(Calendar.YEAR) > 9999)
 					{
@@ -874,7 +865,7 @@ public class ListAuthModulesPage implements Serializable
 				}
 				if (mdbean.getModuleShdate().getEndDate() != null)
 				{
-					enCal = Calendar.getInstance();	
+					enCal = Calendar.getInstance();
 					enCal.setTime(mdbean.getModuleShdate().getEndDate());
 					if (enCal.get(Calendar.YEAR) > 9999)
 					{
@@ -892,7 +883,7 @@ public class ListAuthModulesPage implements Serializable
 					 * addDateErrorMessage(ctx); return "list_auth_modules";
 					 */
 				  }
-				  
+
 			     }
 				if (mdbean.isDateFlag() == true)
 				  {
@@ -900,10 +891,10 @@ public class ListAuthModulesPage implements Serializable
 				  }
 			}
 			  getModuleService().updateProperties(moduleDateBeans);
-		  
-			
+
+
 			if ((yearTooBigFlag == true)||(dateErrFlag == true))
-			{	
+			{
 			  if (yearTooBigFlag == true)
 			  {
 			  String msg = bundle.getString("year_toobig_error");
@@ -914,14 +905,14 @@ public class ListAuthModulesPage implements Serializable
 				String msg = bundle.getString("date_error");
 				addMessage(ctx, "Date Error", msg, FacesMessage.SEVERITY_ERROR);
 			  }
-			}  
+			}
 			else
 			{
 				String msg = bundle.getString("changes_saved");
 				addMessage(ctx, "Changes Saved", msg, FacesMessage.SEVERITY_INFO);
 			}
 			}
-	
+
 		catch (Exception e)
 		{
 			// e.printStackTrace();
@@ -1490,6 +1481,16 @@ public class ListAuthModulesPage implements Serializable
 	public void setLogger(Log logger)
 	{
 		this.logger = logger;
+	}
+
+	public UIData getSecTable()
+	{
+		return this.secTable;
+	}
+
+	public void setSecTable(UIData secTable)
+	{
+		this.secTable = secTable;
 	}
 
 }

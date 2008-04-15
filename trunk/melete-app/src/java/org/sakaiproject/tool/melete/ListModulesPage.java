@@ -94,6 +94,8 @@ public class ListModulesPage implements Serializable{
 	  String userId;
 
 	  private boolean bookmarkStatus;
+	  private UIData modTable;
+	  private UIData secTable;
 
 
 	  public ListModulesPage(){
@@ -311,7 +313,7 @@ public class ListModulesPage implements Serializable{
 						closedModulesFlag = true;
 						break;
 					}
-				}	
+				}
 	  	    }
 		  	return moduleDateBeans;
 	  }
@@ -451,12 +453,8 @@ public class ListModulesPage implements Serializable{
 	    ModuleDatePrivBean mdpbean = null;
 	  	ModuleDateBean mdbean = null;
 	  	FacesContext ctx = FacesContext.getCurrentInstance();
-        UICommand cmdLink = (UICommand)evt.getComponent();
-		String selclientId = cmdLink.getClientId(ctx);
-		selclientId = selclientId.substring(selclientId.indexOf(':')+1);
-		selclientId = selclientId.substring(selclientId.indexOf(':')+1);
-		String modId = selclientId.substring(0,selclientId.indexOf(':'));
-		int selModIndex = Integer.parseInt(modId);
+	  	Map params = ctx.getExternalContext().getRequestParameterMap();
+		int selModIndex = Integer.parseInt((String) params.get("modidx"));
 
 	    ValueBinding binding =
 	            Util.getBinding("#{viewModulesPage}");
@@ -519,29 +517,11 @@ public class ListModulesPage implements Serializable{
 	  {
         FacesContext ctx = FacesContext.getCurrentInstance();
 
-		UICommand cmdLink = (UICommand)evt.getComponent();
-		String selclientId = null;
-		String modId = null;
-		int selModIndex = 0;
-		String sectionindex = null;
-		int selSecIndex = 0;
+        Map params = ctx.getExternalContext().getRequestParameterMap();
+	  	int selModIndex = Integer.parseInt((String) params.get("modidx"));
+	  	int selSecIndex = Integer.parseInt((String) params.get("secidx"));
 
-	    selclientId = cmdLink.getClientId(ctx);
-	    if (selclientId != null)
-	    {
-	      int occurs = selclientId.split(":").length - 1;
-	      if (occurs == 5)
-	      {
-		  selclientId = selclientId.substring(selclientId.indexOf(':')+1);
-	      selclientId = selclientId.substring(selclientId.indexOf(':')+1);
-		  modId = selclientId.substring(0,selclientId.indexOf(':'));
-		  selModIndex = Integer.parseInt(modId);
-		  selclientId = selclientId.substring(selclientId.indexOf(':')+1);
-		  selclientId = selclientId.substring(selclientId.indexOf(':')+1);
-		  sectionindex=selclientId.substring(0,selclientId.indexOf(':'));
-		  selSecIndex = Integer.parseInt(sectionindex);
-	      }
-	    }
+
 		ModuleObjService mod = null;
 		SectionBean secBean = null;
 		int modSeqNo = 0;
@@ -712,5 +692,25 @@ public class ListModulesPage implements Serializable{
 	public void setClosedModulesFlag(boolean closedModulesFlag)
 	{
 		this.closedModulesFlag = closedModulesFlag;
+	}
+
+	public UIData getModTable()
+	{
+		return this.modTable;
+	}
+
+	public void setModTable(UIData modTable)
+	{
+		this.modTable = modTable;
+	}
+
+	public UIData getSecTable()
+	{
+		return this.secTable;
+	}
+
+	public void setSecTable(UIData secTable)
+	{
+		this.secTable = secTable;
 	}
 }
