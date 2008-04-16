@@ -39,6 +39,7 @@ import java.io.Serializable;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.application.FacesMessage;
+import javax.faces.model.ListDataModel;
 
 import org.sakaiproject.util.ResourceLoader;
 //import com.sun.faces.util.Util;
@@ -96,9 +97,21 @@ public class ListModulesPage implements Serializable{
 	  private boolean bookmarkStatus;
 	  private UIData modTable;
 	  private UIData secTable;
+	  private ListDataModel modDataModel;
 
 
-	  public ListModulesPage(){
+	  public ListDataModel getModDataModel()
+	{
+		this.modDataModel = new ListDataModel(getModuleDatePrivBeans());
+		return this.modDataModel;
+	}
+
+	public void setModDataModel(ListDataModel modDataModel)
+	{
+		this.modDataModel = modDataModel;
+	}
+
+	public ListModulesPage(){
 
 	  	instFlag = true;
 	  	studFlag = false;

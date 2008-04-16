@@ -68,7 +68,7 @@ function OpenPrintWindow(windowURL,windowName)
         </tr>
 	<tr> <td colspan="3" valign="top">
  <h:dataTable id="table" 
-                  value="#{listModulesPage.moduleDatePrivBeans}"
+                  value="#{listModulesPage.modDataModel}"
                   var="mdbean"   rowClasses="row1,row2" 
               columnClasses="titleWid,dateWid1,dateWid2"
                    border="0" width="100%" 
