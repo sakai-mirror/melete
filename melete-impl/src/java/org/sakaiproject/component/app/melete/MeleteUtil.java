@@ -104,13 +104,13 @@ public class MeleteUtil {
 				    m = pi.matcher(checkforimgs);
 				else
 				    m = pa.matcher(checkforimgs);
-							
+
 				if(m.pattern().pattern().equals(pa.pattern())){foundPattern = "link";}
 				// end = start+1 means that we found a >
 				// i.e. the attribute we're looking for isn't there
 				if (!m.find() || (m.end() == m.start() + 1)) {
 				    // prevent infinite loop by consuming the <
-				    checkforimgs = checkforimgs.substring(1);				    
+				    checkforimgs = checkforimgs.substring(1);
 				    continue;
 				}
 
@@ -140,13 +140,43 @@ public class MeleteUtil {
 				    if (!m.find()) // found anything?
 					continue;
 				    endSrc = m.start();
-				}		
-				
+				}
+
 			} //while end
 			returnData.add(checkforimgs);
 			if (endSrc != 0) {returnData.add(new Integer(startSrc)); returnData.add(new Integer(endSrc)); returnData.add(foundPattern);}
-			
+
 			return returnData;
 		}
+
+
+
+
+		public String findFormPattern(String checkforimgs)
+	{
+		ArrayList returnData = new ArrayList();
+		Pattern pi = Pattern.compile("<[tT][aA][bB][lL][eE]>\\s*<[tT][rR]>\\s*<[tT][dD]>\\s*<[fF][oO][rR][mM]");
+	
+		// look for <table tr td form
+		Matcher m = pi.matcher(checkforimgs);
+		if (!m.find()) 
+		{
+			int formIdx = -1;
+			int endFormIdx = -1;
+			if((formIdx = checkforimgs.indexOf("<form")) != -1 || (formIdx = checkforimgs.indexOf("<FORM")) != -1)
+			{
+				logger.debug("formIdx and m.end() " + formIdx );
+			
+					//replace and add table tag
+					checkforimgs = checkforimgs.substring(0, formIdx) + "<table><tr><td><form " + checkforimgs.substring(formIdx + 6);
+					//now look for end of form
+				
+					if((endFormIdx = checkforimgs.indexOf("</form>")) != -1 || (endFormIdx = checkforimgs.indexOf("</FORM>")) != -1)
+						checkforimgs = checkforimgs.substring(0, endFormIdx + 7) + " </td></tr></table> " + checkforimgs.substring(endFormIdx + 8);
+			}
+		}
+		return checkforimgs;
+
+	}
 
 }
