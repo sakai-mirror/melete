@@ -327,7 +327,7 @@ public List getModuleDateBeans(String userId, String courseId) {
 			  {
 				  try
 					{
-				  		moduledb.deleteModule(cmod, userId);
+					   moduledb.deleteModule(cmod, userId);
 					}
 				  	catch (Exception ex)
 					{

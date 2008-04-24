@@ -99,9 +99,6 @@
 		<property name="sectiondb">
             <ref local="org.sakaiproject.component.app.melete.SectionDB" />
         </property>
-        <property name="moduleDB">
-            <ref local="org.sakaiproject.component.app.melete.ModuleDB" />
-        </property>   
          <property name="meleteLicenseDB">
             <ref local="org.sakaiproject.component.app.melete.MeleteLicenseDB" />
         </property>   
@@ -119,6 +116,12 @@
           <property name="bookmarksDB">
             <ref local="org.sakaiproject.component.app.melete.MeleteBookmarksDB" />
         </property>
+        <property name="meleteCHService">
+            <ref local="org.sakaiproject.api.app.melete.MeleteCHService" />
+        </property>
+          <property name="moduleDB">
+            <ref local="org.sakaiproject.component.app.melete.ModuleDB" />
+        </property>  
 	</bean>
 	
 

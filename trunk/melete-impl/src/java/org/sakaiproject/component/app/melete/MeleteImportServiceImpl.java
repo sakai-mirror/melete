@@ -1470,7 +1470,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 							//rollback and delete section
 							try
 							{
-								sectionDB.deleteSection(toSec, null);
+								sectionDB.deleteSection(toSec,toContext, null);
 							}
 							catch (Exception ex2)
 							{

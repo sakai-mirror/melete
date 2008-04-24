@@ -4,19 +4,19 @@
 *
 ***********************************************************************************
 *
-* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project 
-*   
-* Licensed under the Apache License, Version 2.0 (the "License"); you 
-* may not use this file except in compliance with the License. You may 
-* obtain a copy of the License at 
-*   
-* http://www.apache.org/licenses/LICENSE-2.0 
-*   
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the License is distributed on an "AS IS" BASIS, 
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
-* implied. See the License for the specific language governing 
-* permissions and limitations under the License. 
+* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you
+* may not use this file except in compliance with the License. You may
+* obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+* implied. See the License for the specific language governing
+* permissions and limitations under the License.
 *
 **********************************************************************************/
 package org.sakaiproject.tool.melete;
@@ -47,13 +47,13 @@ public class DeleteResourcePage implements Serializable{
 	protected Log logger = LogFactory.getLog(DeleteResourcePage.class);
 	private SectionService sectionService;
 	private MeleteCHService meleteCHService;
-	
+
 	private String fromPage;
 	private boolean warningFlag;
 	private String delResourceName;
 	private String delResourceId;
 	private String courseId;
-	
+
     public DeleteResourcePage(){
     }
 
@@ -65,27 +65,27 @@ public class DeleteResourcePage implements Serializable{
   		delResourceName = null;
   		courseId = null;
   	}
-	
+
   	public void setFromPage(String fromPage)
   	{
   		this.fromPage = fromPage;
   	}
-  	
+
   	public void processDeletion(String delResourceId, String courseId)
   	{
   		this.delResourceId = delResourceId;
   		this.courseId = courseId;
-  		List<String> res_in_use = sectionService.findResourceInUse(delResourceId,courseId);
+  		List res_in_use = sectionService.findResourceInUse(delResourceId,courseId);
 		if(res_in_use != null)	logger.debug("res_in_use size " + res_in_use.size());
 		if (res_in_use != null && res_in_use.size() > 0)
-			warningFlag = true;		
+			warningFlag = true;
   	}
-  	
+
   	public void setResourceName(String title)
   	{
   		delResourceName = title;
   	}
-  	
+
   	public String deleteResource()
   	{
   		FacesContext context = FacesContext.getCurrentInstance();
@@ -105,17 +105,17 @@ public class DeleteResourcePage implements Serializable{
   				editPage.refreshCurrSiteResourcesList();
   			}
   			else if(fromPage.startsWith("manage"))
-  			{				
+  			{
   				ValueBinding binding = Util.getBinding("#{manageResourcesPage}");
   				ManageResourcesPage managePage = (ManageResourcesPage) binding.getValue(context);
-  				managePage.refreshCurrSiteResourcesList();				
+  				managePage.refreshCurrSiteResourcesList();
   			}
   			else
   			{
   				ValueBinding binding = Util.getBinding("#{addSectionPage}");
   				AddSectionPage addPage = (AddSectionPage) binding.getValue(context);
   				addPage.refreshCurrSiteResourcesList();
-  			}		
+  			}
   			return fromPage;
   		}
 		catch (Exception e)
@@ -128,12 +128,12 @@ public class DeleteResourcePage implements Serializable{
 			return "#";
 		}
 	}
-  	
+
   	public String cancelDeleteResource()
   	{
   		return fromPage;
   	}
-  	
+
 	/**
 	 * @return Returns the SectionService.
 	 */
@@ -181,5 +181,5 @@ public class DeleteResourcePage implements Serializable{
 	{
 		return this.delResourceName;
 	}
-	
+
  }

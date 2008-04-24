@@ -4,19 +4,19 @@
 *
 ***********************************************************************************
 *
-* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project 
-*   
-* Licensed under the Apache License, Version 2.0 (the "License"); you 
-* may not use this file except in compliance with the License. You may 
-* obtain a copy of the License at 
-*   
-* http://www.apache.org/licenses/LICENSE-2.0 
-*   
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the License is distributed on an "AS IS" BASIS, 
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
-* implied. See the License for the specific language governing 
-* permissions and limitations under the License. 
+* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you
+* may not use this file except in compliance with the License. You may
+* obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+* implied. See the License for the specific language governing
+* permissions and limitations under the License.
 *
 **********************************************************************************/
 package org.sakaiproject.tool.melete;
@@ -66,7 +66,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 	String courseId;
 	String userId;
 	private boolean sameModuleSectionSelected;
-	
+
     public DeleteModulePage(){
        	this.mdbean = null;
     	this.section = null;
@@ -151,7 +151,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			Integer mkey = new Integer(mdbean.getModuleId());
 			modulekeys.put(mkey,mkey);
 		}
-		
+
 		for(int i=0; i < sectionBeans.size();i++)
 		{
 			SectionBean secbean = (SectionBean)sectionBeans.get(i);
@@ -159,7 +159,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			if (modulekeys.containsKey(checkModId)) throw new MeleteException("same_module_section_selected");
 		}
 	}
-	
+
 	private void removeSectionsSelectedToModule() throws Exception
 	{
 		HashMap modulekeys = new HashMap();
@@ -186,20 +186,20 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
         	moduleService = getModuleService();
         FacesContext context = FacesContext.getCurrentInstance();
         ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
-       
+
         // actual delete
 		try{
-			    
+
 			if (getModuleSelected() == true)
-			{	
+			{
 				 // check if sections of selected module are selected too
 				if(sectionBeans != null)CheckSectionsSelected();
 				moduleService.deleteModules(this.moduleDateBeans,getCourseId(), getUserId());
 			}
 			if (getSectionSelected() == true)
-			{	
-			   sectionService.deleteSections(this.sectionBeans, getUserId());
-			}	
+			{
+			   sectionService.deleteSections(this.sectionBeans,getCourseId(), getUserId());
+			}
 		}
 		catch(MeleteException me)
 		{
@@ -227,22 +227,22 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
         	moduleService = getModuleService();
         FacesContext context = FacesContext.getCurrentInstance();
         ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
-       
+
         // actual delete
 		try{
-			       
+
 			if (getModuleSelected() == true)
-			{		
+			{
 				 // check if sections of selected module are selected too
 		        removeSectionsSelectedToModule();
-				moduleService.deleteModules(this.moduleDateBeans,getCourseId(), getUserId());	
+				moduleService.deleteModules(this.moduleDateBeans,getCourseId(), getUserId());
 				sameModuleSectionSelected = false;
 			}
 			if (getSectionSelected() == true)
-			{				
-			   sectionService.deleteSections(this.sectionBeans, getUserId());			   
-			}	 
-		}		
+			{
+			   sectionService.deleteSections(this.sectionBeans,getCourseId(), getUserId());
+			}
+		}
 		catch(Exception ex)
 		{
 			String errMsg = bundle.getString("delete_module_fail");
@@ -252,7 +252,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		setSuccess(true);
        return "confirm_delete_module";
     }
-    
+
 	public String backToModules()
 	{
 		setMdbean(null);
@@ -298,7 +298,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		userId = (String)sessionMap.get("userId");
 		}
 		return userId;
-	}	
+	}
 	/**
 	 * @return Returns the ModuleService.
 	 */

@@ -111,6 +111,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		checkUploadExists();
 		setSuccess(false);
 		FacesContext context = FacesContext.getCurrentInstance();
+		Map sessionMap = context.getExternalContext().getSessionMap();
         ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 
         //validation 1:	   modality is required.
@@ -178,7 +179,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			{
 			logger.error("error in inserting section "+ mex.toString());
 			//rollback and delete section
-			sectionService.deleteSection(section, null);
+			sectionService.deleteSection(section, (String)sessionMap.get("courseId"), null);
 			String errMsg = bundle.getString(mex.getMessage());
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
 			return "failure";
@@ -186,7 +187,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		catch(Exception ex)
 			{
 			logger.error("error in inserting section "+ ex.toString());
-			sectionService.deleteSection(section, null);
+			sectionService.deleteSection(section,(String)sessionMap.get("courseId"), null);
 			String errMsg = bundle.getString("add_section_fail");
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"add_section_fail",errMsg));
 			ex.printStackTrace();
