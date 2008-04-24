@@ -316,7 +316,7 @@ public class ModuleDB implements Serializable {
 		logger.error("error at module db level");
 		throw new MeleteException("add_module_fail");
 	}
-	
+
   }
 
 
@@ -1103,9 +1103,129 @@ public class ModuleDB implements Serializable {
 		return success;
     }
 
+    public void deleteModule(CourseModule cmod, String userId) throws Exception {
+      Module mod = (Module) cmod.getModule();
+      Map sectionMap = mod.getSections();
+      String courseId = cmod.getCourseId();
+      Integer modModuleId = cmod.getModuleId();
+      Transaction tx = null;
+
+      //First delete all the sections
+      String queryString = "from Section sec where sec.moduleId = :moduleId";
+      List secList = null;
+  	try
+	{
+
+      Session session = hibernateUtil.currentSession();
+      Query query = session.createQuery(queryString);
+      query.setParameter("moduleId",modModuleId);
+
+      Iterator itr = query.iterate();
+
+      Section sec = null;
+      secList = new ArrayList();
+      while (itr.hasNext()) {
+      	sec = (Section) itr.next();
+      	secList.add(sec);
+       }
+
+    if (secList != null)
+    {
+      for (ListIterator i = secList.listIterator(); i.hasNext(); )
+      {
+		sectionDB.deleteSection((Section)i.next(), courseId, userId);
+      }
+    }
+	  }
+    catch (HibernateException he)
+    {
+	  logger.error(he.toString());
+	  throw he;
+    }
+    catch (Exception e) {
+      if (tx!=null) tx.rollback();
+      logger.error(e.toString());
+      throw e;
+    }
+    finally
+	{
+    	try
+		  {
+	      	hibernateUtil.closeSession();
+		  }
+	      catch (HibernateException he)
+		  {
+			  logger.error(he.toString());
+			  throw he;
+		  }
+	}
+    try
+	{
+
+      Session session = hibernateUtil.currentSession();
+
+	      tx = session.beginTransaction();
+
+	     cmod = (CourseModule) session.merge(cmod);
+
+	      mod = (Module) cmod.getModule();
+
+	      ModuleShdates mshdates = (ModuleShdates) mod.getModuleshdate();
+
+	      mod.setModuleshdate(null);
+	      session.saveOrUpdate(mod);
+
+	     mshdates = (ModuleShdates) session.merge(mshdates);
+	     session.delete(mshdates);
+
+	      cmod.setModule(null);
+	      session.saveOrUpdate(cmod);
+
+	      mod = (Module) session.merge(mod);
+	      session.delete(mod);
+
+	      cmod = (CourseModule) session.merge(cmod);
+	      session.delete(cmod);
+
+	      tx.commit();
+	      logger.debug("Deleted module");
 
 
-	 public void deleteModule(CourseModule cmod, String userId) throws Exception {
+	    }
+	    catch (HibernateException he)
+	    {
+		  logger.error(he.toString());
+		  throw he;
+	    }
+	    catch (Exception e) {
+	      if (tx!=null) tx.rollback();
+	      logger.error(e.toString());
+	      throw e;
+	    }
+	    finally
+		{
+	    	try
+			  {
+		      	hibernateUtil.closeSession();
+			  }
+		      catch (HibernateException he)
+			  {
+				  logger.error(he.toString());
+				  throw he;
+			  }
+		}
+	    if (userId != null)
+	    {
+	    MeleteBookmarks mb = new MeleteBookmarks();
+		mb.setUserId(userId);
+		mb.setCourseId(courseId);
+		mb.setModuleId(modModuleId);
+		bookmarksDB.deleteBookmark(mb);
+	    }
+
+     }
+
+	/* public void deleteModule(CourseModule cmod, String userId) throws Exception {
 	     	Transaction tx = null;
 	     	Integer modModuleId = null;
 		 	try
@@ -1186,7 +1306,7 @@ public class ModuleDB implements Serializable {
 		    }
 
 	     }
-
+*/
 	 public Module getModule(int moduleId) throws HibernateException {
 	 	Module mod = null;
 	 	try
@@ -1850,13 +1970,13 @@ public class ModuleDB implements Serializable {
 
 				section.setModule(selectedModule);
 				section.setModuleId(selectedModule.getModuleId().intValue());
-				
+
 				// save object
 				tx = session.beginTransaction();
 				session.saveOrUpdate(section);
 				session.saveOrUpdate(prev_module);
 				session.saveOrUpdate(selectedModule);
-				//Code that moves the bookmarks 
+				//Code that moves the bookmarks
 				Map bookmarks = section.getBookmarks();
 				int bookmarkSize = bookmarks.size();
 		    	if (bookmarkSize > 0)
@@ -1869,7 +1989,7 @@ public class ModuleDB implements Serializable {
 		    		  mb.setModuleId(selectedModule.getModuleId().intValue());
 		    		  session.saveOrUpdate(mb);
 		    		}
-		    	}	
+		    	}
 				tx.commit();
 
 			}
@@ -1922,7 +2042,7 @@ public class ModuleDB implements Serializable {
 		  		   		if (slObj != null)
 		  		   		{
 		  		   			Section sec =(Section)printSections.get(new Integer(slObj.getSectionId()));
-		  		   			
+
 		  		   			printText.append("<h4>" +slObj.getDispSeq() +"  " + sec.getTitle()+"</h4>")	;
 		  		   			if(sec.getSectionResource() != null)
 		  		   				printText.append("<p><i>" +getLicenseInformation((MeleteResource)sec.getSectionResource().getResource())+"</i></p>");
@@ -1954,7 +2074,7 @@ public class ModuleDB implements Serializable {
 								url = url.replaceAll(" ", "%20");
 								printText.append("<iframe id=\"iframe1\" src=\"" + url + "\" scrolling=\"auto\" width=\"100%\" border=\"0\" frameborder=\"0\"></iframe>");
 							}
-						
+
 						}
 		  			}
 		  		}
@@ -1988,9 +2108,9 @@ public class ModuleDB implements Serializable {
 	{
 		ResourceLoader rl = new ResourceLoader("melete_license");
 		String licenseStr="";
-		
+
 		if(melResource == null)return licenseStr;
-		
+
 		if(melResource.getLicenseCode() == 1)
 		{
 		licenseStr = rl.getString("license_info_copyright");

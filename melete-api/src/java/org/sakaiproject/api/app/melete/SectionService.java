@@ -33,6 +33,7 @@ import java.util.List;
 * Rashmi - 8/23/06 - add license info methods
  */
 public interface SectionService{
+
 	public Integer insertSection(ModuleObjService module, SectionObjService section) throws Exception;
 	public void editSection(SectionObjService section, MeleteResourceService melResource) throws Exception;
 	public void editSection(SectionObjService section ) throws Exception;
@@ -51,8 +52,8 @@ public interface SectionService{
    
    public List getSortSections(ModuleObjService module);
    
-   public void deleteSection(SectionObjService sec, String userId);
-   public void deleteSections(List sectionBeans, String userId) throws Exception;
+   public void deleteSection(SectionObjService sec, String courseId, String userId);
+   public void deleteSections(List sectionBeans, String courseId, String userId) throws Exception;
 
    public ArrayList getMeleteLicenses();
    public String[] getCCLicenseURL(boolean reqAttr, boolean allowCmrcl, int allowMod);

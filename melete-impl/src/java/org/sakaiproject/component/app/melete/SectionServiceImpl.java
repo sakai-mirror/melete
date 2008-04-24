@@ -33,12 +33,14 @@ import org.apache.commons.logging.LogFactory;
 import org.dom4j.Element;
 import org.hibernate.Session;
 import org.sakaiproject.api.app.melete.MeleteResourceService;
+import org.sakaiproject.api.app.melete.MeleteSecurityService;
 import org.sakaiproject.api.app.melete.SectionResourceService;
 import org.sakaiproject.api.app.melete.SectionService;
 import org.sakaiproject.api.app.melete.ModuleObjService;
 import org.sakaiproject.api.app.melete.SectionObjService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
 import org.sakaiproject.api.app.melete.MeleteCHService;
+
 
 /**
  * @author Rashmi
@@ -55,7 +57,7 @@ import org.sakaiproject.api.app.melete.MeleteCHService;
  */
 public class SectionServiceImpl implements Serializable, SectionService{
 	 private SectionDB sectiondb;
-	 private ModuleDB moduleDB;
+	
 	 private Section section = null;
 	 private Log logger = LogFactory.getLog(SectionServiceImpl.class);
 	 private MeleteLicenseDB meleteLicenseDB;
@@ -102,7 +104,6 @@ public class SectionServiceImpl implements Serializable, SectionService{
 
 	public SectionServiceImpl(){
 		sectiondb= getSectiondb();
-		moduleDB = getModuleDB();
 	}
 
 
@@ -146,19 +147,80 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			}
 	}
 
-	public void deleteSection(SectionObjService sec, String userId)
+	public void deleteSection(SectionObjService sec, String courseId, String userId)
 	{
-		try
-		{
-	  		sectiondb.deleteSection((Section)sec, userId);
-		}
-	  	catch (Exception ex)
-		{
+		
+			try
+			{
+		  		sectiondb.deleteSection((Section)sec, courseId, userId);
+			}
+		  	catch (Exception ex)
+			{
 
+			}			
+
+		/*if (sec.getContentType().equals("typeUpload") || sec.getContentType().equals("typeLink"))
+		{		  
+		  res_in_use = findResourceInUse(sec.getSectionResource().getResource().getResourceId(),courseId); 
+		  try
+		  {
+	  		sectiondb.deleteSection((Section)sec, userId, res_in_use);
+		  }
+	  	  catch (Exception ex)
+		  {
+
+		  }
 		}
+		
+		if (sec.getContentType().equals("typeEditor"))
+		{
+		  List<String> secEmbed = null;	
+		  try
+		  {
+		    secEmbed = meleteCHService.findAllEmbeddedImages(sec.getSectionResource().getResource().getResourceId());
+		  }
+		  catch(Exception ex)
+			{
+				logger.error("SectionServiceImpl -- delete section failed" );
+		
+			}	
+		  if (secEmbed != null)
+		  {
+			 for (ListIterator<String> i = secEmbed.listIterator(); i.hasNext(); )
+			  {
+				  String secEmbedStr = (String)i.next();
+				  if(secEmbedStr.indexOf("/access") !=-1)
+				  {
+					String findEntity = secEmbedStr.substring(secEmbedStr.indexOf("/access")+7);
+					Reference ref = EntityManager.newReference(findEntity);
+					String resource_id =ref.getId() ;
+					if(ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
+					{	
+						resource_id = resource_id.replaceFirst("/content","");
+				        res_in_use = findResourceInUse(resource_id, courseId);
+				        //The resource is only embedded in this section
+				        if ((res_in_use != null)&&(res_in_use.size() == 1))
+				        {
+				        	sectiondb.deleteResourceInUse(resource_id, courseId);
+				        }
+					}   
+				  }  
+			  }
+		  }*/
+		  /*res_in_use = findResourceInUse(sec.getSectionResource().getResource().getResourceId(),courseId); 
+		  try
+		  {
+	  		sectiondb.deleteSection((Section)sec, userId, res_in_use);
+		  }
+	  	  catch (Exception ex)
+		  {
+
+		  }*/
+	  	  //TODO: Code to parse embedded media
+		//}		
 
 	}
-	public void deleteSections(List sectionBeans, String userId) throws MeleteException
+	public void deleteSections(List sectionBeans, String courseId, String userId) throws MeleteException
 	{
 		 List secList = null;
 		 for (ListIterator i = sectionBeans.listIterator(); i.hasNext(); )
@@ -166,7 +228,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			SectionBean secbean = (SectionBean)i.next();
 
 			Section sec = (Section) secbean.getSection();
-  		    sectiondb.deleteSection(sec, userId);
+  		    deleteSection(sec, courseId, userId);
 	      }
 	}
 
@@ -362,13 +424,28 @@ public class SectionServiceImpl implements Serializable, SectionService{
 		return mr;
 	  }
 
-	  public List<String> findResourceInUse(String selResourceId, String courseId)
+	  public List findResourceInUse(String selResourceId, String courseId)
+	  {
+		  List resourceUseList = null;
+		  //found in section resources so break
+		  resourceUseList = sectiondb.checkInSectionResources(selResourceId, courseId);
+		  if (resourceUseList != null && resourceUseList.size() > 0) 
+		  {
+			  return resourceUseList;
+		  }
+		  else
+		  {	  
+		    resourceUseList = sectiondb.findResourceInUse(selResourceId, courseId);
+		  }  
+		  return resourceUseList;
+	  }
+	  
+	 /* public boolean isResourceElseWhere(SectionObjService sec, String courseId)
 	  {
 		  try{
-			  List<String> resourceUseList = null;
 			  //found in section resources so break
-			  resourceUseList = sectiondb.checkInSectionResources(selResourceId, courseId);
-			  if (resourceUseList != null && resourceUseList.size() > 0) return resourceUseList;
+			  boolean resourceElseWhere = sectiondb.checkElseSectionResources(SectionObjService sec);
+			  if (resourceElseWhere) return true;
 			  
 			  logger.debug("now looking in embed data as section resources don't have it");
 			  String lookingFor = "/access/meleteDocs/content" + selResourceId;
@@ -410,8 +487,8 @@ public class SectionServiceImpl implements Serializable, SectionService{
 				logger.error("SectionServiceImpl --find resource in use failed" );
 				return null;
 			}
-	  }
-	  
+	  }*/
+	  	 
 	  public void deleteResourceInUse(String delResourceId,String courseId) throws Exception
 	  {
 		  sectiondb.deleteResourceInUse(delResourceId, courseId);
@@ -429,15 +506,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 	public void setSectiondb(SectionDB sectiondb) {
 		this.sectiondb = sectiondb;
 	}
-		/**
-	 * @param moduleDB The moduleDB to set.
-	 */
-	public void setModuleDB(ModuleDB moduleDB) {
-		this.moduleDB = moduleDB;
-	}
-	public ModuleDB getModuleDB() {
-		return moduleDB;
-	}
+	
 
 	/**
 	 * @param logger The logger to set.
@@ -466,4 +535,6 @@ public class SectionServiceImpl implements Serializable, SectionService{
 	{
 		this.meleteCHService = meleteCHService;
 	}
+	
+	
 }
