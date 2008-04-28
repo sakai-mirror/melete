@@ -65,5 +65,7 @@ public interface MeleteCHService{
 	 public ContentCollection getCollection(String toColl);
 	 public List<String> findAllEmbeddedImages(String sec_resid) throws Exception;
 	 public void removeResource(String delRes_id) throws Exception;
+	 public void removeCollection(String delColl_id, String delSubColl_id) throws Exception;
+	 public void removeCourseCollection(String delColl_id) throws Exception;
 }
 

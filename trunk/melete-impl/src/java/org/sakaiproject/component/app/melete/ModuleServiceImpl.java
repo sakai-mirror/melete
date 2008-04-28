@@ -1197,7 +1197,13 @@ public void restoreModules(List modules) throws Exception
 		    }
 		 /*METHODS USED BY UPDATESEQXML END*/
 
-
+		// clean up deleted modules
+		public int cleanUpDeletedModules() throws Exception
+		{
+			int noOfDeleted = moduledb.cleanUpDeletedModules();
+			return noOfDeleted;
+		}	
+		
 	/**
 	 * @return Returns the moduledb.
 	 */

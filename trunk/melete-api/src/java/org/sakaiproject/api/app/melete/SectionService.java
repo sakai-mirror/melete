@@ -63,4 +63,5 @@ public interface SectionService{
    public void updateSectionResource(SectionObjService section, SectionResourceService secResource) throws Exception;
    public List findResourceInUse(String selResourceId, String courseId);
    public void deleteResourceInUse(String delResourceId,String courseId) throws Exception;
+   public int cleanUpDeletedSections() throws Exception;
 }

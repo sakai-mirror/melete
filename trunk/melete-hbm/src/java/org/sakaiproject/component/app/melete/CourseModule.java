@@ -130,6 +130,7 @@ public class CourseModule implements Serializable,CourseModuleService {
     public String toString() {
         return new ToStringBuilder(this)
             .append("moduleId", getModuleId())
+             .append("courseId", getCourseId())
             .toString();
     }
 
