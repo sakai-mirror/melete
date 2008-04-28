@@ -106,4 +106,6 @@ public interface ModuleService{
 	public void moveSections(List sectionBeans,ModuleObjService selectedModule) throws MeleteException;
 
 	public String printModule(ModuleObjService module) throws MeleteException;
+	
+	public int cleanUpDeletedModules() throws Exception;
 }

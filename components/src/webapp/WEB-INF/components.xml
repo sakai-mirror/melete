@@ -88,6 +88,9 @@
          <property name="meleteCHService">
             <ref local="org.sakaiproject.api.app.melete.MeleteCHService" />
         </property>
+         <property name="meleteSecurityService">
+            <ref local="org.sakaiproject.api.app.melete.MeleteSecurityService" />
+        </property>      
    </bean>	
 
 <!-- Section service -->
@@ -116,12 +119,15 @@
           <property name="bookmarksDB">
             <ref local="org.sakaiproject.component.app.melete.MeleteBookmarksDB" />
         </property>
-        <property name="meleteCHService">
+        <property name="moduleDB">
+            <ref local="org.sakaiproject.component.app.melete.ModuleDB" />
+        </property> 
+         <property name="meleteCHService">
             <ref local="org.sakaiproject.api.app.melete.MeleteCHService" />
         </property>
-          <property name="moduleDB">
-            <ref local="org.sakaiproject.component.app.melete.ModuleDB" />
-        </property>  
+         <property name="meleteSecurityService">
+            <ref local="org.sakaiproject.api.app.melete.MeleteSecurityService" />
+        </property>     
 	</bean>
 	
 

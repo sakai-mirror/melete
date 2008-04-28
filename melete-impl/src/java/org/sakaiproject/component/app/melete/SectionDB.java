@@ -23,11 +23,12 @@ package org.sakaiproject.component.app.melete;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
-
+import java.util.Set;
+import java.util.ListIterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Element;
@@ -38,7 +39,9 @@ import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 import org.sakaiproject.api.app.melete.MeleteCHService;
+import org.sakaiproject.api.app.melete.MeleteSecurityService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
+import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.entity.api.Reference;
 
@@ -56,8 +59,10 @@ import org.sakaiproject.entity.api.Reference;
 public class SectionDB implements Serializable {
 	private HibernateUtil hibernateUtil;
 	private MeleteBookmarksDB bookmarksDB;
-	private MeleteCHService meleteCHService;
 	private ModuleDB moduleDB;
+	private MeleteCHService meleteCHService;
+	private MeleteSecurityService meleteSecurityService;
+
 
 	public static final int MELETE_RESOURCE_ONLY=0;
 	public static final int SECTION_RESOURCE_ONLY=1;
@@ -710,6 +715,26 @@ public class SectionDB implements Serializable {
 			}
 	}
 
+	public List getAllMeleteResourcesOfCourse(String courseId)
+	{
+		try{
+		     Session session = hibernateUtil.currentSession();
+		     String queryString = "select meleteresource.resourceId from MeleteResource meleteresource where meleteresource.resourceId like '%:resourceId%'";
+		     Query query = session.createQuery(queryString);
+		     String selResourceId = "/private/meleteDocs/"+courseId+"/uploads/";
+		     query.setParameter("resourceId",selResourceId);
+		     List result_list = query.list();
+		     return result_list;
+		    }
+		catch(Exception ex){
+			logger.error(ex.toString());
+			return null;
+			}
+	}
+
+
+
+
 	/*
 	 *  get the section resource based on resource id.
 	 */
@@ -948,6 +973,144 @@ public class SectionDB implements Serializable {
 
 	}
 
+	public int cleanUpDeletedSections() throws Exception
+	{
+		if (!meleteSecurityService.isSuperUser(UserDirectoryService.getCurrentUser().getId())) throw new MeleteException("admin_allow_cleanup");
+
+		int delCount = 0;
+		long totalStart = System.currentTimeMillis();
+		try
+		{
+			Session session = hibernateUtil.currentSession();
+			Transaction tx = null;
+			try
+			{
+				// get deleted modules group by course id
+				String queryString = " from Section sec where sec.deleteFlag = 1 order by sec.moduleId";
+				Query query = session.createQuery(queryString);
+				List<Section> res = query.list();
+				Map deletedSections = new HashMap<String, ArrayList<Section>>();
+
+				for (Iterator<Section> itr = res.listIterator(); itr.hasNext();)
+				{
+					Section s = itr.next();
+					String keyStr = s.getModule().getCoursemodule().getCourseId();
+					if (deletedSections.containsKey(keyStr))
+					{
+						ArrayList delsections = (ArrayList) deletedSections.get(keyStr);
+						delsections.add(s);
+						deletedSections.put(keyStr, delsections);
+					}
+					else
+					{
+						ArrayList delSection = new ArrayList();
+						delSection.add(s);
+						deletedSections.put(keyStr, delSection);
+					}
+				}
+				logger.debug("map is created" + deletedSections.size());
+				// for each course id
+				Set alldelSecCourses = deletedSections.keySet();
+				for (Iterator iter = alldelSecCourses.iterator(); iter.hasNext();)
+				{
+					// for that course id get all melete resources from melete_resource
+					long starttime = System.currentTimeMillis();
+					String toDelSecCourseId = (String) iter.next();
+					logger.debug("processing for " + toDelSecCourseId);
+					List activenArchModules = moduleDB.getActivenArchiveModules(toDelSecCourseId);
+					// parse and list all names which are in use
+					List<String> activeResources = moduleDB.getActiveResourcesFromList(activenArchModules);
+					List<String> allCourseResources = moduleDB.getAllMeleteResourcesOfCourse(toDelSecCourseId);
+					int allresourcesz = allCourseResources.size();
+
+					// compare the lists and not in use resources are
+					logger.debug("session is open" + session.isOpen());
+					if (!session.isOpen()) session = hibernateUtil.currentSession();
+					tx = session.beginTransaction();
+					if (allCourseResources != null && activeResources != null)
+					{
+						logger.debug("active list and all" + activeResources.size() + " ; " + allCourseResources.size());
+						logger.debug("active list" + activeResources.toString());
+						allCourseResources.removeAll(activeResources);
+						logger.debug("to del resources" + allCourseResources.size() + allCourseResources.toString());
+					}
+					// delete sections marked for delete
+					List<Section> delSections = (ArrayList) deletedSections.get(toDelSecCourseId);
+					String allSecIds = getAllDeleteSectionIds(delSections);
+					String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
+					String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
+					String delSectionStr = "delete Section s where s.sectionId in " + allSecIds;
+
+					int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
+					deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
+					deletedEntities = session.createQuery(delSectionStr).executeUpdate();
+
+					List<String> allSecMelResIds = getAllDeleteSectionMeleteResourceIds(delSections);
+					for(String secMelResId: allSecMelResIds)
+						meleteCHService.removeResource(secMelResId);
+
+					// delete melete resource and from content resource
+					for (Iterator delIter = allCourseResources.listIterator(); delIter.hasNext();)
+					{
+						String delResourceId = (String) delIter.next();
+						String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
+						deletedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", delResourceId).executeUpdate();
+						meleteCHService.removeResource(delResourceId);
+					}
+
+
+					tx.commit();
+					long endtime = System.currentTimeMillis();
+					logger.debug("to cleanup course with " + allresourcesz + " resources and del sections " + delSections.size() +" and del resources"+ allCourseResources.size()+", it took "
+							+ (endtime - starttime) + "ms");
+				} // for end
+				long totalend = System.currentTimeMillis();
+				logger.debug("to cleanup " + deletedSections.size() + "courses it took " + (totalend - totalStart) + "ms");
+			}
+			catch (HibernateException he)
+			{
+				if (tx != null) tx.rollback();
+				logger.error(he.toString());
+				throw he;
+			}
+			finally
+			{
+				hibernateUtil.closeSession();
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new MeleteException("cleanup_module_fail");
+		}
+		return delCount;
+	}
+
+	private String getAllDeleteSectionIds(List<Section> delSections)
+	{
+		StringBuffer allIds = new StringBuffer("( ");
+		String a = null;
+		for(Section s:delSections)
+		{
+			allIds.append(s.getSectionId()+",");
+		}
+		if(allIds.lastIndexOf(",") != -1)
+			a = allIds.substring(0,allIds.lastIndexOf(","))+" )";
+		return a;
+	}
+
+	private List<String> getAllDeleteSectionMeleteResourceIds(List<Section> delSections)
+	{
+		List<String> a = new ArrayList<String>(0);
+		for(Section s:delSections)
+		{
+			if(s.getSectionResource() != null && s.getSectionResource().getResource() != null)
+				a.add(s.getSectionResource().getResource().getResourceId());
+		}
+		return a;
+	}
+
+
 	/**
 	 * @return Returns the hibernateUtil.
 	 */
@@ -967,6 +1130,18 @@ public class SectionDB implements Serializable {
 		this.bookmarksDB = bookmarksDB;
 	}
 
+	public void setMeleteCHService(MeleteCHService meleteCHService)
+	{
+		this.meleteCHService = meleteCHService;
+	}
+
+	 /**
+	 * @param meleteSecurityService The meleteSecurityService to set.
+	 */
+	public void setMeleteSecurityService(MeleteSecurityService meleteSecurityService) {
+		this.meleteSecurityService = meleteSecurityService;
+	}
+
 	/**
 	 * @param logger The logger to set.
 	 */
@@ -974,22 +1149,13 @@ public class SectionDB implements Serializable {
 		this.logger = logger;
 	}
 
-	public MeleteCHService getMeleteCHService()
-	{
-		return this.meleteCHService;
-	}
-
-	public void setMeleteCHService(MeleteCHService meleteCHService)
-	{
-		this.meleteCHService = meleteCHService;
-	}
 	/**
-	 * @param moduleDB The moduleDB to set.
+	 * @param moduleDB the moduleDB to set
 	 */
-	public void setModuleDB(ModuleDB moduleDB) {
+	public void setModuleDB(ModuleDB moduleDB)
+	{
 		this.moduleDB = moduleDB;
 	}
-	public ModuleDB getModuleDB() {
-		return moduleDB;
-	}
+
+
 }

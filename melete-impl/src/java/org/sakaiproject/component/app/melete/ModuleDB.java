@@ -26,13 +26,17 @@ import java.io.File;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Iterator;
@@ -47,6 +51,7 @@ import org.hibernate.Transaction;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.api.app.melete.MeleteSecurityService;
 import org.sakaiproject.api.app.melete.ModuleObjService;
 import org.sakaiproject.api.app.melete.SectionObjService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
@@ -74,6 +79,7 @@ public class ModuleDB implements Serializable {
 	private SectionDB sectionDB;
 	private MeleteBookmarksDB bookmarksDB;
 	private MeleteCHService meleteCHService;
+	private MeleteSecurityService meleteSecurityService;
 
 	/** Dependency:  The logging service. */
 	private Log logger = LogFactory.getLog(ModuleDB.class);
@@ -467,7 +473,7 @@ public class ModuleDB implements Serializable {
 		{
 	      Session session = hibernateUtil.currentSession();
 
-	      String queryString = "from Module module  where module.coursemodule.courseId = :courseId  and module.coursemodule.archvFlag = 0 and module.coursemodule.deleteFlag = 0 order by module.coursemodule.seqNo";
+	      String queryString = "from Module module where module.coursemodule.courseId = :courseId  and module.coursemodule.archvFlag = 0 and module.coursemodule.deleteFlag = 0 order by module.coursemodule.seqNo";
 
 	      Query query = session.createQuery(queryString);
 	      query.setParameter("courseId", courseId);
@@ -492,6 +498,42 @@ public class ModuleDB implements Serializable {
 		}
 	    return modList;
 	  }
+	 
+	 public List getActivenArchiveModules(String courseId) throws HibernateException {
+		 	List modList = new ArrayList();
+		 	List sectionsList = null;
+		 	Module mod = null;
+		 	Query sectionQuery = null;
+		 	try
+			{
+		      Session session = hibernateUtil.currentSession();
+
+		      String queryString = "from Module module where module.coursemodule.courseId = :courseId  and module.coursemodule.deleteFlag = 0 order by module.coursemodule.seqNo";
+
+		      Query query = session.createQuery(queryString);
+		      query.setParameter("courseId", courseId);
+
+		      modList = query.list();
+
+		    }
+		    catch (HibernateException he)
+		    {
+			  logger.error(he.toString());
+		    }
+		    finally
+			{
+		    	try
+				  {
+			      	hibernateUtil.closeSession();
+				  }
+			      catch (HibernateException he)
+				  {
+					  logger.error(he.toString());
+				  }
+			}
+		    return modList;
+		  }
+	 
 //
 	 public ModuleDateBean getModuleDateBean(String userId, String courseId,  int moduleId) throws HibernateException {
 	 	List modList = new ArrayList();
@@ -2146,6 +2188,213 @@ public class ModuleDB implements Serializable {
 		licenseStr += melResource.getCopyrightOwner();
 		}
 		return licenseStr;
+	}
+
+// clean up code for admin tool	
+	public int cleanUpDeletedModules() throws Exception
+	{
+		if (!meleteSecurityService.isSuperUser(UserDirectoryService.getCurrentUser().getId())) throw new MeleteException("admin_allow_cleanup");
+
+		int delCount = 0;
+		long totalStart = System.currentTimeMillis();
+		try
+		{
+			Session session = hibernateUtil.currentSession();
+			Transaction tx = null;
+			try
+			{
+				// get deleted modules group by course id
+				String queryString = " from CourseModule cmod where cmod.deleteFlag = 1 order by cmod.courseId";
+				Query query = session.createQuery(queryString);
+				List<CourseModule> res = query.list();
+				Map deletedModules = new HashMap<String, ArrayList<Module>>();
+
+				for (Iterator<CourseModule> itr = res.listIterator(); itr.hasNext();)
+				{
+					CourseModule cm = itr.next();
+					if (deletedModules.containsKey(cm.getCourseId()))
+					{
+						ArrayList delmodules = (ArrayList) deletedModules.get(cm.getCourseId());
+						delmodules.add(cm.getModule());
+						deletedModules.put(cm.getCourseId(), delmodules);
+					}
+					else
+					{
+						ArrayList delmodule = new ArrayList();
+						delmodule.add(cm.getModule());
+						deletedModules.put(cm.getCourseId(), delmodule);
+					}
+				}
+				logger.debug("map is created" + deletedModules.size());
+				// for each course id
+				Set alldelCourses = deletedModules.keySet();
+				for (Iterator iter = alldelCourses.iterator(); iter.hasNext();)
+				{
+					// for that course id get all melete resources from melete_resource
+					long starttime = System.currentTimeMillis();
+					String toDelCourseId = (String) iter.next();
+					logger.debug("processing for " + toDelCourseId);
+					List activenArchModules = getActivenArchiveModules(toDelCourseId);
+					// parse and list all names which are in use
+					List<String> activeResources = getActiveResourcesFromList(activenArchModules);
+					List<String> allCourseResources = getAllMeleteResourcesOfCourse(toDelCourseId);
+					int allresourcesz = allCourseResources.size();
+					// compare the lists and not in use resources are
+					logger.debug("session is open" + session.isOpen());
+					if (!session.isOpen()) session = hibernateUtil.currentSession();
+					tx = session.beginTransaction();
+					if (allCourseResources != null && activeResources != null)
+					{
+						logger.debug("active list and all" + activeResources.size() + " ; " + allCourseResources.size());
+						logger.debug("active list" + activeResources.toString());
+						allCourseResources.removeAll(activeResources);
+						logger.debug("to del resources" + allCourseResources.size() + allCourseResources.toString());						
+					}
+					// delete modules and module collection and sections marked for delete
+					List delModules = (ArrayList) deletedModules.get(toDelCourseId);
+					for (Iterator delModuleIter = delModules.listIterator(); delModuleIter.hasNext();)
+					{
+						Module delModule = (Module) delModuleIter.next();
+						Integer delModuleId = delModule.getModuleId();
+						String allSecIds = getAllSectionIds(delModule.getSeqXml());
+						String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
+						String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
+						String delSectionStr = "delete Section s where s.moduleId=:moduleId";
+						String delCourseModuleStr = "delete CourseModule cm where cm.moduleId=:moduleId";
+						String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId=:moduleId";
+						String delModuleStr = "delete Module m where m.moduleId=:moduleId";
+						if (allSecIds != null)
+						{
+							int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
+							deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
+					
+						}
+						int deletedEntities = session.createQuery(delSectionStr).setInteger("moduleId", delModuleId).executeUpdate();
+						deletedEntities = session.createQuery(delCourseModuleStr).setInteger("moduleId", delModuleId).executeUpdate();
+						deletedEntities = session.createQuery(delModuleshDatesStr).setInteger("moduleId", delModuleId).executeUpdate();
+						deletedEntities = session.createQuery(delModuleStr).setInteger("moduleId", delModuleId).executeUpdate();
+						meleteCHService.removeCollection(toDelCourseId, "module_"+delModuleId.toString());
+					}
+
+					// delete melete resource and from content resource
+					for (Iterator delIter = allCourseResources.listIterator(); delIter.hasNext();)
+					{
+						String delResourceId = (String) delIter.next();
+						String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
+						int deletedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", delResourceId).executeUpdate();
+						meleteCHService.removeResource(delResourceId);
+					}				
+					// if course collection is empty than delete course collection
+					meleteCHService.removeCourseCollection(toDelCourseId);
+
+					tx.commit();
+					long endtime = System.currentTimeMillis();
+					logger.debug("to cleanup course with " + allresourcesz + " resources and del modules " + delModules.size() +" and del resources"+ allCourseResources.size()+", it took "
+							+ (endtime - starttime) + "ms");
+				} // for end
+				long totalend = System.currentTimeMillis();
+				logger.debug("to cleanup " + deletedModules.size() + "courses it took " + (totalend - totalStart) + "ms");
+			}
+			catch (HibernateException he)
+			{
+				if (tx != null) tx.rollback();
+				logger.error(he.toString());
+				throw he;
+			}
+			finally
+			{
+				hibernateUtil.closeSession();
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new MeleteException("cleanup_module_fail");
+		}
+		return delCount;
+	}	
+		
+	private String getAllSectionIds(String modSeqXml)
+	{		
+		SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
+		StringBuffer allIds = null;
+		String a = null;
+		try{
+		List<Element> allsec = SectionUtil.getAllSections(modSeqXml);
+		if(allsec.size() > 0) allIds = new StringBuffer("(");
+		for (Iterator<Element> itr = allsec.iterator(); itr.hasNext();)
+		{	String oneId = ((Element) itr.next()).attributeValue("id");			
+			allIds.append(oneId +",");
+		}
+		}catch(Exception e)
+		{
+			logger.debug("error reading sec ids from seq " + e.getMessage());
+			allIds = null;
+		}
+		if(allIds != null && allIds.lastIndexOf(",") != -1)
+			a = allIds.substring(0,allIds.lastIndexOf(","))+" )";	
+		return a;
+	}
+	
+	protected List getActiveResourcesFromList(List activenArchModules)
+	{
+		List<String> secEmbed = new ArrayList();
+		try{
+		 Iterator<Module> i = activenArchModules.iterator();
+		  while (i.hasNext())
+		  {
+			Module mod = i.next();
+			
+			String modSeqXml = mod.getSeqXml();
+			SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
+			if(modSeqXml == null) continue;
+			List<Element> allsec = SectionUtil.getAllSections(modSeqXml);
+			if(allsec == null)continue;
+			for (Iterator<Element> itr = allsec.iterator(); itr.hasNext();)
+			{
+				Section sec = sectionDB.getSection(Integer.parseInt(((Element) itr.next()).attributeValue("id")));
+				if(sec.getContentType().equals("notype") || sec.getSectionResource().getResource() == null) continue;
+				
+				if (sec.getContentType().equals("typeEditor")) 
+					secEmbed.addAll(meleteCHService.findAllEmbeddedImages(sec.getSectionResource().getResource().getResourceId()));
+				else secEmbed.add(sec.getSectionResource().getResource().getResourceId());
+			}
+		  }
+		  logger.debug("before sorting and removing dups" + secEmbed.size());
+		  //sort list and remove duplicates
+		  SortedSet s =  new TreeSet();
+		  s.addAll(secEmbed);
+		  secEmbed.clear();
+		  secEmbed.addAll(s);
+		}
+		catch(Exception e){e.printStackTrace();return null;}
+		  return secEmbed;
+	}
+	
+	
+	protected List getAllMeleteResourcesOfCourse(String toDelCourseId)
+	{
+		List allres = meleteCHService.getListofMediaFromCollection("/private/meleteDocs/"+toDelCourseId+"/uploads/");
+		ArrayList<String> allresNames = new ArrayList();
+		if(allres == null) return null;
+		for(Iterator iter = allres.listIterator(); iter.hasNext();)
+		{
+			ContentResource cr = (ContentResource)iter.next();
+			allresNames.add(cr.getId());
+		}	
+		  SortedSet s =  new TreeSet();
+		  s.addAll(allresNames);
+		  allresNames.clear();
+		  allresNames.addAll(s);
+		  return allresNames;		
+	}
+	
+// end clean up deleted stuff code	
+	 /**
+	 * @param meleteSecurityService The meleteSecurityService to set.
+	 */
+	public void setMeleteSecurityService(MeleteSecurityService meleteSecurityService) {
+		this.meleteSecurityService = meleteSecurityService;
 	}
 
 	/**
