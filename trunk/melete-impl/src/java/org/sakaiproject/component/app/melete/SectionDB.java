@@ -1044,7 +1044,8 @@ public class SectionDB implements Serializable {
 					int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
 					deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
 					deletedEntities = session.createQuery(delSectionStr).executeUpdate();
-
+					delCount += deletedEntities;
+					
 					List<String> allSecMelResIds = getAllDeleteSectionMeleteResourceIds(delSections);
 					for(String secMelResId: allSecMelResIds)
 						meleteCHService.removeResource(secMelResId);
@@ -1065,7 +1066,7 @@ public class SectionDB implements Serializable {
 							+ (endtime - starttime) + "ms");
 				} // for end
 				long totalend = System.currentTimeMillis();
-				logger.debug("to cleanup " + deletedSections.size() + "courses it took " + (totalend - totalStart) + "ms");
+				logger.debug("to cleanup deleted sections from " + deletedSections.size() + "courses it took " + (totalend - totalStart) + "ms");
 			}
 			catch (HibernateException he)
 			{
