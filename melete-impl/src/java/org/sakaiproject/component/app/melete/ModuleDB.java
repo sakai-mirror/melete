@@ -2273,6 +2273,7 @@ public class ModuleDB implements Serializable {
 						deletedEntities = session.createQuery(delCourseModuleStr).setInteger("moduleId", delModuleId).executeUpdate();
 						deletedEntities = session.createQuery(delModuleshDatesStr).setInteger("moduleId", delModuleId).executeUpdate();
 						deletedEntities = session.createQuery(delModuleStr).setInteger("moduleId", delModuleId).executeUpdate();
+						delCount += deletedEntities;
 						meleteCHService.removeCollection(toDelCourseId, "module_"+delModuleId.toString());
 					}
 
@@ -2293,7 +2294,7 @@ public class ModuleDB implements Serializable {
 							+ (endtime - starttime) + "ms");
 				} // for end
 				long totalend = System.currentTimeMillis();
-				logger.debug("to cleanup " + deletedModules.size() + "courses it took " + (totalend - totalStart) + "ms");
+				logger.debug("to cleanup deleted modules from " + deletedModules.size() + "courses it took " + (totalend - totalStart) + "ms");
 			}
 			catch (HibernateException he)
 			{
