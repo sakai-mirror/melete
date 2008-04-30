@@ -2255,7 +2255,7 @@ public class ModuleDB implements Serializable {
 						Module delModule = (Module) delModuleIter.next();
 						Integer delModuleId = delModule.getModuleId();
 						String allSecIds = null;
-						if(delModule.getSeqXml() != null)
+						if(delModule.getDeletedSections() != null)
 						 allSecIds = getAllSectionIds(delModule.getDeletedSections());
 						String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
 						String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
@@ -2267,8 +2267,9 @@ public class ModuleDB implements Serializable {
 						{
 							int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
 							deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
-					
+							logger.debug("updated section resource" + deletedEntities);
 						}
+						logger.debug("deleting stuff for module" + delModuleId);
 						int deletedEntities = session.createQuery(delSectionStr).setInteger("moduleId", delModuleId).executeUpdate();
 						deletedEntities = session.createQuery(delCourseModuleStr).setInteger("moduleId", delModuleId).executeUpdate();
 						deletedEntities = session.createQuery(delModuleshDatesStr).setInteger("moduleId", delModuleId).executeUpdate();
@@ -2354,8 +2355,11 @@ public class ModuleDB implements Serializable {
 				Section sec = sectionDB.getSection(Integer.parseInt(((Element) itr.next()).attributeValue("id")));
 				if(sec.getContentType().equals("notype") || sec.getSectionResource().getResource() == null) continue;
 				
-				if (sec.getContentType().equals("typeEditor")) 
-					secEmbed.addAll(meleteCHService.findAllEmbeddedImages(sec.getSectionResource().getResource().getResourceId()));
+				if (sec.getContentType().equals("typeEditor"))
+				{
+					List l = meleteCHService.findAllEmbeddedImages(sec.getSectionResource().getResource().getResourceId());
+					if(l != null)secEmbed.addAll(l);
+				}
 				else secEmbed.add(sec.getSectionResource().getResource().getResourceId());
 			}
 		  }
