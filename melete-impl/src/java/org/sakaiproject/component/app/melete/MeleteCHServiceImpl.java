@@ -931,6 +931,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 
 	    public List findAllEmbeddedImages(String sec_resId) throws Exception
 	    {
+	    	try{
 	    	ContentResource cr = getResource(sec_resId);
 	    	String checkforImgs = new String(cr.getContent());
 	    	List secEmbedData = new ArrayList<String> (0);
@@ -960,6 +961,11 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	            startSrc=0; endSrc = 0;
 	    	}
 	    	return secEmbedData;
+	    	} catch(Exception e)
+	    	{
+	    		logger.debug("can't read section file" + sec_resId);
+	    	}
+	    	return null;
 	    }
 
 
