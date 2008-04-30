@@ -2256,7 +2256,9 @@ public class ModuleDB implements Serializable {
 					{
 						Module delModule = (Module) delModuleIter.next();
 						Integer delModuleId = delModule.getModuleId();
-						String allSecIds = getAllSectionIds(delModule.getSeqXml());
+						String allSecIds = null;
+						if(delModule.getSeqXml() != null)
+						 allSecIds = getAllSectionIds(delModule.getSeqXml(),delModule.getDeletedSections());
 						String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
 						String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
 						String delSectionStr = "delete Section s where s.moduleId=:moduleId";
@@ -2315,7 +2317,7 @@ public class ModuleDB implements Serializable {
 		return delCount;
 	}	
 		
-	private String getAllSectionIds(String modSeqXml)
+	private String getAllSectionIds(String modSeqXml, Map deletedSections)
 	{		
 		SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
 		StringBuffer allIds = null;
@@ -2331,6 +2333,15 @@ public class ModuleDB implements Serializable {
 		{
 			logger.debug("error reading sec ids from seq " + e.getMessage());
 			allIds = null;
+		}
+		if(allIds != null && deletedSections != null)
+		{
+			for(Iterator i=deletedSections.keySet().iterator();i.hasNext();)
+			{
+				Object obj = i.next();
+				logger.debug("deleted Sections has key as" + obj);
+				allIds.append(obj + ",");
+			}
 		}
 		if(allIds != null && allIds.lastIndexOf(",") != -1)
 			a = allIds.substring(0,allIds.lastIndexOf(","))+" )";	

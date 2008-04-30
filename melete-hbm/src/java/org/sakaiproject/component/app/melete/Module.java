@@ -90,13 +90,15 @@ public class Module implements Serializable,ModuleObjService {
     /** persistent field */
     private Map sections;
 
+    private Map deletedSections;
+    
     /** persistent field */
     private Set modulestudentprivs;
     
     private Map bookmarks;
 
     /** full constructor */
-    public Module(String title, String learnObj, String description, String keywords, String createdByFname, String createdByLname, String userId, String modifiedByFname, String modifiedByLname, String institute, String whatsNext, Date creationDate, Date modificationDate, String seqXml, int version, org.sakaiproject.component.app.melete.ModuleShdates moduleshdate, org.sakaiproject.component.app.melete.CourseModule coursemodule, Map sections, Set modulestudentprivs, Map bookmarks) {
+    public Module(String title, String learnObj, String description, String keywords, String createdByFname, String createdByLname, String userId, String modifiedByFname, String modifiedByLname, String institute, String whatsNext, Date creationDate, Date modificationDate, String seqXml, int version, org.sakaiproject.component.app.melete.ModuleShdates moduleshdate, org.sakaiproject.component.app.melete.CourseModule coursemodule, Map sections, Map deletedSections, Set modulestudentprivs, Map bookmarks) {
         this.title = title;
         this.learnObj = learnObj;
         this.description = description;
@@ -115,6 +117,7 @@ public class Module implements Serializable,ModuleObjService {
         this.moduleshdate = moduleshdate;
         this.coursemodule = coursemodule;
         this.sections = sections;
+        this.deletedSections = deletedSections;
         this.modulestudentprivs = modulestudentprivs;
         this.bookmarks = bookmarks;
     }
@@ -142,7 +145,7 @@ public class Module implements Serializable,ModuleObjService {
     }
 
     /** minimal constructor */
-    public Module(String title, String keywords, String createdByFname, String createdByLname, String userId, Date creationDate, Map sections, Set modulestudentprivs, Map bookmarks) {
+    public Module(String title, String keywords, String createdByFname, String createdByLname, String userId, Date creationDate, Map sections, Map deletedSections, Set modulestudentprivs, Map bookmarks) {
         this.title = title;
         this.keywords = keywords;
         this.createdByFname = createdByFname;
@@ -150,6 +153,7 @@ public class Module implements Serializable,ModuleObjService {
         this.userId = userId;
         this.creationDate = creationDate;
         this.sections = sections;
+        this.deletedSections = deletedSections;
         this.modulestudentprivs = modulestudentprivs;
         this.bookmarks = bookmarks;
     }
@@ -167,6 +171,7 @@ public class Module implements Serializable,ModuleObjService {
          this.moduleshdate = null;
          this.coursemodule = null;
          this.sections = null;
+         this.deletedSections = null;
          this.modulestudentprivs = null;
          this.bookmarks = null;
     }
@@ -319,6 +324,14 @@ public class Module implements Serializable,ModuleObjService {
 
     public void setSections(Map sections) {
         this.sections = sections;
+    }
+    
+    public Map getDeletedSections() {
+        return this.deletedSections;
+    }
+
+    public void setDeletedSections(Map deletedSections) {
+        this.deletedSections = deletedSections;
     }
 
     public Set getModulestudentprivs() {

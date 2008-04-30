@@ -43,6 +43,12 @@
 	  <one-to-many class="org.sakaiproject.component.app.melete.Section"/>
 	
 	</map>
+	
+	<map name="deletedSections" cascade="all-delete-orphan" table="melete_section" inverse="true" lazy="false" where="DELETE_FLAG=1" sort="natural">
+	  <key column="MODULE_ID" foreign-key="MODULE_ID_SEC"/>
+	  <map-key column="SECTION_ID" type="int"/>
+	  <one-to-many class="org.sakaiproject.component.app.melete.Section"/>	
+	</map>
 
 	<!--<set name="moduleshdates" cascade="all-delete-orphan" inverse="true">
 	 <key column="MODULE_ID" foreign-key="MODULE_ID"></key>
