@@ -2246,9 +2246,7 @@ public class ModuleDB implements Serializable {
 					if (allCourseResources != null && activeResources != null)
 					{
 						logger.debug("active list and all" + activeResources.size() + " ; " + allCourseResources.size());
-						logger.debug("active list" + activeResources.toString());
-						allCourseResources.removeAll(activeResources);
-						logger.debug("to del resources" + allCourseResources.size() + allCourseResources.toString());						
+						allCourseResources.removeAll(activeResources);												
 					}
 					// delete modules and module collection and sections marked for delete
 					List delModules = (ArrayList) deletedModules.get(toDelCourseId);
@@ -2258,7 +2256,7 @@ public class ModuleDB implements Serializable {
 						Integer delModuleId = delModule.getModuleId();
 						String allSecIds = null;
 						if(delModule.getSeqXml() != null)
-						 allSecIds = getAllSectionIds(delModule.getSeqXml(),delModule.getDeletedSections());
+						 allSecIds = getAllSectionIds(delModule.getDeletedSections());
 						String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
 						String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
 						String delSectionStr = "delete Section s where s.moduleId=:moduleId";
@@ -2278,11 +2276,12 @@ public class ModuleDB implements Serializable {
 						delCount += deletedEntities;
 						meleteCHService.removeCollection(toDelCourseId, "module_"+delModuleId.toString());
 					}
-
+					logger.debug("suceess remove of deleted modules and their sections.NOW MOVE TO melete resources");
 					// delete melete resource and from content resource
 					for (Iterator delIter = allCourseResources.listIterator(); delIter.hasNext();)
 					{
 						String delResourceId = (String) delIter.next();
+						logger.debug("deleting mr " + delResourceId);
 						String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
 						int deletedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", delResourceId).executeUpdate();
 						meleteCHService.removeResource(delResourceId);
@@ -2317,25 +2316,13 @@ public class ModuleDB implements Serializable {
 		return delCount;
 	}	
 		
-	private String getAllSectionIds(String modSeqXml, Map deletedSections)
+	private String getAllSectionIds(Map deletedSections)
 	{		
-		SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
 		StringBuffer allIds = null;
 		String a = null;
-		try{
-		List<Element> allsec = SectionUtil.getAllSections(modSeqXml);
-		if(allsec.size() > 0) allIds = new StringBuffer("(");
-		for (Iterator<Element> itr = allsec.iterator(); itr.hasNext();)
-		{	String oneId = ((Element) itr.next()).attributeValue("id");			
-			allIds.append(oneId +",");
-		}
-		}catch(Exception e)
-		{
-			logger.debug("error reading sec ids from seq " + e.getMessage());
-			allIds = null;
-		}
 		if(allIds != null && deletedSections != null)
 		{
+			allIds = new StringBuffer("(");
 			for(Iterator i=deletedSections.keySet().iterator();i.hasNext();)
 			{
 				Object obj = i.next();
