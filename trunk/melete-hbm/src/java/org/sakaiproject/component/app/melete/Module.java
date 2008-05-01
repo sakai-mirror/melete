@@ -26,6 +26,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import org.sakaiproject.api.app.melete.ModuleObjService;
 
@@ -92,13 +94,11 @@ public class Module implements Serializable,ModuleObjService {
 
     private Map deletedSections;
     
-    /** persistent field */
-    private Set modulestudentprivs;
     
     private Map bookmarks;
 
     /** full constructor */
-    public Module(String title, String learnObj, String description, String keywords, String createdByFname, String createdByLname, String userId, String modifiedByFname, String modifiedByLname, String institute, String whatsNext, Date creationDate, Date modificationDate, String seqXml, int version, org.sakaiproject.component.app.melete.ModuleShdates moduleshdate, org.sakaiproject.component.app.melete.CourseModule coursemodule, Map sections, Map deletedSections, Set modulestudentprivs, Map bookmarks) {
+    public Module(String title, String learnObj, String description, String keywords, String createdByFname, String createdByLname, String userId, String modifiedByFname, String modifiedByLname, String institute, String whatsNext, Date creationDate, Date modificationDate, String seqXml, int version, org.sakaiproject.component.app.melete.ModuleShdates moduleshdate, org.sakaiproject.component.app.melete.CourseModule coursemodule, Map sections, Map deletedSections, Map bookmarks) {
         this.title = title;
         this.learnObj = learnObj;
         this.description = description;
@@ -118,7 +118,6 @@ public class Module implements Serializable,ModuleObjService {
         this.coursemodule = coursemodule;
         this.sections = sections;
         this.deletedSections = deletedSections;
-        this.modulestudentprivs = modulestudentprivs;
         this.bookmarks = bookmarks;
     }
     
@@ -145,7 +144,7 @@ public class Module implements Serializable,ModuleObjService {
     }
 
     /** minimal constructor */
-    public Module(String title, String keywords, String createdByFname, String createdByLname, String userId, Date creationDate, Map sections, Map deletedSections, Set modulestudentprivs, Map bookmarks) {
+    public Module(String title, String keywords, String createdByFname, String createdByLname, String userId, Date creationDate, Map sections, Map deletedSections, Map bookmarks) {
         this.title = title;
         this.keywords = keywords;
         this.createdByFname = createdByFname;
@@ -154,7 +153,6 @@ public class Module implements Serializable,ModuleObjService {
         this.creationDate = creationDate;
         this.sections = sections;
         this.deletedSections = deletedSections;
-        this.modulestudentprivs = modulestudentprivs;
         this.bookmarks = bookmarks;
     }
 
@@ -172,7 +170,6 @@ public class Module implements Serializable,ModuleObjService {
          this.coursemodule = null;
          this.sections = null;
          this.deletedSections = null;
-         this.modulestudentprivs = null;
          this.bookmarks = null;
     }
     
@@ -334,19 +331,28 @@ public class Module implements Serializable,ModuleObjService {
         this.deletedSections = deletedSections;
     }
 
-    public Set getModulestudentprivs() {
-        return this.modulestudentprivs;
-    }
-
-    public void setModulestudentprivs(Set modulestudentprivs) {
-        this.modulestudentprivs = modulestudentprivs;
-    }
-
+   
     public String toString() {
         return new ToStringBuilder(this)
             .append("moduleId", getModuleId())
             .toString();
     }
+    
+    public boolean equals(Object other) {
+        if ( (this == other ) ) return true;
+        if ( !(other instanceof Module) ) return false;
+        Module castOther = (Module) other;
+        return new EqualsBuilder()
+            .append(this.getModuleId(), castOther.getModuleId())
+            .isEquals();
+    }
+
+    public int hashCode() {
+        return new HashCodeBuilder()
+            .append(getModuleId())
+            .toHashCode();
+    }
+    
 
 	public Map getBookmarks()
 	{

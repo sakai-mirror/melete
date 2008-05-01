@@ -11,3 +11,4 @@ CREATE TABLE `melete_bookmarks` (
 );
 alter table melete_section add OPEN_WINDOW tinyint(1);
 update melete_section set OPEN_WINDOW=1;
+drop table melete_module_student_privs;

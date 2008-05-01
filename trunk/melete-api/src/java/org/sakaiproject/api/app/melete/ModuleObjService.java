@@ -107,14 +107,14 @@ public interface ModuleObjService {
     public abstract org.sakaiproject.api.app.melete.ModuleShdatesService getModuleshdate();
    
     public abstract void setModuleshdate(org.sakaiproject.api.app.melete.ModuleShdatesService moduleshdate);
-
-	public abstract Set getModulestudentprivs();
-
-	public abstract void setModulestudentprivs(Set modulestudentprivs);
 	
 	public abstract org.sakaiproject.api.app.melete.CourseModuleService getCoursemodule();
     
     public abstract void setCoursemodule(org.sakaiproject.api.app.melete.CourseModuleService coursemodule);
 
 	public abstract String toString();
+	
+	public abstract boolean equals(Object other);
+
+	public abstract int hashCode();
 }

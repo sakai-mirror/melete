@@ -64,7 +64,6 @@ public class ListModulesPage implements Serializable{
 	/** Dependency:  The logging service. */
 	  protected Log logger = LogFactory.getLog(ListModulesPage.class);
 	  private List moduleDateBeans = null;
-	  private List moduleDatePrivBeans = null;
 	  /** identifier field */
       private int showModuleId;
 
@@ -80,7 +79,6 @@ public class ListModulesPage implements Serializable{
       private boolean closedModulesFlag;
       private boolean trueFlag = true;
 
-      private ModuleStudentPrivsService  nullMsp = null;
       private ModuleService moduleService;
       private MeleteBookmarksService bookmarksService;
       private Section nullSection = null;
@@ -102,7 +100,7 @@ public class ListModulesPage implements Serializable{
 
 	  public ListDataModel getModDataModel()
 	{
-		this.modDataModel = new ListDataModel(getModuleDatePrivBeans());
+		this.modDataModel = new ListDataModel(getModuleDateBeans());
 		return this.modDataModel;
 	}
 
@@ -251,14 +249,6 @@ public class ListModulesPage implements Serializable{
 	  	this.expandAllFlag = expandAllFlag;
 	  }
 
-	  public ModuleStudentPrivsService  getNullMsp() {
-	  	return nullMsp;
-	  }
-
-	  public void setNullMsp(ModuleStudentPrivsService  nullMsp) {
-	  	this.nullMsp = nullMsp;
-	  }
-
 	  public Section  getNullSection() {
 	  	return nullSection;
 	  }
@@ -335,28 +325,6 @@ public class ListModulesPage implements Serializable{
 	    moduleDateBeans = moduleDateBeansList;
 	  }
 
-	  public List getModuleDatePrivBeans() {
-	  	try {
-	  		moduleDatePrivBeans = getModuleService().getModuleDatePrivBeans(getUserId(), getCourseId());
-
-	  	}catch (Exception e)
-		{
-	  		//e.printStackTrace();
-	  		logger.error(e.toString());
-		}
-	  	if ((moduleDatePrivBeans == null)||(moduleDatePrivBeans.size() == 0))
-	  	{
-	  	  nomodsFlag = true;
-	  	  FacesContext ctx = FacesContext.getCurrentInstance();
-  		  addNoModulesMessage(ctx);
-  		  moduleDatePrivBeans = new ArrayList();
-	  	}
-		  	return moduleDatePrivBeans;
-	  }
-
-	  public void setModuleDatePrivBeans(List moduleDatePrivBeansList) {
-	    moduleDatePrivBeans = moduleDatePrivBeansList;
-	  }
 
 
 	  public int getShowModuleId() {
@@ -371,7 +339,6 @@ public class ListModulesPage implements Serializable{
 
 
 	  public String showSections() {
-	  	ModuleDatePrivBean mdpbean = null;
 	  	ModuleDateBean mdbean = null;
 	  	FacesContext ctx = FacesContext.getCurrentInstance();
 	  	 UIViewRoot root = ctx.getViewRoot();
@@ -396,8 +363,8 @@ public class ListModulesPage implements Serializable{
 	        	retVal = "list_modules_inst";
 	        }
 	        if (getRole()!= null && getRole().equals("STUDENT")) {
-	        	mdpbean = (ModuleDatePrivBean) table.getRowData();
-	        	lmPage.setShowModuleId(mdpbean.getModuleId());
+	        	mdbean = (ModuleDateBean) table.getRowData();
+	        	lmPage.setShowModuleId(mdbean.getModuleId());
 	        }
 
 	  	return retVal;
@@ -463,7 +430,6 @@ public class ListModulesPage implements Serializable{
 
       public void viewModule(ActionEvent evt)
 	  {
-	    ModuleDatePrivBean mdpbean = null;
 	  	ModuleDateBean mdbean = null;
 	  	FacesContext ctx = FacesContext.getCurrentInstance();
 	  	Map params = ctx.getExternalContext().getRequestParameterMap();
@@ -474,7 +440,7 @@ public class ListModulesPage implements Serializable{
 	    ViewModulesPage vmPage = (ViewModulesPage)
 	            binding.getValue(ctx);
 
-        if (getRole()!= null && getRole().equals("INSTRUCTOR")){
+        if (getRole()!= null && (getRole().equals("INSTRUCTOR") || getRole().equals("STUDENT"))){
         	if ((moduleDateBeans != null)&&(moduleDateBeans.size() > 0))
         	{
 	        	mdbean = (ModuleDateBean) moduleDateBeans.get(selModIndex);
@@ -485,18 +451,7 @@ public class ListModulesPage implements Serializable{
 	        	vmPage.setModuleSeqNo(cmod.getSeqNo());
         	}
 	        }
-         else{
-        	 if ((moduleDatePrivBeans != null)&&(moduleDatePrivBeans.size() > 0))
-        	 {
-	        	mdpbean = (ModuleDatePrivBean) moduleDatePrivBeans.get(selModIndex);
-	        	vmPage.setModuleId(mdpbean.getModuleId());
-	        	vmPage.setMdbean(null);
-	        	vmPage.setPrevMdbean(null);
-	           	//Change without having to iterate through cmods
-	        	CourseModuleService cmod = (CourseModuleService) mdpbean.getCmod();
-	        	vmPage.setModuleSeqNo(cmod.getSeqNo());
-        	 }
-	        }
+
       }
 
       public String redirectToViewSection()
@@ -539,7 +494,7 @@ public class ListModulesPage implements Serializable{
 		SectionBean secBean = null;
 		int modSeqNo = 0;
 
-		if (getRole()!=null && getRole().equals("INSTRUCTOR")) {
+		if (getRole()!= null && (getRole().equals("INSTRUCTOR") || getRole().equals("STUDENT"))) {
 			if ((moduleDateBeans != null)&&(moduleDateBeans.size() > 0))
 			{
 		    	ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selModIndex);
@@ -548,15 +503,7 @@ public class ListModulesPage implements Serializable{
 		        modSeqNo = mdbean.getCmod().getSeqNo();
 			}
 		}
-	    else {
-	    	if ((moduleDatePrivBeans != null)&&(moduleDatePrivBeans.size() > 0))
-	    	{
-			    ModuleDatePrivBean mdpbean = (ModuleDatePrivBean) moduleDatePrivBeans.get(selModIndex);
-				mod = mdpbean.getModule();
-		        secBean = (SectionBean) mdpbean.getSectionBeans().get(selSecIndex);
-		        modSeqNo = mdpbean.getCmod().getSeqNo();
-	    	}
-	    }
+
 
 
         ValueBinding binding =

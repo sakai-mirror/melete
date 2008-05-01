@@ -10,7 +10,6 @@
 				<value>org/sakaiproject/component/app/melete/Module.hbm.xml</value>
 				<value>org/sakaiproject/component/app/melete/Section.hbm.xml</value>
 				<value>org/sakaiproject/component/app/melete/ModuleShdates.hbm.xml</value>
-				<value>org/sakaiproject/component/app/melete/ModuleStudentPrivs.hbm.xml</value>
 				<value>org/sakaiproject/component/app/melete/CourseModule.hbm.xml</value>	
 				<value>org/sakaiproject/component/app/melete/SectionResource.hbm.xml</value>	
 				<value>org/sakaiproject/component/app/melete/MeleteUserPreference.hbm.xml</value>	
