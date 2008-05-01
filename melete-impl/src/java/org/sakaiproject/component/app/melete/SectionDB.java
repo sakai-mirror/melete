@@ -1030,7 +1030,6 @@ public class SectionDB implements Serializable {
 					if (allCourseResources != null && activeResources != null)
 					{
 						logger.debug("active list and all" + activeResources.size() + " ; " + allCourseResources.size());
-						logger.debug("active list" + activeResources.toString());
 						allCourseResources.removeAll(activeResources);
 						logger.debug("to del resources" + allCourseResources.size() + allCourseResources.toString());
 					}

@@ -2235,12 +2235,18 @@ public class ModuleDB implements Serializable {
 					String toDelCourseId = (String) iter.next();
 					logger.debug("processing for " + toDelCourseId);
 					List activenArchModules = getActivenArchiveModules(toDelCourseId);
+					List delModules = (ArrayList) deletedModules.get(toDelCourseId);
+					
+					if(activenArchModules == null || activenArchModules.size() == 0)
+					{
+						//deleteEverything();
+						continue;
+					}
 					// parse and list all names which are in use
 					List<String> activeResources = getActiveResourcesFromList(activenArchModules);
 					List<String> allCourseResources = getAllMeleteResourcesOfCourse(toDelCourseId);
 					int allresourcesz = allCourseResources.size();
 					// compare the lists and not in use resources are
-					logger.debug("session is open" + session.isOpen());
 					if (!session.isOpen()) session = hibernateUtil.currentSession();
 					tx = session.beginTransaction();
 					if (allCourseResources != null && activeResources != null)
@@ -2249,40 +2255,81 @@ public class ModuleDB implements Serializable {
 						allCourseResources.removeAll(activeResources);												
 					}
 					// delete modules and module collection and sections marked for delete
-					List delModules = (ArrayList) deletedModules.get(toDelCourseId);
+					
 					for (Iterator delModuleIter = delModules.listIterator(); delModuleIter.hasNext();)
 					{
 						Module delModule = (Module) delModuleIter.next();
 						Integer delModuleId = delModule.getModuleId();
 						String allSecIds = null;
-						if(delModule.getDeletedSections() != null)
-						 allSecIds = getAllSectionIds(delModule.getDeletedSections());
+						Map allModuleDelSecs = delModule.getDeletedSections();
+						allSecIds = getAllSectionIds(allModuleDelSecs);
+						logger.debug("allSecIds is" + allSecIds);
+						
 						String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
 						String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
-						String delSectionStr = "delete Section s where s.moduleId=:moduleId";
+					//	String delSectionStr = "delete Section s where s.moduleId=:moduleId";
+						String delSectionStr = "delete Section s where s.sectionId in " + allSecIds;
 						String delCourseModuleStr = "delete CourseModule cm where cm.moduleId=:moduleId";
 						String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId=:moduleId";
 						String delModuleStr = "delete Module m where m.moduleId=:moduleId";
+						
 						if (allSecIds != null)
 						{
+							try{
 							int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
 							deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
-							logger.debug("updated section resource" + deletedEntities);
+							deletedEntities = session.createQuery(delSectionStr).executeUpdate();
+							}
+							catch(Exception e){
+								logger.info("error deleting section and resources " + allSecIds + " for module" + delModuleId);
+								continue;
+							}
 						}
 						logger.debug("deleting stuff for module" + delModuleId);
-						int deletedEntities = session.createQuery(delSectionStr).setInteger("moduleId", delModuleId).executeUpdate();
-						deletedEntities = session.createQuery(delCourseModuleStr).setInteger("moduleId", delModuleId).executeUpdate();
+					//	int deletedEntities = session.createQuery(delSectionStr).setInteger("moduleId", delModuleId).executeUpdate();
+						int deletedEntities = session.createQuery(delCourseModuleStr).setInteger("moduleId", delModuleId).executeUpdate();
 						deletedEntities = session.createQuery(delModuleshDatesStr).setInteger("moduleId", delModuleId).executeUpdate();
 						deletedEntities = session.createQuery(delModuleStr).setInteger("moduleId", delModuleId).executeUpdate();
 						delCount += deletedEntities;
 						meleteCHService.removeCollection(toDelCourseId, "module_"+delModuleId.toString());
+					}
+					
+					// look for sections just marked for delete
+					queryString = " from Section sec where sec.deleteFlag = 1 and sec.module.coursemodule.courseId=:courseId order by sec.moduleId";
+					query = session.createQuery(queryString);
+					query.setString("courseId", toDelCourseId);
+					List<Section> sectionsres = query.list();
+					if(sectionsres != null)
+					{
+					String allSecIds = "(";
+					
+					for(Section sec:sectionsres)
+						allSecIds = allSecIds.concat(sec.getSectionId().toString() + ",");
+					
+					if(allSecIds.lastIndexOf(",") != -1)
+						allSecIds = allSecIds.substring(0,allSecIds.lastIndexOf(","))+" )";	
+					logger.debug("allSecIds is" + allSecIds);
+					
+					String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
+					String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
+					String delSectionStr = "delete Section s where s.sectionId in " + allSecIds;
+				
+					try{
+						int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
+						deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
+						deletedEntities = session.createQuery(delSectionStr).executeUpdate();
+						}
+						catch(Exception e){
+							logger.info("error deleting extra section and resources " + allSecIds);							
+						}
+					
 					}
 					logger.debug("suceess remove of deleted modules and their sections.NOW MOVE TO melete resources");
 					// delete melete resource and from content resource
 					for (Iterator delIter = allCourseResources.listIterator(); delIter.hasNext();)
 					{
 						String delResourceId = (String) delIter.next();
-						logger.debug("deleting mr " + delResourceId);
+						logger.debug("now deleting mr " + delResourceId);
 						String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
 						int deletedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", delResourceId).executeUpdate();
 						meleteCHService.removeResource(delResourceId);
@@ -2318,16 +2365,15 @@ public class ModuleDB implements Serializable {
 	}	
 		
 	private String getAllSectionIds(Map deletedSections)
-	{		
+	{			
 		StringBuffer allIds = null;
 		String a = null;
-		if(allIds != null && deletedSections != null)
+		if(deletedSections != null)
 		{
 			allIds = new StringBuffer("(");
 			for(Iterator i=deletedSections.keySet().iterator();i.hasNext();)
 			{
 				Object obj = i.next();
-				logger.debug("deleted Sections has key as" + obj);
 				allIds.append(obj + ",");
 			}
 		}
