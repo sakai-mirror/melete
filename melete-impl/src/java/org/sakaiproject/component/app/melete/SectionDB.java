@@ -248,6 +248,122 @@ public class SectionDB implements Serializable {
 	{
 		MeleteBookmarks mb = null;
 		SectionResource secRes = null;
+		int affectedEntities;
+		String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
+		String delSectionResourceStr = "delete SectionResource sr where sr.sectionId=:sectionId and sr.resource.resourceId=:resourceId";
+		String delSectionStr = "delete Section sec where sec.sectionId=:sectionId";
+		String selModuleStr = "select mod.seqXml from Module mod where mod.moduleId=:moduleId";
+		String updModuleStr = "update Module mod set mod.seqXml=:seqXml where mod.moduleId=:moduleId";
+
+		 try{
+		       Transaction tx = null;
+		       Session session = hibernateUtil.currentSession();
+
+		       try
+		       	{
+		    	   tx = session.beginTransaction();
+
+		    	   secRes = (SectionResource) sec.getSectionResource();
+
+		    	   if (deleteFrom != NONE_TO_DELETE)
+		    	   {
+		    		 if ((deleteFrom == MELETE_RESOURCE_ONLY)||(deleteFrom == MELETE_RESOURCE_SECTION_RESOURCE))
+		    		 {
+                       //Delete from MELETE_RESOURCE table
+		    		   if (deleteFrom == MELETE_RESOURCE_ONLY)
+		    		   {
+		    			   affectedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", embedResourceId).executeUpdate();
+		    			   //logger.debug(affectedEntities+" row was deleted from MELETE_RESOURCE");
+		    		   }
+		    		   if (deleteFrom == MELETE_RESOURCE_SECTION_RESOURCE)
+		    		   {
+		    			   affectedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", secRes.getResource().getResourceId()).executeUpdate();
+		    			   //logger.debug(affectedEntities+" row was deleted from MELETE_RESOURCE");
+		    		   }
+	    	          }
+
+		    		 if ((deleteFrom == SECTION_RESOURCE_ONLY)||(deleteFrom == MELETE_RESOURCE_SECTION_RESOURCE))
+		    		 {
+                       //Delete from SECTION_RESOURCE table
+		    			 affectedEntities = session.createQuery(delSectionResourceStr).setInteger("sectionId", secRes.getSectionId()).setString("resourceId", secRes.getResource().getResourceId()).executeUpdate();
+		    			 //logger.debug(affectedEntities+" row was deleted from SECTION_RESOURCE");
+		    		 }
+		    	   }
+		    	   if (deleteFrom != MELETE_RESOURCE_ONLY)
+		    	   {
+		    	     Module module = (Module)sec.getModule();
+		    	     Integer sectionId = sec.getSectionId();
+		    	     logger.debug("checking module element");
+		    	     if(module != null)
+		    	     {
+		    	   		//String sectionsSeqXML = module.getSeqXml();
+		    	   		Query q=session.createQuery(selModuleStr);
+		    			q.setParameter("moduleId",module.getModuleId());
+		    			String sectionsSeqXML = (String)q.uniqueResult();
+
+		    	   		logger.debug("module is not null so changing seq"+ sectionsSeqXML);
+		    	   		SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
+		    	   		logger.debug("deleting section id from xmllist" + sectionId.toString());
+		    	   		sectionsSeqXML =SectionUtil.deleteSection(sectionsSeqXML, sectionId.toString());
+		    	   		//logger.debug("New sectionsseqxml is "+sectionsSeqXML);
+		    	   		affectedEntities = session.createQuery(updModuleStr).setInteger("moduleId", module.getModuleId()).setString("seqXml", sectionsSeqXML).executeUpdate();
+		    	   		//logger.debug(affectedEntities+" row was updated in MELETE_MODULE");
+
+		    	     }
+		    	     if (userId != null)
+				     {
+				        mb = new MeleteBookmarks();
+					    mb.setUserId(userId);
+					    mb.setCourseId(sec.getModule().getCoursemodule().getCourseId());
+					    mb.setModuleId(sec.getModuleId());
+					    mb.setSectionId(sectionId);
+				     }
+		    	     //Delete section
+		    	     affectedEntities = session.createQuery(delSectionStr).setInteger("sectionId",sectionId).executeUpdate();
+		    	     //logger.debug(affectedEntities+" row was deleted from MELETE_SECTION");
+
+
+		    	   }
+
+		    	   tx.commit();
+		    	   logger.debug("Deleted section from everywhere");
+
+		       	}
+		    catch (HibernateException he)
+		    {
+		      if (tx!=null) tx.rollback();
+			  logger.error(he.toString());
+			  throw he;
+		    }
+		    catch (Exception e) {
+		      if (tx!=null) tx.rollback();
+		      logger.error(e.toString());
+		      throw e;
+		    }
+		    finally
+			{
+		      	hibernateUtil.closeSession();
+    		  }
+		    if (deleteFrom != MELETE_RESOURCE_ONLY)
+		    {
+		      if (userId != null)
+		      {
+		    	bookmarksDB.deleteBookmark(mb);
+		      }
+		    }
+		}
+	      catch (Exception ex)
+		  {
+			  logger.error(ex.toString());
+			  ex.printStackTrace();
+			  throw new MeleteException("delete_module_fail");
+		  }
+	}
+
+	/*private void deleteFromMeleteTables(Section sec, String userId, int deleteFrom, String embedResourceId) throws MeleteException
+	{
+		MeleteBookmarks mb = null;
+		SectionResource secRes = null;
 		 try{
 		       Transaction tx = null;
 		       Session session = hibernateUtil.currentSession();
@@ -341,10 +457,14 @@ public class SectionDB implements Serializable {
 			  ex.printStackTrace();
 			  throw new MeleteException("delete_module_fail");
 		  }
-	}
+	}*/
 
 	public void deleteSection(Section sec, String courseId, String userId) throws MeleteException
 	 {
+		  logger.debug("deleteSection begin");
+
+		  //find in embedded data
+		  long starttime = System.currentTimeMillis();
 		if (sec.getContentType().equals("notype"))
 		{
 			deleteFromMeleteTables(sec, userId, NONE_TO_DELETE, null);
@@ -433,39 +553,53 @@ public class SectionDB implements Serializable {
 		  //Media reference processing
 		  if ((secEmbed != null)&&(secEmbed.size() > 0))
 		  {
+			  List newSecEmbed = new ArrayList();
 			  for (ListIterator<String> i = secEmbed.listIterator(); i.hasNext(); )
 			  {
 				  resourceId = (String)i.next();
-				  boolean mediaInUse = false;
 
 				  //Check to see if this media is also associated with a typeLink
 				  //or typeUpload section
 				  List srUseList = checkInSectionResources(resourceId, courseId);
 				  //If it is, continue to the next media reference
-				  if ((srUseList != null) &&(srUseList.size() > 0)) continue;
-
-				  //Check if this media is being referenced in any other typeEditor
-				  //section, since this main section has been deleted already it will
-				  //not check in its own section
-				  List resourceUseList = findResourceInUse(resourceId, courseId);
-				  //If it is, continue to the next media reference
-				  if ((resourceUseList != null) && (resourceUseList.size() > 0)) continue;
-
-				  //If it comes here, it means this media is only referenced within this section
-				  //so remove from CH and delete from MELETE_RESOURCE
-				  try
-			      {
-				    meleteCHService.removeResource(resourceId);
-			      }
-			      catch (Exception e)
+				  if ((srUseList != null) &&(srUseList.size() > 0))
 				  {
-					e.printStackTrace();
-					logger.error("SectionDB -- deleteSection -- error in delete resource" + e.toString());
+					  continue;
 				  }
-			      deleteFromMeleteTables(sec, userId, MELETE_RESOURCE_ONLY, resourceId);
-			  }//End for loop
+				  else
+				  {
+					  //This is the list of embedded media that needs to be checked
+					  //in other files
+					  newSecEmbed.add(resourceId);
+				  }
+			  }//End for loop for checkInSectionResources
+			  if ((newSecEmbed != null)&&(newSecEmbed.size() > 0))
+			  {
+                List resourceDeleteList = findResourcesToDelete(newSecEmbed, courseId);
+                if ((resourceDeleteList != null)&&(resourceDeleteList.size() > 0))
+                {
+                  for (ListIterator<String> k = resourceDeleteList.listIterator(); k.hasNext(); )
+      			  {
+                	  resourceId = (String)k.next();
+                      //Remove from CH and then remove from MELETE_RESOURCE
+    				  try
+    			      {
+    				    meleteCHService.removeResource(resourceId);
+    			      }
+    			      catch (Exception e)
+    				  {
+    					e.printStackTrace();
+    					logger.error("SectionDB -- deleteSection -- error in delete resource" + e.toString());
+    				  }
+    			      deleteFromMeleteTables(sec, userId, MELETE_RESOURCE_ONLY, resourceId);
+      			  }
+                }
+			  }//End if newSecEmbed != null
 		  }//End if secEmbed != null
 		}//end typeEditor
+		long endtime = System.currentTimeMillis();
+
+		logger.debug("delete section end " +(endtime - starttime));
 
 	 }
 
@@ -498,6 +632,42 @@ public class SectionDB implements Serializable {
 			}
 		    return sec;
 		 }
+
+	 //This method returns all typeEditor sections in a course
+	 private List getEditorSections(String courseId) throws HibernateException {
+		 List secList = new ArrayList();
+
+		 	try
+			{
+		      Session session = hibernateUtil.currentSession();
+
+		      String queryString = "from Section section  where section.module.coursemodule.courseId = :courseId  and section.module.coursemodule.archvFlag = 0 and section.module.coursemodule.deleteFlag = 0 and section.contentType='typeEditor'";
+
+		      Query query = session.createQuery(queryString);
+		      query.setParameter("courseId", courseId);
+
+		      secList = query.list();
+
+		    }
+		    catch (HibernateException he)
+		    {
+			  logger.error(he.toString());
+		    }
+		    finally
+			{
+		    	try
+				  {
+			      	hibernateUtil.closeSession();
+				  }
+			      catch (HibernateException he)
+				  {
+					  logger.error(he.toString());
+				  }
+			}
+		    return secList;
+
+		 }
+
 
 
 
@@ -878,39 +1048,33 @@ public class SectionDB implements Serializable {
 	 public List findResourceInUse(String selResourceId, String courseId)
 	  {
 		  try{
-			  List resourceUseList = null;
+			  List<Section> resourceUseList = null;
 
 			  logger.debug("now looking in embed data as section resources don't have it");
-			  String lookingFor = "/access/meleteDocs/content" + selResourceId;
+			  //String lookingFor = "/access/meleteDocs/content" + selResourceId;
+			  String lookingFor = selResourceId;
 			  //find in embedded data
 			  long starttime = System.currentTimeMillis();
-			  //resourceUseList = new ArrayList<String>(0);
-			  List<Module> modList = moduleDB.getModules(courseId);
-			  Iterator<Module> i = modList.iterator();
-			  while (i.hasNext())
-			  {
-				Module mod = i.next();
-
-				String modSeqXml = mod.getSeqXml();
-				SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
-				List<Element> allsec = SectionUtil.getAllSections(modSeqXml);
-				for (Iterator<Element> itr = allsec.iterator(); itr.hasNext();)
+			  resourceUseList = new ArrayList<Section>(0);
+		      List<Section> secList = getEditorSections(courseId);
+		      if ((secList != null)&&(secList.size() > 0))
+		      {
+		    	for (Iterator<Section> itr = secList.iterator(); itr.hasNext();)
 				{
-					Section sec = getSection(Integer.parseInt(((Element) itr.next()).attributeValue("id")));
-					if (!sec.getContentType().equals("typeEditor")) continue;
+					Section sec = (Section) itr.next();
 					List<String> secEmbed = meleteCHService.findAllEmbeddedImages(sec.getSectionResource().getResource().getResourceId());
 
 					if (secEmbed != null && secEmbed.contains(lookingFor)) {
-						/*String foundAt = sec.getModule().getTitle() + " >> " + sec.getTitle();
-						resourceUseList.add(foundAt);*/
+						//String foundAt = sec.getModule().getTitle() + " >> " + sec.getTitle();
+						//resourceUseList.add(foundAt);
 						resourceUseList.add(sec);
 						long endtime = System.currentTimeMillis();
 						logger.debug("found in " +(endtime - starttime));
 						return  resourceUseList;
 					}
 				}
-
 			}
+
 				long endtime = System.currentTimeMillis();
 
 				logger.debug("time to process all files to get all embedded data" +(endtime - starttime));
@@ -918,10 +1082,59 @@ public class SectionDB implements Serializable {
 
 		  }catch(Exception ex)
 			{
+			  ex.printStackTrace();
 				logger.error("SectionServiceImpl --find resource in use failed" );
 				return null;
 			}
 	  }
+
+	 private List findResourcesToDelete(List resourceIdList, String courseId)
+	  {
+		 try{
+			  logger.debug("findResourcesToDelete method beginning");
+
+			  //find in embedded data
+			  long starttime = System.currentTimeMillis();
+			  //resourceUseList = new ArrayList<String>(0);
+		      List<Section> secList = getEditorSections(courseId);
+
+		      if ((secList != null)&&(secList.size() > 0))
+		      {
+		    	for (Iterator<Section> itr = secList.iterator(); itr.hasNext();)
+				{
+					Section sec = (Section) itr.next();
+					List<String> secEmbed = meleteCHService.findAllEmbeddedImages(sec.getSectionResource().getResource().getResourceId());
+
+					if (secEmbed != null & secEmbed.size() > 0)
+					{
+						for (Iterator<String> i = secEmbed.iterator(); i.hasNext();)
+						{
+							String secEmbedStr = (String)i.next();
+							if (resourceIdList.size() > 0)
+							{
+							  if (resourceIdList.contains(secEmbedStr))
+							  {
+								resourceIdList.remove(resourceIdList.indexOf(secEmbedStr));
+							  }
+							}
+							if (resourceIdList.size() == 0) return null;
+						}//End for loop for secEmbed
+					}//End if for secEmbed
+				}//End for loop for secList
+		      }//End if for secList
+
+				long endtime = System.currentTimeMillis();
+
+				logger.debug("findResourcesToDelete" +(endtime - starttime));
+				return resourceIdList;
+
+		  }catch(Exception ex)
+			{
+				logger.error("SectionServiceImpl --find resource in use failed" );
+				return null;
+			}
+	  }
+
 
 	public void deleteResourceInUse(String delResourceId,String courseId) throws MeleteException
 	{

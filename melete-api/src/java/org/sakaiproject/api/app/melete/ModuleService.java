@@ -60,11 +60,6 @@ public interface ModuleService{
 
 	public void setModules(List modules) ;
 
-	public List getModuleDatePrivBeans(String userId, String courseId);
-
-	public void setModuleDatePrivBeans(List moduleDatePrivBeansList) ;
-
-
 	public void updateProperties(List moduleDateBeans)  throws Exception;
 
 	public void archiveModules(List moduleDateBeans, String courseId);

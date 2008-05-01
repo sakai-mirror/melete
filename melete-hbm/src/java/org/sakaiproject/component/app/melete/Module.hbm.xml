@@ -57,10 +57,6 @@
 	
 	<one-to-one name="moduleshdate" class="org.sakaiproject.component.app.melete.ModuleShdates" lazy="false"/>
 
-	<set name="modulestudentprivs" cascade="all-delete-orphan" inverse="true" lazy="false">
-	 <key column="MODULE_ID" foreign-key="MODULE_ID"></key>
-	<one-to-many class="org.sakaiproject.component.app.melete.ModuleStudentPrivs"/>
-	</set>
 
 	<!--<set name="coursemodules" cascade="all-delete-orphan" inverse="true">
 	 <key column="MODULE_ID" foreign-key="MODULE_ID"></key>

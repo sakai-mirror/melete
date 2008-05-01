@@ -92,8 +92,6 @@ public class ListAuthModulesPage implements Serializable
 
 	private List moduleDateBeans = null;
 
-	private List moduleDatePrivBeans = null;
-
 	private List errModuleIds = null;
 
 	/** identifier field */

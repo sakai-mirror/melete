@@ -94,7 +94,6 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 
 	private ModuleDB moduledb;
 	private List moduleDateBeans = null;
-	private List moduleDatePrivBeans = null;
 	private List modules = null;
 	private Module module = null;
 	private ModuleDateBean mdBean = null;
@@ -269,22 +268,6 @@ public List getModuleDateBeans(String userId, String courseId) {
   }
 
 
-  public List getModuleDatePrivBeans(String userId, String courseId) {
-  	try {
-  		moduleDatePrivBeans = moduledb.getModulesDatesPrivsForStudents(userId, courseId);
-  	}catch (HibernateException e)
-	{
-  		//e.printStackTrace();
-  		logger.error(e.toString());
-	}
-  	return moduleDatePrivBeans;
-  }
-
-  public void setModuleDatePrivBeans(List moduleDatePrivBeansList) {
-    moduleDatePrivBeans = moduleDatePrivBeansList;
-  }
-
-
   /*
    * @see org.foothillglobalaccess.melete.ModuleService#updateProperties(org.foothillglobalaccess.melete.ModuleDateBean)
    * updates the moduleDateBean object
@@ -303,7 +286,29 @@ public List getModuleDateBeans(String userId, String courseId) {
 
 
 // end - mallika
-  public void deleteModules(List moduleDateBeans, String courseId, String userId)
+ public void deleteModules(List moduleDateBeans, String courseId, String userId)
+ {
+	  List cmodList = null;
+	  List<Module> delModules = new ArrayList();
+
+	  for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext(); )
+      {
+		ModuleDateBean mdbean = (ModuleDateBean)i.next();
+		delModules.add((Module)mdbean.getCmod().getModule());
+      }	
+		
+	  try
+	  {
+		moduledb.deleteModules(delModules, courseId, userId);
+	  }
+	  catch (Exception ex)
+	  {
+
+	  }
+		
+ }
+ 
+ /*public void deleteModules(List moduleDateBeans, String courseId, String userId)
   {
 	  List cmodList = null;
 
@@ -338,7 +343,7 @@ public List getModuleDateBeans(String userId, String courseId) {
 	      }
 
       }
-  }
+  }*/
 
   public void archiveModules(List moduleDateBeans, String courseId)
   {
