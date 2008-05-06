@@ -99,7 +99,7 @@ function setRequired(id)
                 
                 <h:inputText id="url" size="40" value="#{ut.url}" required="true"/>
                 <h:outputText id="spc" escape="false" value="&nbsp;" />
-                 <h:commandLink id="removeLink"  onclick="setRequired(#{addResourcesPage.table.rowIndex});" actionListener="#{addResourcesPage.removeLink}" action="#{addResourcesPage.redirectToLinkUpload}">  
+                 <h:commandLink id="removeLink"   actionListener="#{addResourcesPage.removeLink}" action="#{addResourcesPage.redirectToLinkUpload}">  
                    <h:graphicImage id="remove_gif" alt="#{msgs.link_upload_remove_item}" value="images/remove_item.png" styleClass="ExpClass"/>
                     <h:outputText 	id="remove_text" value="#{msgs.link_upload_remove_item}"/>		
                   </h:commandLink>
