@@ -1146,7 +1146,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        meleteSecurityService.pushAdvisor();
 		    try
 	   	    {
-		    	delColl_id= Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+delColl_id+ Entity.SEPARATOR+delSubColl_id + Entity.SEPARATOR;
+		    	delColl_id= Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+delColl_id+ Entity.SEPARATOR;
+		    	if(delSubColl_id != null)
+		    		delColl_id = delColl_id.concat(delSubColl_id + Entity.SEPARATOR);
 		    	logger.debug("checking coll before delte" + delColl_id);
 		    	getContentservice().checkCollection(delColl_id);
 		    	getContentservice().removeCollection(delColl_id);
