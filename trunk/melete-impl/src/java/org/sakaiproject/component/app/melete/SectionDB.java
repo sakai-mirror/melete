@@ -1222,6 +1222,7 @@ public class SectionDB implements Serializable {
 					}
 				}
 				logger.debug("map is created" + deletedSections.size());
+				delCount = deletedSections.size();
 				// for each course id
 				Set alldelSecCourses = deletedSections.keySet();
 				for (Iterator iter = alldelSecCourses.iterator(); iter.hasNext();)
@@ -1237,26 +1238,24 @@ public class SectionDB implements Serializable {
 					int allresourcesz = allCourseResources.size();
 
 					// compare the lists and not in use resources are
-					logger.debug("session is open" + session.isOpen());
 					if (!session.isOpen()) session = hibernateUtil.currentSession();
 					tx = session.beginTransaction();
 					if (allCourseResources != null && activeResources != null)
 					{
 						logger.debug("active list and all" + activeResources.size() + " ; " + allCourseResources.size());
-						allCourseResources.removeAll(activeResources);
-						logger.debug("to del resources" + allCourseResources.size() + allCourseResources.toString());
+						allCourseResources.removeAll(activeResources);						
 					}
 					// delete sections marked for delete
 					List<Section> delSections = (ArrayList) deletedSections.get(toDelSecCourseId);
 					String allSecIds = getAllDeleteSectionIds(delSections);
+					logger.debug("all SecIds in sectionscleanup" + allSecIds);
 					String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
 					String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
 					String delSectionStr = "delete Section s where s.sectionId in " + allSecIds;
 
 					int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
 					deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
-					deletedEntities = session.createQuery(delSectionStr).executeUpdate();
-					delCount += deletedEntities;
+					deletedEntities = session.createQuery(delSectionStr).executeUpdate();					
 					
 					List<String> allSecMelResIds = getAllDeleteSectionMeleteResourceIds(delSections);
 					for(String secMelResId: allSecMelResIds)
@@ -1266,6 +1265,7 @@ public class SectionDB implements Serializable {
 					for (Iterator delIter = allCourseResources.listIterator(); delIter.hasNext();)
 					{
 						String delResourceId = (String) delIter.next();
+						logger.debug("now deleteing mr" + delResourceId);
 						String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
 						deletedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", delResourceId).executeUpdate();
 						meleteCHService.removeResource(delResourceId);
@@ -1278,7 +1278,7 @@ public class SectionDB implements Serializable {
 							+ (endtime - starttime) + "ms");
 				} // for end
 				long totalend = System.currentTimeMillis();
-				logger.debug("to cleanup deleted sections from " + deletedSections.size() + "courses it took " + (totalend - totalStart) + "ms");
+				logger.debug("to cleanup " + deletedSections.size() + "courses it took " + (totalend - totalStart) + "ms");
 			}
 			catch (HibernateException he)
 			{
