@@ -1,4 +1,4 @@
-INSTRUCTIONS TO UPGRADE FROM MELETE 2.3m2 >> MELETE 2.4
+INSTRUCTIONS TO UPGRADE FROM MELETE 2.4.5 >> MELETE 2.5
 For a patched Sakai 2.3 OR Sakai 2.4
 -----------------------------------------------------
 SETUP INSTRUCTIONS
@@ -10,7 +10,6 @@ SETUP INSTRUCTIONS
 5. Oracle Code Configuration
 6. Compile Melete 
 7. Database Configuration
-8. Run migrate process
 ---------------------------------
 
 1. Patch Instructions
@@ -30,7 +29,7 @@ SETUP INSTRUCTIONS
 	
 	Instructions for running the path are in /patch/patch-SAK2.4_for_melete2.4.txt.	
 	
-2. Configuring Melete 2.4 
+2. Configuring Melete 2.5 
 
     The settings below need to be performed in the /melete-app/src/webapp/WEB-INF/web.xml file.
 
@@ -44,26 +43,8 @@ SETUP INSTRUCTIONS
         <context-param>
 		     <param-name>packagingdir</param-name>
 		     <param-value>/var/melete/packagefiles</param-value>
-	      </context-param>	
-	       <!-- Settings for scorm packaging directory --> 
-        <context-param>
-		     <param-name>packagingscormdir</param-name>
-		     <param-value>/var/melete/packagefiles/packagefilesscorm</param-value>
 	      </context-param>		
 	      
-   2.2. Meletedocs settings
-            
-	Specify the absolute path to your current meleteDocs directory in the meleteDocsDir 
-	parameter of web.xml.
-        
-	Eg. If you are on unix/linux, if your current meleteDocs directory is /var/meleteDocs, 
-	specify this in the following manner in web.xml.
-           
-        <!-- Settings for meleteDocs directory -->
-        <context-param>
-				 <param-name>meleteDocsDir</param-name>
-				 <param-value>/var/meleteDocs</param-value>
-		</context-param>
 			      
 3. Upload size settings for IMS import file
 	
@@ -151,65 +132,21 @@ SETUP INSTRUCTIONS
 	
 	7.1. To setup the Melete tables: 
 	
-		a. Create a backup of the entire sakai database since this upgrade 
-		requires migration of content.
-	
-		b. You need to run the Melete upgrade script manually
-		Mysql Users: /components/src/sql/mysql/melete24_upgrade.sql
-		Oracle Users: /components/src/sql/oracle/melete24_upgrade.sql
-	
-		c. As of Melete2.4, the column LICENSE_CODE in MELETE_MODULE  and the table 
-		MELETE_MODULE_LICENSE are no longer needed.
+		a. Create a backup of existing Melete tables.
 		
-		Note: The following queries may vary in syntax for Oracle users.
-		In order to drop the column, you first need to drop the constraint on the column.
+		b. You need to run the Melete upgrade script manually
+		Mysql Users: /components/src/sql/mysql/melete25_upgrade.sql
+		Oracle Users: /components/src/sql/oracle/melete25_upgrade.sql
+		
+		c. As of Melete2.5, we are moving the dtd declaration for the SEQ_XML column in MELETE_MODULE
+		from an external reference to an internal inline dtd. The script /components/src/sql/mysql/seqxml_script.sql
+		achieves this. Review the script and make sure dtdlocation variable is set up correctly
+		for your installation. Execute this script and check the MELETE_MODULE table to make sure
+		the SEQ_XML column has been updated correctly.
+		
 	
-		To determine the name of the constraint, use:
-		SHOW CREATE TABLE melete_module;
 	
-		To drop the foreign key constraint on the LICENSE_CODE column, use:
-		ALTER TABLE melete_module DROP FOREIGN KEY <foreign_key_constraint_name>;
-	
-		Now, drop the LICENSE_CODE column and the MELETE_MODULE_LICENSE table:
-		ALTER TABLE melete_module DROP COLUMN LICENSE_CODE;
-		DROP TABLE melete_module_license;
-	
-        NOTE: Melete stores content in the database tables as well as in the /private/meleteDocs folder in ContentHosting. 
-        Through Melete, users only have access to the /private/meleteDocs folder and not other parts of Resources.
-		    
-	
-8. Run migrate process 
 
-This is a MANDATORY step. The migrate process moves Melete content that currently resides in your meleteDocs directory to ContentHosting. It can only be run by administrators. Depending on amount of content, migration can take a few hours. 
-
-	8.1. In sakai.properties, specify the following property and set it to true.
-
- 	  melete.migrate=true
-   
-	8.2. Start tomcat. Make sure there are no errors in the logs as tomcat starts. 
-		Log in as administrator. 
-
-	8.3. Click on the Modules link in any of your courses. Melete content will migrate 
-	from the filesystem to contentHosting for all courses. Upon successful completion, 
-	you will see a message saying the process has completed. 
-
-	8.4. Upon successful migration, please remove the melete.migrate property from sakai.properties.
-   
-   Troubleshooting:
-   
-   If the migrate process fails, the logs need to be checked for errors. 
-   
-   Once the errors are corrected, log in as administrator into Sakai, 
-   go to My workspace->Resources, expand the /private folder 
-   and delete the meleteDocs folder under it.
-
-   Further, the following commands need to be run:
-   DELETE FROM melete_migrate_status;
-   DELETE FROM melete_section_resource;
-   DELETE FROM melete_resource;
-   
-   Now, the process may be restarted by following the instructions above. The process 
-   will restart from scratch and migrate content from the filesystem to contentHosting.
 
 For future development, tutorials and solutions to common setup problems, see:
 http://etudesproject.org/melete.htm   

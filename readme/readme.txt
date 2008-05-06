@@ -1,4 +1,4 @@
-MELETE 2.4 SETUP INSTRUCTIONS
+MELETE 2.5 SETUP INSTRUCTIONS
 For a patched Sakai 2.3 OR Sakai 2.4
 
 Melete is a lesson builder tool for Sakai (A.K.A. Modules). To work with Melete source, you need the same development environment as Sakai, essentially Java 1.4 and Maven 1.0.2.
@@ -34,7 +34,7 @@ SETUP INSTRUCTIONS
 	Instructions for running the path are in /patch/patch-SAK2.4_for_melete2.4.txt.	
 
 	
-2. Configuring Melete 2.4 
+2. Configuring Melete 2.5 
        
   2.1 Packagingdir settings
 	
@@ -48,11 +48,7 @@ SETUP INSTRUCTIONS
 		     <param-name>packagingdir</param-name>
 		     <param-value>/var/melete/packagefiles</param-value>
 	      </context-param>		    
-        <!-- Settings for scorm packaging directory --> 
-        <context-param>
-		     <param-name>packagingscormdir</param-name>
-		     <param-value>/var/melete/packagefiles/packagefilesscorm</param-value>
-	      </context-param>	
+        
 	      
   2.2 Upload size settings for IMS import file
 	
@@ -132,15 +128,12 @@ SETUP INSTRUCTIONS
 	5.1 Set up the Melete tables: 
 	
 	You can either run the sql script manually; it is provided under
-	/components/src/sql/mysql/melete24.sql, 
+	/components/src/sql/mysql/melete25.sql, 
 	
 	OR
 	
-	--Remove this step for Melete2.5 since MELETE_MIGRATE_STATUS will be autocreated.
 	When tomcat starts, hibernate will generate the melete tables 
-	on its own by reading xml files. If you have hibernate create tables for you,
-	please also run the /components/src/sql/mysql/melete24mig.sql script manually since some 
-	entities are not created by Hibernate.
+	on its own by reading xml files. 
 	
 	NOTE: Melete stores content in the database tables as well as in the /private/meleteDocs folder in ContentHosting. 
         Through Melete, users only have access to the /private/meleteDocs folder and not other parts of Resources.
