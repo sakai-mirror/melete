@@ -827,6 +827,8 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				}
 
 				// read license information
+				if(modulegeneralList.size() > 1)
+				{
 				List rightList = modulegeneralList.get(1).elements();
 				for (Iterator iter3 = rightList.iterator(); iter3.hasNext();)
 				{
@@ -841,9 +843,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 							sectionCopyrightFlag = true;
 						}
 					}
+				 }
 				}
-
-			}
+			 }
 			// license end
 		}
 		// other attributes
