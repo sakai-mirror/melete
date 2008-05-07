@@ -647,4 +647,11 @@ color: #5A6D95;
 	color: #000;
 	text-decoration:none;
 }
+.fileclass {
+	border: 1px;
+	border-width: 1px;
+	border-style: solid;
+	border-color:#EAEAEA;
+    border-bottom-color:#EAEAEA;
+    }
 
