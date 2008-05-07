@@ -89,7 +89,7 @@ public class MoveSectionsPage implements Serializable
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 		try{
-			if(selectId != null) selectedModule = moduleService.getModule(new Integer(selectId).intValue());
+			if(selectId != null && selectId != 0) selectedModule = moduleService.getModule(new Integer(selectId).intValue());
 			
 			if(selectedModule == null)
 			{
@@ -134,7 +134,7 @@ public class MoveSectionsPage implements Serializable
 				{
 					availableModules.add(new SelectItem(new Integer(md.getModuleId()),md.getModule().getTitle()));
 				}
-				selectId = new Integer(moduleDateBeans.get(0).getModuleId());
+				//selectId = new Integer(moduleDateBeans.get(0).getModuleId());
 			}
 		}catch(Exception ex)
 		{
