@@ -9,6 +9,8 @@ CREATE TABLE `melete_bookmarks` (
   KEY `MODULE_ID_BOOK_KEY` (`MODULE_ID`),
   KEY `SECTION_ID_BOOK_KEY` (`SECTION_ID`)
 );
+alter table melete_module modify title varchar(255); 
+alter table melete_section modify title varchar(255);
 alter table melete_section add OPEN_WINDOW tinyint(1);
 update melete_section set OPEN_WINDOW=1;
 drop table melete_module_student_privs;
