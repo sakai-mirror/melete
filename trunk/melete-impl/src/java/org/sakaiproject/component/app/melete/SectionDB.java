@@ -254,6 +254,7 @@ public class SectionDB implements Serializable {
 		String delSectionStr = "delete Section sec where sec.sectionId=:sectionId";
 		String selModuleStr = "select mod.seqXml from Module mod where mod.moduleId=:moduleId";
 		String updModuleStr = "update Module mod set mod.seqXml=:seqXml where mod.moduleId=:moduleId";
+		String delBookmarksStr = "delete MeleteBookmarks mb where mb.sectionId=:sectionId";
 
 		 try{
 		       Transaction tx = null;
@@ -312,11 +313,10 @@ public class SectionDB implements Serializable {
 		    	     }
 		    	     if (userId != null)
 				     {
-				        mb = new MeleteBookmarks();
-					    mb.setUserId(userId);
-					    mb.setCourseId(sec.getModule().getCoursemodule().getCourseId());
-					    mb.setModuleId(sec.getModuleId());
-					    mb.setSectionId(sectionId);
+                         //Delete bookmarks for section
+			    	     affectedEntities = session.createQuery(delBookmarksStr).setInteger("sectionId",sectionId).executeUpdate();
+			    	     //logger.debug(affectedEntities+" row was deleted from MELETE_BOOKMARKS");
+
 				     }
 		    	     //Delete section
 		    	     affectedEntities = session.createQuery(delSectionStr).setInteger("sectionId",sectionId).executeUpdate();
@@ -344,13 +344,7 @@ public class SectionDB implements Serializable {
 			{
 		      	hibernateUtil.closeSession();
     		  }
-		    if (deleteFrom != MELETE_RESOURCE_ONLY)
-		    {
-		      if (userId != null)
-		      {
-		    	bookmarksDB.deleteBookmark(mb);
-		      }
-		    }
+		   
 		}
 	      catch (Exception ex)
 		  {
