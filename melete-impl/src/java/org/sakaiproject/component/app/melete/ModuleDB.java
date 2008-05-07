@@ -1109,6 +1109,7 @@ public class ModuleDB implements Serializable {
                         String updCmodseqStr = "update CourseModule cmod set cmod.seqNo=cmod.seqNo-1 where cmod.courseId=:courseId and cmod.seqNo>:seqNo";
 			            String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId=:moduleId";
 			            String delModuleStr = "delete Module m where m.moduleId=:moduleId";
+			            String delBookmarksStr = "delete MeleteBookmarks mb where mb.moduleId=:moduleId";
 			  	 
 			  		    if (allSecIds != null)
 			            {
@@ -1117,6 +1118,7 @@ public class ModuleDB implements Serializable {
 					    }
 			            
 			  		    int deletedEntities = session.createQuery(delSectionStr).setInteger("moduleId", delModuleId).executeUpdate();
+			  		    deletedEntities = session.createQuery(delBookmarksStr).setInteger("moduleId", delModuleId).executeUpdate();
                         Query q=session.createQuery(selCmodseqStr);
 	                    q.setParameter("courseId", courseId);
 		                q.setParameter("moduleId",delModuleId);
@@ -1166,22 +1168,7 @@ public class ModuleDB implements Serializable {
     				  throw he;
     			  }
     		}
-    		    if (userId != null)
-    		    {
-    		    	if (delModules != null) 
-    	    	      {
-    	    	    	  for (ListIterator<Module> k = delModules.listIterator(); k.hasNext(); )
-    	    	    	  {
-    			  		   		Module delModule = (Module)k.next();
-    			  		   		Integer delModuleId = delModule.getModuleId();	
-    		                    MeleteBookmarks mb = new MeleteBookmarks();
-    			                mb.setUserId(userId);
-    			                mb.setCourseId(courseId);
-    			                mb.setModuleId(delModuleId);
-    			                bookmarksDB.deleteBookmark(mb);
-    		              }
-    	    	      }
-    		    }	
+    		   
     		    long endtime = System.currentTimeMillis();
 
     			logger.debug("delete modules ends " +(endtime - starttime));    	
