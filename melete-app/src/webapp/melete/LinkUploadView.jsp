@@ -90,9 +90,10 @@ function setRequired(id)
           <tr>
 		    <td colspan="2">
 	
-			<h:dataTable id="utTable"  value="#{addResourcesPage.utList}" var="ut" border="0" styleClass="maintabledata1"   width="80%" binding="#{addResourcesPage.table}">
+			<h:dataTable id="utTable"  value="#{addResourcesPage.utList}" var="ut" border="1" cellpadding="1" cellspacing="0" styleClass="maintabledata1"   width="80%" binding="#{addResourcesPage.table}">
 			 
 			   <h:column>
+			   <h:outputText id="brval0" escape="false" value="<BR>&nbsp;&nbsp;" />
 			   <h:graphicImage id="contenttype_gif" alt="#{msgs.link_upload_view_content}" value="images/url.gif" styleClass="ExpClass"/>
 			    <h:outputText escape="false" value="&nbsp;*&nbsp;" styleClass="required"/>
 		       <h:outputText id="urltext" escape="false" value="#{msgs.link_upload_view_url}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />
@@ -104,10 +105,11 @@ function setRequired(id)
                     <h:outputText 	id="remove_text" value="#{msgs.link_upload_remove_item}"/>		
                   </h:commandLink>
                 <h:outputText id="brval" escape="false" value="<BR>" />
-                 <h:outputText escape="false" value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;" styleClass="required"/>
+                 <h:outputText escape="false" value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;" styleClass="required"/>
                 <h:outputText id="titletext" escape="false" value="#{msgs.link_upload_view_title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/>
                
                 <h:inputText id="title" size="40" value="#{ut.title}"  required="true"/>
+                <h:outputText id="brval1" escape="false" value="<BR><BR>" />
               </h:column>  
              
 	        </h:dataTable>
