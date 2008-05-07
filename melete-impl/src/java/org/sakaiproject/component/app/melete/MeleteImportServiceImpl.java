@@ -1401,7 +1401,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		//Copy the uploads collection
 	    this.destinationContext = toContext;
   	   	buildModules(fromContext, toContext);
-  	   	setMeleteSitePreference(fromContext, toContext);
+  	//   	setMeleteSitePreference(fromContext, toContext);
 	}
 
 	private void setMeleteSitePreference(String fromContext, String toContext)
