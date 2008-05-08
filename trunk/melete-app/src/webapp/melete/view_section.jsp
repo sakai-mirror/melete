@@ -92,7 +92,7 @@ function showIframe()
 
 <tr>
 		<td colspan="2" align="left">  
-				<h:outputText value="#{msgs.view_section_instructions}"  rendered="#{((viewSectionsPage.section.instr != viewSectionsPage.nullString)&&(viewSectionsPage.section.instr != viewSectionsPage.emptyString))}"  styleClass="italics"></h:outputText> &nbsp;<h:outputText id="instr" value="#{viewSectionsPage.section.instr}"></h:outputText>     
+				<h:outputText value="#{msgs.view_section_instructions} "  rendered="#{((viewSectionsPage.section.instr != viewSectionsPage.nullString)&&(viewSectionsPage.section.instr != viewSectionsPage.emptyString))}"  styleClass="italics"></h:outputText> <h:outputText id="instr" value="#{viewSectionsPage.section.instr}" rendered="#{((viewSectionsPage.section.instr != viewSectionsPage.nullString)&&(viewSectionsPage.section.instr != viewSectionsPage.emptyString))}"></h:outputText>     
 		</td>
 </tr> 
 <tr>
