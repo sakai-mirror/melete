@@ -50,12 +50,11 @@
 		</tr>
 		<tr>
 			<td align="left">
-			<h:outputText id="description" value="#{viewModulesPage.mdbean.module.description}" />
+			<h:outputText id="description" value="#{viewModulesPage.mdbean.module.description}"  rendered="#{((viewModulesPage.mdbean.module.description != viewModulesPage.nullString)&&(viewModulesPage.mdbean.module.description != viewModulesPage.emptyString))}" />
+			<h:outputText id="brval" value="<BR><BR>" escape="false"  rendered="#{((viewModulesPage.mdbean.module.description != viewModulesPage.nullString)&&(viewModulesPage.mdbean.module.description != viewModulesPage.emptyString))}" />
 			</td>
 		</tr>
-		<tr>	<td>&nbsp;</td>		</tr>             
-
-		<tr>
+		
 		<td valign="top">
 			<h:outputText id="secs" value="#{msgs.view_module_content_section}" ></h:outputText>  
 			<h:dataTable id="tablesec"  value="#{viewModulesPage.mdbean.sectionBeans}" var="sectionBean" columnClasses="SectionClass" rowClasses="#{viewModulesPage.mdbean.rowClasses}" rendered="#{viewModulesPage.sectionSize > 0}" styleClass="SectionTableClass">

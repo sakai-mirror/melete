@@ -46,13 +46,11 @@
 
 <tr>
 <td align="left">
-<h:outputText id="description" value="#{viewModulesPage.mdbean.module.description}">
-</h:outputText>  
+<h:outputText id="description" value="#{viewModulesPage.mdbean.module.description}"  rendered="#{((viewModulesPage.mdbean.module.description != viewModulesPage.nullString)&&(viewModulesPage.mdbean.module.description != viewModulesPage.emptyString))}" />
+			<h:outputText id="brval" value="<BR><BR>" escape="false"  rendered="#{((viewModulesPage.mdbean.module.description != viewModulesPage.nullString)&&(viewModulesPage.mdbean.module.description != viewModulesPage.emptyString))}" /> 
 </td>
 </tr>
-<tr>
-<td>&nbsp;</td>
-</tr>             
+            
 <tr>
 <td align="left" valign="top">
 	<h:outputText id="secs" value="#{msgs.view_module_student_content_section}" ></h:outputText>  
