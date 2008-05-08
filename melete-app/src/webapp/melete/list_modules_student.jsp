@@ -40,8 +40,7 @@ function OpenPrintWindow(windowURL,windowName)
 					 </td>
 			</tr>
 <tr>
-  <td>&nbsp;</td>
-  <td align="right">
+  <td colspan="2" align="right">
   <h:commandLink id="clearLink" action="#{listModulesPage.clearAllBookmarks}" immediate="true" rendered="#{listModulesPage.bookmarkStatus == listModulesPage.trueFlag}">
 		  <h:outputText  id="clearText" value="#{msgs.clear_all_bookmarks}"/>
 	    </h:commandLink> 
