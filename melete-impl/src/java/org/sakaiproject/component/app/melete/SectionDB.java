@@ -249,6 +249,7 @@ public class SectionDB implements Serializable {
 		MeleteBookmarks mb = null;
 		SectionResource secRes = null;
 		int affectedEntities;
+		String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.sectionId=:sectionId";
 		String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
 		String delSectionResourceStr = "delete SectionResource sr where sr.sectionId=:sectionId and sr.resource.resourceId=:resourceId";
 		String delSectionStr = "delete Section sec where sec.sectionId=:sectionId";
@@ -278,6 +279,7 @@ public class SectionDB implements Serializable {
 		    		   }
 		    		   if (deleteFrom == MELETE_RESOURCE_SECTION_RESOURCE)
 		    		   {
+		    			   affectedEntities = session.createQuery(updSectionResourceStr).setInteger("sectionId", secRes.getSectionId()).executeUpdate();
 		    			   affectedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", secRes.getResource().getResourceId()).executeUpdate();
 		    			   //logger.debug(affectedEntities+" row was deleted from MELETE_RESOURCE");
 		    		   }
