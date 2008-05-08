@@ -688,6 +688,8 @@ public abstract class SectionPage implements Serializable {
     FCK_CollId = null;
     listNav = null;
     displayResourcesList = null;
+    currLinkUrl = null;
+    displayCurrLink = null;
     FacesContext ctx = FacesContext.getCurrentInstance();
   	ValueBinding binding =  Util.getBinding("#{remoteBrowserFile}");
   	RemoteBrowserFile rbPage = (RemoteBrowserFile)binding.getValue(ctx);
@@ -1174,7 +1176,7 @@ public abstract class SectionPage implements Serializable {
 	public RemoteFilesListingNav getListNav() {
 		if(listNav == null)
 		{
-			listNav = new RemoteFilesListingNav(0,0,15);
+			listNav = new RemoteFilesListingNav(0,0,30);
 		}
 		return listNav;
 	}

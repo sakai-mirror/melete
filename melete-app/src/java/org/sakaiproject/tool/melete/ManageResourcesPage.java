@@ -101,6 +101,12 @@ public void resetValues()
 {
 	this.fileType = "upload";
 	this.numberItems = "1";
+	sortAscFlag = true;
+	displayResourcesList = null;
+	allResourcesList = null;
+	listNav = null;
+	getListNav();
+	getAllResourcesList();
 }
 
 public String cancel()
@@ -373,7 +379,7 @@ public void setMeleteCHService(MeleteCHService meleteCHService)
 public RemoteFilesListingNav getListNav() {
 	if(listNav == null)
 	{
-		listNav = new RemoteFilesListingNav(0,0,15);
+		listNav = new RemoteFilesListingNav(0,0,30);
 		listNav.setFromPage("manage_content");
 	}
 	return listNav;
