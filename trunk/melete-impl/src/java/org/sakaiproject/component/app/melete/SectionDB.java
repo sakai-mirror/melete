@@ -251,7 +251,7 @@ public class SectionDB implements Serializable {
 		int affectedEntities;
 		String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.sectionId=:sectionId";
 		String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
-		String delSectionResourceStr = "delete SectionResource sr where sr.sectionId=:sectionId and sr.resource.resourceId=:resourceId";
+		String delSectionResourceStr = "delete SectionResource sr where sr.sectionId=:sectionId";
 		String delSectionStr = "delete Section sec where sec.sectionId=:sectionId";
 		String selModuleStr = "select mod.seqXml from Module mod where mod.moduleId=:moduleId";
 		String updModuleStr = "update Module mod set mod.seqXml=:seqXml where mod.moduleId=:moduleId";
@@ -288,7 +288,7 @@ public class SectionDB implements Serializable {
 		    		 if ((deleteFrom == SECTION_RESOURCE_ONLY)||(deleteFrom == MELETE_RESOURCE_SECTION_RESOURCE))
 		    		 {
                        //Delete from SECTION_RESOURCE table
-		    			 affectedEntities = session.createQuery(delSectionResourceStr).setInteger("sectionId", secRes.getSectionId()).setString("resourceId", secRes.getResource().getResourceId()).executeUpdate();
+		    			 affectedEntities = session.createQuery(delSectionResourceStr).setInteger("sectionId", secRes.getSectionId()).executeUpdate();
 		    			 //logger.debug(affectedEntities+" row was deleted from SECTION_RESOURCE");
 		    		 }
 		    	   }
@@ -356,104 +356,7 @@ public class SectionDB implements Serializable {
 		  }
 	}
 
-	/*private void deleteFromMeleteTables(Section sec, String userId, int deleteFrom, String embedResourceId) throws MeleteException
-	{
-		MeleteBookmarks mb = null;
-		SectionResource secRes = null;
-		 try{
-		       Transaction tx = null;
-		       Session session = hibernateUtil.currentSession();
-
-		       try
-		       	{
-		    	   tx = session.beginTransaction();
-
-		    	   secRes = (SectionResource) sec.getSectionResource();
-
-		    	   if (deleteFrom != NONE_TO_DELETE)
-		    	   {
-		    		 if ((deleteFrom == MELETE_RESOURCE_ONLY)||(deleteFrom == MELETE_RESOURCE_SECTION_RESOURCE))
-		    		 {
-		    		   MeleteResource melRes = null;
-                       //Delete from MELETE_RESOURCE table
-		    		   if (deleteFrom == MELETE_RESOURCE_ONLY) melRes = getMeleteResource(embedResourceId);
-		    		   if (deleteFrom == MELETE_RESOURCE_SECTION_RESOURCE) melRes = (MeleteResource) session.merge(secRes.getResource());
-	    	           session.delete(melRes);
-	    	          }
-
-		    		 if ((deleteFrom == SECTION_RESOURCE_ONLY)||(deleteFrom == MELETE_RESOURCE_SECTION_RESOURCE))
-		    		 {
-                       //Delete from SECTION_RESOURCE table
-		    	       secRes = (SectionResource) session.merge(secRes);
-		    	       session.delete(secRes);
-		    		 }
-		    	   }
-		    	   if (deleteFrom != MELETE_RESOURCE_ONLY)
-		    	   {
-		    	     Module module = (Module)sec.getModule();
-		    	     Integer sectionId = sec.getSectionId();
-		    	     logger.debug("checking module element");
-		    	     if(module != null)
-		    	     {
-		    	   		String sectionsSeqXML = module.getSeqXml();
-		    	   		logger.debug("module is not null so changing seq"+ sectionsSeqXML);
-		    	   		SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
-		    	   		logger.debug("deleting section id from xmllist" + sectionId.toString());
-		    	   		sectionsSeqXML =SectionUtil.deleteSection(sectionsSeqXML, sectionId.toString());
-		    	   		module.setSeqXml(sectionsSeqXML);
-		    	   		module.getSections().remove(new Integer(sectionId));
-		    	   		module = (Module) session.merge(module);
-		    	   		session.saveOrUpdate(module);
-
-		    	     }
-		    	     if (userId != null)
-				     {
-				        mb = new MeleteBookmarks();
-					    mb.setUserId(userId);
-					    mb.setCourseId(sec.getModule().getCoursemodule().getCourseId());
-					    mb.setModuleId(sec.getModuleId());
-					    mb.setSectionId(sectionId);
-				     }
-		    	     //Delete section
-		    	     sec = (Section) session.merge(sec);
-		    	     session.delete(sec);
-
-		    	   }
-
-		    	   tx.commit();
-		    	   logger.debug("Deleted section from everywhere");
-
-		       	}
-		    catch (HibernateException he)
-		    {
-		      if (tx!=null) tx.rollback();
-			  logger.error(he.toString());
-			  throw he;
-		    }
-		    catch (Exception e) {
-		      if (tx!=null) tx.rollback();
-		      logger.error(e.toString());
-		      throw e;
-		    }
-		    finally
-			{
-		      	hibernateUtil.closeSession();
-    		  }
-		    if (deleteFrom != MELETE_RESOURCE_ONLY)
-		    {
-		      if (userId != null)
-		      {
-		    	bookmarksDB.deleteBookmark(mb);
-		      }
-		    }
-		}
-	      catch (Exception ex)
-		  {
-			  logger.error(ex.toString());
-			  ex.printStackTrace();
-			  throw new MeleteException("delete_module_fail");
-		  }
-	}*/
+	
 
 	public void deleteSection(Section sec, String courseId, String userId) throws MeleteException
 	 {
