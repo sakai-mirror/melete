@@ -355,7 +355,7 @@ font-size: 12px;
 vertical-align: top;
 width: 200px}
 
-.SectionClass 	{font-size: 12px; white-space:nowrap} 
+.SectionClass 	{font-size: 12px; } 
 
 .SectionTableClass {vertical-align: top;}
 
@@ -654,4 +654,3 @@ color: #5A6D95;
 	border-color:#EAEAEA;
     border-bottom-color:#EAEAEA;
     }
-
