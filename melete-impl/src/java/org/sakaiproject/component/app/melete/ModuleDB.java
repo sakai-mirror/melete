@@ -1983,6 +1983,26 @@ public class ModuleDB implements Serializable {
 				session.saveOrUpdate(section);
 				session.saveOrUpdate(prev_module);
 				session.saveOrUpdate(selectedModule);
+				
+				// move section file from content hosting to new location
+				if(section.getContentType() != null && section.getContentType().equals("typeEditor"))
+				{
+				String secContentFile = section.getSectionResource().getResource().getResourceId();
+				String destinationColl = meleteCHService.getCollectionId("typeEditor", selectedModule.getModuleId());
+				String newResId = meleteCHService.moveResource(secContentFile, destinationColl);
+				MeleteResource old = (MeleteResource)section.getSectionResource().getResource();
+				MeleteResource newMR = new MeleteResource(old);
+				newMR.setResourceId(newResId);
+				session.save(newMR);
+				SectionResource newSR = (SectionResource)section.getSectionResource();
+				newSR.setResource(newMR);
+				section.setSectionResource(newSR);
+				session.update(newSR);
+				session.saveOrUpdate(section);
+				session.flush();
+				session.delete(old);				
+				}				
+				
 				//Code that moves the bookmarks
 				Map bookmarks = section.getBookmarks();
 				int bookmarkSize = bookmarks.size();
