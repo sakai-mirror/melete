@@ -101,7 +101,14 @@ public class DeleteResourcePage implements Serializable{
   			if (fromPage.startsWith("edit"))
   			{
   				ValueBinding binding = Util.getBinding("#{editSectionPage}");
-  				EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
+  				EditSectionPage editPage = (EditSectionPage) binding.getValue(context);  				
+  				if(editPage.meleteResource.getResourceId().equals(delResourceId))
+  				{
+  					logger.debug("remove resource from cache" );
+  					editPage.secResource.setResource(null);
+  					editPage.meleteResource = null;
+  					editPage.resetMeleteResourceValues();
+  				}
   				editPage.refreshCurrSiteResourcesList();
   			}
   			else if(fromPage.startsWith("manage"))
@@ -114,6 +121,11 @@ public class DeleteResourcePage implements Serializable{
   			{
   				ValueBinding binding = Util.getBinding("#{addSectionPage}");
   				AddSectionPage addPage = (AddSectionPage) binding.getValue(context);
+  				if(addPage.meleteResource.getResourceId().equals(delResourceId))
+  				{
+  					addPage.resetMeleteResourceValues();
+  					addPage.meleteResource = null;
+  				}
   				addPage.refreshCurrSiteResourcesList();
   			}
   			return fromPage;

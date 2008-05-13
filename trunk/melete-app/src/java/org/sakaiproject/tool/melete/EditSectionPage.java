@@ -492,8 +492,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		selectedResource = null;
 
 		super.resetSectionValues();
-	}
-
+	}	
+	
 	public String redirectLinktoEdit()
 	{
 		return "editmodulesections";
@@ -722,6 +722,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				createLinkUrl();
 				String res_mime_type = getMeleteCHService().MIME_TYPE_LINK;
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, secResourceDescription);
+				if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId();
 				String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type, containCollectionId, getSecContentData(),
 						res);
 				selectedResource = new MeleteResource();

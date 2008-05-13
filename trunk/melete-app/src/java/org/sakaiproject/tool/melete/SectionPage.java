@@ -702,6 +702,19 @@ public abstract class SectionPage implements Serializable {
     if (logger.isDebugEnabled()) logger.debug("!!!!!!!!!reseting section values done !!!!!!!");
     }
 
+    /*
+     *  reset resource values and license from java cache when its deleted and associated with current section 
+     */
+	public void resetMeleteResourceValues()
+	{
+		currLinkUrl = null;
+		displayCurrLink = null;
+		secResourceName = null;
+		secResourceDescription = null;
+		uploadFileName = null;
+		setM_license(null);
+	}
+    
     /**
      * @return remove values from session before closing
      */

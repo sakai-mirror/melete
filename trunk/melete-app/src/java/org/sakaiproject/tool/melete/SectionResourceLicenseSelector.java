@@ -220,6 +220,7 @@ public class SectionResourceLicenseSelector {
 		public void setLicenseCodes(String licenseCodes)
 		{
 			this.licenseCodes = licenseCodes;
+			if(licenseCodes == null) return;
 			if(licenseCodes.equals(CC_CODE)) shouldRenderCC = true;
 			else shouldRenderCC = false;
 			if(licenseCodes.equals(Copyright_CODE)) shouldRenderCopyright = true;

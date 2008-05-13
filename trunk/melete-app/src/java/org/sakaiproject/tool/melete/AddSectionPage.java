@@ -65,7 +65,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		setFormName("AddSectionForm");
 		shouldRenderNotype = true;
 		}
-
+	
 	/**
 	 * @return sizeWarning
 	 * render sizeWarning message if this flag is true
