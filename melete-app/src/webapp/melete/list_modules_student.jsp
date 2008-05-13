@@ -93,7 +93,7 @@ function OpenPrintWindow(windowURL,windowName)
         
         <h:dataTable id="tablesec" rendered="#{((mdbean.moduleId == listModulesPage.showModuleId)||(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}"
                   value="#{mdbean.sectionBeans}"
-                  var="section" rowClasses="#{mdbean.rowClasses}" columnClasses="SectionClass" width="75%" binding="#{listModulesPage.secTable}">
+                  var="section" rowClasses="#{mdbean.rowClasses}" columnClasses="SectionClass" width="95%" binding="#{listModulesPage.secTable}">
                     <h:column> 
 			  <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{section.bookmarkFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
              <h:outputText id="emp_space" value=" " styleClass="ExtraPaddingClass" rendered="#{((mdbean.bookmarkFlag == listModulesPage.trueFlag)&&(section.bookmarkFlag != listModulesPage.trueFlag))}"/>

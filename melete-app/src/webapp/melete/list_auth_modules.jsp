@@ -179,7 +179,7 @@ if (msg != null)
       </h:commandLink>
       <h:dataTable id="tablesec" rendered="#{((mdbean.moduleId == listAuthModulesPage.showModuleId)||(listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag))}"
                   value="#{mdbean.sectionBeans}"
-                  var="sectionBean" columnClasses="SectionClass" rowClasses="#{mdbean.rowClasses}" width="300" binding="#{listAuthModulesPage.secTable}">
+                  var="sectionBean" columnClasses="SectionClass" rowClasses="#{mdbean.rowClasses}" width="95%" binding="#{listAuthModulesPage.secTable}">
                <h:column>
               <h:selectBooleanCheckbox value="#{sectionBean.selected}"  valueChangeListener="#{listAuthModulesPage.selectedSection}"/> 
                <h:outputText id="emp_space" value=" "/>
