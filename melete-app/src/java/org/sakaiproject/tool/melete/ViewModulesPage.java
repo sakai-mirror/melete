@@ -72,7 +72,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
       private int prevSectionSize;
       private int prevSeqNo;
       private int nextSeqNo;
-
+      private boolean printable;
 
 //    This needs to be set later using Utils.getBinding
 	  String courseId;
@@ -498,4 +498,18 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 	  	return retVal;
 
     }
+    
+    public boolean isPrintable()
+	  {
+		  FacesContext ctx = FacesContext.getCurrentInstance();
+		  try{		  
+		   ValueBinding binding = Util.getBinding("#{authorPreferences}");
+	 	   AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(ctx);
+	 	   if (courseId == null) getCourseId();
+	 	   printable = preferencePage.isMaterialPrintable(courseId);
+		  }
+		  catch(Exception e){e.printStackTrace();
+		  printable=false;}
+		  return printable;
+	  }
 }

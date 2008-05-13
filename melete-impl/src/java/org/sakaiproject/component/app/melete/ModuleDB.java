@@ -2084,13 +2084,14 @@ public class ModuleDB implements Serializable {
 							if (sec.getContentType().equals("typeEditor"))
 							{
 								byte[] data = resource.getContent();
-								printText.append("<p>" + new String(data) + "</p>");
+							//	printText.append("<p>" + new String(data) + "</p>");
+								printText.append(new String(data));
 							}
 							if (sec.getContentType().equals("typeLink"))
 							{
 								String url = resource.getUrl();
 								url = url.replaceAll(" ", "%20");
-								printText.append("<p></p><a href=\"" + url + "\" target=\"_blank\">");
+								printText.append("<a href=\"" + url + "\" target=\"_blank\">");
 								printText.append(resource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
 								printText.append("</a>");
 							}
@@ -2142,7 +2143,7 @@ public class ModuleDB implements Serializable {
 		{
 		licenseStr = rl.getString("license_info_copyright");
 		if (melResource.getCopyrightYear() != null)
-			licenseStr += melResource.getCopyrightYear()+",";
+			licenseStr += melResource.getCopyrightYear()+", ";
 		licenseStr += melResource.getCopyrightOwner();
 		}
 
@@ -2150,7 +2151,7 @@ public class ModuleDB implements Serializable {
 		{
 		licenseStr = rl.getString("license_info_dedicated_to");
 		if (melResource.getCopyrightYear() != null)
-			licenseStr += melResource.getCopyrightYear()+",";
+			licenseStr += melResource.getCopyrightYear()+", ";
 		if (melResource.getCopyrightOwner() != null)
 		licenseStr += melResource.getCopyrightOwner();
 		}
@@ -2159,7 +2160,7 @@ public class ModuleDB implements Serializable {
 		{
 		licenseStr = rl.getString("license_info_licensed_under");
 		if (melResource.getCopyrightYear() != null)
-			licenseStr += melResource.getCopyrightYear()+",";
+			licenseStr += melResource.getCopyrightYear()+", ";
 		if (melResource.getCopyrightOwner() != null)
 		licenseStr += melResource.getCopyrightOwner();
 		}
@@ -2168,7 +2169,7 @@ public class ModuleDB implements Serializable {
 		{
 		licenseStr = rl.getString("license_info_fairuse");
 		if (melResource.getCopyrightYear() != null)
-			licenseStr += melResource.getCopyrightYear()+",";
+			licenseStr += melResource.getCopyrightYear()+", ";
 		if (melResource.getCopyrightOwner() != null)
 		licenseStr += melResource.getCopyrightOwner();
 		}
