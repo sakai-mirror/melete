@@ -356,7 +356,8 @@ vertical-align: top;
 width: 200px}
 
 .SectionClass 	{font-size: 12px; 
-width :50%;} 
+align: center;
+width :85%;} 
 
 .SectionTableClass {vertical-align: top;}
 
