@@ -1227,6 +1227,36 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		    }
 	  }
 	  
+	  public String moveResource(String resourceId, String destinationColl) throws Exception
+	  {
+		  if (!isUserAuthor())
+	        {
+	         logger.info("User is not authorized to perform del resource function");
+	        }
+	   			//          setup a security advisor
+	        meleteSecurityService.pushAdvisor();
+		    try
+	   	    {		    	
+		    	getContentservice().checkResource(resourceId);
+		    	String newResId = getContentservice().moveIntoFolder(resourceId,destinationColl);
+		    	return newResId;
+	   	    }
+	   	    catch(IdUnusedException e1)
+		    {
+	   		  logger.error("IdUnusedException thrown from moveResource: "+e1.getMessage());
+		    }	   	   
+	   	    catch (Exception e)
+		    {
+		        throw new MeleteException("move_resource_fail");
+		    }
+		    finally
+		    {
+		       meleteSecurityService.popAdvisor();
+		    }
+		    return null;
+	  }
+	  
+	  
 	    /**
 	     * @return Returns the logger.
 	     */
