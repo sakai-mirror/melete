@@ -179,4 +179,32 @@ public class MeleteUtil {
 
 	}
 
+		public String findFormPattern1(String checkforimgs)
+		{
+			ArrayList returnData = new ArrayList();
+			Pattern pi = Pattern.compile("<\\s*<[fF][oO][rR][mM]");
+		
+			// look for <table tr td form
+			Matcher m = pi.matcher(checkforimgs);
+			if (!m.find()) 
+			{
+				int formIdx = -1;
+				int endFormIdx = -1;
+				if((formIdx = checkforimgs.indexOf("<form")) != -1 || (formIdx = checkforimgs.indexOf("<FORM")) != -1)
+				{
+					logger.debug("formIdx and m.end() " + formIdx );
+				
+						//replace and add table tag
+						String afterForm = checkforimgs.substring(formIdx + 6);
+						afterForm = afterForm.substring(afterForm.indexOf(">")+1);
+						checkforimgs = checkforimgs.substring(0, formIdx) + afterForm;
+						//now look for end of form
+					
+						if((endFormIdx = checkforimgs.indexOf("</form>")) != -1 || (endFormIdx = checkforimgs.indexOf("</FORM>")) != -1)
+							checkforimgs = checkforimgs.substring(0, endFormIdx) +  checkforimgs.substring(endFormIdx + 8);
+				}
+			}
+			return checkforimgs;
+
+		}
 }
