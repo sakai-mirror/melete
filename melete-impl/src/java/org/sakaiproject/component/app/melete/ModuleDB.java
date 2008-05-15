@@ -1513,6 +1513,8 @@ public class ModuleDB implements Serializable {
 					q.setParameter("moduleId", coursemodule.getModule().getModuleId());
 
 					ModuleShdates moduleShdate = (ModuleShdates)(q.uniqueResult());
+					moduleShdate.setStartDate(null);
+					moduleShdate.setEndDate(null);
 
 				//	3a.set start date as restored_date and end_date as 1 yr more
 			/*		GregorianCalendar cal = new GregorianCalendar();
