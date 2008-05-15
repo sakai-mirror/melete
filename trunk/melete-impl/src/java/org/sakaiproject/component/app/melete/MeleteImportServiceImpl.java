@@ -1064,6 +1064,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			if (hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")) {
 //				link
 				section.setContentType("typeLink");
+				section.setOpenWindow(true);
 				// get url title if provided in IMS
 				String urlTitle = "";
 				if(resElements != null){
