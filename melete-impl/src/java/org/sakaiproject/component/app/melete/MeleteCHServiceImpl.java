@@ -785,7 +785,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    		// remove word comments code end
 
 	    		//check for form tag and enclose it in table tag
-	    		checkforimgs = meleteUtil.findFormPattern(checkforimgs);
+	    		checkforimgs = meleteUtil.findFormPattern1(checkforimgs);
 
 
 				contentEditor = checkforimgs;
