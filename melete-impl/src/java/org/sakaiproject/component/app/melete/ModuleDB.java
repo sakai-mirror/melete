@@ -412,6 +412,7 @@ public class ModuleDB implements Serializable {
 
 	 public List getModules(String courseId) throws HibernateException {
 	 	List modList = new ArrayList();
+	 	List cmodList = new ArrayList();
 	 	List sectionsList = null;
 	 	Module mod = null;
 	 	Query sectionQuery = null;
@@ -419,12 +420,17 @@ public class ModuleDB implements Serializable {
 		{
 	      Session session = hibernateUtil.currentSession();
 
-	      String queryString = "from Module module where module.coursemodule.courseId = :courseId  and module.coursemodule.archvFlag = 0 and module.coursemodule.deleteFlag = 0 order by module.coursemodule.seqNo";
+	      String queryString = "select cmod from CourseModule as cmod where courseId = :courseId  and archvFlag = 0 and deleteFlag = 0 order by seqNo";
 
 	      Query query = session.createQuery(queryString);
 	      query.setParameter("courseId", courseId);
 
-	      modList = query.list();
+	      cmodList = query.list();
+	      Iterator i = cmodList.iterator();
+	      while (i.hasNext()) {
+	    	  CourseModule cmod = (CourseModule) i.next();
+	    	  modList.add(cmod.getModule());
+	      }
 
 	    }
 	    catch (HibernateException he)
