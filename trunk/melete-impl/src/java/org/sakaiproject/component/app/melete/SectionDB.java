@@ -372,7 +372,10 @@ public class SectionDB implements Serializable {
 		if ((sec.getContentType().equals("typeLink"))||(sec.getContentType().equals("typeUpload")))
 		{
 			boolean resourceInUse = false;
-			String resourceId = sec.getSectionResource().getResource().getResourceId();
+			String resourceId = null;
+			if (sec.getSectionResource().getResource() != null)
+			{	
+			resourceId = sec.getSectionResource().getResource().getResourceId();	
 			//Check in SECTION_RESOURCE table
 			List srUseList = checkInSectionResources(resourceId, courseId);
 			if (srUseList != null)
@@ -417,6 +420,12 @@ public class SectionDB implements Serializable {
 				  }
 				  deleteFromMeleteTables(sec,userId, MELETE_RESOURCE_SECTION_RESOURCE, null);
 			    }
+			}
+			}
+			else //resource_id is usually null if the resource has been deleted via Manage
+			{
+				//Delete from MELETE_SECTION_RESOURCE and MELETE_SECTION
+				deleteFromMeleteTables(sec, userId, SECTION_RESOURCE_ONLY, null);
 			}
 		}//End typeLink and typeUpload
 
