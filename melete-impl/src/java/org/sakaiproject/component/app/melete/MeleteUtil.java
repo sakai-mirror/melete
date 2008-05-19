@@ -149,37 +149,10 @@ public class MeleteUtil {
 			return returnData;
 		}
 
-
-
-
+		/*
+		 *  remove form tag if found in the composed content as IE chokes on nested forms
+		 */
 		public String findFormPattern(String checkforimgs)
-	{
-		ArrayList returnData = new ArrayList();
-		Pattern pi = Pattern.compile("<[tT][aA][bB][lL][eE]>\\s*<[tT][rR]>\\s*<[tT][dD]>\\s*<[fF][oO][rR][mM]");
-	
-		// look for <table tr td form
-		Matcher m = pi.matcher(checkforimgs);
-		if (!m.find()) 
-		{
-			int formIdx = -1;
-			int endFormIdx = -1;
-			if((formIdx = checkforimgs.indexOf("<form")) != -1 || (formIdx = checkforimgs.indexOf("<FORM")) != -1)
-			{
-				logger.debug("formIdx and m.end() " + formIdx );
-			
-					//replace and add table tag
-					checkforimgs = checkforimgs.substring(0, formIdx) + "<table><tr><td><form " + checkforimgs.substring(formIdx + 6);
-					//now look for end of form
-				
-					if((endFormIdx = checkforimgs.indexOf("</form>")) != -1 || (endFormIdx = checkforimgs.indexOf("</FORM>")) != -1)
-						checkforimgs = checkforimgs.substring(0, endFormIdx + 7) + " </td></tr></table> " + checkforimgs.substring(endFormIdx + 8);
-			}
-		}
-		return checkforimgs;
-
-	}
-
-		public String findFormPattern1(String checkforimgs)
 		{
 			ArrayList returnData = new ArrayList();
 			Pattern pi = Pattern.compile("<\\s*<[fF][oO][rR][mM]");
