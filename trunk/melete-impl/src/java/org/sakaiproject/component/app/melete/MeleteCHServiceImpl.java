@@ -1131,6 +1131,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        }
 	   	    catch (Exception e)
 		    {
+	   	    	e.printStackTrace();
 		        throw new MeleteException("delete_resource_fail");
 		    }
 		    finally
