@@ -749,7 +749,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	         String fileName;
 			 int startSrc =0;
 			 int endSrc = 0;
-
+			 String foundLink = null;
              // look for local embedded images
 	         try
 			 {
@@ -780,13 +780,11 @@ public class MeleteCHServiceImpl implements MeleteCHService {
     			checkforimgs= pre + checkforimgs;
     			wordcommentIdx = -1;
     		}
-
 	    		contentEditor = checkforimgs;
 	    		// remove word comments code end
 
 	    		//check for form tag and enclose it in table tag
 	    		checkforimgs = meleteUtil.findFormPattern1(checkforimgs);
-
 
 				contentEditor = checkforimgs;
 
@@ -800,24 +798,14 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    			{
 	    				startSrc = ((Integer)embedData.get(1)).intValue();
 	    				endSrc = ((Integer)embedData.get(2)).intValue();
+	    				foundLink = (String) embedData.get(3);
 	    			}
 	    			if (endSrc <= 0) break;
 	    			// find filename
 	    			fileName = checkforimgs.substring(startSrc, endSrc);
 	    			 String patternStr = fileName;
 	    			logger.debug("processing embed src" + fileName);
-
-	    			// process links and append http:// protocol if not provided
-	    			String foundLink = (String)embedData.get(3);
-	    			if(foundLink != null && foundLink.equals("link") && !(fileName.startsWith("http://") || fileName.startsWith("https://") || fileName.startsWith("mailto:") || fileName.startsWith("#")) )
-	    			{
-	    				logger.debug("processing embed link src for appending protocol");
-	    				patternStr= "http://" + patternStr;
-	    				contentEditor = meleteUtil.replace(contentEditor,fileName,patternStr);
-	 		            checkforimgs =  meleteUtil.replace(checkforimgs,fileName,patternStr);
-	 		           fileName = patternStr;
-	    			}
-
+	    	
 	    			//process for local uploaded files
 					if(fileName != null && fileName.trim().length() > 0&& (!(fileName.equals(File.separator)))
 						&& fileName.startsWith("file:/") )
@@ -892,35 +880,50 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 					 }
 				}
 				// for internal links to make it relative
-				else if (fileName.startsWith(ServerConfigurationService.getServerUrl()))
-				{
-					if (fileName.indexOf("/meleteDocs") != -1)
+				else
+				{					
+					if (fileName.startsWith(ServerConfigurationService.getServerUrl()))
 					{
-						String findEntity = fileName.substring(fileName.indexOf("/access")+7);
-						logger.info("find entity string " + findEntity);
-						Reference ref = EntityManager.newReference(findEntity);
-						logger.debug("ref properties" + ref.getType() +"," +ref.getId());
-						String newEmbedResourceId =ref.getId() ;
-						newEmbedResourceId =newEmbedResourceId.replaceFirst("/content","");
-
-						if (sectiondb.getMeleteResource(newEmbedResourceId) == null)
+						if (fileName.indexOf("/meleteDocs") != -1)
 						{
-						 //add in melete resource database table also
-			             MeleteResource meleteResource = new MeleteResource();
-		            	 meleteResource.setResourceId(newEmbedResourceId);
-		            	 //set default license info to "I have not determined copyright yet" option
-		            	 meleteResource.setLicenseCode(0);
-		            	 sectiondb.insertResource(meleteResource);
-						}
+							String findEntity = fileName.substring(fileName.indexOf("/access") + 7);
+							logger.info("find entity string " + findEntity);
+							Reference ref = EntityManager.newReference(findEntity);
+							logger.debug("ref properties" + ref.getType() + "," + ref.getId());
+							String newEmbedResourceId = ref.getId();
+							newEmbedResourceId = newEmbedResourceId.replaceFirst("/content", "");
 
+							if (sectiondb.getMeleteResource(newEmbedResourceId) == null)
+							{
+								// add in melete resource database table also
+								MeleteResource meleteResource = new MeleteResource();
+								meleteResource.setResourceId(newEmbedResourceId);
+								// set default license info to "I have not determined copyright yet" option
+								meleteResource.setLicenseCode(0);
+								sectiondb.insertResource(meleteResource);
+							}
+
+						}
+						String replaceStr = meleteUtil.replace(fileName, ServerConfigurationService.getServerUrl(), "");
+						contentEditor = meleteUtil.replace(contentEditor, patternStr, replaceStr);
+						checkforimgs = meleteUtil.replace(checkforimgs, patternStr, replaceStr);
 					}
-					String replaceStr = meleteUtil.replace(fileName,ServerConfigurationService.getServerUrl(),"");
-					contentEditor = meleteUtil.replace(contentEditor,patternStr,replaceStr);
-			        checkforimgs = meleteUtil.replace(checkforimgs,patternStr,replaceStr);
+					// process links and append http:// protocol if not provided
+					else if (!fileName.startsWith("/access") && foundLink != null
+							&& foundLink.equals("link")
+							&& !(fileName.startsWith("http://") || fileName.startsWith("https://") || fileName.startsWith("mailto:") || fileName
+									.startsWith("#")))
+					{
+						logger.debug("processing embed link src for appending protocol");
+						String replaceLinkStr = "http://" + fileName;
+						contentEditor = meleteUtil.replace(contentEditor, fileName, replaceLinkStr);
+						checkforimgs = meleteUtil.replace(checkforimgs, fileName, replaceLinkStr);						
+					}
+
 				}
 		            // iterate next
 		            checkforimgs =checkforimgs.substring(endSrc);
-		            startSrc=0; endSrc = 0;
+		            startSrc=0; endSrc = 0; foundLink = null;
 		         }
 			 }
 	         catch(MeleteException me) {throw me;}
@@ -958,7 +961,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
     			}
     			// iterate next
     			checkforImgs =checkforImgs.substring(endSrc);
-	            startSrc=0; endSrc = 0;
+	            startSrc=0; endSrc = 0; 
 	    	}
 	    	return secEmbedData;
 	    	} catch(Exception e)
