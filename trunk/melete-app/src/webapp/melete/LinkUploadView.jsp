@@ -48,8 +48,7 @@ function setRequired(id)
         </tr>
         <tr>
         <td class="maintabledata3">
-          <h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-		  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
+          <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
 		  	<tr>
 		  		<td height="20" class="maintabledata5"><h:outputText id="t1_1" value="#{msgs.manage_content_new_item}" styleClass="tableheader2"/> 
 		  		</td>
@@ -93,7 +92,8 @@ function setRequired(id)
 			<h:dataTable id="utTable"  value="#{addResourcesPage.utList}" var="ut" border="1" cellpadding="1" cellspacing="0" styleClass="maintabledata1"   width="80%" binding="#{addResourcesPage.table}">
 			 
 			   <h:column>
-			   <h:outputText id="brval0" escape="false" value="<BR>&nbsp;&nbsp;" />
+			   <h:outputText id="brvalmsg" escape="false" value="<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" /><h:message for="url" id="errurlmsg" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
+		 	   <h:outputText id="brval0" escape="false" value="<BR>&nbsp;&nbsp;" />
 			   <h:graphicImage id="contenttype_gif" alt="#{msgs.link_upload_view_content}" value="images/url.gif" styleClass="ExpClass"/>
 			    <h:outputText escape="false" value="&nbsp;*&nbsp;" styleClass="required"/>
 		       <h:outputText id="urltext" escape="false" value="#{msgs.link_upload_view_url}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />
@@ -104,6 +104,8 @@ function setRequired(id)
                    <h:graphicImage id="remove_gif" alt="#{msgs.link_upload_remove_item}" value="images/remove_item.png" styleClass="ExpClass"/>
                     <h:outputText 	id="remove_text" value="#{msgs.link_upload_remove_item}"/>		
                   </h:commandLink>
+                 <h:outputText id="brvaltitle" escape="false" value="<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />  
+                <h:message for="title" id="errtitlemsg" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
                 <h:outputText id="brval" escape="false" value="<BR>" />
                  <h:outputText escape="false" value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;" styleClass="required"/>
                 <h:outputText id="titletext" escape="false" value="#{msgs.link_upload_view_title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/>
