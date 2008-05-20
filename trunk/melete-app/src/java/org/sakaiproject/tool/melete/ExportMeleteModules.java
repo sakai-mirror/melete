@@ -216,8 +216,10 @@ public class ExportMeleteModules {
 		String packagingdirpath = context.getExternalContext()
 		.getInitParameter("packagingdir");
 		String instr_id = getMeleteSiteAndUserInfo().getCurrentUser().getId();
+		instr_id = instr_id.trim();
 		String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
-
+		courseId = courseId.trim();
+		
 		File packagedir = null;
 		try {
 			File basePackDir = new File(packagingdirpath);
@@ -233,7 +235,7 @@ public class ExportMeleteModules {
 					meleteExportService);
 
 			String title = getMeleteSiteAndUserInfo().getCourseTitle();
-
+			title =title.trim();
 			packagedir = new File(basePackDir.getAbsolutePath()
 					+ File.separator + courseId + "_" + instr_id
 					+ File.separator + title.replace(' ', '_'));
@@ -287,9 +289,19 @@ public class ExportMeleteModules {
 			XMLHelper.parseFile(new File(newXmlFile));
 
 			title = Validator.escapeResourceName(title);
-			String outputfilename = packagedir.getParentFile()
+			
+			String outputfilename = null;
+			if(modList.equals(selectList))
+			{
+			outputfilename = packagedir.getParentFile()
 			.getAbsolutePath()
-			+ File.separator + title.replace(' ', '_') + ".zip";;
+			+ File.separator + title.replace(' ', '_') + "_allModules.zip";
+			}
+			else {
+				outputfilename = packagedir.getParentFile()
+				.getAbsolutePath()
+				+ File.separator + title.replace(' ', '_') + "_fewModules.zip";
+			}
 			File zipfile = new File(outputfilename);
 			// create zip
 			createZip(packagedir, zipfile);
