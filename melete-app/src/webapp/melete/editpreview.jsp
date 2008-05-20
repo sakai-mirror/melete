@@ -150,7 +150,7 @@ rendered="#{((editSectionPage.section.sectionResource.resource.licenseCode == 2)
 rendered="#{editSectionPage.section.sectionResource.resource.licenseCode == 3}"/> 
    <h:outputLink value="#{editSectionPage.section.sectionResource.resource.ccLicenseUrl}" target="_blank" 
 
-rendered="#{addSectionPage.section.sectionResource.resource.licenseCode == 3}">
+rendered="#{editSectionPage.section.sectionResource.resource.licenseCode == 3}">
    <h:outputText id="lic3_val2" value="#{msgs.edit_preview_creative_commons}" 
 
 rendered="#{editSectionPage.section.sectionResource.resource.licenseCode == 3}"/>
