@@ -80,7 +80,7 @@ function resetModuleSelection() {
 							  </tr>
 							    <tr>
 										<td colspan="3" height="30"><h:outputText value="#{msgs.sort_sections_choose_module}"/> 
-							          <h:selectOneMenu id="currmodule" value="#{manageModulesPage.currModule}"  valueChangeListener="#{manageModulesPage.nextModuleSections}" onchange="this.form.submit();" >
+							          <h:selectOneMenu id="currmodule" value="#{manageModulesPage.currModule}"  valueChangeListener="#{manageModulesPage.nextModuleSections}" onchange="this.form.submit();" style="width:420px">
 															 <f:selectItems value="#{manageModulesPage.allModulesList}" />							
 												 </h:selectOneMenu>													
 										</td>
@@ -98,7 +98,7 @@ function resetModuleSelection() {
 										<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" style="border-collapse: collapse">
 											<tr>
 											 <td align="left" >
-												 <h:selectOneListbox id="sectioncurrList" disabled="true" size="#{manageModulesPage.showSize}" style="width:100%">
+												 <h:selectOneListbox id="sectioncurrList" disabled="true" size="#{manageModulesPage.showSize}" style="width:420px">
 															 <f:selectItems value="#{manageModulesPage.currSecList}" />							
 												 </h:selectOneListbox>
 											   </td>
@@ -115,7 +115,7 @@ function resetModuleSelection() {
 											<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" style="border-collapse: collapse">
 											<tr>
                        						 <td align="left">
-                       						 	 <h:selectOneListbox id="sectionnewList" value="#{manageModulesPage.newSelectedSection}" size="#{manageModulesPage.showSize}" style="width:100%">
+                       						 	 <h:selectOneListbox id="sectionnewList" value="#{manageModulesPage.newSelectedSection}" size="#{manageModulesPage.showSize}" style="width:420px">
 															 <f:selectItems value="#{manageModulesPage.newSecList}" />							
 													 </h:selectOneListbox>
 											  </td>                        

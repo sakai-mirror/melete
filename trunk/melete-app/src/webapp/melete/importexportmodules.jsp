@@ -120,7 +120,7 @@ function showprocessMsg()
                     				 <h:outputText value="#{msgs.importexportmodules_export_one_more_msg}" />
                     			</td></tr>
                   				<tr><td>
-										<h:selectManyListbox id="oneormoremodules" value="#{exportMeleteModules.selectedModules}" disabled="#{exportMeleteModules.noFlag}" size="3">
+										<h:selectManyListbox id="oneormoremodules" value="#{exportMeleteModules.selectedModules}" disabled="#{exportMeleteModules.noFlag}" size="3" style="width:420px">
 											<f:selectItems value="#{exportMeleteModules.availableModules}" />
 										</h:selectManyListbox>
 								</td></tr>
