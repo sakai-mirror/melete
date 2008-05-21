@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 
 <h:panelGrid id="cclicensetable1" columns="1" columnClasses="maintabledata8" width="100%"  rendered="#{addSectionPage.m_license.shouldRenderCC}">
-	<h:outputText value="Choose A Creative Commons License" />
+	<h:outputText value="#{msgs.add_section_cclicense}" />
 </h:panelGrid>
 	<h:panelGrid id="cclicensetable2" columns="1" width="100%" rendered="#{addSectionPage.m_license.shouldRenderCC}">
 	<h:column>
@@ -17,8 +17,8 @@
 		<h:column>  
                   <h:message style="color: red" for="allowCmrcl"/>
 				  <h:selectOneRadio id="allowCmrcl" value="#{addSectionPage.m_license.allowCmrcl}">
-				  	<f:selectItem itemValue="true" itemLabel="Yes"/>
-					<f:selectItem  itemValue="false" itemLabel="No"/>
+				  	<f:selectItem itemValue="true" itemLabel="#{msgs.add_section_cclicense_form_allowmod2}"/>
+					<f:selectItem  itemValue="false" itemLabel="#{msgs.add_section_cclicense_form_allowmod0}"/>
 				  </h:selectOneRadio>
 		</h:column>			
 		<h:column>  
