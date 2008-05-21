@@ -34,7 +34,7 @@ import org.sakaiproject.api.app.melete.SectionResourceService;
 import org.sakaiproject.api.app.melete.SectionService;
 import org.sakaiproject.component.app.melete.MeleteResource;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
-
+import org.sakaiproject.util.ResourceLoader;
 /**
  * @author Rashmi
  *
@@ -105,6 +105,8 @@ public class SectionResourceLicenseSelector {
 		// license code
 		public ArrayList getLicenseTypes()
 		{
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			 ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 			  if(sectionService == null)
 			  		sectionService = getSectionService();
 
@@ -117,7 +119,8 @@ public class SectionResourceLicenseSelector {
 		      // Adding available list to select box
 		      if(allLicenseTypes == null || allLicenseTypes.size()==0)
 		      {
-		      	licenseTypes.add(new SelectItem("No license", "No license"));
+		    	String nolicenseMsg = bundle.getString("add_section_noLicense");  
+		      	licenseTypes.add(new SelectItem(nolicenseMsg, nolicenseMsg));
 		      	 return licenseTypes;
 		      }
 
@@ -126,7 +129,7 @@ public class SectionResourceLicenseSelector {
 	    	  		MeleteLicenseService  license = (MeleteLicenseService ) itr.next();
 	    	  		String value = license.getCode().toString();
 	    	  		String label = license.getDescription();
-
+	    	  		label = bundle.getString("add_section_license_"+value);  
 	    	  		licenseTypes.add(new SelectItem(value, label));
 	    		}
 
