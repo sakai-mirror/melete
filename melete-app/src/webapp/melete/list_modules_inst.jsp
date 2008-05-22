@@ -41,6 +41,9 @@ function OpenPrintWindow(windowURL,windowName)
 </td>
 </tr>
 <tr>
+<td colspan="2">
+<table border="0" width="100%">
+<tr>
 <td align="left">
 <div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_modules_inst_viewing_student}" /> </div>
 </td>
@@ -48,6 +51,9 @@ function OpenPrintWindow(windowURL,windowName)
  <h:commandLink id="clearLink" action="#{listModulesPage.clearAllBookmarks}" immediate="true" rendered="#{listModulesPage.bookmarkStatus == listModulesPage.trueFlag}">
 		  <h:outputText  id="clearText" value="#{msgs.clear_all_bookmarks}"/>
 	    </h:commandLink> 
+</td>
+</tr>
+</table>
 </td>
 </tr>
 <tr>
