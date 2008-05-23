@@ -50,6 +50,19 @@ public void insertBookmark(MeleteBookmarksObjService mb) throws Exception
 	}
 	return;
   }
+
+public int getBookmarksCount(String userId, String courseId)
+{
+	 int bookmarksCount = 0;
+		try{
+			bookmarksCount = bookmarksdb.getBookmarksCount(userId, courseId);
+		}catch(Exception e)
+		{
+			logger.error("melete bookmarks business --get bookmarks count failed");
+		}
+		return bookmarksCount;	
+}
+
 public List getBookmarks(String userId, String courseId)
 {
   List bookmarks = null;

@@ -30,6 +30,8 @@ public interface MeleteBookmarksService
 
 	public abstract void insertBookmark(MeleteBookmarksObjService mb) throws Exception;
 
+	public abstract int getBookmarksCount(String userId, String courseId);
+	
 	public abstract List getBookmarks(String userId, String courseId);
 	
 	public abstract List getBookmarks(String userId, String courseId, Integer moduleId);

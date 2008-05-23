@@ -140,6 +140,28 @@ public class MeleteBookmarksDB {
 
 	}
 
+	public int getBookmarksCount(String userId, String courseId)
+	{
+		int bookmarksCount = 0;
+		try{
+		     Session session = getHibernateUtil().currentSession();
+		     Query q = null;
+		     
+		     q=session.createQuery("select count(*) from MeleteBookmarks mb where mb.userId =:userId and mb.courseId = :courseId");
+		     q.setParameter("userId",userId);
+		     q.setParameter("courseId",courseId);
+			 bookmarksCount = ((Integer)q.uniqueResult()).intValue();
+
+		     getHibernateUtil().closeSession();
+
+		} catch(Exception ex)
+		{
+			//ex.printStackTrace();
+			logger.error(ex.toString());
+		}
+		return bookmarksCount;		
+	}
+	
 	public void deleteBookmark(MeleteBookmarks mb) throws Exception
 	{
 		Transaction tx = null;

@@ -619,9 +619,9 @@ public class ListModulesPage implements Serializable{
 
 	public boolean isBookmarkStatus()
 	{
-		 List bookmarksList = null;
+		 int bookmarksCount = 0;
 		  try {
-		  		bookmarksList = getBookmarksService().getBookmarks(getUserId(), getCourseId());
+		  		bookmarksCount = getBookmarksService().getBookmarksCount(getUserId(), getCourseId());
 
 		  	}catch (Exception e)
 			{
@@ -629,7 +629,7 @@ public class ListModulesPage implements Serializable{
 		  		logger.error(e.toString());
 			}
 
-		  	if ((bookmarksList == null)||(bookmarksList.size() == 0))
+		  	if (bookmarksCount == 0)
 		  	{
 		  	  return false;
 		  	}
