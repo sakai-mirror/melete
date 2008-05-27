@@ -53,8 +53,9 @@
 							 </h:panelGroup> 
 						 </f:facet>
 					 <h:outputText id="emp_space" value="     "  styleClass="ExtraPaddingClass" rendered="#{curr_resources.resource_id != addSectionPage.selResourceIdFromList}"/>	
-					 <h:graphicImage id="check_gif" alt="#{msgs.list_section_resources_check}" value="images/checkon.gif" rendered="#{curr_resources.resource_id == addSectionPage.selResourceIdFromList}"/>   				<h:graphicImage id="contenttype_gif" alt="#{msgs.list_section_resources_content}" value="images/url.gif" styleClass="ExpClass" rendered="#{addSectionPage.shouldRenderLink}"/>
-						<h:graphicImage id="contenttype_gif1" alt="#{msgs.list_section_resources_content2}" value="images/image.gif" styleClass="ExpClass" rendered="#{addSectionPage.shouldRenderUpload}"/>
+					 <h:graphicImage id="check_gif" alt="#{msgs.list_section_resources_check}" value="images/checkon.gif" rendered="#{curr_resources.resource_id == addSectionPage.selResourceIdFromList}"/>   				<h:graphicImage id="contenttype_gif" alt="#{msgs.list_section_resources_content_url}" title="#{msgs.list_section_resources_content_url}" value="images/url.gif" styleClass="ExpClass" rendered="#{addSectionPage.shouldRenderLink}"/>
+						<h:graphicImage id="contenttype_gif1" alt="#{msgs.list_section_resources_content_upload}" 
+						title="#{msgs.list_section_resources_content_upload}" value="images/image.gif" styleClass="ExpClass" rendered="#{addSectionPage.shouldRenderUpload}"/>
 							<h:outputText id="emp_spacebefore" value="       "  styleClass="ExtraPaddingClass"/>
 							<h:outputLink id="showResourceLink" value="#{curr_resources.resource_url}" target="_blank" title="Section Resource" styleClass="a1">
 								  <h:outputText value="#{curr_resources.resource_title}" />
