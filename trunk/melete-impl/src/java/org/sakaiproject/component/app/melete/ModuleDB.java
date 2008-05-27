@@ -1940,10 +1940,11 @@ public class ModuleDB implements Serializable {
 							copyMelResource.setResourceId(newResourceId);
 							sectionDB.insertMeleteResource(copySection, copyMelResource);
 						}
-						else
+						else if(toCopySection.getSectionResource() != null)
 						{
-							// insert section resource with same melete resource
-							sectionDB.insertSectionResource(copySection, (MeleteResource) toCopySection.getSectionResource().getResource());
+							// insert section resource with same melete resource							
+							MeleteResource copyMr = (MeleteResource) toCopySection.getSectionResource().getResource();
+							if(copyMr != null)	sectionDB.insertSectionResource(copySection, copyMr);							
 						}
 					}
 					// replace with new copied section
