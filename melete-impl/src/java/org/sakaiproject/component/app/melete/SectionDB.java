@@ -373,13 +373,15 @@ public class SectionDB implements Serializable {
 		{
 			boolean resourceInUse = false;
 			String resourceId = null;
-			if (sec.getSectionResource().getResource() != null)
+			if (sec.getSectionResource() != null)
 			{	
-			resourceId = sec.getSectionResource().getResource().getResourceId();	
-			//Check in SECTION_RESOURCE table
-			List srUseList = checkInSectionResources(resourceId, courseId);
-			if (srUseList != null)
-			{
+			  if (sec.getSectionResource().getResource() != null)
+			  {	
+			  resourceId = sec.getSectionResource().getResource().getResourceId();	
+			  //Check in SECTION_RESOURCE table
+			  List srUseList = checkInSectionResources(resourceId, courseId);
+			  if (srUseList != null)
+			  {
 				//This means there is the reference for this section
 				//as well as another section
 				if (srUseList.size() > 1)
@@ -420,13 +422,14 @@ public class SectionDB implements Serializable {
 				  }
 				  deleteFromMeleteTables(sec,userId, MELETE_RESOURCE_SECTION_RESOURCE, null);
 			    }
-			}
+			  }
 			}
 			else //resource_id is usually null if the resource has been deleted via Manage
 			{
 				//Delete from MELETE_SECTION_RESOURCE and MELETE_SECTION
 				deleteFromMeleteTables(sec, userId, SECTION_RESOURCE_ONLY, null);
 			}
+			}//End if section.getSectionResource != null	  
 		}//End typeLink and typeUpload
 
 		if (sec.getContentType().equals("typeEditor"))

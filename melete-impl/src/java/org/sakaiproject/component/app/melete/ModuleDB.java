@@ -2430,7 +2430,7 @@ public class ModuleDB implements Serializable {
 			for (Iterator<Element> itr = allsec.iterator(); itr.hasNext();)
 			{
 				Section sec = sectionDB.getSection(Integer.parseInt(((Element) itr.next()).attributeValue("id")));
-				if(sec.getContentType().equals("notype") || sec.getSectionResource().getResource() == null) continue;
+				if(sec.getContentType().equals("notype") || sec.getSectionResource() == null || sec.getSectionResource().getResource() == null) continue;
 				
 				if (sec.getContentType().equals("typeEditor"))
 				{
