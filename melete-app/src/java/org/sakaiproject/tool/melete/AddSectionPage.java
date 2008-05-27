@@ -131,7 +131,12 @@ public class AddSectionPage extends SectionPage implements Serializable{
 
 	    //validation 3: if upload a new file check fileName format - moved to uploadSerctionContent()
 	  	// validation 4: check link url - moved to addresourcetoMeleteCollection()
-	 	
+	 	if(!section.getContentType().equals("notype") && !section.getContentType().equals("typeEditor") && meleteResource.getResourceId() == null)
+	 	{
+	 		String errMsg = bundle.getString("section_content_required");
+			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"section_content_required",errMsg));
+			return "failure";
+	 	}
 	   //   save section
 		    if (logger.isDebugEnabled()) logger.debug("AddSectionpage:inserting section");
 		     String uploadHomeDir = context.getExternalContext().getInitParameter("uploadDir");
