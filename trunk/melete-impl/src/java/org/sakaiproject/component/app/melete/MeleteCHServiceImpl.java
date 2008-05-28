@@ -1163,12 +1163,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	   	    catch(PermissionException e1)
 	        {
 	          logger.error("Permission to get uploads collection is denied");
-	        }
-	   	    catch(InUseException iue)
-	   	    {
-	   	    	getContentservice().removeAllLocks(delRes_id);
-	   	    	getContentservice().removeResource(delRes_id);
-	   	    }
+	        }	   	  
 	   	    catch (Exception e)
 		    {
 	   	    	e.printStackTrace();
