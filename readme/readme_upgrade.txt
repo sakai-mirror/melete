@@ -138,15 +138,15 @@ SETUP INSTRUCTIONS
 		Mysql Users: /components/src/sql/mysql/melete25_upgrade.sql
 		Oracle Users: /components/src/sql/oracle/melete25_upgrade.sql
 		
-		c. As of Melete2.5, we are moving the dtd declaration for the SEQ_XML column in MELETE_MODULE
+	7.2. It is necessary to run this script in order for the upgrade to run successfully.
+	    As of Melete2.5, we are moving the dtd declaration for the SEQ_XML column in MELETE_MODULE
 		from an external reference to an internal inline dtd. The script /components/src/sql/mysql/seqxml_script.sql
 		achieves this. Review the script and make sure dtdlocation variable is set up correctly
 		for your installation. Execute this script and check the MELETE_MODULE table to make sure
 		the SEQ_XML column has been updated correctly.
 		
-	
-	
-
+	Start tomcat, make sure there are no errors in the logs.
+		
 
 For future development, tutorials and solutions to common setup problems, see:
 http://etudesproject.org/melete.htm   
