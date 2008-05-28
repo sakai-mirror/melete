@@ -423,13 +423,17 @@ public class SectionDB implements Serializable {
 				  deleteFromMeleteTables(sec,userId, MELETE_RESOURCE_SECTION_RESOURCE, null);
 			    }
 			  }
-			}
-			else //resource_id is usually null if the resource has been deleted via Manage
-			{
+			  }
+			  else //resource_id is usually null if the resource has been deleted via Manage
+			  {
 				//Delete from MELETE_SECTION_RESOURCE and MELETE_SECTION
 				deleteFromMeleteTables(sec, userId, SECTION_RESOURCE_ONLY, null);
-			}
+			  }
 			}//End if section.getSectionResource != null	  
+			else //Ideally this condition should never arise, it is a safety feature
+			{
+				deleteFromMeleteTables(sec, userId, NONE_TO_DELETE, null);
+			}
 		}//End typeLink and typeUpload
 
 		if (sec.getContentType().equals("typeEditor"))
