@@ -1145,6 +1145,11 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        {
 	          logger.error("Permission to get uploads collection is denied");
 	        }
+	   	    catch(InUseException iue)
+	   	    {
+	   	    	getContentservice().removeAllLocks(delRes_id);
+	   	    	getContentservice().removeResource(delRes_id);
+	   	    }
 	   	    catch (Exception e)
 		    {
 	   	    	e.printStackTrace();
@@ -1164,12 +1169,12 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        }
 	   			//          setup a security advisor
 	        meleteSecurityService.pushAdvisor();
+	        delColl_id= Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+delColl_id+ Entity.SEPARATOR;
+	    	if(delSubColl_id != null)
+	    		delColl_id = delColl_id.concat(delSubColl_id + Entity.SEPARATOR);
+	    	logger.debug("checking coll before delte" + delColl_id);
 		    try
-	   	    {
-		    	delColl_id= Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+delColl_id+ Entity.SEPARATOR;
-		    	if(delSubColl_id != null)
-		    		delColl_id = delColl_id.concat(delSubColl_id + Entity.SEPARATOR);
-		    	logger.debug("checking coll before delte" + delColl_id);
+	   	    {		    	
 		    	getContentservice().checkCollection(delColl_id);
 		    	getContentservice().removeCollection(delColl_id);
 	   		}
@@ -1185,6 +1190,11 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        {
 	          logger.error("Permission to get uploads collection is denied");
 	        }
+	   	 catch(InUseException iue)
+	   	    {
+	   		 	getContentservice().removeAllLocks(delColl_id);
+	   			getContentservice().removeCollection(delColl_id);
+	   	    }
 	   	    catch (Exception e)
 		    {
 		        throw new MeleteException("delete_resource_fail");
