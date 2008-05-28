@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -128,19 +129,20 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		{
 			//if not, create it
 			if (logger.isDebugEnabled()) logger.debug("creating melete root collection "+rootCollectionRef);
-
+			ContentCollectionEdit edit = null;
 			try
 			{
-				ContentCollectionEdit edit = getContentservice().addCollection(rootCollectionRef);
+				edit = getContentservice().addCollection(rootCollectionRef);
 				ResourcePropertiesEdit props = edit.getPropertiesEdit();
 				props.addProperty(ResourceProperties.PROP_DISPLAY_NAME, collectionName);
                 props.addProperty(ResourceProperties.PROP_DESCRIPTION, description);
                 props.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 				getContentservice().commitCollection(edit);
 				return edit.getId();
-			}
+			}		
 			catch (Exception e2)
-			{
+			{	
+				if(edit != null) getContentservice().cancelCollection(edit);
 				logger.warn("creating melete root collection: " + e2.toString());
 			}
    		}
@@ -492,6 +494,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	 public void editResourceProperties(String selResourceIdFromList, String secResourceName, String secResourceDescription)
 	{
 		 if(selResourceIdFromList == null || selResourceIdFromList.length() == 0) return;
+		 ContentResourceEdit edit = null;
 	 	try
 	    {
         	if (!isUserAuthor())
@@ -501,7 +504,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
    			//          setup a security advisor
         		meleteSecurityService.pushAdvisor();
         		selResourceIdFromList = URLDecoder.decode(selResourceIdFromList,"UTF-8");
-        		ContentResourceEdit edit = getContentservice().editResource(selResourceIdFromList);
+        		edit = getContentservice().editResource(selResourceIdFromList);
 				ResourcePropertiesEdit rp = edit.getPropertiesEdit();
 				rp.clear();
 				rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME,secResourceName);
@@ -511,6 +514,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    }
 		catch(Exception e)
 		{
+			if(edit != null) getContentservice().cancelResource(edit);	    
 			logger.error(e.toString());
 		}
 		finally
@@ -535,34 +539,37 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		    }
 //       setup a security advisor
          meleteSecurityService.pushAdvisor();
-		 	try{
-		 		 String finalName = addCollId + name;
-                 if (finalName.length() > getContentservice().MAXIMUM_RESOURCE_ID_LENGTH)
-                 {
-                 	//leaving room for CHS inserted duplicate filenames -1 -2 etc
-                         int extraChars = finalName.length() - getContentservice().MAXIMUM_RESOURCE_ID_LENGTH +3;
-                         name = name.substring(0,name.length() - extraChars);
-                 }
-		 		resource = getContentservice().addResource (
-													name,
-										            addCollId,
-										            MAXIMUM_ATTEMPTS_FOR_UNIQUENESS,
-										            res_mime_type,
-										            secContentData,
-										            res, 0);
-		 	//check if its duplicate file and edit the resource name if it is
-		 		String checkDup = resource.getUrl().substring(resource.getUrl().lastIndexOf("/")+1);
-
-		 		if(!checkDup.equals(name))
+         try
+			{
+				String finalName = addCollId + name;
+				if (finalName.length() > getContentservice().MAXIMUM_RESOURCE_ID_LENGTH)
 				{
-		 			ContentResourceEdit edit = getContentservice().editResource(resource.getId());
-					ResourcePropertiesEdit rp = edit.getPropertiesEdit();
-					String desc = rp.getProperty(ResourceProperties.PROP_DESCRIPTION);
-					rp.clear();
-					rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME,checkDup);
-					rp.addProperty(ResourceProperties.PROP_DESCRIPTION,desc);
-					rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
-					getContentservice().commitResource(edit);
+					// leaving room for CHS inserted duplicate filenames -1 -2 etc
+					int extraChars = finalName.length() - getContentservice().MAXIMUM_RESOURCE_ID_LENGTH + 3;
+					name = name.substring(0, name.length() - extraChars);
+				}
+				resource = getContentservice().addResource(name, addCollId, MAXIMUM_ATTEMPTS_FOR_UNIQUENESS, res_mime_type, secContentData, res, 0);
+				// check if its duplicate file and edit the resource name if it is
+				String checkDup = resource.getUrl().substring(resource.getUrl().lastIndexOf("/") + 1);
+				ContentResourceEdit edit = null;
+				try
+				{					
+					if (!checkDup.equals(name))
+					{
+						edit = getContentservice().editResource(resource.getId());
+						ResourcePropertiesEdit rp = edit.getPropertiesEdit();
+						String desc = rp.getProperty(ResourceProperties.PROP_DESCRIPTION);
+						rp.clear();
+						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, checkDup);
+						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
+						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
+						getContentservice().commitResource(edit);
+					}
+				}
+				catch (Exception ex)
+				{
+					if (edit != null) getContentservice().cancelResource(edit);
+					throw ex;
 				}
 			}
 			catch(PermissionException e)
@@ -705,6 +712,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	 */
 	 public void editResource(String resourceId, String contentEditor) throws Exception
 	 {
+		 ContentResourceEdit edit = null;
 	 	try
 	    {
         	if (!isUserAuthor())
@@ -716,7 +724,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		if (resourceId != null)
         		{
         		  resourceId = URLDecoder.decode(resourceId,"UTF-8");
-        		  ContentResourceEdit edit = getContentservice().editResource(resourceId);
+        		  edit = getContentservice().editResource(resourceId);
         		  edit.setContent(contentEditor.getBytes());
         		  edit.setContentLength(contentEditor.length());
         		  getContentservice().commitResource(edit);
@@ -726,6 +734,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	 	catch(Exception e)
 		{
 			logger.error("error saving editor content "+e.toString());
+			if(edit != null) getContentservice().cancelResource(edit);
 			throw e;
 		}
 		finally
@@ -1131,6 +1140,16 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		    try
 	   	    {
 		    	getContentservice().checkResource(delRes_id);
+		    	if (getContentservice().isLocked(delRes_id))
+	    		{
+	    			logger.info("resource is locked" + delRes_id);
+	    			Collection<String> allLocks = getContentservice().getLocks(delRes_id);
+	    			if (allLocks != null)
+	    			{
+	    				for (String l : allLocks)
+	    				getContentservice().removeLock(delRes_id, l);	    				
+	    			}
+	    		}
 		    	getContentservice().removeResource(delRes_id);
 	   		}
 	   	    catch(IdUnusedException e1)
@@ -1173,28 +1192,33 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    	if(delSubColl_id != null)
 	    		delColl_id = delColl_id.concat(delSubColl_id + Entity.SEPARATOR);
 	    	logger.debug("checking coll before delte" + delColl_id);
-		    try
-	   	    {		    	
-		    	getContentservice().checkCollection(delColl_id);
-		    	getContentservice().removeCollection(delColl_id);
-	   		}
-	   	    catch(IdUnusedException e1)
-		    {
-	   		  logger.error("IdUnusedException thrown: "+e1.getMessage());
-		    }
-	   	    catch(TypeException e1)
+	    	try
+	    	{
+	    		getContentservice().checkCollection(delColl_id);
+	    		if (getContentservice().isLocked(delColl_id))
+	    		{
+	    			logger.info("resource is locked" + delColl_id);
+	    			Collection<String> allLocks = getContentservice().getLocks(delColl_id);
+	    			if (allLocks != null)
+	    			{
+	    				for (String l : allLocks)
+	    					getContentservice().removeLock(delColl_id, l);	    				
+	    			}
+	    		}
+	    		getContentservice().removeCollection(delColl_id);
+	    	}
+	    	catch (IdUnusedException e1)
+	    	{
+	    		logger.error("IdUnusedException thrown: "+e1.getMessage());
+	    	}
+	    	catch(TypeException e1)
 	        {
 	          logger.error("TypeException thrown: "+e1.getMessage());
 	        }
 	   	    catch(PermissionException e1)
 	        {
 	          logger.error("Permission to get uploads collection is denied");
-	        }
-	   	 catch(InUseException iue)
-	   	    {
-	   		 	getContentservice().removeAllLocks(delColl_id);
-	   			getContentservice().removeCollection(delColl_id);
-	   	    }
+	        }	  
 	   	    catch (Exception e)
 		    {
 		        throw new MeleteException("delete_resource_fail");
