@@ -53,6 +53,7 @@ function setRequired(id)
 		  		<td height="20" class="maintabledata5"><h:outputText id="t1_1" value="#{msgs.manage_content_new_item}" styleClass="tableheader2"/> 
 		  		</td>
 		  	</tr>
+		  
             <tr>
             	<td colspan="2">
             	<h:inputHidden id="numitems" value="#{addResourcesPage.numberItems}" />
@@ -86,6 +87,11 @@ function setRequired(id)
 			  <br>
 			  </td>
 			</tr>	
+				<tr>
+		  	  <td colspan="2">
+		  	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
+		  	  </td>
+		  	</tr>  
           <tr>
 		    <td colspan="2">
 	
