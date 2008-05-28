@@ -511,14 +511,15 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				rp.addProperty(ResourceProperties.PROP_DESCRIPTION,secResourceDescription);
 				rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 				getContentservice().commitResource(edit);
+				edit = null;
 	    }
 		catch(Exception e)
-		{
-			if(edit != null) getContentservice().cancelResource(edit);	    
+		{			    
 			logger.error(e.toString());
 		}
 		finally
 		  {
+			if(edit != null) getContentservice().cancelResource(edit);
 			// clear the security advisor
 			meleteSecurityService.popAdvisor();
 		  }
@@ -564,12 +565,16 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
 						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 						getContentservice().commitResource(edit);
+						edit = null;
 					}
 				}
 				catch (Exception ex)
+				{					
+					throw ex;
+				}
+				finally
 				{
 					if (edit != null) getContentservice().cancelResource(edit);
-					throw ex;
 				}
 			}
 			catch(PermissionException e)
@@ -728,17 +733,18 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		  edit.setContent(contentEditor.getBytes());
         		  edit.setContentLength(contentEditor.length());
         		  getContentservice().commitResource(edit);
+        		  edit = null;
         		}
         		return;
 	    }
 	 	catch(Exception e)
 		{
-			logger.error("error saving editor content "+e.toString());
-			if(edit != null) getContentservice().cancelResource(edit);
+			logger.error("error saving editor content "+e.toString());			
 			throw e;
 		}
 		finally
 		  {
+			if(edit != null) getContentservice().cancelResource(edit);
 			// clear the security advisor
 			meleteSecurityService.popAdvisor();
 		  }
@@ -1139,17 +1145,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        meleteSecurityService.pushAdvisor();
 		    try
 	   	    {
-		    	getContentservice().checkResource(delRes_id);
-		    	if (getContentservice().isLocked(delRes_id))
-	    		{
-	    			logger.info("resource is locked" + delRes_id);
-	    			Collection<String> allLocks = getContentservice().getLocks(delRes_id);
-	    			if (allLocks != null)
-	    			{
-	    				for (String l : allLocks)
-	    				getContentservice().removeLock(delRes_id, l);	    				
-	    			}
-	    		}
+		    	getContentservice().checkResource(delRes_id);		    	
 		    	getContentservice().removeResource(delRes_id);
 	   		}
 	   	    catch(IdUnusedException e1)
@@ -1189,17 +1185,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    	logger.debug("checking coll before delte" + delColl_id);
 	    	try
 	    	{
-	    		getContentservice().checkCollection(delColl_id);
-	    		if (getContentservice().isLocked(delColl_id))
-	    		{
-	    			logger.info("resource is locked" + delColl_id);
-	    			Collection<String> allLocks = getContentservice().getLocks(delColl_id);
-	    			if (allLocks != null)
-	    			{
-	    				for (String l : allLocks)
-	    					getContentservice().removeLock(delColl_id, l);	    				
-	    			}
-	    		}
+	    		getContentservice().checkCollection(delColl_id);	    		
 	    		getContentservice().removeCollection(delColl_id);
 	    	}
 	    	catch (IdUnusedException e1)
