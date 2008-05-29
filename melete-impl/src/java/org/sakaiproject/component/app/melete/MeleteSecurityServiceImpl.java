@@ -493,6 +493,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 			if (siteId != null && siteId.length() > 0)
 			{									
 				List<Module> selectList = getModuleService().getModules(siteId);
+				count = selectList.size();
 				File basePackDir = new File(archivePath);
 				List orgResElements = getMeleteExportService()
 					.generateOrganizationResourceItems(selectList,
@@ -504,7 +505,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 						// read organizations 4j document as w3c document 
 						org.w3c.dom.Document meletew3cDocument = Xml.readDocumentFromString(xmlstr);
 						org.w3c.dom.Element meletew3cElement = (org.w3c.dom.Element)meletew3cDocument.getFirstChild();
-						org.w3c.dom.Element meletew3cNewElement = (org.w3c.dom.Element)((Element) stack.peek()).getOwnerDocument().importNode(meletew3cElement,true);
+						org.w3c.dom.Element meletew3cNewElement = (org.w3c.dom.Element)((Element) stack.peek()).getOwnerDocument().importNode(meletew3cElement,true);						
 						modulesElement.appendChild(meletew3cNewElement);
 											
 						// now resources document
