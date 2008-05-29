@@ -187,11 +187,12 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		}
 	}
 	 
-	public void mergeAndBuildModules(Document ArchiveDoc, String unZippedDirPath, String fromSiteId) throws Exception
+	public int mergeAndBuildModules(Document ArchiveDoc, String unZippedDirPath, String fromSiteId) throws Exception
 	{
 		if (logger.isDebugEnabled()) logger.debug("Entering mergeAndBuildModules");
 		setUnzippeddirpath(unZippedDirPath);
 		setDestinationContext(fromSiteId);
+		int count = 0; 
 		try
 		{
 			Element rootEle = ArchiveDoc.getRootElement();
@@ -203,7 +204,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			// organizations
 			List elements = rootEle.selectNodes("//organization/item");
 			logger.debug("sz of elements is" + elements.size());
-
+			count = elements.size();
 			for (Iterator iter = elements.iterator(); iter.hasNext();)
 			{
 				Element element = (Element) iter.next();
@@ -265,6 +266,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		}
 
 		if (logger.isDebugEnabled()) logger.debug("Exiting mergeAndBuildModules");
+		return count;
 	}
 	/**
 	 * Parses the manifest and build modules
