@@ -1143,10 +1143,12 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        }
 	   			//          setup a security advisor
 	        meleteSecurityService.pushAdvisor();
+	        ContentResourceEdit edit = null;
 		    try
 	   	    {
-		    	getContentservice().checkResource(delRes_id);		    	
-		    	getContentservice().removeResource(delRes_id);
+		    	edit = getContentservice().editResource(delRes_id);		    	
+		    	getContentservice().removeResource(edit);
+		    	edit = null;
 	   		}
 	   	    catch(IdUnusedException e1)
 		    {	   	    
@@ -1167,6 +1169,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		    }
 		    finally
 		    {
+		    	if(edit != null)getContentservice().cancelResource(edit);
 		       meleteSecurityService.popAdvisor();
 		    }
 	  }
@@ -1183,10 +1186,13 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    	if(delSubColl_id != null)
 	    		delColl_id = delColl_id.concat(delSubColl_id + Entity.SEPARATOR);
 	    	logger.debug("checking coll before delte" + delColl_id);
+	    	
+	    	ContentCollectionEdit edit = null;
 	    	try
 	    	{
-	    		getContentservice().checkCollection(delColl_id);	    		
-	    		getContentservice().removeCollection(delColl_id);
+	    		edit = getContentservice().editCollection(delColl_id);	    		
+	    		getContentservice().removeCollection(edit);
+	    		edit = null;
 	    	}
 	    	catch (IdUnusedException e1)
 	    	{
@@ -1206,6 +1212,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		    }
 		    finally
 		    {
+		       if(edit != null)getContentservice().cancelCollection(edit);
 		       meleteSecurityService.popAdvisor();
 		    }
 	  }
