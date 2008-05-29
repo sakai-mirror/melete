@@ -452,6 +452,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 			Set userListAllowImport)
 	{
 		logger.debug("merge of melete" + siteId +"," +fromSiteId + ","+root.toString());
+		int count = 0;
 		try{
 		org.w3c.dom.Document w3doc = Xml.createDocument();
 		org.w3c.dom.Element w3root = (org.w3c.dom.Element)w3doc.importNode(root, true);
@@ -462,13 +463,13 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		org.dom4j.Document domDoc =	domReader.read(w3doc);
 		logger.debug("archive str " + archivePath + archivePath.lastIndexOf(File.separator));
 		archivePath = archivePath.substring(0,archivePath.lastIndexOf("/"));
-		getMeleteImportService().mergeAndBuildModules(domDoc,archivePath,siteId);
+		count = getMeleteImportService().mergeAndBuildModules(domDoc,archivePath,siteId);
 		}catch(Exception e)
 		{
 			e.printStackTrace();
 			return "error on merging modules content";
 		}
-		return "merging modules content \n";
+		return "merging modules content: (" + count+ ") modules \n";
 	}	
 
 	private String createdom4jtree(org.dom4j.Element oneelement)
