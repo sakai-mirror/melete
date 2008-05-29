@@ -98,7 +98,7 @@ function resetModuleSelection() {
 										<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" style="border-collapse: collapse">
 											<tr>
 											 <td align="left" >
-												 <h:selectOneListbox id="sectioncurrList" disabled="true" size="#{manageModulesPage.showSize}" style="width:420px">
+												 <h:selectOneListbox id="sectioncurrList" disabled="true" size="#{manageModulesPage.showSize}" style="width:300px">
 															 <f:selectItems value="#{manageModulesPage.currSecList}" />							
 												 </h:selectOneListbox>
 											   </td>
@@ -115,7 +115,7 @@ function resetModuleSelection() {
 											<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" style="border-collapse: collapse">
 											<tr>
                        						 <td align="left">
-                       						 	 <h:selectOneListbox id="sectionnewList" value="#{manageModulesPage.newSelectedSection}" size="#{manageModulesPage.showSize}" style="width:420px">
+                       						 	 <h:selectOneListbox id="sectionnewList" value="#{manageModulesPage.newSelectedSection}" size="#{manageModulesPage.showSize}" style="width:300px">
 															 <f:selectItems value="#{manageModulesPage.newSecList}" />							
 													 </h:selectOneListbox>
 											  </td>                        

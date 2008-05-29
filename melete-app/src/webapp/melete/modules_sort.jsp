@@ -74,7 +74,7 @@
 										<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" style="border-collapse: collapse">
 											<tr>
 											 <td align="left" class="maintabledata3">
-												 <h:selectOneListbox id="modulecurrList" disabled="true" size="#{manageModulesPage.showSize}" style="width:420px">
+												 <h:selectOneListbox id="modulecurrList" disabled="true" size="#{manageModulesPage.showSize}" style="width:300px">
 															 <f:selectItems value="#{manageModulesPage.currList}" />							
 												 </h:selectOneListbox>
 											   </td>
@@ -91,7 +91,7 @@
 											<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" style="border-collapse: collapse">
 											<tr>
                        						 <td align="left">
-                       						 	 <h:selectOneListbox id="modulenewList" value="#{manageModulesPage.newSelectedModule}" size="#{manageModulesPage.showSize}" style="width:420px">
+                       						 	 <h:selectOneListbox id="modulenewList" value="#{manageModulesPage.newSelectedModule}" size="#{manageModulesPage.showSize}" style="width:300px">
 															 <f:selectItems value="#{manageModulesPage.newList}" />							
 													 </h:selectOneListbox>
 											  </td>                        
