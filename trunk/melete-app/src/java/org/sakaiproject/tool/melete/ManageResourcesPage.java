@@ -347,10 +347,10 @@ public class DisplayResources implements Comparable<DisplayResources>
 			res= this.resource_title.compareTo(n.getResource_title());		
 		
 		// this is link and n is upload
-		if(this.typeLink && !n.isTypeLink()) res = -1;
+		if(this.typeLink && !n.isTypeLink()) res = 1;
 		
 		// this is upload and n is link
-		if(!this.typeLink && n.isTypeLink()) res = 1;		
+		if(!this.typeLink && n.isTypeLink()) res = -1;		
 		
 		return res;
 	}
