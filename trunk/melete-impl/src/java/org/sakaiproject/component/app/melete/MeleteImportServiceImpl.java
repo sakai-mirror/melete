@@ -152,7 +152,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	private boolean buildModuleDescription(Element descEle, Module module)
 	{
 		boolean descr = false;
-		if (descEle != null)
+		if (descEle != null && descEle.element("imsmd:langstring") != null)
 		{
 			String desc = descEle.element("imsmd:langstring").getText();
 			module.setDescription(desc.trim());
@@ -165,7 +165,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	{
 		boolean keywords = false;
 		
-		if (keywordEle != null)
+		if (keywordEle != null && keywordEle.element("imsmd:langstring") != null)
 		{
 			String modkeyword = keywordEle.element("imsmd:langstring").getText();
 			module.setKeywords(modkeyword.trim());
