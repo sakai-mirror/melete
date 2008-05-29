@@ -819,7 +819,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				{
 					Element metaElement = (Element) iter2.next();
 	
-					if (metaElement.getName().equals("imsmd:description"))
+					if (metaElement.getName().equals("imsmd:description") && metaElement.element("imsmd:langstring") != null)
 					{
 						String instr = metaElement.element("imsmd:langstring").getText();
 						section.setInstr(instr.trim());
@@ -834,7 +834,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				{
 					Element rightsElement = (Element) iter3.next();
 	
-					if (rightsElement.getName().equals("imsmd:description"))
+					if (rightsElement.getName().equals("imsmd:description") && rightsElement.element("imsmd:langstring") !=null )
 					{
 						String licenseUrl = rightsElement.element("imsmd:langstring").getText();
 						if (licenseUrl != null)
