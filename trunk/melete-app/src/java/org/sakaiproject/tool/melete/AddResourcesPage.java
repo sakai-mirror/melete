@@ -118,46 +118,63 @@ public class AddResourcesPage {
 	  boolean emptyLinkFlag = false;
 	  boolean emptyTitleFlag = false;
 
-	  for (int i=1; i<=10; i++)
+	  if (this.fileType.equals("upload"))
 	  {
-		if (this.fileType.equals("upload"))
-		{
+	    for (int i=1; i<=10; i++)
+	    {
 			org.apache.commons.fileupload.FileItem fi = (org.apache.commons.fileupload.FileItem) context.getExternalContext().getRequestMap().get("file"+i);
 			if(fi == null || fi.getName() == null || fi.getName().length() ==0)
             {
 		    emptyCounter = emptyCounter + 1;
 		    }
 		 }
-
-
-	  }
-	  try
-	  {
-		if (this.fileType.equals("upload"))
-		{
+ 	    try
+	    {
 			if (emptyCounter == 10) throw new MeleteException("all_uploads_empty");
 		}
-
-	  }
-	  catch (MeleteException mex)
-      {
+	    catch (MeleteException mex)
+        {
 		  String errMsg = bundle.getString(mex.getMessage());
 	      context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
 		  return "failure";
-      }
-
-      for (int i=1; i<=10; i++)
-      {
-    	try
+        }
+	    for (int i=1; i<=10; i++)
         {
-        if(this.fileType.equals("upload"))
-        {
+		  //Validate first, if any fields have a problem, display a message  
+    	  try
+          {
               org.apache.commons.fileupload.FileItem fi = (org.apache.commons.fileupload.FileItem) context.getExternalContext().getRequestMap().get("file"+i);
 
               if(fi !=null && fi.getName() != null && fi.getName().length() !=0)
               {
                  Util.validateUploadFileName(fi.getName());
-                 // filename on the client
+               }
+               else
+               {
+                  logger.info("File being uploaded is NULL");
+                  continue;
+                }
+           }
+           catch (MeleteException mex)
+           {
+             String errMsg = bundle.getString(mex.getMessage());
+  	         context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
+		     return "failure";
+           }
+           catch(Exception e)
+           {
+             logger.error("file upload FAILED" + e.toString());
+           }
+        }
+        for (int i=1; i<=10; i++)
+        {
+    	  try
+          {
+              org.apache.commons.fileupload.FileItem fi = (org.apache.commons.fileupload.FileItem) context.getExternalContext().getRequestMap().get("file"+i);
+
+              if(fi !=null && fi.getName() != null && fi.getName().length() !=0)
+              {
+                  // filename on the client
                  secResourceName = fi.getName();
                  if (secResourceName.indexOf("/") != -1)
                  {
@@ -187,41 +204,32 @@ public class AddResourcesPage {
                   logger.info("File being uploaded is NULL");
                   continue;
                 }
-            }//End if filetype is upload
-        }
-        catch (MeleteException mex)
-        {
+          }
+          catch (MeleteException mex)
+          {
           String errMsg = bundle.getString(mex.getMessage());
   	      context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
 		  return "failure";
-        }
-        catch(Exception e)
-        {
+          }
+          catch(Exception e)
+          {
           logger.error("file upload FAILED" + e.toString());
-         }
+          }
       }
+	  }  
+	  
+	  
       if(this.fileType.equals("link"))
       {
       Iterator utIterator = utList.iterator();
-      while (utIterator.hasNext())
-      {
+      //Finish validating here
+        while (utIterator.hasNext())
+        {
     	  UrlTitleObj utObj = (UrlTitleObj) utIterator.next();
     	  try
     	  {
-            if (this.fileType.equals("link"))
-            {
-              secContentMimeType=getMeleteCHService().MIME_TYPE_LINK;
               String linkUrl = utObj.getUrl();
-              secResourceName = utObj.getTitle();
               Util.validateLink(linkUrl);
-
-              if ((linkUrl != null)&&(linkUrl.trim().length() > 0)&&(secResourceName != null)&&(secResourceName.trim().length() > 0))
-              {
-                secContentData = new byte[linkUrl.length()];
-                secContentData = linkUrl.getBytes();
-                addItem(secResourceName,secContentMimeType, addCollId, secContentData);
-              }
-             }//End if filetype is link
             }
             catch (MeleteException mex)
             {
@@ -231,9 +239,36 @@ public class AddResourcesPage {
             }
             catch(Exception e)
             {
-              logger.error("file upload FAILED" + e.toString());
+              logger.error("link upload FAILED" + e.toString());
              }
-           }
+         }
+         utIterator = utList.iterator();
+         while (utIterator.hasNext())
+        {
+    	  UrlTitleObj utObj = (UrlTitleObj) utIterator.next();
+    	  try
+    	  {
+              secContentMimeType=getMeleteCHService().MIME_TYPE_LINK;
+              String linkUrl = utObj.getUrl();
+              secResourceName = utObj.getTitle();
+              if ((linkUrl != null)&&(linkUrl.trim().length() > 0)&&(secResourceName != null)&&(secResourceName.trim().length() > 0))
+              {
+                secContentData = new byte[linkUrl.length()];
+                secContentData = linkUrl.getBytes();
+                addItem(secResourceName,secContentMimeType, addCollId, secContentData);
+              }
+            }
+            catch (MeleteException mex)
+            {
+              String errMsg = bundle.getString(mex.getMessage());
+      	      context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
+			  return "failure";
+            }
+            catch(Exception e)
+            {
+              logger.error("link upload FAILED" + e.toString());
+             }
+          }        
       }
       FacesContext ctx = FacesContext.getCurrentInstance();
       ValueBinding binding =Util.getBinding("#{manageResourcesPage}");
