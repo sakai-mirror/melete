@@ -466,8 +466,9 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		}catch(Exception e)
 		{
 			e.printStackTrace();
+			return "error on merging modules content";
 		}
-		return "merging melete content \n";
+		return "merging modules content \n";
 	}	
 
 	private String createdom4jtree(org.dom4j.Element oneelement)
