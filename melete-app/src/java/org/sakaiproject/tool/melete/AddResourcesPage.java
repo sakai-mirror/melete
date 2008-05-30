@@ -158,7 +158,7 @@ public class AddResourcesPage {
            catch (MeleteException mex)
            {
              String errMsg = bundle.getString(mex.getMessage());
-  	         context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
+  	         context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"embed_img_bad_filenames",bundle.getString("embed_img_bad_filenames")));
 		     return "failure";
            }
            catch(Exception e)
@@ -234,7 +234,7 @@ public class AddResourcesPage {
             catch (MeleteException mex)
             {
               String errMsg = bundle.getString(mex.getMessage());
-      	      context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
+      	      context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"add_section_bad_url_formats",bundle.getString("add_section_bad_url_formats")));
 			  return "failure";
             }
             catch(Exception e)
