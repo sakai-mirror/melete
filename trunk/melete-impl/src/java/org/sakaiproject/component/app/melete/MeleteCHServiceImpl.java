@@ -1185,13 +1185,12 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        delColl_id= Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+delColl_id+ Entity.SEPARATOR;
 	    	if(delSubColl_id != null)
 	    		delColl_id = delColl_id.concat(delSubColl_id + Entity.SEPARATOR);
-	    	logger.debug("checking coll before delte" + delColl_id);
+	    	logger.debug("checking coll before delte" + delColl_id);	    	
 	    	
-	    	ContentCollectionEdit edit = null;
 	    	try
 	    	{
-	    		edit = getContentservice().editCollection(delColl_id);	    		
-	    		getContentservice().removeCollection(edit);
+	    		getContentservice().checkCollection(delColl_id);	    		
+	    		getContentservice().removeCollection(delColl_id);
 	    		edit = null;
 	    	}
 	    	catch (IdUnusedException e1)
@@ -1208,11 +1207,11 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        }	  
 	   	    catch (Exception e)
 		    {
+	   	    	logger.error("error deleting melete collection:" + e.getMessage());
 		        throw new MeleteException("delete_resource_fail");
 		    }
 		    finally
-		    {
-		       if(edit != null)getContentservice().cancelCollection(edit);
+		    {		  
 		       meleteSecurityService.popAdvisor();
 		    }
 	  }
