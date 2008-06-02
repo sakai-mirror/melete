@@ -306,7 +306,8 @@ public class SectionResourceLicenseSelector {
 	 * @return Returns the copyright_owner.
 	 */
 	public String getCopyright_owner() {
-		copyright_owner = melResource.getCopyrightOwner();
+		if(copyright_owner == null)
+			copyright_owner = melResource.getCopyrightOwner();
 		return copyright_owner;
 	}
 	/**
@@ -319,7 +320,8 @@ public class SectionResourceLicenseSelector {
 	 * @return Returns the copyright_year.
 	 */
 	public String getCopyright_year() {
-		this.copyright_year = melResource.getCopyrightYear();
+		if(copyright_year == null)
+			this.copyright_year = melResource.getCopyrightYear();
 		return copyright_year;
 	}
 	/**
@@ -377,4 +379,5 @@ public class SectionResourceLicenseSelector {
 	public void setShouldRenderPublicDomain(boolean shouldRenderPublicDomain) {
 		this.shouldRenderPublicDomain = shouldRenderPublicDomain;
 	}
+
 }
