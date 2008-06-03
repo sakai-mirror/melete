@@ -583,7 +583,6 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 			resetValues();
 			//fetch the first module and its sections
 			setFormName("SortSectionForm");
-			logger.debug("currSecList in sortsections is " + currSectionsList);
 			return "sections_sort";
 	}
 
@@ -625,8 +624,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 			  currModule = "1";
 			}
 	      }
-		}
-		logger.debug("allModules is " + allModules);
+		}		
 		allModulesList = forSelectItemsList(allModules);
 		return allModulesList;
 	}
@@ -717,9 +715,9 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 	  		if(newSelectedSection != null)
 				{
 				int selIndex = new Integer(newSelectedSection).intValue();
-				if(newSectionsList.size() < 2 || (selIndex == 0))
+				if((selIndex == 0) || newSectionsList == null || newSectionsList.size() < 2 )
 				{
-					logger.debug("one item in the list or first section is selected to move up");
+					logger.debug("one item in the list or first section is selected to move all up");
 			  		return "sections_sort";
 				}
 				ModuleObjService  mod  = (ModuleObjService) allModules.get(new Integer(currModule).intValue() -1);
@@ -746,11 +744,11 @@ return "sections_sort";
 	  	ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 
 	  	try{
-
+	  		logger.debug("new selected value is" + newSelectedSection);
 			if(newSelectedSection != null)
-				{
+				{				
 				int selIndex = new Integer(newSelectedSection).intValue();
-				if(newSectionsList.size() < 2 || (selIndex == 0))
+				if((selIndex == 0) || newSectionsList == null || newSectionsList.size() < 2 )
 				{
 					logger.debug("one item in the list or first section is selected to move up");
 			  		return "sections_sort";
@@ -784,7 +782,7 @@ return "sections_sort";
 			if(newSelectedSection != null)
 				{
 				int selIndex = new Integer(newSelectedSection).intValue();
-				if(newSectionsList.size() < 2 || (selIndex == newSectionsList.size()-1))
+				if(newSectionsList == null || newSectionsList.size() < 2 || (selIndex == newSectionsList.size()-1))
 				{
 					logger.debug("one item in the list or last section is selected to move down");
 			  		return "sections_sort";
@@ -818,7 +816,7 @@ return "sections_sort";
 		if(newSelectedSection != null)
 			{
 			int selIndex = new Integer(newSelectedSection).intValue();
-			if(newSectionsList.size() < 2 || (selIndex == newSectionsList.size()-1))
+			if(newSectionsList == null || newSectionsList.size() < 2 || (selIndex == newSectionsList.size()-1))
 			{
 				logger.debug("one item in the list or last section is selected to move down");
 		  		return "sections_sort";
