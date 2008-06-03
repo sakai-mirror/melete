@@ -71,13 +71,14 @@ function OpenPrintWindow(windowURL,windowName)
           
           </th>
           <th  height="20"  width="5%"  class="leftheader"></th>  
-          <th  height="20"  width="27%"  class="leftheader"><h:outputText value="#{msgs.list_modules_inst_start_date}" /></th>
-          <th  height="20"   width="28%"  class="leftheader"><h:outputText value="#{msgs.list_modules_inst_end_date}" /></th>          
+          <th  height="20"  width="25%"  class="leftheader"><h:outputText value="#{msgs.list_modules_inst_start_date}" /></th>
+          <th  height="20"   width="25%"  class="leftheader"><h:outputText value="#{msgs.list_modules_inst_end_date}" /></th>
+          <th  height="20"  width="5%"  class="leftheader"></th>           
         </tr>
-	<tr> <td colspan="4" valign="top">
+	<tr> <td colspan="5" valign="top">
  <h:dataTable id="table"  
                   value="#{listModulesPage.moduleDateBeans}" 
-                  var="mdbean"  rowClasses="row1,row2" columnClasses="titleWid,ModCheckClass,dateWid1,dateWid2"
+                  var="mdbean"  rowClasses="row1,row2" columnClasses="titleWid,ModCheckClass,dateWid1,dateWid2,ModCheckClass"
                   border="0" width="100%" binding="#{listModulesPage.modTable}">
         <h:column> 
           <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{((mdbean.bookmarkFlag == listModulesPage.trueFlag)&&(mdbean.moduleId != listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}"  styleClass="ExpClass"/>
@@ -192,7 +193,7 @@ function OpenPrintWindow(windowURL,windowName)
       <h:messages showDetail="true" showSummary="false" rendered="#{listModulesPage.nomodsFlag == true}" style="text-align:left"/>      
 	  </td></tr>
 	  <tr>
-         <td  height="20" colspan="4" class="maintabledata5">&nbsp;   </td>
+         <td  height="20" colspan="5" class="maintabledata5">&nbsp;   </td>
         </tr>
         <tr>
         <td colspan="4">

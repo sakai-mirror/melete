@@ -58,18 +58,17 @@ function OpenPrintWindow(windowURL,windowName)
           </h:commandLink>
           <h:commandLink id="collapseAllAction"  action="#{listModulesPage.collapseAllAction}" immediate="true">
             <h:graphicImage id="col_all_gif" alt="#{msgs.list_modules_stud_collapse_all}" title="#{msgs.list_modules_stud_collapse_all}" value="images/collapse-expand.gif"   rendered="#{listModulesPage.expandAllFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
-          </h:commandLink>           
-                    
-          
+          </h:commandLink>
           </th>
-          <th  height="20"  width="27%" valign="middle" class="leftheader"><h:outputText value="#{msgs.list_modules_stud_start_date}" /></th>
-          <th  height="20"   width="28%" valign="middle" class="leftheader"><h:outputText value="#{msgs.list_modules_stud_end_date}" /></th>
+          <th  height="20"  width="25%" valign="middle" class="leftheader"><h:outputText value="#{msgs.list_modules_stud_start_date}" /></th>
+          <th  height="20"   width="25%" valign="middle" class="leftheader"><h:outputText value="#{msgs.list_modules_stud_end_date}" /></th>
+          <th  height="20"  width="5%"  class="leftheader"></th>       
         </tr>
-	<tr> <td colspan="3" valign="top">
+	<tr> <td colspan="4" valign="top">
  <h:dataTable id="table" 
                   value="#{listModulesPage.modDataModel}"
                   var="mdbean"   rowClasses="row1,row2" 
-              columnClasses="titleWid,dateWid1,dateWid2"
+              columnClasses="titleWid,dateWid1,dateWid2,ModCheckClass"
                    border="0" width="100%" 
                    binding="#{listModulesPage.modTable}">
       <h:column>
@@ -148,7 +147,7 @@ function OpenPrintWindow(windowURL,windowName)
       <h:messages showDetail="true" showSummary="false" rendered="#{listModulesPage.nomodsFlag == listModulesPage.trueFlag}" style="text-align:left"/>
 	  </td></tr>
 	  <tr>
-         <td  height="20" colspan="3" class="maintabledata5">&nbsp;   </td>
+         <td  height="20" colspan="4" class="maintabledata5">&nbsp;   </td>
         </tr></table>
  </td>
  </tr>
