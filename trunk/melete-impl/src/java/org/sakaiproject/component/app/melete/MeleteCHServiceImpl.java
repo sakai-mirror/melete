@@ -1190,8 +1190,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    	try
 	    	{
 	    		getContentservice().checkCollection(delColl_id);	    		
-	    		getContentservice().removeCollection(delColl_id);
-	    		edit = null;
+	    		getContentservice().removeCollection(delColl_id);	    	
 	    	}
 	    	catch (IdUnusedException e1)
 	    	{
