@@ -12,21 +12,7 @@
 <title>Melete - Link Upload</title>
 
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
-<script language="javascript1.2">
-function submitaction()
-{
-  document.forms[0].submit();
-}
-function setRequired(id)
-{
-  var title_string = "LinkUploadForm:utTable:"+index+":title";
-  var title_string_val = document.getElementById("title_string").value;
-  if((null == title_string_val) || (title_string_val.length == 0)) 
-  {
-    document.getElementById("title_string").value = '      ';
-  }    
-}
-</script>
+
 </head>
 
 <f:view>
@@ -103,10 +89,10 @@ function setRequired(id)
 			   <h:graphicImage id="contenttype_gif" alt="#{msgs.link_upload_view_content}" value="images/url.gif" styleClass="ExpClass"/>
 			    <h:outputText escape="false" value="&nbsp;*&nbsp;" styleClass="required"/>
 		       <h:outputText id="urltext" escape="false" value="#{msgs.link_upload_view_url}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />
-                
-                <h:inputText id="url" size="40" value="#{ut.url}" required="true"/>
+				 <h:message for="url" id="errurlmsg" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>                
+                <h:inputText id="url" size="40" value="#{ut.url}" />
                 <h:outputText id="spc" escape="false" value="&nbsp;" />
-                 <h:commandLink id="removeLink"   actionListener="#{addResourcesPage.removeLink}" action="#{addResourcesPage.redirectToLinkUpload}">  
+                 <h:commandLink id="removeLink"   actionListener="#{addResourcesPage.removeLink}" action="#{addResourcesPage.redirectToLinkUpload}" >  
                    <h:graphicImage id="remove_gif" alt="#{msgs.link_upload_remove_item}" value="images/remove_item.png" styleClass="ExpClass"/>
                     <h:outputText 	id="remove_text" value="#{msgs.link_upload_remove_item}"/>		
                   </h:commandLink>
@@ -116,7 +102,7 @@ function setRequired(id)
                  <h:outputText escape="false" value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;" styleClass="required"/>
                 <h:outputText id="titletext" escape="false" value="#{msgs.link_upload_view_title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/>
                
-                <h:inputText id="title" size="40" value="#{ut.title}"  required="true"/>
+                <h:inputText id="title" size="40" value="#{ut.title}" />
                 <h:outputText id="brval1" escape="false" value="<BR><BR>" />
               </h:column>  
              
