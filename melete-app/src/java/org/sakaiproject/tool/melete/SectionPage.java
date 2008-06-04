@@ -71,6 +71,7 @@ import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.content.api.ContentHostingService;
+import org.sakaiproject.content.cover.ContentTypeImageService;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.tool.melete.ManageResourcesPage.DisplayResources;
@@ -978,14 +979,22 @@ public abstract class SectionPage implements Serializable {
 
 			if(allmembers == null) return null;
 			Iterator<ContentResource> allmembers_iter = allmembers.iterator();
+			String serverUrl = serverConfigurationService.getServerUrl();
 			while(allmembers_iter != null && allmembers_iter.hasNext())
 			{
 				ContentResource cr = allmembers_iter.next();
 				String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 //							 duplicate listing
 				if (displayName.length() > 50) displayName = displayName.substring(0,50) + "...";
-				String rUrl = cr.getUrl().replaceAll(" ", "%20");
-				currSiteResourcesList.add(new DisplaySecResources(displayName, cr.getId(),rUrl));
+				String rUrl = cr.getUrl().replaceAll(" ", "%20");				
+				String rgif=  serverUrl + "/library/image/sakai/url.gif";
+				if(section.getContentType().equals("typeUpload"))
+				{
+				String contentextension = cr.getContentType();
+		 		rgif = ContentTypeImageService.getContentTypeImage(contentextension);
+		 		rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
+				}
+				currSiteResourcesList.add(new DisplaySecResources(displayName, cr.getId(),rUrl, rgif));
 			}
 			java.util.Collections.sort(currSiteResourcesList);
 			getListNav().setTotalSize(currSiteResourcesList.size()+1);
@@ -1322,16 +1331,26 @@ public abstract class SectionPage implements Serializable {
 	 *
 	 */
 	public class DisplaySecResources implements Comparable<DisplaySecResources>
-	{
+	{	
 		String resource_title;
 		String resource_id;
 		String resource_url;
-
+		String resource_gif;
+		
 		public DisplaySecResources(String resource_title,String resource_id, String resource_url)
 		{
 			this.resource_title = resource_title;
 			this.resource_id = resource_id;
 			this.resource_url = resource_url;
+			this.resource_gif = "";
+		}
+		
+		public DisplaySecResources(String resource_title,String resource_id, String resource_url, String resource_gif)
+		{
+			this.resource_title = resource_title;
+			this.resource_id = resource_id;
+			this.resource_url = resource_url;
+			this.resource_gif = resource_gif;
 		}
 		/**
 		 * @return Returns the resource_id.
@@ -1377,6 +1396,22 @@ public abstract class SectionPage implements Serializable {
 		
 		public String toString() {
 			return resource_title;		
+		}
+
+		/**
+		 * @return the resource_gif
+		 */
+		public String getResource_gif()
+		{
+			return this.resource_gif;
+		}
+
+		/**
+		 * @param resource_gif the resource_gif to set
+		 */
+		public void setResource_gif(String resource_gif)
+		{
+			this.resource_gif = resource_gif;
 		}
 	}
 
