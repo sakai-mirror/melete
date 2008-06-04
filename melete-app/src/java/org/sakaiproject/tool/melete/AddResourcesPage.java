@@ -221,27 +221,54 @@ public class AddResourcesPage {
 	  
       if(this.fileType.equals("link"))
       {
-      Iterator utIterator = utList.iterator();
-      //Finish validating here
+      Iterator utIterator = utList.iterator();   
+         //Finish validating here
+      int count = -1;
         while (utIterator.hasNext())
-        {
-    	  UrlTitleObj utObj = (UrlTitleObj) utIterator.next();
-    	  try
-    	  {
-              String linkUrl = utObj.getUrl();
-              Util.validateLink(linkUrl);
-            }
-            catch (MeleteException mex)
-            {
-              String errMsg = bundle.getString(mex.getMessage());
-      	      context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"add_section_bad_url_formats",bundle.getString("add_section_bad_url_formats")));
-			  return "failure";
-            }
-            catch(Exception e)
-            {
-              logger.error("link upload FAILED" + e.toString());
-             }
-         }
+			{
+        		count++;
+				try
+				{
+					UrlTitleObj utObj = (UrlTitleObj) utIterator.next();
+					if (utObj.title != null) utObj.title = utObj.title.trim();
+					String linkUrl = utObj.getUrl();
+					if(linkUrl != null) linkUrl = linkUrl.trim();
+					String checkUrl = linkUrl;
+					if(checkUrl != null)
+						{
+						checkUrl = checkUrl.replace("http://", "");
+						checkUrl = checkUrl.replace("https://", "");
+						}
+					if((utObj.title == null || utObj.title.length() == 0) && (checkUrl == null || checkUrl.length() == 0))
+					{
+						utIterator.remove();
+						continue;
+					}
+					if (utObj.title == null || utObj.title.length() == 0)
+					{
+						context.addMessage("LinkUploadForm:utTable:"+count+":title", new FacesMessage(FacesMessage.SEVERITY_ERROR, "URL_title_reqd", bundle.getString("URL_title_reqd")));
+						return "#";
+					}
+					
+					if (checkUrl == null || checkUrl.length() == 0)
+					{
+						context.addMessage("LinkUploadForm:utTable:"+count+":url", new FacesMessage(FacesMessage.SEVERITY_ERROR, "URL_reqd", bundle.getString("URL_reqd")));
+						return "#";
+					}
+					Util.validateLink(linkUrl);
+				}
+				catch (MeleteException mex)
+				{
+					String errMsg = bundle.getString(mex.getMessage());
+					context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "add_section_bad_url_formats", bundle
+							.getString("add_section_bad_url_formats")));
+					return "failure";
+				}
+				catch (Exception e)
+				{
+					logger.error("link upload FAILED" + e.toString());
+				}
+			}
          utIterator = utList.iterator();
          while (utIterator.hasNext())
         {
