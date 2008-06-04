@@ -41,8 +41,7 @@
 					    <h:outputText value="#{msgs.manage_res_list_type}" />
 					 </h:panelGroup> 
 				 </f:facet>
-			    <h:graphicImage id="contenttype_gif" alt="#{msgs.edit_list_resources_content_url}" title="#{msgs.edit_list_resources_content_url}" value="images/url.gif" styleClass="ExpClass" rendered="#{list_resources.typeLink}"/>
-				<h:graphicImage id="contenttype_gif1" alt="#{msgs.edit_list_resources_content_upload}" title="#{msgs.edit_list_resources_content_upload}" value="images/image.gif" styleClass="ExpClass" rendered="#{!list_resources.typeLink}"/>
+			    <h:graphicImage id="contenttype_gif" alt="#{msgs.edit_list_resources_content_url}" title="#{msgs.edit_list_resources_content_url}" value="#{list_resources.resource_gif}" styleClass="ExpClass" />			
 			</h:column>
 		    <h:column>
 		    <f:facet name="header">

@@ -46,6 +46,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.sakaiproject.content.cover.ContentTypeImageService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.api.app.melete.MeleteCHService;
@@ -184,14 +185,22 @@ public List<DisplayResources> getAllResourcesList()
 		
 			if(allmembers == null) return null;
 			Iterator<ContentResource> allmembers_iter = allmembers.iterator();
+			String serverUrl = ServerConfigurationService.getServerUrl();
 			while(allmembers_iter != null && allmembers_iter.hasNext())
 			{
 				ContentResource cr = allmembers_iter.next();
 				String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 				if (displayName.length() > 50) displayName = displayName.substring(0,50) + "...";
 				String rUrl = cr.getUrl().replaceAll(" ", "%20");
-				boolean rType = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LINK);
-				allResourcesList.add(new DisplayResources(displayName, cr.getId(),rUrl,rType));
+				boolean rType = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LINK);				
+				String rgif=  serverUrl + "/library/image/sakai/url.gif";
+				if(!rType)
+				{
+				String contentextension = cr.getContentType();
+		 		rgif = ContentTypeImageService.getContentTypeImage(contentextension);
+		 		rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
+				}
+				allResourcesList.add(new DisplayResources(displayName, cr.getId(),rUrl,rType,rgif));
 			}
 			getListNav().setTotalSize(allResourcesList.size()+1);
 			Collections.sort(allResourcesList);	
@@ -277,13 +286,15 @@ public class DisplayResources implements Comparable<DisplayResources>
 	String resource_id;
 	String resource_url;
 	boolean typeLink;
+	String resource_gif;
 
-	public DisplayResources(String resource_title,String resource_id, String resource_url, boolean isTypeLink)
+	public DisplayResources(String resource_title,String resource_id, String resource_url, boolean isTypeLink,String resource_gif)
 	{
 		this.resource_title = resource_title;
 		this.resource_id = resource_id;
 		this.resource_url = resource_url;
 		this.typeLink = isTypeLink;
+		this.resource_gif = resource_gif;
 	}
 	/**
 	 * @return Returns the resource_id.
@@ -353,6 +364,20 @@ public class DisplayResources implements Comparable<DisplayResources>
 		if(!this.typeLink && n.isTypeLink()) res = -1;		
 		
 		return res;
+	}
+	/**
+	 * @return the resource_gif
+	 */
+	public String getResource_gif()
+	{
+		return this.resource_gif;
+	}
+	/**
+	 * @param resource_gif the resource_gif to set
+	 */
+	public void setResource_gif(String resource_gif)
+	{
+		this.resource_gif = resource_gif;
 	}
 }
 
