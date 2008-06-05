@@ -31,11 +31,11 @@
 		    <f:param name="modid" value="#{viewSectionsPage.moduleId}" />
             <f:param name="secid" value="#{viewSectionsPage.nextSecId}" />
      </h:commandLink>
-      <h:commandLink id="whatsNext" action="#{viewSectionsPage.goWhatsNext}" immediate="true" rendered="#{((viewSectionsPage.module.whatsNext != viewSectionsPage.nullString)&&(viewSectionsPage.module.whatsNext != viewSectionsPage.emptyString)&&(viewSectionsPage.nextSecId == 0))}">
+      <h:commandLink id="whatsNext" action="#{viewSectionsPage.goWhatsNext}" immediate="true" rendered="#{((viewSectionsPage.module != null && viewSectionsPage.module.whatsNext != viewSectionsPage.nullString)&&(viewSectionsPage.module != null && viewSectionsPage.module.whatsNext != viewSectionsPage.emptyString)&&(viewSectionsPage.nextSecId == 0))}">
 		  <h:outputText  id="whatsNextMsg" value="#{msgs.view_navigate_next2}"></h:outputText>
 		    <f:param name="modseqno" value="#{viewSectionsPage.moduleSeqNo}" />
      </h:commandLink>   
-    <h:commandLink id="nextMod" action="#{viewSectionsPage.goNextModule}" immediate="true" rendered="#{(((viewSectionsPage.module.whatsNext == viewSectionsPage.nullString)||(viewSectionsPage.module.whatsNext == viewSectionsPage.emptyString))&&(viewSectionsPage.nextSecId == 0)&&(viewSectionsPage.moduleSeqNo < viewSectionsPage.nextSeqNo))}">
+    <h:commandLink id="nextMod" action="#{viewSectionsPage.goNextModule}" immediate="true" rendered="#{(((viewSectionsPage.module != null && viewSectionsPage.module.whatsNext == viewSectionsPage.nullString)||(viewSectionsPage.module != null && viewSectionsPage.module.whatsNext == viewSectionsPage.emptyString))&&(viewSectionsPage.nextSecId == 0)&&(viewSectionsPage.moduleSeqNo < viewSectionsPage.nextSeqNo))}">
 		  <h:outputText  id="nextModMsg" value="#{msgs.view_navigate_next3}"></h:outputText>
 		    <f:param name="modseqno" value="#{viewSectionsPage.moduleSeqNo}" />
      </h:commandLink>     
