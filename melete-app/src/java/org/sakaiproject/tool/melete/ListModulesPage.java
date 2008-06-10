@@ -86,6 +86,7 @@ public class ListModulesPage implements Serializable{
       private String isNull = null;
       private Date nullDate = null;
       private Integer printModuleId =null;
+      private Boolean printMaterial = null;
       private boolean printable;
 
 	  //This needs to be set later using Utils.getBinding
@@ -149,6 +150,7 @@ public class ListModulesPage implements Serializable{
 	  	studFlag = false;
 	  	nomodsFlag = false;
 	  	closedModulesFlag = false;
+	  	printMaterial = null;
 	  	FacesContext context = FacesContext.getCurrentInstance();
 //	  	context.getViewRoot().setTransient(true);
 		if (getRole()!= null)
@@ -288,7 +290,8 @@ public class ListModulesPage implements Serializable{
 	  public List getModuleDateBeans() {
 
 	  	    try {
-	  		moduleDateBeans = getModuleService().getModuleDateBeans(getUserId(), getCourseId());
+	  	    if(moduleDateBeans == null)	
+	  	    	moduleDateBeans = getModuleService().getModuleDateBeans(getUserId(), getCourseId());
 
 	  	    }
 	  	    catch (Exception e)
@@ -510,16 +513,18 @@ public class ListModulesPage implements Serializable{
 	    Util.getBinding("#{viewSectionsPage}");
 	    ViewSectionsPage vsPage = (ViewSectionsPage)
 	    binding.getValue(ctx);
+	    vsPage.resetValues();
+	    vsPage.setSection(null);
+	    vsPage.setModule(null);
 	    vsPage.setBookmarkStatus(false);
 	    if (secBean != null)
 	    {
 	     Section sec = secBean.getSection();
 	    vsPage.setModuleId(sec.getModuleId());
-	    vsPage.setSectionId(sec.getSectionId());
+	    vsPage.setSectionId(sec.getSectionId());	   
 	    vsPage.setBookmarkStatus(secBean.isBookmarkFlag());
 	    }
-	     vsPage.setSection(null);
-	    vsPage.setModule(null);
+	    
 	    vsPage.setModuleSeqNo(modSeqNo);
 
 
@@ -576,10 +581,14 @@ public class ListModulesPage implements Serializable{
 	  {
 		  FacesContext ctx = FacesContext.getCurrentInstance();
 		  try{
-		   String site_id=ToolManager.getCurrentPlacement().getContext();
-		   ValueBinding binding = Util.getBinding("#{authorPreferences}");
-	 	   AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(ctx);
-	 	   printable = preferencePage.isMaterialPrintable(site_id);
+			  if (printMaterial == null)
+			  {
+				  String site_id = ToolManager.getCurrentPlacement().getContext();
+				  ValueBinding binding = Util.getBinding("#{authorPreferences}");
+				  AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
+				  printable = preferencePage.isMaterialPrintable(site_id);
+				  printMaterial = new Boolean(printable);
+			  }
 		  }
 		  catch(Exception e){e.printStackTrace();
 		  printable=false;}

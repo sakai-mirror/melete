@@ -111,12 +111,15 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
       private org.w3c.dom.Document subSectionW3CDom;
       private String linkName;
 
-      private boolean bookmarkStatus;
-
+      private boolean bookmarkStatus;  
+      
+      // added to reduce queries
+      private String contentLinkUrl;
 
 	  public ViewSectionsPage(){
 	  	courseId = null;
 	  	userId = null;
+	  	contentLinkUrl = null;
 	  }
 
 	  //Code to test
@@ -141,7 +144,10 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	  	return emptyString;
 	  }
 
-
+	  public void resetValues()
+	  {
+		  contentLinkUrl =null;
+	  }
 
 
 
@@ -191,21 +197,18 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	  public String getContentLink()
 	  {
 		String url = null;
-		if (this.section != null)
+		if (this.section == null) return null;
+		if(contentLinkUrl == null)
 		{
 		SectionResourceService secRes = this.section.getSectionResource();
 		String resourceId = null;
-		if (secRes != null)
-		{
-			if (secRes.getResource() != null)
+		if (secRes != null && (secRes.getResource() != null))
 			{
 				resourceId = secRes.getResource().getResourceId();
-			}
-		}
+			}		
 	    ContentResource resource = null;
 
-
-    	if (resourceId != null)
+	    if (resourceId != null)
     	{
     	    try
     	    {
@@ -215,16 +218,17 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
               if (logger.isDebugEnabled()) logger.debug("Resource url is "+resource.getUrl());
               url = resource.getUrl();
       	      url = url.replaceAll(" ", "%20");
+      	      contentLinkUrl = url;
               }
               catch (Exception e)
               {
               url = null;
+              contentLinkUrl = null;
         	  e.printStackTrace();
               }
     	}
 		}
     	 return url;
-
 	  }
 
 	  public String getSectionContentType()
@@ -507,12 +511,19 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 
 public String goTOC()
 {
+	resetValues();
+	FacesContext context = FacesContext.getCurrentInstance();
+	ValueBinding binding = Util.getBinding("#{listModulesPage}");
+	ListModulesPage listPage = (ListModulesPage)
+        binding.getValue(context);
+	listPage.setModuleDateBeans(null);
 	if (getInstRole()) return "list_modules_inst";
 	else return "list_modules_student";
 }
 
 public String goPrevNext()
 {
+	resetValues();
 	FacesContext context = FacesContext.getCurrentInstance();
 	this.section = null;
 	//this.module = null;
@@ -560,6 +571,7 @@ public String goPrevNext()
 }
 public String goWhatsNext()
 {
+	resetValues();
 	FacesContext context = FacesContext.getCurrentInstance();
 	int currSeqNo = new Integer(((String)context.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue();
 
@@ -579,6 +591,7 @@ public String goWhatsNext()
 
 public String goPrevModule()
 {
+	resetValues();
 	FacesContext context = FacesContext.getCurrentInstance();
 	this.section = null;
 	//this.module = null;
@@ -611,6 +624,7 @@ public String goPrevModule()
 
 public String goNextModule()
 {
+	resetValues();
 	FacesContext context = FacesContext.getCurrentInstance();
 	this.section = null;
 	//this.module = null;

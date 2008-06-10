@@ -60,6 +60,7 @@ public class NavPage implements Serializable {
           Util.getBinding("#{listModulesPage}");
    	    ListModulesPage lmPage = (ListModulesPage) binding.getValue(ctx);
    	    lmPage.resetValues();
+   	    lmPage.setModuleDateBeans(null);
    	    role = (String)sessionMap.get("role");
    	    if (role.equals("INSTRUCTOR"))
    	    {

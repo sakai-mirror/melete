@@ -286,6 +286,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
 
 		SectionBean secBean = (SectionBean) table.getRowData();
+		vsPage.resetValues();
 		vsPage.setSectionId(secBean.getSection().getSectionId());
 		vsPage.setModuleId(secBean.getSection().getModuleId());
 		vsPage.setModuleSeqNo(secBean.getSection().getModule().getCoursemodule().getSeqNo());
@@ -307,6 +308,11 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 
     public String goTOC()
 	{
+    	FacesContext context = FacesContext.getCurrentInstance();
+    	ValueBinding binding = Util.getBinding("#{listModulesPage}");
+    	ListModulesPage listPage = (ListModulesPage)
+            binding.getValue(context);
+    	listPage.setModuleDateBeans(null);
 		if (getInstRole()) return "list_modules_inst";
 		else return "list_modules_student";
 	}
