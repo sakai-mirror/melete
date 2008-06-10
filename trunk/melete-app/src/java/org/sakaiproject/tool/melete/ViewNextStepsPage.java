@@ -286,6 +286,11 @@ public void setSecpgroup(HtmlPanelGroup secpgroup)
 }
 public String goTOC()
 {
+	FacesContext context = FacesContext.getCurrentInstance();
+	ValueBinding binding = Util.getBinding("#{listModulesPage}");
+	ListModulesPage listPage = (ListModulesPage)
+        binding.getValue(context);
+	listPage.setModuleDateBeans(null);
 	if (instRole) return "list_modules_inst";
 	else return "list_modules_student";
 }
