@@ -442,7 +442,7 @@ public class ListModulesPage implements Serializable{
 	            Util.getBinding("#{viewModulesPage}");
 	    ViewModulesPage vmPage = (ViewModulesPage)
 	            binding.getValue(ctx);
-
+	    		vmPage.setPrintable(null);
         if (getRole()!= null && (getRole().equals("INSTRUCTOR") || getRole().equals("STUDENT"))){
         	if ((moduleDateBeans != null)&&(moduleDateBeans.size() > 0))
         	{

@@ -143,6 +143,7 @@ public String goPrevItem()
       ViewModulesPage vmPage = (ViewModulesPage)
         binding.getValue(context);
       vmPage.setModuleId(this.prevModId);
+      vmPage.setPrintable(null);
   	  vmPage.setMdbean(null);
   	  if (this.nextSeqNo > 1)
   	  {
@@ -218,6 +219,7 @@ public String goNextModule()
   	vmPage.setMdbean(null);
   	vmPage.setPrevMdbean(null);
     vmPage.setModuleSeqNo(nextSeqNo);
+    vmPage.setPrintable(null);
     if (instRole)
 	{
 			return "view_module";
