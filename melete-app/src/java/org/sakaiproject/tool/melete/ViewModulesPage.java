@@ -250,7 +250,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     	}
     	return courseId;
     }
-    
+
     private String getUserId()
     {
     	if (userId == null)
@@ -290,8 +290,8 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 		vsPage.setSectionId(secBean.getSection().getSectionId());
 		vsPage.setModuleId(secBean.getSection().getModuleId());
 		vsPage.setModuleSeqNo(secBean.getSection().getModule().getCoursemodule().getSeqNo());
-		vsPage.setBookmarkStatus(secBean.isBookmarkFlag());
 		vsPage.setSection(null);
+		vsPage.setSection(secBean.getSection());
 		// added by rashmi on 6/14/05
 		vsPage.setModule(null);
 
@@ -331,8 +331,8 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
  	           vsPage.setSectionId(secBean.getSection().getSectionId());
  	            vsPage.setModuleId(secBean.getSection().getModuleId());
  	            vsPage.setModuleSeqNo(secBean.getSection().getModule().getCoursemodule().getSeqNo());
- 	            vsPage.setBookmarkStatus(secBean.isBookmarkFlag());
- 	            vsPage.setSection(null);
+ 	           vsPage.setSection(null);
+ 	            vsPage.setSection(secBean.getSection());
  	            //added by rashmi on 6/14/05
  	            vsPage.setModule(null);
 
@@ -369,8 +369,8 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
  	            vsPage.setSectionId(secBean.getSection().getSectionId());
  	            vsPage.setModuleId(secBean.getSection().getModuleId());
  	            vsPage.setModuleSeqNo(secBean.getSection().getModule().getCoursemodule().getSeqNo());
- 	            vsPage.setBookmarkStatus(secBean.isBookmarkFlag());
  	            vsPage.setSection(null);
+ 	            vsPage.setSection(secBean.getSection());
  	            //added by rashmi on 6/14/05
  	            vsPage.setModule(null);
 
@@ -437,9 +437,9 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
             binding.getValue(context);
     	vnPage.setPrevSecId(0);
     	vnPage.setPrevModId(this.moduleId);
-    	
+
     	vnPage.setNextSeqNo(this.nextSeqNo);
-    	
+
         if (this.mdbean != null) vnPage.setModule(this.mdbean.getModule());
 
     		return "view_whats_next";
@@ -463,7 +463,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     	}
     }
     public void viewModule(ActionEvent evt) {
-    	
+
     	FacesContext ctx = FacesContext.getCurrentInstance();
     	UICommand cmdLink = (UICommand)evt.getComponent();
     	List cList = cmdLink.getChildren();
@@ -476,7 +476,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     		  param = (UIParameter) cList.get(i);
     		}
     	}
-    	
+
     	ValueBinding binding =
             Util.getBinding("#{viewModulesPage}");
          ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(ctx);
@@ -487,7 +487,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 	  		ModuleService modServ = getModuleService();
 	  		CourseModule cMod = (CourseModule)modServ.getCourseModule(((Integer)param.getValue()).intValue(),getCourseId());
 	  		vmPage.setModuleSeqNo(cMod.getSeqNo());
-	  		
+
 		}
 		catch (Exception e)
 		{
@@ -499,17 +499,17 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     public String redirectToViewModule(){
     	String retVal = "view_module_student";
 	    if (getInstRole() == true)
-	    {	    	
+	    {
 	    	retVal = "view_module";
-	    }	  
+	    }
 	  	return retVal;
 
     }
-    
+
     public boolean isPrintable()
 	  {
 		  FacesContext ctx = FacesContext.getCurrentInstance();
-		  try{	
+		  try{
 			if(printable == null)
 			{
 		   ValueBinding binding = Util.getBinding("#{authorPreferences}");
@@ -522,7 +522,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 		  printable=false;}
 		  return printable.booleanValue();
 	  }
-    
+
     public void setPrintable(Boolean printable)
     {
     	this.printable = printable;

@@ -26,11 +26,6 @@
 	<property name="creationDate"  column="CREATION_DATE"  type="timestamp" not-null="true"/>			
 	<property name="modificationDate"  column="MODIFICATION_DATE"  type="timestamp"  not-null="true"/>
 	<many-to-one name="module"  class="org.sakaiproject.component.app.melete.Module" insert="false" update="false" column="MODULE_ID"  lazy="false"/>
-	<one-to-one name="sectionResource" class="org.sakaiproject.component.app.melete.SectionResource"/>
-	<map name="bookmarks"  table="melete_bookmarks" cascade="all" inverse="true" lazy="false" sort="natural">
-	  <key column="SECTION_ID" foreign-key="SECTION_ID_BOOK_KEY"/>
-	  <map-key column="BOOKMARK_ID" type="int"/>
-	  <one-to-many class="org.sakaiproject.component.app.melete.MeleteBookmarks"/>
-	</map>
+	<one-to-one name="sectionResource" class="org.sakaiproject.component.app.melete.SectionResource"/>	
 	</class>
 </hibernate-mapping>

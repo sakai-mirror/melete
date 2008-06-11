@@ -12,8 +12,7 @@
 				<value>org/sakaiproject/component/app/melete/ModuleShdates.hbm.xml</value>
 				<value>org/sakaiproject/component/app/melete/CourseModule.hbm.xml</value>	
 				<value>org/sakaiproject/component/app/melete/SectionResource.hbm.xml</value>	
-				<value>org/sakaiproject/component/app/melete/MeleteUserPreference.hbm.xml</value>	
-				<value>org/sakaiproject/component/app/melete/MeleteBookmarks.hbm.xml</value>	
+				<value>org/sakaiproject/component/app/melete/MeleteUserPreference.hbm.xml</value>					
 				<value>org/sakaiproject/component/app/melete/MeleteResource.hbm.xml</value>	
 				<value>org/sakaiproject/component/app/melete/MeleteMigrateStatus.hbm.xml</value>
 				<value>org/sakaiproject/component/app/melete/MeleteSitePreference.hbm.xml</value>	
@@ -80,9 +79,6 @@
         <property name="sectionDB">
             <ref local="org.sakaiproject.component.app.melete.SectionDB" />
         </property>
-       <property name="bookmarksDB">
-            <ref local="org.sakaiproject.component.app.melete.MeleteBookmarksDB" />
-        </property>
               
          <property name="meleteCHService">
             <ref local="org.sakaiproject.api.app.melete.MeleteCHService" />
@@ -114,10 +110,7 @@
 			singleton="true">
 			<property name="hibernateUtil">
             <ref local="org.sakaiproject.component.app.melete.HibernateUtil" />
-        </property>
-          <property name="bookmarksDB">
-            <ref local="org.sakaiproject.component.app.melete.MeleteBookmarksDB" />
-        </property>
+        </property>          
         <property name="moduleDB">
             <ref local="org.sakaiproject.component.app.melete.ModuleDB" />
         </property> 
@@ -216,21 +209,6 @@
 		<property name="userPrefdb">
 			<ref local="org.sakaiproject.component.app.melete.MeleteUserPreferenceDB"/>
         </property>
-	</bean>
-    
-    <bean id="org.sakaiproject.component.app.melete.MeleteBookmarksDB"
-			class="org.sakaiproject.component.app.melete.MeleteBookmarksDB"
-			singleton="true">
-			<property name="hibernateUtil">
-            <ref local="org.sakaiproject.component.app.melete.HibernateUtil" />
-        </property>        
-	</bean>	
-	
-	<bean id="org.sakaiproject.api.app.melete.MeleteBookmarksService"
-				class="org.sakaiproject.component.app.melete.MeleteBookmarksServiceImpl"
-				singleton="true">	
-		<property name="bookmarksdb">
-			<ref local="org.sakaiproject.component.app.melete.MeleteBookmarksDB"/>
-        </property>
-	</bean>
+	</bean>    
+   
 </beans>

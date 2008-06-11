@@ -46,8 +46,6 @@ import org.sakaiproject.api.app.melete.SectionService;
 //import org.sakaiproject.jsf.ToolBean;
 
 import org.sakaiproject.api.app.melete.MeleteCHService;
-import org.sakaiproject.api.app.melete.MeleteBookmarksService;
-import org.sakaiproject.api.app.melete.MeleteBookmarksObjService;
 
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
@@ -79,7 +77,6 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	  /** identifier field */
 	  private int moduleId;
 	  private int sectionId;
-	  private int bookmarkId;
       private int moduleSeqNo;
       private int prevSecId;
       private int nextSecId;
@@ -100,7 +97,6 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
       private SectionService sectionService;
 
   	  private MeleteCHService meleteCHService;
-  	  private MeleteBookmarksService bookmarksService;
 
       /** Dependency:  The logging service. */
       protected Log logger = LogFactory.getLog(ViewSectionsPage.class);
@@ -111,8 +107,6 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
       private org.w3c.dom.Document subSectionW3CDom;
       private String linkName;
 
-      private boolean bookmarkStatus;  
-      
       // added to reduce queries
       private String contentLinkUrl;
 
@@ -205,7 +199,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		if (secRes != null && (secRes.getResource() != null))
 			{
 				resourceId = secRes.getResource().getResourceId();
-			}		
+			}
 	    ContentResource resource = null;
 
 	    if (resourceId != null)
@@ -532,9 +526,9 @@ public String goPrevNext()
 	if (moduleIdStr != null)
 	{
 		if (moduleIdStr.trim().length() > 0)
-		{	
+		{
 		  this.moduleId = new Integer(moduleIdStr).intValue();
-		}  
+		}
 	}
 	if (sectionIdStr != null)
 	{
@@ -542,24 +536,9 @@ public String goPrevNext()
 		{
 	      this.sectionId = new Integer(sectionIdStr).intValue();
 		}
-	}		
+	}
 	this.module = null;
-	List sectionBookmarks = bookmarksService.getBookmarks(getUserId(), getCourseId(), this.moduleId, this.sectionId);
-	if (sectionBookmarks == null)
-	{
-		this.bookmarkStatus = false;
-	}
-	else
-	{
-		if (sectionBookmarks.size() == 0)
-		{
-			this.bookmarkStatus = false;
-		}
-		else
-		{
-			this.bookmarkStatus = true;
-		}
-	}
+
 	if (getInstRole())
 	{
 			return "view_section";
@@ -599,10 +578,10 @@ public String goPrevModule()
 	if (moduleIdStr != null)
 	{
 		if (moduleIdStr.trim().length() > 0)
-		{	
+		{
 		  this.moduleId = new Integer(moduleIdStr).intValue();
-		}  
-	}	
+		}
+	}
 	this.module = null;
 	ValueBinding binding =
         Util.getBinding("#{viewModulesPage}");
@@ -653,56 +632,6 @@ public String goNextModule()
 	{
 			return "view_module_student";
 	}
-}
-
-public String createBookmark()
-{
-	FacesContext context = FacesContext.getCurrentInstance();
-	Map sessionMap = context.getExternalContext().getSessionMap();
-	ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
-
-	MeleteBookmarks mb = new MeleteBookmarks();
-	mb.setUserId(getUserId());
-	mb.setCourseId(getCourseId());
-	mb.setModuleId(this.moduleId);
-	mb.setSectionId(this.sectionId);
-	try
-	{
-	 bookmarksService.insertBookmark(mb);
-	 setBookmarkStatus(true);
-	}
-	catch(Exception e)
-	{
-		String errMsg = bundle.getString("Set_bookmarks_fail");
-		context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Set_prefs_fail",errMsg));
-	}
-	return "view_section";
-
-}
-
-public String clearBookmark()
-{
-	FacesContext context = FacesContext.getCurrentInstance();
-	Map sessionMap = context.getExternalContext().getSessionMap();
-	ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
-
-	MeleteBookmarks mb = new MeleteBookmarks();
-	mb.setUserId(getUserId());
-	mb.setCourseId(getCourseId());
-	mb.setModuleId(this.moduleId);
-	mb.setSectionId(this.sectionId);
-	try
-	{
-	 bookmarksService.deleteBookmark(mb);
-	 setBookmarkStatus(false);
-	}
-	catch(Exception e)
-	{
-		String errMsg = bundle.getString("Clear_bookmarks_fail");
-		context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Set_prefs_fail",errMsg));
-	}
-	return "view_section";
-
 }
 
 /*
@@ -802,33 +731,5 @@ public MeleteCHService getMeleteCHService() {
 public void setMeleteCHService(MeleteCHService meleteCHService) {
 	this.meleteCHService = meleteCHService;
 }
-public MeleteBookmarksService getBookmarksService()
-{
-	return this.bookmarksService;
-}
 
-public void setBookmarksService(MeleteBookmarksService bookmarksService)
-{
-	this.bookmarksService = bookmarksService;
-}
-
-public boolean isBookmarkStatus()
-{
-	return this.bookmarkStatus;
-}
-
-public void setBookmarkStatus(boolean bookmarkStatus)
-{
-	this.bookmarkStatus = bookmarkStatus;
-}
-
-public int getBookmarkId()
-{
-	return this.bookmarkId;
-}
-
-public void setBookmarkId(int bookmarkId)
-{
-	this.bookmarkId = bookmarkId;
-}
 }

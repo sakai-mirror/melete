@@ -39,13 +39,7 @@ function OpenPrintWindow(windowURL,windowName)
 						</f:subview>
 					 </td>
 			</tr>
-<tr>
-  <td colspan="2" align="right">
-  <h:commandLink id="clearLink" action="#{listModulesPage.clearAllBookmarks}" immediate="true" rendered="#{listModulesPage.bookmarkStatus == listModulesPage.trueFlag}">
-		  <h:outputText  id="clearText" value="#{msgs.clear_all_bookmarks}"/>
-	    </h:commandLink> 
-</td>
-</tr>			
+		
 <tr>
 <td colspan="2" class="maintabledata3">
 <h:messages showDetail="true" showSummary="false"/>
@@ -72,7 +66,6 @@ function OpenPrintWindow(windowURL,windowName)
                    border="0" width="100%" 
                    binding="#{listModulesPage.modTable}">
       <h:column>
-  <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{((mdbean.bookmarkFlag == listModulesPage.trueFlag)&&(mdbean.moduleId != listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}" styleClass="ExpClass"/>
                                        
     <h:commandLink id="viewSections" action="#{listModulesPage.showSections}" immediate="true">
         <h:graphicImage id="exp_gif" value="images/expand.gif" rendered="#{((mdbean.moduleId != listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}" styleClass="ExpClass"/>
@@ -94,8 +87,6 @@ function OpenPrintWindow(windowURL,windowName)
                   value="#{mdbean.sectionBeans}"
                   var="section" rowClasses="#{mdbean.rowClasses}" columnClasses="SectionClass" width="95%" binding="#{listModulesPage.secTable}">
                     <h:column> 
-			  <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{section.bookmarkFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
-             <h:outputText id="emp_space" value=" " styleClass="ExtraPaddingClass" rendered="#{((mdbean.bookmarkFlag == listModulesPage.trueFlag)&&(section.bookmarkFlag != listModulesPage.trueFlag))}"/>
               <h:graphicImage id="bul_gif" value="images/bullet_black.gif"/>
              
              <h:commandLink id="viewSectionEditor"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}"  rendered="#{((section.section.contentType != listModulesPage.isNull && section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}" immediate="true">

@@ -4,19 +4,19 @@
 *
 ***********************************************************************************
 *
-* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project 
-*   
-* Licensed under the Apache License, Version 2.0 (the "License"); you 
-* may not use this file except in compliance with the License. You may 
-* obtain a copy of the License at 
-*   
-* http://www.apache.org/licenses/LICENSE-2.0 
-*   
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the License is distributed on an "AS IS" BASIS, 
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
-* implied. See the License for the specific language governing 
-* permissions and limitations under the License. 
+* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you
+* may not use this file except in compliance with the License. You may
+* obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+* implied. See the License for the specific language governing
+* permissions and limitations under the License.
 *
 **********************************************************************************/
 package org.sakaiproject.component.app.melete;
@@ -74,7 +74,7 @@ public class Section implements Serializable,SectionObjService {
 
     /** nullable persistent field */
     private boolean textualContent;
-    
+
     /** nullable persistent field */
     private boolean openWindow;
 
@@ -95,11 +95,10 @@ public class Section implements Serializable,SectionObjService {
 
     /** nullable persistent field */
     private org.sakaiproject.component.app.melete.SectionResource sectionResource;
-    
-    private Map bookmarks;
+
 
     /** full constructor */
-    public Section(int moduleId, String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname, String instr, String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean openWindow, boolean deleteFlag, Date creationDate, Date modificationDate, int version, org.sakaiproject.component.app.melete.Module module, org.sakaiproject.component.app.melete.SectionResource sectionResource, Map bookmarks) {
+    public Section(int moduleId, String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname, String instr, String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean openWindow, boolean deleteFlag, Date creationDate, Date modificationDate, int version, org.sakaiproject.component.app.melete.Module module, org.sakaiproject.component.app.melete.SectionResource sectionResource) {
         this.moduleId = moduleId;
         this.title = title;
         this.createdByFname = createdByFname;
@@ -118,7 +117,6 @@ public class Section implements Serializable,SectionObjService {
         this.version = version;
         this.module = module;
         this.sectionResource = sectionResource;
-        this.bookmarks = bookmarks;
     }
     /** Custom constructor */
     public Section(String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname, String instr, String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean openWindow, boolean deleteFlag, Date creationDate, Date modificationDate) {
@@ -163,9 +161,8 @@ public class Section implements Serializable,SectionObjService {
            this.deleteFlag = oldSection.isDeleteFlag();
            this.module = null;
            this.sectionResource = null;
-           this.bookmarks = null;
     }
-    
+
     public Integer getSectionId() {
         return this.sectionId;
     }
@@ -263,15 +260,15 @@ public class Section implements Serializable,SectionObjService {
     public void setTextualContent(boolean textualContent) {
         this.textualContent = textualContent;
     }
-    
+
     public boolean isOpenWindow() {
         return this.openWindow;
     }
 
     public void setOpenWindow(boolean openWindow) {
         this.openWindow = openWindow;
-    }    
-    
+    }
+
     public boolean isDeleteFlag() {
         return this.deleteFlag;
     }
@@ -325,13 +322,5 @@ public class Section implements Serializable,SectionObjService {
             .append("sectionId", getSectionId())
             .toString();
     }
-	public Map getBookmarks()
-	{
-		return this.bookmarks;
-	}
-	public void setBookmarks(Map bookmarks)
-	{
-		this.bookmarks = bookmarks;
-	}
 
 }

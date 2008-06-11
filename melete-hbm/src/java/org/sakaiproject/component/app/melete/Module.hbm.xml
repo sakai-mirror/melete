@@ -63,12 +63,7 @@
 	<one-to-many class="org.sakaiproject.component.app.melete.CourseModule"/>
 	</set>-->
 	
-	<one-to-one name="coursemodule" class="org.sakaiproject.component.app.melete.CourseModule"/>
-    <map name="bookmarks"  table="melete_bookmarks" cascade="all" inverse="true" lazy="false" sort="natural">
-	  <key column="MODULE_ID" foreign-key="MODULE_ID_BOOK_KEY"/>
-	  <map-key column="BOOKMARK_ID" type="int"/>
-	  <one-to-many class="org.sakaiproject.component.app.melete.MeleteBookmarks"/>
-	</map>
+	<one-to-one name="coursemodule" class="org.sakaiproject.component.app.melete.CourseModule"/>    
 </class>
 </hibernate-mapping>
 

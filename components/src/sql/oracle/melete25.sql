@@ -113,16 +113,7 @@ CREATE TABLE `melete_user_preference` (
   PRIMARY KEY  (`PREF_ID`)
 );
 CREATE TABLE `melete_migrate_status` (START_FLAG tinyint(1),COMPLETE_FLAG tinyint(1));
-CREATE TABLE `melete_bookmarks` (
-  `BOOKMARK_ID` int(11) NOT NULL default '0',
-  `USER_ID` varchar(99) default NULL,
-  `COURSE_ID` varchar(99) default NULL,
-  `MODULE_ID` int(11) NOT NULL default '0',
-  `SECTION_ID` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`BOOKMARK_ID`),
-  KEY `MODULE_ID_BOOK_KEY` (`MODULE_ID`),
-  KEY `SECTION_ID_BOOK_KEY` (`SECTION_ID`)
-);
+
 CREATE TABLE `melete_site_preference` (
   `PREF_SITE_ID` varchar(99) NOT NULL default '',
   `PRINTABLE` tinyint(1) default NULL,

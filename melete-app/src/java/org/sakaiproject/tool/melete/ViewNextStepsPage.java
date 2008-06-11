@@ -51,7 +51,7 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
 //Adding to test
 import org.sakaiproject.api.app.melete.MeleteSecurityService;
-import org.sakaiproject.api.app.melete.MeleteBookmarksService;
+
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -79,7 +79,6 @@ public class ViewNextStepsPage implements Serializable/*,ToolBean */{
 	  String userId;
 	  private boolean instRole;
 	  public HtmlPanelGroup secpgroup;
-	  private MeleteBookmarksService bookmarksService;
 
 
       /** Dependency:  The logging service. */
@@ -173,22 +172,7 @@ public String goPrevItem()
 	    vsPage.setSection(null);
 	    //added by rashmi on 6/14/05
 	    vsPage.setModule(null);
-	    List sectionBookmarks = bookmarksService.getBookmarks(getUserId(), courseId, this.prevModId, this.prevSecId);
-		if (sectionBookmarks == null)
-		{
-			vsPage.setBookmarkStatus(false);
-		}
-		else
-		{
-			if (sectionBookmarks.size() == 0)
-			{
-				vsPage.setBookmarkStatus(false);
-			}
-			else
-			{
-				vsPage.setBookmarkStatus(true);
-			}
-		}	    
+
 
 	    if (getInstRole() == true)
 	    {
@@ -375,15 +359,4 @@ private String getUserId()
 	return userId;
 }
 
-
-public MeleteBookmarksService getBookmarksService()
-{
-	return this.bookmarksService;
-}
-
-
-public void setBookmarksService(MeleteBookmarksService bookmarksService)
-{
-	this.bookmarksService = bookmarksService;
-}
 }

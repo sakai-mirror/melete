@@ -42,18 +42,9 @@ function OpenPrintWindow(windowURL,windowName)
 </tr>
 <tr>
 <td colspan="2">
-<table border="0" width="100%">
-<tr>
-<td align="left">
+
 <div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_modules_inst_viewing_student}" /> </div>
-</td>
-<td align="right">
- <h:commandLink id="clearLink" action="#{listModulesPage.clearAllBookmarks}" immediate="true" rendered="#{listModulesPage.bookmarkStatus == listModulesPage.trueFlag}">
-		  <h:outputText  id="clearText" value="#{msgs.clear_all_bookmarks}"/>
-	    </h:commandLink> 
-</td>
-</tr>
-</table>
+
 </td>
 </tr>
 <tr>
@@ -80,8 +71,7 @@ function OpenPrintWindow(windowURL,windowName)
                   value="#{listModulesPage.moduleDateBeans}" 
                   var="mdbean"  rowClasses="row1,row2" columnClasses="titleWid,ModCheckClass,dateWid1,dateWid2,ModCheckClass"
                   border="0" width="100%" binding="#{listModulesPage.modTable}">
-        <h:column> 
-          <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{((mdbean.bookmarkFlag == listModulesPage.trueFlag)&&(mdbean.moduleId != listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}"  styleClass="ExpClass"/>
+        <h:column>       
       
             <h:commandLink id="viewSections" action="#{listModulesPage.showSections}">
         <h:graphicImage id="exp_gif" value="images/expand.gif" rendered="#{((mdbean.moduleId != listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}" styleClass="ExpClass"/>
@@ -110,10 +100,7 @@ function OpenPrintWindow(windowURL,windowName)
            <h:dataTable id="tablesec" rendered="#{(((mdbean.moduleId == listModulesPage.showModuleId)||(listModulesPage.expandAllFlag == listModulesPage.trueFlag)))}"
                   value="#{mdbean.sectionBeans}"
                   var="section" columnClasses="SectionClass" rowClasses="#{mdbean.rowClasses}"  width="95%" binding="#{listModulesPage.secTable}">
-                   <h:column>
-                 <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{section.bookmarkFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
-                <h:outputText id="emp_space" value=" " styleClass="ExtraPaddingClass" rendered="#{((mdbean.bookmarkFlag == listModulesPage.trueFlag)&&(section.bookmarkFlag != listModulesPage.trueFlag))}"/>
-            
+                   <h:column>                         
                <h:graphicImage id="bul_gif" value="images/bullet_black.gif"/>
               
            <h:commandLink id="viewSectionEditor"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{((section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}">
