@@ -58,7 +58,6 @@ import org.sakaiproject.entity.api.Reference;
 
 public class SectionDB implements Serializable {
 	private HibernateUtil hibernateUtil;
-	private MeleteBookmarksDB bookmarksDB;
 	private ModuleDB moduleDB;
 	private MeleteCHService meleteCHService;
 	private MeleteSecurityService meleteSecurityService;
@@ -246,7 +245,6 @@ public class SectionDB implements Serializable {
 	//MELETE tables
 	private void deleteFromMeleteTables(Section sec, String userId, int deleteFrom, String embedResourceId) throws MeleteException
 	{
-		MeleteBookmarks mb = null;
 		SectionResource secRes = null;
 		int affectedEntities;
 		String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.sectionId=:sectionId";
@@ -255,7 +253,6 @@ public class SectionDB implements Serializable {
 		String delSectionStr = "delete Section sec where sec.sectionId=:sectionId";
 		String selModuleStr = "select mod.seqXml from Module mod where mod.moduleId=:moduleId";
 		String updModuleStr = "update Module mod set mod.seqXml=:seqXml where mod.moduleId=:moduleId";
-		String delBookmarksStr = "delete MeleteBookmarks mb where mb.sectionId=:sectionId";
 
 		 try{
 		       Transaction tx = null;
@@ -313,13 +310,7 @@ public class SectionDB implements Serializable {
 		    	   		//logger.debug(affectedEntities+" row was updated in MELETE_MODULE");
 
 		    	     }
-		    	     if (userId != null)
-				     {
-                         //Delete bookmarks for section
-			    	     affectedEntities = session.createQuery(delBookmarksStr).setInteger("sectionId",sectionId).executeUpdate();
-			    	     //logger.debug(affectedEntities+" row was deleted from MELETE_BOOKMARKS");
 
-				     }
 		    	     //Delete section
 		    	     affectedEntities = session.createQuery(delSectionStr).setInteger("sectionId",sectionId).executeUpdate();
 		    	     //logger.debug(affectedEntities+" row was deleted from MELETE_SECTION");
@@ -346,7 +337,7 @@ public class SectionDB implements Serializable {
 			{
 		      	hibernateUtil.closeSession();
     		  }
-		   
+
 		}
 	      catch (Exception ex)
 		  {
@@ -356,7 +347,7 @@ public class SectionDB implements Serializable {
 		  }
 	}
 
-	
+
 
 	public void deleteSection(Section sec, String courseId, String userId) throws MeleteException
 	 {
@@ -374,10 +365,10 @@ public class SectionDB implements Serializable {
 			boolean resourceInUse = false;
 			String resourceId = null;
 			if (sec.getSectionResource() != null)
-			{	
+			{
 			  if (sec.getSectionResource().getResource() != null)
-			  {	
-			  resourceId = sec.getSectionResource().getResource().getResourceId();	
+			  {
+			  resourceId = sec.getSectionResource().getResource().getResourceId();
 			  //Check in SECTION_RESOURCE table
 			  List srUseList = checkInSectionResources(resourceId, courseId);
 			  if (srUseList != null)
@@ -429,7 +420,7 @@ public class SectionDB implements Serializable {
 				//Delete from MELETE_SECTION_RESOURCE and MELETE_SECTION
 				deleteFromMeleteTables(sec, userId, SECTION_RESOURCE_ONLY, null);
 			  }
-			}//End if section.getSectionResource != null	  
+			}//End if section.getSectionResource != null
 			else //Ideally this condition should never arise, it is a safety feature
 			{
 				deleteFromMeleteTables(sec, userId, NONE_TO_DELETE, null);
@@ -1158,7 +1149,7 @@ public class SectionDB implements Serializable {
 					if (allCourseResources != null && activeResources != null)
 					{
 						logger.debug("active list and all" + activeResources.size() + " ; " + allCourseResources.size());
-						allCourseResources.removeAll(activeResources);						
+						allCourseResources.removeAll(activeResources);
 					}
 					// delete sections marked for delete
 					List<Section> delSections = (ArrayList) deletedSections.get(toDelSecCourseId);
@@ -1170,8 +1161,8 @@ public class SectionDB implements Serializable {
 
 					int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
 					deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
-					deletedEntities = session.createQuery(delSectionStr).executeUpdate();					
-					
+					deletedEntities = session.createQuery(delSectionStr).executeUpdate();
+
 					List<String> allSecMelResIds = getAllDeleteSectionMeleteResourceIds(delSections);
 					for(String secMelResId: allSecMelResIds)
 						meleteCHService.removeResource(secMelResId);
@@ -1251,11 +1242,6 @@ public class SectionDB implements Serializable {
 	 */
 	public void setHibernateUtil(HibernateUtil hibernateUtil) {
 		this.hibernateUtil = hibernateUtil;
-	}
-
-	public void setBookmarksDB(MeleteBookmarksDB bookmarksDB)
-	{
-		this.bookmarksDB = bookmarksDB;
 	}
 
 	public void setMeleteCHService(MeleteCHService meleteCHService)

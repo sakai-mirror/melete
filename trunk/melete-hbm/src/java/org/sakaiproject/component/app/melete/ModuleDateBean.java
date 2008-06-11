@@ -4,19 +4,19 @@
 *
 ***********************************************************************************
 *
-* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project 
-*   
-* Licensed under the Apache License, Version 2.0 (the "License"); you 
-* may not use this file except in compliance with the License. You may 
-* obtain a copy of the License at 
-*   
-* http://www.apache.org/licenses/LICENSE-2.0 
-*   
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the License is distributed on an "AS IS" BASIS, 
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
-* implied. See the License for the specific language governing 
-* permissions and limitations under the License. 
+* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you
+* may not use this file except in compliance with the License. You may
+* obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+* implied. See the License for the specific language governing
+* permissions and limitations under the License.
 *
 **********************************************************************************/
 
@@ -29,42 +29,40 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.sakaiproject.api.app.melete.*;
 
 /** @author Hibernate CodeGenerator */
-/* Mallika - 3/22/05 - changed to implement moduledatebeanservice 
- * 
+/* Mallika - 3/22/05 - changed to implement moduledatebeanservice
+ *
  */
 public class ModuleDateBean implements Serializable, ModuleDateBeanService {
 
     /** identifier field */
     protected int moduleId;
-  
+
     protected boolean selected;
-    
+
     protected boolean dateFlag;
-    
+
     protected boolean visibleFlag;
-    
-    protected boolean bookmarkFlag;
-    
+
     protected String truncTitle;
-    
+
     protected String rowClasses;
-    
+
     /** nullable persistent field */
     protected Module module;
-    
+
     /** nullable persistent field */
     protected ModuleShdates moduleShdate;
-    
+
     protected CourseModule cmod;
-    
+
     private List sectionBeans;
-    
- 
+
+
     public boolean isSelected()
     {
     	return selected;
     }
-    
+
     public void setSelected(boolean selected)
     {
     	this.selected = selected;
@@ -73,36 +71,28 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService {
     {
     	return dateFlag;
     }
-    
+
     public void setDateFlag(boolean dateFlag)
     {
     	this.dateFlag = dateFlag;
-    }    
-    
+    }
+
     public boolean isVisibleFlag()
     {
     	return visibleFlag;
     }
-    
+
     public void setVisibleFlag(boolean visibleFlag)
     {
     	this.visibleFlag = visibleFlag;
-    }        
+    }
 
-	public boolean isBookmarkFlag()
-	{
-		return this.bookmarkFlag;
-	}
 
-	public void setBookmarkFlag(boolean bookmarkFlag)
-	{
-		this.bookmarkFlag = bookmarkFlag;
-	}   
     public String getTruncTitle()
     {
     	return truncTitle;
     }
-    
+
     public void setTruncTitle(String truncTitle)
     {
     	this.truncTitle = truncTitle;
@@ -119,8 +109,8 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService {
 
     /** default constructor */
     public ModuleDateBean() {
-    }  
-    
+    }
+
     public int getModuleId() {
         return this.moduleId;
     }
@@ -148,7 +138,7 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService {
 
     public void setCmod(org.sakaiproject.api.app.melete.CourseModuleService cmod) {
         this.cmod = (CourseModule) cmod;
-    }    
+    }
     public List getSectionBeans() {
         return this.sectionBeans;
     }
@@ -158,13 +148,13 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService {
     }
 
     public void setRowClasses(String rowClasses) {
-      this.rowClasses = rowClasses;	
+      this.rowClasses = rowClasses;
     }
-    
+
     public String getRowClasses() {
     	return this.rowClasses;
     }
-    
+
     public String toString() {
         return new ToStringBuilder(this)
             .append("moduleId", getModuleId())

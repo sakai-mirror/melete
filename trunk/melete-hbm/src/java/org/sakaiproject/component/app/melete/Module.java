@@ -4,19 +4,19 @@
 *
 ***********************************************************************************
 *
-* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project 
-*   
-* Licensed under the Apache License, Version 2.0 (the "License"); you 
-* may not use this file except in compliance with the License. You may 
-* obtain a copy of the License at 
-*   
-* http://www.apache.org/licenses/LICENSE-2.0 
-*   
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the License is distributed on an "AS IS" BASIS, 
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
-* implied. See the License for the specific language governing 
-* permissions and limitations under the License. 
+* Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you
+* may not use this file except in compliance with the License. You may
+* obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+* implied. See the License for the specific language governing
+* permissions and limitations under the License.
 *
 **********************************************************************************/
 package org.sakaiproject.component.app.melete;
@@ -93,12 +93,11 @@ public class Module implements Serializable,ModuleObjService {
     private Map sections;
 
     private Map deletedSections;
-    
-    
-    private Map bookmarks;
+
+
 
     /** full constructor */
-    public Module(String title, String learnObj, String description, String keywords, String createdByFname, String createdByLname, String userId, String modifiedByFname, String modifiedByLname, String institute, String whatsNext, Date creationDate, Date modificationDate, String seqXml, int version, org.sakaiproject.component.app.melete.ModuleShdates moduleshdate, org.sakaiproject.component.app.melete.CourseModule coursemodule, Map sections, Map deletedSections, Map bookmarks) {
+    public Module(String title, String learnObj, String description, String keywords, String createdByFname, String createdByLname, String userId, String modifiedByFname, String modifiedByLname, String institute, String whatsNext, Date creationDate, Date modificationDate, String seqXml, int version, org.sakaiproject.component.app.melete.ModuleShdates moduleshdate, org.sakaiproject.component.app.melete.CourseModule coursemodule, Map sections, Map deletedSections) {
         this.title = title;
         this.learnObj = learnObj;
         this.description = description;
@@ -118,9 +117,8 @@ public class Module implements Serializable,ModuleObjService {
         this.coursemodule = coursemodule;
         this.sections = sections;
         this.deletedSections = deletedSections;
-        this.bookmarks = bookmarks;
     }
-    
+
     /*Custom constructor*/
     public Module(String title, String learnObj, String description, String keywords, String createdByFname, String createdByLname, String userId, String modifiedByFname, String modifiedByLname, String institute, String whatsNext, Date creationDate, Date modificationDate, String seqXml) {
         this.title = title;
@@ -137,14 +135,14 @@ public class Module implements Serializable,ModuleObjService {
         this.creationDate = creationDate;
         this.modificationDate = modificationDate;
         this.seqXml = seqXml;
-        
+
     }
     /** default constructor */
     public Module() {
     }
 
     /** minimal constructor */
-    public Module(String title, String keywords, String createdByFname, String createdByLname, String userId, Date creationDate, Map sections, Map deletedSections, Map bookmarks) {
+    public Module(String title, String keywords, String createdByFname, String createdByLname, String userId, Date creationDate, Map sections, Map deletedSections) {
         this.title = title;
         this.keywords = keywords;
         this.createdByFname = createdByFname;
@@ -153,7 +151,6 @@ public class Module implements Serializable,ModuleObjService {
         this.creationDate = creationDate;
         this.sections = sections;
         this.deletedSections = deletedSections;
-        this.bookmarks = bookmarks;
     }
 
     /** Copy constructor*/
@@ -170,9 +167,8 @@ public class Module implements Serializable,ModuleObjService {
          this.coursemodule = null;
          this.sections = null;
          this.deletedSections = null;
-         this.bookmarks = null;
     }
-    
+
     public Integer getModuleId() {
         return this.moduleId;
     }
@@ -268,7 +264,7 @@ public class Module implements Serializable,ModuleObjService {
     public void setWhatsNext(String whatsNext) {
         this.whatsNext = whatsNext;
     }
- 
+
     public Date getCreationDate() {
         return this.creationDate;
     }
@@ -314,7 +310,7 @@ public class Module implements Serializable,ModuleObjService {
     public void setCoursemodule(org.sakaiproject.api.app.melete.CourseModuleService coursemodule) {
         this.coursemodule = (CourseModule) coursemodule;
     }
-  
+
     public Map getSections() {
         return this.sections;
     }
@@ -322,7 +318,7 @@ public class Module implements Serializable,ModuleObjService {
     public void setSections(Map sections) {
         this.sections = sections;
     }
-    
+
     public Map getDeletedSections() {
         return this.deletedSections;
     }
@@ -331,13 +327,13 @@ public class Module implements Serializable,ModuleObjService {
         this.deletedSections = deletedSections;
     }
 
-   
+
     public String toString() {
         return new ToStringBuilder(this)
             .append("moduleId", getModuleId())
             .toString();
     }
-    
+
     public boolean equals(Object other) {
         if ( (this == other ) ) return true;
         if ( !(other instanceof Module) ) return false;
@@ -352,16 +348,5 @@ public class Module implements Serializable,ModuleObjService {
             .append(getModuleId())
             .toHashCode();
     }
-    
-
-	public Map getBookmarks()
-	{
-		return this.bookmarks;
-	}
-
-	public void setBookmarks(Map bookmarks)
-	{
-		this.bookmarks = bookmarks;
-	}
 
 }

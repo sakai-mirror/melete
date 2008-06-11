@@ -45,7 +45,6 @@ import org.sakaiproject.util.ResourceLoader;
 //import com.sun.faces.util.Util;
 import java.sql.Timestamp;
 import org.sakaiproject.api.app.melete.ModuleService;
-import org.sakaiproject.api.app.melete.MeleteBookmarksService;
 import org.sakaiproject.component.app.melete.*;
 import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzGroup;
@@ -80,7 +79,7 @@ public class ListModulesPage implements Serializable{
       private boolean trueFlag = true;
 
       private ModuleService moduleService;
-      private MeleteBookmarksService bookmarksService;
+
       private Section nullSection = null;
       private List nullList = null;
       private String isNull = null;
@@ -93,7 +92,6 @@ public class ListModulesPage implements Serializable{
 	  String courseId;
 	  String userId;
 
-	  private boolean bookmarkStatus;
 	  private UIData modTable;
 	  private UIData secTable;
 	  private ListDataModel modDataModel;
@@ -290,7 +288,7 @@ public class ListModulesPage implements Serializable{
 	  public List getModuleDateBeans() {
 
 	  	    try {
-	  	    if(moduleDateBeans == null)	
+	  	    if(moduleDateBeans == null)
 	  	    	moduleDateBeans = getModuleService().getModuleDateBeans(getUserId(), getCourseId());
 
 	  	    }
@@ -516,37 +514,19 @@ public class ListModulesPage implements Serializable{
 	    vsPage.resetValues();
 	    vsPage.setSection(null);
 	    vsPage.setModule(null);
-	    vsPage.setBookmarkStatus(false);
 	    if (secBean != null)
 	    {
 	     Section sec = secBean.getSection();
 	    vsPage.setModuleId(sec.getModuleId());
-	    vsPage.setSectionId(sec.getSectionId());	   
-	    vsPage.setBookmarkStatus(secBean.isBookmarkFlag());
+	    vsPage.setSectionId(sec.getSectionId());
+	    vsPage.setSection(sec);
 	    }
-	    
+
 	    vsPage.setModuleSeqNo(modSeqNo);
 
 
    }
-      public String clearAllBookmarks()
-      {
-      	FacesContext context = FacesContext.getCurrentInstance();
-      	Map sessionMap = context.getExternalContext().getSessionMap();
-      	ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 
-      	try
-      	{
-      	 bookmarksService.deleteAllBookmarks(getUserId(),getCourseId());
-      	}
-      	catch(Exception e)
-      	{
-      		String errMsg = bundle.getString("Clear_bookmarks_fail");
-      		context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Set_prefs_fail",errMsg));
-      	}
-      	return "list_modules_inst";
-
-      }
 	  private void addNoModulesMessage(FacesContext ctx){
 	  	FacesMessage msg =
 	  		new FacesMessage("No modules", "No modules are available for the course at this time.");
@@ -616,42 +596,6 @@ public class ListModulesPage implements Serializable{
 	  	}
 	  	return userId;
 	  }
-	public MeleteBookmarksService getBookmarksService()
-	{
-		return this.bookmarksService;
-	}
-
-	public void setBookmarksService(MeleteBookmarksService bookmarksService)
-	{
-		this.bookmarksService = bookmarksService;
-	}
-
-	public boolean isBookmarkStatus()
-	{
-		 int bookmarksCount = 0;
-		  try {
-		  		bookmarksCount = getBookmarksService().getBookmarksCount(getUserId(), getCourseId());
-
-		  	}catch (Exception e)
-			{
-		  		//e.printStackTrace();
-		  		logger.error(e.toString());
-			}
-
-		  	if (bookmarksCount == 0)
-		  	{
-		  	  return false;
-		  	}
-		  	else
-		  	{
-		  	  return true;
-		  	}
-	}
-
-	public void setBookmarkStatus(boolean bookmarkStatus)
-	{
-		this.bookmarkStatus = bookmarkStatus;
-	}
 
 	public boolean isClosedModulesFlag()
 	{

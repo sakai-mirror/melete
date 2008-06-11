@@ -74,20 +74,10 @@ function showIframe()
 </tr> 
 
 <tr>
-		<td align="left">  
+		<td colspan="2" align="left">  
 		  <h:outputText id="title" value="#{viewSectionsPage.section.title}" styleClass="bold style7"></h:outputText>     
 		</td>
-		<td align="right">
-		<h:commandLink id="bmarkLink" action="#{viewSectionsPage.createBookmark}" immediate="true" rendered="#{viewSectionsPage.bookmarkStatus == false}">
-		  <h:outputText  id="bmarkText1" value="#{msgs.bookmark_text}"/>
-	    </h:commandLink>  
-	    <h:graphicImage id="bmark_gif" value="images/bookmark.png" rendered="#{viewSectionsPage.bookmarkStatus == true}" styleClass="ExpClass"/>        
-	    <h:outputText  id="bmarkText2" value="#{msgs.bookmarked_text}" rendered="#{viewSectionsPage.bookmarkStatus == true}"/>
-	    <h:outputText id="seperatorMsg" value=" | "  rendered="#{viewSectionsPage.bookmarkStatus == true}"/>
-	    <h:commandLink id="clearLink" action="#{viewSectionsPage.clearBookmark}" immediate="true"  rendered="#{viewSectionsPage.bookmarkStatus == true}">
-		  <h:outputText  id="clearText" value="#{msgs.clear_bookmark_text}"/>
-	    </h:commandLink>    
-		</td>
+		
 </tr> 
 
 <tr>
