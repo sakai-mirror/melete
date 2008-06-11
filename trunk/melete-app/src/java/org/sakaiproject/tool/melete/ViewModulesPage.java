@@ -72,7 +72,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
       private int prevSectionSize;
       private int prevSeqNo;
       private int nextSeqNo;
-      private boolean printable;
+      private Boolean printable;
 
 //    This needs to be set later using Utils.getBinding
 	  String courseId;
@@ -482,6 +482,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
          ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(ctx);
          vmPage.setModuleId(((Integer)param.getValue()).intValue());
          vmPage.setMdbean(null);
+         vmPage.setPrintable(null);
          try {
 	  		ModuleService modServ = getModuleService();
 	  		CourseModule cMod = (CourseModule)modServ.getCourseModule(((Integer)param.getValue()).intValue(),getCourseId());
@@ -508,14 +509,22 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     public boolean isPrintable()
 	  {
 		  FacesContext ctx = FacesContext.getCurrentInstance();
-		  try{		  
+		  try{	
+			if(printable == null)
+			{
 		   ValueBinding binding = Util.getBinding("#{authorPreferences}");
 	 	   AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(ctx);
 	 	   if (courseId == null) getCourseId();
-	 	   printable = preferencePage.isMaterialPrintable(courseId);
+	 	   printable = new Boolean(preferencePage.isMaterialPrintable(courseId));
+			}
 		  }
 		  catch(Exception e){e.printStackTrace();
 		  printable=false;}
-		  return printable;
+		  return printable.booleanValue();
 	  }
+    
+    public void setPrintable(Boolean printable)
+    {
+    	this.printable = printable;
+    }
 }

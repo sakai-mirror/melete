@@ -609,6 +609,7 @@ public String goPrevModule()
       ViewModulesPage vmPage = (ViewModulesPage)
         binding.getValue(context);
     vmPage.setModuleId(this.moduleId);
+    vmPage.setPrintable(null);
   	vmPage.setMdbean(null);
   	vmPage.setPrevMdbean(null);
     vmPage.setModuleSeqNo(this.moduleSeqNo);
@@ -643,6 +644,7 @@ public String goNextModule()
   	vmPage.setMdbean(null);
   	vmPage.setPrevMdbean(null);
     vmPage.setModuleSeqNo(this.nextSeqNo);
+    vmPage.setPrintable(null);
     if (getInstRole())
 	{
 			return "view_module";
