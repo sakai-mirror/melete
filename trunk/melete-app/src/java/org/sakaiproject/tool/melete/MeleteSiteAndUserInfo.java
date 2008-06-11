@@ -293,12 +293,12 @@ public class MeleteSiteAndUserInfo {
 		    	  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_fail",errMsg));
 		    	  return "error_migration";
 		      }
-		      if (migrateResult == moduleService.MIGRATE_COMPLETE)
-			  {
-				  String successMsg = bundle.getString("migration_process_success");
-				  context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_INFO,"migration_process_success",successMsg));
-				  return "list_auth_modules";
-			  }
+//		      if (migrateResult == moduleService.MIGRATE_COMPLETE)
+//			  {
+//				  String successMsg = bundle.getString("migration_process_success");
+//				  context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_INFO,"migration_process_success",successMsg));
+//				  return "list_auth_modules";
+//			  }
 		    }
 		    catch (Exception ex)
 		    {
