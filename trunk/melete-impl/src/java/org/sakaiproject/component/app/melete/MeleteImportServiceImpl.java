@@ -1129,15 +1129,8 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				{
 			 		// actual insert
 			 		// if not found in meleteDocs collection include it
-			 		String uploadCollId = "";
-			 		if (resElements != null)
-			 		{
-			 			uploadCollId = getMeleteCHService().getUploadCollectionId();
-			 		}
-			 		else
-			 		{
-			 			uploadCollId = getMeleteCHService().getUploadCollectionId(destinationContext);
-			 		}
+			 		String uploadCollId = getMeleteCHService().getUploadCollectionId(destinationContext);
+			 		
 				  	// data is generally large so read it only if need to insert
 					if(section.getContentType().equals("typeLink"))
 					{
