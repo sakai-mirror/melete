@@ -73,22 +73,22 @@ function OpenPrintWindow(windowURL,windowName)
                   border="0" width="100%" binding="#{listModulesPage.modTable}">
         <h:column>       
       
-            <h:commandLink id="viewSections" action="#{listModulesPage.showSections}">
+            <h:commandLink id="viewSections" action="#{listModulesPage.showSections}" immediate="true">
         <h:graphicImage id="exp_gif" value="images/expand.gif" rendered="#{((mdbean.moduleId != listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}" styleClass="ExpClass"/>
          <h:inputHidden id="moduleShowId" value="#{mdbean.moduleId}"/>
       </h:commandLink>
- <h:commandLink id="hideSections" action="#{listModulesPage.hideSections}">
+ <h:commandLink id="hideSections" action="#{listModulesPage.hideSections}" immediate="true">
         <h:graphicImage id="col_gif" value="images/collapse.gif" rendered="#{(((mdbean.moduleId == listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList))||((listModulesPage.expandAllFlag == listModulesPage.trueFlag)&&(mdbean.sectionBeans != listModulesPage.nullList)))}" styleClass="ExpClass"/>
          <h:inputHidden id="moduleHideId" value="#{mdbean.moduleId}"/>
       </h:commandLink>   
-       <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}"  
+       <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}" immediate="true"  
           rendered="#{mdbean.visibleFlag == listModulesPage.trueFlag}">
           <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
               <h:outputText id="title"
                            value="#{mdbean.module.title}">
          </h:outputText>             
        </h:commandLink>
-      <h:commandLink id="viewModule2"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}"  
+      <h:commandLink id="viewModule2"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}"  immediate="true" 
          rendered="#{mdbean.visibleFlag != listModulesPage.trueFlag}">      
          <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
          <h:outputText id="title2"
@@ -103,21 +103,21 @@ function OpenPrintWindow(windowURL,windowName)
                    <h:column>                         
                <h:graphicImage id="bul_gif" value="images/bullet_black.gif"/>
               
-           <h:commandLink id="viewSectionEditor"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{((section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}">
+           <h:commandLink id="viewSectionEditor"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{((section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}" immediate="true">
                   <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
                <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
                <h:outputText id="sectitleEditor" 
                            value="#{section.section.title}">
                </h:outputText>
              </h:commandLink>
-            <h:commandLink id="viewSectionEditor2"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{((section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag != listModulesPage.trueFlag))}">
+            <h:commandLink id="viewSectionEditor2"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{((section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag != listModulesPage.trueFlag))}" immediate="true">
                   <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
                <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
                <h:outputText id="sectitleEditor2" 
                            value="#{section.section.title}" styleClass="italics">
                </h:outputText>
              </h:commandLink>             
-           <h:commandLink id="viewSectionLink"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}" rendered="#{((section.section.contentType != listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}">
+           <h:commandLink id="viewSectionLink"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}" rendered="#{((section.section.contentType != listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}" immediate="true">
                   <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
                <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
                <h:outputText id="sectitleLink" 
@@ -125,7 +125,7 @@ function OpenPrintWindow(windowURL,windowName)
                </h:outputText>
              </h:commandLink> 
           
-           <h:commandLink id="viewSectionLink2"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}" rendered="#{((section.section.contentType != listModulesPage.typeLink)&&(mdbean.visibleFlag != listModulesPage.trueFlag))}">
+           <h:commandLink id="viewSectionLink2"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}" rendered="#{((section.section.contentType != listModulesPage.typeLink)&&(mdbean.visibleFlag != listModulesPage.trueFlag))}" immediate="true">
                  <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
                <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
                <h:outputText id="sectitleLink2" 

@@ -460,8 +460,8 @@ public class ModuleDB implements Serializable {
 		{
 	       Session session = hibernateUtil.currentSession();
 
-	      String queryString = "from Module module where module.moduleId = :moduleId and module.coursemodule.courseId = :courseId  and module.coursemodule.archvFlag = 0 and module.coursemodule.deleteFlag = 0 order by module.coursemodule.seqNo";
-
+	      //String queryString = "from Module module where module.moduleId = :moduleId and module.coursemodule.courseId = :courseId  and module.coursemodule.archvFlag = 0 and module.coursemodule.deleteFlag = 0 order by module.coursemodule.seqNo";
+			String queryString = "from CourseModule cmod where cmod.moduleId = :moduleId and cmod.courseId = :courseId  and cmod.archvFlag = 0 and cmod.deleteFlag = 0 order by cmod.seqNo";
 	      Query query = session.createQuery(queryString);
 	      query.setParameter("moduleId", new Integer(moduleId));
 	      query.setParameter("courseId", courseId);
@@ -469,8 +469,9 @@ public class ModuleDB implements Serializable {
 	      modList = query.list();
 	      Iterator i = modList.iterator();
 	      while (i.hasNext()) {
+			CourseModule cmod = (CourseModule) i.next();
 	        mdBean = new ModuleDateBean();
-	        mod = (Module) i.next();
+	        mod = (Module) cmod.getModule();
 	        populateModuleBean(mod, mdBean);
 
 	      }
@@ -500,7 +501,7 @@ public class ModuleDB implements Serializable {
 		 	try
 			{
 		       Session session = hibernateUtil.currentSession();
-               String queryString = "from Module module where module.coursemodule.courseId = :courseId and module.coursemodule.seqNo = :seqNo  and module.coursemodule.archvFlag = 0 and module.coursemodule.deleteFlag = 0 order by module.coursemodule.seqNo";
+               String queryString = "from CourseModule cmod where cmod.courseId = :courseId and cmod.seqNo = :seqNo  and cmod.archvFlag = 0 and cmod.deleteFlag = 0 order by cmod.seqNo";
 
               Query query = session.createQuery(queryString);
 		      query.setParameter("seqNo", new Integer(seqNo));
@@ -509,9 +510,10 @@ public class ModuleDB implements Serializable {
 		      modList = query.list();
 		      Iterator i = modList.iterator();
 		      while (i.hasNext()) {
-		        mdBean = new ModuleDateBean();
-		        mod = (Module) i.next();
-		    	  populateModuleBean(mod, mdBean);
+		        	CourseModule cmod = (CourseModule) i.next();
+				    mdBean = new ModuleDateBean();
+				    mod = (Module) cmod.getModule();
+				    populateModuleBean(mod, mdBean);
 
 		      }
 			}

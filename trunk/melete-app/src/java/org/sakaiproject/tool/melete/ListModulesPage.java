@@ -505,9 +505,7 @@ public class ListModulesPage implements Serializable{
 			}
 		}
 
-
-
-        ValueBinding binding =
+		ValueBinding binding =
 	    Util.getBinding("#{viewSectionsPage}");
 	    ViewSectionsPage vsPage = (ViewSectionsPage)
 	    binding.getValue(ctx);
