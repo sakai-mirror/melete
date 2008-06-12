@@ -135,6 +135,7 @@ public String goPrevItem()
 {
 	FacesContext context = FacesContext.getCurrentInstance();
 	courseId = getCourseId();
+	int nextPrevSeqNo = getModuleService().getPrevSeqNo(courseId,this.nextSeqNo);
 	if (this.prevSecId == 0)
 	{
 	  ValueBinding binding =
@@ -146,7 +147,7 @@ public String goPrevItem()
   	  vmPage.setMdbean(null);
   	  if (this.nextSeqNo > 1)
   	  {
-        vmPage.setModuleSeqNo(getModuleService().getPrevSeqNo(courseId,this.nextSeqNo));
+        vmPage.setModuleSeqNo(nextPrevSeqNo);
   	  }
       vmPage.setPrevMdbean(null);
       if (instRole)
@@ -168,7 +169,7 @@ public String goPrevItem()
 
 	    vsPage.setSectionId(this.prevSecId);
 	    vsPage.setModuleId(this.prevModId);
-	    vsPage.setModuleSeqNo(getModuleService().getPrevSeqNo(courseId,this.nextSeqNo));
+	    vsPage.setModuleSeqNo(nextPrevSeqNo);
 	    vsPage.setSection(null);
 	    //added by rashmi on 6/14/05
 	    vsPage.setModule(null);
@@ -193,13 +194,14 @@ public String goNextModule()
 	FacesContext context = FacesContext.getCurrentInstance();
 	//this.module = null;
 	int nextSeqNo = new Integer(((String)context.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue();
-	ModuleDateBean nextMdBean = (ModuleDateBean) getModuleService().getModuleDateBeanBySeq(getUserId(), getCourseId(),nextSeqNo);
+//	ModuleDateBean nextMdBean = (ModuleDateBean) getModuleService().getModuleDateBeanBySeq(getUserId(), getCourseId(),nextSeqNo);
 	this.module = null;
 	ValueBinding binding =
         Util.getBinding("#{viewModulesPage}");
       ViewModulesPage vmPage = (ViewModulesPage)
         binding.getValue(context);
-    vmPage.setModuleId(nextMdBean.getModuleId());
+  //  vmPage.setModuleId(nextMdBean.getModuleId());
+    vmPage.setModuleId(0);  
   	vmPage.setMdbean(null);
   	vmPage.setPrevMdbean(null);
     vmPage.setModuleSeqNo(nextSeqNo);

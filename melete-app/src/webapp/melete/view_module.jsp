@@ -81,7 +81,7 @@ function OpenPrintWindow(windowURL,windowName)
           	
 		  <h:column>            
           	   <h:graphicImage id="bul_gif" value="images/bullet_black.gif" rendered="#{sectionBean.section.title != viewModulesPage.nullString}"/>
-					  <h:commandLink id="viewSectionEditor"  action="#{viewModulesPage.viewSection}" rendered="#{sectionBean.section.title != viewModulesPage.nullString}">
+					  <h:commandLink id="viewSectionEditor"  action="#{viewModulesPage.viewSection}" rendered="#{sectionBean.section.title != viewModulesPage.nullString}" immediate="true">
 							  <h:outputText id="sectitleEditor" value="#{sectionBean.section.title}" > </h:outputText>
 					  </h:commandLink>
 			</h:column>
