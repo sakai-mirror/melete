@@ -267,7 +267,7 @@ if (msg != null)
 		    	<f:param id="printmoduleId" name="printModuleId" value="#{listAuthModulesPage.printModuleId}" />
 		  	  <h:graphicImage id="printImgLink" value="images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 		  </h:outputLink>
-		    <h:outputText id="emp_space6" value="  " styleClass="ExtraPaddingClass" />
+		    <h:outputText id="emp_space7" value="  " styleClass="ExtraPaddingClass" />
         </h:column>
 	    
           
