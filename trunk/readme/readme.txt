@@ -9,11 +9,12 @@ SETUP INSTRUCTIONS
 1. Patch Instructions
 2. Configuring Melete  
 3. Configuring Commercial Sferyx Editor (Optional)
-4. Compile Melete 
-5. Database Configuration
-6. Update Sakai Roles (under realms)
-
-
+4. Oracle Code Configuration
+5. Internationalize Messages (Optional)
+6. Compile Melete 
+7. Database Configuration
+8. Configure Site Archive to include Melete
+9. Update Sakai Roles (under realms)
 ---------------------------------
 
 1. Patch Instructions
@@ -108,7 +109,20 @@ SETUP INSTRUCTIONS
 		
                               ***** END OF OPTIONAL STEP **********
 
-4. Compile Melete
+4. Oracle Code Configuration
+   ** SKIP this step if you are NOT using Oracle.**
+   
+   If you are using Oracle, due to differences in Oracle query behavior, you will need to 
+   perform the following step:
+   Replace two methods (migrateMeleteDocs and processLicenseInformation) 
+   in /melete-impl/src/java/org/sakaiproject/component/app/melete/ModuleServiceImpl.java
+   with their corresponding Oracle versions, located at /patch/migrate_oracle.txt
+
+5. Internationalize Messages (Optional)
+	If you want to run Melete in a different language than English, you need to update messages.properties of your language 
+	under melete-app/src/bundle and under melete-impl/src/bundle.
+	
+6. Compile Melete
 	 On the command prompt, go to the melete source directory which you placed 
 	under sakai and run maven commands just like you did for sakai.
 	
@@ -117,7 +131,7 @@ SETUP INSTRUCTIONS
 	(for more instructions, see section titled 'Sakai Maven Goals' in the 
 	"How we build Sakai Using Maven" document provided by Sakai lead developers)
 	
-5. Database Configuration
+7. Database Configuration
 
 	* Melete works with HSQLDB, Oracle or Mysql4.1 Database. The driver used is 
 	the MySql Connector/J 3.1.12 (same as Sakai). It has been tested just on Mysql, 
@@ -125,7 +139,7 @@ SETUP INSTRUCTIONS
 	
 	* Melete shares the same database as Sakai's and adds a few tables to the database. 
 	
-	5.1 Set up the Melete tables: 
+	7.1 Set up the Melete tables: 
 	
 	You can either run the sql script manually; it is provided under
 	/components/src/sql/mysql/melete25.sql, 
@@ -137,19 +151,24 @@ SETUP INSTRUCTIONS
 	
 	NOTE: Melete stores content in the database tables as well as in the /private/meleteDocs folder in ContentHosting. 
         Through Melete, users only have access to the /private/meleteDocs folder and not other parts of Resources.
-	
 
-6. Update Sakai Roles (under realms) to include Melete permissions
+8. Configure Site Archive to include Melete 
+	Melete now participates in Site Archive. Modify archive\archive-impl\pack\src\webapp\WEB-INF\components.xml, add
+	<value>MeleteSecurityService</value> in the filterServices list.
+	
+	Compile and deploy archive again.	
+	
+9. Update Sakai Roles (under realms) to include Melete permissions
 
 	(If you are simply upgrading Melete in your Sakai instance, no roles changes are needed)
 
-	6.1. Log on as Sakai admin. Check appropriate Melete permissions under the roles in
+	9.1. Log on as Sakai admin. Check appropriate Melete permissions under the roles in
 	 !site.template.course. 
 	
 	* Check melete.author for teacher, instructor, faculty types of roles (maintain).
 	* Check melete.student for student types of custom roles that you have (access).
 		
-	6.2. If you have project sites and related roles in !site.template.project, appropriate 
+	9.2. If you have project sites and related roles in !site.template.project, appropriate 
 	permissions (melete.student or melete.author) need to be checked as defined above.
 		
    CAUTION: 
