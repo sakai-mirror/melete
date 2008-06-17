@@ -2214,14 +2214,13 @@ public class ModuleDB implements Serializable {
 						}
 						catch(Exception e){
 							e.printStackTrace();
-							logger.info("error deleting extra section and resources " + allSecIds);
-							break out;
+							logger.info("error deleting extra section and resources " + allSecIds);							
 						}
 
 					}
-     	out:		logger.debug("suceess remove of deleted modules and their sections.NOW MOVE TO melete resources");
+					logger.debug("suceess remove of deleted modules and their sections.NOW MOVE TO melete resources");
 					// delete melete resource and from content resource
-					for (Iterator delIter = allCourseResources.listIterator(); delIter.hasNext();)
+				 for (Iterator delIter = allCourseResources.listIterator(); delIter.hasNext();)
 					{
 						String delResourceId = (String) delIter.next();
 						logger.debug("now deleting mr " + delResourceId);
