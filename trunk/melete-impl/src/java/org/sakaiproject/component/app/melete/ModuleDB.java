@@ -2188,11 +2188,12 @@ public class ModuleDB implements Serializable {
 					}
 					logger.debug("looking for extra sections marked for delete");
 					// look for sections just marked for delete
-					queryString = " from Section sec where sec.deleteFlag = 1 and sec.module.coursemodule.courseId=:courseId order by sec.moduleId";
-					query = session.createQuery(queryString);
+				//	queryString = " from Section sec where sec.deleteFlag = 1 and sec.module.coursemodule.courseId=:courseId order by sec.moduleId";
+     				queryString = " from Section sec where sec.deleteFlag = 1 and sec.moduleId IN (select moduleId from CourseModule cm where cm.courseId=:courseId) order by sec.moduleId";
+     				query = session.createQuery(queryString);
 					query.setString("courseId", toDelCourseId);
 					List<Section> sectionsres = query.list();
-					if(sectionsres != null)
+					if(sectionsres != null && sectionsres.size() > 0)
 					{
 					String allSecIds = "(";
 
@@ -2212,12 +2213,13 @@ public class ModuleDB implements Serializable {
 						deletedEntities = session.createQuery(delSectionStr).executeUpdate();
 						}
 						catch(Exception e){
+							e.printStackTrace();
 							logger.info("error deleting extra section and resources " + allSecIds);
-							continue;
+							break out;
 						}
 
 					}
-					logger.debug("suceess remove of deleted modules and their sections.NOW MOVE TO melete resources");
+     	out:		logger.debug("suceess remove of deleted modules and their sections.NOW MOVE TO melete resources");
 					// delete melete resource and from content resource
 					for (Iterator delIter = allCourseResources.listIterator(); delIter.hasNext();)
 					{
