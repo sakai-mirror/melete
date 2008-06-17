@@ -136,100 +136,100 @@ function clearItem(id)
 			<p>
 			<div id="choose1" class="fileclass" style="display:block">
 			<br>
-			<b>&nbsp;&nbsp;<span class="required">* </span></b>Choose a file:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile1" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload1"><INPUT TYPE="FILE" id="file1" NAME="file1" />
 			<img src="images/remove_item.png"/>
-			<a id="remove1" href="#" onClick="javascript:clearItem(1)">Remove item</a>
+			<a id="remove1" href="#" onClick="javascript:clearItem(1)"><h:outputText id="removeItem1" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>
 		
 			<div id="choose2" class="fileclass" style="display:none">
 			<br>
-			<b>&nbsp;&nbsp;<span class="required">* </span></b>Choose a file:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile2" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload2"><INPUT TYPE="FILE" id="file2" NAME="file2" />
 			<img src="images/remove_item.png"/>
-			<a id="remove2" href="#" onClick="javascript:clearItem(2)">Remove item</a>
+			<a id="remove2" href="#" onClick="javascript:clearItem(2)"><h:outputText id="removeItem2" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>
 		
 			<div id="choose3" class="fileclass" style="display:none">
 			<br>
-			<b>&nbsp;&nbsp;<span class="required">* </span></b>Choose a file:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile3" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload3"><INPUT TYPE="FILE" id="file3" NAME="file3" />
 			<img src="images/remove_item.png"/>
-			<a id="remove3" href="#" onClick="javascript:clearItem(3)">Remove item</a>
+			<a id="remove3" href="#" onClick="javascript:clearItem(3)"><h:outputText id="removeItem3" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>
 		
 			<div id="choose4" class="fileclass" style="display:none">
 			<br>
-			<b>&nbsp;&nbsp;<span class="required">* </span></b>Choose a file:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile4" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload4"><INPUT TYPE="FILE" id="file4" NAME="file4" />
 			<img src="images/remove_item.png"/>
-			<a id="remove4" href="#" onClick="javascript:clearItem(4)">Remove item</a>
+			<a id="remove4" href="#" onClick="javascript:clearItem(4)"><h:outputText id="removeItem4" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>
 
             <div id="choose5" class="fileclass" style="display:none">
 			<br>
-			<b>&nbsp;&nbsp;<span class="required">* </span></b>Choose a file:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile5" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload5"><INPUT TYPE="FILE" id="file5" NAME="file5" />
 			<img src="images/remove_item.png"/>
-			<a id="remove5" href="#" onClick="javascript:clearItem(5)">Remove item</a>
+			<a id="remove5" href="#" onClick="javascript:clearItem(5)"><h:outputText id="removeItem5" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>
 		
 			<div id="choose6" class="fileclass" style="display:none">
 			<br>
-			<b>&nbsp;&nbsp;<span class="required">* </span></b>Choose a file:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile6" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload6"><INPUT TYPE="FILE" id="file6" NAME="file6" />
 			<img src="images/remove_item.png"/>
-			<a id="remove6" href="#" onClick="javascript:clearItem(6)">Remove item</a>
+			<a id="remove6" href="#" onClick="javascript:clearItem(6)"><h:outputText id="removeItem6" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>
 		
 			<div id="choose7" class="fileclass" style="display:none">
 			<br>
-			<b>&nbsp;&nbsp;<span class="required">* </span></b>Choose a file:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile7" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload7"><INPUT TYPE="FILE" id="file7" NAME="file7" />
 			<img src="images/remove_item.png"/>
-			<a id="remove7" href="#" onClick="javascript:clearItem(7)">Remove item</a>
+			<a id="remove7" href="#" onClick="javascript:clearItem(7)"><h:outputText id="removeItem7" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>
 		
 			<div id="choose8" class="fileclass" style="display:none">
 			<br>
-			<b>&nbsp;&nbsp;<span class="required">* </span></b>Choose a file:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile8" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload8"><INPUT TYPE="FILE" id="file8" NAME="file8" />
 			<img src="images/remove_item.png"/>
-			<a id="remove8" href="#" onClick="javascript:clearItem(8)">Remove item</a>
+			<a id="remove8" href="#" onClick="javascript:clearItem(8)"><h:outputText id="removeItem8" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>			
 			
             <div id="choose9" class="fileclass" style="display:none">
             <br>
-			<b>&nbsp;&nbsp;<span class="required">* </span></b>Choose a file:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile9" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload9"><INPUT TYPE="FILE" id="file9" NAME="file9" />
 			<img src="images/remove_item.png"/>
-			<a id="remove9" href="#" onClick="javascript:clearItem(9)">Remove item</a>
+			<a id="remove9" href="#" onClick="javascript:clearItem(9)"><h:outputText id="removeItem9" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>	
 			
 			<div id="choose10" class="fileclass" style="display:none">
 			<br>
-			<b>&nbsp;&nbsp;<span class="required">* </span></b>Choose a file:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile10" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload10"><INPUT TYPE="FILE" id="file10" NAME="file10" />
 			<img src="images/remove_item.png"/>
-			<a id="remove10" href="#" onClick="javascript:clearItem(10)">Remove item</a>
+			<a id="remove10" href="#" onClick="javascript:clearItem(10)"><h:outputText id="removeItem10" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>	
