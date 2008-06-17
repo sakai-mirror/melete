@@ -230,11 +230,11 @@ public class MeleteSiteAndUserInfo {
 
 		int migrateResult=-1;
 		String beginMigrate = ServerConfigurationService.getString("melete.migrate","false");
-		logger.info("Value of beginMigrate is "+beginMigrate);
-
+		logger.info("Value of beginMigrate is "+beginMigrate + isSuperUser());
+		
 	    moduleService.checkInstallation();
 
-		if ((isSuperUser()&&beginMigrate.equals("false")) || ((!isSuperUser())&&isUserAuthor()) || ((!isSuperUser())&&isUserStudent()))
+		if ((isSuperUser()&& beginMigrate.equals("false")) || ((!isSuperUser()) && isUserAuthor()) || ((!isSuperUser()) && isUserStudent()))
 		{
 				migrateResult = moduleService.getMigrateStatus();
 				try
@@ -299,6 +299,8 @@ public class MeleteSiteAndUserInfo {
 //				  context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_INFO,"migration_process_success",successMsg));
 //				  return "list_auth_modules";
 //			  }
+		      if (migrateResult == moduleService.MIGRATE_COMPLETE)
+		    	  return "list_auth_modules"; 
 		    }
 		    catch (Exception ex)
 		    {
