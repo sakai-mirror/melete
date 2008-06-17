@@ -953,7 +953,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
     				}
     			}
 		            // iterate next
-		            checkforimgs =checkforimgs.substring(endSrc);
+    				if(endSrc > 0 && endSrc <= checkforimgs.length())
+    					checkforimgs =checkforimgs.substring(endSrc);
+    				else checkforimgs = null;
 		            startSrc=0; endSrc = 0; foundLink = null;
 		         }
 			 }
