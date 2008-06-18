@@ -2211,6 +2211,7 @@ public class ModuleDB implements Serializable {
 						int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
 						deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
 						deletedEntities = session.createQuery(delSectionStr).executeUpdate();
+						logger.debug("sucess remove of deleted sections" + deletedEntities);
 						}
 						catch(Exception e){
 							e.printStackTrace();
