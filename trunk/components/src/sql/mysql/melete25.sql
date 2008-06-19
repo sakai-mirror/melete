@@ -112,6 +112,8 @@ CREATE TABLE `melete_user_preference` (
   `EXP_CHOICE` tinyint(1) default NULL,
   PRIMARY KEY  (`PREF_ID`)
 );
+CREATE INDEX USER_ID_IDX ON melete_user_preference(USER_ID);
+
 CREATE TABLE `melete_migrate_status` (START_FLAG tinyint(1),COMPLETE_FLAG tinyint(1));
 
 CREATE TABLE `melete_site_preference` (
