@@ -10,3 +10,4 @@ CREATE TABLE `melete_site_preference` (
   `PRINTABLE` tinyint(1) default NULL,
   PRIMARY KEY (`PREF_SITE_ID`)
   );
+CREATE INDEX USER_ID_IDX ON melete_user_preference(USER_ID);
