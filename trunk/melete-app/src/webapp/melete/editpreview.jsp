@@ -8,20 +8,19 @@
 function showIframe()
 {
  
-	var str=document.getElementById("previewForm:contentType").value;
-
-	if((str.match("typeLink"))||(str.match("typeEditor")))
+	var str=document.getElementById("previewForm:contentType").value;	 
+	if(str.match("typeEditor"))
 	{
 		document.getElementById("iframe1").style.visibility="hidden";
 		document.getElementById("iframe1").style.display="none";
 	}
-	
+
 }	
 
 </script>
 <f:view>
 <body onLoad="showIframe(),setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
- 	<h:form id="previewForm" >
+ 	<h:form id="previewForm" > 	
      <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
           <tr>
             <td width="100%" height="20" >
@@ -60,12 +59,12 @@ function showIframe()
                 </h:outputText> 
                 <br>
                 <br>
-	            <h:outputLink id="viewSectionLink"  value="#{editSectionPage.previewContentData}" target="_blank" rendered="#{editSectionPage.shouldRenderLink}">
+	            <h:outputLink id="viewSectionLink"  value="#{editSectionPage.previewContentData}" target="_blank" rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderUpload) && editSectionPage.section.openWindow == true}">
                 <h:outputText id="sectitleLink" 
-                           value="#{editSectionPage.secResourceName}" rendered="#{editSectionPage.shouldRenderLink}">
+                           value="#{editSectionPage.secResourceName}">
                 </h:outputText>
                 </h:outputLink>	
-                <iframe  id="iframe1" src="<h:outputText value="#{editSectionPage.previewContentData}"  rendered="#{editSectionPage.shouldRenderUpload}"/>" style="visibility:visible" scrolling="auto" width="100%"  height="700" border="0" frameborder="0"></iframe>	
+                <iframe  id="iframe1" src="<h:outputText value="#{editSectionPage.previewContentData}"  rendered="#{(editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLink) && editSectionPage.section.openWindow == false}"/>" style="visibility:visible" scrolling="auto" width="100%"  height="700" border="0" frameborder="0"></iframe>	
                				
 		      </td></tr>
 	       

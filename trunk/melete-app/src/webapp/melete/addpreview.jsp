@@ -10,7 +10,7 @@ function showIframe()
  
 	var str=document.getElementById("previewAddForm:contentType").value;
 
-	if((str.match("typeLink"))||(str.match("typeEditor")))
+	if((str.match("typeEditor"))
 	{
 		document.getElementById("iframe1").style.visibility="hidden";
 		document.getElementById("iframe1").style.display="none";
@@ -55,12 +55,12 @@ function showIframe()
                 </h:outputText> 
                 <br>
                 <br>
-	            <h:outputLink id="viewSectionLink"  value="#{addSectionPage.previewContentData}" target="_blank" rendered="#{addSectionPage.shouldRenderLink}">
+	            <h:outputLink id="viewSectionLink"  value="#{addSectionPage.previewContentData}" target="_blank" rendered="#{(addSectionPage.shouldRenderLink || addSectionPage.shouldRenderUpload) && addSectionPage.section.openWindow == true}">
                 <h:outputText id="sectitleLink" 
-                           value="#{addSectionPage.secResourceName}" rendered="#{addSectionPage.shouldRenderLink}">
+                           value="#{addSectionPage.secResourceName}">
                 </h:outputText>
                 </h:outputLink>						
-	             <iframe  id="iframe1" src="<h:outputText value="#{addSectionPage.previewContentData}"  rendered="#{addSectionPage.shouldRenderUpload}"/>" scrolling="auto" style="visibility:visible" width="100%"  height="700" border="0" frameborder="0"></iframe>	
+	             <iframe  id="iframe1" src="<h:outputText value="#{addSectionPage.previewContentData}"  rendered="#{(addSectionPage.shouldRenderUpload || addSectionPage.shouldRenderLink) && addSectionPage.section.openWindow == false}"/>" scrolling="auto" style="visibility:visible" width="100%"  height="700" border="0" frameborder="0"></iframe>	
             
 				</td></tr>
 			

@@ -22,17 +22,16 @@ function showIframe()
 		document.getElementById("iframe2").style.visibility="hidden";
 		document.getElementById("iframe2").style.display="none";
 	}
-	if (contentTypeStr.match("typeLink")&&openWindowStr.match("false"))
+	if (contentTypeStr.match("typeLink")&& openWindowStr.match("false"))
 	{
 	    document.getElementById("iframe2").style.visibility="hidden";
 		document.getElementById("iframe2").style.display="none";
-	}
-	if (contentTypeStr.match("typeUpload")&&openWindowStr.match("false"))
+	}	
+	if (contentTypeStr.match("typeUpload")&& openWindowStr.match("false"))
 	{
 	    document.getElementById("iframe1").style.visibility="hidden";
 		document.getElementById("iframe1").style.display="none";
 	}
-	
 }	
 
 </script>
@@ -95,21 +94,14 @@ function showIframe()
                            value="#{msgs.view_section_clicking}<BR><BR>" rendered="#{(((viewSectionsPage.section.contentType == viewSectionsPage.typeUpload)||(viewSectionsPage.section.contentType == viewSectionsPage.typeLink))&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}">
       </h:outputText> 
       
-	 <h:outputLink id="viewSectionLink"  value="#{viewSectionsPage.contentLink}" target="_blank" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}">
+	 <h:outputLink id="viewSectionLink"  value="#{viewSectionsPage.contentLink}" target="_blank" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink || viewSectionsPage.section.contentType == viewSectionsPage.typeUpload)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}">
       <h:outputText id="sectitleLink" 
                            value="#{viewSectionsPage.linkName}">
       </h:outputText>
     </h:outputLink>
-    <h:outputLink id="viewSectionUpload"  value="#{viewSectionsPage.contentLink}" target="_blank" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeUpload)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}">
-      <h:outputText id="sectitleUpload" 
-                           value="#{viewSectionsPage.linkName}">
-      </h:outputText>
-    </h:outputLink>
-      <iframe   id="iframe1" src="<h:outputText value="#{viewSectionsPage.content}" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink)&&(viewSectionsPage.linkName != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == false))}"/>" style="visibility:visible" scrolling="auto" width="100%"  height="700" border="0" frameborder="0"></iframe>
-      
-  <h:outputText value="#{viewSectionsPage.content}" escape="false" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeEditor)&&(viewSectionsPage.content != viewSectionsPage.nullString))}"/>
- 
- <iframe   id="iframe2" src="<h:outputText value="#{viewSectionsPage.contentLink}" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeUpload)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow==false))}"/>" style="visibility:visible" scrolling="auto" width="100%"  height="700" border="0" frameborder="0"></iframe>
+   <iframe   id="iframe1" src="<h:outputText value="#{viewSectionsPage.content}" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink)&&(viewSectionsPage.linkName != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == false))}"/>" style="visibility:visible" scrolling="auto" width="100%"  height="700" border="0" frameborder="0"></iframe>
+   <h:outputText value="#{viewSectionsPage.content}" escape="false" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeEditor)&&(viewSectionsPage.content != viewSectionsPage.nullString))}"/>
+  <iframe id="iframe2" src="<h:outputText value="#{viewSectionsPage.contentLink}" />" style="visibility:visible" scrolling="auto" width="100%"  height="700" border="0" frameborder="0"></iframe>
 	</td>
 	</tr>
 
