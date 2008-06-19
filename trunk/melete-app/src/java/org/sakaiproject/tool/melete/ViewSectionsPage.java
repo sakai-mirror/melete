@@ -181,7 +181,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
               record = "";
         	  e.printStackTrace();
               }
-    	}
+    	}    	
     	 return record;
 		}
 		}
@@ -222,7 +222,8 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
               }
     	}
 		}
-    	 return url;
+		logger.debug("content link value send is" + contentLinkUrl);
+    	 return contentLinkUrl;
 	  }
 
 	  public String getSectionContentType()
