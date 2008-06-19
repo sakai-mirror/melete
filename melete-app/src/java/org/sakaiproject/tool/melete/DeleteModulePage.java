@@ -31,6 +31,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 //import org.sakaiproject.jsf.ToolBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -262,6 +263,11 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		setModuleDateBeans(null);
 		setSectionBeans(null);
 		sameModuleSectionSelected = false;
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{listModulesPage}");
+		ListModulesPage listPage = (ListModulesPage)
+	        binding.getValue(context);
+		listPage.setModuleDateBeans(null);
 		return "list_auth_modules";
 	}
 
@@ -277,6 +283,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		setModuleDateBeans(null);
 		setSectionBeans(null);
 		sameModuleSectionSelected = false;
+		
 		return "list_auth_modules";
 	}
 	private String getCourseId()
