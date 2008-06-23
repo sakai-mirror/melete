@@ -784,8 +784,12 @@ public class ExportMeleteModules {
 
 				String name = null;
 				String filepath = files[i].getAbsolutePath();
-				name = filepath.substring(filepath.indexOf(baseFileName)
-						+ baseFileName.length() + 1);
+//				name = filepath.substring(filepath.indexOf(baseFileName)
+//						+ baseFileName.length() + 1);
+				
+				// fix by Raul Enrique Mengod López
+				name = filepath.substring(filepath.indexOf(File.separator+baseFileName+File.separator)
+                        + baseFileName.length() + 2);
 				zout.putNextEntry(new ZipEntry(name));
 
 				// Transfer bytes from the file to the ZIP file
