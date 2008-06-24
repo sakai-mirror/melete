@@ -37,31 +37,29 @@
 		  	<tr>
 		  		<td height="20" class="maintabledata5"><h:outputText id="t1_1" value="#{msgs.author_preference_global_preference}" styleClass="tableheader2"/> </td></tr>
             <tr>
-                <td align="center">
-                	<table border="0" cellpadding="0" cellspacing="3" width="95%">
-                	<tr>
-                		<td>
+                <td align="center">                	
+                	<h:panelGrid id="editorPrefPanel" columns="1" width="95%" cellpadding="0" cellspacing="3" border="0" rendered="#{authorPreferences.shouldRenderEditorPanel}">
+                	 <h:column>
                 		<h:outputText id="t1" value="#{msgs.author_preference_editor_select}" styleClass="bold"/>
-                	</td></tr>
-                	<tr>
-                	<td>
+                	</h:column>
+                	 <h:column>
 						<h:selectOneRadio value="#{authorPreferences.userEditor}" layout="pageDirection">
 							<f:selectItems value="#{authorPreferences.availableEditors}" />
 						</h:selectOneRadio>	
-					</td>	
-			</tr>	
-			<tr>
-				 <td height="15"><h:outputText id="t2" value="#{msgs.author_preference_view_select}"  styleClass="bold"/>          </td>
-                </tr>
-                <tr>
-                <td>
+					</h:column>
+				   </h:panelGrid>		
+				<h:panelGrid id="collapsePrefPanel" columns="1" width="95%" cellpadding="0" cellspacing="3" border="0">
+				<h:column>
+				 	<h:outputText id="t2" value="#{msgs.author_preference_view_select}"  styleClass="bold"/>      
+				 </h:column>
+               	 <h:column>
 					<h:selectOneRadio value="#{authorPreferences.userView}" layout="pageDirection">
 						<f:selectItem itemLabel="#{msgs.author_preference_Expanded}" itemValue="true" />
 						<f:selectItem itemLabel="#{msgs.author_preference_Collapsed}" itemValue="false"/>
 					</h:selectOneRadio>	
-				</td></tr></table>
-				</td></tr>						
-				</table></td></tr>
+				</h:column>
+				 </h:panelGrid>
+				</td></tr>			
 				<tr>
 					 <td class="maintabledata3" >
           	    	  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber2">
