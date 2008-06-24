@@ -286,7 +286,7 @@ public List getModuleDateBeans(String userId, String courseId) {
 
 
 // end - mallika
- public void deleteModules(List moduleDateBeans, String courseId, String userId)
+ public void deleteModules(List moduleDateBeans, String courseId, String userId) throws Exception
  {
 	  List cmodList = null;
 	  List<Module> delModules = new ArrayList();
@@ -303,7 +303,7 @@ public List getModuleDateBeans(String userId, String courseId) {
 	  }
 	  catch (Exception ex)
 	  {
-
+		  throw new MeleteException("delete_module_fail");
 	  }
 		
  }
