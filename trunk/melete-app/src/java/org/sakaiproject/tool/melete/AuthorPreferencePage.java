@@ -56,6 +56,7 @@ public class AuthorPreferencePage {
   //rendering flags
   private boolean shouldRenderSferyx=false;
   private boolean shouldRenderFCK=false;
+  private boolean shouldRenderEditorPanel = false;
   private MeleteAuthorPrefService authorPref;
   private MeleteUserPreference mup;
   private MeleteSitePreference msp;
@@ -140,6 +141,13 @@ public class AuthorPreferencePage {
   			}
   	}
   	return availableEditors;
+  }
+  
+  public boolean isShouldRenderEditorPanel()
+  {
+	  int count = ServerConfigurationService.getInt("melete.wysiwyg.editor.count", 0);
+	  if (count > 1) shouldRenderEditorPanel = true;
+	  return shouldRenderEditorPanel;
   }
 /**
  * @return Returns the shouldRenderFCK.
@@ -332,4 +340,5 @@ public void setMaterialPrintable(String materialPrintable)
 {
 	this.materialPrintable = materialPrintable;
 }
+
 }
