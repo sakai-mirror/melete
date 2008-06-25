@@ -1041,6 +1041,7 @@ public class ModuleDB implements Serializable {
 			      meleteCHService.removeResource(delResourceId);
 		          }
 	    	    }
+			  tx.commit(); 
 		}
 		catch (HibernateException he)
 		{
