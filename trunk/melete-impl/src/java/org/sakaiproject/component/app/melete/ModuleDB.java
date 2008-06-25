@@ -960,11 +960,11 @@ public class ModuleDB implements Serializable {
 		long starttime = System.currentTimeMillis();
 		Transaction tx = null;
 		try
-		{			
-			// order del module list by seq number
-
+		{	
 			// Get resources for modules that need to be deleted
 			List delResourcesList = getActiveResourcesFromList(delModules);
+			if(delModules.size() != allModules.size())
+			{
 			allModules.removeAll(delModules);
 			List<String> allActiveResources = getActiveResourcesFromList(allModules);
 			if (allActiveResources != null && delResourcesList != null)
@@ -972,7 +972,7 @@ public class ModuleDB implements Serializable {
 				logger.debug("active list and all" + delResourcesList.size() + " ; " + allActiveResources.size());
 				delResourcesList.removeAll(allActiveResources);
 			}
-
+			}
 			// get all module-ids and section_ids
 			// update seq_no for each deleted_module
 			StringBuffer allModuleIds = new StringBuffer("(");
