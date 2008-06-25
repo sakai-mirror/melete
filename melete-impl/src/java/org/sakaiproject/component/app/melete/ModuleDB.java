@@ -1010,17 +1010,22 @@ public class ModuleDB implements Serializable {
 			if (delSectionIds != null)
 			{
 				int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
+				logger.debug("section resource deleted" + deletedEntities);
 				deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
 			}
 			
 			if (delModuleIds != null)
 			{
 				int deletedEntities = session.createQuery(delSectionStr).executeUpdate();
+				logger.debug("section deleted" + deletedEntities);
 				deletedEntities = session.createQuery(delCourseModuleStr).executeUpdate();
+				logger.debug("course module deleted" + deletedEntities);
 				deletedEntities = session.createQuery(delModuleshDatesStr).executeUpdate();
 				deletedEntities = session.createQuery(delModuleStr).executeUpdate();
+				logger.debug("module deleted" + deletedEntities);
 			}
 			// delete module collection
+			logger.debug("updating seq_number now");
 			Collections.reverse(DelModuleInfoList);
 			for (DelModuleInfo dmi:DelModuleInfoList)
 			{
@@ -1036,6 +1041,7 @@ public class ModuleDB implements Serializable {
 	              for (Iterator delIter = delResourcesList.listIterator(); delIter.hasNext();)
 	              {
 			      String delResourceId = (String) delIter.next();
+			      if (delResourceId == null) continue;
 			      String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
 			      int deletedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", delResourceId).executeUpdate();
 			      meleteCHService.removeResource(delResourceId);
@@ -1053,6 +1059,7 @@ public class ModuleDB implements Serializable {
 		{
 			if (tx != null) tx.rollback();
 			logger.error(e.toString());
+			e.printStackTrace();
 			throw e;
 		}
 		finally
