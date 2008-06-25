@@ -1006,6 +1006,7 @@ public class ModuleDB implements Serializable {
 			String delModuleStr = "delete Module m where m.moduleId in " + delModuleIds;
 
 			Session session = hibernateUtil.currentSession();
+			tx = session.beginTransaction();
 			
 			if (delSectionIds != null)
 			{
