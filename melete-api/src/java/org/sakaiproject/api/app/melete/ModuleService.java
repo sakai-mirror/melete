@@ -74,8 +74,8 @@ public interface ModuleService{
 
 	public CourseModuleService getCourseModule(int moduleId,  String courseId) throws Exception;
 
-	public void deleteModules(List moduleDateBeans, String courseId, String userId) throws Exception;
-
+//	public void deleteModules(List moduleDateBeans, String courseId, String userId) throws Exception;
+	public void deleteModules(List moduleDateBeans,List allmoduleDateBeans, String courseId, String userId) throws Exception;
 	public int getMaxSeqNo(String courseId);
 	public int getNextSeqNo(String courseId, int currSeqNo);
 	public int getPrevSeqNo(String courseId, int currSeqNo);
