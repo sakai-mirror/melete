@@ -28,6 +28,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -952,8 +953,130 @@ public class ModuleDB implements Serializable {
 		boolean success = dir.renameTo(new File(del_fname));
 		return success;
     }
+// one more attempt 
+    public void deleteModules(List delModules, List allModules, String courseId, String userId) throws Exception
+	{
+    	logger.debug("deleteModules begin");
+		long starttime = System.currentTimeMillis();
+		Transaction tx = null;
+		try
+		{			
+			// order del module list by seq number
 
-    //Deletemodule bulk method
+			// Get resources for modules that need to be deleted
+			List delResourcesList = getActiveResourcesFromList(delModules);
+			allModules.removeAll(delModules);
+			List<String> allActiveResources = getActiveResourcesFromList(allModules);
+			if (allActiveResources != null && delResourcesList != null)
+			{
+				logger.debug("active list and all" + delResourcesList.size() + " ; " + allActiveResources.size());
+				delResourcesList.removeAll(allActiveResources);
+			}
+
+			// get all module-ids and section_ids
+			// update seq_no for each deleted_module
+			StringBuffer allModuleIds = new StringBuffer("(");
+			StringBuffer allSectionIds = new StringBuffer("(");
+			String delModuleIds = null;
+			String delSectionIds = null;
+			ArrayList<DelModuleInfo> DelModuleInfoList = new ArrayList<DelModuleInfo>(0);
+			for (Iterator dmIter = delModules.iterator(); dmIter.hasNext();)
+			{
+				Module dm = (Module) dmIter.next();
+				allModuleIds.append(dm.getModuleId().toString() + ",");
+				Map delSections = dm.getSections();
+				if (delSections == null || delSections.isEmpty()) continue;
+				for (Iterator i = delSections.keySet().iterator(); i.hasNext();)
+				{
+					allSectionIds.append(i.next() + ",");
+				}
+				// record seq_no and id
+				DelModuleInfoList.add(new DelModuleInfo(dm.getModuleId().toString(),dm.getCoursemodule().getSeqNo())); 
+			}
+			if (allModuleIds.lastIndexOf(",") != -1) delModuleIds = allModuleIds.substring(0, allModuleIds.lastIndexOf(",")) + " )";
+
+			if (allSectionIds.lastIndexOf(",") != -1) delSectionIds = allSectionIds.substring(0, allSectionIds.lastIndexOf(",")) + " )";
+
+			// delete modules and sections
+			String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + delSectionIds;
+			String delSectionResourceStr = "delete SectionResource sr where sr.section in " + delSectionIds;
+			String delSectionStr = "delete Section s where s.moduleId in " + delModuleIds;
+			String delCourseModuleStr = "delete CourseModule cm where cm.moduleId in " + delModuleIds;
+			String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId in " + delModuleIds;
+			String delModuleStr = "delete Module m where m.moduleId in " + delModuleIds;
+
+			Session session = hibernateUtil.currentSession();
+			
+			if (delSectionIds != null)
+			{
+				int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
+				deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
+			}
+			
+			if (delModuleIds != null)
+			{
+				int deletedEntities = session.createQuery(delSectionStr).executeUpdate();
+				deletedEntities = session.createQuery(delCourseModuleStr).executeUpdate();
+				deletedEntities = session.createQuery(delModuleshDatesStr).executeUpdate();
+				deletedEntities = session.createQuery(delModuleStr).executeUpdate();
+			}
+			// delete module collection
+			Collections.reverse(DelModuleInfoList);
+			for (DelModuleInfo dmi:DelModuleInfoList)
+			{
+			String updCmodseqStr = "update CourseModule cmod set cmod.seqNo=cmod.seqNo-1 where cmod.courseId=:courseId and cmod.seqNo>:seqNo";
+			int updatedEntities = session.createQuery(updCmodseqStr).setString("courseId", courseId).setInteger("seqNo",
+					dmi.getSeq()).executeUpdate();
+			  meleteCHService.removeCollection(courseId, "module_"+dmi.getId());
+			}
+			// delete resources
+			  if ((delResourcesList != null)&&(delResourcesList.size() > 0))
+	    	    {
+	              // delete melete resource and from content resource
+	              for (Iterator delIter = delResourcesList.listIterator(); delIter.hasNext();)
+	              {
+			      String delResourceId = (String) delIter.next();
+			      String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
+			      int deletedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", delResourceId).executeUpdate();
+			      meleteCHService.removeResource(delResourceId);
+		          }
+	    	    }
+		}
+		catch (HibernateException he)
+		{
+			if (tx != null) tx.rollback();
+			logger.error(he.toString());
+			throw he;
+		}
+		catch (Exception e)
+		{
+			if (tx != null) tx.rollback();
+			logger.error(e.toString());
+			throw e;
+		}
+		finally
+		{
+			try
+			{
+				hibernateUtil.closeSession();
+			}
+			catch (HibernateException he)
+			{
+				logger.error(he.toString());
+				throw he;
+			}
+		}
+
+		long endtime = System.currentTimeMillis();
+
+		logger.debug("delete modules ends " + (endtime - starttime));
+	}
+	
+    
+    
+    
+    // Deletemodule bulk method
+    /*
     public void deleteModules(List delModules, String courseId, String userId) throws Exception {
 
    	     logger.debug("deleteModules begin");
@@ -1081,7 +1204,7 @@ public class ModuleDB implements Serializable {
 
     			logger.debug("delete modules ends " +(endtime - starttime));
     }
-
+*/
     //The deleteModule method below iterate through each section and deletes
     //them individually
     /*
@@ -2382,5 +2505,36 @@ public class ModuleDB implements Serializable {
 		this.meleteCHService = meleteCHService;
 	}
 
+	private class DelModuleInfo implements Comparable<DelModuleInfo>
+	{
+		String id;
+		int seq;
+		DelModuleInfo(String id, int seq){
+			this.id = id;
+			this.seq = seq;
+		}
+		/**
+		 * @return the id
+		 */
+		public String getId()
+		{
+			return this.id;
+		}
+		
+		/**
+		 * @return the seq
+		 */
+		public int getSeq()
+		{
+			return this.seq;
+		}
+		
+		public int compareTo(DelModuleInfo n) {
+			if (this.seq > n.seq) return 1;
+			if (this.seq < n.seq) return -1;
+			if (this.seq == n.seq) return 0;	
+			return 0;
+		}
+	}
 }
 

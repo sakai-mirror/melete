@@ -786,11 +786,12 @@ public class ListAuthModulesPage implements Serializable
 			DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
 			// dmPage.setMdbean(mdbean);
 			dmPage.setModuleDateBeans(delModBeans);
+			dmPage.setAllmoduleDateBeans(moduleDateBeans);
 			dmPage.setModuleSelected(true);
 			count = 0;
 			moduleSelected = false;
 			selectedModIndices = null;
-
+		//	delModBeans = null;
 			// We do not want to bypass processing of section if sections and modules are selected
 			if (sectionSelected == false)
 			{

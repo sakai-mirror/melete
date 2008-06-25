@@ -63,6 +63,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 	private boolean moduleSelected;
 	private boolean sectionSelected;
 	private List moduleDateBeans = null;
+	private List allmoduleDateBeans = null;
 	private List sectionBeans = null;
 	String courseId;
 	String userId;
@@ -76,6 +77,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
     	sameModuleSectionSelected = false;
     	courseId = null;
     	userId = null;
+    	allmoduleDateBeans = null;
     }
 
   	/*
@@ -195,7 +197,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			{
 				 // check if sections of selected module are selected too
 				if(sectionBeans != null)CheckSectionsSelected();
-				moduleService.deleteModules(this.moduleDateBeans,getCourseId(), getUserId());
+				moduleService.deleteModules(this.moduleDateBeans,this.allmoduleDateBeans,getCourseId(), getUserId());
 			}
 			if (getSectionSelected() == true)
 			{
@@ -236,7 +238,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			{
 				 // check if sections of selected module are selected too
 		        removeSectionsSelectedToModule();
-				moduleService.deleteModules(this.moduleDateBeans,getCourseId(), getUserId());
+				moduleService.deleteModules(this.moduleDateBeans,allmoduleDateBeans,getCourseId(), getUserId());
 				sameModuleSectionSelected = false;
 			}
 			if (getSectionSelected() == true)
@@ -261,6 +263,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		setSection(null);
 		setSectionSelected(false);
 		setModuleDateBeans(null);
+		setAllmoduleDateBeans(null);
 		setSectionBeans(null);
 		sameModuleSectionSelected = false;
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -338,5 +341,13 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 	 */
 	public boolean isSameModuleSectionSelected() {
 		return sameModuleSectionSelected;
+	}
+
+	/**
+	 * @param allmoduleDateBeans the allmoduleDateBeans to set
+	 */
+	public void setAllmoduleDateBeans(List allmoduleDateBeans)
+	{
+		this.allmoduleDateBeans = allmoduleDateBeans;
 	}
  }
