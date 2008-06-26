@@ -533,8 +533,11 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				 licensename = licenseUrl.substring(0,nameIdx) ;
 				 String otherInfo = licenseUrl.substring(nameIdx +1);
 				 int ownerIdx = otherInfo.lastIndexOf(",");
+				 if(ownerIdx != -1)
+				 {
 				 meleteResource.setCopyrightOwner(otherInfo.substring(0,ownerIdx));
 				 meleteResource.setCopyrightYear(otherInfo.substring(ownerIdx+1));
+				 }
 			}
 			CcLicense ccl = meleteLicenseDB.fetchCcLicenseUrl(licensename);
 			licenseUrl = ccl.getUrl();
