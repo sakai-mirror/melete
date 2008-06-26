@@ -169,7 +169,7 @@ if (msg != null)
          <h:inputHidden id="moduleHideId" value="#{mdbean.moduleId}"/>
       </h:commandLink>    
       <h:outputText id="emp_spacemod" value=" "/>
-      <h:outputText id="mod_seq" value="#{mdbean.cmod.seqNo}."/>
+      <h:outputText id="mod_seq" value="#{mdbean.cmod.seqNo}. " rendered="#{listModulesPage.autonumber}"/>
       <h:outputText id="emp_spacemod2" value=" "/>
       
       <h:commandLink id="editMod" actionListener="#{listAuthModulesPage.editModule}"  action="#{listAuthModulesPage.redirectToEditModule}">     
@@ -183,7 +183,7 @@ if (msg != null)
                <h:column>
               <h:selectBooleanCheckbox value="#{sectionBean.selected}"  valueChangeListener="#{listAuthModulesPage.selectedSection}"/> 
                <h:outputText id="emp_space" value=" "/>
-               <h:outputText id="disp_seq" value="#{sectionBean.displaySequence}"/>
+               <h:outputText id="disp_seq" value="#{sectionBean.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>
                <h:outputText id="emp_space2" value=" "/>
               
               <h:commandLink id="editSec" actionListener="#{listAuthModulesPage.editSection}"  action="#{listAuthModulesPage.redirectToEditSection}">

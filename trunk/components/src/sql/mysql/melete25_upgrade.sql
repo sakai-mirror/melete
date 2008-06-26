@@ -8,6 +8,7 @@ drop table melete_module_student_privs;
 CREATE TABLE `melete_site_preference` (
   `PREF_SITE_ID` varchar(99) NOT NULL default '',
   `PRINTABLE` tinyint(1) default NULL,
+  `AUTONUMBER` tinyint(1) default '0',
   PRIMARY KEY (`PREF_SITE_ID`)
   );
 CREATE INDEX USER_ID_IDX ON melete_user_preference(USER_ID);

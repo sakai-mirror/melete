@@ -51,6 +51,7 @@ public interface SectionService{
    public void setSection(SectionObjService sec);
    
    public List getSortSections(ModuleObjService module);
+   public String getSectionDisplaySequence(SectionObjService module);
    
    public void deleteSection(SectionObjService sec, String courseId, String userId);
    public void deleteSections(List sectionBeans, String courseId, String userId) throws Exception;

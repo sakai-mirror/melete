@@ -70,6 +70,7 @@ function showIframe()
 	<tr>	<td colspan="2">&nbsp;</td>		</tr>     
 <tr>
 <td colspan="2" align="left">
+         <h:outputText id="mod_seq" value="#{viewSectionsPage.moduleSeqNo}. " styleClass="bold style6" rendered="#{viewSectionsPage.autonumber}"/>
 	 <h:outputText id="modtitle" value="#{viewSectionsPage.module.title}" styleClass="bold style6" >
 </h:outputText>
 
@@ -78,6 +79,7 @@ function showIframe()
 
 <tr>
 <td colspan="2" align="left">
+ <h:outputText id="sec_seq" value="#{viewSectionsPage.sectionDisplaySequence}. " styleClass="bold style7" rendered="#{viewSectionsPage.autonumber}"/>
  <h:outputText id="title" value="#{viewSectionsPage.section.title}" styleClass="bold style7"></h:outputText>     
 
 </td>

@@ -61,6 +61,7 @@ public class AuthorPreferencePage {
   private MeleteUserPreference mup;
   private MeleteSitePreference msp;
   private String materialPrintable="false";
+  private String materialAutonumber="false";
 
   /** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(AuthorPreferencePage.class);
@@ -105,6 +106,8 @@ public class AuthorPreferencePage {
   		if(msp != null && msp.isPrintable())
   			materialPrintable = "true";
 
+  		if(msp != null && msp.isAutonumber())
+  			materialAutonumber = "true";
   	return;
   	}
 
@@ -253,6 +256,10 @@ public String setUserChoice()
 		if (materialPrintable.equals("true"))msp.setPrintable(true);
 		else msp.setPrintable(false);
 
+		//set autonumber preference
+		if (materialAutonumber.equals("true"))msp.setAutonumber(true);
+		else msp.setAutonumber(false);
+
 		authorPref.insertUserSiteChoice(msp);
 		}
 		catch(Exception e)
@@ -274,6 +281,12 @@ public boolean isMaterialPrintable(String site_id)
 {
 	MeleteSitePreference checkMsp = (MeleteSitePreference)getAuthorPref().getSiteChoice(site_id);
 	if(checkMsp != null)return checkMsp.isPrintable();
+	else return false;
+}
+public boolean isMaterialAutonumber(String site_id)
+{
+	MeleteSitePreference checkMsp = (MeleteSitePreference)getAuthorPref().getSiteChoice(site_id);
+	if(checkMsp != null)return checkMsp.isAutonumber();
 	else return false;
 }
 
@@ -340,5 +353,20 @@ public void setMaterialPrintable(String materialPrintable)
 {
 	this.materialPrintable = materialPrintable;
 }
+/**
+ * @return the materialAutonumber
+ */
+public String getMaterialAutonumber()
+ {
+       return this.materialAutonumber;
+ }
+
+ /**
+  * @param materialAutonumber the materialAutonumber to set
+  */
+public void setMaterialAutonumber(String materialAutonumber)
+ {
+       this.materialAutonumber = materialAutonumber;
+ }
 
 }

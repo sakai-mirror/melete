@@ -156,6 +156,7 @@ public class MeleteUserPreferenceDB {
 	      else 
 	      {
 	    	 find_msp.setPrintable(msp.isPrintable()); 
+	    	 find_msp.setAutonumber(msp.isAutonumber()); 
 	    	 session.update(find_msp);
 	      }
 
@@ -192,7 +193,7 @@ public class MeleteUserPreferenceDB {
 		}
 	}
 	
-	public void setSitePreferences(String site_id, boolean printFlag) 
+	public void setSitePreferences(String site_id, boolean printFlag, boolean autonumberFlag) 
 	{
 		Transaction tx = null;
 	 	try
@@ -209,11 +210,13 @@ public class MeleteUserPreferenceDB {
 	    	  MeleteSitePreference msp = new MeleteSitePreference();
 	    	  msp.setPrefSiteId(site_id);
 	    	  msp.setPrintable(printFlag);
+	    	  msp.setAutonumber(autonumberFlag);
 	     	  session.save(msp);
 	      }
 	      else 
 	      {
 	    	 find_msp.setPrintable(printFlag); 
+	    	 find_msp.setAutonumber(autonumberFlag); 
 	    	 session.update(find_msp);
 	      }
 

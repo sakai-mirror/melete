@@ -1405,7 +1405,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	private void setMeleteSitePreference(String fromContext, String toContext)
 	{
 		MeleteSitePreference fromMsp = meleteUserPrefDB.getSitePreferences(fromContext);
-		meleteUserPrefDB.setSitePreferences(toContext,fromMsp.isPrintable());
+		meleteUserPrefDB.setSitePreferences(toContext,fromMsp.isPrintable(),fromMsp.isAutonumber());
 	}
 
 	private void buildModules(String fromContext, String toContext)

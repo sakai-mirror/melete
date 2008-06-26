@@ -66,6 +66,9 @@ import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.util.ResourceLoader;
 import org.dom4j.Element;
 
+import org.sakaiproject.api.app.melete.MeleteAuthorPrefService;
+import org.sakaiproject.component.app.melete.MeleteUserPreferenceDB;
+
 /* Mallika - 4/17/07 - added code to support subsections on list pages
  * Mallika -6/6/07 - consolidated methods
  * Mallika - 6/6/07 - Added methods for multiple indent (same as previous)
@@ -80,6 +83,8 @@ public class ModuleDB implements Serializable {
 	private SectionDB sectionDB;
 	private MeleteCHService meleteCHService;
 	private MeleteSecurityService meleteSecurityService;
+
+	private MeleteUserPreferenceDB userPrefdb;
 
 	/** Dependency:  The logging service. */
 	private Log logger = LogFactory.getLog(ModuleDB.class);
@@ -2082,9 +2087,15 @@ public class ModuleDB implements Serializable {
 			Session session = hibernateUtil.currentSession();
 			Transaction tx = null;
 			StringBuffer printText = null;
+			String courseId=module.getCoursemodule().getCourseId();
+			boolean autonumber = userPrefdb.getSitePreferences(courseId).isAutonumber();
 			try
 			{
-				printText = new StringBuffer("<h3>" + module.getCoursemodule().getSeqNo() +"  " +module.getTitle() + "</h3>");
+				if (autonumber) {
+ 						printText = new StringBuffer("<h3>" + module.getCoursemodule().getSeqNo() +".  " +module.getTitle() + "</h3>");
+				} else {		
+ 						printText = new StringBuffer("<h3>" + module.getTitle() + "</h3>");
+				};
 				SubSectionUtilImpl ssuImpl = new SubSectionUtilImpl();
 				ssuImpl.traverseDom(module.getSeqXml(),new Integer(module.getCoursemodule().getSeqNo()).toString());
 				List<SecLevelObj> xmlSecList = ssuImpl.getXmlSecList();
@@ -2098,7 +2109,11 @@ public class ModuleDB implements Serializable {
 		  		   		{
 		  		   			Section sec =(Section)printSections.get(new Integer(slObj.getSectionId()));
 
-		  		   			printText.append("<h4>" +slObj.getDispSeq() +"  " + sec.getTitle()+"</h4>")	;
+				                        if (autonumber) {
+		  		   			   printText.append("<h4>" +slObj.getDispSeq() +".  " + sec.getTitle()+"</h4>")	;
+							} else {
+		  		   			   printText.append("<h4>" + sec.getTitle()+"</h4>")	;
+							};
 		  		   			if(sec.getSectionResource() != null)
 		  		   				printText.append("<p><i>" +getLicenseInformation((MeleteResource)sec.getSectionResource().getResource())+"</i></p>");
 
@@ -2545,5 +2560,12 @@ public class ModuleDB implements Serializable {
 			return 0;
 		}
 	}
+        /**
+        * @param userPrefdb the userPreference to set
+        */
+        public void setMeleteUserPrefDB(MeleteUserPreferenceDB userPrefdb)
+        {
+               this.userPrefdb=userPrefdb;
+        }
 }
 

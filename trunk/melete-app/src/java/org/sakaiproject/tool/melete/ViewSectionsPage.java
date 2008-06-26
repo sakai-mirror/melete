@@ -98,6 +98,8 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 
   	  private MeleteCHService meleteCHService;
 
+	  private String sectionDisplaySequence;
+
       /** Dependency:  The logging service. */
       protected Log logger = LogFactory.getLog(ViewSectionsPage.class);
 
@@ -106,6 +108,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
       public HtmlPanelGroup secpgroup;
       private org.w3c.dom.Document subSectionW3CDom;
       private String linkName;
+      private Boolean autonumber;
 
       // added to reduce queries
       private String contentLinkUrl;
@@ -487,6 +490,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 			if (this.section == null)
 			{
 				this.section = (SectionObjService) getSectionService().getSection(this.sectionId);
+				this.sectionDisplaySequence=getSectionService().getSectionDisplaySequence(this.section);
 			}
 		}
 		catch (Exception e)
@@ -496,6 +500,18 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     	return this.section;
     }
 
+    public void setSectionDisplaySequence(String sectionDisplaySequence){
+	          this.sectionDisplaySequence = sectionDisplaySequence;
+		      }
+
+        public String getSectionDisplaySequence(){
+
+                      if (this.sectionDisplaySequence == null) {
+			      this.section = (SectionObjService) getSectionService().getSection(this.sectionId);
+			      this.sectionDisplaySequence=getSectionService().getSectionDisplaySequence(this.section);
+			};		      
+		      return this.sectionDisplaySequence;
+		          }
     public void setSection(SectionObjService section){
       this.section = section;
     }
@@ -732,5 +748,26 @@ public MeleteCHService getMeleteCHService() {
 public void setMeleteCHService(MeleteCHService meleteCHService) {
 	this.meleteCHService = meleteCHService;
 }
+    public boolean isAutonumber()
+    {
+     FacesContext ctx = FacesContext.getCurrentInstance();
+     try{
+         if(autonumber == null)
+         {
+          ValueBinding binding = Util.getBinding("#{authorPreferences}");
+          AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(ctx);
+          if (courseId == null) getCourseId();
+          autonumber = new Boolean(preferencePage.isMaterialAutonumber(courseId));
+         }
+     }
+      catch(Exception e){e.printStackTrace();
+      autonumber=false;}
+     return autonumber.booleanValue();
+    }
+
+    public void setAutonumber(Boolean autonumber)
+    {
+     this.autonumber = autonumber;
+    }
 
 }
