@@ -77,6 +77,7 @@ function OpenPrintWindow(windowURL,windowName)
       </h:commandLink> 
          <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}" rendered="#{mdbean.visibleFlag == listModulesPage.trueFlag}" immediate="true">
               <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
+	      <h:outputText id="mod_seq" value="#{mdbean.cmod.seqNo}. " rendered="#{listModulesPage.autonumber}"/>
                   <h:outputText id="title"
                            value="#{mdbean.module.title}">
               </h:outputText>             
@@ -92,7 +93,8 @@ function OpenPrintWindow(windowURL,windowName)
              <h:commandLink id="viewSectionEditor"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}"  rendered="#{((section.section.contentType != listModulesPage.isNull && section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}" immediate="true">
                <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
                <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
-             
+ 
+	       <h:outputText id="sec_seq" value="#{section.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>    
                <h:outputText id="sectitleEditor" 
                            value="#{section.section.title}">
                </h:outputText>
@@ -100,7 +102,8 @@ function OpenPrintWindow(windowURL,windowName)
              <h:commandLink id="viewSectionLink"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}"  rendered="#{((section.section.contentType != listModulesPage.isNull && section.section.contentType != listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}" immediate="true">
                 <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
                <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
-             
+            
+	       <h:outputText id="sec_seq2" value="#{section.displaySequence}. " rendered="#{listModulesPage.autonumber}"/> 
                <h:outputText id="sectitleLink" 
                            value="#{section.section.title}">
                </h:outputText>

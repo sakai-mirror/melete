@@ -119,5 +119,6 @@ CREATE TABLE `melete_migrate_status` (START_FLAG tinyint(1),COMPLETE_FLAG tinyin
 CREATE TABLE `melete_site_preference` (
   `PREF_SITE_ID` varchar(99) NOT NULL default '',
   `PRINTABLE` tinyint(1) default NULL,
+  `AUTONUMBER` tinyint(1) default '0',
   PRIMARY KEY (`PREF_SITE_ID`)
 );

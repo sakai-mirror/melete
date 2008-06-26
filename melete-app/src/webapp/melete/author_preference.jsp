@@ -78,6 +78,17 @@
 										<f:selectItem itemLabel="#{msgs.author_preference_no}" itemValue="false"/>
 								</h:selectOneRadio>	
 					</td></tr></table>
+                				<table border="0" cellpadding="0" cellspacing="3" width="95%">
+                				<tr><td>
+								 <h:outputText id="t4" value="#{msgs.author_preference_autonumber}"  styleClass="bold"/>          
+								 </td></tr>
+								<tr>
+						   <td>
+							<h:selectOneRadio value="#{authorPreferences.materialAutonumber}" layout="pageDirection">
+										<f:selectItem itemLabel="#{msgs.author_preference_yes}" itemValue="true" />
+										<f:selectItem itemLabel="#{msgs.author_preference_no}" itemValue="false"/>
+								</h:selectOneRadio>	
+					</td></tr></table>
 					</td></tr></table>
 					</td></tr>									
               <tr>

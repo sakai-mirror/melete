@@ -86,6 +86,9 @@
          <property name="meleteSecurityService">
             <ref local="org.sakaiproject.api.app.melete.MeleteSecurityService" />
         </property>      
+        <property name="meleteUserPrefDB">
+            <ref local="org.sakaiproject.component.app.melete.MeleteUserPreferenceDB" />
+        </property>
    </bean>	
 
 <!-- Section service -->

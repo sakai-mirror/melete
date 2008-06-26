@@ -86,7 +86,9 @@ public class ListModulesPage implements Serializable{
       private Date nullDate = null;
       private Integer printModuleId =null;
       private Boolean printMaterial = null;
+      private Boolean autonumberMaterial = null;
       private boolean printable;
+      private boolean autonumber;
 
 	  //This needs to be set later using Utils.getBinding
 	  String courseId;
@@ -149,6 +151,7 @@ public class ListModulesPage implements Serializable{
 	  	nomodsFlag = false;
 	  	closedModulesFlag = false;
 	  	printMaterial = null;
+	  	autonumberMaterial = null;
 	  	FacesContext context = FacesContext.getCurrentInstance();
 //	  	context.getViewRoot().setTransient(true);
 		if (getRole()!= null)
@@ -571,6 +574,24 @@ public class ListModulesPage implements Serializable{
 		  catch(Exception e){e.printStackTrace();
 		  printable=false;}
 		  return printable;
+	  }
+
+	  public boolean isAutonumber()
+	  {
+		  FacesContext ctx = FacesContext.getCurrentInstance();
+		  try{
+			  if (autonumberMaterial == null)
+			  {
+				  String site_id = ToolManager.getCurrentPlacement().getContext();
+				  ValueBinding binding = Util.getBinding("#{authorPreferences}");
+				  AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
+				  autonumber = preferencePage.isMaterialAutonumber(site_id);
+				  autonumberMaterial = new Boolean(autonumber);
+			  }
+		  }
+		  catch(Exception e){e.printStackTrace();
+		  autonumber=false;}
+		  return autonumber;
 	  }
 
 	  private String getCourseId()

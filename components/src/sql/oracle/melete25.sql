@@ -129,5 +129,6 @@ CREATE TABLE melete_migrate_status (START_FLAG number(1),COMPLETE_FLAG number(1)
 CREATE TABLE melete_site_preference (
   PREF_SITE_ID varchar2(99) default '' NOT NULL ,
   PRINTABLE number(1) default NULL,
+  AUTONUMBER number(1) default '0' NOT NULL,
   PRIMARY KEY (PREF_SITE_ID)
 );

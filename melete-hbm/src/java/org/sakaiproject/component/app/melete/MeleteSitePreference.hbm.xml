@@ -9,6 +9,7 @@
       <generator class="assigned"/>   
     </id>      
        <property name="printable" column="PRINTABLE" type="boolean"/>
+       <property name="autonumber" column="AUTONUMBER" type="boolean"/>
 	 </class>
  </hibernate-mapping>
 	 

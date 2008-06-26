@@ -73,6 +73,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
       private int prevSeqNo;
       private int nextSeqNo;
       private Boolean printable;
+      private Boolean autonumber;
 
 //    This needs to be set later using Utils.getBinding
 	  String courseId;
@@ -526,5 +527,27 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     public void setPrintable(Boolean printable)
     {
     	this.printable = printable;
+    }
+
+    public boolean isAutonumber()
+	  {
+		  FacesContext ctx = FacesContext.getCurrentInstance();
+		  try{
+			if(autonumber == null)
+			{
+		   ValueBinding binding = Util.getBinding("#{authorPreferences}");
+	 	   AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(ctx);
+	 	   if (courseId == null) getCourseId();
+	 	   autonumber = new Boolean(preferencePage.isMaterialAutonumber(courseId));
+			}
+		  }
+		  catch(Exception e){e.printStackTrace();
+		  autonumber=false;}
+		  return autonumber.booleanValue();
+	  }
+
+    public void setAutonumber(Boolean autonumber)
+    {
+    	this.autonumber = autonumber;
     }
 }

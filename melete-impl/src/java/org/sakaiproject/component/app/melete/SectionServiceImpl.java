@@ -189,6 +189,33 @@ public class SectionServiceImpl implements Serializable, SectionService{
 	  	  	section = (Section)sec;
 	  }
 
+	  // Added by UPV to show section numbering
+          public String getSectionDisplaySequence(SectionObjService section) {
+	        try {
+                     ModuleObjService module =section.getModule();
+                     Map sections = module.getSections();
+                     List sectionsList = null;
+                     SubSectionUtilImpl sutil = new SubSectionUtilImpl();
+                     String startDispSeq = new Integer(module.getCoursemodule().getSeqNo()).toString();
+                     sutil.traverseDom(module.getSeqXml(),startDispSeq);
+                     List xmlSecList = sutil.getXmlSecList();
+                     if(xmlSecList != null)
+		          {
+	                   sectionsList = new ArrayList();
+	                   for (ListIterator k = xmlSecList.listIterator(); k.hasNext(); ){
+			       SecLevelObj slObj = (SecLevelObj)k.next();
+			       if (section.getSectionId().equals(slObj.getSectionId())) {return slObj.getDispSeq();};
+
+                           }
+                     }
+                }catch (Exception e)
+	          {
+                   logger.error(e.toString());
+                }
+                return null;
+          }
+
+
 	  public List getSortSections(ModuleObjService module) {
 	  	try {
 	  		Map sections = module.getSections();

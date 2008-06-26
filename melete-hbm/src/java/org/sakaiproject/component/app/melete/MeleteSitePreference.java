@@ -34,6 +34,7 @@ public class MeleteSitePreference implements Serializable,MeleteSitePreferenceSe
 
     /** nullable persistent field */
     private boolean printable;   
+    private boolean autonumber;   
    
 	/** full constructor
 	 * @param userId
@@ -49,6 +50,7 @@ public class MeleteSitePreference implements Serializable,MeleteSitePreferenceSe
 	 */
 	public MeleteSitePreference() {
 		this.printable = false;
+		this.autonumber = false;
 	}
 		
 	/**
@@ -83,5 +85,20 @@ public class MeleteSitePreference implements Serializable,MeleteSitePreferenceSe
 	public void setPrintable(boolean printable)
 	{
 		this.printable = printable;
+	}
+	/**
+	 * @return the autonumber
+	 */
+	public boolean isAutonumber()
+	{
+		return this.autonumber;
+	}
+
+	/**
+	 * @param autonumber the autonumber to set
+	 */
+	public void setAutonumber(boolean autonumber)
+	{
+		this.autonumber = autonumber;
 	}
 }
