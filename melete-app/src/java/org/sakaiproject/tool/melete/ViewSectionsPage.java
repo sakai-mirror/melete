@@ -639,6 +639,7 @@ public String goNextModule()
     }*/
   	vmPage.setMdbean(null);
   	vmPage.setPrevMdbean(null);
+  	vmPage.setModuleId(0);
     vmPage.setModuleSeqNo(this.nextSeqNo);
     vmPage.setPrintable(null);
     if (getInstRole())
