@@ -37,7 +37,7 @@
      </h:commandLink>   
     <h:commandLink id="nextMod" action="#{viewSectionsPage.goNextModule}" immediate="true" rendered="#{(((viewSectionsPage.module != null && viewSectionsPage.module.whatsNext == viewSectionsPage.nullString)||(viewSectionsPage.module != null && viewSectionsPage.module.whatsNext == viewSectionsPage.emptyString))&&(viewSectionsPage.nextSecId == 0)&&(viewSectionsPage.moduleSeqNo < viewSectionsPage.nextSeqNo))}">
 		  <h:outputText  id="nextModMsg" value="#{msgs.view_navigate_next3}"></h:outputText>
-		    <f:param name="modseqno" value="#{viewSectionsPage.moduleSeqNo}" />
+		    <f:param name="modseqno" value="#{viewSectionsPage.nextSeqNo}" />
      </h:commandLink>     
 	</h:column>
 </h:panelGrid>	
