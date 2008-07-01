@@ -85,18 +85,20 @@ function showIframe()
               </tr>
 			 <tr>
 			 <td>
-			 <table width="100%" height="20" border="0" cellpadding="3" cellspacing="0" >
+			 <table width="100%" border="0" cellpadding="3" cellspacing="0" >
    	         <tr>
 	         <td align="center" class="meleteLicenseMsg center"><B>
+	         <h:outputText id="lic1_val0" value="    " 
+rendered="#{addSectionPage.section.sectionResource.resource.licenseCode == 0}"/> 
              <!--License code Copyright-->
    <h:outputText id="lic1_val1" value="#{msgs.add_preview_copyright}" 
 
 rendered="#{addSectionPage.section.sectionResource.resource.licenseCode == 1}"/> 
 
-      <h:outputText id="lic1_val2" value="#{addSectionPage.section.sectionResource.resource.copyrightOwner} " 
+   <h:outputText id="lic1_val4" value="#{addSectionPage.section.sectionResource.resource.copyrightYear}" rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 1)&&(addSectionPage.section.sectionResource.resource.copyrightYear != addSectionPage.nullString))}"/> 
+      <h:outputText id="lic1_val2" escape="false" value="<BR>#{addSectionPage.section.sectionResource.resource.copyrightOwner} " 
 
 rendered="#{addSectionPage.section.sectionResource.resource.licenseCode == 1}"/> 
-   <h:outputText id="lic1_val4" value=", #{addSectionPage.section.sectionResource.resource.copyrightYear}" rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 1)&&(addSectionPage.section.sectionResource.resource.copyrightYear != addSectionPage.nullString))}"/> 
 
       <!--End license code Copyright-->
  <!--License code Public domain-->
@@ -110,10 +112,10 @@ rendered="#{addSectionPage.section.sectionResource.resource.licenseCode == 2}">
 
 rendered="#{addSectionPage.section.sectionResource.resource.licenseCode == 2}"/> 
    </h:outputLink>
-   <h:outputText id="lic2_val3" value=", #{addSectionPage.section.sectionResource.resource.copyrightOwner} "  
+  <h:outputText id="lic2_val5" value="#{addSectionPage.section.sectionResource.resource.copyrightYear}" rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 2)&&(addSectionPage.section.sectionResource.resource.copyrightYear != addSectionPage.nullString))}"/> 
+   <h:outputText id="lic2_val3" escape="false" value="<BR>#{addSectionPage.section.sectionResource.resource.copyrightOwner} "  
 
 rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 2)&&(addSectionPage.section.sectionResource.resource.copyrightOwner != addSectionPage.nullString))}"/> 
-  <h:outputText id="lic2_val5" value=", #{addSectionPage.section.sectionResource.resource.copyrightYear}" rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 2)&&(addSectionPage.section.sectionResource.resource.copyrightYear != addSectionPage.nullString))}"/> 
 
  
       <!--End license code Public domain-->   
@@ -128,22 +130,22 @@ rendered="#{addSectionPage.section.sectionResource.resource.licenseCode == 3}">
 
 rendered="#{addSectionPage.section.sectionResource.resource.licenseCode == 3}"/>
    </h:outputLink> 
-   <h:outputText id="lic3_val3" value=", #{addSectionPage.section.sectionResource.resource.copyrightOwner} "  
+   
+   <h:outputText id="lic3_val5" value="#{addSectionPage.section.sectionResource.resource.copyrightYear}" rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 3)&&(addSectionPage.section.sectionResource.resource.copyrightYear != addSectionPage.nullString))}"/> 
+<h:outputText id="lic3_val3" escape="false" value="<BR>#{addSectionPage.section.sectionResource.resource.copyrightOwner} "  
 
 rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 3)&&(addSectionPage.section.sectionResource.resource.copyrightOwner != addSectionPage.nullString))}"/> 
-
-   <h:outputText id="lic3_val5" value=", #{addSectionPage.section.sectionResource.resource.copyrightYear}" rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 3)&&(addSectionPage.section.sectionResource.resource.copyrightYear != addSectionPage.nullString))}"/> 
 
       <!--End license code CC license-->     	
 	 
         <!--License code fairuse license-->
       <h:outputText id="lic4_val2" value="#{addSectionPage.section.sectionResource.resource.ccLicenseUrl}"  rendered="#{addSectionPage.section.sectionResource.resource.licenseCode == 4}"/>
-       <h:outputText id="lic4_val3" value=", #{addSectionPage.section.sectionResource.resource.copyrightOwner} "  
+    
+   <h:outputText id="lic4_val5" value="#{addSectionPage.section.sectionResource.resource.copyrightYear}" rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 4)&&(addSectionPage.section.sectionResource.resource.copyrightYear != addSectionPage.nullString))}"/> 
+	   <h:outputText id="lic4_val3" escape="false" value="<BR>#{addSectionPage.section.sectionResource.resource.copyrightOwner} "  
 
 rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 4)&&(addSectionPage.section.sectionResource.resource.copyrightOwner != addSectionPage.nullString))}"/> 
-
-   <h:outputText id="lic4_val5" value=", #{addSectionPage.section.sectionResource.resource.copyrightYear}" rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 4)&&(addSectionPage.section.sectionResource.resource.copyrightYear != addSectionPage.nullString))}"/> 
-
+	
          <!--End license code fairuse license-->            
               </B></TD></TR>
 	         </TABLE>
