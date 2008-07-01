@@ -113,10 +113,7 @@ SETUP INSTRUCTIONS
    ** SKIP this step if you are NOT using Oracle.**
    
    If you are using Oracle, due to differences in Oracle query behavior, you will need to 
-   perform the following step:
-   Replace two methods (migrateMeleteDocs and processLicenseInformation) 
-   in /melete-impl/src/java/org/sakaiproject/component/app/melete/ModuleServiceImpl.java
-   with their corresponding Oracle versions, located at /patch/migrate_oracle.txt
+   apply patch located at /patch/migrate_oracle.txt
 
 5. Internationalize Messages (Optional)
 	If you want to run Melete in a different language than English, you need to update messages.properties of your language 
@@ -149,8 +146,10 @@ SETUP INSTRUCTIONS
 	When tomcat starts, hibernate will generate the melete tables 
 	on its own by reading xml files. 
 	
-	NOTE: Melete stores content in the database tables as well as in the /private/meleteDocs folder in ContentHosting. 
-        Through Melete, users only have access to the /private/meleteDocs folder and not other parts of Resources.
+	NOTE: a. Make sure secondary indices on user_id column of melete_user_preference table and on course_id of melete_course_module table
+	 		 are created.Hibernate sometimes doesn't create it. 
+		  b. Melete stores content in the database tables as well as in the /private/meleteDocs folder in ContentHosting. 
+        	 Through Melete, users only have access to the /private/meleteDocs folder and not other parts of Resources.
 
 8. Configure Site Archive to include Melete 
 	Melete now participates in Site Archive. Modify archive\archive-impl\pack\src\webapp\WEB-INF\components.xml, add
