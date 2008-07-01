@@ -131,33 +131,19 @@ function showIframe()
 	<jsp:include page="view_navigate.jsp"/>
 </f:subview>
 </td>
-</tr>    
- <!--End Content-->
-
-<tr>
-<td>
-<TABLE  cellSpacing="0" cellPadding="0" width="100%" border="0" height="20">
-  <TR>
-   <TD align="center" class="meleteLicenseMsg center" width="100%" height="20">
-   <B>
-   <!--<A class=copyrighttable  href="http://www.fhda.edu/" target=_blank>-->
-  <jsp:include page="license_info.jsp"/> 
-		<!--<br>2004 Foothill  College 
-	</A>-->
-	</B>
-	</TD>
-  </TR>
-</TABLE>
-</td>
-</tr> 
-
-
-  </table>
-</h:form>
-<!--End Content-->
-</td>
 </tr>
+</table></td>
+</tr>
+<tr><td>
+<table width="100%" height="20" border="0" cellpadding="3" cellspacing="0" >
+   	<tr>
+	 <td align="center" class="meleteLicenseMsg center"><B>
+  			<jsp:include page="license_info.jsp"/>      
+         </B></td></tr>
+	    </table>
+</td></tr>
 </table>
+</h:form>
 </body>
 </f:view>
 
