@@ -8,7 +8,9 @@
 	<id name="prefId" column="PREF_ID" type="int" unsaved-value="null">
       <generator class="hilo"/>
     </id> 
-       <property name="userId" column="USER_ID" type="string" length="99"/>			 
+       <property name="userId" type="string" length="99">
+       		<column name="USER_ID" index="USER_ID_IDX" />
+       </property>			 
        <property name="editorChoice" column="EDITOR_CHOICE" type="string" />	
        <property name="viewExpChoice" column="EXP_CHOICE" type="boolean"/>       
 	 </class>

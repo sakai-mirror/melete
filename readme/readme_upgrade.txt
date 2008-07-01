@@ -111,10 +111,7 @@ SETUP INSTRUCTIONS
    ** SKIP this step if you are NOT using Oracle.**
    
    If you are using Oracle, due to differences in Oracle query behavior, you will need to 
-   perform the following step:
-   Replace two methods (migrateMeleteDocs and processLicenseInformation) 
-   in /melete-impl/src/java/org/sakaiproject/component/app/melete/ModuleServiceImpl.java
-   with their corresponding Oracle versions, located at /patch/migrate_oracle.txt
+   apply patch located at /patch/migrate_oracle.txt
 
 6. Internationalize Messages (Optional)
 	If you want to run Melete in a different language than English, you need to update messages.properties of your language 
@@ -145,6 +142,9 @@ SETUP INSTRUCTIONS
 		Mysql Users: /components/src/sql/mysql/melete25_upgrade.sql
 		Oracle Users: /components/src/sql/oracle/melete25_upgrade.sql
 		
+		NOTE: Please make sure secondary index on user_id column of melete_user_preference table is created.
+			  Hibernate sometimes doesn't create it.
+			   
 	8.2. It is necessary to run this script in order for the upgrade to run successfully.
 	    As of Melete2.5, we are moving the dtd declaration for the SEQ_XML column in MELETE_MODULE
 		from an external reference to an internal inline dtd. The script /components/src/sql/mysql/seqxml_script.sql
