@@ -111,19 +111,17 @@ function showIframe()
 	                </h:commandLink>				
 			</td></tr>			
          	 <tr><td>
-         		 <table width="100%" height="20" border="0" cellpadding="3" cellspacing="0" >
+         		 <table width="100%" border="0" cellpadding="3" cellspacing="0" >
    	         <tr>
 	         <td align="center" class="meleteLicenseMsg center"><B>
+	          <h:outputText id="lic1_val0" value="    "
+rendered="#{editSectionPage.m_license.licenseCodes == 0}"/>      
              <!--License code Copyright-->
    <h:outputText id="lic1_val1" value="#{msgs.edit_preview_copyright}" 
 
-rendered="#{editSectionPage.m_license.licenseCodes == 1}"/> 
-
-      <h:outputText id="lic1_val2" value="#{editSectionPage.m_license.copyright_owner} " 
-
-rendered="#{editSectionPage.m_license.licenseCodes == 1}"/> 
-   <h:outputText id="lic1_val4" value=",#{editSectionPage.m_license.copyright_year}" rendered="#{((editSectionPage.m_license.licenseCodes == 1)&&(editSectionPage.m_license.copyright_year != editSectionPage.nullString))}"/> 
-
+rendered="#{editSectionPage.m_license.licenseCodes == 1}"/>      
+   <h:outputText id="lic1_val4" value="#{editSectionPage.m_license.copyright_year}" rendered="#{((editSectionPage.m_license.licenseCodes == 1)&&(editSectionPage.m_license.copyright_year != editSectionPage.nullString))}"/> 
+   <h:outputText id="lic1_val2" escape="false" value="<BR>#{editSectionPage.m_license.copyright_owner}" rendered="#{editSectionPage.m_license.licenseCodes == 1}"/> 
       <!--End license code Copyright-->
  <!--License code Public domain-->
    <h:outputText id="lic2_val1" value="#{msgs.edit_preview_dedicated_to}" 
@@ -132,13 +130,12 @@ rendered="#{editSectionPage.m_license.licenseCodes == 2}"/>
    
    <h:outputText id="lic2_val2" value="#{msgs.edit_preview_public_domain}" 
 
-rendered="#{editSectionPage.m_license.licenseCodes == 2}"/> 
+rendered="#{editSectionPage.m_license.licenseCodes == 2}"/>  
    
-   <h:outputText id="lic2_val3" value=",#{editSectionPage.m_license.copyright_owner} "  
+  <h:outputText id="lic2_val5" value="#{editSectionPage.m_license.copyright_year}" rendered="#{((editSectionPage.m_license.licenseCodes == 2)&&(editSectionPage.m_license.copyright_year != editSectionPage.nullString))}"/> 
+ <h:outputText id="lic2_val3" escape="false" value="<BR>#{editSectionPage.m_license.copyright_owner} "  
 
-rendered="#{((editSectionPage.m_license.licenseCodes == 2)&&(editSectionPage.m_license.copyright_owner != editSectionPage.nullString))}"/> 
-  <h:outputText id="lic2_val5" value=",#{editSectionPage.m_license.copyright_year}" rendered="#{((editSectionPage.m_license.licenseCodes == 2)&&(editSectionPage.m_license.copyright_year != editSectionPage.nullString))}"/> 
-
+rendered="#{((editSectionPage.m_license.licenseCodes == 2)&&(editSectionPage.m_license.copyright_owner != editSectionPage.nullString))}"/>	
  
       <!--End license code Public domain-->   
       <!--License code CC license-->
@@ -149,22 +146,20 @@ rendered="#{editSectionPage.m_license.licenseCodes == 3}"/>
    <h:outputText id="lic3_val2" value="#{msgs.edit_preview_creative_commons}" 
 
 rendered="#{editSectionPage.m_license.licenseCodes == 3}"/>
-    
-   <h:outputText id="lic3_val3" value=",#{editSectionPage.m_license.copyright_owner} "  
+
+   <h:outputText id="lic3_val5" value="#{editSectionPage.m_license.copyright_year}" rendered="#{((editSectionPage.m_license.licenseCodes == 3)&&(editSectionPage.m_license.copyright_year != editSectionPage.nullString))}"/> 
+	  <h:outputText id="lic3_val3" escape="false" value="<BR>#{editSectionPage.m_license.copyright_owner} "  
 
 rendered="#{((editSectionPage.m_license.licenseCodes == 3)&&(editSectionPage.m_license.copyright_owner != editSectionPage.nullString))}"/> 
-
-   <h:outputText id="lic3_val5" value=",#{editSectionPage.m_license.copyright_year}" rendered="#{((editSectionPage.m_license.licenseCodes == 3)&&(editSectionPage.m_license.copyright_year != editSectionPage.nullString))}"/> 
-
       <!--End license code CC license-->     	
 	 
         <!--License code fairuse license-->
       <h:outputText id="lic4_val2" value="#{msgs.edit_preview_fairuse}"  rendered="#{editSectionPage.m_license.licenseCodes == 4}"/>
-       <h:outputText id="lic4_val3" value=",#{editSectionPage.m_license.copyright_owner} "  
+       
+   <h:outputText id="lic4_val5" value="#{editSectionPage.m_license.copyright_year}" rendered="#{((editSectionPage.m_license.licenseCodes == 4)&&(editSectionPage.m_license.copyright_year != editSectionPage.nullString))}"/> 
+<h:outputText id="lic4_val3" escape="false" value="<BR>#{editSectionPage.m_license.copyright_owner} "  
 
 rendered="#{((editSectionPage.m_license.licenseCodes == 4)&&(editSectionPage.m_license.copyright_owner != editSectionPage.nullString))}"/> 
-
-   <h:outputText id="lic4_val5" value=",#{editSectionPage.m_license.copyright_year}" rendered="#{((editSectionPage.m_license.licenseCodes == 4)&&(editSectionPage.m_license.copyright_year != editSectionPage.nullString))}"/> 
 
          <!--End license code fairuse license-->             
               </B></TD></TR>
