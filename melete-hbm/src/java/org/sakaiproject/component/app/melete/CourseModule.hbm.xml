@@ -17,9 +17,7 @@
            <param name="property">module</param>
            </generator>
     </id>      
-   <property name="courseId" type="string" length="99">
-   		<column name="COURSE_ID" index="COURSE_ID_IDX" />
-   </property>
+   <property name="courseId" column="COURSE_ID" type="string" length="99" />     
    <property name="seqNo" column="SEQ_NO"  type="int"  length="2" not-null="true"/>
    <property name="archvFlag" column="ARCHV_FLAG" type="boolean" />
    <property name="dateArchived"  column="DATE_ARCHIVED"  type="timestamp"  />
@@ -27,6 +25,10 @@
 	
    <one-to-one name="module" class="org.sakaiproject.component.app.melete.Module" constrained="true" lazy="false"/>
 	 </class>
+	 <database-object>
+		<create>create index COURSE_ID_IDX on melete_course_module(COURSE_ID)</create>		
+		<drop></drop>		
+	</database-object>
  </hibernate-mapping>
 	 
 	 
