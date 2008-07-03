@@ -107,6 +107,8 @@ public class ListAuthModulesPage implements Serializable
 
 	private boolean expandAllFlag;
 
+	private boolean autonumber;
+
 	// This needs to be set later using Utils.getBinding
 	String courseId;
 
@@ -215,9 +217,18 @@ public class ListAuthModulesPage implements Serializable
 		{
 			expandAllFlag = false;
 		}
+                String autonum = preferencePage.getMaterialAutonumber();
+		if (autonum.equals("true"))
+		{  autonumber = true;
+		} else {
+		   autonumber = false;
+		};
+	}	
 
-	}
-
+	public boolean isAutonumber()
+	{
+		return autonumber;
+	};
 	public void resetDateFlags()
 	{
 		resetSelectedLists();
