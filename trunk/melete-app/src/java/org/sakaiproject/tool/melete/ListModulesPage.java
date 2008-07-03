@@ -453,6 +453,7 @@ public class ListModulesPage implements Serializable{
 	        	vmPage.setPrevMdbean(null);
 	          	CourseModuleService cmod = (CourseModuleService) mdbean.getCmod();
 	        	vmPage.setModuleSeqNo(cmod.getSeqNo());
+			vmPage.setAutonumber(this.autonumber);
         	}
 	        }
 
@@ -524,7 +525,7 @@ public class ListModulesPage implements Serializable{
 	    }
 
 	    vsPage.setModuleSeqNo(modSeqNo);
-
+	    vsPage.setAutonumber(this.autonumber);	
 
    }
 
