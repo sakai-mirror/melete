@@ -192,6 +192,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 	  // Added by UPV to show section numbering
           public String getSectionDisplaySequence(SectionObjService section) {
 	        try {
+	             if (section==null) {return null;};
                      ModuleObjService module =section.getModule();
                      Map sections = module.getSections();
                      List sectionsList = null;
