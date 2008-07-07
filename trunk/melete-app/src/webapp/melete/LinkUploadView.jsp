@@ -45,7 +45,7 @@
             	<h:inputHidden id="numitems" value="#{addResourcesPage.numberItems}" />
               		<h:outputText id="t2" value="#{msgs.manage_content_number_links}"/>
                 	
-						  <h:selectOneMenu id="number" value="#{addResourcesPage.numberItems}" onchange="submitaction();" valueChangeListener="#{addResourcesPage.updateNumber}"  >
+						  <h:selectOneMenu id="number" value="#{addResourcesPage.numberItems}" valueChangeListener="#{addResourcesPage.updateNumber}" onchange="this.form.submit();"  >
 						    <f:selectItem itemValue="1" itemLabel="#{msgs.manage_content_one}"/>	
 							<f:selectItem itemValue="2" itemLabel="#{msgs.manage_content_two}"/>	
 							<f:selectItem itemValue="3" itemLabel="#{msgs.manage_content_three}"/>	
