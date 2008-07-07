@@ -100,7 +100,7 @@ function changestatusmessage()
       </table>   
 	   </h:form>      
       <p>&nbsp;</p>
-        <p><a href="#top" class="style3"><h:outputText value="#{msgs.confirm_addmodulesection_back_to_top}" /></a></p>
+
 </td>
   </tr>
 </table>

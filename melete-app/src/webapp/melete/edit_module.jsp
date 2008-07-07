@@ -220,7 +220,7 @@ function showEdateCal()
   </h:form>
 </table>
 <p class="bold"><span class="required">*</span>&nbsp; <h:outputText value="#{msgs.edit_module_required}" /> </p>
-	 <p><a href="#top" class="style3"> <h:outputText value="#{msgs.edit_module_back_to_top}" /> </a></p>  </td>
+
     </tr>
 
 </table>

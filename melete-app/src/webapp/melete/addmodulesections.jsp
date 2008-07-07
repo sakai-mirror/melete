@@ -296,7 +296,6 @@ function contentChangeSubmit()
           </tr>
         </table>
 		<p class="bold"><span class="required">*</span>&nbsp;<h:outputText value="#{msgs.addmodulesections_required}" /></p>
-       		 <p><a href="#top" class="style3"><h:outputText value="#{msgs.addmodulesections_back_to_top}" /></a></p>             
 	 </td>
   </tr>
 </table>

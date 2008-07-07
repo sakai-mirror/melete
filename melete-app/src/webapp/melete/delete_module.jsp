@@ -113,7 +113,7 @@
         </tr>
       </table>
 	</h:form>
-        <p><a href="#top" class="style3"><h:outputText value="#{msgs.delete_module_back_to_top}" /></a></p>
+
 </td>
   </tr>
 </table>

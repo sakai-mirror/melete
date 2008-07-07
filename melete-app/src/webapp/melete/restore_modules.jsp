@@ -89,7 +89,7 @@
 		  		</tr>
 		  	</table> 
 		  	<p>&nbsp;</p>
-        	<p><a href="#top"><h:outputText value="#{msgs.restore_modules_back_to_top}" /></a></p>
+
 		</td>
   	</tr>
 </table>

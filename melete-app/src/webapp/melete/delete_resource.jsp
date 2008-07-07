@@ -82,7 +82,7 @@
 			 <tr><td  height="20" class="maintabledata5">&nbsp;</td></tr>
             </table>
       </td></tr></table>
-        <p><a href="#top" class="style3"><h:outputText value="#{msgs.delete_module_back_to_top}" /></a></p>
+
   <!-- This Ends the Main Text Area -->
   	</h:form>
 </body>
