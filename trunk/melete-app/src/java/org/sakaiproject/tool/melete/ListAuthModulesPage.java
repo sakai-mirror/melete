@@ -817,6 +817,17 @@ public class ListAuthModulesPage implements Serializable
 			{
 				delSecBeans = new ArrayList();
 			}
+			if(selectedSecModIndices == null)
+			{
+				ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+				String msg = bundle.getString("select_one_delete");
+				addMessage(ctx, "Select  One", msg, FacesMessage.SEVERITY_ERROR);
+				moduleSelected = false;
+				sectionSelected = false;
+				resetSelectedLists();
+				return "list_auth_modules";
+			}
+			
 			for (ListIterator i = selectedSecModIndices.listIterator(); i.hasNext();)
 			{
 				SecModObj smObj = (SecModObj) i.next();
@@ -824,6 +835,7 @@ public class ListAuthModulesPage implements Serializable
 				secBean = (SectionBean) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
 				delSecBeans.add(secBean);
 			}
+			
 			ValueBinding binding = Util.getBinding("#{deleteModulePage}");
 			DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
 			dmPage.setSection((Section) secBean.getSection());
