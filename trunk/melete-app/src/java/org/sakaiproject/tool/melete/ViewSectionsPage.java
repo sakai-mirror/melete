@@ -514,6 +514,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		          }
     public void setSection(SectionObjService section){
       this.section = section;
+      this.sectionDisplaySequence=getSectionService().getSectionDisplaySequence(this.section);
     }
 
 
