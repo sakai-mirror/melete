@@ -106,7 +106,7 @@
         </tr>
       </table>
 	</h:form>
-        <p><a href="#top" class="style3"><h:outputText value="#{msgs.author_preference_back_to_top}" /></a></p>
+
 </td>
   </tr>
 </table>

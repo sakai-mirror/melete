@@ -145,7 +145,7 @@ function resetModuleSelection() {
 						</tr>
 						</table> 
 		  	<p>&nbsp;</p>
-        	<p><a href="#top"><h:outputText value="#{msgs.sort_modules_back_to_top}" /></a></p>
+
 		</td>
   	</tr>
 </table>

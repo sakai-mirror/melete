@@ -328,7 +328,7 @@ window.open('editpreviewEditor.jsf');
         </table>
        </h:form>  
 	   <p class="bold"><span class="required">*</span>&nbsp; <h:outputText value="#{msgs.editmodulesections_required}" /></p>
-        <p><a href="#top" class="style3"> <h:outputText value="#{msgs.editmodulesections_back_to_top}" /></a></p>   
+
 	 </td>
   </tr>  
 </table>
