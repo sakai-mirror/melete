@@ -2130,21 +2130,14 @@ public class ModuleDB implements Serializable {
 							//	printText.append("<p>" + new String(data) + "</p>");
 								printText.append(new String(data));
 							}
-							if (sec.getContentType().equals("typeLink"))
+							if (sec.getContentType().equals("typeLink") || sec.getContentType().equals("typeUpload"))
 							{
 								String url = resource.getUrl();
 								url = url.replaceAll(" ", "%20");
 								printText.append("<a href=\"" + url + "\" target=\"_blank\">");
 								printText.append(resource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
 								printText.append("</a>");
-							}
-
-							if (sec.getContentType().equals("typeUpload"))
-							{
-								String url = resource.getUrl();
-								url = url.replaceAll(" ", "%20");
-								printText.append("<iframe id=\"iframe1\" src=\"" + url + "\" scrolling=\"auto\" width=\"100%\" border=\"0\" frameborder=\"0\"></iframe>");
-							}
+							}						
 
 						}
 		  			}
