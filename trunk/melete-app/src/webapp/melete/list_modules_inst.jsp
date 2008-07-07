@@ -81,10 +81,10 @@ function OpenPrintWindow(windowURL,windowName)
         <h:graphicImage id="col_gif" value="images/collapse.gif" rendered="#{(((mdbean.moduleId == listModulesPage.showModuleId)&&(mdbean.sectionBeans != listModulesPage.nullList))||((listModulesPage.expandAllFlag == listModulesPage.trueFlag)&&(mdbean.sectionBeans != listModulesPage.nullList)))}" styleClass="ExpClass"/>
          <h:inputHidden id="moduleHideId" value="#{mdbean.moduleId}"/>
       </h:commandLink>   
+       <h:outputText id="mod_seq" value="#{mdbean.cmod.seqNo}. " rendered="#{listModulesPage.autonumber}"/>
        <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}" immediate="true"  
           rendered="#{mdbean.visibleFlag == listModulesPage.trueFlag}">
           <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
-	  <h:outputText id="mod_seq" value="#{mdbean.cmod.seqNo}. " rendered="#{listModulesPage.autonumber}"/>
               <h:outputText id="title"
                            value="#{mdbean.module.title}">
          </h:outputText>             
@@ -92,7 +92,6 @@ function OpenPrintWindow(windowURL,windowName)
       <h:commandLink id="viewModule2"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}"  immediate="true" 
          rendered="#{mdbean.visibleFlag != listModulesPage.trueFlag}">      
          <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
-	  <h:outputText id="mod_seq2" value="#{mdbean.cmod.seqNo}. " rendered="#{listModulesPage.autonumber}"/>
          <h:outputText id="title2"
                            value="#{mdbean.module.title}" styleClass="italics">
          </h:outputText>                 
@@ -104,7 +103,7 @@ function OpenPrintWindow(windowURL,windowName)
                   var="section" columnClasses="SectionClass" rowClasses="#{mdbean.rowClasses}"  width="95%" binding="#{listModulesPage.secTable}">
                    <h:column>                         
                <h:graphicImage id="bul_gif" value="images/bullet_black.gif"/>
-              
+	       <h:outputText id="sec_seq" value="#{section.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>
            <h:commandLink id="viewSectionEditor"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{((section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}" immediate="true">
                   <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
                <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
@@ -122,7 +121,6 @@ function OpenPrintWindow(windowURL,windowName)
            <h:commandLink id="viewSectionLink"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}" rendered="#{((section.section.contentType != listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}" immediate="true">
                   <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
                <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
-	       <h:outputText id="sec_seq" value="#{section.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>
                <h:outputText id="sectitleLink" 
                            value="#{section.section.title}">
                </h:outputText>
