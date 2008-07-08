@@ -147,7 +147,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			}
 	}
 
-	public void deleteSection(SectionObjService sec, String courseId, String userId)
+	public void deleteSection(SectionObjService sec, String courseId, String userId) throws MeleteException
 	{
 
 			try
@@ -156,7 +156,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			}
 		  	catch (Exception ex)
 			{
-
+		  		throw new MeleteException("delete_module_fail");
 			}
 	}
 	
@@ -170,7 +170,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 
 			Section sec = (Section) secbean.getSection();
   		    deleteSection(sec, courseId, userId);
-	      }
+	      }		 
 	}
 
 	public SectionObjService getSection(int sectionId) {

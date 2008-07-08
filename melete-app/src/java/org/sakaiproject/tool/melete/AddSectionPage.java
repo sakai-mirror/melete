@@ -184,7 +184,9 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			{
 			logger.error("error in inserting section "+ mex.toString());
 			//rollback and delete section
-			sectionService.deleteSection(section, (String)sessionMap.get("courseId"), null);
+			try{
+				sectionService.deleteSection(section,(String)sessionMap.get("courseId"), null);
+				} catch (Exception e){}
 			String errMsg = bundle.getString(mex.getMessage());
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
 			return "failure";
@@ -192,7 +194,9 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		catch(Exception ex)
 			{
 			logger.error("error in inserting section "+ ex.toString());
+			try{
 			sectionService.deleteSection(section,(String)sessionMap.get("courseId"), null);
+			} catch (Exception e){}
 			String errMsg = bundle.getString("add_section_fail");
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"add_section_fail",errMsg));
 			ex.printStackTrace();
