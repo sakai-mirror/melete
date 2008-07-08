@@ -410,6 +410,7 @@ public class SectionDB implements Serializable {
 				  {
 					e.printStackTrace();
 					logger.error("SectionDB -- deleteSection -- error in delete resource" + e.toString());
+					throw new MeleteException("delete_module_fail");
 				  }
 				  deleteFromMeleteTables(sec,userId, MELETE_RESOURCE_SECTION_RESOURCE, null);
 			    }
@@ -430,6 +431,13 @@ public class SectionDB implements Serializable {
 		if (sec.getContentType().equals("typeEditor"))
 		{
 		  List<String> secEmbed = null;
+		  if(sec.getSectionResource() == null)
+		  {
+			  deleteFromMeleteTables(sec, userId, NONE_TO_DELETE, null);
+			    long endtime = System.currentTimeMillis();
+        		logger.debug("delete section end " +(endtime - starttime));
+        		return;	
+		  }
 		  String resourceId = sec.getSectionResource().getResource().getResourceId();
 		  //Store all embedded media references in a list
 		  try
@@ -451,6 +459,7 @@ public class SectionDB implements Serializable {
 		  {
 			e.printStackTrace();
 			logger.error("SectionDB -- deleteSection -- error in delete resource" + e.toString());
+			throw new MeleteException("delete_module_fail");
 		  }
 	      //Delete references to the main section.html section in MELETE_SECTION, SECTION_RESOURCE
 	      //and MELETE_RESOURCE
@@ -496,6 +505,7 @@ public class SectionDB implements Serializable {
     				  {
     					e.printStackTrace();
     					logger.error("SectionDB -- deleteSection -- error in delete resource" + e.toString());
+    					throw new MeleteException("delete_module_fail");
     				  }
     			      deleteFromMeleteTables(sec, userId, MELETE_RESOURCE_ONLY, resourceId);
       			  }
