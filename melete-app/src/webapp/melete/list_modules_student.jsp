@@ -146,9 +146,6 @@ function OpenPrintWindow(windowURL,windowName)
  </tr>
  </table>
  <!--End Content-->
-
- <p><h:outputLink styleClass="style3" value="#top" rendered="#{listModulesPage.nomodsFlag != listModulesPage.trueFlag}">  <f:verbatim><h:outputText value="#{msgs.list_modules_stud_back_to_top}" /></f:verbatim> </h:outputLink>
- </p>
 </td>
 </tr>
 </table>
