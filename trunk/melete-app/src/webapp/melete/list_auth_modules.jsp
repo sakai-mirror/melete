@@ -285,9 +285,6 @@ if (msg != null)
  
 
 <!--End Content-->
-
- <p> <h:outputLink styleClass="style3" value="#top" rendered="#{listModulesPage.nomodsFlag == false}">  <f:verbatim> <h:outputText value="#{msgs.list_auth_modules_back_to_top}" /> </f:verbatim> </h:outputLink>
-</p>
 </td>
 </tr>
 </table>
