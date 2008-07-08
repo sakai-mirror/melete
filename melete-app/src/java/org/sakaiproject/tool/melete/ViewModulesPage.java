@@ -295,7 +295,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 		vsPage.setSection(secBean.getSection());
 		// added by rashmi on 6/14/05
 		vsPage.setModule(null);
-		vsPage.setAutonumber(this.autonumber);
+		//vsPage.setAutonumber(this.autonumber);
 		String retVal = "view_section_student";
 		if (isAuthor) retVal = "view_section";
 
@@ -314,6 +314,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     	ListModulesPage listPage = (ListModulesPage)
             binding.getValue(context);
     	listPage.setModuleDateBeans(null);
+    	listPage.setAutonumberMaterial(null);
 		if (getInstRole()) return "list_modules_inst";
 		else return "list_modules_student";
 	}
@@ -336,6 +337,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
  	            vsPage.setSection(secBean.getSection());
  	            //added by rashmi on 6/14/05
  	            vsPage.setModule(null);
+ 	            vsPage.setAutonumber(null);
 
 
  	     String retVal = "view_section_student";
@@ -374,7 +376,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
  	            vsPage.setSection(secBean.getSection());
  	            //added by rashmi on 6/14/05
  	            vsPage.setModule(null);
-
+ 	            vsPage.setAutonumber(null);
  	     String retVal = "view_section_student";
 
  	    //03/10/05  rashmi - added seperate page for links and upload to show them in frame
