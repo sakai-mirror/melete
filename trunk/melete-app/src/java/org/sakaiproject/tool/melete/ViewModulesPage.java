@@ -486,6 +486,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
          vmPage.setModuleId(((Integer)param.getValue()).intValue());
          vmPage.setMdbean(null);
          vmPage.setPrintable(null);
+         vmPage.setAutonumber(null);
          try {
 	  		ModuleService modServ = getModuleService();
 	  		CourseModule cMod = (CourseModule)modServ.getCourseModule(((Integer)param.getValue()).intValue(),getCourseId());
