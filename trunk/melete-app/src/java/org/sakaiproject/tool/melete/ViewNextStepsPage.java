@@ -145,6 +145,7 @@ public String goPrevItem()
       vmPage.setModuleId(this.prevModId);
       vmPage.setPrintable(null);
   	  vmPage.setMdbean(null);
+  	  vmPage.setAutonumber(null);
   	  if (this.nextSeqNo > 1)
   	  {
         vmPage.setModuleSeqNo(nextPrevSeqNo);
@@ -173,7 +174,7 @@ public String goPrevItem()
 	    vsPage.setSection(null);
 	    //added by rashmi on 6/14/05
 	    vsPage.setModule(null);
-
+	    vsPage.setAutonumber(null);
 
 	    if (getInstRole() == true)
 	    {
@@ -206,6 +207,7 @@ public String goNextModule()
   	vmPage.setPrevMdbean(null);
     vmPage.setModuleSeqNo(nextSeqNo);
     vmPage.setPrintable(null);
+    vmPage.setAutonumber(null);
     if (instRole)
 	{
 			return "view_module";
@@ -279,6 +281,7 @@ public String goTOC()
 	ListModulesPage listPage = (ListModulesPage)
         binding.getValue(context);
 	listPage.setModuleDateBeans(null);
+	listPage.setAutonumberMaterial(null);
 	if (instRole) return "list_modules_inst";
 	else return "list_modules_student";
 }

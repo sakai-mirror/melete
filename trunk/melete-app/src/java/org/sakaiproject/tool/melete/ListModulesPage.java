@@ -453,7 +453,7 @@ public class ListModulesPage implements Serializable{
 	        	vmPage.setPrevMdbean(null);
 	          	CourseModuleService cmod = (CourseModuleService) mdbean.getCmod();
 	        	vmPage.setModuleSeqNo(cmod.getSeqNo());
-			vmPage.setAutonumber(this.autonumber);
+	        	vmPage.setAutonumber(null);
         	}
 	        }
 
@@ -525,8 +525,6 @@ public class ListModulesPage implements Serializable{
 	    }
 
 	    vsPage.setModuleSeqNo(modSeqNo);
-	    vsPage.setAutonumber(this.autonumber);	
-
    }
 
 	  private void addNoModulesMessage(FacesContext ctx){
@@ -645,5 +643,13 @@ public class ListModulesPage implements Serializable{
 	public void setSecTable(UIData secTable)
 	{
 		this.secTable = secTable;
+	}
+
+	/**
+	 * @param autonumberMaterial the autonumberMaterial to set
+	 */
+	public void setAutonumberMaterial(Boolean autonumberMaterial)
+	{
+		this.autonumberMaterial = autonumberMaterial;
 	}
 }

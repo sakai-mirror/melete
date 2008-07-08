@@ -144,6 +144,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	  public void resetValues()
 	  {
 		  contentLinkUrl =null;
+		  autonumber = null;
 	  }
 
 
@@ -529,6 +530,7 @@ public String goTOC()
 	ListModulesPage listPage = (ListModulesPage)
         binding.getValue(context);
 	listPage.setModuleDateBeans(null);
+	listPage.setAutonumberMaterial(null);
 	if (getInstRole()) return "list_modules_inst";
 	else return "list_modules_student";
 }
@@ -607,6 +609,7 @@ public String goPrevModule()
         binding.getValue(context);
     vmPage.setModuleId(this.moduleId);
     vmPage.setPrintable(null);
+    vmPage.setAutonumber(null);
   	vmPage.setMdbean(null);
   	vmPage.setPrevMdbean(null);
     vmPage.setModuleSeqNo(this.moduleSeqNo);
@@ -643,6 +646,7 @@ public String goNextModule()
   	vmPage.setModuleId(0);
     vmPage.setModuleSeqNo(this.nextSeqNo);
     vmPage.setPrintable(null);
+    vmPage.setAutonumber(null);
     if (getInstRole())
 	{
 			return "view_module";
