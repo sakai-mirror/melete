@@ -75,14 +75,15 @@ function showEdateCal(index)
   }
 } 
 
-function OpenPrintWindow(windowURL,windowName)
+function OpenPrintWindow(print_id, windowName)
 {
+	
   var _info = navigator.userAgent;
   var _ie = (_info.indexOf("MSIE") > 0 && _info.indexOf("Win") > 0 && _info.indexOf("Windows 3.1") < 0);
 	var windowDefaults = "status=no, menubar=no, location=no, scrollbars=yes, resizeable=yes, width=700, height=700, left=20, top=20";
 	var newWindow;
-	if(!_ie) newWindow = window.open(windowURL,windowName,windowDefaults);
-	else newWindow = window.open(windowURL,null,windowDefaults);
+	if(!_ie) newWindow = window.open('print_module.jsf?printModuleId='+print_id,windowName,windowDefaults);
+	else newWindow = window.open('print_module.jsf',null,windowDefaults);
 if (window.focus) { newWindow.focus(); } ; // force the window to the front if the browser supports it
 return newWindow;
 
@@ -263,7 +264,7 @@ if (msg != null)
 		  	  <h:graphicImage id="duplicateImg" value="images/page_copy.png" alt="#{msgs.list_auth_modules_alt_duplicate}" title="#{msgs.list_auth_modules_alt_duplicate}" styleClass="AuthImgClass"/>
 		  </h:commandLink>
 		     <h:outputText id="emp_space5" value="  " styleClass="ExtraPaddingClass" />
-		     <h:outputLink id="printModuleLink" value="print_module" onclick="OpenPrintWindow(this.href,'Melete Print Window');this.href='#';">
+		     <h:outputLink id="printModuleLink" onclick="OpenPrintWindow(#{listAuthModulesPage.printModuleId},'Melete Print Window');">
 		    	<f:param id="printmoduleId" name="printModuleId" value="#{listAuthModulesPage.printModuleId}" />
 		  	  <h:graphicImage id="printImgLink" value="images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 		  </h:outputLink>

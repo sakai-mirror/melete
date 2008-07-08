@@ -28,4 +28,7 @@ public interface MeleteSitePreferenceService {
 	public abstract void setPrefSiteId(String prefSiteId);
 	public abstract boolean isPrintable();
 	public abstract void setPrintable(boolean printable);
+	public abstract boolean isAutonumber();
+	public abstract void setAutonumber(boolean autonumber);
+	
 }
