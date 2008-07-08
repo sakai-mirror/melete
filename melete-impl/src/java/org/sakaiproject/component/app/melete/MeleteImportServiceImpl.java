@@ -1444,8 +1444,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					{
 						Map.Entry entry = (Map.Entry) keyValuePairs.next();
 						Section fromSec = (Section) entry.getValue();
-						fromSecId = fromSec.getSectionId().intValue();
+						fromSecId = fromSec.getSectionId().intValue();						
 						Section toSec = new Section(fromSec.getTitle(), fromSec.getCreatedByFname(), fromSec.getCreatedByLname(), fromSec.getModifiedByFname(), fromSec.getModifiedByLname(), fromSec.getInstr(), fromSec.getContentType(), fromSec.isAudioContent(), fromSec.isVideoContent(), fromSec.isTextualContent(), fromSec.isOpenWindow(), fromSec.isDeleteFlag(), fromSec.getCreationDate(), fromSec.getModificationDate());
+						logger.debug("copied section open window value" + toSec.getTitle()+"," + toSec.isOpenWindow() );
 						try
 						{
 							//Insert into the SECTION table
@@ -1454,7 +1455,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 							//Replace old references of sections to new references in SEQ xml
 							//TODO : Move the update seqxml lower down so sequence does not update
 							//if exception is thrown
-							if(!toSec.getContentType().equals("notype"))
+							if(!fromSec.getContentType().equals("notype") && fromSec.getSectionResource() != null)
 							{
 								toMres = new MeleteResource((MeleteResource)fromSec.getSectionResource().getResource());
 								toMres.setResourceId(null);
