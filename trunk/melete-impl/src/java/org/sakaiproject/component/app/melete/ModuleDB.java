@@ -2088,7 +2088,9 @@ public class ModuleDB implements Serializable {
 			Transaction tx = null;
 			StringBuffer printText = null;
 			String courseId=module.getCoursemodule().getCourseId();
-			boolean autonumber = userPrefdb.getSitePreferences(courseId).isAutonumber();
+			boolean autonumber = false;
+			MeleteSitePreference pref = userPrefdb.getSitePreferences(courseId);
+			if(pref != null)autonumber = pref.isAutonumber();
 			try
 			{
 				if (autonumber) {
