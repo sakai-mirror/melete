@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.sakaiproject.component.app.melete.Section" table="melete_section" >
+ <id name="sectionId" column="SECTION_ID" type="int" unsaved-value="null">
+      <generator class="hilo"/>
+    </id>
+     <!--many to one module id many to one or foreign key-->
+	 <version name="version" column="VERSION" />   
+     <property name="moduleId" column="MODULE_ID"  type="int"  not-null="true"/>
+    <property name="title" column="TITLE" type="string"  length="255" not-null="true"/>
+	<property name="createdByFname" column="CREATED_BY_FNAME" type="string"  length="50" not-null="true"/>
+	<property name="createdByLname" column="CREATED_BY_LNAME" type="string"   length="50" not-null="true"/>
+	<property name="modifiedByFname" column="MODIFIED_BY_FNAME" type="string"  length="50"/>
+	<property name="modifiedByLname" column="MODIFIED_BY_LNAME" type="string"   length="50" />
+	<property name="instr" column="INSTR" type="string" length="250" />		
+	<property name="contentType" column="CONTENT_TYPE" type="string"  length="10" not-null="true"/>			
+	<property name="audioContent" column="AUDIO_CONTENT" type="boolean"/>		
+	<property name="videoContent" column="VIDEO_CONTENT" type="boolean"/>		
+	<property name="textualContent" column="TEXTUAL_CONTENT" type="boolean"/>
+	<property name="openWindow" column="OPEN_WINDOW" type="boolean" />	
+	<property name="deleteFlag" column="DELETE_FLAG" type="boolean" />				
+	<property name="creationDate"  column="CREATION_DATE"  type="timestamp" not-null="true"/>			
+	<property name="modificationDate"  column="MODIFICATION_DATE"  type="timestamp"  not-null="true"/>
+	<many-to-one name="module"  class="org.sakaiproject.component.app.melete.Module" insert="false" update="false" column="MODULE_ID"  lazy="false"/>
+	<one-to-one name="sectionResource" class="org.sakaiproject.component.app.melete.SectionResource"/>	
+	</class>
+</hibernate-mapping>

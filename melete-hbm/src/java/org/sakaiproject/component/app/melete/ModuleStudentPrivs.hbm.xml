@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.sakaiproject.component.app.melete.ModuleStudentPrivs" table="melete_module_student_privs">
+    <composite-id>
+    <key-property name="courseId" column="COURSE_ID" type="string" length="20"/>	
+    <!--<key-many-to-one name="course" class="org.sakaiproject.component.app.melete.Course" column="SITE_ID" />-->
+      <key-many-to-one name="module" class="org.sakaiproject.component.app.melete.Module" column="MODULE_ID" />
+       <key-property name="studentId" column="STUDENT_ID" type="string" length="11"/>	
+
+   </composite-id>
+    <!--many to one module id many to one or foreign key-->
+   <property name="allowUnlimited" column="ALLOW_UNLIMITED" type="boolean" />	
+   <property name="deny" column="DENY" type="boolean" />	
+   	<property name="startDate"  column="START_DATE"  type="timestamp"  />			
+	<property name="endDate"  column="END_DATE"  type="timestamp"  />		
+	</class>
+</hibernate-mapping>
