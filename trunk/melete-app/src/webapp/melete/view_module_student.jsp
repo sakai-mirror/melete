@@ -20,7 +20,7 @@ function OpenPrintWindow(print_id, windowName)
 	var windowDefaults = "status=no, menubar=no, location=no, scrollbars=yes, resizeable=yes, width=700, height=700, left=20, top=20";
 	var newWindow;
 	if(!_ie) newWindow = window.open('print_module.jsf?printModuleId='+print_id,windowName,windowDefaults);
-	else newWindow = window.open('print_module.jsf',null,windowDefaults);
+	else newWindow = window.open('print_module.jsf?printModuleId='+print_id,null,windowDefaults);
 if (window.focus) { newWindow.focus(); } ; // force the window to the front if the browser supports it
 return newWindow;
 
