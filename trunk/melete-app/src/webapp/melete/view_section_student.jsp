@@ -98,7 +98,7 @@ function showIframe()
 			
 		<br> 
 		 <h:outputText id="secinstLink" escape="false"
-                           value="#{msgs.view_section_clicking}<BR><BR>" rendered="#{(((viewSectionsPage.section.contentType == viewSectionsPage.typeUpload)||(viewSectionsPage.section.contentType == viewSectionsPage.typeLink))&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}">
+                           value="#{msgs.view_section_clicking}<BR><BR>" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}">
       </h:outputText> 
       
 	 <h:outputLink id="viewSectionLink"  value="#{viewSectionsPage.contentLink}" target="_blank" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}">
