@@ -990,10 +990,12 @@ public class ModuleDB implements Serializable {
 				Module dm = (Module) dmIter.next();
 				allModuleIds.append(dm.getModuleId().toString() + ",");
 				Map delSections = dm.getSections();
-				if (delSections == null || delSections.isEmpty()) continue;
-				for (Iterator i = delSections.keySet().iterator(); i.hasNext();)
+				if (delSections != null && !delSections.isEmpty()) 
 				{
-					allSectionIds.append(i.next() + ",");
+					for (Iterator i = delSections.keySet().iterator(); i.hasNext();)
+					{
+						allSectionIds.append(i.next() + ",");
+					}
 				}
 				// record seq_no and id
 				DelModuleInfoList.add(new DelModuleInfo(dm.getModuleId().toString(),dm.getCoursemodule().getSeqNo())); 
