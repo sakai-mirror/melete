@@ -132,7 +132,7 @@ return newWindow;
          </h:column>
 		 <h:column rendered="#{listModulesPage.printable}">  
          <h:outputText id="emp_space5" value="  " styleClass="ExtraPaddingClass" />
-	     <h:outputLink id="printModuleLink" values="list_modules_student" onclick="OpenPrintWindow(#{listModulesPage.printModuleId},'Melete Print Window');" rendered="#{mdbean.visibleFlag}">
+	     <h:outputLink id="printModuleLink" value="list_modules_student" onclick="OpenPrintWindow(#{listModulesPage.printModuleId},'Melete Print Window');" rendered="#{mdbean.visibleFlag}">
 	    	<f:param id="printmoduleId" name="printModuleId" value="#{listModulesPage.printModuleId}" />
 	  	  	<h:graphicImage id="printImgLink" value="images/printer.png"  alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 	 	 </h:outputLink>
