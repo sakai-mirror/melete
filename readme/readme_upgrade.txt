@@ -86,18 +86,20 @@ SETUP INSTRUCTIONS
 	
 7. Sakai 2.5 Portal Icons
 
-Sakai 2.5 and later supports icons in the portal for each tool. Sakai comes with icons for the tools that are bundled, and you can make a few simple edits to add icons for other tools such as Mneme. The icons are part of the Sakai skin. The skin files are in the "library" webapp, which is located in your deployed tomcat in the folder
-
-webapps/library/skin
+Sakai 2.5 and later supports icons in the portal for each tool. Sakai comes with icons for the tools that are bundled,
+and you can make a few simple edits to add icons for other tools such as Melete. The icons are part of the Sakai skin.
+The skin files are in the "library" webapp, which is located in your deployed tomcat in the folder webapps/library/skin
 
 The skin has to be enhanced in two ways:
 
     * make the new icons available
     * change the skin .css file to reference them
 
-There is a "default" skin, and perhaps, depending on your customizations of Sakai, other skins. You need to make these changes for the skins that you are using. 
+There is a "default" skin, and perhaps, depending on your customizations of Sakai, other skins. You need to make these 
+changes for the skins that you are using. 
 
-The following instructions show how to change the "default" skin, in the "library/skin/default" folder. To change the others, apply these same changes to the other skins, located in folders under "library/skin/".
+The following instructions show how to change the "default" skin, in the "library/skin/default" folder. To change the others,
+apply these same changes to the other skins, located in folders under "library/skin/".
 
 		You can add an icon for Melete here:
 		webapps/library/skin/default/icons/
@@ -106,7 +108,7 @@ The following instructions show how to change the "default" skin, in the "librar
 
 		The Melete tool icon is modules-menu.png 
 		
-		You can get it from melete-app/src/webapp/melete/images
+		You can get it from melete-app/src/webapp/images
 
 		The file "portal.css" is where the icons are referenced. For the default skin, this file is here:
 
