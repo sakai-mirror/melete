@@ -202,7 +202,7 @@ The following instructions show how to change the "default" skin, in the "librar
 
 		The Melete tool icon is modules-menu.png 
 		
-		You can get it from melete-app/src/webapp/melete/images
+		You can get it from melete-app/src/webapp/images
 
 		The file "portal.css" is where the icons are referenced. For the default skin, this file is here:
 
