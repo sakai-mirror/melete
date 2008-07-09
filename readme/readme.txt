@@ -9,13 +9,12 @@ SETUP INSTRUCTIONS
 1. Patch Instructions
 2. Configuring Melete  
 3. Configuring Commercial Sferyx Editor (Optional)
-4. Oracle Code Configuration
-5. Internationalize Messages (Optional)
-6. Compile Melete 
-7. Database Configuration
-8. Configure Site Archive to include Melete
-9. Update Sakai Roles (under realms)
-10. Sakai 2.5 Portal Icons
+4. Internationalize Messages (Optional)
+5. Compile Melete 
+6. Database Configuration
+7. Configure Site Archive to include Melete
+8. Update Sakai Roles (under realms)
+9. Sakai 2.5 Portal Icons
 ---------------------------------
 
 1. Patch Instructions
@@ -112,17 +111,11 @@ SETUP INSTRUCTIONS
 		
                               ***** END OF OPTIONAL STEP **********
 
-4. Oracle Code Configuration
-   ** SKIP this step if you are NOT using Oracle.**
-   
-   If you are using Oracle, due to differences in Oracle query behavior, you will need to 
-   apply patch located at /patch/migrate_oracle.txt
-
-5. Internationalize Messages (Optional)
+4. Internationalize Messages (Optional)
 	If you want to run Melete in a different language than English, you need to update messages.properties of your language 
 	under melete-app/src/bundle and under melete-impl/src/bundle.
 	
-6. Compile Melete
+5. Compile Melete
 	 On the command prompt, go to the melete source directory which you placed 
 	under sakai and run maven commands just like you did for sakai.
 	
@@ -130,8 +123,10 @@ SETUP INSTRUCTIONS
 	
 	(for more instructions, see section titled 'Sakai Maven Goals' in the 
 	"How we build Sakai Using Maven" document provided by Sakai lead developers)
+
+	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for melete-2.5.Feel free to contact us at 	etudes-dev@foothill.edu for melete-2.4.5 patch that you can work from.
 	
-7. Database Configuration
+6. Database Configuration
 
 	* Melete works with HSQLDB, Oracle or Mysql4.1 Database. The driver used is 
 	the MySql Connector/J 3.1.12 (same as Sakai). It has been tested just on Mysql, 
@@ -139,7 +134,7 @@ SETUP INSTRUCTIONS
 	
 	* Melete shares the same database as Sakai's and adds a few tables to the database. 
 	
-	7.1 Set up the Melete tables: 
+	6.1 Set up the Melete tables: 
 	
 	You can either run the sql script manually; it is provided under
 	/components/src/sql/mysql/melete25.sql, 
@@ -154,23 +149,23 @@ SETUP INSTRUCTIONS
 		  b. Melete stores content in the database tables as well as in the /private/meleteDocs folder in ContentHosting. 
         	 Through Melete, users only have access to the /private/meleteDocs folder and not other parts of Resources.
 
-8. Configure Site Archive to include Melete 
+7. Configure Site Archive to include Melete 
 	Melete now participates in Site Archive. Modify archive\archive-impl\pack\src\webapp\WEB-INF\components.xml, add
 	<value>MeleteSecurityService</value> in the filterServices list.
 	
 	Compile and deploy archive again.	
 	
-9. Update Sakai Roles (under realms) to include Melete permissions
+8. Update Sakai Roles (under realms) to include Melete permissions
 
 	(If you are simply upgrading Melete in your Sakai instance, no roles changes are needed)
 
-	9.1. Log on as Sakai admin. Check appropriate Melete permissions under the roles in
+	8.1. Log on as Sakai admin. Check appropriate Melete permissions under the roles in
 	 !site.template.course. 
 	
 	* Check melete.author for teacher, instructor, faculty types of roles (maintain).
 	* Check melete.student for student types of custom roles that you have (access).
 		
-	9.2. If you have project sites and related roles in !site.template.project, appropriate 
+	8.2. If you have project sites and related roles in !site.template.project, appropriate 
 	permissions (melete.student or melete.author) need to be checked as defined above.
 		
    CAUTION: 
@@ -180,7 +175,7 @@ SETUP INSTRUCTIONS
 		PERMISSIONS THAT YOU CHECKED. YOU WILL NEED TO USE !SITE.HELPER OR OTHER 
 		SCRIPT TO PROPAGATE THE MELETE PERMISSION TO EXISTING SITES. 		
 
-10. Sakai 2.5 Portal Icons
+9. Sakai 2.5 Portal Icons
 
 Sakai 2.5 and later supports icons in the portal for each tool. Sakai comes with icons for the tools that are bundled, and you can make a few simple edits to add icons for other tools such as Mneme. The icons are part of the Sakai skin. The skin files are in the "library" webapp, which is located in your deployed tomcat in the folder
 
