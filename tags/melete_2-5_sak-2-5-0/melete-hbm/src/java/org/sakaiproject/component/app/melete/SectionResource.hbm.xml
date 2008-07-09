@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.sakaiproject.component.app.melete.SectionResource" table="melete_section_resource">
+    <id name="sectionId" column="SECTION_ID" type="int"  unsaved-value="null">
+         <generator class="foreign">
+           <param name="property">section</param>
+           </generator>
+    </id>      
+	  <one-to-one name="section" class="org.sakaiproject.component.app.melete.Section" constrained="true" lazy="false"/>
+     <many-to-one name="resource" class="org.sakaiproject.component.app.melete.MeleteResource" column="RESOURCE_ID" lazy="false"/>
+	 </class>
+ </hibernate-mapping>
+	 
