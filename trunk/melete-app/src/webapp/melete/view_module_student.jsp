@@ -55,7 +55,7 @@ return newWindow;
 </tr>             
 <tr>
 <td align="left">
-<h:outputText id="mod_seq" value="#{viewModulesPage.mdbean.cmod.seqNo}. " styleClass="bold style6" rendered="#{listModulesPage.autonumber}"/>
+<h:outputText id="mod_seq" value="#{viewModulesPage.mdbean.cmod.seqNo}. " styleClass="bold style6" rendered="#{viewModulesPage.autonumber}"/>
 <h:outputText id="title" value="#{viewModulesPage.mdbean.module.title}" styleClass="bold style6" ></h:outputText>
 </td>
 <td align="right">	
@@ -80,7 +80,7 @@ return newWindow;
                	  <h:column>
             		  <h:graphicImage id="bul_gif" value="images/bullet_black.gif" rendered="#{sectionBean.section.title != viewModulesPage.nullString}"/>
 			          <h:commandLink id="viewSectionEditor"  action="#{viewModulesPage.viewSection}" rendered="#{sectionBean.section.title != viewModulesPage.nullString}" immediate="true">
-				  <h:outputText id="sec_seq" value="#{sectionBean.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>
+				  <h:outputText id="sec_seq" value="#{sectionBean.displaySequence}. " rendered="#{viewModulesPage.autonumber}"/>
 										  <h:outputText id="sectitleEditor" value="#{sectionBean.section.title}" > </h:outputText>
 					  </h:commandLink>
 			</h:column>
