@@ -89,7 +89,7 @@ return newWindow;
                   value="#{mdbean.sectionBeans}"
                   var="section" rowClasses="#{mdbean.rowClasses}" columnClasses="SectionClass" width="95%" binding="#{listModulesPage.secTable}">
                     <h:column> 
-              <h:graphicImage id="bul_gif" value="images/bullet_black.gif"/>
+              <h:graphicImage id="bul_gif" value="images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}"/>
              
 	       <h:outputText id="sec_seq" value="#{section.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>    
              <h:commandLink id="viewSectionEditor"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}"  rendered="#{((section.section.contentType != listModulesPage.isNull && section.section.contentType == listModulesPage.typeLink)&&(mdbean.visibleFlag == listModulesPage.trueFlag))}" immediate="true">
