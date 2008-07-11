@@ -1,7 +1,7 @@
-Sakai 2.4.x Patch Instructions for Melete 2.4
+Sakai 2.4.x Patch Instructions for Melete 2.5
 ------------------------------------------------
 
-1.  Go to the sakai-src directory and run the script present in the Melete source code(/patch/melete24patchsak24.sh). 
+1.  Go to the sakai-src directory and run the script present in the Melete source code(/patch/melete25patchsak24.sh). 
 This script merges the relevant, required changes of the jsf folder.
 
 2. Make sure sakai builds properly after running this script as sometimes svn merge command fails.
