@@ -22,17 +22,17 @@ SETUP INSTRUCTIONS
 	** SKIP this step if you will run Melete with Sakai 2.4.**
 	
 	If you are using Sakai 2.3, you need to execute a patch that enables Sakai
-	2.3 to run with Melete 2.5. The patch is at /patch/melete25patchsak23.sh.
+	2.3 to run with Melete 2.5. The patch is at /patch/meletepatchsak23.sh.
 	
-	Instructions for running the path are in /patch/patch-SAK2.3_for_melete2.5.txt.
+	Instructions for running the patch are in /patch/patch-SAK2.3_for_melete.txt.
    
    b. Sakai 2.4.x Patch Instructions
 	** SKIP this step if you will run Melete with Sakai 2.3.**
 	
 	If you are using Sakai 2.4, you need to execute a patch that enables Sakai
-	2.4 to run with Melete 2.5. The patch is at /patch/melete25patchsak24.sh.
+	2.4 to run with Melete 2.5. The patch is at /patch/meletepatchsak24.sh.
 	
-	Instructions for running the path are in /patch/patch-SAK2.4_for_melete2.5.txt.	
+	Instructions for running the patch are in /patch/patch-SAK2.4_for_melete.txt.	
 	
 	NOTE: No patch is needed for Sakai 2.5
 
