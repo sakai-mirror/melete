@@ -434,28 +434,40 @@ public class ListModulesPage implements Serializable{
 
       public void viewModule(ActionEvent evt)
 	  {
-	  	ModuleDateBean mdbean = null;
-	  	FacesContext ctx = FacesContext.getCurrentInstance();
-	  	Map params = ctx.getExternalContext().getRequestParameterMap();
-		int selModIndex = Integer.parseInt((String) params.get("modidx"));
-
-	    ValueBinding binding =
-	            Util.getBinding("#{viewModulesPage}");
-	    ViewModulesPage vmPage = (ViewModulesPage)
-	            binding.getValue(ctx);
-	    		vmPage.setPrintable(null);
-        if (getRole()!= null && (getRole().equals("INSTRUCTOR") || getRole().equals("STUDENT"))){
-        	if ((moduleDateBeans != null)&&(moduleDateBeans.size() > 0))
-        	{
-	        	mdbean = (ModuleDateBean) moduleDateBeans.get(selModIndex);
-	        	vmPage.setModuleId(mdbean.getModuleId());
-	        	vmPage.setMdbean(null);
-	        	vmPage.setPrevMdbean(null);
-	          	CourseModuleService cmod = (CourseModuleService) mdbean.getCmod();
-	        	vmPage.setModuleSeqNo(cmod.getSeqNo());
-	        	vmPage.setAutonumber(null);
-        	}
-	        }
+    	  ModuleDateBean mdbean = null;
+    	  FacesContext ctx = FacesContext.getCurrentInstance();
+    	  Map params = ctx.getExternalContext().getRequestParameterMap();
+    	  int selModIndex;
+    	  if(params != null && params.containsKey("modidx"))
+    		 {
+    		  selModIndex = Integer.parseInt((String) params.get("modidx"));
+    	     }
+    	  else 
+          {
+          	ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+  			String Errmsg = bundle.getString("error_view_module");
+  			FacesMessage msg =new FacesMessage(Errmsg);
+  		  	msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+  			ctx.addMessage (null, msg);
+  			return;
+          }
+    	  ValueBinding binding =
+    		  Util.getBinding("#{viewModulesPage}");
+    	  ViewModulesPage vmPage = (ViewModulesPage)
+    	  binding.getValue(ctx);
+    	  vmPage.setPrintable(null);
+    	  if (getRole()!= null && (getRole().equals("INSTRUCTOR") || getRole().equals("STUDENT"))){
+    		  if ((moduleDateBeans != null)&&(moduleDateBeans.size() > 0))
+    		  {
+    			  mdbean = (ModuleDateBean) moduleDateBeans.get(selModIndex);
+    			  vmPage.setModuleId(mdbean.getModuleId());
+    			  vmPage.setMdbean(null);
+    			  vmPage.setPrevMdbean(null);
+    			  CourseModuleService cmod = (CourseModuleService) mdbean.getCmod();
+    			  vmPage.setModuleSeqNo(cmod.getSeqNo());
+    			  vmPage.setAutonumber(null);
+    		  }
+    	  }
 
       }
 
@@ -491,10 +503,21 @@ public class ListModulesPage implements Serializable{
         FacesContext ctx = FacesContext.getCurrentInstance();
 
         Map params = ctx.getExternalContext().getRequestParameterMap();
-	  	int selModIndex = Integer.parseInt((String) params.get("modidx"));
-	  	int selSecIndex = Integer.parseInt((String) params.get("secidx"));
-
-
+        int selModIndex,selSecIndex;
+        if(params != null && params.containsKey("modidx")&& params.containsKey("secidx"))
+        {
+	  	 selModIndex = Integer.parseInt((String) params.get("modidx"));
+	  	 selSecIndex = Integer.parseInt((String) params.get("secidx"));
+        }
+        else 
+        {
+        	ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+			String Errmsg = bundle.getString("error_view_section");
+			FacesMessage msg =new FacesMessage(Errmsg);
+		  	msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			ctx.addMessage (null, msg);
+			return;
+        }
 		ModuleObjService mod = null;
 		SectionBean secBean = null;
 		int modSeqNo = 0;
