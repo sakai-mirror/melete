@@ -138,7 +138,7 @@ return newWindow;
 	 	 </h:outputLink>
        </h:column>  
       </h:dataTable>   
-      <h:messages showDetail="true" showSummary="false" rendered="#{listModulesPage.nomodsFlag == listModulesPage.trueFlag}" style="text-align:left"/>
+      <h:outputText id="nomodstext" value="#{msgs.no_modules}" rendered="#{listModulesPage.nomodsFlag}" style="text-align:left"/>    
 	  </td></tr>
 	  <tr>
          <td  height="20" colspan="4" class="maintabledata5">&nbsp;   </td>
