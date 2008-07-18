@@ -958,14 +958,14 @@ public class ModuleDB implements Serializable {
 		boolean success = dir.renameTo(new File(del_fname));
 		return success;
     }
-// one more attempt 
+// one more attempt
     public void deleteModules(List delModules, List allModules, String courseId, String userId) throws Exception
 	{
     	logger.debug("deleteModules begin");
 		long starttime = System.currentTimeMillis();
 		Transaction tx = null;
 		try
-		{	
+		{
 			// Get resources for modules that need to be deleted
 			List delResourcesList = getActiveResourcesFromList(delModules);
 			if(delModules.size() != allModules.size())
@@ -990,15 +990,25 @@ public class ModuleDB implements Serializable {
 				Module dm = (Module) dmIter.next();
 				allModuleIds.append(dm.getModuleId().toString() + ",");
 				Map delSections = dm.getSections();
-				if (delSections != null && !delSections.isEmpty()) 
+				if (delSections != null && !delSections.isEmpty())
 				{
 					for (Iterator i = delSections.keySet().iterator(); i.hasNext();)
 					{
 						allSectionIds.append(i.next() + ",");
 					}
 				}
+
+				Map delDeletedSections = dm.getDeletedSections();
+				if (delDeletedSections != null && !delDeletedSections.isEmpty())
+				{
+					for (Iterator i1 = delDeletedSections.keySet().iterator(); i1.hasNext();)
+					{
+						allSectionIds.append(i1.next() + ",");
+					}
+				}
+
 				// record seq_no and id
-				DelModuleInfoList.add(new DelModuleInfo(dm.getModuleId().toString(),dm.getCoursemodule().getSeqNo())); 
+				DelModuleInfoList.add(new DelModuleInfo(dm.getModuleId().toString(),dm.getCoursemodule().getSeqNo()));
 			}
 			if (allModuleIds.lastIndexOf(",") != -1) delModuleIds = allModuleIds.substring(0, allModuleIds.lastIndexOf(",")) + " )";
 
@@ -1014,14 +1024,14 @@ public class ModuleDB implements Serializable {
 
 			Session session = hibernateUtil.currentSession();
 			tx = session.beginTransaction();
-			
+
 			if (delSectionIds != null)
 			{
 				int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
 				logger.debug("section resource deleted" + deletedEntities);
 				deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
 			}
-			
+
 			if (delModuleIds != null)
 			{
 				int deletedEntities = session.createQuery(delSectionStr).executeUpdate();
@@ -1055,7 +1065,7 @@ public class ModuleDB implements Serializable {
 			      meleteCHService.removeResource(delResourceId);
 		          }
 	    	    }
-			  tx.commit(); 
+			  tx.commit();
 		}
 		catch (HibernateException he)
 		{
@@ -1087,10 +1097,10 @@ public class ModuleDB implements Serializable {
 
 		logger.debug("delete modules ends " + (endtime - starttime));
 	}
-	
-    
-    
-    
+
+
+
+
     // Deletemodule bulk method
     /*
     public void deleteModules(List delModules, String courseId, String userId) throws Exception {
@@ -2097,7 +2107,7 @@ public class ModuleDB implements Serializable {
 			{
 				if (autonumber) {
  						printText = new StringBuffer("<h3>" + module.getCoursemodule().getSeqNo() +".  " +module.getTitle() + "</h3>");
-				} else {		
+				} else {
  						printText = new StringBuffer("<h3>" + module.getTitle() + "</h3>");
 				};
 				SubSectionUtilImpl ssuImpl = new SubSectionUtilImpl();
@@ -2141,7 +2151,7 @@ public class ModuleDB implements Serializable {
 								printText.append("<a href=\"" + url + "\" target=\"_blank\">");
 								printText.append(resource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
 								printText.append("</a>");
-							}						
+							}
 
 						}
 		  			}
@@ -2359,7 +2369,7 @@ public class ModuleDB implements Serializable {
 						}
 						catch(Exception e){
 							e.printStackTrace();
-							logger.info("error deleting extra section and resources " + allSecIds);							
+							logger.info("error deleting extra section and resources " + allSecIds);
 						}
 
 					}
@@ -2541,7 +2551,7 @@ public class ModuleDB implements Serializable {
 		{
 			return this.id;
 		}
-		
+
 		/**
 		 * @return the seq
 		 */
@@ -2549,11 +2559,11 @@ public class ModuleDB implements Serializable {
 		{
 			return this.seq;
 		}
-		
+
 		public int compareTo(DelModuleInfo n) {
 			if (this.seq > n.seq) return 1;
 			if (this.seq < n.seq) return -1;
-			if (this.seq == n.seq) return 0;	
+			if (this.seq == n.seq) return 0;
 			return 0;
 		}
 	}
