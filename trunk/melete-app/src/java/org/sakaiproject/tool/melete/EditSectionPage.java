@@ -848,7 +848,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		SectionObjService prevSection = null;
 		try
 		{
-			//prevSection = sectionService.getPrevSection(section.getSectionId().toString(), module.getSeqXml());
+			prevSection = sectionService.getPrevSection(section.getSectionId().toString(), module.getSeqXml());
 		}
 		catch (Exception e)
 		{

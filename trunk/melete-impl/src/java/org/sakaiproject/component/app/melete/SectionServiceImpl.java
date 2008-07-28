@@ -435,7 +435,20 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			}
 		  return null;	
 	  }
-
+	  
+	  public SectionObjService getPrevSection(String curr_id, String seqXML) throws Exception
+	  {
+		  SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
+		  org.w3c.dom.Document sectionDocument = SectionUtil.getSubSectionW3CDOM(seqXML);
+		  org.w3c.dom.Element currItem = sectionDocument.getElementById(curr_id);
+		  org.w3c.dom.Element prevItem = SectionUtil.getPrevSection(currItem);
+			if (prevItem != null)
+			{
+				SectionObjService prevSection = getSection(Integer.parseInt(prevItem.getAttribute("id")));				
+				return prevSection;
+			}
+		  return null;	
+	  }
 
 	/**
 	 * @return Returns the sectiondb.

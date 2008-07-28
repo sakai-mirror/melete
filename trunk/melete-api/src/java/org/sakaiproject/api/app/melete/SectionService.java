@@ -66,4 +66,5 @@ public interface SectionService{
    public void deleteResourceInUse(String delResourceId,String courseId) throws Exception;
    public int cleanUpDeletedSections() throws Exception;
    public SectionObjService getNextSection(String curr_id, String seqXML) throws Exception;
+   public SectionObjService getPrevSection(String curr_id, String seqXML) throws Exception;
 }
