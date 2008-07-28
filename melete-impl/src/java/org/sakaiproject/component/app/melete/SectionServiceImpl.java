@@ -106,7 +106,9 @@ public class SectionServiceImpl implements Serializable, SectionService{
 		sectiondb= getSectiondb();
 	}
 
-
+	public void destroy(){
+		logger.debug(this +".destroy()");
+	}
 
 	public Integer insertSection(ModuleObjService module, SectionObjService section) throws MeleteException
 	{
@@ -409,8 +411,6 @@ public class SectionServiceImpl implements Serializable, SectionService{
 		  return resourceUseList;
 	  }
 
-
-
 	  public void deleteResourceInUse(String delResourceId,String courseId) throws Exception
 	  {
 		  sectiondb.deleteResourceInUse(delResourceId, courseId);
@@ -422,7 +422,19 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			return noOfDeleted;
 	  }
 
-
+	  public SectionObjService getNextSection(String curr_id, String seqXML) throws Exception
+	  {
+		  SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
+		  org.w3c.dom.Document sectionDocument = SectionUtil.getSubSectionW3CDOM(seqXML);
+		  org.w3c.dom.Element currItem = sectionDocument.getElementById(curr_id);
+		  org.w3c.dom.Element nextItem = SectionUtil.getNextSection(currItem);
+			if (nextItem != null)
+			{
+				SectionObjService nextSection = getSection(Integer.parseInt(nextItem.getAttribute("id")));				
+				return nextSection;
+			}
+		  return null;	
+	  }
 
 
 	/**

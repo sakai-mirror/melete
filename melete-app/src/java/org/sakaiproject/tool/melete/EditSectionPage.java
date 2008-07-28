@@ -38,6 +38,7 @@ import org.sakaiproject.component.app.melete.MeleteResource;
 import org.sakaiproject.component.app.melete.ModuleDateBean;
 import org.sakaiproject.component.app.melete.Section;
 import org.sakaiproject.component.app.melete.SectionResource;
+import org.sakaiproject.component.app.melete.SubSectionUtilImpl;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.content.api.ContentResourceEdit;
@@ -71,7 +72,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	private boolean shouldRenderServerResources = false;
 
 	private boolean shouldRenderLocalUpload = false;
-
+	
 	public EditSectionPage()
 	{
 		setFormName("EditSectionForm");
@@ -396,7 +397,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 
 		// create new instance of section model
-		setSection(null);
+	setSection(null);
 		resetSectionValues();
 		setSizeWarning(false);
 
@@ -489,8 +490,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		m_selected_license = null;
 		selectedResourceName = null;
 		selectedResourceDescription = null;
-		selectedResource = null;
-
+		selectedResource = null;		
 		super.resetSectionValues();
 	}	
 	
@@ -802,5 +802,68 @@ public class EditSectionPage extends SectionPage implements Serializable
 		this.shouldRenderLocalUpload = shouldRenderLocalUpload;
 	}
 
+	public String editNextSection()
+	{
+		setSuccess(false);
+		if (!saveHere().equals("failure"))
+		{
+			setSuccess(true);
+		}
+		else
+			return "editmodulesections";
 
+		// find Next Section/subsection
+		SectionObjService nextSection = null;
+		try
+		{
+			nextSection = sectionService.getNextSection(section.getSectionId().toString(), module.getSeqXml());
+		}
+		catch (Exception e)
+		{
+			logger.debug("error in finding next so probably this is the last one");
+			e.printStackTrace();			
+			return cancel();
+		}
+		// reset section model to refresh and set to next
+		setSection(null);
+		resetSectionValues();
+		setSizeWarning(false);
+		if(nextSection != null)
+			setEditInfo(nextSection);
+		else return cancel();
+		
+		return "editmodulesections";
+	}
+
+	public String editPrevSection()
+	{
+		setSuccess(false);
+		if (!saveHere().equals("failure"))
+		{
+			setSuccess(true);
+		}
+		else return "editmodulesections";
+
+		// find Next Section/subsection
+		SectionObjService prevSection = null;
+		try
+		{
+			//prevSection = sectionService.getPrevSection(section.getSectionId().toString(), module.getSeqXml());
+		}
+		catch (Exception e)
+		{
+			logger.debug("error in finding prev section to edit");
+			e.printStackTrace();			
+			return cancel();
+		}
+		// reset section model to refresh and set to next
+		setSection(null);
+		resetSectionValues();
+		setSizeWarning(false);
+		if(prevSection != null)
+			setEditInfo(prevSection);
+		else return cancel();
+		
+		return "editmodulesections";
+	}
 }

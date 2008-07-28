@@ -112,16 +112,27 @@ window.open('editpreviewEditor.jsf');
 		<div class="meletePortletToolBarMessage"><img src="images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.editmodulesections_editing_section}" /> </div>
 		 </td></tr>
 		  <tr>
-            <td height="20" class="maintabledata8">
-     			<h:commandLink id="TOCButton"  action="#{editSectionPage.cancel}"  immediate="true">
+            <td height="20" class="maintabledata8">            	   
+	     		<h:commandLink id="editPrevButton" onmousedown="transferEditordata();" action="#{editSectionPage.editPrevSection}">
+ 					 <h:outputText id="text4_4" value="#{msgs.editmodulesections_edit_prev}"/>
+				</h:commandLink> &laquo;
+     			<h:commandLink id="TOCButton"  action="#{editSectionPage.cancel}" immediate="true">
 						<h:outputText id="toc" value="#{msgs.editmodulesections_TOC}" />
 					</h:commandLink>
-				&raquo;  <h:outputText id="text4" value="#{editSectionPage.module.title}" /> &raquo; <h:outputText id="text4_1" value="#{editSectionPage.section.title}" /> &raquo; 
+				&raquo;   
+	     		<h:commandLink id="editNextButton" onmousedown="transferEditordata();" action="#{editSectionPage.editNextSection}">
+ 					 <h:outputText id="text4_2" value="#{msgs.editmodulesections_edit_next}"/>
+				</h:commandLink>  <h:outputText id="text4_3" value=" / "/>
 	     		<h:commandLink onmousedown="transferEditordata();" action="#{editSectionPage.saveAndAddAnotherSection}">
  					 <h:outputText id="text5" value="#{msgs.editmodulesections_add_new}"/>
 				</h:commandLink> 
 			</td>
-          </tr>		 
+          </tr>	
+          <tr>
+          	<td class="maintabledata8">
+          		<h:outputText id="text4" value="#{editSectionPage.module.title}" /> &raquo; <h:outputText id="text4_1" value="#{editSectionPage.section.title}" /> 
+          	</td>
+          </tr>	 
      	  <tr>
             <td  class="maintabledata7">
 			 <h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
