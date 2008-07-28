@@ -48,8 +48,8 @@ public class SubSectionUtilImpl {
 	private org.w3c.dom.Document subSectionW3CDOM;
 	 private Log logger = LogFactory.getLog(SubSectionUtilImpl.class);
 	 private List xmlSecList;
-	 private org.w3c.dom.Element currParent;
-	 private org.w3c.dom.Element currLastSection;
+	 private org.w3c.dom.Node currParent;
+	 private org.w3c.dom.Node currLastSection;
 
 	 public SubSectionUtilImpl() {
 		 xmlSecList = new ArrayList();
@@ -373,7 +373,9 @@ public class SubSectionUtilImpl {
 			currParent = currItem;
 			return (org.w3c.dom.Element)currItem.getFirstChild();
 			}
-
+		
+		if(currParent == null) currParent = currItem.getParentNode();
+		
 		if (currItem.equals((org.w3c.dom.Element)currParent.getLastChild()))
 		{
 			while(true)
@@ -384,11 +386,11 @@ public class SubSectionUtilImpl {
 				currItem = (org.w3c.dom.Element)currParent.getNextSibling();
 				if (currItem == null) {
 					logger.debug("going a level up to fetch sibling");
-					currItem = currParent;
-					currParent = (org.w3c.dom.Element)currItem.getParentNode();
+					currItem = (org.w3c.dom.Element)currParent;
+					currParent = currItem.getParentNode();
 					continue;
 				}
-				currParent = (org.w3c.dom.Element)currItem.getParentNode();
+				currParent = currItem.getParentNode();
 				return currItem;
 				} else return null;
 			}
