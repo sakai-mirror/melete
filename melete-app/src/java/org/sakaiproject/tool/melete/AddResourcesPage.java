@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.List;
 import java.util.Iterator;
+import java.io.File;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -80,15 +81,16 @@ public class AddResourcesPage {
         /*
          * get from session
          */
+	  	  if(maxUploadSize == 0)
+	  	  {
           FacesContext context = FacesContext.getCurrentInstance();
           Map sessionMap = context.getExternalContext().getSessionMap();
-
-
-         int sz = Integer.parseInt((String)sessionMap.get("maxSize"));
-          if (logger.isDebugEnabled()) logger.debug("Size is "+sz);
-
-
-        return sz;
+          maxUploadSize = 2;
+          if((String)sessionMap.get("maxSize") != null)
+        	  maxUploadSize = Integer.parseInt((String)sessionMap.get("maxSize"));
+          if (logger.isDebugEnabled()) logger.debug("Size is "+maxUploadSize);
+	  	  }
+        return maxUploadSize;
   }
 
   public void resetValues()
@@ -96,6 +98,7 @@ public class AddResourcesPage {
 	  this.utList = null;
 	  this.numberItems = null;
 	  this.fileType = null;
+	  maxUploadSize = 0;
   }
   public void cancelResetValues()
   {
@@ -467,5 +470,25 @@ public void setTable(UIData table)
 	this.table = table;
 }
 
+public boolean validateFile(String up_field)
+{
+	File f = new File(up_field);
+	try{
+	Util.validateUploadFileName(f.getName());
+	} catch(MeleteException me)
+	{		
+		return false;
+	}	
+	return true;
+}
+
+public boolean validateFileSize(String up_field)
+{
+	File f = new File(up_field);
+	//1 MB = 1048576 bytes
+	if (new Long((f.length()/1048576)).intValue() > getMaxUploadSize())
+		return false;
+	return true;
+}
 }
 
