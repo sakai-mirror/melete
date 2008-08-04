@@ -923,11 +923,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 						checkforimgs = meleteUtil.replace(checkforimgs, patternStr, replaceStr);
 					}
 					// process links and append http:// protocol if not provided
-					else if (!fileName.startsWith("/access")
-							&& foundLink != null
-							&& foundLink.equals("link")
-							&& !(fileName.startsWith("http://") || fileName.startsWith("https://") || fileName.startsWith("mailto:") || fileName
-									.startsWith("#")))
+					else if (!(fileName.startsWith("/") || fileName.startsWith("./") || fileName.startsWith("../") || fileName.startsWith("#"))
+							&& foundLink != null && foundLink.equals("link") 
+							&& !(fileName.startsWith("http://") || fileName.startsWith("https://") || fileName.startsWith("mailto:")))
 					{
 						logger.debug("processing embed link src for appending protocol");
 						String replaceLinkStr = "http://" + fileName;
