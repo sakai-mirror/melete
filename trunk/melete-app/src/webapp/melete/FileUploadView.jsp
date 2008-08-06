@@ -182,7 +182,8 @@ function validateFileName(divID, sourceID)
 		</td>
         </tr>
         <tr>
-        <td class="maintabledata3">        
+        <td class="maintabledata3">   
+        <h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>     
 		  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
 		  	<tr>
 		  		<td height="20" class="maintabledata5"><h:outputText id="t1_1" value="#{msgs.manage_content_new_item}" styleClass="tableheader2"/> 
