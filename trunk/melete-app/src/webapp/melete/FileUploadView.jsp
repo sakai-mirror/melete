@@ -39,6 +39,72 @@ function loadInputs()
   {
    document.getElementById("choose"+i).style.display='block';
   }   
+   showErrorMsgs();
+   showSuccessMsgs();
+}
+
+function showErrorMsgs()
+{
+  var errStr=document.getElementById("FileUploadForm:err_field_msgs").value;
+   var end = 0;
+   var len = 0;
+   var idx;
+   var msg;
+  if(errStr != null)
+  {
+   len = errStr.length; 
+   while(errStr != null && (end = errStr.indexOf(",")) != -1)
+  	{
+  	idx = errStr.substring(1,end);
+  	errStr = errStr.substring(end+1,len);
+  	len = errStr.length;  
+  	if((end = errStr.indexOf(",")) != -1)
+  	{
+  	msg = errStr.substring(1,end);
+  	errStr = errStr.substring(end+1,len);
+  	len = errStr.length;   	
+   	}
+   	else
+   	{
+   	msg = errStr.substring(1,len-1);
+   	errStr = null;
+   	}   	
+   	document.getElementById("errMsg"+idx).innerHTML=msg;
+  	}
+  }
+}
+
+function showSuccessMsgs()
+{
+  var successStr=document.getElementById("FileUploadForm:success_field_msgs").value;
+   var end = 0;
+   var len = 0;
+   var idx;
+   var msg;
+  if(successStr != null)
+  {
+   len = successStr.length; 
+   while(successStr != null && (end = successStr.indexOf(",")) != -1)
+  	{
+  	idx = successStr.substring(1,end);
+  	successStr = successStr.substring(end+1,len);
+  	len = successStr.length;  
+  	if((end = successStr.indexOf(",")) != -1)
+  	{
+  	msg = successStr.substring(1,end);
+  	successStr = successStr.substring(end+1,len);
+  	len = successStr.length;   	
+   	}
+   	else
+   	{
+   	msg = successStr.substring(1,len-1);
+   	successStr = null;
+   	}   	
+   	document.getElementById("choose"+idx).style.display='none';
+   	document.getElementById("show"+idx).style.display='block';
+   	document.getElementById("show"+idx).innerHTML=msg;
+  	}
+  }
 }
 function showInputs()
 {
@@ -116,8 +182,7 @@ function validateFileName(divID, sourceID)
 		</td>
         </tr>
         <tr>
-        <td class="maintabledata3">
-          <h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
+        <td class="maintabledata3">        
 		  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
 		  	<tr>
 		  		<td height="20" class="maintabledata5"><h:outputText id="t1_1" value="#{msgs.manage_content_new_item}" styleClass="tableheader2"/> 
@@ -154,6 +219,8 @@ function validateFileName(divID, sourceID)
 		  	<tr>
 			  <td>
 			  <br>
+			  	<h:inputHidden id="err_field_msgs" value="#{addResourcesPage.err_fields}" />
+			  	<h:inputHidden id="success_field_msgs" value="#{addResourcesPage.success_fields}" />
 			  </td>
 			</tr>
           <tr>
@@ -164,6 +231,7 @@ function validateFileName(divID, sourceID)
 			<div id="errMsg1" style="color:red">
 				<p> </p>
 			</div>		
+			
 			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile1" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload1"><INPUT TYPE="FILE" id="file1" NAME="file1" onchange="validateFileName('errMsg1','file1')"/>
 			<img src="images/remove_item.png"/>
@@ -171,12 +239,15 @@ function validateFileName(divID, sourceID)
 			</span>
 			<br>
 			</div>
-		
+			<div id="show1" class="fileclass" style="color:blue;display:none">
+			<p></p>			
+			</div>
 			<div id="choose2" class="fileclass" style="display:none">
 			<br>
 			<div id="errMsg2" style="color:red">
 				<p> </p>
 			</div>		
+
 			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile2" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload2"><INPUT TYPE="FILE" id="file2" NAME="file2" onchange="validateFileName('errMsg2','file2')"/>
 			<img src="images/remove_item.png"/>
@@ -184,12 +255,16 @@ function validateFileName(divID, sourceID)
 			</span>
 			<br>
 			</div>
-		
+			<div id="show2" class="fileclass" style="color:blue;display:none">
+			<p></p>			
+			</div>
+			
 			<div id="choose3" class="fileclass" style="display:none">
 			<br>
 			<div id="errMsg3" style="color:red">
 				<p>  </p>
-			</div>		
+			</div>	
+	
 			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile3" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload3"><INPUT TYPE="FILE" id="file3" NAME="file3" onchange="validateFileName('errMsg3','file3')"/>
 			<img src="images/remove_item.png"/>
@@ -197,7 +272,10 @@ function validateFileName(divID, sourceID)
 			</span>
 			<br>
 			</div>
-		
+			<div id="show3" class="fileclass" style="color:blue;display:none">
+			<p></p>			
+			</div>
+			
 			<div id="choose4" class="fileclass" style="display:none">
 			<br>
 			<div id="errMsg4" style="color:red">
@@ -210,7 +288,10 @@ function validateFileName(divID, sourceID)
 			</span>
 			<br>
 			</div>
-
+			<div id="show4" class="fileclass" style="color:blue;display:none">
+			<p></p>			
+			</div>
+			
             <div id="choose5" class="fileclass" style="display:none">
 			<br>
 			<div id="errMsg5" style="color:red">
@@ -223,7 +304,10 @@ function validateFileName(divID, sourceID)
 			</span>
 			<br>
 			</div>
-		
+			<div id="show5" class="fileclass" style="color:blue;display:none">
+			<p></p>			
+			</div>
+			
 			<div id="choose6" class="fileclass" style="display:none">
 			<br>
 			<div id="errMsg6" style="color:red">
@@ -236,7 +320,10 @@ function validateFileName(divID, sourceID)
 			</span>
 			<br>
 			</div>
-		
+			<div id="show6" class="fileclass" style="color:blue;display:none">
+			<p></p>			
+			</div>
+			
 			<div id="choose7" class="fileclass" style="display:none">
 			<br>
 			<div id="errMsg7" style="color:red">
@@ -249,7 +336,10 @@ function validateFileName(divID, sourceID)
 			</span>
 			<br>
 			</div>
-		
+			<div id="show7" class="fileclass" style="color:blue;display:none">
+			<p></p>			
+			</div>
+			
 			<div id="choose8" class="fileclass" style="display:none">
 			<br>
 			<div id="errMsg8" style="color:red">
@@ -262,6 +352,9 @@ function validateFileName(divID, sourceID)
 			</span>
 			<br>
 			</div>			
+			<div id="show8" class="fileclass" style="color:blue;display:none">
+			<p></p>			
+			</div>
 			
             <div id="choose9" class="fileclass" style="display:none">
             <br>
@@ -275,6 +368,9 @@ function validateFileName(divID, sourceID)
 			</span>
 			<br>
 			</div>	
+			<div id="show9" class="fileclass" style="color:blue;display:none">
+			<p></p>			
+			</div>
 			
 			<div id="choose10" class="fileclass" style="display:none">
 			<br>
@@ -288,6 +384,9 @@ function validateFileName(divID, sourceID)
 			</span>
 			<br>
 			</div>	
+			<div id="show10" class="fileclass" style="color:blue;display:none">
+			<p></p>			
+			</div>
 			</p>
 	        </td>
 	     </tr>	
