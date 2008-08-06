@@ -477,9 +477,9 @@ public void setTable(UIData table)
 
 public boolean validateFile(String up_field)
 {
-	File f = new File(up_field);
+//	File f = new File(up_field);
 	try{
-	Util.validateUploadFileName(f.getName());
+	Util.validateUploadFileName(up_field);
 	} catch(MeleteException me)
 	{		
 		return false;
