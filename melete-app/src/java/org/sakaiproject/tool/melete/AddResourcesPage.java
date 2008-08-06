@@ -58,7 +58,8 @@ public class AddResourcesPage {
   private List utList;
   protected MeleteCHService meleteCHService;
   private UIData table;
-
+  private ArrayList<String> err_fields = null;
+  private ArrayList<String> success_fields = null;
   /** Dependency:  The logging service. */
   protected Log logger = LogFactory.getLog(AddResourcesPage.class);
 
@@ -98,7 +99,9 @@ public class AddResourcesPage {
 	  this.utList = null;
 	  this.numberItems = null;
 	  this.fileType = null;
-	  maxUploadSize = 0;
+	  this.maxUploadSize = 0;
+	  err_fields = null;
+	  success_fields = null;
   }
   public void cancelResetValues()
   {
@@ -141,34 +144,8 @@ public class AddResourcesPage {
 	      context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
 		  return "failure";
         }
-	    for (int i=1; i<=10; i++)
-        {
-		  //Validate first, if any fields have a problem, display a message  
-    	  try
-          {
-              org.apache.commons.fileupload.FileItem fi = (org.apache.commons.fileupload.FileItem) context.getExternalContext().getRequestMap().get("file"+i);
-
-              if(fi !=null && fi.getName() != null && fi.getName().length() !=0)
-              {
-                 Util.validateUploadFileName(fi.getName());
-               }
-               else
-               {
-                  logger.info("File being uploaded is NULL");
-                  continue;
-                }
-           }
-           catch (MeleteException mex)
-           {
-             String errMsg = bundle.getString(mex.getMessage());
-  	         context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"embed_img_bad_filenames",bundle.getString("embed_img_bad_filenames")));
-		     return "failure";
-           }
-           catch(Exception e)
-           {
-             logger.error("file upload FAILED" + e.toString());
-           }
-        }
+	   
+	    
         for (int i=1; i<=10; i++)
         {
     	  try
@@ -177,6 +154,9 @@ public class AddResourcesPage {
 
               if(fi !=null && fi.getName() != null && fi.getName().length() !=0)
               {
+            	  //validate fileName
+            	  Util.validateUploadFileName(fi.getName());
+            	  validateFileSize(fi.getSize()); 
                   // filename on the client
                  secResourceName = fi.getName();
                  if (secResourceName.indexOf("/") != -1)
@@ -201,6 +181,9 @@ public class AddResourcesPage {
                  if (logger.isDebugEnabled()) logger.debug("new names for upload content is" + secContentMimeType +"," + secResourceName);
 
                  addItem(secResourceName,secContentMimeType, addCollId, secContentData);
+                 if(success_fields == null) success_fields = new ArrayList<String>();
+                 success_fields.add(new Integer(i).toString());  
+                 success_fields.add(bundle.getString("add_item_success") + secResourceName);
                }
                else
                {
@@ -210,14 +193,25 @@ public class AddResourcesPage {
           }
           catch (MeleteException mex)
           {
-          String errMsg = bundle.getString(mex.getMessage());
-  	      context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
-		  return "failure";
+        	  String mexMsg = mex.getMessage();
+           if(mex.getMessage().equals("embed_img_bad_filename"))mexMsg = "img_bad_filename";
+          String errMsg = bundle.getString(mexMsg);
+  	   //   context.addMessage ("FileUploadForm:chooseFile"+i, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
+  	    //  logger.error("error in uploading multiple files" + errMsg);
+  	      if(err_fields == null) err_fields = new ArrayList<String>();
+  	      err_fields.add(new Integer(i).toString());  
+  	      err_fields.add(errMsg);
+		  //return "failure";
           }
           catch(Exception e)
           {
-          logger.error("file upload FAILED" + e.toString());
+          logger.error("file upload FAILED" + e.toString());                 
           }
+      }
+      if(err_fields != null)
+      {
+    	  logger.debug("err found in fields" + err_fields.toString());
+    	  return "file_upload_view";
       }
 	  }  
 	  
@@ -470,6 +464,17 @@ public void setTable(UIData table)
 	this.table = table;
 }
 
+/*public boolean validateFile(String up_field_name)
+{
+	  FacesContext ctx = FacesContext.getCurrentInstance();
+	  org.apache.commons.fileupload.FileItem fi = (org.apache.commons.fileupload.FileItem) ctx.getExternalContext().getRequestMap().get(up_field_name);
+	  if(fi != null)
+	  {
+		  System.out.println("file throu apache uploads is not null" + fi.getName());
+	  } else System.out.println("fi is null");
+	  return true;
+}*/
+
 public boolean validateFile(String up_field)
 {
 	File f = new File(up_field);
@@ -482,13 +487,28 @@ public boolean validateFile(String up_field)
 	return true;
 }
 
-public boolean validateFileSize(String up_field)
+public void validateFileSize(long sz) throws MeleteException
 {
-	File f = new File(up_field);
 	//1 MB = 1048576 bytes
-	if (new Long((f.length()/1048576)).intValue() > getMaxUploadSize())
-		return false;
-	return true;
+	if (new Long((sz/1048576)).intValue() > getMaxUploadSize())
+		throw new MeleteException("file_too_large");	
 }
+
+/**
+ * @return the err_fields
+ */
+public ArrayList<String> getErr_fields()
+{
+	return this.err_fields;
+}
+
+/**
+ * @return the success_fields
+ */
+public ArrayList<String> getSuccess_fields()
+{
+	return this.success_fields;
+}
+
 }
 
