@@ -95,6 +95,10 @@ SETUP INSTRUCTIONS
                               ***** END OF OPTIONAL STEP **********
 
 3. Compile Melete
+   In the /pom.xml file, set the version to your sakai version.
+   Eg. If your sakai version is 2.5.0, in /pom.xml, you would have:
+     <version>2.5.0</version>
+     
 	 On the command prompt, go to the melete source directory which you placed 
 	under sakai and run maven commands just like you did for sakai.
 	
