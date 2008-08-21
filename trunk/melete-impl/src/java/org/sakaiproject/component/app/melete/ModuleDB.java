@@ -2142,8 +2142,8 @@ public class ModuleDB implements Serializable {
 							{
 								byte[] data = resource.getContent();
 							//	printText.append("<p>" + new String(data) + "</p>");
-								printText.append(new String(data));
-							}
+								if(data != null && data.length != 0)
+									printText.append(new String(data));							}
 							if (sec.getContentType().equals("typeLink") || sec.getContentType().equals("typeUpload"))
 							{
 								String url = resource.getUrl();
@@ -2194,7 +2194,8 @@ public class ModuleDB implements Serializable {
 		licenseStr = rl.getString("license_info_copyright");
 		if (melResource.getCopyrightYear() != null)
 			licenseStr += melResource.getCopyrightYear()+", ";
-		licenseStr += melResource.getCopyrightOwner();
+		if (melResource.getCopyrightOwner() != null)
+			licenseStr += melResource.getCopyrightOwner();
 		}
 
 		if(melResource.getLicenseCode() == 2)
