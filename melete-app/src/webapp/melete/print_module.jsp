@@ -1,6 +1,6 @@
 <%@ page import="org.sakaiproject.tool.melete.PrintModulePage,javax.faces.application.FacesMessage, java.util.ResourceBundle"%>
 <html>
-<link rel="stylesheet" href="rtbc004.css" type="text/css">
+<link rel="stylesheet" href="rtbc004.css" type="text/css" media="all">
 <link href="/library/skin/tool_base.css" type="text/css" rel="stylesheet" media="all" />
 <link href="/library/skin/default/tool.css" type="text/css" rel="stylesheet" media="all" />
 <title>Melete - Print Module</title>
