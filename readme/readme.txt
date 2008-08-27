@@ -119,7 +119,7 @@ SETUP INSTRUCTIONS
 	 On the command prompt, go to the melete source directory which you placed 
 	under sakai and run maven commands just like you did for sakai.
 	
-	To build, run 'maven sakai:build' and then to deploy 'maven sakai:deploy'
+	To build, run 'mvn sakai:build' and then to deploy 'mvn clean install sakai:deploy'
 	
 	(for more instructions, see section titled 'Sakai Maven Goals' in the 
 	"How we build Sakai Using Maven" document provided by Sakai lead developers)
