@@ -101,7 +101,10 @@ function showIframe()
                            value="#{viewSectionsPage.linkName}">
       </h:outputText>
     </h:outputLink>
-   <iframe   id="iframe1" src="<h:outputText value="#{viewSectionsPage.content}" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink)&&(viewSectionsPage.linkName != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == false))}"/>" style="visibility:visible" scrolling="auto" width="100%"  height="700" border="0" frameborder="0"></iframe>
+    <h:outputText value="<iframe id=\"iframe1\" src=\"#{viewSectionsPage.content}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
+    border=\"0\" frameborder= \"0\"></iframe>" rendered="#{((viewSectionsPage.section.contentType ==viewSectionsPage.typeLink)&&(viewSectionsPage.linkName !=
+    viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
+
    <h:outputText value="#{viewSectionsPage.content}" escape="false" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeEditor)&&(viewSectionsPage.content != viewSectionsPage.nullString))}"/>
   <iframe id="iframe2" src="<h:outputText value="#{viewSectionsPage.contentLink}" />" style="visibility:visible" scrolling="auto" width="100%"  height="700" border="0" frameborder="0"></iframe>
 	</td>
