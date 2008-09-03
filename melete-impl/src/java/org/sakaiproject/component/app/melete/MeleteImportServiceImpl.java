@@ -1069,7 +1069,10 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			if (hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")) {
 //				link
 				section.setContentType("typeLink");
-				section.setOpenWindow(true);
+				//The statement below means- for IMS import all link sections
+				//are opened in a new window. For Import from site, they preserve
+				//the setting in the site being imported from
+				if (resElements != null) section.setOpenWindow(true);
 				// get url title if provided in IMS
 				String urlTitle = "";
 				if(resElements != null){
