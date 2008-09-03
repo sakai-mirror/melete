@@ -73,6 +73,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 	private boolean shouldRenderLocalUpload = false;
 	
+	private Boolean hasNext = false;
+	
+	private Boolean hasPrev = false;
+	
 	public EditSectionPage()
 	{
 		setFormName("EditSectionForm");
@@ -490,7 +494,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 		m_selected_license = null;
 		selectedResourceName = null;
 		selectedResourceDescription = null;
-		selectedResource = null;		
+		selectedResource = null;	
+		hasNext = null;
+		hasPrev = null;
 		super.resetSectionValues();
 	}	
 	
@@ -802,6 +808,26 @@ public class EditSectionPage extends SectionPage implements Serializable
 		this.shouldRenderLocalUpload = shouldRenderLocalUpload;
 	}
 
+	public boolean isHasNext()
+	{		
+		SectionObjService nextSection = null;
+		if (hasNext == null)
+		{
+			hasNext = false;
+			try
+			{
+				nextSection = sectionService.getNextSection(section.getSectionId().toString(), module.getSeqXml());
+				
+				if (nextSection != null) hasNext = true;
+			}
+			catch (Exception e)
+			{
+
+			}
+		}
+		return hasNext.booleanValue();
+	}
+	
 	public String editNextSection()
 	{
 		setSuccess(false);
@@ -835,6 +861,25 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editmodulesections";
 	}
 
+	public boolean isHasPrev()
+	{
+		SectionObjService prevSection = null;	
+		if (hasPrev == null)
+		{
+			hasPrev = false;
+			try
+			{
+				prevSection = sectionService.getPrevSection(section.getSectionId().toString(), module.getSeqXml());
+				if(prevSection != null)hasPrev = true;
+			}
+			catch (Exception e)
+			{
+
+			}
+		}
+		return hasPrev.booleanValue();
+	}
+	
 	public String editPrevSection()
 	{
 		setSuccess(false);
@@ -865,5 +910,22 @@ public class EditSectionPage extends SectionPage implements Serializable
 		else return cancel();
 		
 		return "editmodulesections";
+	}
+
+	public String goTOC()
+	{
+		setSuccess(false);
+		if (!saveHere().equals("failure"))
+		{
+			setSuccess(true);
+		}
+		else
+			return "editmodulesections";
+	
+		// reset section model to refresh
+		setSection(null);
+		resetSectionValues();
+		setSizeWarning(false);		
+		return cancel();
 	}
 }
