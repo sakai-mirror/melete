@@ -8,37 +8,10 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
-<script language="javascript1.2">
-function showIframe()
-{
- 	var contentTypeStr=document.getElementById("viewsectionform:contentType").value;
-    var openWindowStr=document.getElementById("viewsectionform:openWindow").value;
-  
-	if (contentTypeStr.match("typeEditor")||(contentTypeStr.match("typeUpload")&&openWindowStr.match("true"))||(contentTypeStr.match("typeLink")&&openWindowStr.match("true")))
-	{
-		document.getElementById("iframe1").style.visibility="hidden";
-		document.getElementById("iframe1").style.display="none";
-		
-		document.getElementById("iframe2").style.visibility="hidden";
-		document.getElementById("iframe2").style.display="none";
-	}
-	if (contentTypeStr.match("typeLink")&& openWindowStr.match("false"))
-	{
-	    document.getElementById("iframe2").style.visibility="hidden";
-		document.getElementById("iframe2").style.display="none";
-	}	
-	if (contentTypeStr.match("typeUpload")&& openWindowStr.match("false"))
-	{
-	    document.getElementById("iframe1").style.visibility="hidden";
-		document.getElementById("iframe1").style.display="none";
-	}
-}	
-
-</script>
 </head>
 
 <f:view>
-<body onLoad="showIframe(),setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
+<body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
 <a name="newanchor"></a>
 <h:form id="viewsectionform">       
 <table height="470" border="0" cellpadding="20"  width="100%" bordercolor="#EAEAEA" style="border-collapse: collapse" >
@@ -101,12 +74,14 @@ function showIframe()
                            value="#{viewSectionsPage.linkName}">
       </h:outputText>
     </h:outputLink>
-    <h:outputText value="<iframe id=\"iframe1\" src=\"#{viewSectionsPage.content}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
+    <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{viewSectionsPage.content}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
     border=\"0\" frameborder= \"0\"></iframe>" rendered="#{((viewSectionsPage.section.contentType ==viewSectionsPage.typeLink)&&(viewSectionsPage.linkName !=
     viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
 
    <h:outputText value="#{viewSectionsPage.content}" escape="false" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeEditor)&&(viewSectionsPage.content != viewSectionsPage.nullString))}"/>
-  <iframe id="iframe2" src="<h:outputText value="#{viewSectionsPage.contentLink}" />" style="visibility:visible" scrolling="auto" width="100%"  height="700" border="0" frameborder="0"></iframe>
+  
+	<h:outputText id="contentUploadFrame" value="<iframe id=\"iframe2\" src=\"#{viewSectionsPage.contentLink}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
+    border=\"0\" frameborder= \"0\"></iframe>" rendered="#{((viewSectionsPage.section.contentType ==viewSectionsPage.typeUpload)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
 	</td>
 	</tr>
 
