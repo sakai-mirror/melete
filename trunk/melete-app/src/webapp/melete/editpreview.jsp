@@ -64,7 +64,7 @@ function showIframe()
                            value="#{editSectionPage.secResourceName}">
                 </h:outputText>
                 </h:outputLink>	
-                <iframe  id="iframe1" src="<h:outputText value=\"#{editSectionPage.previewContentData}\"  rendered=\"#{(editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLink) && editSectionPage.section.openWindow == false}\"/>" style="visibility:visible" scrolling="auto" width="100%"  height="700" border="0" frameborder="0"></iframe>	
+                <iframe  id="iframe1" src="<h:outputText value="#{editSectionPage.previewContentData}"  rendered="#{(editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLink) && editSectionPage.section.openWindow == false}"/>" style="visibility:visible" scrolling="auto" width="100%"  height="700" border="0" frameborder="0"></iframe>	
                				
 		      </td></tr>
 	       
