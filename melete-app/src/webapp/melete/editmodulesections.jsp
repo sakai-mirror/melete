@@ -113,16 +113,20 @@ window.open('editpreviewEditor.jsf');
 		 </td></tr>
 		  <tr>
             <td height="20" class="maintabledata8">            	   
-	     		<h:commandLink id="editPrevButton" onmousedown="transferEditordata();" action="#{editSectionPage.editPrevSection}">
+	     		<h:commandLink id="editPrevButton" onmousedown="transferEditordata();" action="#{editSectionPage.editPrevSection}" rendered="#{editSectionPage.hasPrev}">
  					 <h:outputText id="text4_4" value="#{msgs.editmodulesections_edit_prev}"/>
-				</h:commandLink> &laquo;
-     			<h:commandLink id="TOCButton"  action="#{editSectionPage.cancel}" immediate="true">
+				</h:commandLink> 
+				<h:outputText id="text4_5" value="#{msgs.editmodulesections_edit_prev}" rendered="#{!editSectionPage.hasPrev}"/>
+				&laquo;
+     			<h:commandLink id="TOCButton"  onmousedown="transferEditordata();" action="#{editSectionPage.goTOC}">
 						<h:outputText id="toc" value="#{msgs.editmodulesections_TOC}" />
 					</h:commandLink>
 				&raquo;   
-	     		<h:commandLink id="editNextButton" onmousedown="transferEditordata();" action="#{editSectionPage.editNextSection}">
+	     		<h:commandLink id="editNextButton" onmousedown="transferEditordata();" action="#{editSectionPage.editNextSection}" rendered="#{editSectionPage.hasNext}">
  					 <h:outputText id="text4_2" value="#{msgs.editmodulesections_edit_next}"/>
-				</h:commandLink>  <h:outputText id="text4_3" value=" / "/>
+				</h:commandLink>
+				<h:outputText id="text4_6" value="#{msgs.editmodulesections_edit_next}" rendered="#{!editSectionPage.hasNext}"/>
+				  <h:outputText id="text4_3" value=" / "/>				
 	     		<h:commandLink onmousedown="transferEditordata();" action="#{editSectionPage.saveAndAddAnotherSection}">
  					 <h:outputText id="text5" value="#{msgs.editmodulesections_add_new}"/>
 				</h:commandLink> 
