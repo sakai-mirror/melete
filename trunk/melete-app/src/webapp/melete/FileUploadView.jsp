@@ -50,10 +50,10 @@ function showErrorMsgs()
    var len = 0;
    var idx;
    var msg;
-  if(errStr != null)
+  if(errStr != undefined)
   {
    len = errStr.length; 
-   while(errStr != null && (end = errStr.indexOf(",")) != -1)
+   while(errStr != undefined && (end = errStr.indexOf(",")) != -1)
   	{
   	idx = errStr.substring(1,end);
   	errStr = errStr.substring(end+1,len);
@@ -110,7 +110,7 @@ function showInputs()
 {
   var str=document.getElementById("FileUploadForm:number").value;
   
-  for (i=2; i<=str; i++)
+  for (i=1; i<=str; i++)
   {
      document.getElementById("choose"+i).style.display='block';
   }
@@ -135,6 +135,7 @@ function clearItem(id)
   {
     document.getElementById("FileUploadForm:number").selectedIndex=0;
   }  
+  document.getElementById("errMsg"+id).innerHTML=" ";
 }
 </script>
 <script language ="javascript">
