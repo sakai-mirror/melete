@@ -88,10 +88,14 @@ function showEdateCal()
 	 		<td height="20" class="maintabledata2"> 
 				<h:commandLink id="TOCButton"  action="#{editModulePage.cancel}"  immediate="true">
 						<h:outputText id="toc" value="#{msgs.edit_module_TOC}" />
-					</h:commandLink> &raquo;  <h:outputText value="#{editModulePage.module.title}" /> 
+					</h:commandLink> &raquo;  <h:outputText value="#{editModulePage.module.title}" /> &raquo;
+				 <h:commandLink id="editFirstSection" action="#{editModulePage.editSection}" rendered="#{editModulePage.hasSections}">
+				     <h:outputText id="editSectionText" value="#{msgs.edit_module_edit_sections}"/>				     
+				  </h:commandLink> 	
+				<h:outputText id="editSectionText_1" value=" / " rendered="#{editModulePage.hasSections}" />
 			  <h:commandLink id="addSection" action="#{editModulePage.addContentSections}">
-				  &raquo;   <h:outputText id="addSectionText" value="#{msgs.edit_module_add_content_sections}"/>
-				  </h:commandLink> 				  
+				   <h:outputText id="addSectionText" value="#{msgs.edit_module_add_content_sections}"/>
+			  </h:commandLink> 				  
 		 </td>
 	  </tr>	
     <tr>
