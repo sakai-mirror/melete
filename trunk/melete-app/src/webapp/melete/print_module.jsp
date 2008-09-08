@@ -1,10 +1,12 @@
 <%@ page import="org.sakaiproject.tool.melete.PrintModulePage,javax.faces.application.FacesMessage, java.util.ResourceBundle"%>
 <html>
-<link rel="stylesheet" href="rtbc004.css" type="text/css" media="all">
+<head>
+<link rel="stylesheet" href="rtbc004.css" type="text/css" media="all" >
 <link href="/library/skin/tool_base.css" type="text/css" rel="stylesheet" media="all" />
 <link href="/library/skin/default/tool.css" type="text/css" rel="stylesheet" media="all" />
 <title>Melete - Print Module</title>
-<body">
+</head>
+<body>
 <form id="printModuleForm" >
      <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
           <tr>

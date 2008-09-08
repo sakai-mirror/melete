@@ -2126,7 +2126,7 @@ public class ModuleDB implements Serializable {
 				                        if (autonumber) {
 		  		   			   printText.append("<h4>" +slObj.getDispSeq() +".  " + sec.getTitle()+"</h4>")	;
 							} else {
-		  		   			   printText.append("<h4>" + sec.getTitle()+"</h4>")	;
+		  		   			   printText.append("<h4>" + sec.getTitle()+"</h4> <hr style=\"border-bottom:3px solid #000;\">")	;
 							};
 		  		   			if(sec.getSectionResource() != null)
 		  		   				printText.append("<p><i>" +getLicenseInformation((MeleteResource)sec.getSectionResource().getResource())+"</i></p>");
