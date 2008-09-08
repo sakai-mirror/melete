@@ -4,7 +4,7 @@
   <parent>
     <artifactId>melete-base</artifactId>
     <groupId>org.sakaiproject</groupId>
-    <version>${sakai.version}</version>
+    <version>2.5</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <name>Sakai Melete Service</name>
@@ -23,17 +23,17 @@
     <dependency>
       <groupId>org.sakaiproject</groupId>
       <artifactId>sakai-entity-api</artifactId>
-      <version>${sakai.version}</version>
+      
     </dependency>
     <dependency>
       <groupId>org.sakaiproject</groupId>
       <artifactId>sakai-component</artifactId>
-      <version>${sakai.version}</version>
+      
     </dependency>
     <dependency>
       <groupId>org.sakaiproject</groupId>
       <artifactId>sakai-content-api</artifactId>
-      <version>${sakai.version}</version>
+      
     </dependency>
     <dependency>
       <groupId>dom4j</groupId>
