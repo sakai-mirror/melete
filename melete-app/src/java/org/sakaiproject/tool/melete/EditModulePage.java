@@ -33,6 +33,7 @@ import javax.faces.el.ValueBinding;
 import org.sakaiproject.util.ResourceLoader;
 
 import org.sakaiproject.component.app.melete.ModuleDateBean;
+import org.sakaiproject.api.app.melete.SectionObjService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
 //import org.sakaiproject.jsf.ToolBean;
 /**
@@ -53,7 +54,9 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 	protected Log logger = LogFactory.getLog(EditModulePage.class);
    private boolean callFromAddContent = false;
    private boolean showLicenseFlag = true;
-
+   private boolean hasSections = false;
+   private SectionObjService firstSection = null;
+   
     public EditModulePage(){
       setFormName("EditModuleForm");
       setSuccess(false);
@@ -244,6 +247,54 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
     	setModuleDateBean(mdbean);
     	setModule(mdbean.getModule());
     	setModuleShdates(mdbean.getModuleShdate());
-    }
+    	if(mdbean.getSectionBeans().isEmpty())
+    	{
+    		setFirstSection(null);
+    		setHasSections(false);
+    	}
+    	else{
+    		setHasSections(true);
+    		setFirstSection(((SectionBean)mdbean.getSectionBeans().get(0)).getSection());
+    	}   	
+    	
+   	}
 
+    public boolean isHasSections()
+    {
+    	return hasSections;
+    }
+	/**
+	 * @param hasSections the hasSections to set
+	 */
+	public void setHasSections(boolean hasSections)
+	{
+		this.hasSections = hasSections;
+	}
+	
+	public String editSection()
+	{
+		callFromAddContent = false;
+		 if(!getSuccess())
+	        {	        	
+	        	if(!savehere().equals("failure"))
+	    	 		    setSuccess(true);
+	    	   	else return "edit_module";	        	
+	        }
+		 	     
+	        FacesContext context = FacesContext.getCurrentInstance();
+	        ValueBinding binding =Util.getBinding("#{editSectionPage}");
+	        EditSectionPage editPage = (EditSectionPage) binding.getValue(context);	        	        
+	        Map sessionMap = context.getExternalContext().getSessionMap();
+			sessionMap.put("currModule", module);
+			editPage.setEditInfo(firstSection);
+	        
+		return "editmodulesections";
+	}
+	/**
+	 * @param firstSection the firstSection to set
+	 */
+	public void setFirstSection(SectionObjService firstSection)
+	{
+		this.firstSection = firstSection;
+	}
  }
