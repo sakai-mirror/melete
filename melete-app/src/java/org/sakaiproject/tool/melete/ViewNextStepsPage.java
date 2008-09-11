@@ -135,7 +135,7 @@ public String goPrevItem()
 {
 	FacesContext context = FacesContext.getCurrentInstance();
 	courseId = getCourseId();
-	int nextPrevSeqNo = getModuleService().getPrevSeqNo(courseId,this.nextSeqNo);
+	int prevSeqNo = getModuleService().getPrevSeqNo(courseId,this.nextSeqNo);
 	if (this.prevSecId == 0)
 	{
 	  ValueBinding binding =
@@ -148,7 +148,7 @@ public String goPrevItem()
   	  vmPage.setAutonumber(null);
   	  if (this.nextSeqNo > 1)
   	  {
-        vmPage.setModuleSeqNo(nextPrevSeqNo);
+        vmPage.setModuleSeqNo(prevSeqNo);
   	  }
       vmPage.setPrevMdbean(null);
       if (instRole)
@@ -170,7 +170,16 @@ public String goPrevItem()
 
 	    vsPage.setSectionId(this.prevSecId);
 	    vsPage.setModuleId(this.prevModId);
-	    vsPage.setModuleSeqNo(nextPrevSeqNo);
+	    //This condition occurs when whats next is after
+	    //the last section of the last module
+	    if (prevSeqNo == -1)
+	    {
+	    	vsPage.setModuleSeqNo(this.moduleSeqNo);
+	    }
+	    else
+	    {	
+	       vsPage.setModuleSeqNo(prevSeqNo);
+	    }   
 	    vsPage.setSection(null);
 	    //added by rashmi on 6/14/05
 	    vsPage.setModule(null);
