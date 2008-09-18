@@ -436,7 +436,7 @@ public class SectionDB implements Serializable {
 			  deleteFromMeleteTables(sec, userId, NONE_TO_DELETE, null);
 			    long endtime = System.currentTimeMillis();
         		logger.debug("delete section end " +(endtime - starttime));
-        		return;	
+        		return;
 		  }
 		  String resourceId = sec.getSectionResource().getResource().getResourceId();
 		  //Store all embedded media references in a list
@@ -1151,7 +1151,9 @@ public class SectionDB implements Serializable {
 					// parse and list all names which are in use
 					List<String> activeResources = moduleDB.getActiveResourcesFromList(activenArchModules);
 					List<String> allCourseResources = moduleDB.getAllMeleteResourcesOfCourse(toDelSecCourseId);
-					int allresourcesz = allCourseResources.size();
+					int allresourcesz = 0;
+					int delresourcesz = 0;
+					if(allCourseResources !=null) allresourcesz = allCourseResources.size();
 
 					// compare the lists and not in use resources are
 					if (!session.isOpen()) session = hibernateUtil.currentSession();
@@ -1178,19 +1180,24 @@ public class SectionDB implements Serializable {
 						meleteCHService.removeResource(secMelResId);
 
 					// delete melete resource and from content resource
+					if(allCourseResources != null)
+					{
+						delresourcesz = allCourseResources.size();
 					for (Iterator delIter = allCourseResources.listIterator(); delIter.hasNext();)
 					{
 						String delResourceId = (String) delIter.next();
+						try{
 						logger.debug("now deleteing mr" + delResourceId);
 						String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
 						deletedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", delResourceId).executeUpdate();
 						meleteCHService.removeResource(delResourceId);
+						} catch(Exception e){logger.error("unable to delete resource. still associated with section.");}
 					}
-
+					}
 
 					tx.commit();
 					long endtime = System.currentTimeMillis();
-					logger.debug("to cleanup course with " + allresourcesz + " resources and del sections " + delSections.size() +" and del resources"+ allCourseResources.size()+", it took "
+					logger.debug("to cleanup course with " + allresourcesz + " resources and del sections " + delSections.size() +" and del resources"+ delresourcesz+", it took "
 							+ (endtime - starttime) + "ms");
 				} // for end
 				long totalend = System.currentTimeMillis();

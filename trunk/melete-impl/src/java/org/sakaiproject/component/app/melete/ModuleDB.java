@@ -2295,7 +2295,9 @@ public class ModuleDB implements Serializable {
 					// parse and list all names which are in use
 					List<String> activeResources = getActiveResourcesFromList(activenArchModules);
 					List<String> allCourseResources = getAllMeleteResourcesOfCourse(toDelCourseId);
-					int allresourcesz = allCourseResources.size();
+					int allresourcesz = 0;
+					int delresourcesz = 0;
+					if(allCourseResources != null) allresourcesz = allCourseResources.size();
 					// compare the lists and not in use resources are
 					if (!session.isOpen()) session = hibernateUtil.currentSession();
 					tx = session.beginTransaction();
@@ -2343,11 +2345,13 @@ public class ModuleDB implements Serializable {
 					}
 					logger.debug("looking for extra sections marked for delete");
 					// look for sections just marked for delete
-				//	queryString = " from Section sec where sec.deleteFlag = 1 and sec.module.coursemodule.courseId=:courseId order by sec.moduleId";
-     				queryString = " from Section sec where sec.deleteFlag = 1 and sec.moduleId IN (select moduleId from CourseModule cm where cm.courseId=:courseId) order by sec.moduleId";
-     				query = session.createQuery(queryString);
-					query.setString("courseId", toDelCourseId);
-					List<Section> sectionsres = query.list();
+				 String queryString1 = " from Section sec where sec.deleteFlag = 1 and sec.moduleId IN (select moduleId from
+				 CourseModule cm where cm.courseId=:courseId and cm.deleteFlag = 0) order by sec.moduleId";
+
+				     Query query1 = session.createQuery(queryString1);
+				     query1.setString("courseId",	toDelCourseId);
+					List<Section> sectionsres = query1.list();
+					logger.debug("found extra sections :" + sectionsres.size());
 					if(sectionsres != null && sectionsres.size() > 0)
 					{
 					String allSecIds = "(";
@@ -2375,21 +2379,29 @@ public class ModuleDB implements Serializable {
 
 					}
 					logger.debug("suceess remove of deleted modules and their sections.NOW MOVE TO melete resources");
+				if(	allCourseResources != null)
+				{
+					delresourcesz = allCourseResources.size();
 					// delete melete resource and from content resource
 				 for (Iterator delIter = allCourseResources.listIterator(); delIter.hasNext();)
 					{
 						String delResourceId = (String) delIter.next();
+						try{
 						logger.debug("now deleting mr " + delResourceId);
 						String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
 						int deletedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", delResourceId).executeUpdate();
 						meleteCHService.removeResource(delResourceId);
+						} catch(Exception e)
+						{logger.error("unable to delete resource.its still asociated with section." + delResourceId);
+						}
 					}
+				}
 					// if course collection is empty than delete course collection
 					meleteCHService.removeCourseCollection(toDelCourseId);
 
 					tx.commit();
 					long endtime = System.currentTimeMillis();
-					logger.debug("to cleanup course with " + allresourcesz + " resources and del modules " + delModules.size() +" and del resources"+ allCourseResources.size()+", it took "
+					logger.debug("to cleanup course with " + allresourcesz + " resources and del modules " + delModules.size() +" and del resources"+ delresourcesz+", it took "
 							+ (endtime - starttime) + "ms");
 				} // for end
 				long totalend = System.currentTimeMillis();
