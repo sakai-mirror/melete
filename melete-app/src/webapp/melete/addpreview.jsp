@@ -4,24 +4,10 @@
 
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <title>Melete - Preview Section</title>
-<script language="javascript1.2">
-function showIframe()
-{
- 
-	var str=document.getElementById("previewAddForm:contentType").value;
-
-	if((str.match("typeEditor"))
-	{
-		document.getElementById("iframe1").style.visibility="hidden";
-		document.getElementById("iframe1").style.display="none";
-	}
-	
-}	
-
-</script>
 <f:view>
-<body onLoad="showIframe(),setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
+<body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
 <h:form id="previewAddForm" >
+	
      <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
           <tr>
             <td width="100%" height="20" >
@@ -59,9 +45,12 @@ function showIframe()
                 <h:outputText id="sectitleLink" 
                            value="#{addSectionPage.secResourceName}">
                 </h:outputText>
-                </h:outputLink>						
-	             <iframe  id="iframe1" src="<h:outputText value="#{addSectionPage.previewContentData}"  rendered="#{(addSectionPage.shouldRenderUpload || addSectionPage.shouldRenderLink) && addSectionPage.section.openWindow == false}"/>" scrolling="auto" style="visibility:visible" width="100%"  height="700" border="0" frameborder="0"></iframe>	
-            
+                </h:outputLink>		
+                
+                 <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{addSectionPage.previewContentData}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
+                 border=\"0\" frameborder= \"0\"></iframe>" rendered="#{(addSectionPage.shouldRenderUpload || addSectionPage.shouldRenderLink) && addSectionPage.section.openWindow == false}" escape="false" />
+	             
+	          
 				</td></tr>
 			
 			<tr><td> <div align="center">
