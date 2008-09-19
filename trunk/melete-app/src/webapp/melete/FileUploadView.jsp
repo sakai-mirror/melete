@@ -39,8 +39,18 @@ function loadInputs()
   {
    document.getElementById("choose"+i).style.display='block';
   }   
+   clearMsgs();
    showErrorMsgs();
    showSuccessMsgs();
+}
+
+function clearMsgs()
+{
+    for(int i=1; i <=10; i++)
+    	{
+	document.getElementById("errMsg"+i).innerHTML=" ";
+	document.getElementById("show"+i).innerHTML=" ";
+	}
 }
 
 function showErrorMsgs()
