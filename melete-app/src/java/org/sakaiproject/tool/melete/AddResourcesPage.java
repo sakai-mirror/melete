@@ -134,7 +134,9 @@ public class AddResourcesPage {
 		    emptyCounter = emptyCounter + 1;
 		    }
 		 }
- 	    try
+
+		 if (emptyCounter == 10) return "manage_content";
+ 	  /* try
 	    {
 			if (emptyCounter == 10) throw new MeleteException("all_uploads_empty");
 		}
@@ -144,8 +146,9 @@ public class AddResourcesPage {
 	      context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
 		  return "failure";
         }
-	   
-	    
+        */
+
+
         for (int i=1; i<=10; i++)
         {
     	  try
@@ -156,7 +159,7 @@ public class AddResourcesPage {
               {
             	  //validate fileName
             	  Util.validateUploadFileName(fi.getName());
-            	  validateFileSize(fi.getSize()); 
+            	  validateFileSize(fi.getSize());
                   // filename on the client
                  secResourceName = fi.getName();
                  if (secResourceName.indexOf("/") != -1)
@@ -182,7 +185,7 @@ public class AddResourcesPage {
 
                  addItem(secResourceName,secContentMimeType, addCollId, secContentData);
                  if(success_fields == null) success_fields = new ArrayList<String>();
-                 success_fields.add(new Integer(i).toString());  
+                 success_fields.add(new Integer(i).toString());
                  success_fields.add(bundle.getString("add_item_success") + secResourceName);
                }
                else
@@ -199,13 +202,13 @@ public class AddResourcesPage {
   	   //   context.addMessage ("FileUploadForm:chooseFile"+i, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
   	    //  logger.error("error in uploading multiple files" + errMsg);
   	      if(err_fields == null) err_fields = new ArrayList<String>();
-  	      err_fields.add(new Integer(i).toString());  
+  	      err_fields.add(new Integer(i).toString());
   	      err_fields.add(errMsg);
 		  //return "failure";
           }
           catch(Exception e)
           {
-          logger.error("file upload FAILED" + e.toString());                 
+          logger.error("file upload FAILED" + e.toString());
           }
       }
       if(err_fields != null)
@@ -213,12 +216,12 @@ public class AddResourcesPage {
     	  logger.debug("err found in fields" + err_fields.toString());
     	  return "file_upload_view";
       }
-	  }  
-	  
-	  
+	  }
+
+
       if(this.fileType.equals("link"))
       {
-      Iterator utIterator = utList.iterator();   
+      Iterator utIterator = utList.iterator();
          //Finish validating here
       int count = -1;
         while (utIterator.hasNext())
@@ -246,7 +249,7 @@ public class AddResourcesPage {
 						context.addMessage("LinkUploadForm:utTable:"+count+":title", new FacesMessage(FacesMessage.SEVERITY_ERROR, "URL_title_reqd", bundle.getString("URL_title_reqd")));
 						return "#";
 					}
-					
+
 					if (checkUrl == null || checkUrl.length() == 0)
 					{
 						context.addMessage("LinkUploadForm:utTable:"+count+":url", new FacesMessage(FacesMessage.SEVERITY_ERROR, "URL_reqd", bundle.getString("URL_reqd")));
@@ -292,7 +295,7 @@ public class AddResourcesPage {
             {
               logger.error("link upload FAILED" + e.toString());
              }
-          }        
+          }
       }
       FacesContext ctx = FacesContext.getCurrentInstance();
       ValueBinding binding =Util.getBinding("#{manageResourcesPage}");
@@ -362,10 +365,10 @@ public class AddResourcesPage {
 	  String rowId = selclientId.substring(0,selclientId.indexOf(':'));
 	  this.removeLinkIndex = Integer.parseInt(rowId);
 	  if (Integer.parseInt(this.numberItems) > 1)
-	  {	  
+	  {
 	    this.numberItems = String.valueOf(Integer.parseInt(this.numberItems) - 1);
 	    this.utList.remove(this.removeLinkIndex);
-	  }  
+	  }
 	  else
 	  {
 		  this.utList = new ArrayList();
@@ -481,9 +484,9 @@ public boolean validateFile(String up_field)
 	try{
 	Util.validateUploadFileName(up_field);
 	} catch(MeleteException me)
-	{		
+	{
 		return false;
-	}	
+	}
 	return true;
 }
 
@@ -491,7 +494,7 @@ public void validateFileSize(long sz) throws MeleteException
 {
 	//1 MB = 1048576 bytes
 	if (new Long((sz/1048576)).intValue() > getMaxUploadSize())
-		throw new MeleteException("file_too_large");	
+		throw new MeleteException("file_too_large");
 }
 
 /**
