@@ -4,22 +4,8 @@
 
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <title>Melete - Preview Section</title>
-<script language="javascript1.2">
-function showIframe()
-{
- 
-	var str=document.getElementById("previewForm:contentType").value;	 
-	if(str.match("typeEditor"))
-	{
-		document.getElementById("iframe1").style.visibility="hidden";
-		document.getElementById("iframe1").style.display="none";
-	}
-
-}	
-
-</script>
 <f:view>
-<body onLoad="showIframe(),setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
+<body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
  	<h:form id="previewForm" > 	
      <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
           <tr>
@@ -64,8 +50,8 @@ function showIframe()
                            value="#{editSectionPage.secResourceName}">
                 </h:outputText>
                 </h:outputLink>	
-                <iframe  id="iframe1" src="<h:outputText value="#{editSectionPage.previewContentData}"  rendered="#{(editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLink) && editSectionPage.section.openWindow == false}"/>" style="visibility:visible" scrolling="auto" width="100%"  height="700" border="0" frameborder="0"></iframe>	
-               				
+                    <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{editSectionPage.previewContentData}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
+               	    border=\"0\" frameborder= \"0\"></iframe>" rendered="#{(editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLink) && editSectionPage.section.openWindow == false}" escape="false" />			
 		      </td></tr>
 	       
 			<tr><td><div align="center">
