@@ -223,7 +223,7 @@ public class ListAuthModulesPage implements Serializable
 		} else {
 		   autonumber = false;
 		};
-	}	
+	}
 
 	public boolean isAutonumber()
 	{
@@ -827,7 +827,7 @@ public class ListAuthModulesPage implements Serializable
 				resetSelectedLists();
 				return "list_auth_modules";
 			}
-			
+
 			for (ListIterator i = selectedSecModIndices.listIterator(); i.hasNext();)
 			{
 				SecModObj smObj = (SecModObj) i.next();
@@ -835,7 +835,7 @@ public class ListAuthModulesPage implements Serializable
 				secBean = (SectionBean) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
 				delSecBeans.add(secBean);
 			}
-			
+
 			ValueBinding binding = Util.getBinding("#{deleteModulePage}");
 			DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
 			dmPage.setSection((Section) secBean.getSection());
@@ -1482,7 +1482,7 @@ public class ListAuthModulesPage implements Serializable
 		catch (Exception me)
 		{
 			logger.error(me.toString());
-			String msg = bundle.getString("print_fail");
+			String msg = bundle.getString("print_module_fail");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 		}
 		return 0;
