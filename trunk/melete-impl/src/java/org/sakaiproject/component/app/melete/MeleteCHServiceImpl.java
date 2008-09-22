@@ -66,6 +66,7 @@ import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.entity.api.Reference;
+import org.sakaiproject.util.Validator;
 
 /*
  * Created on Sep 18, 2006 by rashmi
@@ -529,7 +530,11 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	 public String addResourceItem(String name, String res_mime_type,String addCollId, byte[] secContentData, ResourcePropertiesEdit res ) throws Exception
 	{
 		 ContentResource resource = null;
-		 name = URLDecoder.decode(name,"UTF-8");
+		 
+		 //Storing the original filename so it can be used in the display name
+		 String dispName = name;
+		 name = Validator.escapeResourceName(name);
+		 
 		 if (logger.isDebugEnabled()) logger.debug("IN addResourceItem "+name+" addCollId "+addCollId);
 		// need to add notify logic here and set the arg6 accordingly.
 		try
@@ -554,19 +559,41 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				String checkDup = resource.getUrl().substring(resource.getUrl().lastIndexOf("/") + 1);
 				ContentResourceEdit edit = null;
 				try
-				{					
+				{
 					if (!checkDup.equals(name))
 					{
+						if (logger.isDebugEnabled()) logger.debug("Found a duplicate");
+						checkDup = checkDup.substring(checkDup.lastIndexOf("-"), checkDup.length());
+						dispName = dispName.substring(0, dispName.lastIndexOf("."));
+						StringBuffer dispBuffer = new StringBuffer();
+						dispBuffer.append(dispName);
+						dispBuffer.append(checkDup);
+						dispName = dispBuffer.toString();
 						edit = getContentservice().editResource(resource.getId());
 						ResourcePropertiesEdit rp = edit.getPropertiesEdit();
 						String desc = rp.getProperty(ResourceProperties.PROP_DESCRIPTION);
 						rp.clear();
-						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, checkDup);
+						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, dispName);
 						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
 						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 						getContentservice().commitResource(edit);
 						edit = null;
 					}
+					else
+					{
+						//The code below ensures that the display name of the 
+						//resource is set correctly
+						edit = getContentservice().editResource(resource.getId());
+						ResourcePropertiesEdit rp = edit.getPropertiesEdit();
+						String desc = rp.getProperty(ResourceProperties.PROP_DESCRIPTION);
+						rp.clear();
+						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, dispName);
+						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
+						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
+						getContentservice().commitResource(edit);
+						edit = null;						
+					}	
+					
 				}
 				catch (Exception ex)
 				{					
