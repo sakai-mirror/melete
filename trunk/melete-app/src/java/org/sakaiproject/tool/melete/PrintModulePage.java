@@ -56,9 +56,9 @@ public class PrintModulePage implements Serializable
 	private ModuleObjService selectedModule;
 
 	private ModuleService moduleService;
-	
+
 	private String printText;
-	
+
 	/** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(PrintModulePage.class);
 
@@ -67,42 +67,30 @@ public class PrintModulePage implements Serializable
 
 	}
 
-	public void processModule(ModuleObjService module)
-	{
-		logger.debug("print process called");
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
-		try{			
-			printText = moduleService.printModule(selectedModule);	
-		}catch(Exception e)
-		{			
-			String msg = bundle.getString("print_fail");
-			ctx.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"move_section_fail",msg));		
-		}		
-	}
-	
+
 	public void processModule(Integer moduleId)
 	{
 		logger.debug("print process called");
+		printText = null;
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 		try{
 			ModuleObjService printMod = moduleService.getModule(moduleId.intValue());
-			printText = moduleService.printModule(printMod);	
+			printText = moduleService.printModule(printMod);
 		}catch(Exception e)
-		{		
-			e.printStackTrace();
-			String msg = bundle.getString("print_fail");
-			ctx.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"move_section_fail",msg));		
-		}		
+		{
+			String msg = bundle.getString("print_module_fail");
+			printText= msg;
+			ctx.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"print_module_fail",msg));
+		}
 	}
-	
+
 	public void resetValues()
-	{		
+	{
 		selectedModule = null;
-		printText = null;		
+		printText = null;
 	}
-	
+
 	/**
 	 * @param logger The logger to set.
 	 */
@@ -110,7 +98,7 @@ public class PrintModulePage implements Serializable
 	{
 		this.logger = logger;
 	}
-	
+
 	/**
 	 * @return Returns the ModuleService.
 	 */
@@ -133,5 +121,5 @@ public class PrintModulePage implements Serializable
 	public String getPrintText()
 	{
 		return this.printText;
-	}	
+	}
 }
