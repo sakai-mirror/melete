@@ -46,10 +46,10 @@ function loadInputs()
 
 function clearMsgs()
 {
-    for(int i=1; i <=10; i++)
+    for(j=1; j <=10; j++)
     	{
-	document.getElementById("errMsg"+i).innerHTML=" ";
-	document.getElementById("show"+i).innerHTML=" ";
+	document.getElementById("errMsg"+j).innerHTML=" ";
+	document.getElementById("show"+j).innerHTML=" ";
 	}
 }
 

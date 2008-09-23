@@ -123,7 +123,7 @@ public class AddResourcesPage {
 	  String linkValue, titleValue;
 	  boolean emptyLinkFlag = false;
 	  boolean emptyTitleFlag = false;
-
+	  err_fields = null;
 	  if (this.fileType.equals("upload"))
 	  {
 	    for (int i=1; i<=10; i++)
@@ -216,6 +216,7 @@ public class AddResourcesPage {
     	  logger.debug("err found in fields" + err_fields.toString());
     	  return "file_upload_view";
       }
+	  
 	  }
 
 

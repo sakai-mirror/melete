@@ -2264,6 +2264,7 @@ public class ModuleDB implements Serializable {
 				}
 				logger.debug("map is created" + deletedModules.size());
 				delCount = deletedModules.size();
+				int i=0;
 				// for each course id
 				Set alldelCourses = deletedModules.keySet();
 				for (Iterator iter = alldelCourses.iterator(); iter.hasNext();)
@@ -2271,7 +2272,7 @@ public class ModuleDB implements Serializable {
 					// for that course id get all melete resources from melete_resource
 					long starttime = System.currentTimeMillis();
 					String toDelCourseId = (String) iter.next();
-					logger.debug("processing for " + toDelCourseId);
+					logger.debug("processing " + i++ +" course with id " + toDelCourseId);
 					List activenArchModules = getActivenArchiveModules(toDelCourseId);
 					List<Module> delModules = (ArrayList) deletedModules.get(toDelCourseId);
 
@@ -2303,7 +2304,7 @@ public class ModuleDB implements Serializable {
 					tx = session.beginTransaction();
 					if (allCourseResources != null && activeResources != null)
 					{
-						logger.debug("active list and all" + activeResources.size() + " ; " + allCourseResources.size());
+						logger.debug("active resources list sz and all resources" + activeResources.size() + " ; " + allCourseResources.size());
 						allCourseResources.removeAll(activeResources);
 					}
 					// delete modules and module collection and sections marked for delete
@@ -2343,15 +2344,13 @@ public class ModuleDB implements Serializable {
 						deletedEntities = session.createQuery(delModuleStr).setInteger("moduleId", delModuleId).executeUpdate();
 						meleteCHService.removeCollection(toDelCourseId, "module_"+delModuleId.toString());
 					}
-					logger.debug("looking for extra sections marked for delete");
+				
 					// look for sections just marked for delete
-				 String queryString1 = " from Section sec where sec.deleteFlag = 1 and sec.moduleId IN (select moduleId from
-				 CourseModule cm where cm.courseId=:courseId and cm.deleteFlag = 0) order by sec.moduleId";
-
-				     Query query1 = session.createQuery(queryString1);
-				     query1.setString("courseId",	toDelCourseId);
+					String queryString1 = " from Section sec where sec.deleteFlag = 1 and sec.moduleId IN (select moduleId from CourseModule cm where cm.courseId=:courseId) order by sec.moduleId";
+     			    Query query1 = session.createQuery(queryString1);
+				    query1.setString("courseId",	toDelCourseId);
 					List<Section> sectionsres = query1.list();
-					logger.debug("found extra sections :" + sectionsres.size());
+					logger.debug("found extra sections marked for delete:" + sectionsres.size());
 					if(sectionsres != null && sectionsres.size() > 0)
 					{
 					String allSecIds = "(";
@@ -2378,7 +2377,7 @@ public class ModuleDB implements Serializable {
 						}
 
 					}
-					logger.debug("suceess remove of deleted modules and their sections.NOW MOVE TO melete resources");
+			
 				if(	allCourseResources != null)
 				{
 					delresourcesz = allCourseResources.size();
