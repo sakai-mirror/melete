@@ -562,13 +562,20 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				{
 					if (!checkDup.equals(name))
 					{
-						if (logger.isDebugEnabled()) logger.debug("Found a duplicate");
-						checkDup = checkDup.substring(checkDup.lastIndexOf("-"), checkDup.length());
-						dispName = dispName.substring(0, dispName.lastIndexOf("."));
-						StringBuffer dispBuffer = new StringBuffer();
-						dispBuffer.append(dispName);
-						dispBuffer.append(checkDup);
-						dispName = dispBuffer.toString();
+						if (logger.isDebugEnabled()) logger.debug("Found another resource with the same name or new typeEditor section");
+                        if (checkDup.lastIndexOf("-") != -1)
+                        {	
+						   checkDup = checkDup.substring(checkDup.lastIndexOf("-"), checkDup.length());
+						   dispName = dispName.substring(0, dispName.lastIndexOf("."));
+						   StringBuffer dispBuffer = new StringBuffer();
+						   dispBuffer.append(dispName);
+						   dispBuffer.append(checkDup);
+						   dispName = dispBuffer.toString();
+                        }
+                        else //This it the condition for typeEditor Section.html sections
+                        {
+                        	dispName = checkDup;
+                        }
 						edit = getContentservice().editResource(resource.getId());
 						ResourcePropertiesEdit rp = edit.getPropertiesEdit();
 						String desc = rp.getProperty(ResourceProperties.PROP_DESCRIPTION);
