@@ -28,7 +28,7 @@ String selected_module_id = (String)request.getParameter("printModuleId");
 if(selected_module_id != null)
 	{
 	printModulePage.processModule(new Integer(selected_module_id));
-	out.println(printModulePage.getPrintText());
+	out.println(printModulePage.getPrintText());	
 	}	
 %> 
 		</td></tr>		 
