@@ -1,3 +1,26 @@
+/*
+* Copyright (c) 2008 Etudes, Inc.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you
+* may not use this file except in compliance with the License. You may
+* obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+* implied. See the License for the specific language governing
+* permissions and limitations under the License.
+*/
 package org.sakaiproject.component.app.melete;
 
 import java.io.File;
@@ -156,23 +179,23 @@ public class MeleteUtil {
 		{
 			ArrayList returnData = new ArrayList();
 			Pattern pi = Pattern.compile("<\\s*<[fF][oO][rR][mM]");
-		
+
 			// look for <table tr td form
 			Matcher m = pi.matcher(checkforimgs);
-			if (!m.find()) 
+			if (!m.find())
 			{
 				int formIdx = -1;
 				int endFormIdx = -1;
 				if((formIdx = checkforimgs.indexOf("<form")) != -1 || (formIdx = checkforimgs.indexOf("<FORM")) != -1)
 				{
 					logger.debug("formIdx and m.end() " + formIdx );
-				
+
 						//replace and add table tag
 						String afterForm = checkforimgs.substring(formIdx + 6);
 						afterForm = afterForm.substring(afterForm.indexOf(">")+1);
 						checkforimgs = checkforimgs.substring(0, formIdx) + afterForm;
 						//now look for end of form
-					
+
 						if((endFormIdx = checkforimgs.indexOf("</form>")) != -1 || (endFormIdx = checkforimgs.indexOf("</FORM>")) != -1)
 							checkforimgs = checkforimgs.substring(0, endFormIdx) +  checkforimgs.substring(endFormIdx + 8);
 				}
