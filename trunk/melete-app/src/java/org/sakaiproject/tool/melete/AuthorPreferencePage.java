@@ -1,5 +1,9 @@
-
-/*
+/**********************************************************************************
+ *
+ * $URL$ 
+ *
+ ***********************************************************************************
+ *
  * Copyright (c) 2008 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,18 +25,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License. 
- * Created on Oct 10, 2006  @author Rashmi
- *
- * Captures author preferences
- *
- * modified by rashmi - 10/16/06 - pref editor cancel functionality
- * Rashmi - 10/16/06 - nav rules from pref_editor are now pref_editor.
- * Needs to changed later back to author_preferences
- * Rashmi - 10/16/06 - read available editors from sakai.properties
- * Rashmi - 10/18/06 - default wysiwyg property - add more conditions to make it foolproof
- * Rashmi - 10/24/06 - pref_editor page is now author_pref page so later fro 3.0 change return stmts to pref_editor
- * Rashmi - 12/6/06 - add length check in defaultEditorChoice() to make sure melete default editor is not specified
- */
+ **********************************************************************************/
 package org.sakaiproject.tool.melete;
 
 import java.util.ArrayList;

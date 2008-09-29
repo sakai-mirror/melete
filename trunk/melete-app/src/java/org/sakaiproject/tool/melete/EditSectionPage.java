@@ -1,9 +1,9 @@
 /**********************************************************************************
  *
- * $Header: /usr/src/sakai/melete-2.4/melete-app/src/java/org/sakaiproject/tool/melete/EditSectionPage.java,v 1.40 2007/09/07 17:49:37 mallikat Exp $
+ * $URL$
  *
  ***********************************************************************************
-  * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

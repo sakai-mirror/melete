@@ -1,9 +1,9 @@
 /**********************************************************************************
  *
- * $Header: /usr/src/sakai/melete-2.4/melete-app/src/java/org/sakaiproject/tool/melete/PrintModulePage.java,v 1.5 2007/11/07 00:54:16 rashmim Exp $
+ * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/java/org/sakaiproject/tool/melete/PrintModulePage.java,v 1.5 2007/11/07 00:54:16 rashmim Exp $
  *
  ***********************************************************************************
-  * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

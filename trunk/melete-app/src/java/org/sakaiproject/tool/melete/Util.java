@@ -1,12 +1,10 @@
 /*******************************************************************************
  *
- * $Header:
- * /usr/src/sakai/melete_2-1-0/melete-app/src/java/org/sakaiproject/tool/melete/Util.java,v
- * 1.1 2005/11/23 21:37:24 murthyt Exp $
+ * $URL$
  *
  * **********************************************************************************
  *
-   * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
