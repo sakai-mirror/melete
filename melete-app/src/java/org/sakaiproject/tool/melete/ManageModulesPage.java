@@ -1,10 +1,10 @@
 /**********************************************************************************
-*
-* $Header: /usr/src/sakai/melete-2.4/melete-app/src/java/org/sakaiproject/tool/melete/ManageModulesPage.java,v 1.15 2007/09/10 19:40:45 rashmim Exp $
-*
-***********************************************************************************
-*
-  * Copyright (c) 2008 Etudes, Inc.
+ *
+ * $URL$
+ *
+ ***********************************************************************************
+ *
+ * Copyright (c) 2008 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License. 
-*
-**********************************************************************************/
+ *
+ **********************************************************************************/
 
 package org.sakaiproject.tool.melete;
 

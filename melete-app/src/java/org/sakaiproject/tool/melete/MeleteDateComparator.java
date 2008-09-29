@@ -1,6 +1,9 @@
-/*
- * Created on Jan 25, 2005
- * compartaor class to sort date deactivated of restore modules
+/**********************************************************************************
+ *
+ * $URL$
+ *
+ ***********************************************************************************
+ *
  * Copyright (c) 2008 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +24,8 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
 * implied. See the License for the specific language governing 
 * permissions and limitations under the License. 
- */
+**********************************************************************************/
+
 package org.sakaiproject.tool.melete;
 import java.util.Date;
 import org.sakaiproject.component.app.melete.CourseModule;

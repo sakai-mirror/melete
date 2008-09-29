@@ -1,4 +1,8 @@
-/*
+/**********************************************************************************
+ *
+ * $URL$
+ *
+ ***************************************************************************************
  * Copyright (c) 2008 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +24,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License. 
- * Created on Mar 8, 2007
- *  @author Rashmi
- * 	this class provides navigation through the remote files listing like show 15 at a time
- *  05/24/07 - Rashmi - changed totalsize to totalsize + 1 in few checks to fix partial listing
- *  					when list is less than chunkSize
- */
+ *******************************************************************************/
 package org.sakaiproject.tool.melete;
 
 public class RemoteFilesListingNav {

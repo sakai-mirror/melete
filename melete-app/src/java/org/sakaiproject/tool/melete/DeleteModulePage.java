@@ -1,10 +1,10 @@
 /**********************************************************************************
-*
-* $Header: /usr/src/sakai/melete-2.4/melete-app/src/java/org/sakaiproject/tool/melete/DeleteModulePage.java,v 1.10 2007/06/27 16:28:53 rashmim Exp $
-*
-***********************************************************************************
-*
-  * Copyright (c) 2008 Etudes, Inc.
+ *
+ * $URL$
+ *
+ ***********************************************************************************
+ *
+ * Copyright (c) 2008 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License. 
-*
-**********************************************************************************/
+ *
+ **********************************************************************************/
 package org.sakaiproject.tool.melete;
 
 import java.io.Serializable;

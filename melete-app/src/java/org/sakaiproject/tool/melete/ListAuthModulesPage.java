@@ -1,9 +1,9 @@
 /**********************************************************************************
  *
- * $Header: /usr/src/sakai/melete-2.4/melete-app/src/java/org/sakaiproject/tool/melete/ListAuthModulesPage.java,v 1.27 2007/11/13 19:32:39 mallikat Exp $
+ * $URL$
  *
  ***********************************************************************************
-  * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * Copyright (c) 2004, 2005, 2006, 2007 Foothill College, ETUDES Project
- *
+ * 
  **********************************************************************************/
 
 package org.sakaiproject.tool.melete;
