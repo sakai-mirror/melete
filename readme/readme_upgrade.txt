@@ -58,16 +58,22 @@ SETUP INSTRUCTIONS
 	under melete-app/src/bundle and under melete-impl/src/bundle.
 	   
 3. Compile Melete
-     On the command prompt, go to the melete source directory which you placed 
+    At the command prompt, go to the melete source directory which you placed 
 	under sakai and run maven commands just like you did for sakai.
 	
-	To build, run 'maven sakai:build' and then to deploy 'maven sakai:deploy'
+	3.1 Sakai 2.4 and previous versions
+	
+	To build(using Maven version 1), run 'maven sakai:build' and then to deploy 'maven sakai:deploy'
 	
 	(for more instructions, see section titled 'Sakai Maven Goals' in the 
 	"How we build Sakai Using Maven" document provided by Sakai lead developers)
+	
+	3.2 Sakai 2.5 
+	
+	To build and deploy(using Maven version 2), run 'mvn clean install sakai:deploy'
 
-	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for melete-2.5.Feel free to contact us at 			etudes-dev@foothill.edu for melete-2.4.5 patch that you can work from.
-
+	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for melete-2.5.Feel free to contact us at 	etudes-dev@foothill.edu for melete-2.4.5 patch that you can work from.
+	
 4. Database Configuration
   
 	* Melete works with HSQLDB, Oracle or Mysql4.1 Database. The driver used is 
