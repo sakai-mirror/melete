@@ -1,6 +1,6 @@
 /**********************************************************************************
 *
-* $Header: /usr/src/sakai/melete-2.4/melete-api/src/java/org/sakaiproject/api/app/melete/MeleteSecurityService.java,v 1.6 2007/09/21 23:02:40 mallikat Exp $
+* $URL$
 *
 ***********************************************************************************
 *

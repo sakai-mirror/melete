@@ -1,4 +1,8 @@
-/*
+/**********************************************************************************
+*
+* $URL$
+*
+***********************************************************************************
 * Copyright (c) 2008 Etudes, Inc.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,13 +24,8 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 * implied. See the License for the specific language governing
 * permissions and limitations under the License.
-*/
-/*
- * Created on Jun 4, 2007
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
+*******************************************************************************/
+
 package org.sakaiproject.component.app.melete;
 
 import java.io.File;

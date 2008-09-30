@@ -1,6 +1,6 @@
 /**********************************************************************************
 *
-* $Header: /usr/src/sakai/melete-2.4/melete-api/src/java/org/sakaiproject/api/app/melete/exception/MeleteException.java,v 1.2 2007/05/07 21:26:21 mallikat Exp $
+* $URL$
 *
 ***********************************************************************************
 *
