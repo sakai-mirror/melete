@@ -72,7 +72,7 @@ SETUP INSTRUCTIONS
 	
 	To build and deploy(using Maven version 2), run 'mvn clean install sakai:deploy'
 
-	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for melete-2.5.1.Feel free to contact us at 	etudes-dev@foothill.edu for melete-2.4.5 patch that you can work from.
+	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for melete-2.5.1.Feel free to contact us at dev@etudes.org for melete-2.4.5 patch that you can work from.
 	
 4. Database Configuration
   
@@ -94,7 +94,7 @@ SETUP INSTRUCTIONS
 			  Hibernate sometimes doesn't create it.
 			   
 	4.2. It is necessary to run this script in order for the upgrade to run successfully.
-	    As of Melete2.5, we are moving the dtd declaration for the SEQ_XML column in MELETE_MODULE
+	    As of Melete2.5, we have moved the dtd declaration for the SEQ_XML column in MELETE_MODULE
 		from an external reference to an internal inline dtd. The script /components/src/sql/mysql/seqxml_script.sql
 		achieves this. Review the script and make sure dtdlocation variable is set up correctly
 		for your installation. Execute this script and check the MELETE_MODULE table to make sure
