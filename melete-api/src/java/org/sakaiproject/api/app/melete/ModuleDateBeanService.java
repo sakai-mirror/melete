@@ -1,6 +1,6 @@
 /**********************************************************************************
 *
-* $Header: /usr/src/sakai/melete-2.4/melete-api/src/java/org/sakaiproject/api/app/melete/ModuleDateBeanService.java,v 1.3 2007/05/07 21:16:21 mallikat Exp $
+* $URL$
 *
 ***********************************************************************************
 *

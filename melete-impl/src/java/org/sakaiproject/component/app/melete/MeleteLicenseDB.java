@@ -1,6 +1,6 @@
 /**********************************************************************************
 *
-* $Header: /usr/src/sakai/melete-2.4/melete-impl/src/java/org/sakaiproject/component/app/melete/MeleteLicenseDB.java,v 1.4 2007/05/07 22:06:55 mallikat Exp $
+* $URL$
 *
 ***********************************************************************************
 *

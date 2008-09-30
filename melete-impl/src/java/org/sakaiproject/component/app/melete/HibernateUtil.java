@@ -1,6 +1,6 @@
 /**********************************************************************************
 *
-* $Header: /usr/src/sakai/melete-2.4/melete-impl/src/java/org/sakaiproject/component/app/melete/HibernateUtil.java,v 1.2 2007/05/07 22:06:55 mallikat Exp $
+* $URL$
 *
 ***********************************************************************************
 *

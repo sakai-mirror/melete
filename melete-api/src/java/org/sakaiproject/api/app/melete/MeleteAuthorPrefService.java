@@ -1,6 +1,6 @@
 /**********************************************************************************
 *
-* $Header: /usr/src/sakai/melete-2.4/melete-api/src/java/org/sakaiproject/api/app/melete/MeleteAuthorPrefService.java,v 1.3 2007/05/21 18:33:11 mallikat Exp $
+* $URL$
 *
 ***********************************************************************************
 *

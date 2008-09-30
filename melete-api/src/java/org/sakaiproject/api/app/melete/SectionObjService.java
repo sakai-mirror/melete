@@ -1,6 +1,6 @@
 /**********************************************************************************
 *
-* $Header: /usr/src/sakai/melete-2.4/melete-api/src/java/org/sakaiproject/api/app/melete/SectionObjService.java,v 1.4 2007/05/09 20:47:00 rashmim Exp $
+* $URL$
 *
 ***********************************************************************************
 *

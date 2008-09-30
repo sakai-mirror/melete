@@ -1,10 +1,10 @@
 /**********************************************************************************
-*
-* $Header: /usr/src/sakai/melete-2.4/melete-impl/src/java/org/sakaiproject/component/app/melete/ModuleDB.java,v 1.38 2007/11/07 00:54:16 mallikat Exp $
-*
-***********************************************************************************
-*
-  * Copyright (c) 2008 Etudes, Inc.
+ *
+ * $URL$
+ *
+ ***********************************************************************************
+ *
+ * Copyright (c) 2008 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License. 
-*
+ *
 **********************************************************************************/
 
 package org.sakaiproject.component.app.melete;
