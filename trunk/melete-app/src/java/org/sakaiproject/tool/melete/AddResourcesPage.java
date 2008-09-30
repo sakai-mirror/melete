@@ -143,7 +143,15 @@ public class AddResourcesPage {
 		    }
 		 }
 
-		 if (emptyCounter == 10) return "manage_content";
+		 if (emptyCounter == 10) 
+			 {
+			 FacesContext ctx = FacesContext.getCurrentInstance();
+		     ValueBinding binding =Util.getBinding("#{manageResourcesPage}");
+		  	 ManageResourcesPage manResPage = (ManageResourcesPage) binding.getValue(ctx);
+		  	 manResPage.refreshCurrSiteResourcesList();
+		  	 manResPage.resetValues();
+			 return "manage_content";
+			 }
  	  /* try
 	    {
 			if (emptyCounter == 10) throw new MeleteException("all_uploads_empty");
