@@ -21,7 +21,7 @@
 * implied. See the License for the specific language governing
 * permissions and limitations under the License.
 */
-INSTRUCTIONS TO UPGRADE FROM MELETE 2.4.5 >> MELETE 2.5
+INSTRUCTIONS TO UPGRADE FROM MELETE 2.4.5 >> MELETE 2.5.1
 For a patched Sakai 2.3, patched Sakai 2.4, OR Sakai 2.5
 -----------------------------------------------------
 SETUP INSTRUCTIONS
@@ -39,7 +39,7 @@ SETUP INSTRUCTIONS
 	** SKIP this step if you will run Melete with Sakai 2.4.**
 	
 	If you are using Sakai 2.3, you need to execute a patch that enables Sakai
-	2.3 to run with Melete 2.5. The patch is at /patch/meletepatchsak23.sh.
+	2.3 to run with Melete 2.5.1. The patch is at /patch/meletepatchsak23.sh.
 	
 	Instructions for running the path are in /patch/patch-SAK2.3_for_melete.txt.
    
@@ -47,7 +47,7 @@ SETUP INSTRUCTIONS
 	** SKIP this step if you will run Melete with Sakai 2.3.**
 	
 	If you are using Sakai 2.4, you need to execute a patch that enables Sakai
-	2.4 to run with Melete 2.5. The patch is at /patch/meletepatchsak24.sh.
+	2.4 to run with Melete 2.5.1. The patch is at /patch/meletepatchsak24.sh.
 	
 	Instructions for running the path are in /patch/patch-SAK2.4_for_melete.txt.	
 	
@@ -72,7 +72,7 @@ SETUP INSTRUCTIONS
 	
 	To build and deploy(using Maven version 2), run 'mvn clean install sakai:deploy'
 
-	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for melete-2.5.Feel free to contact us at 	etudes-dev@foothill.edu for melete-2.4.5 patch that you can work from.
+	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for melete-2.5.1.Feel free to contact us at 	etudes-dev@foothill.edu for melete-2.4.5 patch that you can work from.
 	
 4. Database Configuration
   
