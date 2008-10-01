@@ -153,7 +153,7 @@ SETUP INSTRUCTIONS
 	
 	To build and deploy(using Maven version 2), run 'mvn clean install sakai:deploy'
 
-	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for melete-2.5.1.Feel free to contact us at dev@etudes.org for melete-2.4.5 patch that you can work from.
+	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for Melete 2.5.1.Feel free to contact us at dev@etudes.org for melete-2.4.5 patch that you can work from.
 	
 6. Database Configuration
 
