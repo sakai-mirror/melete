@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  **********************************************************************************/
 package org.sakaiproject.component.app.melete;
@@ -674,6 +674,43 @@ public class SectionDB implements Serializable {
 			throw new MeleteException("add_section_fail");
 			}
 	}
+
+	public void deleteResource(MeleteResource melResource) throws Exception
+		{
+			try{
+			     Session session = hibernateUtil.currentSession();
+		         Transaction tx = null;
+				try
+				{
+					tx = session.beginTransaction();
+				//delete resource
+					session.delete(melResource);
+				  // complete transaction
+					tx.commit();
+
+			 	  if (logger.isDebugEnabled()) logger.debug(" resource deleted" );
+
+				}
+				catch(StaleObjectStateException sose)
+			     {
+					logger.error("stale object exception" + sose.toString());
+			     }
+				catch(HibernateException he)
+					     {
+							if(tx !=null) tx.rollback();
+							logger.error(he.toString());
+							he.printStackTrace();
+							throw he;
+					     }
+		        	finally{
+					hibernateUtil.closeSession();
+					 }
+			}catch(Exception ex){
+					// Throw application specific error
+				ex.printStackTrace();
+				throw new MeleteException("add_section_fail");
+				}
+		}
 
 	/*
 	 *  add resource associated with section
