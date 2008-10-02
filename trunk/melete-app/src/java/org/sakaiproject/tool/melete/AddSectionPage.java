@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  **********************************************************************************/
 
@@ -73,7 +73,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		setFormName("AddSectionForm");
 		shouldRenderNotype = true;
 		}
-	
+
 	/**
 	 * @return sizeWarning
 	 * render sizeWarning message if this flag is true
@@ -134,7 +134,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	     //validation 2: if content is provided then check for copyright license
 	     if(!section.getContentType().equals("notype") && getM_license().getLicenseCodes().equals(SectionResourceLicenseSelector.Copyright_CODE))
 	     {
-	     	getM_license().checkForRequiredFields();	     
+	     	getM_license().checkForRequiredFields();
 	     }
 
 	    //validation 3: if upload a new file check fileName format - moved to uploadSerctionContent()
@@ -149,7 +149,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		    if (logger.isDebugEnabled()) logger.debug("AddSectionpage:inserting section");
 		     String uploadHomeDir = context.getExternalContext().getInitParameter("uploadDir");
 		    String addCollId = getMeleteCHService().getCollectionId( section.getContentType(), module.getModuleId());
-	
+
 			// step 1: insert section
 			Integer newSectionId = sectionService.insertSection(module,section);
 			section.setSectionId(newSectionId);
@@ -160,7 +160,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			{
 				meleteResource = getM_license().processLicenseInformation(getMeleteResource());
 
-			//	step 2.1:existing resource is selected for section content				
+			//	step 2.1:existing resource is selected for section content
 				if(!section.getContentType().equals("typeEditor") && selResourceIdFromList != null)
 					{
 					if (logger.isDebugEnabled()) logger.debug("existing resource is selected");
@@ -178,9 +178,9 @@ public class AddSectionPage extends SectionPage implements Serializable{
 						   meleteResource.setResourceId(newResourceId);
 					}
 					else getMeleteCHService().editResourceProperties(meleteResource.getResourceId(), secResourceName, secResourceDescription);
-			
+
 					}
-								
+
 			//step 3: insert section resource in melete table i.e. if new resource then insert in melete resource table
 			//	otherwise just insert in sectionResource table
 				if(selResourceIdFromList == null) sectionService.insertMeleteResource(section, meleteResource);
@@ -193,6 +193,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			logger.error("error in inserting section "+ mex.toString());
 			//rollback and delete section
 			try{
+				if(selResourceIdFromList != null) sectionService.deleteResource(meleteResource);
 				sectionService.deleteSection(section,(String)sessionMap.get("courseId"), null);
 				} catch (Exception e){}
 			String errMsg = bundle.getString(mex.getMessage());
@@ -203,6 +204,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			{
 			logger.error("error in inserting section "+ ex.toString());
 			try{
+			if(selResourceIdFromList != null) sectionService.deleteResource(meleteResource);
 			sectionService.deleteSection(section,(String)sessionMap.get("courseId"), null);
 			} catch (Exception e){}
 			String errMsg = bundle.getString("add_section_fail");
@@ -306,9 +308,9 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	  public String gotoServerView()
 	  {
 	  	logger.debug("going to server view page");
-	  	expandAllFlag = true;  	    
+	  	expandAllFlag = true;
  	    renderSelectedResource = false;
- 	    selResourceIdFromList = null; 	    
+ 	    selResourceIdFromList = null;
  	    currSiteResourcesList = null;
  	    getCurrSiteResourcesList();
  	    return "ContentUploadServerView";
@@ -322,7 +324,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		{
 	  		// local file is selected so create a resource to move on
 	  	  if(selResourceIdFromList == null)
-	  		{	  		
+	  		{
             	   String addCollectionId = getMeleteCHService().getUploadCollectionId();
             	   String uploadHomeDir = ctx.getExternalContext().getInitParameter("uploadDir");
             	   String newResourceId = addResourceToMeleteCollection(uploadHomeDir,addCollectionId);
@@ -331,7 +333,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	               String checkDup = rUrl.substring(rUrl.lastIndexOf("/")+1);
 	               if(!checkDup.equals(secResourceName))secResourceName = checkDup;
             	}
-            
+
 	  		ctx.renderResponse();
 		}
 		catch(Exception e)
@@ -352,7 +354,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	  		setLinkUrl(currLinkUrl);
 	  		return "addmodulesections";
 	  }
-	  
+
 	  public void selectedResourceDeleteAction(ActionEvent evt)
 		{
 			FacesContext ctx = FacesContext.getCurrentInstance();
@@ -362,37 +364,37 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			UIData table = (UIData) root.findComponent("ServerViewForm:ResourceListingForm").findComponent("table");
 			DisplaySecResources selectedDr = (DisplaySecResources) table.getRowData();
 			logger.debug("selected row to delete " + selectedDr.getResource_id());
-			 
+
 			ValueBinding binding =Util.getBinding("#{deleteResourcePage}");
 			DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
 			delResPage.resetValues();
 			if(section.getContentType().equals("typeUpload"))
 				delResPage.setFromPage("ContentUploadServerView");
 			else if (section.getContentType().equals("typeLink"))
-				delResPage.setFromPage("ContentLinkServerView");		
-			
+				delResPage.setFromPage("ContentLinkServerView");
+
 			delResPage.setResourceName(selectedDr.getResource_title());
-			delResPage.processDeletion(selectedDr.getResource_id(), courseId);		
+			delResPage.processDeletion(selectedDr.getResource_id(), courseId);
 			return;
 		}
-	
+
 	  public String redirectDeleteLink()
 		{
 			 return "delete_resource";
 		}
-	  
+
 	  public String gotoServerLinkView()
 	  {
 			expandAllFlag = true;
 			renderSelectedResource = false;
-			selResourceIdFromList = null;			
-			setLinkUrl(null);			
+			selResourceIdFromList = null;
+			setLinkUrl(null);
 			refreshCurrSiteResourcesList();
 			newURLTitle="";
 			if(displayCurrLink == null || displayCurrLink.length() == 0) newURLTitle = secResourceName;
 			return "ContentLinkServerView";
 	  }
-	  
+
 	  public String setServerUrl()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -410,22 +412,22 @@ public class AddSectionPage extends SectionPage implements Serializable{
 					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "select_or_cancel", errMsg));
 					return "ContentLinkServerView";
 				}
-				
+
 				if(newURLTitle == null || newURLTitle.length() == 0)
 				{
 					errMsg = bundle.getString("URL_title_reqd");
 					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "URL_title_reqd", errMsg));
 					return "editContentLinkServerView";
 				}
-				
-				secResourceName = newURLTitle;	
+
+				secResourceName = newURLTitle;
 				String addCollectionId = getMeleteCHService().getUploadCollectionId();
 				String newResourceId = addResourceToMeleteCollection(null, addCollectionId);
 				meleteResource.setResourceId(newResourceId);
 				currLinkUrl = getLinkUrl();
 			}
 			logger.debug("currlink value in setServer is" + currLinkUrl);
-			createLinkUrl();	
+			createLinkUrl();
 			ctx.renderResponse();
 		}
 			catch (Exception e)
@@ -433,15 +435,15 @@ public class AddSectionPage extends SectionPage implements Serializable{
 				logger.error("error in set server url for edit section content" + errMsg);
 				e.printStackTrace();
 				if (e.getMessage() != null)
-				{	
+				{
 				  errMsg = bundle.getString(e.getMessage());
 				  ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), errMsg));
-				}  
+				}
 				return "ContentLinkServerView";
 			}
 			return "addmodulesections";
 		}
-	 
+
 	  public void selectedResourceAction(ActionEvent evt) {
 	    	FacesContext ctx = FacesContext.getCurrentInstance();
 	    	UICommand cmdLink = (UICommand)evt.getComponent();

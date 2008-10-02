@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  **********************************************************************************/
 package org.sakaiproject.component.app.melete;
@@ -169,8 +169,8 @@ public class SectionServiceImpl implements Serializable, SectionService{
 		  		throw new MeleteException("delete_module_fail");
 			}
 	}
-	
-	
+
+
 	public void deleteSections(List sectionBeans, String courseId, String userId) throws MeleteException
 	{
 		 List secList = null;
@@ -180,7 +180,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 
 			Section sec = (Section) secbean.getSection();
   		    deleteSection(sec, courseId, userId);
-	      }		 
+	      }
 	}
 
 	public SectionObjService getSection(int sectionId) {
@@ -288,6 +288,19 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			}
 	  }
 
+	/*
+     * deleteResource object
+     */
+	  public void deleteResource(MeleteResourceService melResource) throws Exception
+	  {
+		try{
+			sectiondb.deleteResource((MeleteResource)melResource);
+			}catch(Exception ex)
+			{
+				logger.error("AddSectionPage --delete resource failed");
+				throw new MeleteException(ex.toString());
+			}
+  		}
 	  /*
 	   * add section resource association and resource object
 	   */
@@ -438,12 +451,12 @@ public class SectionServiceImpl implements Serializable, SectionService{
 		  org.w3c.dom.Element nextItem = SectionUtil.getNextSection(currItem);
 			if (nextItem != null)
 			{
-				SectionObjService nextSection = getSection(Integer.parseInt(nextItem.getAttribute("id")));				
+				SectionObjService nextSection = getSection(Integer.parseInt(nextItem.getAttribute("id")));
 				return nextSection;
 			}
-		  return null;	
+		  return null;
 	  }
-	  
+
 	  public SectionObjService getPrevSection(String curr_id, String seqXML) throws Exception
 	  {
 		  SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
@@ -452,10 +465,10 @@ public class SectionServiceImpl implements Serializable, SectionService{
 		  org.w3c.dom.Element prevItem = SectionUtil.getPrevSection(currItem);
 			if (prevItem != null)
 			{
-				SectionObjService prevSection = getSection(Integer.parseInt(prevItem.getAttribute("id")));				
+				SectionObjService prevSection = getSection(Integer.parseInt(prevItem.getAttribute("id")));
 				return prevSection;
 			}
-		  return null;	
+		  return null;
 	  }
 
 	/**
