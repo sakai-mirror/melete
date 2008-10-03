@@ -129,22 +129,31 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"add_section_modality_reqd",errMsg));
 			return "failure";
 	     }
-	     try
-		 {
 	     //validation 2: if content is provided then check for copyright license
-	     if(!section.getContentType().equals("notype") && getM_license().getLicenseCodes().equals(SectionResourceLicenseSelector.Copyright_CODE))
-	     {
-	     	getM_license().checkForRequiredFields();
-	     }
-
+	     try
+		   {
+	          if(!section.getContentType().equals("notype") && getM_license().getLicenseCodes().equals(SectionResourceLicenseSelector.Copyright_CODE))
+	          {
+	        	getM_license().checkForRequiredFields();
+	          }
+		   }
+		catch(MeleteException mex)
+		   {
+			logger.error("licenese info not proper "+ mex.toString());
+			String errMsg = bundle.getString(mex.getMessage());
+			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
+			return "failure";
+		   }
 	    //validation 3: if upload a new file check fileName format - moved to uploadSerctionContent()
 	  	// validation 4: check link url - moved to addresourcetoMeleteCollection()
-	 	if(!section.getContentType().equals("notype") && !section.getContentType().equals("typeEditor") && meleteResource.getResourceId() == null)
-	 	{
-	 		String errMsg = bundle.getString("section_content_required");
-			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"section_content_required",errMsg));
-			return "failure";
-	 	}
+	  	 try
+		 {
+	 		if(!section.getContentType().equals("notype") && !section.getContentType().equals("typeEditor") && meleteResource.getResourceId() == null)
+	 		{
+	 			String errMsg = bundle.getString("section_content_required");
+				context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"section_content_required",errMsg));
+				return "failure";
+	 		}
 	   //   save section
 		    if (logger.isDebugEnabled()) logger.debug("AddSectionpage:inserting section");
 		     String uploadHomeDir = context.getExternalContext().getInitParameter("uploadDir");
@@ -194,7 +203,8 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			//rollback and delete section
 			try{
 				if(selResourceIdFromList != null) sectionService.deleteResource(meleteResource);
-				sectionService.deleteSection(section,(String)sessionMap.get("courseId"), null);
+				if(section.getSectionId()!= null && section.getSectionId().intValue() != 0)
+					sectionService.deleteSection(section,(String)sessionMap.get("courseId"), null);
 				} catch (Exception e){}
 			String errMsg = bundle.getString(mex.getMessage());
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
@@ -205,7 +215,8 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			logger.error("error in inserting section "+ ex.toString());
 			try{
 			if(selResourceIdFromList != null) sectionService.deleteResource(meleteResource);
-			sectionService.deleteSection(section,(String)sessionMap.get("courseId"), null);
+			if(section.getSectionId()!= null && section.getSectionId().intValue() != 0)
+					sectionService.deleteSection(section,(String)sessionMap.get("courseId"), null);
 			} catch (Exception e){}
 			String errMsg = bundle.getString("add_section_fail");
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"add_section_fail",errMsg));
