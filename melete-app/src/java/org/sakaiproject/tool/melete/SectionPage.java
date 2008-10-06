@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  **********************************************************************************/
 package org.sakaiproject.tool.melete;
@@ -149,13 +149,13 @@ public abstract class SectionPage implements Serializable {
 	 protected String currLinkUrl;
      protected String displayCurrLink;
      protected String newURLTitle;
-     
+
      protected String selectedResourceName;
 
      protected String selectedResourceDescription;
 
  	protected MeleteResource selectedResource;
- 	
+
  	protected SectionResourceLicenseSelector m_selected_license;
 
     public SectionPage()
@@ -174,17 +174,17 @@ public abstract class SectionPage implements Serializable {
             meleteResource = null;
             sortAscFlag = true;
             }
-    
-    
+
+
     static Comparator<DisplaySecResources> SectionResourcesComparatorDesc = new Comparator<DisplaySecResources>() {
         public int compare(DisplaySecResources o1, DisplaySecResources o2) {
-               return -1 * (o1.compareTo(o2));      
+               return -1 * (o1.compareTo(o2));
         }
-     };  
-    
+     };
+
      public String sortResourcesAsc()
      {
-     	sortAscFlag=false;	
+     	sortAscFlag=false;
      	listNav.resetCurrIndex();
      	sortList();
      	return "#";
@@ -192,19 +192,19 @@ public abstract class SectionPage implements Serializable {
 
 
      public String sortResourcesDesc()
-     {	
+     {
      	sortAscFlag=true;
      	listNav.resetCurrIndex();
      	sortList();
      	return "#";
      }
-    
+
      private void sortList()
      {
      	if(sortAscFlag) java.util.Collections.sort(currSiteResourcesList);
      	else Collections.sort(currSiteResourcesList,SectionResourcesComparatorDesc);
      }
-    
+
      public boolean getSortAscFlag()
      {
     	 return this.sortAscFlag;
@@ -345,8 +345,6 @@ public abstract class SectionPage implements Serializable {
           if (null == this.section) {
                         if (logger.isDebugEnabled()) logger.debug("get section is null so creating one");
               this.section = new Section();
-        //      this.section.setLink("http://");
-        //      this.section.setContentType("typeEditor");
               this.section.setContentType("notype");
               // user info from session
               this.section.setCreatedByFname((String)sessionMap.get("firstName"));
@@ -708,11 +706,17 @@ public abstract class SectionPage implements Serializable {
 		  	rbPage.setRemoteLinkFiles(null);
   		}
 
+	shouldRenderEditor=false;
+	shouldRenderLink=false;
+	shouldRenderUpload=false;
+	shouldRenderResources=false;
+	shouldRenderNotype = false;
+
     if (logger.isDebugEnabled()) logger.debug("!!!!!!!!!reseting section values done !!!!!!!");
     }
 
     /*
-     *  reset resource values and license from java cache when its deleted and associated with current section 
+     *  reset resource values and license from java cache when its deleted and associated with current section
      */
 	public void resetMeleteResourceValues()
 	{
@@ -723,7 +727,7 @@ public abstract class SectionPage implements Serializable {
 		uploadFileName = null;
 		setM_license(null);
 	}
-    
+
     /**
      * @return remove values from session before closing
      */
@@ -970,7 +974,7 @@ public abstract class SectionPage implements Serializable {
 
 			// get list of all resources for upload type for the current site
 			currSiteResourcesList = new ArrayList<DisplaySecResources>();
-		
+
 			List<ContentResource> allmembers = null;
 			if(section == null || section.getContentType() == null) return null;
 
@@ -994,7 +998,7 @@ public abstract class SectionPage implements Serializable {
 				String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 //							 duplicate listing
 				if (displayName.length() > 50) displayName = displayName.substring(0,50) + "...";
-				String rUrl = cr.getUrl().replaceAll(" ", "%20");				
+				String rUrl = cr.getUrl().replaceAll(" ", "%20");
 				String rgif=  serverUrl + "/library/image/sakai/url.gif";
 				if(section.getContentType().equals("typeUpload"))
 				{
@@ -1034,7 +1038,7 @@ public abstract class SectionPage implements Serializable {
 		} catch (Exception e){logger.error("error in creating displayList for server residing files" + e.toString());}
 		return displayResourcesList;
 	}
-	
+
 	 //Mallika - 10/13/06 - new method to check if uploads directory exists
     public void checkUploadExists()
     {
@@ -1264,7 +1268,7 @@ public abstract class SectionPage implements Serializable {
 	{
 		this.currLinkUrl = currLinkUrl;
 	}
-	
+
 	/**
 	 * @return Returns the selectedResource.
 	 */
@@ -1316,7 +1320,7 @@ public abstract class SectionPage implements Serializable {
 	{
 		this.selectedResourceName = selectedResourceName;
 	}
-	
+
 	/**
 	 * @return the newURLTitle
 	 */
@@ -1332,19 +1336,19 @@ public abstract class SectionPage implements Serializable {
 	{
 		this.newURLTitle = newURLTitle;
 	}
-	
+
 	/*
 	 *
 	 * inner class to set required content resource values for display
 	 *
 	 */
 	public class DisplaySecResources implements Comparable<DisplaySecResources>
-	{	
+	{
 		String resource_title;
 		String resource_id;
 		String resource_url;
 		String resource_gif;
-		
+
 		public DisplaySecResources(String resource_title,String resource_id, String resource_url)
 		{
 			this.resource_title = resource_title;
@@ -1352,7 +1356,7 @@ public abstract class SectionPage implements Serializable {
 			this.resource_url = resource_url;
 			this.resource_gif = "";
 		}
-		
+
 		public DisplaySecResources(String resource_title,String resource_id, String resource_url, String resource_gif)
 		{
 			this.resource_title = resource_title;
@@ -1396,14 +1400,14 @@ public abstract class SectionPage implements Serializable {
 		public void setResource_url(String resource_url) {
 			this.resource_url = resource_url;
 		}
-		
+
 		public int compareTo(DisplaySecResources n) {
-			int res = resource_title.compareTo(n.getResource_title());			
+			int res = resource_title.compareTo(n.getResource_title());
 			return res;
 		}
-		
+
 		public String toString() {
-			return resource_title;		
+			return resource_title;
 		}
 
 		/**
