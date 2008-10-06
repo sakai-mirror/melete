@@ -55,11 +55,6 @@
 				<tr><td>
                 <h:inputHidden id="contentType" value="#{addSectionPage.section.contentType}"/>
 			     <h:outputText id="typeEditorContents" value="#{addSectionPage.previewContentData}" escape="false"  rendered="#{addSectionPage.shouldRenderEditor}"></h:outputText>		
-		        <br> 
-		        <h:outputText id="secinstLink" 
-                           value="#{msgs.add_preview_clicking}" rendered="#{addSectionPage.shouldRenderLink}">
-                </h:outputText> 
-                <br>
                 <br>
 	            <h:outputLink id="viewSectionLink"  value="#{addSectionPage.previewContentData}" target="_blank" rendered="#{(addSectionPage.shouldRenderLink || addSectionPage.shouldRenderUpload) && addSectionPage.section.openWindow == true}">
                 <h:outputText id="sectitleLink" 

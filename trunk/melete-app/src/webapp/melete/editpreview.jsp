@@ -58,12 +58,7 @@
 			  </td></tr>
 			  <tr><td>
 		      <h:inputHidden id="contentType" value="#{editSectionPage.section.contentType}"/>
-			  <h:outputText id="typeEditorContents" value="#{editSectionPage.previewContentData}" escape="false"  rendered="#{editSectionPage.shouldRenderEditor}"></h:outputText>		
-		        <br> 
-		        <h:outputText id="secinstLink" 
-                           value="#{msgs.edit_preview_clicking}" rendered="#{editSectionPage.shouldRenderLink}">
-                </h:outputText> 
-                <br>
+			  <h:outputText id="typeEditorContents" value="#{editSectionPage.previewContentData}" escape="false"  rendered="#{editSectionPage.shouldRenderEditor}"></h:outputText>		 
                 <br>
 	            <h:outputLink id="viewSectionLink"  value="#{editSectionPage.previewContentData}" target="_blank" rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderUpload) && editSectionPage.section.openWindow == true}">
                 <h:outputText id="sectitleLink" 
