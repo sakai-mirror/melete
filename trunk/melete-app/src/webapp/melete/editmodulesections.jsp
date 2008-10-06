@@ -29,26 +29,6 @@
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 
-<!--  Copyright (c) 2008 Etudes, Inc. -->
- 
-<!--  Licensed under the Apache License, Version 2.0 (the "License"); -->
-<!--   you may not use this file except in compliance with the License.-->
-<!--   You may obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-  
-<!--   Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project -->
-  
-<!--   Licensed under the Apache License, Version 2.0 (the "License"); you -->
-<!--   may not use this file except in compliance with the License. You may -->
-<!--   obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-<!--  Unless required by applicable law or agreed to in writing, software -->
-<!--  distributed under the License is distributed on an "AS IS" BASIS, -->
-<!--  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or -->
-<!--  implied. See the License for the specific language governing -->
-<!--  permissions and limitations under the License. -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
@@ -75,6 +55,26 @@ function showupload()
 	defaultStatus = "Done";
 	var str=document.getElementById("EditSectionForm:contentType").value;
 	var sferyxdisplay = document.getElementById("EditSectionForm:contentEditorView:sferyxDisplay");  
+	
+	if(str.match("notype"))
+		{		
+			if(document.htmleditor != null)
+			{
+			document.htmleditor.style.visibility="hidden";
+			document.htmleditor.style.display="none";
+			}
+			if (document.getElementById("EditSectionForm:contentEditorView:EditorPanel") != null)
+			  {
+			     document.getElementById("EditSectionForm:contentEditorView:EditorPanel").style.visibility="hidden";
+			     document.getElementById("EditSectionForm:contentEditorView:EditorPanel").style.display="none";
+			  }
+	
+			if(document.getElementById("othereditor") != null)
+			  {
+			      document.getElementById("othereditor").style.visibility="hidden";
+			      document.getElementById("othereditor").style.display="none";
+			  }
+	}
 	
 	if(sferyxdisplay != null && str.match("typeEditor"))
 	{	
