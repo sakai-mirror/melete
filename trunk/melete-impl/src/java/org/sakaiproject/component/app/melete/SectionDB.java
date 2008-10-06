@@ -279,13 +279,22 @@ public class SectionDB implements Serializable {
                        //Delete from MELETE_RESOURCE table
 		    		   if (deleteFrom == MELETE_RESOURCE_ONLY)
 		    		   {
-		    			   affectedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", embedResourceId).executeUpdate();
-		    			   //logger.debug(affectedEntities+" row was deleted from MELETE_RESOURCE");
+		    			   if (embedResourceId != null)
+		    			   {	   
+		    			     affectedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", embedResourceId).executeUpdate(); 
+		    			     //logger.debug(affectedEntities+" row was deleted from MELETE_RESOURCE");
+		    			   }  
 		    		   }
 		    		   if (deleteFrom == MELETE_RESOURCE_SECTION_RESOURCE)
 		    		   {
-		    			   affectedEntities = session.createQuery(updSectionResourceStr).setInteger("sectionId", secRes.getSectionId()).executeUpdate();
-		    			   affectedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", secRes.getResource().getResourceId()).executeUpdate();
+		    			   if (secRes.getSectionId() != null)
+		    			   {	   
+		    			     affectedEntities = session.createQuery(updSectionResourceStr).setInteger("sectionId", secRes.getSectionId()).executeUpdate();
+		    			   }
+		    			   if (secRes.getResource().getResourceId() != null)
+		    			   {	   
+		    			     affectedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", secRes.getResource().getResourceId()).executeUpdate();
+		    			   }  
 		    			   //logger.debug(affectedEntities+" row was deleted from MELETE_RESOURCE");
 		    		   }
 	    	          }
@@ -293,8 +302,11 @@ public class SectionDB implements Serializable {
 		    		 if ((deleteFrom == SECTION_RESOURCE_ONLY)||(deleteFrom == MELETE_RESOURCE_SECTION_RESOURCE))
 		    		 {
                        //Delete from SECTION_RESOURCE table
-		    			 affectedEntities = session.createQuery(delSectionResourceStr).setInteger("sectionId", secRes.getSectionId()).executeUpdate();
-		    			 //logger.debug(affectedEntities+" row was deleted from SECTION_RESOURCE");
+		    			 if (secRes.getSectionId() != null)
+		    			 { 	 
+		    			   affectedEntities = session.createQuery(delSectionResourceStr).setInteger("sectionId", secRes.getSectionId()).executeUpdate();
+		    			   //logger.debug(affectedEntities+" row was deleted from SECTION_RESOURCE");
+		    			 }  
 		    		 }
 		    	   }
 		    	   if (deleteFrom != MELETE_RESOURCE_ONLY)
@@ -316,12 +328,14 @@ public class SectionDB implements Serializable {
 		    	   		//logger.debug("New sectionsseqxml is "+sectionsSeqXML);
 		    	   		affectedEntities = session.createQuery(updModuleStr).setInteger("moduleId", module.getModuleId()).setString("seqXml", sectionsSeqXML).executeUpdate();
 		    	   		//logger.debug(affectedEntities+" row was updated in MELETE_MODULE");
-
 		    	     }
 
 		    	     //Delete section
-		    	     affectedEntities = session.createQuery(delSectionStr).setInteger("sectionId",sectionId).executeUpdate();
-		    	     //logger.debug(affectedEntities+" row was deleted from MELETE_SECTION");
+		    	     if (sectionId != null)
+		    	     {	 
+		    	       affectedEntities = session.createQuery(delSectionStr).setInteger("sectionId",sectionId).executeUpdate();
+		    	       //logger.debug(affectedEntities+" row was deleted from MELETE_SECTION");
+		    	     }  
 
 
 		    	   }
