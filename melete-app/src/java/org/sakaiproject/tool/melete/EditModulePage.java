@@ -255,7 +255,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
     	setModuleDateBean(mdbean);
     	setModule(mdbean.getModule());
     	setModuleShdates(mdbean.getModuleShdate());
-    	if(mdbean.getSectionBeans().isEmpty())
+    	if((mdbean.getSectionBeans() == null)||(mdbean.getSectionBeans().isEmpty()))
     	{
     		setFirstSection(null);
     		setHasSections(false);
