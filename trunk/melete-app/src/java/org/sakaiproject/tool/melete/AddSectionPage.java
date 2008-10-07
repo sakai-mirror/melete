@@ -495,4 +495,10 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			return;
 		}
 
+	  public void resetSectionValues()
+	    {
+		  super.resetSectionValues();
+		  shouldRenderNotype = true;
+		  if(section != null) section = null;
+	    }
 }

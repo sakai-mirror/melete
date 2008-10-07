@@ -118,10 +118,12 @@ public class SectionDB implements Serializable {
 			  SectionUtil.addSectiontoList(sectionsSeqXML, section.getSectionId().toString());
 			  sectionsSeqXML = SectionUtil.storeSubSections();
 			  module.setSeqXml(sectionsSeqXML);
-
 			  session.saveOrUpdate(module);
+			  session.merge(module);
 			  }
-			  tx.commit();
+			  session.merge(section);
+			  tx.commit();			  
+			  
 			  if (logger.isDebugEnabled()) logger.debug("commiting transaction and new added section id:" + section.getSectionId() + ","+section.getTitle());
 			  return section.getSectionId();
 
@@ -129,6 +131,7 @@ public class SectionDB implements Serializable {
 			catch(StaleObjectStateException sose)
 		     {
 				logger.error("stale object exception" + sose.toString());
+				session.refresh(section);
 		     }
 			catch(ConstraintViolationException cve)
 			{
@@ -164,7 +167,9 @@ public class SectionDB implements Serializable {
 	 	  	  // save object
 			  tx = session.beginTransaction();
 			  session.saveOrUpdate(section);
+			  session.merge(section);
  		  	  tx.commit();
+ 		  	  
 			  if (logger.isDebugEnabled()) logger.debug("commiting transaction and new added section id:" + section.getSectionId() + ","+section.getTitle());
 			  return section.getSectionId();
 
@@ -172,6 +177,7 @@ public class SectionDB implements Serializable {
 			catch(StaleObjectStateException sose)
 		     {
 				logger.error("stale object exception" + sose.toString());
+				session.refresh(section);
 		     }
 			catch(HibernateException he)
 				     {
@@ -215,7 +221,9 @@ public class SectionDB implements Serializable {
 			  	  session.saveOrUpdate(melResource);
 			  	  session.saveOrUpdate(secResource);
 			  	  session.saveOrUpdate(section);
+			  	  session.merge(section);
 				  tx.commit();
+				  
 			  if (logger.isDebugEnabled()) logger.debug("commit transaction and edit section :" + section.getModuleId() + ","+section.getTitle());
 	//		  updateExisitingResource(secResource);
 			  return ;
@@ -226,6 +234,7 @@ public class SectionDB implements Serializable {
 				if(tx !=null) tx.rollback();
 				logger.error("stale object exception" + sose.toString());
 				sose.printStackTrace();
+				session.refresh(section);
 				throw new MeleteException("edit_section_multiple_users");
 		     }
 			catch (HibernateException he)
