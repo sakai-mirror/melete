@@ -77,22 +77,22 @@ function showupload()
 	if(!str.match("typeEditor"))
 	{	
 	// avoid js error if sferyx is not available	
-		if(document.htmleditor != null)
+		if(document.htmleditor != undefined)
 		{
 			document.htmleditor.style.visibility="hidden";
 			document.htmleditor.style.display="none";
 		}
-		if (document.getElementById("AddSectionForm:contentEditorView:EditorPanel") != null)
+		if (document.getElementById("AddSectionForm:contentEditorView") != undefined)
             {
-                  document.getElementById("AddSectionForm:contentEditorView:EditorPanel").style.visibility="hidden";
-                  document.getElementById("AddSectionForm:contentEditorView:EditorPanel").style.display="none";
+                  document.getElementById("AddSectionForm:contentEditorView").style.visibility="hidden";
+                  document.getElementById("AddSectionForm:contentEditorView").style.display="none";
             }
 	}	
 	
-	if(sferyxdisplay != null && str.match("typeEditor"))	
+	if(sferyxdisplay != undefined && str.match("typeEditor"))	
 		{	
 		 var k1=document.getElementById("AddSectionForm:contentEditorView:contentTextArea").value;     
-			if(k1 !=null)	document.htmleditor.setContent(k1); //May use initialURLEncodedContent param instead
+			if(k1 != undefined)	document.htmleditor.setContent(k1); //May use initialURLEncodedContent param instead
 		  }
 
     //This check is to hide fckeditor		  
@@ -108,11 +108,11 @@ function transferEditordata()
     var str=document.getElementById("AddSectionForm:contentType").value;
     if (str == "typeEditor")
     {
-	if(document.htmleditor!=null)
+	if(document.htmleditor!= undefined)
 	{
 	  window.defaultStatus="Adding content....";
 	  	var k =document.htmleditor.getBodyContent();
-	  		 if(document.getElementById("AddSectionForm:contentEditorView:contentTextArea") !=null)
+	  		 if(document.getElementById("AddSectionForm:contentEditorView:contentTextArea") !=undefined)
 			 {
 				document.getElementById("AddSectionForm:contentEditorView:contentTextArea").value=k;
 			}
@@ -121,15 +121,6 @@ function transferEditordata()
 	}
 			
 }
-
-/*function showmessage()
-{
-		if (document.getElementById("file1").value.length  >  0)
-		   {
-		   window.defaultStatus="<%=mensaje%>";
-		   } 
-  }
- */
   
   function clearmessage()
  {

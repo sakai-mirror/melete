@@ -58,25 +58,25 @@ function showupload()
 	
 	if(str.match("notype"))
 		{		
-			if(document.htmleditor != null)
+			if(document.htmleditor != undefined)
 			{
 			document.htmleditor.style.visibility="hidden";
 			document.htmleditor.style.display="none";
 			}
-			if (document.getElementById("EditSectionForm:contentEditorView:EditorPanel") != null)
+			if (document.getElementById("EditSectionForm:contentEditorView") != undefined)
 			  {
-			     document.getElementById("EditSectionForm:contentEditorView:EditorPanel").style.visibility="hidden";
-			     document.getElementById("EditSectionForm:contentEditorView:EditorPanel").style.display="none";
+			     document.getElementById("EditSectionForm:contentEditorView").style.visibility="hidden";
+			     document.getElementById("EditSectionForm:contentEditorView").style.display="none";
 			  }
 	
-			if(document.getElementById("othereditor") != null)
+			if(document.getElementById("othereditor") != undefined)
 			  {
 			      document.getElementById("othereditor").style.visibility="hidden";
 			      document.getElementById("othereditor").style.display="none";
 			  }
 	}
 	
-	if(sferyxdisplay != null && str.match("typeEditor"))
+	if(sferyxdisplay != undefined && str.match("typeEditor"))
 	{	
 	 var k1=document.getElementById("EditSectionForm:contentEditorView:contentTextArea").value;     
 	 if(k1 !=null)
@@ -87,15 +87,15 @@ function showupload()
 
 	if(!str.match("typeEditor"))
 	{		
-		if(document.htmleditor != null)
+		if(document.htmleditor != undefined)
 			{
 				document.htmleditor.style.visibility="hidden";
 				document.htmleditor.style.display="none";
 			}
-			if (document.getElementById("EditSectionForm:contentEditorView:EditorPanel") != null)
+			if (document.getElementById("EditSectionForm:contentEditorView") != undefined)
             {
-                  document.getElementById("EditSectionForm:contentEditorView:EditorPanel").style.visibility="hidden";
-                  document.getElementById("EditSectionForm:contentEditorView:EditorPanel").style.display="none";
+                  document.getElementById("EditSectionForm:contentEditorView").style.visibility="hidden";
+                  document.getElementById("EditSectionForm:contentEditorView").style.display="none";
             }		
 	}
 }	
@@ -103,10 +103,10 @@ function showupload()
 function transferEditordata()
 {
 	var sferyxdisplay = document.getElementById("EditSectionForm:contentEditorView:sferyxDisplay");
-	if ((sferyxdisplay != null)&&(document.htmleditor!=null))
+	if ((sferyxdisplay != undefined)&&(document.htmleditor!=undefined))
 	{
 	  	var k = document.htmleditor.getBodyContent();
-	  	 if(sferyxdisplay != null && document.getElementById("EditSectionForm:contentEditorView:contentTextArea") !=null)
+	  	 if(sferyxdisplay != undefined && document.getElementById("EditSectionForm:contentEditorView:contentTextArea") != undefined)
 			 {
                 document.getElementById("EditSectionForm:contentEditorView:contentTextArea").value=k;
 		document.htmleditor.uploadMultipartContent(true);
