@@ -21,7 +21,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 
-<<%@ page import="org.sakaiproject.tool.melete.MeleteSiteAndUserInfo"%>
+<%@ page import="org.sakaiproject.tool.melete.MeleteSiteAndUserInfo"%>
 <%
 final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 
