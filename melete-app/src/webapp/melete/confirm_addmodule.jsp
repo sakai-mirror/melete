@@ -1,11 +1,3 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
-<head>
-<meta http-equiv="Content-Language" content="en-us">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<meta name="description" content="ETUDES-NG Course Management System, Powered by Sakai">
-<meta name="keywords" content="ETUDES-NG course management system, e-learning">
-
 <!--  Copyright (c) 2008 Etudes, Inc. -->
  
 <!--  Licensed under the Apache License, Version 2.0 (the "License"); -->
@@ -26,12 +18,17 @@
 <!--  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or -->
 <!--  implied. See the License for the specific language governing -->
 <!--  permissions and limitations under the License. -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="description" content="ETUDES-NG Course Management System, Powered by Sakai">
+<meta name="keywords" content="ETUDES-NG course management system, e-learning">
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
-
-
-
 
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <!-- End code to put in head section for image pre-loading. -->
