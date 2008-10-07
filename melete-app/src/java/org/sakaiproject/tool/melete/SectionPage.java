@@ -515,7 +515,7 @@ public abstract class SectionPage implements Serializable {
 	    		ValueBinding binding = Util.getBinding("#{authorPreferences}");
 	    		AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
 	    		String usereditor = preferencePage.getUserEditor();
-
+	    		this.contentEditor = new String("Compose content here");
 		           if(contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor") != null && usereditor.equals(preferencePage.FCKEDITOR))
 		                {
 		                contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor").setRendered(shouldRenderEditor);
