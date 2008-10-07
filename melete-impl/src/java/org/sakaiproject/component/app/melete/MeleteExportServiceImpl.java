@@ -63,8 +63,7 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.content.cover.ContentHostingService;
-import org.doomdark.uuid.UUID;
-import org.doomdark.uuid.UUIDGenerator;
+
 /**
  * @author Faculty
  *
