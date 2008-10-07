@@ -573,12 +573,19 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 						if (logger.isDebugEnabled()) logger.debug("Found another resource with the same name or new typeEditor section");
                         if (checkDup.lastIndexOf("-") != -1)
                         {	
-						   checkDup = checkDup.substring(checkDup.lastIndexOf("-"), checkDup.length());
-						   dispName = dispName.substring(0, dispName.lastIndexOf("."));
-						   StringBuffer dispBuffer = new StringBuffer();
-						   dispBuffer.append(dispName);
-						   dispBuffer.append(checkDup);
-						   dispName = dispBuffer.toString();
+						   if (dispName.lastIndexOf(".") != -1)
+						   {	 
+							 checkDup = checkDup.substring(checkDup.lastIndexOf("-"), checkDup.length());  
+						     dispName = dispName.substring(0, dispName.lastIndexOf("."));
+						     StringBuffer dispBuffer = new StringBuffer();
+						     dispBuffer.append(dispName);
+						     dispBuffer.append(checkDup);
+						     dispName = dispBuffer.toString();
+						   } 
+						   else
+						   {
+							   dispName = checkDup;
+						   }
                         }
                         else //This it the condition for typeEditor Section.html sections
                         {
@@ -588,7 +595,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 						ResourcePropertiesEdit rp = edit.getPropertiesEdit();
 						String desc = rp.getProperty(ResourceProperties.PROP_DESCRIPTION);
 						rp.clear();
-						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, dispName);
+						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, dispName);	
 						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
 						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 						getContentservice().commitResource(edit);
@@ -602,6 +609,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 						ResourcePropertiesEdit rp = edit.getPropertiesEdit();
 						String desc = rp.getProperty(ResourceProperties.PROP_DESCRIPTION);
 						rp.clear();
+						
 						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, dispName);
 						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
 						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
