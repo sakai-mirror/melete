@@ -63,8 +63,8 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.content.cover.ContentHostingService;
-import org.doomdark.uuid.UUID;
-import org.doomdark.uuid.UUIDGenerator;
+import org.sakaiproject.id.cover.IdManager;
+
 /**
  * @author Faculty
  *
@@ -176,7 +176,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 						+ "http://www.imsglobal.org/xsd/imsmd_v1p2.xsd ");
 		*/
 
-		root.addAttribute("identifier", "Manifest-" + getUUID().toString());
+		root.addAttribute("identifier", "Manifest-" + getUUID());
 		root.addAttribute("version", "IMS CP 1.1.4");
 		return root;
 	}
@@ -206,7 +206,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 					break;
 				}
 			}
-			rootnew.addAttribute("identifier", "Manifest-" + getUUID().toString());
+			rootnew.addAttribute("identifier", "Manifest-" + getUUID());
 			return rootnew;
 		} catch (DocumentException de) {
 			throw de;
@@ -554,8 +554,8 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 	 * gets UUID
 	 * @return - returns the UUID
 	 */
-	UUID getUUID() {
-		return UUIDGenerator.getInstance().generateRandomBasedUUID();
+	String getUUID() {
+		return IdManager.createUuid();
 	}
 
 
