@@ -933,6 +933,10 @@
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
      </navigation-case> 
+      <navigation-case>
+      <from-outcome>failure</from-outcome>
+      <to-view-id>/melete/editpreview.jsp</to-view-id>
+     </navigation-case> 
     </navigation-rule>    
  
   
