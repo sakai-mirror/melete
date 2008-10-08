@@ -131,11 +131,7 @@
 			<version>2.6.2</version>
 		</dependency>
 		
-		<dependency>
-			<groupId>jug</groupId>
-			<artifactId>jug</artifactId>
-			<version>1.1.2</version>
-		</dependency>
+		
 		<dependency>
 			<groupId>servletapi</groupId>
 			<artifactId>servletapi</artifactId>
