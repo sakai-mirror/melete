@@ -436,6 +436,9 @@ public class AddSectionPage extends SectionPage implements Serializable{
 				String newResourceId = addResourceToMeleteCollection(null, addCollectionId);
 				meleteResource.setResourceId(newResourceId);
 				currLinkUrl = getLinkUrl();
+				String rUrl = getMeleteCHService().getResourceUrl(newResourceId);
+	            String checkDup = rUrl.substring(rUrl.lastIndexOf("/")+1);
+	            if(!checkDup.equals(secResourceName))secResourceName = checkDup;
 			}
 			logger.debug("currlink value in setServer is" + currLinkUrl);
 			createLinkUrl();
