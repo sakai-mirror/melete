@@ -452,6 +452,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 	 */
 	public String getPreviewPage()
 	{
+	   ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+
 		try
 		{
 			if (!section.getContentType().equals("notype"))
@@ -460,9 +462,19 @@ public class EditSectionPage extends SectionPage implements Serializable
 				{
 					FacesContext context = FacesContext.getCurrentInstance();
 					String uploadHomeDir = context.getExternalContext().getInitParameter("uploadDir");
-					this.previewContentData = getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir, contentEditor);
-					contentEditor = previewContentData;
-					return "editpreview";
+					try
+					{
+					  this.previewContentData = getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir, contentEditor);
+					  contentEditor = previewContentData;
+					}  
+					catch (MeleteException mex)
+					{
+						logger.error("error in editing section "+ mex.toString());
+						String errMsg = bundle.getString(mex.getMessage());
+						context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
+						return "failure";
+					}
+					
 				}
 				else
 				{
@@ -476,6 +488,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				return "editpreview";
 			}
 		}
+		
 		catch (Exception e)
 		{
 			logger.error(e.toString());
