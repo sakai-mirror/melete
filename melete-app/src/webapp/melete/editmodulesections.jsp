@@ -58,18 +58,19 @@ function showupload()
 	
 	if(str.match("notype"))
 		{		
-			if(document.htmleditor != undefined)
+			if(document.htmleditor != undefined && document.htmleditor != null)
 			{
 			document.htmleditor.style.visibility="hidden";
 			document.htmleditor.style.display="none";
 			}
-			if (document.getElementById("EditSectionForm:contentEditorView") != undefined)
+			if (document.getElementById("EditSectionForm:contentEditorView") != undefined && 
+			document.getElementById("EditSectionForm:contentEditorView") != null)
 			  {
 			     document.getElementById("EditSectionForm:contentEditorView").style.visibility="hidden";
 			     document.getElementById("EditSectionForm:contentEditorView").style.display="none";
 			  }
 	
-			if(document.getElementById("othereditor") != undefined)
+			if(document.getElementById("othereditor") != undefined && document.getElementById("othereditor") != null)
 			  {
 			      document.getElementById("othereditor").style.visibility="hidden";
 			      document.getElementById("othereditor").style.display="none";
@@ -79,7 +80,7 @@ function showupload()
 	if(sferyxdisplay != undefined && str.match("typeEditor"))
 	{	
 	 var k1=document.getElementById("EditSectionForm:contentEditorView:contentTextArea").value;     
-	 if(k1 !=null)
+	 if(k1 != undefined && k1 !=null)
 		 {
 		 document.htmleditor.setContent(k1); //May use initialURLEncodedContent param instead
         	}
@@ -87,12 +88,13 @@ function showupload()
 
 	if(!str.match("typeEditor"))
 	{		
-		if(document.htmleditor != undefined)
+		if(document.htmleditor != undefined && document.htmleditor != null)
 			{
 				document.htmleditor.style.visibility="hidden";
 				document.htmleditor.style.display="none";
 			}
-			if (document.getElementById("EditSectionForm:contentEditorView") != undefined)
+			if (document.getElementById("EditSectionForm:contentEditorView") != undefined && 
+			document.getElementById("EditSectionForm:contentEditorView") != null)
             {
                   document.getElementById("EditSectionForm:contentEditorView").style.visibility="hidden";
                   document.getElementById("EditSectionForm:contentEditorView").style.display="none";
@@ -103,10 +105,11 @@ function showupload()
 function transferEditordata()
 {
 	var sferyxdisplay = document.getElementById("EditSectionForm:contentEditorView:sferyxDisplay");
-	if ((sferyxdisplay != undefined)&&(document.htmleditor!=undefined))
+	if ((sferyxdisplay != undefined )&&(document.htmleditor!=undefined && document.htmleditor!= null))
 	{
 	  	var k = document.htmleditor.getBodyContent();
-	  	 if(sferyxdisplay != undefined && document.getElementById("EditSectionForm:contentEditorView:contentTextArea") != undefined)
+	  	 if(document.getElementById("EditSectionForm:contentEditorView:contentTextArea") != undefined && 
+	  	 document.getElementById("EditSectionForm:contentEditorView:contentTextArea") != null)
 			 {
                 document.getElementById("EditSectionForm:contentEditorView:contentTextArea").value=k;
 		document.htmleditor.uploadMultipartContent(true);
