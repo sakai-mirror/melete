@@ -55,18 +55,19 @@ function showupload()
 	var sferyxdisplay = document.getElementById("AddSectionForm:contentEditorView:sferyxDisplay");
 	if(str.match("notype"))
 	{		
-		if(document.htmleditor != null)
+		if(document.htmleditor != undefined && document.htmleditor != null )
 		{
 		document.htmleditor.style.visibility="hidden";
 		document.htmleditor.style.display="none";
 		}
-		if (document.getElementById("AddSectionForm:contentEditorView:EditorPanel") != null)
+		if (document.getElementById("AddSectionForm:contentEditorView:EditorPanel") != undefined &&
+		    document.getElementById("AddSectionForm:contentEditorView:EditorPanel") != null)
 		  {
 		     document.getElementById("AddSectionForm:contentEditorView:EditorPanel").style.visibility="hidden";
 		     document.getElementById("AddSectionForm:contentEditorView:EditorPanel").style.display="none";
 		  }
 
-		if(document.getElementById("othereditor") != null)
+		if(document.getElementById("othereditor") != undefined && document.getElementById("othereditor") != null)
 		  {
 		      document.getElementById("othereditor").style.visibility="hidden";
 		      document.getElementById("othereditor").style.display="none";
@@ -77,12 +78,13 @@ function showupload()
 	if(!str.match("typeEditor"))
 	{	
 	// avoid js error if sferyx is not available	
-		if(document.htmleditor != undefined)
+		if(document.htmleditor != undefined && document.htmleditor != null)
 		{
 			document.htmleditor.style.visibility="hidden";
 			document.htmleditor.style.display="none";
 		}
-		if (document.getElementById("AddSectionForm:contentEditorView") != undefined)
+		if (document.getElementById("AddSectionForm:contentEditorView") != undefined && 
+		document.getElementById("AddSectionForm:contentEditorView") != null)
             {
                   document.getElementById("AddSectionForm:contentEditorView").style.visibility="hidden";
                   document.getElementById("AddSectionForm:contentEditorView").style.display="none";
@@ -92,7 +94,7 @@ function showupload()
 	if(sferyxdisplay != undefined && str.match("typeEditor"))	
 		{	
 		 var k1=document.getElementById("AddSectionForm:contentEditorView:contentTextArea").value;     
-			if(k1 != undefined)	document.htmleditor.setContent(k1); //May use initialURLEncodedContent param instead
+			if(k1 != undefined && k1 != null) document.htmleditor.setContent(k1); //May use initialURLEncodedContent param instead
 		  }
 
     //This check is to hide fckeditor		  
@@ -108,11 +110,12 @@ function transferEditordata()
     var str=document.getElementById("AddSectionForm:contentType").value;
     if (str == "typeEditor")
     {
-	if(document.htmleditor!= undefined)
+	if(document.htmleditor!= undefined && document.htmleditor!= null)
 	{
 	  window.defaultStatus="Adding content....";
 	  	var k =document.htmleditor.getBodyContent();
-	  		 if(document.getElementById("AddSectionForm:contentEditorView:contentTextArea") !=undefined)
+	  		 if(document.getElementById("AddSectionForm:contentEditorView:contentTextArea") !=undefined &&
+	  		   document.getElementById("AddSectionForm:contentEditorView:contentTextArea") != null)
 			 {
 				document.getElementById("AddSectionForm:contentEditorView:contentTextArea").value=k;
 			}
