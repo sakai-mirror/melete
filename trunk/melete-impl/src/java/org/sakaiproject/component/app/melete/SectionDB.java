@@ -89,14 +89,11 @@ public class SectionDB implements Serializable {
 	 * update module witht his association to new added section
 	 * If error in committing transaction, it rollbacks the transaction.
 	 */
-	//Mallika - 5/3/06 - This addSection is the new one with section id
-	//in section filename. The previous version of this function is in comments
-	//below
-	//Rashmi - 8/22/06 - according to new section design integrated with CH
-	public Integer addSection(Module module, Section section, boolean fromImport) throws MeleteException
+    public Integer addSection(Module module, Section section, boolean fromImport) throws MeleteException
 	{
 		try{
 		     Session session = hibernateUtil.currentSession();
+	         if(session != null) session.clear();
 	         Transaction tx = null;
 			try
 			{
@@ -106,6 +103,9 @@ public class SectionDB implements Serializable {
 			  section.setModuleId(module.getModuleId().intValue());
 			  section.setDeleteFlag(false);
 			  	// save object
+			  if (!session.isOpen()) {
+				  session = hibernateUtil.currentSession();
+			  		}
 			  tx = session.beginTransaction();
 			  session.save(section);
 
@@ -117,21 +117,29 @@ public class SectionDB implements Serializable {
 			  logger.debug("adding section id to the xmllist" + section.getSectionId().toString());
 			  SectionUtil.addSectiontoList(sectionsSeqXML, section.getSectionId().toString());
 			  sectionsSeqXML = SectionUtil.storeSubSections();
-			  module.setSeqXml(sectionsSeqXML);
-			  session.saveOrUpdate(module);
-			  session.merge(module);
+
+			  Query query = session.createQuery("from Module mod where mod.moduleId=:moduleId");
+			  query.setParameter("moduleId", section.getModuleId());
+			   List secModules = query.list();
+		       if(secModules != null)
+		       {
+		     		Module secModule = secModules.get(0);
+		     		secModule.setSeqXml(sectionsSeqXML);
+			  		session.saveOrUpdate(secModule);
+				}
+				else throw new MeleteException("add_section_fail");
 			  }
-			  session.merge(section);
-			  tx.commit();			  
-			  
+
+			  tx.commit();
+
 			  if (logger.isDebugEnabled()) logger.debug("commiting transaction and new added section id:" + section.getSectionId() + ","+section.getTitle());
 			  return section.getSectionId();
-
 	        }
 			catch(StaleObjectStateException sose)
 		     {
-				logger.error("stale object exception" + sose.toString());
-				session.refresh(section);
+				logger.error("add section stale object exception" + sose.toString());
+				if(tx !=null) tx.rollback();
+				throw sose;
 		     }
 			catch(ConstraintViolationException cve)
 			{
@@ -141,7 +149,7 @@ public class SectionDB implements Serializable {
 			catch(HibernateException he)
 				     {
 						if(tx !=null) tx.rollback();
-						logger.error(he.toString());
+						logger.error("add section HE exception" + he.toString());
 						throw he;
 				     }
 	        	finally{
@@ -149,9 +157,10 @@ public class SectionDB implements Serializable {
 				 }
 		}catch(Exception ex){
 				// Throw application specific error
+				ex.printStackTrace();
 			throw new MeleteException("add_section_fail");
 			}
-		return null;
+
 	}
 
 	public Integer editSection( Section section) throws MeleteException
@@ -165,24 +174,26 @@ public class SectionDB implements Serializable {
 			  section.setCreationDate(new java.util.Date());
 			  section.setModificationDate(new java.util.Date());
 	 	  	  // save object
+	 	  	  if (!session.isOpen()) session = hibernateUtil.currentSession();
+			  session.evict(section);
 			  tx = session.beginTransaction();
 			  session.saveOrUpdate(section);
-			  session.merge(section);
+			  session.flush();
  		  	  tx.commit();
- 		  	  
+
 			  if (logger.isDebugEnabled()) logger.debug("commiting transaction and new added section id:" + section.getSectionId() + ","+section.getTitle());
 			  return section.getSectionId();
 
 	        }
 			catch(StaleObjectStateException sose)
 		     {
-				logger.error("stale object exception" + sose.toString());
-				session.refresh(section);
+				logger.error("edit section stale object exception" + sose.toString());
+				throw sose;
 		     }
 			catch(HibernateException he)
 				     {
 						if(tx !=null) tx.rollback();
-						logger.error(he.toString());
+						logger.error("edit section stale object exception" + he.toString());
 						throw he;
 				     }
 	        	finally{
@@ -192,7 +203,7 @@ public class SectionDB implements Serializable {
 				// Throw application specific error
 			throw new MeleteException("add_section_fail");
 			}
-		return null;
+
 	}
 	/*
 	 * edit section....
@@ -217,13 +228,15 @@ public class SectionDB implements Serializable {
 			  section.setSectionResource(secResource);
 
 		 // save object
+		 	if (!session.isOpen()) session = hibernateUtil.currentSession();
+		 	session.evict(section);
 			  tx = session.beginTransaction();
 			  	  session.saveOrUpdate(melResource);
 			  	  session.saveOrUpdate(secResource);
 			  	  session.saveOrUpdate(section);
-			  	  session.merge(section);
+				  session.flush();
 				  tx.commit();
-				  
+
 			  if (logger.isDebugEnabled()) logger.debug("commit transaction and edit section :" + section.getModuleId() + ","+section.getTitle());
 	//		  updateExisitingResource(secResource);
 			  return ;
@@ -232,25 +245,19 @@ public class SectionDB implements Serializable {
 			catch(StaleObjectStateException sose)
 		     {
 				if(tx !=null) tx.rollback();
-				logger.error("stale object exception" + sose.toString());
-				sose.printStackTrace();
-				session.refresh(section);
-				throw new MeleteException("edit_section_multiple_users");
+				logger.error("edit section stale object exception" + sose.toString());
+				throw sose;
 		     }
 			catch (HibernateException he)
 				     {
 						if(tx !=null) tx.rollback();
-						logger.error(he.toString());
+						logger.error("edit section HE exception" + he.toString());
 						he.printStackTrace();
 						throw he;
 				     }
 	       	finally{
 	       			hibernateUtil.closeSession();
 				 	}
-		}
-		catch(MeleteException ex){
-			// Throw application specific error
-			throw ex;
 		}
 		catch(Exception ex){
 				// Throw application specific error
@@ -289,21 +296,21 @@ public class SectionDB implements Serializable {
 		    		   if (deleteFrom == MELETE_RESOURCE_ONLY)
 		    		   {
 		    			   if (embedResourceId != null)
-		    			   {	   
-		    			     affectedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", embedResourceId).executeUpdate(); 
+		    			   {
+		    			     affectedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", embedResourceId).executeUpdate();
 		    			     //logger.debug(affectedEntities+" row was deleted from MELETE_RESOURCE");
-		    			   }  
+		    			   }
 		    		   }
 		    		   if (deleteFrom == MELETE_RESOURCE_SECTION_RESOURCE)
 		    		   {
 		    			   if (secRes.getSectionId() != null)
-		    			   {	   
+		    			   {
 		    			     affectedEntities = session.createQuery(updSectionResourceStr).setInteger("sectionId", secRes.getSectionId()).executeUpdate();
 		    			   }
 		    			   if (secRes.getResource().getResourceId() != null)
-		    			   {	   
+		    			   {
 		    			     affectedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", secRes.getResource().getResourceId()).executeUpdate();
-		    			   }  
+		    			   }
 		    			   //logger.debug(affectedEntities+" row was deleted from MELETE_RESOURCE");
 		    		   }
 	    	          }
@@ -312,10 +319,10 @@ public class SectionDB implements Serializable {
 		    		 {
                        //Delete from SECTION_RESOURCE table
 		    			 if (secRes.getSectionId() != null)
-		    			 { 	 
+		    			 {
 		    			   affectedEntities = session.createQuery(delSectionResourceStr).setInteger("sectionId", secRes.getSectionId()).executeUpdate();
 		    			   //logger.debug(affectedEntities+" row was deleted from SECTION_RESOURCE");
-		    			 }  
+		    			 }
 		    		 }
 		    	   }
 		    	   if (deleteFrom != MELETE_RESOURCE_ONLY)
@@ -341,10 +348,10 @@ public class SectionDB implements Serializable {
 
 		    	     //Delete section
 		    	     if (sectionId != null)
-		    	     {	 
+		    	     {
 		    	       affectedEntities = session.createQuery(delSectionStr).setInteger("sectionId",sectionId).executeUpdate();
 		    	       //logger.debug(affectedEntities+" row was deleted from MELETE_SECTION");
-		    	     }  
+		    	     }
 
 
 		    	   }
