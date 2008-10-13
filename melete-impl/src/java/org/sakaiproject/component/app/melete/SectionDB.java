@@ -123,7 +123,7 @@ public class SectionDB implements Serializable {
 			   List secModules = query.list();
 		       if(secModules != null)
 		       {
-		     		Module secModule = secModules.get(0);
+		     		Module secModule = (Module)secModules.get(0);
 		     		secModule.setSeqXml(sectionsSeqXML);
 			  		session.saveOrUpdate(secModule);
 				}
