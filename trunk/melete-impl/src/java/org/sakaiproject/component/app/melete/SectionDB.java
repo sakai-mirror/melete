@@ -558,7 +558,7 @@ public class SectionDB implements Serializable {
 	 }
 
 	 public Section getSection(int sectionId) throws HibernateException {
-		 	Section sec = null;
+		 	Section sec = new Section();
 		 	try
 			{
 

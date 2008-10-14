@@ -184,7 +184,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 	}
 
 	public SectionObjService getSection(int sectionId) {
-		Section section = null;
+		Section section = new Section();
         try {
                 section = sectiondb.getSection(sectionId);
 		    }catch (Exception e)
