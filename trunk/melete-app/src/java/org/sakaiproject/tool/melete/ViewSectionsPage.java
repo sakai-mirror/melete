@@ -506,6 +506,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		{
 			logger.error(e.toString());
 		}
+		
     	return this.section;
     }
 
@@ -637,7 +638,9 @@ public String goNextModule()
 	FacesContext context = FacesContext.getCurrentInstance();
 	this.section = null;
 	//this.module = null;
-	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(((String)context.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue());
+	String modSeqNoStr = (String)context.getExternalContext().getRequestParameterMap().get("modseqno");
+	if ((modSeqNoStr == null)||(modSeqNoStr.length() == 0)) modSeqNoStr = "0";
+	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNoStr).intValue());
 	//ModuleDateBean nextMdBean = (ModuleDateBean) getModuleService().getModuleDateBeanBySeq(getUserId(),getCourseId(),nextSeqNo);
 	this.module = null;
 	ValueBinding binding =
