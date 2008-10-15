@@ -352,7 +352,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 			 		if (ce.isResource())
 			 		{
 			 		String contentextension = ((ContentResource)ce).getContentType();
-			 		if(contentextension.equals(MIME_TYPE_LINK) || contentextension.equals(MIME_TYPE_EDITOR))
+			 		if(contentextension.equals(MIME_TYPE_LINK) )
 			 		{
 			 			 memIt.remove();
 			 		}
@@ -439,8 +439,6 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				 		if (ce.isResource())
 				 		{
 				 		String contentextension = ((ContentResource)ce).getContentType();
-				 		if(contentextension.equals(MIME_TYPE_EDITOR))
-				 			 memIt.remove();
 				 		}else  memIt.remove();
 				 	}
 
