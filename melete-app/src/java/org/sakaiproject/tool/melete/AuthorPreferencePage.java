@@ -136,12 +136,15 @@ public class AuthorPreferencePage {
   	{
   		availableEditors = new ArrayList();
   		int count = ServerConfigurationService.getInt("melete.wysiwyg.editor.count", 0);
+  		FacesContext context = FacesContext.getCurrentInstance();
+        ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
   		for(int i=1;i <=count; i++)
   			{
   			String label = ServerConfigurationService.getString("melete.wysiwyg.editor"+i, "");
-  			if(label.equalsIgnoreCase(FCKEDITOR)) label = FCKEDITOR;
-  			if(label.equalsIgnoreCase(SFERYX)) label = SFERYX;
-  			availableEditors.add(new SelectItem(label, label));
+  			String displayLabel ="";
+  			if(label.equalsIgnoreCase(FCKEDITOR)) displayLabel = bundle.getString("FCKEDITOR");
+  			if(label.equalsIgnoreCase(SFERYX)) displayLabel = bundle.getString("SFERYX");
+  			availableEditors.add(new SelectItem(label, displayLabel));
   			}
   	}
   	return availableEditors;
