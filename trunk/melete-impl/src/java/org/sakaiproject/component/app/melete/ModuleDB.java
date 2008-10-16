@@ -505,6 +505,7 @@ public class ModuleDB implements Serializable {
 				  logger.error(he.toString());
 			  }
 		}
+	    if (mdBean == null) mdBean = new ModuleDateBean();
 	    return mdBean;
 	  }
 	 public ModuleDateBean getModuleDateBeanBySeq(String userId, String courseId,  int seqNo) throws HibernateException {
@@ -546,6 +547,7 @@ public class ModuleDB implements Serializable {
 					  logger.error(he.toString());
 				  }
 			}
+		    if (mdBean == null) mdBean = new ModuleDateBean();
 		    return mdBean;
 		  }
 
@@ -558,6 +560,7 @@ public class ModuleDB implements Serializable {
 	   Map sectionMap = null;
 	   java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
 
+	   if (mod == null) mod = new Module();
 	   if (((mod.getModuleshdate().getStartDate() == null)||(mod.getModuleshdate().getStartDate().before(currentTimestamp)))&&((mod.getModuleshdate().getEndDate() == null)||(mod.getModuleshdate().getEndDate().after(currentTimestamp))))
 	   {
 		   mdBean.setVisibleFlag(true);
