@@ -271,6 +271,8 @@ public class SectionDB implements Serializable {
 	{
 		SectionResource secRes = null;
 		int affectedEntities;
+		
+		//These are the queries
 		String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.sectionId=:sectionId";
 		String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
 		String delSectionResourceStr = "delete SectionResource sr where sr.sectionId=:sectionId";
