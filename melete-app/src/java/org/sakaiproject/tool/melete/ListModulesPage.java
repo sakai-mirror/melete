@@ -448,7 +448,16 @@ public class ListModulesPage implements Serializable{
     	  int selModIndex;
     	  if(params != null && params.containsKey("modidx"))
     		 {
-    		  selModIndex = Integer.parseInt((String) params.get("modidx"));
+    		  String modidxStr = (String) params.get("modidx");
+    		  //This condition was added to fix ME-809 bug report issue
+    		  if ((modidxStr != null)&&(modidxStr.length() > 0)&&(!(modidxStr.equals("null"))))
+    		  {	  
+    		    selModIndex = Integer.parseInt(modidxStr);
+    		  }
+    		  else
+    		  {
+    			 selModIndex = 0; 
+    		  }
     	     }
     	  else 
           {
@@ -514,8 +523,27 @@ public class ListModulesPage implements Serializable{
         int selModIndex,selSecIndex;
         if(params != null && params.containsKey("modidx")&& params.containsKey("secidx"))
         {
-	  	 selModIndex = Integer.parseInt((String) params.get("modidx"));
-	  	 selSecIndex = Integer.parseInt((String) params.get("secidx"));
+           String modidxStr = (String) params.get("modidx");
+   		  //This condition was added to fix ME-809 bug report issue
+   		  if ((modidxStr != null)&&(modidxStr.length() > 0)&&(!(modidxStr.equals("null"))))
+   		  {	  
+   		    selModIndex = Integer.parseInt(modidxStr);
+   		  }
+   		  else
+   		  {
+   			 selModIndex = 0; 
+   		  }
+   		   String secidxStr = (String) params.get("secidx");
+		  //This condition was added to fix ME-809 bug report issue
+		  if ((secidxStr != null)&&(secidxStr.length() > 0)&&(!(secidxStr.equals("null"))))
+		  {	  
+		    selSecIndex = Integer.parseInt(secidxStr);
+		  }
+		  else
+		  {
+			 selSecIndex = 0; 
+		  }
+	  	 
         }
         else 
         {
