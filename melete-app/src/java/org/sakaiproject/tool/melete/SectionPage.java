@@ -113,6 +113,7 @@ public abstract class SectionPage implements Serializable {
 	//rendering flags
 	protected boolean shouldRenderEditor=false;
 	protected boolean shouldRenderLink=false;
+	protected boolean shouldRenderLink2=false;
 	protected boolean shouldRenderUpload=false;
 	protected boolean shouldRenderResources=false;
 	protected boolean shouldRenderNotype = false;
@@ -264,6 +265,16 @@ public abstract class SectionPage implements Serializable {
                     shouldRenderLink = this.section.getContentType().equals("typeLink");
             }
             return shouldRenderLink;
+    }
+
+    public boolean getShouldRenderLink2()
+	    {
+	            shouldRenderLink2 = false;
+	            if(this.section != null && this.section.getContentType() != null)
+	            {
+	                    shouldRenderLink2 = this.section.getContentType().equals("typeLink2");
+	            }
+	            return shouldRenderLink2;
     }
 
 
@@ -491,6 +502,7 @@ public abstract class SectionPage implements Serializable {
             shouldRenderResources = contentTypeRadio.getValue().equals("typeExistUpload") ||
             							contentTypeRadio.getValue().equals("typeExistLink");
             shouldRenderNotype = contentTypeRadio.getValue().equals("notype");
+			shouldRenderLink2 = contentTypeRadio.getValue().equals("typeLink2");
 
             selResourceIdFromList = null;
             secResourceName = null;
@@ -507,6 +519,11 @@ public abstract class SectionPage implements Serializable {
             if(contentTypeRadio.findComponent(getFormName()).findComponent("link") != null)
             	{
                    contentTypeRadio.findComponent(getFormName()).findComponent("link").setRendered(shouldRenderLink);
+            	}
+
+            if(contentTypeRadio.findComponent(getFormName()).findComponent("ContentLink2View") != null)
+            	{
+                   contentTypeRadio.findComponent(getFormName()).findComponent("ContentLink2View").setRendered(shouldRenderLink2);
             	}
 
             if(shouldRenderEditor)
@@ -586,6 +603,10 @@ public abstract class SectionPage implements Serializable {
 	                    secContentData = new byte[linkUrl.length()];
 	                    secContentData = linkUrl.getBytes();
 	            }
+	            if(section.getContentType().equals("typeLink2"))
+				   {
+					   // to do by Dr.CHUCK
+				   }
 	            if(section.getContentType().equals("typeUpload"))
 	            {
 	                    res_mime_type = uploadSectionContent("file1");
@@ -630,7 +651,7 @@ public abstract class SectionPage implements Serializable {
             		getMeleteCHService().editResource(resourceId, contentEditor);
 	            }
 
-	            if(section.getContentType().equals("typeLink") || section.getContentType().equals("typeUpload"))
+	            if(section.getContentType().equals("typeLink") || section.getContentType().equals("typeUpload") || section.getContentType().equals("typeLink2"))
 	            {
 	                  getMeleteCHService().editResourceProperties(resourceId,secResourceName,secResourceDescription);
 	            }
@@ -708,6 +729,7 @@ public abstract class SectionPage implements Serializable {
 
 	shouldRenderEditor=false;
 	shouldRenderLink=false;
+	shouldRenderLink2=false;
 	shouldRenderUpload=false;
 	shouldRenderResources=false;
 	shouldRenderNotype = false;
