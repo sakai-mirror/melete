@@ -596,11 +596,11 @@ public void restoreModules(List modules) throws Exception
 
 	    		if ((start_flag == 1)&&(complete_flag == 1))
 	    		{
-	    			logger.info("getMigrateStatus - The migrate process has completed");
 	    			return MIGRATE_COMPLETE;
 	    		}
 	    		else
 	    		{
+	    			logger.info("getMigrateStatus - The migrate process has not completed");
 	    			return MIGRATE_INCOMPLETE;
 	    		}
 	    	}
