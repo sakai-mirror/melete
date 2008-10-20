@@ -50,6 +50,7 @@ import org.sakaiproject.tool.melete.SectionPage.DisplaySecResources;
 import org.sakaiproject.util.ResourceLoader;
 
 import org.sakaiproject.api.app.melete.exception.MeleteException;
+import org.sakaiproject.api.app.melete.exception.UserErrorException;
 import org.sakaiproject.component.app.melete.MeleteResource;
 import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.content.api.ContentResource;
@@ -443,6 +444,15 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			logger.debug("currlink value in setServer is" + currLinkUrl);
 			createLinkUrl();
 			ctx.renderResponse();
+		}
+		catch (UserErrorException uex)
+		{
+			if (uex.getMessage() != null)
+			{
+			  errMsg = bundle.getString(uex.getMessage());
+			  ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, uex.getMessage(), errMsg));
+			}
+			return "ContentLinkServerView";
 		}
 			catch (Exception e)
 			{

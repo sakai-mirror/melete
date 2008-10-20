@@ -17,7 +17,7 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
@@ -40,6 +40,7 @@ import javax.faces.event.*;
 import org.sakaiproject.api.app.melete.ModuleService;
 import org.sakaiproject.api.app.melete.SectionObjService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
+import org.sakaiproject.api.app.melete.exception.UserErrorException;
 import org.sakaiproject.component.app.melete.MeleteResource;
 import org.sakaiproject.component.app.melete.ModuleDateBean;
 import org.sakaiproject.component.app.melete.Section;
@@ -78,11 +79,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 	private boolean shouldRenderServerResources = false;
 
 	private boolean shouldRenderLocalUpload = false;
-	
+
 	private Boolean hasNext = false;
-	
+
 	private Boolean hasPrev = false;
-	
+
 	public EditSectionPage()
 	{
 		setFormName("EditSectionForm");
@@ -319,10 +320,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 					if (logger.isDebugEnabled()) logger.debug("Ist step of edit - check meleteResource" + meleteResource.getResourceId());
 					//The condition below was put in to handle ME-639
 					if (meleteResource.getResourceId() != null)
-					{	
+					{
 					  getMeleteCHService().checkResource(meleteResource.getResourceId());
 					  editMeleteCollectionResource(uploadHomeDir, meleteResource.getResourceId());
-					}  
+					}
 					else
 					{
 						if (logger.isDebugEnabled()) logger.debug("Resource ID is null");
@@ -466,7 +467,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 					{
 					  this.previewContentData = getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir, contentEditor);
 					  contentEditor = previewContentData;
-					}  
+					}
 					catch (MeleteException mex)
 					{
 						logger.error("error in editing section "+ mex.toString());
@@ -474,7 +475,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 						context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
 						return "failure";
 					}
-					
+
 				}
 				else
 				{
@@ -488,7 +489,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				return "editpreview";
 			}
 		}
-		
+
 		catch (Exception e)
 		{
 			logger.error(e.toString());
@@ -513,12 +514,12 @@ public class EditSectionPage extends SectionPage implements Serializable
 		m_selected_license = null;
 		selectedResourceName = null;
 		selectedResourceDescription = null;
-		selectedResource = null;	
+		selectedResource = null;
 		hasNext = null;
 		hasPrev = null;
 		super.resetSectionValues();
-	}	
-	
+	}
+
 	public String redirectLinktoEdit()
 	{
 		return "editmodulesections";
@@ -768,6 +769,15 @@ public class EditSectionPage extends SectionPage implements Serializable
 			meleteResource = selectedResource;
 			ctx.renderResponse();
 		}
+		catch (UserErrorException uex)
+				{
+					if (uex.getMessage() != null)
+					{
+					  errMsg = bundle.getString(uex.getMessage());
+					  ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, uex.getMessage(), errMsg));
+					}
+					return "editContentLinkServerView";
+		}
 		catch (Exception e)
 		{
 			logger.error("error in set server url for edit section content" + errMsg);
@@ -828,7 +838,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	}
 
 	public boolean isHasNext()
-	{		
+	{
 		SectionObjService nextSection = null;
 		if (hasNext == null)
 		{
@@ -836,7 +846,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			try
 			{
 				nextSection = sectionService.getNextSection(section.getSectionId().toString(), module.getSeqXml());
-				
+
 				if (nextSection != null) hasNext = true;
 			}
 			catch (Exception e)
@@ -846,7 +856,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		return hasNext.booleanValue();
 	}
-	
+
 	public String editNextSection()
 	{
 		setSuccess(false);
@@ -866,7 +876,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		catch (Exception e)
 		{
 			logger.debug("error in finding next so probably this is the last one");
-			e.printStackTrace();			
+			e.printStackTrace();
 			return cancel();
 		}
 		// reset section model to refresh and set to next
@@ -876,13 +886,13 @@ public class EditSectionPage extends SectionPage implements Serializable
 		if(nextSection != null)
 			setEditInfo(nextSection);
 		else return cancel();
-		
+
 		return "editmodulesections";
 	}
 
 	public boolean isHasPrev()
 	{
-		SectionObjService prevSection = null;	
+		SectionObjService prevSection = null;
 		if (hasPrev == null)
 		{
 			hasPrev = false;
@@ -898,7 +908,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		return hasPrev.booleanValue();
 	}
-	
+
 	public String editPrevSection()
 	{
 		setSuccess(false);
@@ -917,7 +927,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		catch (Exception e)
 		{
 			logger.debug("error in finding prev section to edit");
-			e.printStackTrace();			
+			e.printStackTrace();
 			return cancel();
 		}
 		// reset section model to refresh and set to next
@@ -927,7 +937,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		if(prevSection != null)
 			setEditInfo(prevSection);
 		else return cancel();
-		
+
 		return "editmodulesections";
 	}
 
@@ -940,11 +950,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		else
 			return "editmodulesections";
-	
+
 		// reset section model to refresh
 		setSection(null);
 		resetSectionValues();
-		setSizeWarning(false);		
+		setSizeWarning(false);
 		return cancel();
 	}
 }
