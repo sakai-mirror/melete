@@ -67,6 +67,7 @@ import org.sakaiproject.api.app.melete.SectionResourceService;
 import org.sakaiproject.api.app.melete.MeleteResourceService;
 import org.sakaiproject.api.app.melete.SectionService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
+import org.sakaiproject.api.app.melete.exception.UserErrorException;
 import org.sakaiproject.api.app.melete.MeleteCHService;
 import org.sakaiproject.component.app.melete.Module;
 import org.sakaiproject.component.app.melete.Section;
@@ -553,7 +554,7 @@ public abstract class SectionPage implements Serializable {
 	/*
 	 *  adds resource to specified melete module or uploads collection.
 	 */
-	public String addResourceToMeleteCollection(String uploadHomeDir, String addCollId) throws MeleteException
+	public String addResourceToMeleteCollection(String uploadHomeDir, String addCollId) throws UserErrorException,MeleteException
 	{
 		try{
 	            String res_mime_type=getMeleteCHService().MIME_TYPE_EDITOR;
@@ -598,6 +599,10 @@ public abstract class SectionPage implements Serializable {
 	            	String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type,addCollId,secContentData,res );
 		            return newResourceId;
 				}
+				catch(UserErrorException uex)
+					{
+					throw uex;
+					}
 				catch(MeleteException me)
 					{
 					logger.error("error in creating resource for section content");

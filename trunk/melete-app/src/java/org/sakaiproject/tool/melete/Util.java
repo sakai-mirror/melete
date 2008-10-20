@@ -39,6 +39,7 @@ import javax.faces.application.ApplicationFactory;
 import javax.faces.el.ValueBinding;
 
 import org.sakaiproject.api.app.melete.exception.MeleteException;
+import org.sakaiproject.api.app.melete.exception.UserErrorException;
 
 public class Util {
 
@@ -86,11 +87,11 @@ public class Util {
      * This method throws a MeleteException if the url does not start with
      * http:// or https://
      */
-    public static void validateLink(String linkUrl) throws MeleteException
+    public static void validateLink(String linkUrl) throws UserErrorException
     {
     	 if( !(linkUrl.startsWith("http://") || linkUrl.startsWith("https://")))
     	{
-    	  throw new MeleteException("add_section_bad_url_format");
+    	  throw new UserErrorException("add_section_bad_url_format");
     	}
 
         /*try

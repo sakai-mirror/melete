@@ -18,14 +18,14 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
- * 
+ * permissions and limitations under the License.
+ *
  **********************************************************************************/
 package org.sakaiproject.tool.melete;
 
@@ -54,6 +54,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.sakaiproject.api.app.melete.exception.MeleteException;
+import org.sakaiproject.api.app.melete.exception.UserErrorException;
 import org.sakaiproject.api.app.melete.MeleteCHService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
@@ -143,7 +144,7 @@ public class AddResourcesPage {
 		    }
 		 }
 
-		 if (emptyCounter == 10) 
+		 if (emptyCounter == 10)
 			 {
 			 FacesContext ctx = FacesContext.getCurrentInstance();
 		     ValueBinding binding =Util.getBinding("#{manageResourcesPage}");
@@ -232,7 +233,7 @@ public class AddResourcesPage {
     	  logger.debug("err found in fields" + err_fields.toString());
     	  return "file_upload_view";
       }
-	  
+
 	  }
 
 
@@ -274,9 +275,9 @@ public class AddResourcesPage {
 					}
 					Util.validateLink(linkUrl);
 				}
-				catch (MeleteException mex)
+				catch (UserErrorException uex)
 				{
-					String errMsg = bundle.getString(mex.getMessage());
+					String errMsg = bundle.getString(uex.getMessage());
 					context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "add_section_bad_url_formats", bundle
 							.getString("add_section_bad_url_formats")));
 					return "failure";
