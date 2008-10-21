@@ -42,6 +42,7 @@ import org.sakaiproject.api.app.melete.SectionResourceService;
 import org.sakaiproject.api.app.melete.SectionService;
 import org.sakaiproject.component.app.melete.MeleteResource;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
+import org.sakaiproject.api.app.melete.exception.UserErrorException;
 import org.sakaiproject.util.ResourceLoader;
 /**
  * @author Rashmi
@@ -253,13 +254,13 @@ public class SectionResourceLicenseSelector {
 			return licenseCodes;
 		}
 		
-		public void checkForRequiredFields() throws MeleteException
+		public void checkForRequiredFields() throws UserErrorException
 		{
 			if(copyright_owner == null || copyright_owner.trim().length() == 0)
-				throw new MeleteException("copyright_info_required");
+				throw new UserErrorException("copyright_info_required");
 			
 			if(copyright_year == null || copyright_year.trim().length() == 0)
-				throw new MeleteException("copyright_info_required");
+				throw new UserErrorException("copyright_info_required");
 		}
 		
 		

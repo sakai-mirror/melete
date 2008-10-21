@@ -303,7 +303,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 			// validation 4: check link url title
 			if (section.getContentType().equals("typeLink") && (secResourceName == null || secResourceName.trim().length() == 0))
-				throw new MeleteException("URL_title_reqd");
+				throw new UserErrorException("URL_title_reqd");
 
 			// save section
 			if (logger.isDebugEnabled()) logger.debug("EditSectionpage:save section");
@@ -357,6 +357,12 @@ public class EditSectionPage extends SectionPage implements Serializable
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "add_section_success", successMsg));
 
 			return "success";
+		}
+		catch (UserErrorException uex)
+		{
+			String errMsg = bundle.getString(uex.getMessage());
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, uex.getMessage(), errMsg));
+			return "failure";
 		}
 		catch (MeleteException mex)
 		{
