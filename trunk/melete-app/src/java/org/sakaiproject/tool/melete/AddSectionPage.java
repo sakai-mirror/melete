@@ -138,11 +138,10 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	        	getM_license().checkForRequiredFields();
 	          }
 		   }
-		catch(MeleteException mex)
+		catch(UserErrorException uex)
 		   {
-			logger.error("licenese info not proper "+ mex.toString());
-			String errMsg = bundle.getString(mex.getMessage());
-			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
+			String errMsg = bundle.getString(uex.getMessage());
+			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,uex.getMessage(),errMsg));
 			return "failure";
 		   }
 	    //validation 3: if upload a new file check fileName format - moved to uploadSerctionContent()
