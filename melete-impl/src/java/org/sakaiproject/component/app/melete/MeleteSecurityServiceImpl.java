@@ -103,7 +103,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	 */
 	public void setLogger(Log logger)
 	{
-		logger = logger;
+		this.logger = logger;
 	}
 
 
