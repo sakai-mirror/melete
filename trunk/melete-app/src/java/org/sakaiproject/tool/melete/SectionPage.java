@@ -915,12 +915,7 @@ public abstract class SectionPage implements Serializable {
             this.serverConfigurationService = serverConfigurationService;
     }
 
-    /**
-     * @return Returns the logger.
-     */
-    public void setLogger(Log logger) {
-            this.logger = logger;
-    }
+
 
      /**
      * @return Returns the secResource.

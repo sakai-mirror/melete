@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  **********************************************************************************/
 
@@ -199,12 +199,7 @@ public class ListModulesPage implements Serializable{
 		this.moduleService = moduleService;
 	  }
 
-		/**
-		 * @param logger The logger to set.
-		 */
-		public void setLogger(Log logger) {
-			this.logger = logger;
-		}
+
 	  public String getRole() {
 	  	return role;
 	  }
@@ -451,15 +446,15 @@ public class ListModulesPage implements Serializable{
     		  String modidxStr = (String) params.get("modidx");
     		  //This condition was added to fix ME-809 bug report issue
     		  if ((modidxStr != null)&&(modidxStr.length() > 0)&&(!(modidxStr.equals("null"))))
-    		  {	  
+    		  {
     		    selModIndex = Integer.parseInt(modidxStr);
     		  }
     		  else
     		  {
-    			 selModIndex = 0; 
+    			 selModIndex = 0;
     		  }
     	     }
-    	  else 
+    	  else
           {
           	ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
   			String Errmsg = bundle.getString("error_view_module");
@@ -526,26 +521,26 @@ public class ListModulesPage implements Serializable{
            String modidxStr = (String) params.get("modidx");
    		  //This condition was added to fix ME-809 bug report issue
    		  if ((modidxStr != null)&&(modidxStr.length() > 0)&&(!(modidxStr.equals("null"))))
-   		  {	  
+   		  {
    		    selModIndex = Integer.parseInt(modidxStr);
    		  }
    		  else
    		  {
-   			 selModIndex = 0; 
+   			 selModIndex = 0;
    		  }
    		   String secidxStr = (String) params.get("secidx");
 		  //This condition was added to fix ME-809 bug report issue
 		  if ((secidxStr != null)&&(secidxStr.length() > 0)&&(!(secidxStr.equals("null"))))
-		  {	  
+		  {
 		    selSecIndex = Integer.parseInt(secidxStr);
 		  }
 		  else
 		  {
-			 selSecIndex = 0; 
+			 selSecIndex = 0;
 		  }
-	  	 
+
         }
-        else 
+        else
         {
         	ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 			String Errmsg = bundle.getString("error_view_section");

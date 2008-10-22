@@ -18,7 +18,7 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -240,7 +240,7 @@ public class MeleteSiteAndUserInfo {
 
 		int migrateResult=-1;
 		String beginMigrate = ServerConfigurationService.getString("melete.migrate","false");
-		
+
 	    moduleService.checkInstallation();
 
 		if ((isSuperUser()&& beginMigrate.equals("false")) || ((!isSuperUser()) && isUserAuthor()) || ((!isSuperUser()) && isUserStudent()))
@@ -309,7 +309,7 @@ public class MeleteSiteAndUserInfo {
 //				  return "list_auth_modules";
 //			  }
 		      if (migrateResult == moduleService.MIGRATE_COMPLETE)
-		    	  return "list_auth_modules"; 
+		    	  return "list_auth_modules";
 		    }
 		    catch (Exception ex)
 		    {
@@ -473,12 +473,7 @@ public class MeleteSiteAndUserInfo {
 	* setter methods
 	*******************************************************************************/
 
-	/**
-	 * @param logger The logger to set.
-	 */
-	public void setLogger(Log logger) {
-		this.logger = logger;
-	}
+
 
 	/**
 	 * @param meleteSecurityService The meleteSecurityService to set.

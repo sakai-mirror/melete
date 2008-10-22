@@ -486,13 +486,6 @@ public class SectionServiceImpl implements Serializable, SectionService{
 
 
 	/**
-	 * @param logger The logger to set.
-	 */
-	public void setLogger(Log logger)
-	  {
-	    this.logger = logger;
-	  }
-	/**
 	 * @return Returns the meleteLicenseDB.
 	 */
 	public MeleteLicenseDB getMeleteLicenseDB() {

@@ -18,13 +18,13 @@
 * may not use this file except in compliance with the License. You may
 * obtain a copy of the License at
 *
-* http://www.apache.org/licenses/LICENSE-2.0 
+* http://www.apache.org/licenses/LICENSE-2.0
 *
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the License is distributed on an "AS IS" BASIS, 
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
-* implied. See the License for the specific language governing 
-* permissions and limitations under the License. 
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+* implied. See the License for the specific language governing
+* permissions and limitations under the License.
 *
 **********************************************************************************/
 package org.sakaiproject.component.app.melete;
@@ -99,11 +99,11 @@ public class MeleteLicenseDB implements Serializable{
 	{
 		saveData(ccLicenses);
 	}
-	
-	
+
+
 	/**
 	 * creates ModuleLicense
-	 * 
+	 *
 	 * @param moduleLicense -
 	 *            ModuleLicense
 	 */
@@ -112,8 +112,8 @@ public class MeleteLicenseDB implements Serializable{
 		saveData(moduleLicenses);
 
 	}
-	
-	
+
+
 	/**
 	 * @param obj
 	 */
@@ -122,18 +122,18 @@ public class MeleteLicenseDB implements Serializable{
 		try
 		{
 		     Session session = hibernateUtil.currentSession();
-	         
+
 	         tx = session.beginTransaction();
 	         for(int i=0; i < objs.size();i++)
 	         {
-	         Object obj = objs.get(i);	
+	         Object obj = objs.get(i);
 	         session.save(obj);
 	         }
 	         tx.commit();
 		}catch(HibernateException he)
 		{
 			try {
-				if(tx !=null) 
+				if(tx !=null)
 					tx.rollback();
 			} catch (HibernateException e) {
 				logger.error(e.toString());
@@ -148,7 +148,7 @@ public class MeleteLicenseDB implements Serializable{
 			}
 		 }
 	}
-	
+
 	/**
 	 * called from backing bean addModulePage to get the license url and license name
 	 * @param reqAttr
@@ -176,8 +176,8 @@ public class MeleteLicenseDB implements Serializable{
 			logger.error(ex.toString());
 			}
 		return licenseInfo;
-	}	
-	
+	}
+
 //	 add by rashmi to fetch license name for export
 	public String fetchCcLicenseName(String licenseUrl)
 	{
@@ -196,7 +196,7 @@ public class MeleteLicenseDB implements Serializable{
 			}
 		return licenseInfo;
 	}
-	
+
 //	 add by rashmi
 	public CcLicense fetchCcLicenseUrl(String name)
 	{
@@ -215,7 +215,7 @@ public class MeleteLicenseDB implements Serializable{
 			}
 		return licenseInfo;
 	}
-	
+
 	/**
 	 * @return Returns the hibernateUtil.
 	 */
@@ -229,10 +229,5 @@ public class MeleteLicenseDB implements Serializable{
 		this.hibernateUtil = hibernateUtil;
 	}
 
-	/**
-	 * @param logger The logger to set.
-	 */
-	public void setLogger(Log logger) {
-		this.logger = logger;
-	}
+
 }
