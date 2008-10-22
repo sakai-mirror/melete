@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  **********************************************************************************/
 
@@ -64,18 +64,13 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
    private boolean showLicenseFlag = true;
    private boolean hasSections = false;
    private SectionObjService firstSection = null;
-   
+
     public EditModulePage(){
       setFormName("EditModuleForm");
       setSuccess(false);
 
     }
-    /**
-	 * @param logger The logger to set.
-	 */
-	public void setLogger(Log logger) {
-		this.logger = logger;
-	}
+
 
 	/*
 	 * Rashmi 12/21
@@ -113,7 +108,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 	    // rashmi added validations start
 //     	validation
       	module.setTitle(module.getTitle().trim());
-     
+
       	// validation no 3
       	Date  d = new Date();
       	Date st = getModuleShdates().getStartDate();
@@ -122,7 +117,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 //       validation no 4 b
       	 boolean dateResult = validateDates(context, bundle, st, end);
          if (dateResult == false) return "failure";
-         
+
     	/*if ((end != null) && (st != null))
 		{
 			if (end.compareTo(st) <= 0)
@@ -135,7 +130,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 				return "failure";
 			}
 		}*/
-     	
+
  	    // rashmi added validations end
 
 	     // actual update
@@ -183,7 +178,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 		}
 		if (callFromAddContent == false)
 		{
-		  String msg="";	
+		  String msg="";
 		  msg = bundle.getString("edit_module_success");
 		  addMessage(context, "Info Message", msg, FacesMessage.SEVERITY_INFO);
 		}
@@ -263,8 +258,8 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
     	else{
     		setHasSections(true);
     		setFirstSection(((SectionBean)mdbean.getSectionBeans().get(0)).getSection());
-    	}   	
-    	
+    	}
+
    	}
 
     public boolean isHasSections()
@@ -278,24 +273,24 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 	{
 		this.hasSections = hasSections;
 	}
-	
+
 	public String editSection()
 	{
 		callFromAddContent = false;
 		 if(!getSuccess())
-	        {	        	
+	        {
 	        	if(!savehere().equals("failure"))
 	    	 		    setSuccess(true);
-	    	   	else return "edit_module";	        	
+	    	   	else return "edit_module";
 	        }
-		 	     
+
 	        FacesContext context = FacesContext.getCurrentInstance();
 	        ValueBinding binding =Util.getBinding("#{editSectionPage}");
-	        EditSectionPage editPage = (EditSectionPage) binding.getValue(context);	        	        
+	        EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
 	        Map sessionMap = context.getExternalContext().getSessionMap();
 			sessionMap.put("currModule", module);
 			editPage.setEditInfo(firstSection);
-	        
+
 		return "editmodulesections";
 	}
 	/**

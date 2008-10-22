@@ -103,13 +103,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
     abstract public int createSectionElement(Element ParentSection, Section section, int i, int k, Element resources, File resoucesDir, String imagespath) throws Exception;
     abstract public List generateOrganizationResourceItems(List modList, File packagedir,String maintitle)throws Exception;
 
-	/**
-	 * Establish my logger component dependency.
-	 * @param logger the logger component.
-	 */
-	public void setLogger(Log logger){
-		this.logger = logger;
-	}
+
 	/**
 	 * Final initialization, once all dependencies are set.
 	 */

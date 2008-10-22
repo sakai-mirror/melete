@@ -17,7 +17,7 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
@@ -67,20 +67,20 @@ public class MoveSectionsPage implements Serializable
 	private ModuleService moduleService;
 
 	private List<SectionBean> sectionBeans;
-	
-	private List<ModuleDateBean> moduleDateBeans;	
-	
+
+	private List<ModuleDateBean> moduleDateBeans;
+
 	private ArrayList<SelectItem> availableModules;
-	
+
 	private boolean nomodsFlag;
-	
+
 	private String courseId;
-	
+
 	private String userId;
-	
+
 	private Integer selectId ;
-	
-	
+
+
 	/** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(MoveSectionsPage.class);
 
@@ -96,40 +96,40 @@ public class MoveSectionsPage implements Serializable
 		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 		try{
 			if(selectId != null && selectId != 0) selectedModule = moduleService.getModule(new Integer(selectId).intValue());
-			
+
 			if(selectedModule == null)
 			{
 				String msg = bundle.getString("select_one_move_section");
 				ctx.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"select_one_move_section",msg));
 				return "move_section";
 			}
-		moduleService.moveSections(sectionBeans, selectedModule);	
+		moduleService.moveSections(sectionBeans, selectedModule);
 		}catch(Exception e)
-		{			
+		{
 			String msg = bundle.getString("move_section_fail");
-			ctx.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"move_section_fail",msg));		
+			ctx.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"move_section_fail",msg));
 		}
-		
+
 		return "list_auth_modules";
 	}
-	
+
 	public String cancel()
 	{
 		return "list_auth_modules";
 	}
-	
+
 	public List<SelectItem> getAvailableModules()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
-		
+
 		try
 		{
 			if(availableModules == null)
 			{
 				availableModules = new ArrayList<SelectItem>(0);
-				ModuleService moduleService = getModuleService();			
-				moduleDateBeans = moduleService.getModuleDateBeans(getUserId(), getCourseId());			
+				ModuleService moduleService = getModuleService();
+				moduleDateBeans = moduleService.getModuleDateBeans(getUserId(), getCourseId());
 				if(moduleDateBeans == null || moduleDateBeans.size() == 0)
 				{
 					nomodsFlag = true;
@@ -145,27 +145,21 @@ public class MoveSectionsPage implements Serializable
 		}catch(Exception ex)
 		{
 			String msg = bundle.getString("move_section_fail");
-			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"move_section_fail",msg));		
+			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"move_section_fail",msg));
 		}
 		return availableModules;
 }
-	
+
 	public void resetValues()
 	{
-		moduleDateBeans = null;	
+		moduleDateBeans = null;
 		availableModules = null;
 		selectedModule = null;
 		sectionBeans = null;
 		selectId = null;
 	}
-	
-	/**
-	 * @param logger The logger to set.
-	 */
-	public void setLogger(Log logger)
-	{
-		this.logger = logger;
-	}
+
+
 
 	/**
 	 * @param sectionBeans the sectionBeans to set
@@ -198,7 +192,7 @@ public class MoveSectionsPage implements Serializable
 	{
 		return this.nomodsFlag;
 	}
-	
+
 	private String getCourseId()
 	{
 		if (courseId == null)
@@ -218,7 +212,7 @@ public class MoveSectionsPage implements Serializable
 		userId = (String)sessionMap.get("userId");
 		}
 		return userId;
-	}	
+	}
 
 	/**
 	 * @return the selectId
@@ -233,6 +227,6 @@ public class MoveSectionsPage implements Serializable
 	 */
 	public void setSelectId(Integer selectId)
 	{
-		this.selectId = selectId;	
+		this.selectId = selectId;
 	}
 }

@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  **********************************************************************************/
 package org.sakaiproject.tool.melete;
@@ -137,10 +137,10 @@ public abstract class ModulePage implements Serializable{
     {
 	   Calendar calstart = new GregorianCalendar();
      	Calendar calend = new GregorianCalendar();
-     
+
      	boolean errorFlag = false;
      	if ((st != null) || (end!= null))
-     	{	
+     	{
      	  if (st != null)
 		  {
      		calstart.setTime(st);
@@ -161,7 +161,7 @@ public abstract class ModulePage implements Serializable{
 				errorFlag = true;
 			}
 		  }
-		
+
   //      validation no 4 b
      	  if ((end != null)&&(st != null))
      	  {
@@ -170,7 +170,7 @@ public abstract class ModulePage implements Serializable{
      		String errMsg = "";
 	     	errMsg = bundle.getString("end_date_before_start");
 	     	addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-	     	errorFlag = true; 	
+	     	errorFlag = true;
      	  }
      	  }
      	}
@@ -179,7 +179,7 @@ public abstract class ModulePage implements Serializable{
      	if (errorFlag == true) return false;
      	return true;
     }
-    
+
     protected void addMessage(FacesContext context, String msgName, String msgDetail, FacesMessage.Severity severity)
 	{
 		FacesMessage msg = new FacesMessage(msgName, msgDetail);
@@ -508,7 +508,5 @@ public ModuleDateBean getModuleDateBean() {
 		this.moduleService = moduleService;
 	}
 
-	public void setLogger(Log logger) {
-		this.logger = logger;
-	}
+
  }

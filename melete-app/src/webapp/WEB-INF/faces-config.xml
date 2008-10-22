@@ -40,14 +40,6 @@
 		<managed-bean-class> 
 			org.sakaiproject.tool.melete.MeleteSiteAndUserInfo</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
-		<!-- a service dependency property - for the Logger -->
-		<!--<managed-property>
-			<description>Service Dependency: logging service</description>
-		<property-name>logger</property-name>
-			<value> 
-				#{Components["org.sakaiproject.service.framework.log.Logger"]}</value>
-		</managed-property>
-		-->
 		<!-- a service dependency property - for the MeleteSecurityService -->
 		<managed-property>
 			<description>Service Dependency: MeleteSecurityService</description>
@@ -82,13 +74,6 @@
             <property-name>moduleService</property-name>
             <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
         </managed-property>
-         <!-- a service dependency property - for the Logger -->
-		<!--<managed-property>
-			<description>Service Dependency: logging service</description>
-			<property-name>logger</property-name>
-			<value>#{Components["org.sakaiproject.service.framework.log.Logger"]}</value>
-		</managed-property>
-		-->
 	   </managed-bean>  
 	
  <managed-bean>
@@ -102,14 +87,6 @@
             <property-name>moduleService</property-name>
             <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
         </managed-property>       
-         
-<!-- a service dependency property - for the Logger -->
-	<!--	<managed-property>
-			<description>Service Dependency: logging service</description>
-			<property-name>logger</property-name>
-			<value>#{Components["org.sakaiproject.service.framework.log.Logger"]}</value>
-		</managed-property>                 
--->
     </managed-bean>
      <managed-bean>
             <description>Melete List Modules Tool</description>
@@ -122,13 +99,6 @@
                 <property-name>moduleService</property-name>
                 <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
             </managed-property>                              
-  <!-- a service dependency property - for the Logger -->
-	<!--	<managed-property>
-			<description>Service Dependency: logging service</description>
-			<property-name>logger</property-name>
-			<value>#{Components["org.sakaiproject.service.framework.log.Logger"]}</value>
-		</managed-property>            
--->
         </managed-bean>
 
  <managed-bean>
@@ -142,14 +112,7 @@
             <property-name>moduleService</property-name>
             <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
         </managed-property>
-<!-- a service dependency property - for the Logger -->
-<!--		<managed-property>
-			<description>Service Dependency: logging service</description>
-			<property-name>logger</property-name>
-			<value>#{Components["org.sakaiproject.service.framework.log.Logger"]}</value>
-		</managed-property>                    
--->
-      </managed-bean>  
+     </managed-bean>  
 	
 	 <managed-bean>
       <description>Manages the DeleteModule page</description>
@@ -167,12 +130,6 @@
             <property-name>sectionService</property-name>
             <value>#{Components["org.sakaiproject.api.app.melete.SectionService"]}</value>
         </managed-property>        
-         <!-- a service dependency property - for the Logger -->
-	<!--	<managed-property>
-			<description>Service Dependency: logging service</description>
-			<property-name>logger</property-name>
-			<value>#{Components["org.sakaiproject.service.framework.log.Logger"]}</value>
-		</managed-property>-->
       </managed-bean>  	
       
 	      
@@ -208,12 +165,6 @@
 	    	            <property-name>meleteCHService</property-name>
 	    	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteCHService"]}</value>
             </managed-property>
-             <!-- a service dependency property - for the Logger -->
-<!--		<managed-property>
-			<description>Service Dependency: logging service</description>
-			<property-name>logger</property-name>
-			<value>#{Components["org.sakaiproject.service.framework.log.Logger"]}</value>
-		</managed-property>-->
       </managed-bean>  
       
       
@@ -249,12 +200,6 @@
 	            <property-name>meleteCHService</property-name>
 	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteCHService"]}</value>
     </managed-property>                  
-            <!--   	<managed-property>
-			<description>Service Dependency: logging service</description>
-			<property-name>logger</property-name>
-			<value>#{Components["org.sakaiproject.service.framework.log.Logger"]}</value>
-		</managed-property>
--->
       </managed-bean>  
 
    	 <managed-bean>
@@ -267,13 +212,6 @@
             <property-name>moduleService</property-name>
             <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
         </managed-property>
-         
-<!-- a service dependency property - for the Logger -->
-<!--		<managed-property>
-			<description>Service Dependency: logging service</description>
-			<property-name>logger</property-name>
-			<value>#{Components["org.sakaiproject.service.framework.log.Logger"]}</value>
-		</managed-property>                    -->
     </managed-bean>  
 
  <managed-bean>
@@ -296,12 +234,6 @@
 	            <property-name>meleteCHService</property-name>
 	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteCHService"]}</value>
     </managed-property>                
-<!-- a service dependency property - for the Logger -->
-<!--		<managed-property>
-			<description>Service Dependency: logging service</description>
-			<property-name>logger</property-name>
-			<value>#{Components["org.sakaiproject.service.framework.log.Logger"]}</value>
-		</managed-property>   -->
        </managed-bean>
                 
      <managed-bean>
@@ -315,11 +247,6 @@
 			<property-name>moduleService</property-name>
 			<value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
 		</managed-property>
-<!--		<managed-property>
-			<description>Service Dependency: logging service</description>
-			<property-name>logger</property-name>
-			<value>#{Components["org.sakaiproject.service.framework.log.Logger"]}</value>
-		</managed-property>-->
 		  <managed-property>
             <description>Service Dependency: Section service</description>
             <property-name>sectionService</property-name>
@@ -360,13 +287,7 @@
 	            <property-name>meleteCHService</property-name>
 	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteCHService"]}</value>
         </managed-property>
-<!--            <managed-property>
-			<description>Service Dependency: logging service</description>
-			<property-name>logger</property-name>
-			<value>#{Components["org.sakaiproject.service.framework.log.Logger"]}</value>
-		</managed-property>
--->
-			     	 </managed-bean> 
+		</managed-bean> 
           
          
 <managed-bean>
@@ -386,12 +307,6 @@
             <property-name>moduleService</property-name>
             <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
         </managed-property>
-     <!--   <managed-property>
-			<description>Service Dependency: logging service</description>
-			<property-name>logger</property-name>
-			<value>#{Components["org.sakaiproject.service.framework.log.Logger"]}</value>
-		</managed-property>
--->
     </managed-bean> 
   	
 	<managed-bean>
@@ -419,12 +334,6 @@
 			<property-name>meleteExportScormService</property-name>
 			<value>#{Components["MeleteExportScormService"]}</value>
 		</managed-property>
-     <!--     <managed-property>
-			<description>Service Dependency: logging service</description>
-			<property-name>logger</property-name>
-			<value>#{Components["org.sakaiproject.service.framework.log.Logger"]}</value>
-		  </managed-property>
--->
     </managed-bean>              
 
  <managed-bean>

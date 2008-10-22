@@ -17,7 +17,7 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
@@ -225,7 +225,7 @@ public class ExportMeleteModules {
 		instr_id = instr_id.trim();
 		String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
 		courseId = courseId.trim();
-		
+
 		File packagedir = null;
 		try {
 			File basePackDir = new File(packagingdirpath);
@@ -295,7 +295,7 @@ public class ExportMeleteModules {
 			XMLHelper.parseFile(new File(newXmlFile));
 
 			title = Validator.escapeResourceName(title);
-			
+
 			String outputfilename = null;
 			if(modList.equals(selectList))
 			{
@@ -792,7 +792,7 @@ public class ExportMeleteModules {
 				String filepath = files[i].getAbsolutePath();
 //				name = filepath.substring(filepath.indexOf(baseFileName)
 //						+ baseFileName.length() + 1);
-				
+
 				// fix by Raul Enrique Mengod López
 				name = filepath.substring(filepath.indexOf(File.separator+baseFileName+File.separator)
                         + baseFileName.length() + 2);
@@ -898,13 +898,7 @@ public class ExportMeleteModules {
 		this.moduleService = moduleService;
 	}
 
-	/**
-	 * @param logger
-	 *            The logger to set.
-	 */
-	public void setLogger(Log logger) {
-		this.logger = logger;
-	}
+
 
 	/**
 	 * @return Returns the uploadmax.

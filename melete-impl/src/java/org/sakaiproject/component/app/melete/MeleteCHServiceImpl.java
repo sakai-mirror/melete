@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
 **********************************************************************************/
 
@@ -148,9 +148,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
                 props.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 				getContentservice().commitCollection(edit);
 				return edit.getId();
-			}		
+			}
 			catch (Exception e2)
-			{	
+			{
 				if(edit != null) getContentservice().cancelCollection(edit);
 				logger.warn("creating melete root collection: " + e2.toString());
 			}
@@ -521,7 +521,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				edit = null;
 	    }
 		catch(Exception e)
-		{			    
+		{
 			logger.error(e.toString());
 		}
 		finally
@@ -536,11 +536,11 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	 public String addResourceItem(String name, String res_mime_type,String addCollId, byte[] secContentData, ResourcePropertiesEdit res ) throws Exception
 	{
 		 ContentResource resource = null;
-		 
+
 		 //Storing the original filename so it can be used in the display name
 		 String dispName = name;
 		 name = Validator.escapeResourceName(name);
-		 
+
 		 if (logger.isDebugEnabled()) logger.debug("IN addResourceItem "+name+" addCollId "+addCollId);
 		// need to add notify logic here and set the arg6 accordingly.
 		try
@@ -570,16 +570,16 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 					{
 						if (logger.isDebugEnabled()) logger.debug("Found another resource with the same name or new typeEditor section");
                         if (checkDup.lastIndexOf("-") != -1)
-                        {	
+                        {
 						   if (dispName.lastIndexOf(".") != -1)
-						   {	 
-							 checkDup = checkDup.substring(checkDup.lastIndexOf("-"), checkDup.length());  
+						   {
+							 checkDup = checkDup.substring(checkDup.lastIndexOf("-"), checkDup.length());
 						     dispName = dispName.substring(0, dispName.lastIndexOf("."));
 						     StringBuffer dispBuffer = new StringBuffer();
 						     dispBuffer.append(dispName);
 						     dispBuffer.append(checkDup);
 						     dispName = dispBuffer.toString();
-						   } 
+						   }
 						   else
 						   {
 							   dispName = checkDup;
@@ -593,7 +593,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 						ResourcePropertiesEdit rp = edit.getPropertiesEdit();
 						String desc = rp.getProperty(ResourceProperties.PROP_DESCRIPTION);
 						rp.clear();
-						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, dispName);	
+						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, dispName);
 						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
 						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 						getContentservice().commitResource(edit);
@@ -601,23 +601,23 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 					}
 					else
 					{
-						//The code below ensures that the display name of the 
+						//The code below ensures that the display name of the
 						//resource is set correctly
 						edit = getContentservice().editResource(resource.getId());
 						ResourcePropertiesEdit rp = edit.getPropertiesEdit();
 						String desc = rp.getProperty(ResourceProperties.PROP_DESCRIPTION);
 						rp.clear();
-						
+
 						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, dispName);
 						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
 						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 						getContentservice().commitResource(edit);
-						edit = null;						
-					}	
-					
+						edit = null;
+					}
+
 				}
 				catch (Exception ex)
-				{					
+				{
 					throw ex;
 				}
 				finally
@@ -787,7 +787,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    }
 	 	catch(Exception e)
 		{
-			logger.error("error saving editor content "+e.toString());			
+			logger.error("error saving editor content "+e.toString());
 			throw e;
 		}
 		finally
@@ -867,8 +867,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    			// find filename
 	    			fileName = checkforimgs.substring(startSrc, endSrc);
 	    			 String patternStr = fileName;
-	    			logger.debug("processing embed src" + fileName);	    	
-	    			
+	    			logger.debug("processing embed src" + fileName);
+
 	    			//process for local uploaded files
 					if(fileName != null && fileName.trim().length() > 0&& (!(fileName.equals(File.separator)))
 						&& fileName.startsWith("file:/") )
@@ -944,7 +944,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				}
 				// for internal links to make it relative
 				else
-				{					
+				{
 					if (fileName.startsWith(ServerConfigurationService.getServerUrl()))
 					{
 						if (fileName.indexOf("/meleteDocs") != -1)
@@ -972,7 +972,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 					}
 					// process links and append http:// protocol if not provided
 					else if (!(fileName.startsWith("/") || fileName.startsWith("./") || fileName.startsWith("../") || fileName.startsWith("#"))
-							&& foundLink != null && foundLink.equals("link") 
+							&& foundLink != null && foundLink.equals("link")
 							&& !(fileName.startsWith("http://") || fileName.startsWith("https://") || fileName.startsWith("mailto:")))
 					{
 						logger.debug("processing embed link src for appending protocol");
@@ -982,7 +982,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 					}
 
 				}
-				
+
 				// add target if not provided
     			if(foundLink != null && foundLink.equals("link"))
     			{
@@ -1040,7 +1040,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
     			}
     			// iterate next
     			checkforImgs =checkforImgs.substring(endSrc);
-	            startSrc=0; endSrc = 0; 
+	            startSrc=0; endSrc = 0;
 	    	}
 	    	return secEmbedData;
 	    	} catch(Exception e)
@@ -1194,12 +1194,12 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        ContentResourceEdit edit = null;
 		    try
 	   	    {
-		    	edit = getContentservice().editResource(delRes_id);		    	
+		    	edit = getContentservice().editResource(delRes_id);
 		    	getContentservice().removeResource(edit);
 		    	edit = null;
 	   		}
 	   	    catch(IdUnusedException e1)
-		    {	   	    
+		    {
 	   		  logger.error("IdUnusedException thrown: "+e1.getMessage() + delRes_id );
 		    }
 	   	    catch(TypeException e1)
@@ -1209,7 +1209,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	   	    catch(PermissionException e1)
 	        {
 	          logger.error("Permission to get uploads collection is denied");
-	        }	   	  
+	        }
 	   	    catch (Exception e)
 		    {
 	   	    	e.printStackTrace();
@@ -1233,12 +1233,12 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        delColl_id= Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+delColl_id+ Entity.SEPARATOR;
 	    	if(delSubColl_id != null)
 	    		delColl_id = delColl_id.concat(delSubColl_id + Entity.SEPARATOR);
-	    	logger.debug("checking coll before delte" + delColl_id);	    	
-	    	
+	    	logger.debug("checking coll before delte" + delColl_id);
+
 	    	try
 	    	{
-	    		getContentservice().checkCollection(delColl_id);	    		
-	    		getContentservice().removeCollection(delColl_id);	    	
+	    		getContentservice().checkCollection(delColl_id);
+	    		getContentservice().removeCollection(delColl_id);
 	    	}
 	    	catch (IdUnusedException e1)
 	    	{
@@ -1251,19 +1251,19 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	   	    catch(PermissionException e1)
 	        {
 	          logger.error("Permission to get uploads collection is denied");
-	        }	  
+	        }
 	   	    catch (Exception e)
 		    {
 	   	    	logger.error("error deleting melete collection:" + e.getMessage());
 		        throw new MeleteException("delete_resource_fail");
 		    }
 		    finally
-		    {		  
+		    {
 		       meleteSecurityService.popAdvisor();
 		    }
 	  }
 
-	  
+
 	  public void removeCourseCollection(String delColl_id) throws Exception
 	  {
 		  if (!isUserAuthor())
@@ -1277,20 +1277,20 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		    	delColl_id= Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+delColl_id+ Entity.SEPARATOR;
 		    	logger.debug("checking course coll before delete: " + delColl_id);
 		    	getContentservice().checkCollection(delColl_id);
-		    	
+
 		    	// if uploads directory remains and all modules are deleted
 		    	logger.debug("collection sz"+ getContentservice().getCollectionSize(delColl_id));
 		    	if(getContentservice().getCollectionSize(delColl_id) == 1)
-		    	{	
+		    	{
 		    		List allEnt = getContentservice().getAllEntities(delColl_id);
-		    		
+
 		    		for(Iterator i = allEnt.iterator(); i.hasNext();)
 		    		{
 		    			ContentEntity ce = (ContentEntity)i.next();
 		    			if(ce.isCollection() && (ce.getId().indexOf("module_") == -1))
 		    				getContentservice().removeCollection(delColl_id);
 		    		}
-		    		
+
 		    	}
 	   		}
 	   	    catch(IdUnusedException e1)
@@ -1314,7 +1314,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		       meleteSecurityService.popAdvisor();
 		    }
 	  }
-	  
+
 	  public String moveResource(String resourceId, String destinationColl) throws Exception
 	  {
 		  if (!isUserAuthor())
@@ -1324,7 +1324,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	   			//          setup a security advisor
 	        meleteSecurityService.pushAdvisor();
 		    try
-	   	    {		    	
+	   	    {
 		    	getContentservice().checkResource(resourceId);
 		    	String newResId = getContentservice().moveIntoFolder(resourceId,destinationColl);
 		    	return newResId;
@@ -1332,7 +1332,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	   	    catch(IdUnusedException e1)
 		    {
 	   		  logger.error("IdUnusedException thrown from moveResource: "+e1.getMessage());
-		    }	   	   
+		    }
 	   	    catch (Exception e)
 		    {
 		        throw new MeleteException("move_resource_fail");
@@ -1343,14 +1343,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		    }
 		    return null;
 	  }
-	  
-	  
-	    /**
-	     * @return Returns the logger.
-	     */
-	    public void setLogger(Log logger) {
-	            this.logger = logger;
-	    }
+
+
 
 	    /**
 	     * @return Returns the contentservice.

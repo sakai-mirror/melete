@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  **********************************************************************************/
 package org.sakaiproject.component.app.melete;
@@ -124,9 +124,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	private String destinationContext;
 	protected MeleteUtil meleteUtil = new MeleteUtil();
 
-	public void setLogger(Log logger){
-		this.logger = logger;
-	}
+
 	/**
 	 * Final initialization, once all dependencies are set.
 	 */
@@ -145,18 +143,18 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	{
 		boolean moduleTitleFlag = false;
 		if (titleEle != null)
-		{			
+		{
 			String title = titleEle.getTextTrim();
 			if (title != null && title.length() != 0)
 			{
 				module.setTitle(title);
 				moduleTitleFlag = true;
 			}
-		}		
+		}
 		if(!moduleTitleFlag) module.setTitle("Untitled Module");
 		return;
 	}
-	
+
 	private boolean buildModuleDescription(Element descEle, Module module)
 	{
 		boolean descr = false;
@@ -172,7 +170,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	private boolean buildModuleKeyword(Element keywordEle, Module module)
 	{
 		boolean keywords = false;
-		
+
 		if (keywordEle != null && keywordEle.element("imsmd:langstring") != null)
 		{
 			String modkeyword = keywordEle.element("imsmd:langstring").getText();
@@ -181,7 +179,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		}
 		return keywords;
 	}
-	
+
 
 	private void removeNamespaces(Element elem)
 	{
@@ -194,17 +192,17 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			if (n.getNodeType() == Node.ELEMENT_NODE) removeNamespaces((Element) n);
 		}
 	}
-	 
+
 	public int mergeAndBuildModules(Document ArchiveDoc, String unZippedDirPath, String fromSiteId) throws Exception
 	{
 		if (logger.isDebugEnabled()) logger.debug("Entering mergeAndBuildModules");
 		setUnzippeddirpath(unZippedDirPath);
 		setDestinationContext(fromSiteId);
-		int count = 0; 
+		int count = 0;
 		try
 		{
 			Element rootEle = ArchiveDoc.getRootElement();
-		
+
 			Map uris = new HashMap();
 			uris.put("imscp", DEFAULT_NAMESPACE_URI);
 			uris.put("imsmd", IMSMD_NAMESPACE_URI);
@@ -216,7 +214,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			for (Iterator iter = elements.iterator(); iter.hasNext();)
 			{
 				Element element = (Element) iter.next();
-			
+
 				//build module
 				Module module = new Module();
 				boolean keywords = false;
@@ -224,24 +222,24 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				for (Iterator iter1 = element.elementIterator(); iter1.hasNext();)
 				{
 					Element childele = (Element) iter1.next();
-			
+
 					if (childele.getName().equals("title")) buildModuleTitle(childele, module);
 					if (childele.getName().equals("imsmd:lom"))
 					{
 						List<Element> modulegeneralList = childele.elements();
 						List moduleMetadataList = modulegeneralList.get(0).elements();
-						
+
 						for (Iterator iter2 = moduleMetadataList.iterator(); iter2.hasNext();)
 						{
 							Element metaElement = (Element) iter2.next();
-			
+
 							if (metaElement.getName().equals("imsmd:description")) descr = buildModuleDescription(metaElement, module);
 							if (!descr) module.setDescription("    ");
 							if (metaElement.getName().equals("imsmd:keyword")) keywords = buildModuleKeyword(metaElement, module);
 							if (!keywords) module.setKeywords(module.getTitle());
 						}
 					}
-					
+
 				}
 				createModule(module);
 			// build sections
@@ -264,7 +262,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				logger.debug("checking seqXML now at the end of buildModule process" + seqDocument.asXML());
 				module.setSeqXml(seqDocument.asXML());
 				moduleDB.updateModule(module);
-				
+
 			}
 		}
 		catch (Exception e)
@@ -831,7 +829,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				for (Iterator iter2 = moduleMetadataList.iterator(); iter2.hasNext();)
 				{
 					Element metaElement = (Element) iter2.next();
-	
+
 					if (metaElement.getName().equals("imsmd:description") && metaElement.element("imsmd:langstring") != null)
 					{
 						String instr = metaElement.element("imsmd:langstring").getText();
@@ -846,7 +844,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				for (Iterator iter3 = rightList.iterator(); iter3.hasNext();)
 				{
 					Element rightsElement = (Element) iter3.next();
-	
+
 					if (rightsElement.getName().equals("imsmd:description") && rightsElement.element("imsmd:langstring") !=null )
 					{
 						String licenseUrl = rightsElement.element("imsmd:langstring").getText();
@@ -919,9 +917,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 		if (logger.isDebugEnabled()) logger.debug("Exiting mergeSection...");
 	}
-	
-	
-	
+
+
+
 	/**
 	 * creates section dependent file
 	 *
@@ -1144,7 +1142,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			 		// actual insert
 			 		// if not found in meleteDocs collection include it
 			 		String uploadCollId = getMeleteCHService().getUploadCollectionId(destinationContext);
-			 		
+
 				  	// data is generally large so read it only if need to insert
 					if(section.getContentType().equals("typeLink"))
 					{
@@ -1455,7 +1453,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					{
 						Map.Entry entry = (Map.Entry) keyValuePairs.next();
 						Section fromSec = (Section) entry.getValue();
-						fromSecId = fromSec.getSectionId().intValue();						
+						fromSecId = fromSec.getSectionId().intValue();
 						Section toSec = new Section(fromSec.getTitle(), fromSec.getCreatedByFname(), fromSec.getCreatedByLname(), fromSec.getModifiedByFname(), fromSec.getModifiedByLname(), fromSec.getInstr(), fromSec.getContentType(), fromSec.isAudioContent(), fromSec.isVideoContent(), fromSec.isTextualContent(), fromSec.isOpenWindow(), fromSec.isDeleteFlag(), fromSec.getCreationDate(), fromSec.getModificationDate());
 						logger.debug("copied section open window value" + toSec.getTitle()+"," + toSec.isOpenWindow() );
 						try
@@ -1508,7 +1506,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			}
 
 		}
-			
+
 	}
 	/*METHODS USED BY IMPORT FROM SITE END*/
 

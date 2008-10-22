@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  **********************************************************************************/
 package org.sakaiproject.component.app.melete;
@@ -97,14 +97,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 
 	/** Dependency: a logger component. */
 	private Log logger = LogFactory.getLog(MeleteSecurityServiceImpl.class);
-	/**
-	 * Establish my logger component dependency.
-	 * @param logger the logger component.
-	 */
-	public void setLogger(Log logger)
-	{
-		this.logger = logger;
-	}
+
 
 
 /**
@@ -225,11 +218,11 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	private boolean allowStudent(String reference)throws Exception{
 
          try {
-        	if (reference != null) 
+        	if (reference != null)
 			  return SecurityService.unlock(SECURE_STUDENT, reference);
             else
        		  return SecurityService.unlock(SECURE_STUDENT, getMeleteImportService().getDestinationContext());
-   		
+
 		} catch (Exception e) {
 			throw new Exception(this.getClass().getName()+ " : allowStudent(reference) : " + e.toString());
 		}
@@ -265,7 +258,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		if (ToolManager.getCurrentPlacement() != null)
 		  return ("/site/" + ToolManager.getCurrentPlacement().getContext());
 		else
-		  return ("/site/" + getMeleteImportService().getDestinationContext());	
+		  return ("/site/" + getMeleteImportService().getDestinationContext());
 	}
 
 		/*******************************************************************************************************************************
@@ -454,7 +447,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	public String getLabel()
 	{
 		return "melete";
-	}	
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -468,7 +461,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		org.w3c.dom.Document w3doc = Xml.createDocument();
 		org.w3c.dom.Element w3root = (org.w3c.dom.Element)w3doc.importNode(root, true);
 		w3doc.appendChild(w3root);
-		
+
 		//convert to dom4j doc
 		org.dom4j.io.DOMReader domReader = new org.dom4j.io.DOMReader();
 		org.dom4j.Document domDoc =	domReader.read(w3doc);
@@ -481,7 +474,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 			return "error on merging modules content";
 		}
 		return "merging modules content: (" + count+ ") modules \n";
-	}	
+	}
 
 	private String createdom4jtree(org.dom4j.Element oneelement)
 	{
@@ -502,36 +495,36 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		try
 		{
 			Element modulesElement = doc.createElement(MeleteSecurityService.class.getName());
-		
+
 			if (siteId != null && siteId.length() > 0)
-			{									
+			{
 				List<Module> selectList = getModuleService().getModules(siteId);
 				count = selectList.size();
 				File basePackDir = new File(archivePath);
 				List orgResElements = getMeleteExportService()
 					.generateOrganizationResourceItems(selectList,
 							basePackDir, SiteService.getSite(siteId).getTitle());
-						
+
 					if (orgResElements != null && orgResElements.size() > 0) {
-						
+
 						String xmlstr =  createdom4jtree((org.dom4j.Element)(org.dom4j.Element)orgResElements.get(0));
-						// read organizations 4j document as w3c document 
+						// read organizations 4j document as w3c document
 						org.w3c.dom.Document meletew3cDocument = Xml.readDocumentFromString(xmlstr);
 						org.w3c.dom.Element meletew3cElement = (org.w3c.dom.Element)meletew3cDocument.getFirstChild();
-						org.w3c.dom.Element meletew3cNewElement = (org.w3c.dom.Element)((Element) stack.peek()).getOwnerDocument().importNode(meletew3cElement,true);						
+						org.w3c.dom.Element meletew3cNewElement = (org.w3c.dom.Element)((Element) stack.peek()).getOwnerDocument().importNode(meletew3cElement,true);
 						modulesElement.appendChild(meletew3cNewElement);
-											
+
 						// now resources document
 						xmlstr =  createdom4jtree((org.dom4j.Element)(org.dom4j.Element)orgResElements.get(1));
-						
+
 						org.w3c.dom.Document meletew3cResDocument = Xml.readDocumentFromString(xmlstr);
 						org.w3c.dom.Element meletew3cElement1 = (org.w3c.dom.Element)meletew3cResDocument.getFirstChild();
 						org.w3c.dom.Element meletew3cNewElement1 = (org.w3c.dom.Element)((Element) stack.peek()).getOwnerDocument().importNode(meletew3cElement1,true);
-						modulesElement.appendChild(meletew3cNewElement1);					
-						
+						modulesElement.appendChild(meletew3cNewElement1);
+
 						((Element) stack.peek()).appendChild(modulesElement);
-						stack.push(modulesElement);	
-				}				
+						stack.push(modulesElement);
+				}
 			}
 	//		stack.pop();
 		}
@@ -577,7 +570,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 			logger.error(e.getMessage(), e);
 		}
 	}
-	
+
    public ModuleService getModuleService() {
 	        return moduleService;
 	    }
@@ -614,6 +607,6 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	{
 		this.meleteExportService = meleteExportService;
 	}
- 
-     
+
+
 }

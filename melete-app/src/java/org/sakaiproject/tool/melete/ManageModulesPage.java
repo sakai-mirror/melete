@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  **********************************************************************************/
 
@@ -265,7 +265,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		managePage.resetValues();
 		return "manage_content";
 	}
-	
+
 	/*
 	 * navigation rule for Return
 	 */
@@ -632,7 +632,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 			  currModule = "1";
 			}
 	      }
-		}		
+		}
 		allModulesList = forSelectItemsList(allModules);
 		return allModulesList;
 	}
@@ -754,7 +754,7 @@ return "sections_sort";
 	  	try{
 	  		logger.debug("new selected value is" + newSelectedSection);
 			if(newSelectedSection != null)
-				{				
+				{
 				int selIndex = new Integer(newSelectedSection).intValue();
 				if((selIndex == 0) || newSectionsList == null || newSectionsList.size() < 2 )
 				{
@@ -860,13 +860,7 @@ return "sections_sort";
 	public void setModuleService(ModuleService moduleService) {
 		this.moduleService = moduleService;
 	}
-	/**
-	 * @return Returns the logger.
-	 */
 
-	public void setLogger(Log logger) {
-		this.logger = logger;
-	}
 
 	public HtmlPanelGrid getSeqTable() {
 		return null;

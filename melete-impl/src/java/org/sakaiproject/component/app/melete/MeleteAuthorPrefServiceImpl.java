@@ -94,13 +94,7 @@ public MeleteSitePreferenceService getSiteChoice(String site_id)
 	return msp;
 }
 
-/**
-	 * @param logger The logger to set.
-	 */
-	public void setLogger(Log logger)
-	  {
-	    this.logger = logger;
-	  }
+
 	/**
 	 * @return Returns the UserPrefdb
 	 */

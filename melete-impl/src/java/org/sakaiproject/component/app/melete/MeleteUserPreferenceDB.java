@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  */
 package org.sakaiproject.component.app.melete;
@@ -95,7 +95,7 @@ public class MeleteUserPreferenceDB {
 	    	 // session.saveOrUpdate(mup);
 	    	session.update(mup);
 	      }
-	      
+
 	      tx.commit();
 
 	    }
@@ -129,7 +129,7 @@ public class MeleteUserPreferenceDB {
 			  }
 		}
 	}
-	
+
 	public MeleteSitePreference getSitePreferences(String siteId)
 	{
 		MeleteSitePreference msp = null;
@@ -161,13 +161,13 @@ public class MeleteUserPreferenceDB {
 	      Query q=session.createQuery("select msp1 from MeleteSitePreference as msp1 where msp1.prefSiteId =:siteId");
 		  q.setParameter("siteId",msp.getPrefSiteId());
 		  MeleteSitePreference find_msp = (MeleteSitePreference)q.uniqueResult();
-		 
+
 	      if(find_msp == null)
 	     	  session.save(msp);
-	      else 
+	      else
 	      {
-	    	 find_msp.setPrintable(msp.isPrintable()); 
-	    	 find_msp.setAutonumber(msp.isAutonumber()); 
+	    	 find_msp.setPrintable(msp.isPrintable());
+	    	 find_msp.setAutonumber(msp.isAutonumber());
 	    	 session.update(find_msp);
 	      }
 
@@ -203,8 +203,8 @@ public class MeleteUserPreferenceDB {
 			  }
 		}
 	}
-	
-	public void setSitePreferences(String site_id, boolean printFlag, boolean autonumberFlag) 
+
+	public void setSitePreferences(String site_id, boolean printFlag, boolean autonumberFlag)
 	{
 		Transaction tx = null;
 	 	try
@@ -215,7 +215,7 @@ public class MeleteUserPreferenceDB {
 	      Query q=session.createQuery("select msp1 from MeleteSitePreference as msp1 where msp1.prefSiteId =:siteId");
 		  q.setParameter("siteId",site_id);
 		  MeleteSitePreference find_msp = (MeleteSitePreference)q.uniqueResult();
-		 
+
 	      if(find_msp == null)
 	      {
 	    	  MeleteSitePreference msp = new MeleteSitePreference();
@@ -224,10 +224,10 @@ public class MeleteUserPreferenceDB {
 	    	  msp.setAutonumber(autonumberFlag);
 	     	  session.save(msp);
 	      }
-	      else 
+	      else
 	      {
-	    	 find_msp.setPrintable(printFlag); 
-	    	 find_msp.setAutonumber(autonumberFlag); 
+	    	 find_msp.setPrintable(printFlag);
+	    	 find_msp.setAutonumber(autonumberFlag);
 	    	 session.update(find_msp);
 	      }
 
@@ -236,16 +236,16 @@ public class MeleteUserPreferenceDB {
 	 	catch(StaleObjectStateException sose)
 	     {
 			if(tx !=null) tx.rollback();
-			logger.error("stale object exception" + sose.toString());		
+			logger.error("stale object exception" + sose.toString());
 	     }
 	    catch (HibernateException he)
 	    {
 		  logger.error(he.toString());
-		  he.printStackTrace();		 
+		  he.printStackTrace();
 	    }
 	    catch (Exception e) {
 	      if (tx!=null) tx.rollback();
-	      logger.error(e.toString());	      
+	      logger.error(e.toString());
 	    }
 	    finally
 		{
@@ -255,7 +255,7 @@ public class MeleteUserPreferenceDB {
 			  }
 		      catch (HibernateException he)
 			  {
-				  logger.error(he.toString());				  
+				  logger.error(he.toString());
 			  }
 		}
 	}
@@ -272,12 +272,7 @@ public class MeleteUserPreferenceDB {
 		this.hibernateUtil = hibernateUtil;
 	}
 
-	/**
-	 * @param logger The logger to set.
-	 */
-	public void setLogger(Log logger) {
-		this.logger = logger;
-	}
-	
+
+
 
 }

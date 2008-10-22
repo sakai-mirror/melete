@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  **********************************************************************************/
 package org.sakaiproject.tool.melete;
@@ -116,12 +116,6 @@ public class ViewNextStepsPage implements Serializable/*,ToolBean */{
 	  }
 
 
-	  /**
-		 * @param logger The logger to set.
-	  */
-	  public void setLogger(Log logger) {
-			this.logger = logger;
-	  }
 
 
 
@@ -185,9 +179,9 @@ public String goPrevItem()
 	    	vsPage.setModuleSeqNo(this.moduleSeqNo);
 	    }
 	    else
-	    {	
+	    {
 	       vsPage.setModuleSeqNo(prevSeqNo);
-	    }   
+	    }
 	    vsPage.setSection(null);
 	    //added by rashmi on 6/14/05
 	    vsPage.setModule(null);
@@ -219,7 +213,7 @@ public String goNextModule()
       ViewModulesPage vmPage = (ViewModulesPage)
         binding.getValue(context);
   //  vmPage.setModuleId(nextMdBean.getModuleId());
-    vmPage.setModuleId(0);  
+    vmPage.setModuleId(0);
   	vmPage.setMdbean(null);
   	vmPage.setPrevMdbean(null);
     vmPage.setModuleSeqNo(nextSeqNo);

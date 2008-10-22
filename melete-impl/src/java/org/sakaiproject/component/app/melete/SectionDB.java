@@ -271,7 +271,7 @@ public class SectionDB implements Serializable {
 	{
 		SectionResource secRes = null;
 		int affectedEntities;
-		
+
 		//These are the queries
 		String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.sectionId=:sectionId";
 		String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
@@ -1350,12 +1350,7 @@ public class SectionDB implements Serializable {
 		this.meleteSecurityService = meleteSecurityService;
 	}
 
-	/**
-	 * @param logger The logger to set.
-	 */
-	public void setLogger(Log logger) {
-		this.logger = logger;
-	}
+
 
 	/**
 	 * @param moduleDB the moduleDB to set

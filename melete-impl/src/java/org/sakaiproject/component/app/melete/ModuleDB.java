@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
 **********************************************************************************/
 
@@ -113,12 +113,7 @@ public class ModuleDB implements Serializable {
 	{
 		return new ModuleDB();
 	}
-	/**
-	 * @param logger The logger to set.
-	 */
-	public void setLogger(Log logger) {
-		this.logger = logger;
-	}
+
 
 	 /**
 	   * assign sequence number to the new module.
@@ -2356,7 +2351,7 @@ public class ModuleDB implements Serializable {
 						deletedEntities = session.createQuery(delModuleStr).setInteger("moduleId", delModuleId).executeUpdate();
 						meleteCHService.removeCollection(toDelCourseId, "module_"+delModuleId.toString());
 					}
-				
+
 					// look for sections just marked for delete
 					String queryString1 = " from Section sec where sec.deleteFlag = 1 and sec.moduleId IN (select moduleId from CourseModule cm where cm.courseId=:courseId) order by sec.moduleId";
      			    Query query1 = session.createQuery(queryString1);
@@ -2389,7 +2384,7 @@ public class ModuleDB implements Serializable {
 						}
 
 					}
-			
+
 				if(	allCourseResources != null)
 				{
 					delresourcesz = allCourseResources.size();

@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  **********************************************************************************/
 package org.sakaiproject.tool.melete;
@@ -294,7 +294,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		setModuleDateBeans(null);
 		setSectionBeans(null);
 		sameModuleSectionSelected = false;
-		
+
 		return "list_auth_modules";
 	}
 	private String getCourseId()
@@ -341,9 +341,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 	public void setSectionService(SectionService sectionService) {
 		this.sectionService = sectionService;
 	}
-	public void setLogger(Log logger) {
-		this.logger = logger;
-	}
+
 	/**
 	 * @return Returns the sameModuleSectionSelected.
 	 */
