@@ -126,6 +126,48 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		}
    }
 
+   public boolean isUserAuthor(String reference)throws Exception{
+
+		try {
+			return meleteSecurityService.allowAuthor(reference);
+		} catch (Exception e) {
+			throw e;
+		}
+   }
+
+   public boolean isUserStudent(String reference)throws Exception{
+
+	try {
+		return meleteSecurityService.allowStudent(reference);
+	} catch (Exception e) {
+		throw e;
+	}
+   }
+
+   private String getCourseId(String inputStr)
+   {
+	  String courseId = null;
+	  String rootCollectionRef = Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR;
+
+	  if ((inputStr != null)&&(inputStr.length() > 0))
+	  {
+		  if (inputStr.startsWith(rootCollectionRef))
+		  {
+			  courseId = inputStr.substring(rootCollectionRef.length(),inputStr.indexOf(Entity.SEPARATOR,rootCollectionRef.length()));
+		  }
+		  else
+		  {
+			  logger.warn("getCourseId - inputStr does not contain prefix structure "+inputStr);
+		  }
+	  }
+	  else
+	  {
+		  logger.warn("getCourseId - inputStr is null");
+	  }
+	  return courseId;
+
+   }
+
 	private String addMeleteRootCollection(String rootCollectionRef, String collectionName, String description)
 	{
 		try
@@ -166,9 +208,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
      */
 	 public String addCollectionToMeleteCollection(String meleteItemColl,String CollName)
      {
-            try
+		 String courseId = meleteItemColl.substring(0,meleteItemColl.indexOf(Entity.SEPARATOR));
+		    try
     	    {
-            	if (!isUserAuthor())
+            	if (!isUserAuthor(courseId))
             		{
             		logger.info("User is not authorized to access meleteDocs collection");
             		}
@@ -217,10 +260,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    collName = "module_"+ modId;
         }
         else {
-            if (ToolManager.getCurrentPlacement()!=null)
-	        addToCollection=ToolManager.getCurrentPlacement().getContext()+Entity.SEPARATOR+"uploads";
-            else
-                addToCollection=getMeleteSecurityService().getMeleteImportService().getDestinationContext()+Entity.SEPARATOR+"uploads";
+            addToCollection=ToolManager.getCurrentPlacement().getContext()+Entity.SEPARATOR+"uploads";
 
         	collName = "uploads";
         }
@@ -380,6 +420,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		 */
 	 public List getListofLinksFromCollection(String collId)
 		 {
+
 		 	try
 		    {
 	        	if (!isUserAuthor())
@@ -541,11 +582,12 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		 String dispName = name;
 		 name = Validator.escapeResourceName(name);
 
+		 String courseId = getCourseId(addCollId);
 		 if (logger.isDebugEnabled()) logger.debug("IN addResourceItem "+name+" addCollId "+addCollId);
 		// need to add notify logic here and set the arg6 accordingly.
 		try
  	    {
-		    if (!isUserAuthor())
+		    if (!isUserAuthor(courseId))
 		    {
 		       logger.info("User is not authorized to add resource");
 		    }
@@ -706,9 +748,11 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	  */
 	 public ContentResource getResource(String resourceId) throws Exception
 	 {
+		if (resourceId == null) return null;
+		String courseId = getCourseId(resourceId);
 	 	try
 	    {
-        	if (!isUserAuthor() && !isUserStudent())
+        	if (!isUserAuthor(courseId) && !isUserStudent(courseId))
         		{
         		logger.info("User is not authorized to access meleteDocs collection");
         		}
@@ -731,9 +775,11 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 
 	 public void checkResource(String resourceId) throws Exception
 	 {
+		if (resourceId == null) return;
+		String courseId = getCourseId(resourceId);
 	 	try
 	    {
-        	if (!isUserAuthor())
+        	if (!isUserAuthor(courseId))
         		{
         		logger.info("User is not authorized to access meleteDocs collection");
         		}
