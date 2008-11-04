@@ -106,9 +106,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	private MeleteLicenseDB meleteLicenseDB;
 	private MeleteUserPreferenceDB meleteUserPrefDB;
 
-	protected String unzippeddirpath = null;
 	private SubSectionUtilImpl sectionUtil;
-	private Document seqDocument;
 
 	/**default namespace and metadata namespace*/
 	protected String DEFAULT_NAMESPACE_URI = "http://www.imsglobal.org/xsd/imscp_v1p1";
@@ -121,7 +119,6 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	protected int RESOURCE_LICENSE_CC_CODE = 3; //Creative Commons
 	protected int RESOURCE_LICENSE_FAIRUSE_CODE = 4; //FairUse Exception
 
-	private String destinationContext;
 	protected MeleteUtil meleteUtil = new MeleteUtil();
 
 
@@ -196,8 +193,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	public int mergeAndBuildModules(Document ArchiveDoc, String unZippedDirPath, String fromSiteId) throws Exception
 	{
 		if (logger.isDebugEnabled()) logger.debug("Entering mergeAndBuildModules");
-		setUnzippeddirpath(unZippedDirPath);
-		setDestinationContext(fromSiteId);
+
 		int count = 0;
 		try
 		{
@@ -241,21 +237,19 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					}
 
 				}
-				createModule(module);
+				createModule(module, fromSiteId);
 			// build sections
 
 				sectionUtil = new SubSectionUtilImpl();
-		//		String moduleDtdLocation = new String(meleteUtil.readFromFile(new File(getUnzippeddirpath() + File.separator + "moduleSeqdtdLocation.txt")));
-		//		sectionUtil.setDtdLocation(moduleDtdLocation);
-				seqDocument = sectionUtil.createSubSection4jDOM();
+				Document seqDocument = sectionUtil.createSubSection4jDOM();
 
 				for (Iterator iter3 = element.elementIterator("item"); iter3.hasNext();)
 				{
 					Element itemelement = (Element) iter3.next();
 
 					if (itemelement.attributeValue("identifier").startsWith("NEXTSTEPS"))
-						mergeWhatsNext(itemelement, ArchiveDoc, module);
-					else mergeSection(itemelement, ArchiveDoc, module, addBlankSection(null));
+						mergeWhatsNext(itemelement, ArchiveDoc, module, unZippedDirPath);
+					else mergeSection(itemelement, ArchiveDoc, module, addBlankSection(null, seqDocument), unZippedDirPath, seqDocument, fromSiteId);
 				}
 
 				// update module seqXml
@@ -284,8 +278,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	public void parseAndBuildModules(Document document, String unZippedDirPath) throws Exception
 	{
 		if (logger.isDebugEnabled()) logger.debug("Entering parseAndBuildModules");
-		setUnzippeddirpath(unZippedDirPath);
-		setDestinationContext(ToolManager.getCurrentPlacement().getContext());
+
 		Map uris = new HashMap();
 		uris.put("imscp", DEFAULT_NAMESPACE_URI);
 		uris.put("imsmd", IMSMD_NAMESPACE_URI);
@@ -304,13 +297,13 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			for (Iterator iter = elements.iterator(); iter.hasNext();)
 			{
 				Element element = (Element) iter.next();
-				buildModule(element, document);
+				buildModule(element, document, unZippedDirPath,ToolManager.getCurrentPlacement().getContext() );
 			}
 		}
 		catch (Exception e)
 		{
 			// no organization tag so create one flat module
-			buildFlatModule(document);
+			buildFlatModule(document, unZippedDirPath,ToolManager.getCurrentPlacement().getContext());
 		}
 
 		if (logger.isDebugEnabled()) logger.debug("Exiting parseAndBuildModules");
@@ -319,7 +312,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	/*
 	 * Builds one big module and each resource element becomes a section
 	 */
-	  private void buildFlatModule(Document document) throws Exception
+	  private void buildFlatModule(Document document, String unZippedDirPath, String courseId) throws Exception
 	  {
 		  if (logger.isDebugEnabled())
 				logger.debug("Entering buildFlatModule..." );
@@ -329,7 +322,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			module.setTitle("Untitled Module");
 			module.setKeywords("Untitled Module");
 			module.setDescription("    ");
-			createModule(module);
+			createModule(module, courseId);
 
 			// read all resources tag and create section
 			Map uris = new HashMap();
@@ -343,7 +336,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			Element eleAllResources = (Element) xpath.selectSingleNode(document);
 
 			sectionUtil = new SubSectionUtilImpl();
-			seqDocument = sectionUtil.createSubSection4jDOM();
+			Document seqDocument = sectionUtil.createSubSection4jDOM();
 
 			// build section
 			// loop thru resources elements - resource elements
@@ -351,7 +344,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			for (Iterator iter = elements.iterator(); iter.hasNext();)
 			{
 				Element eleRes = (Element) iter.next();
-				Section section = buildDefaultSection(module,addBlankSection(null));
+				Section section = buildDefaultSection(module,addBlankSection(null, seqDocument));
 
 				MeleteResource meleteResource= new MeleteResource();
 				//default to no license
@@ -368,7 +361,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					if (hrefVal != null && hrefVal.length() != 0
 							&& !(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")))
 					{
-						if (!meleteUtil.checkFileExists(getUnzippeddirpath() + File.separator + hrefVal))
+						if (!meleteUtil.checkFileExists(unZippedDirPath + File.separator + hrefVal))
 						{
 							logger.info("content file for section is missing so move ON");
 							return;
@@ -377,7 +370,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					// end missing file check
 
 					List resElements = eleRes.elements();
-					createContentResource(module, section, meleteResource, hrefVal, resElements);
+					createContentResource(module, section, meleteResource, hrefVal, resElements, unZippedDirPath, courseId);
 
 				} // resHrefAttr check end
 			}
@@ -418,7 +411,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	 * @exception throws exception
 	 * revised by rashmi - change the whole structure of accessing elements
 	 */
-	private void buildModule(Element eleItem, Document document)
+	private void buildModule(Element eleItem, Document document, String unZippedDirPath, String courseId)
 	throws Exception {
 
 		if (logger.isDebugEnabled())
@@ -472,21 +465,21 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		}
 		if (!keywords) module.setKeywords(module.getTitle());
 		if (!descr) module.setDescription("    ");
-		createModule(module);
+		createModule(module, courseId);
 
 // 		build sections
 		try
 		{
 			sectionUtil = new SubSectionUtilImpl();
-			seqDocument = sectionUtil.createSubSection4jDOM();
+			Document seqDocument = sectionUtil.createSubSection4jDOM();
 
 			for (Iterator iter = eleItem.elementIterator("item"); iter.hasNext();)
 			{
 				Element element = (Element) iter.next();
 
 				if (element.attributeValue("identifier").startsWith("NEXTSTEPS"))
-					buildWhatsNext(element, document, module);
-				else buildSection(element, document, module, addBlankSection(null));
+					buildWhatsNext(element, document, module, unZippedDirPath);
+				else buildSection(element, document, module, addBlankSection(null, seqDocument), unZippedDirPath, seqDocument, courseId);
 			}
 
 			// update module seqXml
@@ -502,7 +495,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		if (logger.isDebugEnabled()) logger.debug("Exiting buildModule...");
 	}
 
-	private Element addBlankSection(Element parentElement)
+	private Element addBlankSection(Element parentElement, Document seqDocument)
 	{
 		if(parentElement == null)
 			parentElement = seqDocument.getRootElement();
@@ -593,7 +586,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	 * build whats next
 	 * added by rashmi
 	 */
-	private void buildWhatsNext(Element eleItem,Document  document,Module module) throws Exception
+	private void buildWhatsNext(Element eleItem,Document  document,Module module,String unZippedDirPath) throws Exception
 	{
 		Attribute identifierref = eleItem.attribute("identifierref");
 		Element eleRes;
@@ -601,7 +594,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		if (identifierref != null) {
 			eleRes = getResource(identifierref.getValue(), document);
 			String hrefVal = eleRes.attributeValue("href");
-			String nextsteps = new String(meleteUtil.readFromFile(new File(getUnzippeddirpath() + File.separator+ hrefVal)));
+			String nextsteps = new String(meleteUtil.readFromFile(new File(unZippedDirPath + File.separator+ hrefVal)));
 			module.setWhatsNext(nextsteps);
 			ModuleDateBean mdbean = new ModuleDateBean();
 			mdbean.setModuleId(module.getModuleId().intValue());
@@ -614,7 +607,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 	}
 
-	private void mergeWhatsNext(Element eleItem,Document  document,Module module) throws Exception
+	private void mergeWhatsNext(Element eleItem,Document  document,Module module,String unZippedDirPath) throws Exception
 	{
 		Attribute identifierref = eleItem.attribute("identifierref");
 		Element eleRes;
@@ -622,7 +615,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		if (identifierref != null) {
 			eleRes = getMergeResource(identifierref.getValue(), document);
 			String hrefVal = eleRes.attributeValue("href");
-			String nextsteps = new String(meleteUtil.readFromFile(new File(getUnzippeddirpath() + File.separator+ hrefVal)));
+			String nextsteps = new String(meleteUtil.readFromFile(new File(unZippedDirPath + File.separator+ hrefVal)));
 			module.setWhatsNext(nextsteps);
 			moduleDB.updateModule(module);
 		}
@@ -632,13 +625,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	 * creates the module
 	 * @param module Module
 	 */
-	private void createModule(Module module)throws Exception {
+	private void createModule(Module module, String courseId)throws Exception {
 		if (logger.isDebugEnabled())
 			logger.debug("Entering createModule...");
-
-		//String courseId = PortalService.getCurrentSiteId();
-		String courseId ="";
-        courseId =destinationContext;
 
 		String userId = UserDirectoryService.getCurrentUser().getId();
 		String firstName = UserDirectoryService.getCurrentUser()
@@ -662,7 +651,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	 * @param module Module
 	 * @throws Exception
 	 */
-	private void buildSection(Element eleItem, Document document, Module module, Element seqElement)
+	private void buildSection(Element eleItem, Document document, Module module, Element seqElement, String unZippedDirPath, Document seqDocument, String courseId)
 			throws Exception {
 		if (logger.isDebugEnabled())
 			logger.debug("Entering buildSection...");
@@ -690,7 +679,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			//item
 			else if (element.getQualifiedName().equalsIgnoreCase("item")) {
 				//call recursive here
-				buildSection(element,document, module, addBlankSection(seqElement));
+				buildSection(element,document, module, addBlankSection(seqElement, seqDocument), unZippedDirPath, seqDocument, courseId);
 			}
 			//metadata
 			else if (element.getQualifiedName().equalsIgnoreCase("imsmd:lom")){
@@ -761,7 +750,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					if (hrefVal != null && hrefVal.length() != 0
 							&& !(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")))
 					{
-						if (!meleteUtil.checkFileExists(getUnzippeddirpath() + File.separator + hrefVal))
+						if (!meleteUtil.checkFileExists(unZippedDirPath + File.separator + hrefVal))
 						{
 							logger.info("content file for section is missing so move ON");
 							return;
@@ -771,7 +760,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 					// create meleteResourceObject
 					List resElements = eleRes.elements();
-					createContentResource(module, section, meleteResource, hrefVal, resElements);
+					createContentResource(module, section, meleteResource, hrefVal, resElements, unZippedDirPath, courseId);
 
 				} // resHrefAttr check end
 			}
@@ -787,9 +776,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	 * @param module Module
 	 * @throws Exception
 	 */
-	private void mergeSection(Element eleItem, Document document, Module module, Element seqElement)
+	private void mergeSection(Element eleItem, Document document, Module module, Element seqElement,String unZippedDirPath, Document seqDocument, String courseId)
 			throws Exception {
-		if (logger.isDebugEnabled()) logger.debug("Entering buildSection...");
+		if (logger.isDebugEnabled()) logger.debug("Entering mergeSection...");
 
 		Attribute identifier = eleItem.attribute("identifier");
 		logger.debug("importing ITEM " + identifier.getValue());
@@ -817,7 +806,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			else if (element.getQualifiedName().equalsIgnoreCase("item"))
 			{
 				// call recursive here
-				buildSection(element, document, module, addBlankSection(seqElement));
+				buildSection(element, document, module, addBlankSection(seqElement, seqDocument), unZippedDirPath, seqDocument, courseId);
 			}
 			// metadata
 			else if (element.getName().equalsIgnoreCase("imsmd:lom"))
@@ -899,7 +888,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					if (hrefVal != null && hrefVal.length() != 0
 							&& !(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")))
 					{
-						if (!meleteUtil.checkFileExists(getUnzippeddirpath() + File.separator + hrefVal))
+						if (!meleteUtil.checkFileExists(unZippedDirPath + File.separator + hrefVal))
 						{
 							logger.info("content file for section is missing so move ON");
 							return;
@@ -909,7 +898,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 					// create meleteResourceObject
 					List resElements = eleRes.elements();
-					createContentResource(module, section, meleteResource, hrefVal, resElements);
+					createContentResource(module, section, meleteResource, hrefVal, resElements, unZippedDirPath, courseId);
 
 				} // resHrefAttr check end
 			}
@@ -926,7 +915,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	 * @param hrefVal
 	 *        href value of the item
 	 */
-	private String uploadSectionDependentFile(String hrefVal, String courseId, boolean imsImport) {
+	private String uploadSectionDependentFile(String hrefVal, String courseId, boolean imsImport,String unZippedDirPath) {
 		try {
 			String filename = null;
 			String res_mime_type = null;
@@ -949,9 +938,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			 		if (imsImport)
 			 		{
 				 		  //This is executed by IMP import
-				 		  melContentData = meleteUtil.readFromFile(new File(getUnzippeddirpath() + File.separator
+				 		  melContentData = meleteUtil.readFromFile(new File(unZippedDirPath + File.separator
 								+ hrefVal));
-				 		 uploadCollId = getMeleteCHService().getUploadCollectionId(destinationContext);
+				 		 uploadCollId = getMeleteCHService().getUploadCollectionId(courseId);
 			 		}
 			 		else
 			 		{
@@ -998,7 +987,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	 * @throws MeleteException
 	 * @throws Exception
 	 */
-	public void createContentResource(Module module,Section section,MeleteResource meleteResource, String hrefVal,List resElements)
+	private void createContentResource(Module module,Section section,MeleteResource meleteResource, String hrefVal,List resElements, String unZippedDirPath, String courseId)
 	throws MalformedURLException, UnknownHostException, MeleteException, Exception {
 		String melResourceName = null;
 		String melResourceDescription = null;
@@ -1010,9 +999,6 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 		if (logger.isDebugEnabled())
 			logger.debug("Entering createSection...");
-
-		String courseId ="";
-       	courseId = destinationContext;
 
 
 		//This code fixes resource description transfer for import from site
@@ -1042,9 +1028,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			if (resElements != null)
 			{
                 //This part called by IMS import
-				contentEditor = new String(meleteUtil.readFromFile(new File(getUnzippeddirpath() + File.separator + hrefVal)));
+				contentEditor = new String(meleteUtil.readFromFile(new File(unZippedDirPath + File.separator + hrefVal)));
 //				 create objects for embedded images
-				contentEditor = createContentFile(contentEditor, (Module)module, (Section)section, resElements);
+				contentEditor = createContentFile(contentEditor, (Module)module, (Section)section, resElements, unZippedDirPath, courseId);
 				addCollId = getMeleteCHService().getCollectionId(section.getContentType(), module.getModuleId());
 			}
 			else
@@ -1052,8 +1038,8 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				//This part called by import from site
 				  ContentResource cr = getMeleteCHService().getResource(hrefVal);
 				  contentEditor = new String(cr.getContent());
-				  contentEditor = createContentFile(contentEditor, (Module)module, (Section)section, null);
-				  addCollId = getMeleteCHService().getCollectionId(destinationContext, section.getContentType(), module.getModuleId());
+				  contentEditor = createContentFile(contentEditor, (Module)module, (Section)section, null, unZippedDirPath, courseId);
+				  addCollId = getMeleteCHService().getCollectionId(courseId, section.getContentType(), module.getModuleId());
 			}
 
              melContentData = new byte[contentEditor.length()];
@@ -1141,7 +1127,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				{
 			 		// actual insert
 			 		// if not found in meleteDocs collection include it
-			 		String uploadCollId = getMeleteCHService().getUploadCollectionId(destinationContext);
+			 		String uploadCollId = getMeleteCHService().getUploadCollectionId(courseId);
 
 				  	// data is generally large so read it only if need to insert
 					if(section.getContentType().equals("typeLink"))
@@ -1154,7 +1140,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 							{
 								if(resElements != null){
 									String fileName = ((Element)resElements.get(0)).attributeValue("href");
-									melContentData = meleteUtil.readFromFile(new File(getUnzippeddirpath() + File.separator+ fileName));
+									melContentData = meleteUtil.readFromFile(new File(unZippedDirPath + File.separator+ fileName));
 									res_mime_type = fileName.substring(fileName.lastIndexOf(".")+1);
 									res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
 									}
@@ -1195,7 +1181,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					  res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
 			 		  if (resElements != null)
 			 		  {
-			 			melContentData = meleteUtil.readFromFile(new File(getUnzippeddirpath() + File.separator+ hrefVal));
+			 			melContentData = meleteUtil.readFromFile(new File(unZippedDirPath + File.separator+ hrefVal));
 			 		  }
 			 		  else
 			 		  {
@@ -1298,14 +1284,11 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	 *
 	 * IMP NOTE: NEED TO READ IP ADDRESS FROM SESSION OR SOMEWHERE ELSE
 	 */
-	private String createContentFile(String contentEditor, Module module, Section section, List resElements)throws Exception{
+	private String createContentFile(String contentEditor, Module module, Section section, List resElements, String unZippedDirPath, String courseId)throws Exception{
 		//save uploaded img inside content editor to destination directory
 		String checkforimgs = contentEditor;
 		int imgindex = -1;
         String imgSrcPath, imgName, imgLoc;
-		String courseId ="";
-
-		courseId =destinationContext;
 
 		int startSrc =0;
 		int endSrc = 0;
@@ -1344,7 +1327,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 						}
 					}
 				}
-				contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, true);
+				contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, true, unZippedDirPath);
 			    } // if check for images
 			    } //if http check end
 			}//IMS import (original code) ends here
@@ -1368,7 +1351,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 //							Item resides in resources
 						    checkforimgs = checkforimgs.substring(endSrc);
 						    imgActualPath = ref.getId();
-						    contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, false);
+						    contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, false, unZippedDirPath);
 
 						}
 						if (ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
@@ -1377,7 +1360,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 							//Item resides in meleteDocs, so need not check under resources
 							checkforimgs = checkforimgs.substring(endSrc);
 							imgActualPath = ref.getId().replaceFirst("/content","");
-							contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, false);
+							contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, false, unZippedDirPath);
 						}
 					}
 			     }
@@ -1390,9 +1373,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		return contentEditor;
 	}
 
-	private String ReplaceEmbedMediaWithResourceURL(String contentEditor, String imgSrcPath, String imgActualPath, String courseId, boolean imsImport)
+	private String ReplaceEmbedMediaWithResourceURL(String contentEditor, String imgSrcPath, String imgActualPath, String courseId, boolean imsImport, String unZippedDirPath)
 	{
-		 		String replacementStr = uploadSectionDependentFile(imgActualPath, courseId, imsImport);
+		 		String replacementStr = uploadSectionDependentFile(imgActualPath, courseId, imsImport, unZippedDirPath);
 				//Upon import, embedded media was getting full url without code below
 				if (replacementStr.startsWith(ServerConfigurationService.getServerUrl()))
 				{
@@ -1409,8 +1392,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	public void copyModules(String fromContext, String toContext)
 	{
 		//Copy the uploads collection
-	    this.destinationContext = toContext;
-  	   	buildModules(fromContext, toContext);
+	   	buildModules(fromContext, toContext);
   	//   	setMeleteSitePreference(fromContext, toContext);
 	}
 
@@ -1468,7 +1450,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 							{
 								toMres = new MeleteResource((MeleteResource)fromSec.getSectionResource().getResource());
 								toMres.setResourceId(null);
-								createContentResource(toMod,toSec,toMres,((MeleteResource)fromSec.getSectionResource().getResource()).getResourceId(),null);
+								createContentResource(toMod,toSec,toMres,((MeleteResource)fromSec.getSectionResource().getResource()).getResourceId(),null,null,toContext);
 							}
 							if (fromModSeqXml!=null)
 								fromModSeqXml = fromModSeqXml.replace(Integer.toString(fromSecId), Integer.toString(toSecId));
@@ -1492,10 +1474,12 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					}
 
 					//Finally, update the seqXml for the module
-					toMod.setSeqXml(fromModSeqXml);
+
+				    Module secModule = moduleDB.getModule(toMod.getModuleId().intValue());
+				    secModule.setSeqXml(fromModSeqXml);
 					try
 					{
-						moduleDB.updateModule(toMod);
+						moduleDB.updateModule(secModule);
 					}
 					catch (Exception ex)
 					{
@@ -1528,38 +1512,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 	}
 
-	public String getDestinationContext()
-	{
-		return this.destinationContext;
-	}
 
-	public void setDestinationContext(String destinationContext)
-	{
-		this.destinationContext = destinationContext;
-	}
-
-	public void setModuleDB(ModuleDB moduleDB) {
-		this.moduleDB = moduleDB;
-	}
-
-	/**
-	 * @param sectionDB The sectionDB to set.
-	 */
-	public void setSectionDB(SectionDB sectionDB) {
-		this.sectionDB = sectionDB;
-	}
-	/**
-	 * @return Returns the unzippeddirpath.
-	 */
-	protected String getUnzippeddirpath() {
-		return unzippeddirpath;
-	}
-	/**
-	 * @param unzippeddirpath The unzippeddirpath to set.
-	 */
-	protected void setUnzippeddirpath(String unzippeddirpath) {
-		this.unzippeddirpath = unzippeddirpath;
-	}
 
 	/**
 	 * @return Returns the meleteCHService.
@@ -1573,6 +1526,20 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	public void setMeleteCHService(MeleteCHService meleteCHService) {
 		this.meleteCHService = meleteCHService;
 	}
+
+	public void setModuleDB(ModuleDB moduleDB) {
+		this.moduleDB = moduleDB;
+	}
+
+	/**
+	 * @param sectionDB The sectionDB to set.
+	 */
+	public void setSectionDB(SectionDB sectionDB) {
+		this.sectionDB = sectionDB;
+	}
+
+
+
 	/**
 	 * @return Returns the meleteLicenseDB.
 	 */
