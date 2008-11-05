@@ -397,9 +397,12 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 	      int countidx = 0;
 	          	while (itr.hasNext()) {
 	         		SectionBean secBean= (SectionBean) itr.next();
+	         		if (secBean != null)
+	         		{	
 		  	  		String value = new Integer(countidx++).toString();
 		  	  		String label = secBean.getDisplaySequence() +" "+ secBean.getSection().getTitle();
 		  	 		selectList.add(new SelectItem(value, label));
+	         		}
 		  		}
 
 	   	return selectList;
