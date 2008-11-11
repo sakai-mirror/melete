@@ -113,7 +113,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 	/*
 	 *  process section type and create resource element object
 	 */
-	void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String sectionFileName,int i) throws Exception
+	void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String sectionFileName,int item_ref_num) throws Exception
 	{
 		if (section.getContentType().equals("typeLink")){
 			String linkData = new String(content_data1);
@@ -171,6 +171,23 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 			//create the file
 			File resfile = new File(resoucesDir+ "/"+fileName);
 			createFileFromContent( modSecContent.getBytes(), resfile.getAbsolutePath());
+		} else if (section.getContentType().equals("typeLTI")){
+			resource.addAttribute("type ","SimpleLTI");
+			String linkData = new String(content_data1);
+
+			Element file = resource.addElement("file");
+                        String fileName = "simplelti-"+item_ref_num+".xml";
+
+			file.addAttribute("href", "resources/"+ fileName);
+			resource.addAttribute("href", "resources/"+ fileName);
+
+			File resfile = new File(resoucesDir+ "/"+fileName);
+			createFileFromContent( linkData.getBytes(), resfile.getAbsolutePath());
+                        Element urlTitle = createLOMElement("imsmd:title", "title");
+                        Element imsmdlangstring = createLOMElement("imsmd:"+getLangString(), getLangString());
+			imsmdlangstring.setText(sectionFileName);
+			urlTitle.add(imsmdlangstring);
+			resource.add(urlTitle);
 		}else if(section.getContentType().equals("typeUpload")){
 			Element file = resource.addElement("file");
 			String fileName = Validator.escapeResourceName(sectionFileName);
@@ -236,7 +253,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 				Element resource = resources.addElement("resource");
 				resource.addAttribute("identifier","RESOURCE"+ item_ref_num);
 				resource.addAttribute("type ","webcontent");
-				createResourceElement(section, resource, content_data1, resoucesDir, imagespath,(String)content_data.get(0),i);
+				createResourceElement(section, resource, content_data1, resoucesDir, imagespath,(String)content_data.get(0),item_ref_num);
 
 					//preserve resource description
 				if (content_data.get(1) != null && ((String)content_data.get(1)).length() != 0)
