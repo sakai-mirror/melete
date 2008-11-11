@@ -96,16 +96,20 @@ public class DeleteResourcePage implements Serializable{
 
   	public String deleteResource()
   	{
+System.out.println("deleteResource");
   		FacesContext context = FacesContext.getCurrentInstance();
   		try
   		{
   			if(delResourceId != null)
   			{
+System.out.println("Deleting "+this.delResourceId);
   				// delete from content resource
   				meleteCHService.removeResource(this.delResourceId);
   				sectionService.deleteResourceInUse(this.delResourceId, this.courseId);
   				logger.debug("delete resource is done now move back to page");
+System.out.println("Deleted "+this.delResourceId);
   			}
+System.out.println("fromPage="+fromPage);
   			if (fromPage.startsWith("edit"))
   			{
   				ValueBinding binding = Util.getBinding("#{editSectionPage}");
@@ -129,7 +133,8 @@ public class DeleteResourcePage implements Serializable{
   			{
   				ValueBinding binding = Util.getBinding("#{addSectionPage}");
   				AddSectionPage addPage = (AddSectionPage) binding.getValue(context);
-  				if(addPage.meleteResource.getResourceId().equals(delResourceId))
+  				if(addPage.meleteResource == null || addPage.meleteResource.getResourceId() == null 
+					|| delResourceId.equals(addPage.meleteResource.getResourceId()))
   				{
   					addPage.resetMeleteResourceValues();
   					addPage.meleteResource = null;

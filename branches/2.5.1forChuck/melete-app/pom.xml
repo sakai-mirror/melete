@@ -41,6 +41,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
+			<artifactId>sakai-melete-util</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-melete-impl</artifactId>
 			
 			<scope>provided</scope>

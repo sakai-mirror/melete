@@ -712,6 +712,14 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editContentLinkServerView";
 	}
 
+	public String gotoServerLTIView()
+	{
+System.out.println("gotoServerLTIView");
+		gotoServerLinkView();
+		setLTIDescriptor(null);
+		return "editContentLTIServerView";
+	}
+
 	public String setServerUrl()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -778,6 +786,77 @@ public class EditSectionPage extends SectionPage implements Serializable
 			  ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), errMsg));
 			}
 			return "editContentLinkServerView";
+		}
+		return "editmodulesections";
+	}
+
+	public String setServerLTI()
+	{
+System.out.println("setServerLTI in edit "+selResourceIdFromList);
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+		String errMsg = null;
+		if (logger.isDebugEnabled()) logger.debug("selected resource properties" + selectedResourceName + " , " + selectedResourceDescription);
+		try
+		{
+			// new link provided
+			if (selResourceIdFromList == null)
+			{
+System.out.println("LTI Desc="+getLTIDescriptor());
+				if (getLTIDescriptor().equals("http://") || getLTIDescriptor().equals("https://"))
+				{
+					errMsg = bundle.getString("select_or_cancel");
+					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "select_or_cancel", errMsg));
+					return "editContentLTIServerView";
+				}
+				setM_license(null);
+				if(newURLTitle == null || newURLTitle.length() == 0)
+				{
+					errMsg = bundle.getString("URL_title_reqd");
+					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "URL_title_reqd", errMsg));
+					return "editContentLTIServerView";
+				}
+				secResourceName = newURLTitle;
+System.out.println("secResourceName="+secResourceName);
+				createLTIDescriptor();
+System.out.println("created");
+				String res_mime_type = getMeleteCHService().MIME_TYPE_LTI;
+				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, secResourceDescription);
+System.out.println("res="+res);
+				if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId();
+System.out.println("Coll="+containCollectionId);
+				String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type, containCollectionId, getSecContentData(),
+						res);
+System.out.println("Add Resource XX="+newResourceId);
+				selectedResource = new MeleteResource();
+				selectedResource.setResourceId(newResourceId);
+				sectionService.insertResource(selectedResource);
+				currLinkUrl = secResourceName;
+			}
+			else
+			{
+				// pick from server list
+				secResourceName = selectedResourceName;
+				secResourceDescription = selectedResourceDescription;
+				setM_license(m_selected_license);
+				ContentResource cr = getMeleteCHService().getResource(selResourceIdFromList);
+System.out.println("FIX THIS");
+				if(cr.getContentLength() > 0)
+					currLinkUrl = new String(cr.getContent());
+			}
+			meleteResource = selectedResource;
+			ctx.renderResponse();
+		}
+		catch (Exception e)
+		{
+			logger.error("error in set server url for edit section content" + errMsg);
+			e.printStackTrace();
+			if (e.getMessage() != null)
+			{
+			  errMsg = bundle.getString(e.getMessage());
+			  ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), errMsg));
+			}
+			return "editContentLTIServerView";
 		}
 		return "editmodulesections";
 	}
