@@ -147,17 +147,25 @@ public class MeleteCHServiceImpl implements MeleteCHService {
    private String getCourseId(String inputStr)
    {
 	  String courseId = null;
-	  String rootCollectionRef = Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR;
+	  String meleteCollectionRef = Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR;
+	  String groupCollectionRef = Entity.SEPARATOR+"group"+Entity.SEPARATOR;
 
 	  if ((inputStr != null)&&(inputStr.length() > 0))
 	  {
-		  if (inputStr.startsWith(rootCollectionRef))
+		  if (inputStr.startsWith(meleteCollectionRef))
 		  {
-			  courseId = inputStr.substring(rootCollectionRef.length(),inputStr.indexOf(Entity.SEPARATOR,rootCollectionRef.length()));
+			  courseId = inputStr.substring(meleteCollectionRef.length(),inputStr.indexOf(Entity.SEPARATOR,meleteCollectionRef.length()));
 		  }
 		  else
 		  {
-			  logger.warn("getCourseId - inputStr does not contain prefix structure "+inputStr);
+			  if (inputStr.startsWith(groupCollectionRef))
+			  {
+				  courseId = inputStr.substring(groupCollectionRef.length(), inputStr.indexOf(Entity.SEPARATOR,groupCollectionRef.length()));
+			  }
+			  else
+			  {
+				  logger.warn("getCourseId - inputStr does not contain prefix structure of melete or group "+inputStr);
+			  }
 		  }
 	  }
 	  else
