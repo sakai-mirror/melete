@@ -43,7 +43,7 @@ public interface MeleteCHService{
 
 	 public static final String MIME_TYPE_EDITOR="text/html";
 	 public static final String MIME_TYPE_LINK="text/url";
-	 public static final String MIME_TYPE_LTI="ims/simptlti";
+	 public static final String MIME_TYPE_LTI="ims/simplelti";
 
 	 public String addCollectionToMeleteCollection(String meleteItemColl,String CollName);
 	 public String addResourceItem(String name, String res_mime_type,String addCollId, byte[] secContentData, ResourcePropertiesEdit res) throws Exception;

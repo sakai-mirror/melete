@@ -94,7 +94,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	private MeleteImportService meleteImportService;
 	private MeleteExportService meleteExportService;
 
-	public static final String MIME_TYPE_LTI="ims/simptlti";
+	public static final String MIME_TYPE_LTI="ims/simplelti";
 
 	// Note: security needs a proper Resource reference
 
