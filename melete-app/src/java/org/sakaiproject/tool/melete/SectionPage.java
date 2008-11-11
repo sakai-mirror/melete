@@ -569,19 +569,16 @@ public abstract class SectionPage implements Serializable {
     public void toggleLTIDisplay(ValueChangeEvent event)throws AbortProcessingException
     {
 	// Nothing to do - because the setter handles it all
-System.out.println("toggleLTIDisplay");
     }
 
     public String getLTIDisplay()
     {
-System.out.println("getLTIDisplay "+shouldLTIDisplayAdvanced);
 	if ( shouldLTIDisplayAdvanced ) return "Advanced";
 	return "Basic";
     }
 
     public void setLTIDisplay(String newDisplay)
     {
-System.out.println("setLTIDisplay = "+newDisplay);
 	shouldLTIDisplayAdvanced = "Advanced".equals(newDisplay);
     }
 
@@ -591,7 +588,6 @@ System.out.println("setLTIDisplay = "+newDisplay);
     }
     public void setLTIUrl(String LTIUrl)
     {
-System.out.println("setLTIUrl = "+LTIUrl);
 	currLTIUrl = LTIUrl;
 	fixDescriptor();
     }
@@ -602,7 +598,6 @@ System.out.println("setLTIUrl = "+LTIUrl);
     }
     public void setLTIPassword(String LTIPassword)
     {
-System.out.println("setLTIPassword = "+LTIPassword);
 	currLTIPassword = LTIPassword;
 	fixDescriptor();
     }
@@ -621,21 +616,9 @@ System.out.println("setLTIPassword = "+LTIPassword);
 		desc = desc + "  <lti_secret>"+currLTIPassword+"</lti_secret> \n" ;
          }
 	desc = desc + "</toolInstance>\n";
-	System.out.println("desc="+desc);
+	// System.out.println("desc="+desc);
 	setLTIDescriptor(desc);
     }
-
-/*
-    // Currently in Section
-    public String getLTIDescriptor()
-    {
-	return currLTIDescriptor;
-    }
-    public void setLTIDescriptor(String LTIDescriptor)
-    {
-	currLTIDescriptor = LTIDescriptor;
-    }
-*/
 
     public boolean getShouldLTIDisplayAdvanced()
     {
@@ -694,14 +677,13 @@ System.out.println("setLTIPassword = "+LTIPassword);
 	                    secContentData = linkUrl.getBytes();
 	            }
 	            if(section.getContentType().equals("typeLTI"))
-				   {
+		    {
                             // Why, I do not know... /Chuck
                             String pitch = getLTIDescriptor();
 	                    res_mime_type=getMeleteCHService().MIME_TYPE_LTI;
 	                    secContentData = new byte[ltiDescriptor.length()];
 	                    secContentData = ltiDescriptor.getBytes();
-System.out.println("TODO BY Chuck addResourceToMeleteCollection ="+ltiDescriptor);
-				   }
+		    }
 	            if(section.getContentType().equals("typeUpload"))
 	            {
 	                    res_mime_type = uploadSectionContent("file1");
@@ -710,10 +692,8 @@ System.out.println("TODO BY Chuck addResourceToMeleteCollection ="+ltiDescriptor
 	             }
 	            ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,secResourceName,secResourceDescription);
 	            if (logger.isDebugEnabled()) logger.debug("add resource now " + secContentData );
-System.out.println("add resource now " + secContentData );
 
 	            	String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type,addCollId,secContentData,res );
-System.out.println("New Resource " + newResourceId );
 		            return newResourceId;
 				}
 				catch(MeleteException me)
@@ -947,7 +927,6 @@ System.out.println("New Resource " + newResourceId );
      * This will get stored in resources.
      */
     public void setLinkUrl(String linkUrl) {
-System.out.println("setLinkUrl "+linkUrl);
             this.linkUrl = linkUrl;
     }
 
@@ -955,7 +934,7 @@ System.out.println("setLinkUrl "+linkUrl);
      * @return Returns the ltiDescriptor.
      */
     public String getLTIDescriptor() {
-            if(ltiDescriptor == null)ltiDescriptor ="Chuck Default";
+            if(ltiDescriptor == null)ltiDescriptor ="";
             return ltiDescriptor;
     }
     /**
@@ -964,7 +943,6 @@ System.out.println("setLinkUrl "+linkUrl);
      * This will get stored in resources.
      */
     public void setLTIDescriptor(String ltiDescriptor) {
-System.out.println("setLTIDescriptor = "+ltiDescriptor);
             this.ltiDescriptor = ltiDescriptor;
     }
 
@@ -983,7 +961,6 @@ System.out.println("setLTIDescriptor = "+ltiDescriptor);
      */
     public void createLTIDescriptor()
     {
-System.out.println("createLTIDescriptor secResourceName="+secResourceName+" GLD="+getLTIDescriptor());
     	if (secResourceName == null || secResourceName.length() == 0) secResourceName = "create name in createLTIDescriptor";
 	secContentData = new byte[getLTIDescriptor().length()];
         secContentData = getLTIDescriptor().getBytes();
@@ -1120,7 +1097,6 @@ System.out.println("createLTIDescriptor secResourceName="+secResourceName+" GLD=
 	 * @return Returns the currSiteResourcesList.
 	 */
 	public List<DisplaySecResources> getCurrSiteResourcesList() {
-System.out.println("getCurrSiteResourcesList");
 		try{
 		if(currSiteResourcesList ==null)
 		{
@@ -1134,7 +1110,6 @@ System.out.println("getCurrSiteResourcesList");
 			List<ContentResource> allmembers = null;
 			if(section == null || section.getContentType() == null) return null;
 
-System.out.println("section.getContentType()="+section.getContentType());
 			//to create list of resource whose type is typeUpload
 				if(section.getContentType().equals("typeUpload") || section.getContentType().equals("typeExistUpload"))
 				{
@@ -1182,7 +1157,6 @@ System.out.println("section.getContentType()="+section.getContentType());
 	 */
 	public List getDisplayResourcesList()
 	{
-System.out.println("getDisplayResourcesList");
 		try{
 		if(currSiteResourcesList == null) getCurrSiteResourcesList();
 		if(currSiteResourcesList != null)
@@ -1307,9 +1281,6 @@ System.out.println("getDisplayResourcesList");
 	 */
 	public MeleteResource getMeleteResource() {
 		logger.info("check meleteResource" + meleteResource + secResource);
-
-System.out.println("check meleteResource" + meleteResource + secResource);
-System.out.println("formName="+formName);
 
 		if(formName.equals("AddSectionForm") && meleteResource == null)
             this.meleteResource = new MeleteResource();
@@ -1518,7 +1489,6 @@ System.out.println("formName="+formName);
 	 */
 	public void setNewURLTitle(String newURLTitle)
 	{
-System.out.println("setNewURLTitle ="+newURLTitle);
 		this.newURLTitle = newURLTitle;
 	}
 
@@ -1535,7 +1505,6 @@ System.out.println("setNewURLTitle ="+newURLTitle);
 	 */
 	public void setNewLTIDescriptor(String newLTIDescriptor)
 	{
-System.out.println("setNewLTIDescriptor = "+newLTIDescriptor);
 		this.newLTIDescriptor = newLTIDescriptor;
 	}
 

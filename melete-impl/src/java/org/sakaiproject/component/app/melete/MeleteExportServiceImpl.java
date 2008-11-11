@@ -176,7 +176,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 			String linkData = new String(content_data1);
 
 			Element file = resource.addElement("file");
-                        String fileName = "simplelti-"+item_ref_num+".xml";
+                        String fileName = "simplelti-"+item_ref_num;
 
 			file.addAttribute("href", "resources/"+ fileName);
 			resource.addAttribute("href", "resources/"+ fileName);

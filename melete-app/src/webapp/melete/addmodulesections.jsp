@@ -238,7 +238,7 @@ function contentChangeSubmit()
 											    <f:selectItem itemValue="typeEditor" itemLabel="#{msgs.addmodulesections_compose}"/>	
 												<f:selectItem itemValue="typeUpload"  itemLabel="#{msgs.addmodulesections_upload_local}"/> 										
 												<f:selectItem itemValue="typeLink"   itemLabel="#{msgs.addmodulesections_link_url}"/>	
-												<f:selectItem itemValue="typeLTI"   itemLabel="#{msgs.addmodulesections_link_url2}"/>	
+												<f:selectItem itemValue="typeLTI"   itemLabel="#{msgs.addmodulesections_lti}"/>	
 											 </h:selectOneMenu>
 										</td>
 										</tr>
