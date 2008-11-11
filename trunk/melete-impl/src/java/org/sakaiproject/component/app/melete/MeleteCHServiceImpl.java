@@ -171,6 +171,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
             	if (!isUserAuthor())
             		{
             		logger.info("User is not authorized to access meleteDocs collection");
+            		return null;
             		}
        			//          setup a security advisor
             		meleteSecurityService.pushAdvisor();
@@ -385,6 +386,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        	if (!isUserAuthor())
 	        		{
 	        		logger.info("User is not authorized to access meleteDocs collection");
+	        		return null;
 	        		}
 	   			//          setup a security advisor
 	        		meleteSecurityService.pushAdvisor();
@@ -425,6 +427,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        	if (!isUserAuthor())
 	        		{
 	        		logger.info("User is not authorized to access meleteDocs collection");
+	        		return null;
 	        		}
 	   			//          setup a security advisor
 	        		meleteSecurityService.pushAdvisor();
@@ -507,6 +510,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         	if (!isUserAuthor())
         		{
         		logger.info("User is not authorized to access meleteDocs collection");
+        		return;
         		}
    			//          setup a security advisor
         		meleteSecurityService.pushAdvisor();
@@ -548,6 +552,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		    if (!isUserAuthor())
 		    {
 		       logger.info("User is not authorized to add resource");
+		       return null;
 		    }
 //       setup a security advisor
          meleteSecurityService.pushAdvisor();
@@ -685,6 +690,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         	if (!isUserAuthor())
         		{
         		logger.info("User is not authorized to access meleteDocs collection");
+        		return null;
         		}
    			//          setup a security advisor
         		meleteSecurityService.pushAdvisor();
@@ -711,6 +717,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         	if (!isUserAuthor() && !isUserStudent())
         		{
         		logger.info("User is not authorized to access meleteDocs collection");
+        		return null;
         		}
    			//          setup a security advisor
         		meleteSecurityService.pushAdvisor();
@@ -736,6 +743,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         	if (!isUserAuthor())
         		{
         		logger.info("User is not authorized to access meleteDocs collection");
+        		return;
         		}
    			//          setup a security advisor
         		meleteSecurityService.pushAdvisor();
@@ -771,6 +779,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         	if (!isUserAuthor())
         		{
         		logger.info("User is not authorized to access meleteDocs collection");
+        		return;
         		}
    			//          setup a security advisor
         		meleteSecurityService.pushAdvisor();
@@ -1083,6 +1092,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        if (!isUserAuthor())
 	        {
 	        		logger.info("User is not authorized to perform the copyIntoFolder function");
+	        		return;
 	        }
 	   			//          setup a security advisor
 	        meleteSecurityService.pushAdvisor();
@@ -1151,6 +1161,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         if (!isUserAuthor())
         {
         		logger.info("User is not authorized to perform the copyIntoFolder function");
+        		return null;
         }
    			//          setup a security advisor
         meleteSecurityService.pushAdvisor();
@@ -1188,6 +1199,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		  if (!isUserAuthor())
 	        {
 	        		logger.info("User is not authorized to perform del resource function");
+	        		return;
 	        }
 	   			//          setup a security advisor
 	        meleteSecurityService.pushAdvisor();
@@ -1227,6 +1239,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		  if (!isUserAuthor())
 	        {
 	        		logger.info("User is not authorized to perform del resource function");
+	        		return;
 	        }
 	   			//          setup a security advisor
 	        meleteSecurityService.pushAdvisor();
@@ -1269,6 +1282,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		  if (!isUserAuthor())
 	        {
 	        		logger.info("User is not authorized to perform del resource function");
+	        		return;
 	        }
 	   			//          setup a security advisor
 	        meleteSecurityService.pushAdvisor();
@@ -1320,6 +1334,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		  if (!isUserAuthor())
 	        {
 	         logger.info("User is not authorized to perform del resource function");
+	         return null;
 	        }
 	   			//          setup a security advisor
 	        meleteSecurityService.pushAdvisor();
