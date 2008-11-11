@@ -43,7 +43,10 @@
     <dependency>
       <groupId>org.sakaiproject</groupId>
       <artifactId>sakai-melete-api</artifactId>
-      
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-melete-util</artifactId>
     </dependency>
     <dependency>
       <groupId>org.sakaiproject</groupId>

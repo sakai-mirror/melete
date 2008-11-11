@@ -60,13 +60,13 @@
 		      <h:inputHidden id="contentType" value="#{editSectionPage.section.contentType}"/>
 			  <h:outputText id="typeEditorContents" value="#{editSectionPage.previewContentData}" escape="false"  rendered="#{editSectionPage.shouldRenderEditor}"></h:outputText>		 
                 <br>
-	            <h:outputLink id="viewSectionLink"  value="#{editSectionPage.previewContentData}" target="_blank" rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderUpload) && editSectionPage.section.openWindow == true}">
+	            <h:outputLink id="viewSectionLink"  value="#{editSectionPage.previewContentData}" target="_blank" rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLTI) && editSectionPage.section.openWindow == true}">
                 <h:outputText id="sectitleLink" 
                            value="#{editSectionPage.secResourceName}">
                 </h:outputText>
                 </h:outputLink>	
                     <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{editSectionPage.previewContentData}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
-               	    border=\"0\" frameborder= \"0\"></iframe>" rendered="#{(editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLink) && editSectionPage.section.openWindow == false}" escape="false" />			
+               	    border=\"0\" frameborder= \"0\"></iframe>" rendered="#{(editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLink|| editSectionPage.shouldRenderLTI) && editSectionPage.section.openWindow == false}" escape="false" />			
 		      </td></tr>
 	       
 			<tr><td><div align="center">

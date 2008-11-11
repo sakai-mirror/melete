@@ -113,10 +113,12 @@ public abstract class SectionPage implements Serializable {
 	//rendering flags
 	protected boolean shouldRenderEditor=false;
 	protected boolean shouldRenderLink=false;
-	protected boolean shouldRenderLink2=false;
+	protected boolean shouldRenderLTI=false;
 	protected boolean shouldRenderUpload=false;
 	protected boolean shouldRenderResources=false;
 	protected boolean shouldRenderNotype = false;
+
+	protected boolean shouldLTIDisplayAdvanced = false;
 
 	/** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(SectionPage.class);
@@ -137,6 +139,7 @@ public abstract class SectionPage implements Serializable {
 	  private RemoteFilesListingNav listNav;
 	  private boolean sortAscFlag;
 	  private String linkUrl;
+	  private String ltiDescriptor;
 	  private byte[] secContentData;
 	  protected String selResourceIdFromList;
 	  private String nullString = null;
@@ -148,8 +151,13 @@ public abstract class SectionPage implements Serializable {
 	  protected String FCK_CollId;
 
 	 protected String currLinkUrl;
+	 protected String currLTIDescriptor;
+	 protected String currLTIPassword;
+	 protected String currLTIUrl;
      protected String displayCurrLink;
      protected String newURLTitle;
+     protected String newLTIDescriptor;;
+
 
      protected String selectedResourceName;
 
@@ -246,7 +254,6 @@ public abstract class SectionPage implements Serializable {
 
 //  get rendering flags
 
-
     public boolean getShouldRenderEditor()
     {
             if(this.section != null && this.section.getContentType() != null)
@@ -267,16 +274,15 @@ public abstract class SectionPage implements Serializable {
             return shouldRenderLink;
     }
 
-    public boolean getShouldRenderLink2()
-	    {
-	            shouldRenderLink2 = false;
-	            if(this.section != null && this.section.getContentType() != null)
-	            {
-	                    shouldRenderLink2 = this.section.getContentType().equals("typeLink2");
-	            }
-	            return shouldRenderLink2;
+    public boolean getShouldRenderLTI()
+    {
+            shouldRenderLTI = false;
+            if(this.section != null && this.section.getContentType() != null)
+            {
+                    shouldRenderLTI = this.section.getContentType().equals("typeLTI");
+            }
+            return shouldRenderLTI;
     }
-
 
     public boolean getShouldRenderUpload()
     {
@@ -502,7 +508,7 @@ public abstract class SectionPage implements Serializable {
             shouldRenderResources = contentTypeRadio.getValue().equals("typeExistUpload") ||
             							contentTypeRadio.getValue().equals("typeExistLink");
             shouldRenderNotype = contentTypeRadio.getValue().equals("notype");
-			shouldRenderLink2 = contentTypeRadio.getValue().equals("typeLink2");
+            shouldRenderLTI = contentTypeRadio.getValue().equals("typeLTI");
 
             selResourceIdFromList = null;
             secResourceName = null;
@@ -521,9 +527,9 @@ public abstract class SectionPage implements Serializable {
                    contentTypeRadio.findComponent(getFormName()).findComponent("link").setRendered(shouldRenderLink);
             	}
 
-            if(contentTypeRadio.findComponent(getFormName()).findComponent("ContentLink2View") != null)
+            if(contentTypeRadio.findComponent(getFormName()).findComponent("ContentLTIView") != null)
             	{
-                   contentTypeRadio.findComponent(getFormName()).findComponent("ContentLink2View").setRendered(shouldRenderLink2);
+                   contentTypeRadio.findComponent(getFormName()).findComponent("ContentLTIView").setRendered(shouldRenderLTI);
             	}
 
             if(shouldRenderEditor)
@@ -555,7 +561,91 @@ public abstract class SectionPage implements Serializable {
             }
     }
 
+    /**
+     * @param event
+     * @throws AbortProcessingException
+     * Changes the LTI view from basic to advanced.
+     */
+    public void toggleLTIDisplay(ValueChangeEvent event)throws AbortProcessingException
+    {
+	// Nothing to do - because the setter handles it all
+System.out.println("toggleLTIDisplay");
+    }
 
+    public String getLTIDisplay()
+    {
+System.out.println("getLTIDisplay "+shouldLTIDisplayAdvanced);
+	if ( shouldLTIDisplayAdvanced ) return "Advanced";
+	return "Basic";
+    }
+
+    public void setLTIDisplay(String newDisplay)
+    {
+System.out.println("setLTIDisplay = "+newDisplay);
+	shouldLTIDisplayAdvanced = "Advanced".equals(newDisplay);
+    }
+
+    public String getLTIUrl()
+    {
+	return currLTIUrl;
+    }
+    public void setLTIUrl(String LTIUrl)
+    {
+System.out.println("setLTIUrl = "+LTIUrl);
+	currLTIUrl = LTIUrl;
+	fixDescriptor();
+    }
+
+    public String getLTIPassword()
+    {
+	return currLTIPassword;
+    }
+    public void setLTIPassword(String LTIPassword)
+    {
+System.out.println("setLTIPassword = "+LTIPassword);
+	currLTIPassword = LTIPassword;
+	fixDescriptor();
+    }
+
+    // Produce a basic descriptor from the URL and Password
+    private void fixDescriptor()
+    {
+         if ( currLTIUrl == null ) return;
+         String desc = 
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+		"<toolInstance xmlns=\"http://www.imsglobal.org/services/cc/imsti_ptdd_v1p0\" \n" +
+		"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> \n" + 
+		"  <melete-basic>true</melete-basic> \n" +
+		"  <launchurl>"+currLTIUrl+"</launchurl> \n" ;
+         if ( currLTIPassword != null ) {
+		desc = desc + "  <lti_secret>"+currLTIPassword+"</lti_secret> \n" ;
+         }
+	desc = desc + "</toolInstance>\n";
+	System.out.println("desc="+desc);
+	setLTIDescriptor(desc);
+    }
+
+/*
+    // Currently in Section
+    public String getLTIDescriptor()
+    {
+	return currLTIDescriptor;
+    }
+    public void setLTIDescriptor(String LTIDescriptor)
+    {
+	currLTIDescriptor = LTIDescriptor;
+    }
+*/
+
+    public boolean getShouldLTIDisplayAdvanced()
+    {
+	return shouldLTIDisplayAdvanced;
+    }
+
+    public boolean getShouldLTIDisplayBasic()
+    {
+	return ! shouldLTIDisplayAdvanced;
+    }
 
     /*
      * modality is required. check if one is selected or not
@@ -603,9 +693,14 @@ public abstract class SectionPage implements Serializable {
 	                    secContentData = new byte[linkUrl.length()];
 	                    secContentData = linkUrl.getBytes();
 	            }
-	            if(section.getContentType().equals("typeLink2"))
+	            if(section.getContentType().equals("typeLTI"))
 				   {
-					   // to do by Dr.CHUCK
+                            // Why, I do not know... /Chuck
+                            String pitch = getLTIDescriptor();
+	                    res_mime_type=getMeleteCHService().MIME_TYPE_LTI;
+	                    secContentData = new byte[ltiDescriptor.length()];
+	                    secContentData = ltiDescriptor.getBytes();
+System.out.println("TODO BY Chuck addResourceToMeleteCollection ="+ltiDescriptor);
 				   }
 	            if(section.getContentType().equals("typeUpload"))
 	            {
@@ -615,8 +710,10 @@ public abstract class SectionPage implements Serializable {
 	             }
 	            ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,secResourceName,secResourceDescription);
 	            if (logger.isDebugEnabled()) logger.debug("add resource now " + secContentData );
+System.out.println("add resource now " + secContentData );
 
 	            	String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type,addCollId,secContentData,res );
+System.out.println("New Resource " + newResourceId );
 		            return newResourceId;
 				}
 				catch(MeleteException me)
@@ -651,7 +748,7 @@ public abstract class SectionPage implements Serializable {
             		getMeleteCHService().editResource(resourceId, contentEditor);
 	            }
 
-	            if(section.getContentType().equals("typeLink") || section.getContentType().equals("typeUpload") || section.getContentType().equals("typeLink2"))
+	            if(section.getContentType().equals("typeLink") || section.getContentType().equals("typeUpload") || section.getContentType().equals("typeLTI"))
 	            {
 	                  getMeleteCHService().editResourceProperties(resourceId,secResourceName,secResourceDescription);
 	            }
@@ -713,10 +810,14 @@ public abstract class SectionPage implements Serializable {
     selResourceIdFromList = null;
     meleteResource = null;
     linkUrl = null;
+    ltiDescriptor = null;
     FCK_CollId = null;
     listNav = null;
     displayResourcesList = null;
     currLinkUrl = null;
+    currLTIDescriptor = null;
+    currLTIUrl = null;
+    currLTIPassword = null;
     displayCurrLink = null;
     FacesContext ctx = FacesContext.getCurrentInstance();
   	ValueBinding binding =  Util.getBinding("#{remoteBrowserFile}");
@@ -729,7 +830,7 @@ public abstract class SectionPage implements Serializable {
 
 	shouldRenderEditor=false;
 	shouldRenderLink=false;
-	shouldRenderLink2=false;
+	shouldRenderLTI=false;
 	shouldRenderUpload=false;
 	shouldRenderResources=false;
 	shouldRenderNotype = false;
@@ -743,6 +844,9 @@ public abstract class SectionPage implements Serializable {
 	public void resetMeleteResourceValues()
 	{
 		currLinkUrl = null;
+		currLTIDescriptor = null;
+		currLTIUrl = null;
+		currLTIPassword = null;
 		displayCurrLink = null;
 		secResourceName = null;
 		secResourceDescription = null;
@@ -843,7 +947,25 @@ public abstract class SectionPage implements Serializable {
      * This will get stored in resources.
      */
     public void setLinkUrl(String linkUrl) {
+System.out.println("setLinkUrl "+linkUrl);
             this.linkUrl = linkUrl;
+    }
+
+    /**
+     * @return Returns the ltiDescriptor.
+     */
+    public String getLTIDescriptor() {
+            if(ltiDescriptor == null)ltiDescriptor ="Chuck Default";
+            return ltiDescriptor;
+    }
+    /**
+     * @param ltiDescriptor The ltiDescriptor to set.
+     * as from section table we will remove link,contentpath and uploadpath fields.
+     * This will get stored in resources.
+     */
+    public void setLTIDescriptor(String ltiDescriptor) {
+System.out.println("setLTIDescriptor = "+ltiDescriptor);
+            this.ltiDescriptor = ltiDescriptor;
     }
 
     /*
@@ -854,6 +976,17 @@ public abstract class SectionPage implements Serializable {
     	if (secResourceName == null || secResourceName.length() == 0) secResourceName = linkUrl;
  	   	secContentData = new byte[getLinkUrl().length()];
         secContentData = getLinkUrl().getBytes();
+    }
+
+    /*
+     * get material from the new provided Descriptor
+     */
+    public void createLTIDescriptor()
+    {
+System.out.println("createLTIDescriptor secResourceName="+secResourceName+" GLD="+getLTIDescriptor());
+    	if (secResourceName == null || secResourceName.length() == 0) secResourceName = "create name in createLTIDescriptor";
+	secContentData = new byte[getLTIDescriptor().length()];
+        secContentData = getLTIDescriptor().getBytes();
     }
 
     /*
@@ -987,6 +1120,7 @@ public abstract class SectionPage implements Serializable {
 	 * @return Returns the currSiteResourcesList.
 	 */
 	public List<DisplaySecResources> getCurrSiteResourcesList() {
+System.out.println("getCurrSiteResourcesList");
 		try{
 		if(currSiteResourcesList ==null)
 		{
@@ -1000,6 +1134,7 @@ public abstract class SectionPage implements Serializable {
 			List<ContentResource> allmembers = null;
 			if(section == null || section.getContentType() == null) return null;
 
+System.out.println("section.getContentType()="+section.getContentType());
 			//to create list of resource whose type is typeUpload
 				if(section.getContentType().equals("typeUpload") || section.getContentType().equals("typeExistUpload"))
 				{
@@ -1010,6 +1145,11 @@ public abstract class SectionPage implements Serializable {
 				{
 					allmembers = getMeleteCHService().getListofLinksFromCollection(uploadCollId);
 				}
+
+                                if(section.getContentType().equals("typeLTI") || section.getContentType().equals("typeExistLTI"))
+                                {
+                                        allmembers = getMeleteCHService().getListFromCollection(uploadCollId, getMeleteCHService().MIME_TYPE_LTI);
+                                }
 
 			if(allmembers == null) return null;
 			Iterator<ContentResource> allmembers_iter = allmembers.iterator();
@@ -1042,6 +1182,7 @@ public abstract class SectionPage implements Serializable {
 	 */
 	public List getDisplayResourcesList()
 	{
+System.out.println("getDisplayResourcesList");
 		try{
 		if(currSiteResourcesList == null) getCurrSiteResourcesList();
 		if(currSiteResourcesList != null)
@@ -1166,6 +1307,9 @@ public abstract class SectionPage implements Serializable {
 	 */
 	public MeleteResource getMeleteResource() {
 		logger.info("check meleteResource" + meleteResource + secResource);
+
+System.out.println("check meleteResource" + meleteResource + secResource);
+System.out.println("formName="+formName);
 
 		if(formName.equals("AddSectionForm") && meleteResource == null)
             this.meleteResource = new MeleteResource();
@@ -1292,6 +1436,24 @@ public abstract class SectionPage implements Serializable {
 	}
 
 	/**
+	 * @return Returns the currLTIDescriptor.
+	 */
+	public String getCurrLTIDescriptor()
+	{
+		if (!(getLTIDescriptor().equals("http://") || getLTIDescriptor().equals("https://"))) currLTIDescriptor = getLTIDescriptor();
+		return currLTIDescriptor;
+	}
+
+	/**
+	 * @param currLTIDescriptor
+	 *        The currLTIDescriptor to set.
+	 */
+	public void setCurrLTIDescriptor(String currLTIDescriptor)
+	{
+		this.currLTIDescriptor = currLTIDescriptor;
+	}
+
+	/**
 	 * @return Returns the selectedResource.
 	 */
 	public MeleteResource getSelectedResource()
@@ -1356,7 +1518,25 @@ public abstract class SectionPage implements Serializable {
 	 */
 	public void setNewURLTitle(String newURLTitle)
 	{
+System.out.println("setNewURLTitle ="+newURLTitle);
 		this.newURLTitle = newURLTitle;
+	}
+
+	/**
+	 * @return the newLTIDescriptor
+	 */
+	public String getNewLTIDescriptor()
+	{
+		return this.newLTIDescriptor;
+	}
+
+	/**
+	 * @return the newLTIDescriptor to set
+	 */
+	public void setNewLTIDescriptor(String newLTIDescriptor)
+	{
+System.out.println("setNewLTIDescriptor = "+newLTIDescriptor);
+		this.newLTIDescriptor = newLTIDescriptor;
 	}
 
 	/*

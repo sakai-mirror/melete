@@ -238,7 +238,7 @@ function contentChangeSubmit()
 											    <f:selectItem itemValue="typeEditor" itemLabel="#{msgs.addmodulesections_compose}"/>	
 												<f:selectItem itemValue="typeUpload"  itemLabel="#{msgs.addmodulesections_upload_local}"/> 										
 												<f:selectItem itemValue="typeLink"   itemLabel="#{msgs.addmodulesections_link_url}"/>	
-												<f:selectItem itemValue="typeLink2"   itemLabel="#{msgs.addmodulesections_link_url2}"/>	
+												<f:selectItem itemValue="typeLTI"   itemLabel="#{msgs.addmodulesections_link_url2}"/>	
 											 </h:selectOneMenu>
 										</td>
 										</tr>
@@ -251,7 +251,7 @@ function contentChangeSubmit()
 												<jsp:include page="ContentUploadView.jsp"/> 
 											</f:subview>
 											<!--add LTI option by Dr.Chuck -->
-											 <f:subview id="ContentLink2View" rendered="#{addSectionPage.shouldRenderLink2}">
+											 <f:subview id="ContentLTIView" rendered="#{addSectionPage.shouldRenderLTI}">
 												<jsp:include page="ContentLTIView.jsp"/> 
 											</f:subview>	
 									     </td>

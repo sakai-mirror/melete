@@ -38,6 +38,7 @@ import javax.faces.component.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.*;
@@ -58,7 +59,9 @@ import org.sakaiproject.api.app.melete.MeleteCHService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.util.ResourceLoader;
-
+import org.sakaiproject.tool.cover.ToolManager;
+import org.sakaiproject.simpleti.SakaiSimpleLTI;
+import org.imsglobal.simplelti.SimpleLTIUtil;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -137,6 +140,10 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	  	return "typeLink";
 	  }
 
+	  public String getTypeLTI(){
+	  	return "typeLTI";
+	  }
+
 	  public String getTypeUpload(){
 	  	return "typeUpload";
 	  }
@@ -155,7 +162,25 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		  autonumber = null;
 	  }
 
-
+	private ContentResource getContentResource()
+	{
+		if (this.section == null) return null;
+		SectionResourceService secRes = this.section.getSectionResource();
+		if ( secRes == null ) return null;
+		if ( secRes.getResource() == null ) return null;
+		String resourceId = secRes.getResource().getResourceId();
+		if ( resourceId == null ) return null;
+		try
+		{
+			ContentResource resource = getMeleteCHService().getResource(resourceId);
+			return resource;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	  /*
 	   * Added by rashmi to fix bug#282 - 3/10/05
@@ -163,6 +188,21 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	   */
 	  public String getContent()
 	  {
+		ContentResource resource = getContentResource();
+System.out.println("getContent res="+resource);
+		String str = null;
+		try
+		{
+			byte[] rsrcArray = resource.getContent();
+			str = new String(rsrcArray);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return "<!-- Error unable to retrieve resource content -->\n";
+		}
+		return str;
+/*
 		SectionResourceService secRes = null;
 		if (this.section != null)
 		{
@@ -198,7 +238,64 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		}
 		}
 		return "";
+*/
 	  }
+
+	public String getContentLTI()
+	{
+		ContentResource resource = getContentResource();
+		if ( resource == null ) 
+		{
+			return "<!-- resource not found -->\n";
+		}
+		String str = null;
+		try
+		{
+			byte[] rsrcArray = resource.getContent();
+			str = new String(rsrcArray);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return "<!-- Error unable to retrieve resource content -->\n";
+		}
+		
+		// Check to see if we are doing a POST...
+		if ( SimpleLTIUtil.isPostLaunch(str) )
+		{
+			return getContentPost(str);
+		}
+
+		String context = ToolManager.getCurrentPlacement().getContext();
+
+		// TODO: Deal with POST!!! Return an iFrame
+		Properties props = SakaiSimpleLTI.doLaunch(str, context, resource.getId());
+		System.out.println("Props="+props);
+		// The resource *insisted* on a POST
+		if ( SimpleLTIUtil.isPostLaunch(props) )
+		{
+			return getContentPost(str);
+		}
+
+		String htmltext = props.getProperty("htmltext");
+		if ( htmltext != null )
+		{
+			return htmltext;
+		}
+
+		return "<!-- Error htmltext not returned from launch-->\n";
+	  }
+
+	private String getContentPost(String str)
+	{
+		String frameHeight = SimpleLTIUtil.getFrameHeight(str);
+		String htmltext = "<iframe id=\"iframeLTIPost\" src=\"" +
+			getContentLink() +
+			"\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" " +
+			" marginwidth=\"0\" marginheight=\"0\" " +
+			"height=\"" + frameHeight + "\"  border=\"0\" frameborder= \"0\"></iframe>";
+		return htmltext;
+	}
 
 	  public String getContentLink()
 	  {

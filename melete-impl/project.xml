@@ -41,6 +41,11 @@
 			<artifactId>sakai-melete-api</artifactId>
 			<version>${sakai.version}</version>
 		</dependency>
+                <dependency>
+                        <groupId>sakaiproject</groupId>
+                        <artifactId>sakai-melete-util</artifactId>
+                        <version>${sakai.version}</version>
+                </dependency>
 		<dependency>
 			<groupId>sakaiproject</groupId>
 			<artifactId>sakai-melete-hbm</artifactId>

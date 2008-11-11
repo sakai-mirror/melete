@@ -390,6 +390,7 @@ public class SectionDB implements Serializable {
 	public void deleteSection(Section sec, String courseId, String userId) throws MeleteException
 	 {
 		  logger.debug("deleteSection begin");
+		  System.out.println("deleteSection begin");
 
 		  //find in embedded data
 		  long starttime = System.currentTimeMillis();
@@ -398,7 +399,8 @@ public class SectionDB implements Serializable {
 			deleteFromMeleteTables(sec, userId, NONE_TO_DELETE, null);
 		}
 
-		if ((sec.getContentType().equals("typeLink"))||(sec.getContentType().equals("typeUpload")))
+		if ((sec.getContentType().equals("typeLink"))||(sec.getContentType().equals("typeUpload"))
+                    || (sec.getContentType().equals("typeLTI")) )
 		{
 			boolean resourceInUse = false;
 			String resourceId = null;

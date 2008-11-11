@@ -159,7 +159,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 
 	public void deleteSection(SectionObjService sec, String courseId, String userId) throws MeleteException
 	{
-
+System.out.println("deleteSection c="+courseId+" u="+userId);
 			try
 			{
 		  		sectiondb.deleteSection((Section)sec, courseId, userId);
