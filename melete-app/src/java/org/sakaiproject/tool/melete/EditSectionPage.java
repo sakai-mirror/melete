@@ -53,6 +53,10 @@ import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.util.ResourceLoader;
 
+import org.sakaiproject.event.cover.EventTrackingService;
+import org.sakaiproject.tool.cover.ToolManager;
+
+
 /**
  * @author Rashmi Mallika - upload exceed message doesn't display Rashmi - add server listing options to dropdown Rashmi - seperate method for
  *         processing replace server view link 2 me
@@ -354,7 +358,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 			// uploadFileName=null;
 			String successMsg = bundle.getString("add_section_success");
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "add_section_success", successMsg));
-
+			
+			//Track the event
+			EventTrackingService.post(EventTrackingService.newEvent("melete.section.edit", ToolManager.getCurrentPlacement().getContext(), true));
+			
 			return "success";
 		}
 		catch (MeleteException mex)

@@ -59,6 +59,8 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.util.ResourceLoader;
 
+import org.sakaiproject.event.cover.EventTrackingService;
+import org.sakaiproject.tool.cover.ToolManager;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -519,6 +521,8 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
                       if (this.sectionDisplaySequence == null) {
 			      this.section = (SectionObjService) getSectionService().getSection(this.sectionId);
 			      this.sectionDisplaySequence=getSectionService().getSectionDisplaySequence(this.section);
+				  //Track the event
+				  EventTrackingService.post(EventTrackingService.newEvent("melete.section.read", ToolManager.getCurrentPlacement().getContext(), true));
 			};		      
 		      return this.sectionDisplaySequence;
 		          }
