@@ -39,6 +39,9 @@ import org.sakaiproject.util.ResourceLoader;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+
+import org.sakaiproject.event.cover.EventTrackingService;
+import org.sakaiproject.tool.cover.ToolManager;
 /**
  * @author Rashmi
  *
@@ -123,6 +126,8 @@ public class AddModulePage extends ModulePage implements Serializable{
 			moduleService.insertProperties(getModule(),getModuleShdates(),userId,courseId);
 			// add module to session
 			sessionMap.put("currModule",module);
+		  //Track the event
+		  EventTrackingService.post(EventTrackingService.newEvent("melete.module.new", ToolManager.getCurrentPlacement().getContext(), true));
 
 
 		}catch(Exception ex)
