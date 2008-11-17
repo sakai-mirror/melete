@@ -137,7 +137,11 @@ public class NavPage implements Serializable {
 		FacesContext ctx = FacesContext.getCurrentInstance();
 	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
 		role = (String)sessionMap.get("role");
-		if (role.equals("INSTRUCTOR")) return true;
+		if ((role != null)&&(role.length() > 0))
+		{	
+		  if (role.equals("INSTRUCTOR")) return true;
+		  else return false;
+		}
 		else return false;
 	}
 
