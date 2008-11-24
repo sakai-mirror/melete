@@ -1492,10 +1492,12 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					}
 
 					//Finally, update the seqXml for the module
-					toMod.setSeqXml(fromModSeqXml);
+
+				    Module secModule = moduleDB.getModule(toMod.getModuleId().intValue());
+				    secModule.setSeqXml(fromModSeqXml);
 					try
 					{
-						moduleDB.updateModule(toMod);
+						moduleDB.updateModule(secModule);
 					}
 					catch (Exception ex)
 					{
