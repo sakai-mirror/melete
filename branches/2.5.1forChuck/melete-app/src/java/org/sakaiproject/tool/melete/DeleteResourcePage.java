@@ -96,20 +96,16 @@ public class DeleteResourcePage implements Serializable{
 
   	public String deleteResource()
   	{
-System.out.println("deleteResource");
   		FacesContext context = FacesContext.getCurrentInstance();
   		try
   		{
   			if(delResourceId != null)
   			{
-System.out.println("Deleting "+this.delResourceId);
   				// delete from content resource
   				meleteCHService.removeResource(this.delResourceId);
   				sectionService.deleteResourceInUse(this.delResourceId, this.courseId);
   				logger.debug("delete resource is done now move back to page");
-System.out.println("Deleted "+this.delResourceId);
   			}
-System.out.println("fromPage="+fromPage);
   			if (fromPage.startsWith("edit"))
   			{
   				ValueBinding binding = Util.getBinding("#{editSectionPage}");

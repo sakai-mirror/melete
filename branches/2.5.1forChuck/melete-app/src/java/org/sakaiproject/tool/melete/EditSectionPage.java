@@ -268,6 +268,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 			delResPage.setFromPage("editContentUploadServerView");
 		else if (section.getContentType().equals("typeLink"))
 			delResPage.setFromPage("editContentLinkServerView");
+		else if (section.getContentType().equals("typeLTI"))
+			delResPage.setFromPage("editContentLTIServerView");
 
 		delResPage.setResourceName(selectedDr.getResource_title());
 		delResPage.processDeletion(selectedDr.getResource_id(), courseId);
