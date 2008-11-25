@@ -415,6 +415,9 @@ System.out.println("Add Resource III");
 	  {
 System.out.println("gotoServerLTIView");
 			gotoServerLinkView();
+			setLTIUrl(null);
+			setLTIPassword(null);
+			// Do this after the first two
 			setLTIDescriptor(null);
 			return "ContentLTIServerView";
 	  }
