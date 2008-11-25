@@ -503,13 +503,9 @@ System.out.println("LTI Desc="+getLTIDescriptor());
 
 				secResourceName = newURLTitle;
 				String addCollectionId = getMeleteCHService().getUploadCollectionId();
-System.out.println("Add Resource IV");
 				String newResourceId = addResourceToMeleteCollection(null, addCollectionId);
 				meleteResource.setResourceId(newResourceId);
 				currLinkUrl = getLTIDescriptor();
-				String rUrl = getMeleteCHService().getResourceUrl(newResourceId);
-				String checkDup = rUrl.substring(rUrl.lastIndexOf("/")+1);
-				if(!checkDup.equals(secResourceName))secResourceName = checkDup;
 			}
 			logger.debug("currlink value in setServer is" + currLinkUrl);
 			createLTIDescriptor();
@@ -526,7 +522,6 @@ System.out.println("Add Resource IV");
 			}
 			return "ContentLTIServerView";
 		}
-System.out.println("returning addmodulesections");
 		return "addmodulesections";
 	}
 
