@@ -66,7 +66,7 @@ public class SakaiSimpleLTI {
 
 	// We demand an endpoint
         String lti2EndPoint = XMLMap.getString(tm,"/toolInstance/launchurl");
-	if ( lti2EndPoint == null ) 
+        if ( lti2EndPoint == null || lti2EndPoint.trim().length() < 1 )
 	{
 		// TODO: Need to send back an error code
 		return null;
