@@ -1398,6 +1398,7 @@ public abstract class SectionPage implements Serializable {
 	public String getDisplayCurrLTI()
 	{
 	    String retval = secResourceName;
+System.out.println("getDisplayCurrLTI "+secResourceName);
 
 		if (retval != null && retval.length() > 50)
 			displayCurrLink = retval.substring(0, 50) + "...";
