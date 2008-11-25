@@ -1,21 +1,30 @@
+/**********************************************************************************
+ *
+ * Copyright (c) 2008 Etudes, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License. 
+ *
+ **********************************************************************************/
+
 package org.imsglobal.simplelti;
 
-/* Author - Charles Severance (csev@umich.edu / www.dr-chuck.com) 
- * 
- * Copyright 2007 Using the Apache 2.0 license
- * 
- *    http://www.apache.org/licenses/LICENSE-2.0.html
- *    
- * Licensor provides the Work on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY 
- * KIND, either express or implied, including, without limitation, any warranties or 
- * conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR 
- * PURPOSE. You are solely responsible for determining the appropriateness of using or 
- * redistributing the Work and assume any risks associated with Your exercise of 
- * permissions under this License.
- * 
- * See the bottom of this file regarding additional licensing options beyond Apache 2.0
- * if you would like to include this in your product or produce a derivative work.
- * 
+/* 
  * This is a little project I call mdom.org which stands for "Map-Dom" or "XML Doms in Maps" 
  * or "XML Documents meet Java Maps" - clearly there is homage to XPath style parsing in the
  * formation of the keys in the Maps - but XPath is not used.
@@ -1298,34 +1307,3 @@ Chan-title=Dr-Chuck's Media
 
  */
 
-/* Additional Licensing Detail
-
-  I hereby grant to the Adopter of this software (Adopter) and to recipients of 
-  software distributed by the Adopter a perpetual, worldwide, non-exclusive, no-charge, 
-  royalty-free, irrevocable copyright license to reproduce, prepare derivative works of,
-  publicly display, publicly perform, sublicense, and distribute This Software 
-  and such derivative works as per the Apache individual contributor agreement.
- 
-    http://www.apache.org/licenses/icla.txt  
-
-  This grant does not allow you to produce a new release of this product and name it 
-  "org.mdom".  You also cannot package this as org.mdom - if you did this, it would 
-  potentially be confusing to have multiple versions of the same jar from multiple sources.  
-  You can re-release this software as a stand-alone product if you change its name.
-  
-  You can change the license of this software and make yourself the owner of your licensed copy 
-  of this software. You must retain attribution to the original author.  Attribution in 
-  source code is sufficient.
-  
-  If you find bugs, please do send them to me so my version can get better - this is completely 
-  optional on your part.  And if your lawyers can't understand what is written here and they 
-  really want something in writing - please feel free to contact me for written permission to 
-  reuse, adopt, and or modify.  It will be freely given.
-  
-  Oh yeah - and you can remove this blah-blah end-material in your derived version 
-  if you like :)  You can print them out and put them in a file like a contribution agreement 
-  and then delete them from the source code.
-  
-  - Charles Severance (csev@umich.edu / www.dr-chuck.com) - Mon Nov  5 08:43:26 EST 2007
-  
- */
