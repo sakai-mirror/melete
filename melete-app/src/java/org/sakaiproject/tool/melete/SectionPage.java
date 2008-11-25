@@ -614,7 +614,7 @@ public abstract class SectionPage implements Serializable {
 		"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> \n" + 
 		"  <melete-basic>true</melete-basic> \n" +
 		"  <launchurl>"+currLTIUrl+"</launchurl> \n" ;
-         if ( currLTIPassword != null ) {
+         if ( currLTIPassword != null && currLTIPassword.trim().length() > 0 ) {
 		desc = desc + "  <lti_secret>"+currLTIPassword+"</lti_secret> \n" ;
          }
 	desc = desc + "</toolInstance>\n";
