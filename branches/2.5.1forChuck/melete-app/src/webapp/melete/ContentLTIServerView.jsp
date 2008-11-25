@@ -77,7 +77,8 @@ function contentChangeSubmit()
 						<h:inputHidden id="contentChange" value=""/>  
                                                 <h:selectOneMenu id="LTIDisplay" value="#{addSectionPage.LTIDisplay}" 
                                                         valueChangeListener="#{addSectionPage.toggleLTIDisplay}" 
-                                                        onchange="contentChangeSubmit();this.form.submit();">
+                                                        onchange="contentChangeSubmit();this.form.submit();" 
+							immediate="true" >
                                                 <f:selectItem itemValue="Basic" itemLabel="#{msgs.addmodulesections_basic_lti}"/>
                                                 <f:selectItem itemValue="Advanced" itemLabel="#{msgs.addmodulesections_advanced_lti}"/>
                                                 </h:selectOneMenu>
