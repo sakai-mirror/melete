@@ -8,12 +8,6 @@
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you
- * may not use this file except in compliance with the License. You may
- * obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0 
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
@@ -416,8 +410,96 @@ public class SimpleLTIUtil {
         if ( postResp != null ) retProp.setProperty("type",postResp);
 	retProp.setProperty("status","success");
 
-        return retProp;
+	return retProp;
     }
+
+    // Set the HTML Text in the htamltext property
+    public static void generateHtmlText(Properties retProp, Properties newMap,
+                                        String lti2FrameHeight)
+    {
+
+System.out.println("pro="+retProp);
+        // launchurl=http://www.youtube.com/v/f90ysF9BenI, status=success, type=iFrame
+
+        String status = retProp.getProperty("status");
+        String launchurl = retProp.getProperty("launchurl");
+        if ( ! "success".equalsIgnoreCase(status) )
+        {
+                return;
+        }
+        String theType = retProp.getProperty("type");
+System.out.println("theType="+theType);
+        // Check to see if we got a POST
+        String htmltext = null;
+        if ( "iframe".equalsIgnoreCase(theType) )
+        {
+                // Not good
+                if ( launchurl == null ) return;
+                StringBuffer text = new StringBuffer();
+                text.append("<iframe ");
+                text.append("title=\"Site Info\" ");
+                if ( lti2FrameHeight == null ) lti2FrameHeight = "1200";
+                text.append("height=\""+lti2FrameHeight+"\" \n");
+                text.append("width=\"100%\" frameborder=\"0\" marginwidth=\"0\"\n");
+                text.append("marginheight=\"0\" scrolling=\"auto\"\n");
+                text.append("src=\""+launchurl+"\">\n");
+                text.append("Your browser does not support iframes. <br>");
+                text.append("<a href=\""+launchurl+"\" target=\"_new\">Press here for content</a>\n");
+                text.append("</iframe>");
+                htmltext = text.toString();
+                retProp.setProperty("htmltext",htmltext);
+        }
+        else if ( "widget".equalsIgnoreCase(theType) )
+        {
+                htmltext = retProp.getProperty("launchwidget");
+System.out.println("widget htext="+htmltext);
+                retProp.setProperty("htmltext",htmltext);
+        }
+        else  // Post or otherwise
+        {
+                // Not good
+                if ( launchurl == null ) return;
+                StringBuffer text = new StringBuffer();
+                text.append(postText1);
+                text.append("<form action=\""+launchurl+"\" name=\"ltiLaunchForm\" method=\"post\">\n" );
+                for(Object okey : newMap.keySet() )
+                {
+                        if ( ! (okey instanceof String) ) continue;
+                        String key = (String) okey;
+                        if ( key == null ) continue;
+                        String value = newMap.getProperty(key);
+                        if ( value == null ) continue;
+                        if ( "action".equalsIgnoreCase(key) ) continue;
+                        if ( value.equals("") ) continue;
+                        // Should this be UTF-8 ???
+                        // value = URLEncoder.encode(value);
+                        // key = URLEncoder.encode(key);
+                        text.append("<input type=\"hidden\" size=\"40\" name=\"");
+                        text.append(key);
+                        text.append("\" value=\"");
+                        text.append(value);
+                        text.append("\"/>\n");
+                }
+                text.append(postText2);
+                htmltext = text.toString();
+                retProp.setProperty("htmltext",htmltext);
+        }
+    }
+
+    private final static String postText1 =
+"<head>\n" +
+"  <script language=\"javascript\"> \n" +
+"    function go() { \n" +
+"        /* document.ltiLaunchForm.submit(); */ \n" +
+"    } \n" +
+" </script> \n" +
+"</head>\n" +
+"<body onLoad=\"go()\">\n";
+
+    private final static String postText2 =
+" <input type=\"hidden\" size=\"40\" name=\"action\" value=\"direct\"/>\n" +
+" <input type=\"submit\" value=\"Continue\">  If you are not redirected in 15 seconds press Continue.\n" +
+"</form>\n";
 
     // Determine if a post launch was requested
     public static boolean isPostLaunch(Properties props)
