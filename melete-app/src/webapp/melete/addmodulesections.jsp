@@ -228,17 +228,13 @@ function contentChangeSubmit()
 									<h:outputText id="text14" value="#{msgs.addmodulesections_auditory_content}"/>			
 										</td>
 									  </tr>	
-									  <tr><td colspan="2">	 <h:message style="color: red" for="link"/></td></tr>
+									 
 								  <tr>
 								  	  <td  align="left" valign="middle"><h:outputText id="text15" value="#{msgs.addmodulesections_content_type}" /></td>
                                  	  <td> 
 										   <h:inputHidden id="contentChange" value=""/>								  
 												  <h:selectOneMenu id="contentType" value="#{addSectionPage.section.contentType}" valueChangeListener="#{addSectionPage.showHideContent}" onchange="contentChangeSubmit();this.form.submit();"  tabindex="6">
-												<f:selectItem itemValue="notype" itemLabel="#{msgs.addmodulesections_choose_one}"/>	
-											    <f:selectItem itemValue="typeEditor" itemLabel="#{msgs.addmodulesections_compose}"/>	
-												<f:selectItem itemValue="typeUpload"  itemLabel="#{msgs.addmodulesections_upload_local}"/> 										
-												<f:selectItem itemValue="typeLink"   itemLabel="#{msgs.addmodulesections_link_url}"/>	
-												<f:selectItem itemValue="typeLTI"   itemLabel="#{msgs.addmodulesections_lti}"/>	
+													<f:selectItems value="#{addSectionPage.allContentTypes}" />
 											 </h:selectOneMenu>
 										</td>
 										</tr>

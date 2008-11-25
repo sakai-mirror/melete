@@ -251,12 +251,8 @@ window.open('editpreviewEditor.jsf');
                                  	  <td> 
 										<h:inputHidden id="contentType"  value="#{editSectionPage.section.contentType}"  />	  								  	
 										  <h:selectOneMenu id="contentType1" value="#{editSectionPage.section.contentType}" valueChangeListener="#{editSectionPage.showHideContent}" onchange="this.form.submit();"  tabindex="6" rendered="#{editSectionPage.shouldRenderContentTypeSelect}">
-												<f:selectItem itemValue="notype" itemLabel="#{msgs.editmodulesections_choose_one}"/>	
-											    <f:selectItem itemValue="typeEditor" itemLabel="#{msgs.editmodulesections_compose}"/>	
-												<f:selectItem itemValue="typeUpload"  itemLabel="#{msgs.editmodulesections_upload_local}"/> 
-												<f:selectItem itemValue="typeLink"   itemLabel="#{msgs.editmodulesections_link_url}"/>												
-												<f:selectItem itemValue="typeLTI"   itemLabel="#{msgs.editmodulesections_lti}"/>												
-											 </h:selectOneMenu>
+											<f:selectItems value="#{editSectionPage.allContentTypes}" />											
+										 </h:selectOneMenu>
 											 </td>
 											 </tr>
 									<tr><td colspan="2" >

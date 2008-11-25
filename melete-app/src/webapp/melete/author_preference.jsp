@@ -79,6 +79,17 @@
 					</h:selectOneRadio>	
 				</h:column>
 				 </h:panelGrid>
+<h:panelGrid id="LTIPrefPanel" columns="1" width="95%" cellpadding="0" cellspacing="3" border="0">
+				<h:column>
+				 	<h:outputText id="LTI1" value="#{msgs.author_preference_LTI_select}"  styleClass="bold"/>      
+				 </h:column>
+               	 <h:column>
+					<h:selectOneRadio value="#{authorPreferences.showLTI}" layout="pageDirection">
+						<f:selectItem itemLabel="#{msgs.author_preference_yes}" itemValue="true" />
+						<f:selectItem itemLabel="#{msgs.author_preference_no}" itemValue="false"/>
+					</h:selectOneRadio>	
+				</h:column>
+				 </h:panelGrid>
 				</td></tr>			
 				<tr>
 					 <td class="maintabledata3" >
