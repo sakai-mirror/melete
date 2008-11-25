@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -1385,10 +1386,24 @@ public abstract class SectionPage implements Serializable {
 
 	public String getDisplayCurrLink()
 	{
-		if (currLinkUrl != null && currLinkUrl.length() > 50)
-			displayCurrLink = currLinkUrl.substring(0, 50) + "...";
+	    String retval = currLinkUrl;
+
+		if (retval != null && retval.length() > 50)
+			displayCurrLink = retval.substring(0, 50) + "...";
 		else
-			displayCurrLink = currLinkUrl;
+			displayCurrLink = retval;
+
+		return displayCurrLink;
+	}
+
+	public String getDisplayCurrLTI()
+	{
+	    String retval = secResourceName;
+
+		if (retval != null && retval.length() > 50)
+			displayCurrLink = retval.substring(0, 50) + "...";
+		else
+			displayCurrLink = retval;
 
 		return displayCurrLink;
 	}
@@ -1400,6 +1415,26 @@ public abstract class SectionPage implements Serializable {
 	{
 		if (!(getLinkUrl().equals("http://") || getLinkUrl().equals("https://"))) currLinkUrl = getLinkUrl();
 		return currLinkUrl;
+	}
+
+	public String getCurrLTIUrl()
+	{
+		if ( meleteResource != null ) 
+		{
+			try 
+			{
+                		ContentResource cr = getMeleteCHService().getResource(meleteResource.getResourceId());
+				String retval = URLEncoder.encode(cr.getUrl());
+System.out.println("X="+retval+"Y="+cr.getUrl());
+				// return URLEncoder.encode(cr.getUrl());
+				return cr.getUrl();
+			} 
+			catch (Exception e)
+			{
+				return "about:blank";
+			}
+		}
+		return "about:blank";
 	}
 
 	/**

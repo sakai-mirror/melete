@@ -802,7 +802,6 @@ System.out.println("setServerLTI in edit "+selResourceIdFromList);
 			// new link provided
 			if (selResourceIdFromList == null)
 			{
-System.out.println("LTI Desc="+getLTIDescriptor());
 				if (getLTIDescriptor().equals("http://") || getLTIDescriptor().equals("https://"))
 				{
 					errMsg = bundle.getString("select_or_cancel");
@@ -817,17 +816,12 @@ System.out.println("LTI Desc="+getLTIDescriptor());
 					return "editContentLTIServerView";
 				}
 				secResourceName = newURLTitle;
-System.out.println("secResourceName="+secResourceName);
 				createLTIDescriptor();
-System.out.println("created");
 				String res_mime_type = getMeleteCHService().MIME_TYPE_LTI;
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, secResourceDescription);
-System.out.println("res="+res);
 				if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId();
-System.out.println("Coll="+containCollectionId);
 				String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type, containCollectionId, getSecContentData(),
 						res);
-System.out.println("Add Resource XX="+newResourceId);
 				selectedResource = new MeleteResource();
 				selectedResource.setResourceId(newResourceId);
 				sectionService.insertResource(selectedResource);
@@ -840,7 +834,6 @@ System.out.println("Add Resource XX="+newResourceId);
 				secResourceDescription = selectedResourceDescription;
 				setM_license(m_selected_license);
 				ContentResource cr = getMeleteCHService().getResource(selResourceIdFromList);
-System.out.println("FIX THIS");
 				if(cr.getContentLength() > 0)
 					currLinkUrl = new String(cr.getContent());
 			}
