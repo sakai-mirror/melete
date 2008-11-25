@@ -619,7 +619,6 @@ public abstract class SectionPage implements Serializable {
 		desc = desc + "  <lti_secret>"+currLTIPassword+"</lti_secret> \n" ;
          }
 	desc = desc + "</toolInstance>\n";
-	// System.out.println("desc="+desc);
 	setLTIDescriptor(desc);
     }
 
@@ -1425,7 +1424,6 @@ public abstract class SectionPage implements Serializable {
 			{
                 		ContentResource cr = getMeleteCHService().getResource(meleteResource.getResourceId());
                                 String rUrl = cr.getUrl().replaceAll(" ", "%20");
-System.out.println("getCurrLTIUrl Y="+cr. getUrl()+" r="+rUrl);
 				return rUrl;
 			} 
 			catch (Exception e)

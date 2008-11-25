@@ -24,10 +24,10 @@
 	<h:column>
   		<h:outputText id="editlinkText1" value="#{msgs.editcontentltiview_link1}"/>
 		<h:outputText id="somespaces_1" value="   " styleClass="ExtraPaddingClass" />		
-        	<h:outputLink id="showResourceLink" value="#{editSectionPage.currLTIUrl}" target="_blank" title="Section Resource" styleClass="a1" rendered="#{editSectionPage.displayCurrLink != null}">	  
+        	<h:outputLink id="showResourceLTI" value="#{editSectionPage.currLTIUrl}" target="_blank" title="Section Resource" styleClass="a1" rendered="#{editSectionPage.displayCurrLTI != null}">	  
   			<h:outputText id="editltiText3" value="#{editSectionPage.displayCurrLTI}" />
   		</h:outputLink>	
-		<h:outputText id="editltiText4" value="#{msgs.editcontentltiview_noURL}" rendered="#{editSectionPage.displayCurrLink == null}" styleClass="bold"/>
+		<h:outputText id="editltiText4" value="#{msgs.editcontentltiview_noURL}" rendered="#{editSectionPage.displayCurrLTI == null}" styleClass="bold"/>
 		<h:outputText id="somespaces1" value=" " styleClass="ExtraPaddingClass" />
 	</h:column>
 	<h:column>					
