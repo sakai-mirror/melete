@@ -1424,10 +1424,9 @@ public abstract class SectionPage implements Serializable {
 			try 
 			{
                 		ContentResource cr = getMeleteCHService().getResource(meleteResource.getResourceId());
-				String retval = URLEncoder.encode(cr.getUrl());
-System.out.println("X="+retval+"Y="+cr.getUrl());
-				// return URLEncoder.encode(cr.getUrl());
-				return cr.getUrl();
+                                String rUrl = cr.getUrl().replaceAll(" ", "%20");
+System.out.println("getCurrLTIUrl Y="+cr. getUrl()+" r="+rUrl);
+				return rUrl;
 			} 
 			catch (Exception e)
 			{
