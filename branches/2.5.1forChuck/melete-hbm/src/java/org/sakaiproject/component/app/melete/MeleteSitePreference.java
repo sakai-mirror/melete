@@ -1,6 +1,6 @@
 /**********************************************************************************
 *
-* $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-hbm/src/java/org/sakaiproject/component/app/melete/MeleteSitePreference.java $
+* $URL$
 *
 ***********************************************************************************
 *

@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- *
+ * $$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -86,7 +86,8 @@ import org.sakaiproject.content.cover.ContentTypeImageService;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.tool.melete.ManageResourcesPage.DisplayResources;
-
+import org.sakaiproject.util.ResourceLoader;
+import javax.faces.model.SelectItem;
 /**
  * @author Rashmi
  *
@@ -159,8 +160,8 @@ public abstract class SectionPage implements Serializable {
 	 protected String currLTIUrl;
      protected String displayCurrLink;
      protected String newURLTitle;
-     protected String newLTIDescriptor;;
-
+     protected String newLTIDescriptor;
+     protected ArrayList allContentTypes;
 
      protected String selectedResourceName;
 
@@ -185,6 +186,7 @@ public abstract class SectionPage implements Serializable {
             secResource = null;
             meleteResource = null;
             sortAscFlag = true;
+            allContentTypes = null;
             }
 
 
@@ -819,7 +821,7 @@ public abstract class SectionPage implements Serializable {
 	shouldRenderUpload=false;
 	shouldRenderResources=false;
 	shouldRenderNotype = false;
-
+	allContentTypes = null;
     if (logger.isDebugEnabled()) logger.debug("!!!!!!!!!reseting section values done !!!!!!!");
     }
 
@@ -1545,6 +1547,35 @@ public abstract class SectionPage implements Serializable {
 		this.newLTIDescriptor = newLTIDescriptor;
 	}
 
+	public List getAllContentTypes() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader(
+				"org.sakaiproject.tool.melete.bundle.Messages");
+		if (allContentTypes == null) {
+			Map sessionMap = context.getExternalContext().getSessionMap();
+			String userId = (String) sessionMap.get("userId");
+
+			ValueBinding binding = Util.getBinding("#{authorPreferences}");
+			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
+			boolean userLTIChoice = preferencePage.getUserLTIChoice(userId);
+
+			allContentTypes = new ArrayList<SelectItem>(0);
+			String notypemsg = bundle.getString("addmodulesections_choose_one");
+			allContentTypes.add(new SelectItem("notype", notypemsg));
+			String typeEditormsg = bundle.getString("addmodulesections_compose");
+			allContentTypes.add(new SelectItem("typeEditor", typeEditormsg));
+			String typeUploadmsg = bundle.getString("addmodulesections_upload_local");
+			allContentTypes.add(new SelectItem("typeUpload", typeUploadmsg));
+			String typeLinkmsg = bundle.getString("addmodulesections_link_url");
+			allContentTypes.add(new SelectItem("typeLink", typeLinkmsg));
+			if (userLTIChoice) {
+				String typeLTImsg = bundle.getString("addmodulesections_lti");
+				allContentTypes.add(new SelectItem("typeLTI", typeLTImsg));
+			}
+		}
+		return allContentTypes;
+	}
+	
 	/*
 	 *
 	 * inner class to set required content resource values for display

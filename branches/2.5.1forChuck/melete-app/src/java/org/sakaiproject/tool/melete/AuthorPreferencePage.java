@@ -51,6 +51,7 @@ public class AuthorPreferencePage {
   private String editorChoice;
   private String userEditor;
   private String userView="true";
+  private String showLTI = "false";
   private ArrayList availableEditors;
   private boolean displaySferyx=false;
 
@@ -103,7 +104,10 @@ public class AuthorPreferencePage {
   			userView = "false";
   		else
   			userView = "true";
-
+  		
+ 		if (mup != null && mup.isShowLTIChoice())
+  			showLTI = "true";
+  		  		
   		if(msp != null && msp.isPrintable())
   			materialPrintable = "true";
 
@@ -243,6 +247,9 @@ public String setUserChoice()
 			{
 				mup.setViewExpChoice(false);
 			}
+			
+			if (showLTI.equals("true"))	mup.setShowLTIChoice(true);
+			else mup.setShowLTIChoice(false);			
 
 		mup.setUserId((String)sessionMap.get("userId"));
 		authorPref.insertUserChoice(mup);
@@ -369,5 +376,19 @@ public void setMaterialAutonumber(String materialAutonumber)
  {
        this.materialAutonumber = materialAutonumber;
  }
+
+public String getShowLTI() {
+	return showLTI;
+}
+
+public void setShowLTI(String showLTI) {
+	this.showLTI = showLTI;
+}
+
+public boolean getUserLTIChoice(String userId){
+	MeleteUserPreference checkMup = (MeleteUserPreference)getAuthorPref().getUserChoice(userId);
+	if(checkMup != null) return checkMup.isShowLTIChoice();
+	else return false;
+}
 
 }

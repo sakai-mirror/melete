@@ -1,6 +1,6 @@
 /**********************************************************************************
  *
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-api/src/java/org/sakaiproject/api/app/melete/MeleteSitePreferenceService.java,v 1.3 2007/05/21 18:33:11 mallikat Exp $
+ * $URL$
  *
  ***********************************************************************************
  * Copyright (c) 2008 Etudes, Inc.

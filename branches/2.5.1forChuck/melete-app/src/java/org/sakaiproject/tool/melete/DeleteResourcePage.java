@@ -1,6 +1,6 @@
 /**********************************************************************************
  *
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/java/org/sakaiproject/tool/melete/DeleteResourcePage.java,v 1.10 2007/06/27 16:28:53 rashmim Exp $
+ * $URL$
  *
  ***********************************************************************************
  *
