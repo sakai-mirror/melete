@@ -24,6 +24,9 @@
 					<tr><td height="20" colspan="2"> 
 					</f:verbatim>
 						<h:outputText id="addLTIBasic1" value="#{msgs.addmodulesections_lti_url}" />
+                                                <f:verbatim>
+                                                        <span class="required">*</span>
+                                                </f:verbatim>
 						<h:outputText id="addLTIBasic2" value=" " styleClass="ExtraPaddingClass"/>
 						<h:inputText id="LTIUrl" value="#{addSectionPage.LTIUrl}" size="40" /> 	
 					<f:verbatim>

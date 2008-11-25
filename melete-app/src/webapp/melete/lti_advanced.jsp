@@ -24,8 +24,11 @@
 					<tr><td height="20" colspan="2"> 
 					</f:verbatim>
 						<h:outputText id="editLTIText_9" value="#{msgs.addmodulesections_lti_descriptor}" />
-                                                <f:verbatim></br></f:verbatim>
-						<h:inputTextarea id="LTI_descriptor" value="#{addSectionPage.LTIDescriptor}" cols="60" rows="20"/> 	
+                                                <f:verbatim>
+                                                        <span class="required">*</span>
+							<br/>
+                                                </f:verbatim>
+						<h:inputTextarea id="LTI_descriptor" value="#{addSectionPage.LTIDescriptor}" cols="60" rows="20"  /> 	
 					<f:verbatim>
 					</td></tr>
 					</f:verbatim>

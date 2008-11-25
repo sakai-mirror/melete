@@ -20,12 +20,15 @@
 <!--  permissions and limitations under the License. -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
-					<f:verbatim>
-					<tr><td height="20" colspan="2"> 
-					</f:verbatim>
-						<h:outputText id="editLTIText_9" value="#{msgs.addmodulesections_lti_descriptor}" />
-						<f:verbatim></br></f:verbatim>
-						<h:inputTextarea id="LTI_descriptor" value="#{editSectionPage.LTIDescriptor}" cols="60" rows="20"/> 	
-					<f:verbatim>
-					</td></tr>
-					</f:verbatim>
+<f:verbatim>
+  <tr><td height="20" colspan="2"> 
+</f:verbatim>
+<h:outputText id="editLTIText_9" value="#{msgs.addmodulesections_lti_descriptor}" /><span class="required">*</span>
+<f:verbatim>
+  <span class="required">*</span>
+  <br/>
+</f:verbatim>
+<h:inputTextarea id="LTI_descriptor" value="#{editSectionPage.LTIDescriptor}" cols="60" rows="20" />
+<f:verbatim>
+ </td></tr>
+</f:verbatim>
