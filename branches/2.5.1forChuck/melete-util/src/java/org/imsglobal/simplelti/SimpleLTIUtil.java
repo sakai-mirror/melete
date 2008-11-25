@@ -229,6 +229,27 @@ public class SimpleLTIUtil {
 		retProp.setProperty("status","fail");
         }
 
+    public static boolean validateDescriptor(String descriptor)
+    {
+        Properties newMap = new Properties();
+        newMap.setProperty("action", "launchresolve");
+        // Map<String, String> tm = XMLMap.getMap(descriptor);
+        Map<String,Object> tm = XMLMap.getFullMap(descriptor);
+
+        if ( tm == null )
+        {
+                return false;
+        }
+
+        // We demand an endpoint
+        String lti2EndPoint = XMLMap.getString(tm,"/toolInstance/launchurl");
+        if ( lti2EndPoint == null || lti2EndPoint.trim().length() < 1 )
+        {
+                return false;
+        }
+        return true;
+    }
+
     public static void addNonce(Properties newMap, String lti2Password, String org_id, String org_secret)
     {
         // Setup the normal digest

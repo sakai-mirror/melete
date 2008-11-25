@@ -58,6 +58,8 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 
+import org.imsglobal.simplelti.SimpleLTIUtil;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.api.app.melete.ModuleObjService;
@@ -678,8 +680,11 @@ public abstract class SectionPage implements Serializable {
 	            }
 	            if(section.getContentType().equals("typeLTI"))
 		    {
-                            // Why, I do not know... /Chuck
                             String pitch = getLTIDescriptor();
+			    if ( ! SimpleLTIUtil.validateDescriptor(ltiDescriptor) ) 
+			    {
+	    		     		throw new MeleteException("add_section_bad_lti");
+			    }
 	                    res_mime_type=getMeleteCHService().MIME_TYPE_LTI;
 	                    secContentData = new byte[ltiDescriptor.length()];
 	                    secContentData = ltiDescriptor.getBytes();
