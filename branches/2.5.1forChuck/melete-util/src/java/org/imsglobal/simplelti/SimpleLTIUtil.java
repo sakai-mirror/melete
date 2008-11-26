@@ -511,7 +511,7 @@ System.out.println("widget htext="+htmltext);
 "<head>\n" +
 "  <script language=\"javascript\"> \n" +
 "    function go() { \n" +
-"        /* document.ltiLaunchForm.submit(); */ \n" +
+"        document.ltiLaunchForm.submit(); \n" +
 "    } \n" +
 " </script> \n" +
 "</head>\n" +
