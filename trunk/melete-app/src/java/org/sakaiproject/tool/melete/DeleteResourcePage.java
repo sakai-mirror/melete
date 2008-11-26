@@ -140,8 +140,8 @@ public class DeleteResourcePage implements Serializable{
   		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
-			logger.error("error in delete resource" + e.toString());
+			//e.printStackTrace();
+			logger.debug("error in delete resource" + e.toString());
 			ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 			String errMsg = bundle.getString("delete_resource_fail");
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), errMsg));
