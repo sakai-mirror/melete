@@ -20,7 +20,8 @@
 <!--  permissions and limitations under the License. -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
-<h:panelGrid id="LinkPanel2" columns="2" width="80%" columnClasses="col30,col50" border="0">
+
+<h:panelGrid id="LinkPanel2" columns="2" width="80%" columnClasses="col30,col50" border="0" rendered="#{addSectionPage.shouldRenderLTI}">
   <h:column><h:outputText id="linkText1" value="#{msgs.contentlinkviewlti_link}"/>
      <h:outputText id="extraspacesUpload0" value="" styleClass="ExtraPaddingClass" />
      <h:outputLink id="showResourceLTI" value="#{addSectionPage.currLTIUrl}" target="_blank" title="Section Resource" styleClass="a1" rendered="#{addSectionPage.displayCurrLTI != null}">
