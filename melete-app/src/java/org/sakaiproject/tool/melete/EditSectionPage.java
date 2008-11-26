@@ -161,7 +161,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		catch (Exception e)
 		{
-			logger.error("error in reading resource properties in edit section");
+			logger.debug("error in reading resource properties in edit section" + e);
 		}
 
 	}
@@ -246,8 +246,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		catch (Exception ex)
 		{
-			ex.printStackTrace();
-			logger.error("error while accessing content resource");
+			//ex.printStackTrace();
+			logger.debug("error while accessing content resource" + ex.toString());
 		}
 		return;
 	}
@@ -366,7 +366,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		catch (MeleteException mex)
 		{
-			logger.error("error in updating section " + mex.toString());
+			logger.debug("error in updating section " + mex.toString());
 			String errMsg = bundle.getString(mex.getMessage());
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, mex.getMessage(), errMsg));
 			mex.printStackTrace();
@@ -376,9 +376,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		{
 			logger.error("error in updating section " + ex.toString());
 			String errMsg = bundle.getString("add_section_fail");
-			logger.error("error in updating section is" + errMsg);
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "add_section_fail", errMsg));
-			ex.printStackTrace();
+		//	ex.printStackTrace();
 			return "failure";
 		}
 
@@ -476,7 +475,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 					}
 					catch (MeleteException mex)
 					{
-						logger.error("error in editing section "+ mex.toString());
+						logger.debug("error in editing section "+ mex.toString());
 						String errMsg = bundle.getString(mex.getMessage());
 						context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
 						return "failure";
@@ -684,8 +683,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		catch (MeleteException me)
 		{
-			logger.error("error in set server file for edit section content");
-			me.printStackTrace();
+			logger.debug("error in set server file for edit section content" + me.toString());
+//			me.printStackTrace();
 			String errMsg = bundle.getString(me.getMessage());
 			ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
 			return "editContentUploadServerView";

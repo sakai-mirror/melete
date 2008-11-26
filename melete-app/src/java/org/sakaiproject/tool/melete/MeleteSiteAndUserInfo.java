@@ -323,7 +323,7 @@ public class MeleteSiteAndUserInfo {
 		} catch (Exception e) {
 			String errMsg = bundle.getString("migration_process_fail");
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_fail",errMsg));
-			logger.error(e.toString());
+			logger.warn(e.toString());
 		}
 		return "error_migration";
 	}

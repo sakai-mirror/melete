@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  ******************************************************************************/
 package org.sakaiproject.tool.melete;
@@ -111,19 +111,19 @@ public class Util {
         }
         catch(MalformedURLException me)
         {
-           logger.error(me.toString());
+           logger.debug(me.toString());
            errMsg = "add_section_bad_url";
            throw new MeleteException(errMsg);
         }
         catch(UnknownHostException ue)
         {
-           logger.error(ue.toString());
+           logger.debug(ue.toString());
            errMsg = "add_section_bad_url";
            throw new MeleteException(errMsg);
         }
         catch(Exception e)
         {
-           logger.error(e.toString());
+           logger.debug(e.toString());
            errMsg = "add_section_bad_link";
            throw new MeleteException(errMsg);
         }*/

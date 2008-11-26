@@ -398,7 +398,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 	          	while (itr.hasNext()) {
 	         		SectionBean secBean= (SectionBean) itr.next();
 	         		if (secBean != null)
-	         		{	
+	         		{
 		  	  		String value = new Integer(countidx++).toString();
 		  	  		String label = secBean.getDisplaySequence() +" "+ secBean.getSection().getTitle();
 		  	 		selectList.add(new SelectItem(value, label));
@@ -467,8 +467,8 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		  	}
 		  catch (MeleteException me)
 		  	{
-			logger.error(me.toString());
-			me.printStackTrace();
+			logger.debug(me.toString());
+		//	me.printStackTrace();
 	  		String ErrMsg = bundle.getString("sort_fail");
 	  		FacesMessage msg =new FacesMessage(ErrMsg);
 		  	msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -507,8 +507,8 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		  	}
 		  catch (MeleteException me)
 		  	{
-			logger.error(me.toString());
-			me.printStackTrace();
+			logger.debug(me.toString());
+			//me.printStackTrace();
 	  		String ErrMsg = bundle.getString("sort_fail");
 	  		FacesMessage msg =new FacesMessage(ErrMsg);
 		  	msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -544,7 +544,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		  	}
 		  catch (MeleteException me)
 		  	{
-			logger.error(me.toString());
+			logger.debug(me.toString());
 			String ErrMsg = bundle.getString("sort_fail");
 	  		FacesMessage msg =new FacesMessage(ErrMsg);
 		  	msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -580,7 +580,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		  	}
 		  catch (MeleteException me)
 		  	{
-			logger.error(me.toString());
+			logger.debug(me.toString());
 			String ErrMsg = bundle.getString("sort_fail");
 	  		FacesMessage msg =new FacesMessage(ErrMsg);
 		  	msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -741,7 +741,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		}
 	catch (MeleteException me)
 		{
-		logger.error(me.toString());
+		logger.debug(me.toString());
 		String ErrMsg = bundle.getString("sort_fail");
 		FacesMessage msg =new FacesMessage(ErrMsg);
 		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -774,7 +774,7 @@ return "sections_sort";
 		}
 	catch (MeleteException me)
 		{
-		logger.error(me.toString());
+		logger.debug(me.toString());
 		String ErrMsg = bundle.getString("sort_fail");
 		FacesMessage msg =new FacesMessage(ErrMsg);
 		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -808,7 +808,7 @@ return "sections_sort";
 		}
 	catch (MeleteException me)
 		{
-		logger.error(me.toString());
+		logger.debug(me.toString());
 		String ErrMsg = bundle.getString("sort_fail");
 		FacesMessage msg =new FacesMessage(ErrMsg);
 		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -842,7 +842,7 @@ return "sections_sort";
 	}
 catch (MeleteException me)
 	{
-	logger.error(me.toString());
+	logger.debug(me.toString());
 	String ErrMsg = bundle.getString("sort_fail");
 	FacesMessage msg =new FacesMessage(ErrMsg);
 	msg.setSeverity(FacesMessage.SEVERITY_ERROR);

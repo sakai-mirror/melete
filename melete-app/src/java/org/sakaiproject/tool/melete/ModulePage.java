@@ -277,7 +277,7 @@ public abstract class ModulePage implements Serializable{
 		} catch(Exception e)
 		{
 			yr=" ";
-			logger.error("error in getting yr ..prob becos of melete site and user");
+			logger.debug("error in getting yr ..prob becos of melete site and user");
 		}
 	}
 	return yr;
@@ -326,7 +326,7 @@ public abstract class ModulePage implements Serializable{
 		}catch(Exception e)
 		{
 			season=" ";
-			logger.error("sesaon is null prob some error in meleteSiteand user");
+			logger.debug("sesaon is null prob some error in meleteSiteand user");
 		}
 	}
 	return season;

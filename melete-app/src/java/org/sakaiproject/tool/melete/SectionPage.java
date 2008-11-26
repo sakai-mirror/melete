@@ -605,13 +605,13 @@ public abstract class SectionPage implements Serializable {
 					}
 				catch(MeleteException me)
 					{
-					logger.error("error in creating resource for section content");
+					logger.debug("error in creating resource for section content" + me.toString());
 					throw me;
 					}
 				catch(Exception e)
 					{
-					logger.error("error in creating resource for section content");
-					e.printStackTrace();
+					logger.error("error in creating resource for section content" + e.toString());
+					//e.printStackTrace();
 					throw new MeleteException("add_section_fail");
 					}
 	}
@@ -642,12 +642,12 @@ public abstract class SectionPage implements Serializable {
             }
             catch(MeleteException me)
 			{
-			logger.error("error in editing resource for section content");
+			logger.debug("error in editing resource for section content" + me.toString());
 			throw me;
 			}
 			catch(Exception e)
-				{logger.error("error in editing resource for section content");
-				e.printStackTrace();
+				{logger.error("error in editing resource for section content" + e.toString());
+			//	e.printStackTrace();
 				throw new MeleteException("add_section_fail");
 				}
 	}
@@ -880,7 +880,7 @@ public abstract class SectionPage implements Serializable {
          }
      	catch(MeleteException me)
 		{
-     		logger.error("file upload FAILED" + me.toString());
+     		logger.debug("file upload FAILED" + me.toString());
      		throw me;
 		}
      	catch(Exception e)
@@ -1011,7 +1011,7 @@ public abstract class SectionPage implements Serializable {
 			java.util.Collections.sort(currSiteResourcesList);
 			getListNav().setTotalSize(currSiteResourcesList.size()+1);
 		}
-		} catch (Exception e){logger.error("error in creating list for server residing files" + e.toString());}
+		} catch (Exception e){logger.warn("error in creating list for server residing files" + e.toString());}
 		return currSiteResourcesList;
 	}
 
@@ -1035,7 +1035,7 @@ public abstract class SectionPage implements Serializable {
 				logger.debug("displayResourcesList" + displayResourcesList.size());
 			}
 		}
-		} catch (Exception e){logger.error("error in creating displayList for server residing files" + e.toString());}
+		} catch (Exception e){logger.warn("error in creating displayList for server residing files" + e.toString());}
 		return displayResourcesList;
 	}
 
@@ -1188,7 +1188,7 @@ public abstract class SectionPage implements Serializable {
 				}
 				catch (Exception e)
 				{
-					logger.error("exception in setting security advice for FCK collection" + e.toString());
+					logger.warn("exception in setting security advice for FCK collection" + e.toString());
 					return SecurityAdvice.NOT_ALLOWED;
 				}
 				return SecurityAdvice.NOT_ALLOWED;

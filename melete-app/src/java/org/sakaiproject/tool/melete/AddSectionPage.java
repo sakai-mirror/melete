@@ -199,7 +199,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		}
 	     catch(MeleteException mex)
 			{
-			logger.error("error in inserting section "+ mex.toString());
+			logger.debug("error in inserting section "+ mex.toString());
 			//rollback and delete section
 			try{
 				if(selResourceIdFromList != null) sectionService.deleteResource(meleteResource);
@@ -212,7 +212,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			}
 		catch(Exception ex)
 			{
-			logger.error("error in inserting section "+ ex.toString());
+			logger.debug("error in inserting section "+ ex.toString());
 			try{
 			if(selResourceIdFromList != null) sectionService.deleteResource(meleteResource);
 			if(section.getSectionId()!= null && section.getSectionId().intValue() != 0)
@@ -220,7 +220,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			} catch (Exception e){}
 			String errMsg = bundle.getString("add_section_fail");
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"add_section_fail",errMsg));
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			return "failure";
 			}
 
@@ -311,7 +311,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 				return "addpreview";
 			}
   	     } catch (Exception e) {
-			logger.error(e.toString());
+			logger.debug(e.toString());
 		  }
 		return "#";
 	}
@@ -349,8 +349,8 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		}
 		catch(Exception e)
 			{
-			logger.error("error in set server file for add section content");
-			e.printStackTrace();
+			logger.debug("error in set server file for add section content" + e.toString());
+			//e.printStackTrace();
 			String errMsg = bundle.getString(e.getMessage());
      		ctx.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"",errMsg));
 			return "ContentUploadServerView";
@@ -501,8 +501,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 
 	    	catch(Exception ex)
 			{
-	    		ex.printStackTrace();
-	    		logger.error("error while accessing content resource");
+	    		logger.debug("error while accessing content resource" + ex.toString());
 			}
 			return;
 		}

@@ -161,7 +161,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 		}
 		catch(MeleteException me)
 		{
-			logger.error("show error message for"+me.toString()+me.getMessage()+",");
+			logger.debug("show error message for"+me.toString()+me.getMessage()+",");
 			errMsg = bundle.getString(me.getMessage());
 			addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
 			return "failure";
@@ -169,8 +169,6 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 		catch(Exception ex)
 		{
 			logger.error("mbusiness insert module failed:" + ex);
-			//ex.printStackTrace();
-			logger.error(ex.toString());
 			errMsg = "";
 			errMsg = bundle.getString("edit_module_fail");
 			addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);

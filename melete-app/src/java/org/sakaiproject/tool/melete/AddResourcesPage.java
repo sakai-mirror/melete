@@ -225,7 +225,7 @@ public class AddResourcesPage {
           }
           catch(Exception e)
           {
-          logger.error("file upload FAILED" + e.toString());
+          logger.debug("file upload FAILED" + e.toString());
           }
       }
       if(err_fields != null)
@@ -284,7 +284,7 @@ public class AddResourcesPage {
 				}
 				catch (Exception e)
 				{
-					logger.error("link upload FAILED" + e.toString());
+					logger.debug("link upload FAILED" + e.toString());
 				}
 			}
          utIterator = utList.iterator();
@@ -311,7 +311,7 @@ public class AddResourcesPage {
             }
             catch(Exception e)
             {
-              logger.error("link upload FAILED" + e.toString());
+              logger.debug("link upload FAILED" + e.toString());
              }
           }
       }
@@ -334,13 +334,12 @@ public class AddResourcesPage {
       }
       catch(MeleteException me)
 	  {
-	     logger.error("error in creating resource for section content");
+	     logger.debug("error in creating resource for section content");
 	     throw me;
 	  }
       catch(Exception e)
 	  {
-	     logger.error("error in creating resource for section content");
-	     e.printStackTrace();
+	     logger.debug("error in creating resource for section content" + e.toString());
 	     throw new MeleteException("add_item_fail");
 	   }
   }
