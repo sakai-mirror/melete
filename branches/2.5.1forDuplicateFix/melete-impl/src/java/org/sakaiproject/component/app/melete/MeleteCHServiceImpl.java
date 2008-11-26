@@ -147,20 +147,25 @@ public class MeleteCHServiceImpl implements MeleteCHService {
    private String getCourseId(String inputStr)
    {
 	  String courseId = null;
-	  String meleteCollectionRef = Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR;
-	  String groupCollectionRef = Entity.SEPARATOR+"group"+Entity.SEPARATOR;
-
+	  String meleteCollectionRef = Entity.SEPARATOR+"private"+ REFERENCE_ROOT;
+	  String groupCollectionRef = Entity.SEPARATOR+"group";
+	  org.sakaiproject.entity.api.Reference ref1 = null;
+	  
 	  if ((inputStr != null)&&(inputStr.length() > 0))
 	  {
 		  if (inputStr.startsWith(meleteCollectionRef))
 		  {
-			  courseId = inputStr.substring(meleteCollectionRef.length(),inputStr.indexOf(Entity.SEPARATOR,meleteCollectionRef.length()));
+			  inputStr = inputStr.replace(meleteCollectionRef ,"/site");
+			  ref1 = org.sakaiproject.entity.cover.EntityManager.newReference(inputStr);
+			  courseId = ref1.getContainer();
 		  }
 		  else
 		  {
 			  if (inputStr.startsWith(groupCollectionRef))
 			  {
-				  courseId = inputStr.substring(groupCollectionRef.length(), inputStr.indexOf(Entity.SEPARATOR,groupCollectionRef.length()));
+				  inputStr = inputStr.replace(groupCollectionRef ,"/site");
+				  ref1 = org.sakaiproject.entity.cover.EntityManager.newReference(inputStr);
+				  courseId = ref1.getContainer();			  
 			  }
 			  else
 			  {
