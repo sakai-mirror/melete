@@ -632,42 +632,42 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 			}
 			catch(PermissionException e)
 			{
-			logger.error("permission is denied");
+			logger.debug("permission is denied");
 			}
 			catch(IdInvalidException e)
 			{
-			logger.error("title" + " " + e.getMessage ());
+			logger.debug("title" + " " + e.getMessage ());
 			throw new MeleteException("failed");
 			}
 			catch(IdLengthException e)
 			{
-			logger.error("The name is too long" + " " +e.getMessage());
+			logger.debug("The name is too long" + " " +e.getMessage());
 			throw new MeleteException("failed");
 			}
 			catch(IdUniquenessException e)
 			{
-			logger.error("Could not add this resource item to melete collection");
+			logger.debug("Could not add this resource item to melete collection");
 			throw new MeleteException("failed");
 			}
 			catch(InconsistentException e)
 			{
-			logger.error("Invalid characters in collection title");
+			logger.debug("Invalid characters in collection title");
 
 			throw new MeleteException("failed");
 			}
 			catch(OverQuotaException e)
 			{
-			logger.error("Adding this resource would place this account over quota.To add this resource, some resources may need to be deleted.");
+			logger.debug("Adding this resource would place this account over quota.To add this resource, some resources may need to be deleted.");
 			throw new MeleteException("failed");
 			}
 			catch(ServerOverloadException e)
 			{
-			logger.error("failed - internal error");
+			logger.debug("failed - internal error");
 			throw new MeleteException("failed");
 			}
 			catch(RuntimeException e)
 			{
-			logger.error("SectionPage.addResourcetoMeleteCollection ***** Unknown Exception ***** " + e.getMessage());
+			logger.debug("SectionPage.addResourcetoMeleteCollection ***** Unknown Exception ***** " + e.getMessage());
 			e.printStackTrace();
 			throw new MeleteException("failed");
 			}
@@ -893,7 +893,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 //			  	  	 if filename contains pound char then throw error
 					if(fileName.indexOf("#") != -1)
 			  	  	{
-			  	  	logger.error("embedded FILE contains hash or other characters " + fileName);
+			  	  	logger.debug("embedded FILE contains hash or other characters " + fileName);
 	  	  		    throw new MeleteException("embed_img_bad_filename");
 			  	  	}
 		             // add the file to collection and move from uploads directory
@@ -947,7 +947,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		             }
 		             catch(FileNotFoundException ff)
 					 {
-		             	logger.error(ff.toString());
+		             	logger.debug(ff.toString());
 		             	throw new MeleteException("embed_image_size_exceed");
 					 }
 				}
@@ -1015,8 +1015,11 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		         }
 			 }
 	         catch(MeleteException me) {throw me;}
-	         catch(Exception e){logger.error(e.toString());e.printStackTrace();}
-
+	         catch(Exception e){
+				 if(logger.isDebugEnabled()) {
+					 logger.debug(e.toString());
+					 e.printStackTrace();}
+			}
 	    	return contentEditor;
 	    }
 
@@ -1102,43 +1105,43 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	       }
 	       catch(InconsistentException e)
           {
-            logger.error("Inconsistent exception thrown");
+            logger.debug("Inconsistent exception thrown");
           }
 	       catch(IdLengthException e)
           {
-            logger.error("IdLength exception thrown");
+            logger.debug("IdLength exception thrown");
           }
 	       catch(IdUniquenessException e)
           {
-            logger.error("IdUniqueness exception thrown");
+            logger.debug("IdUniqueness exception thrown");
           }
           catch(PermissionException e)
           {
-            logger.error("Permission to copy uploads collection is denied");
+            logger.debug("Permission to copy uploads collection is denied");
           }
           catch(IdUnusedException e)
           {
-            logger.error("Failed to create uploads collection in second site");
+            logger.debug("Failed to create uploads collection in second site");
           }
           catch(TypeException e)
           {
-            logger.error("TypeException thrown: "+e.getMessage());
+            logger.debug("TypeException thrown: "+e.getMessage());
           }
           catch(InUseException e)
           {
-            logger.error("InUseException thrown: "+e.getMessage());
+            logger.debug("InUseException thrown: "+e.getMessage());
           }
           catch(IdUsedException e)
           {
-            logger.error("IdUsedException thrown");
+            logger.debug("IdUsedException thrown");
           }
           catch(OverQuotaException e)
           {
-            logger.error("Copying this collection would place this account over quota.");
+            logger.debug("Copying this collection would place this account over quota.");
            }
            catch(ServerOverloadException e)
            {
-             logger.error("Server overload exception");
+             logger.debug("Server overload exception");
            }
          }
 		 catch (Exception e)
@@ -1171,15 +1174,15 @@ public class MeleteCHServiceImpl implements MeleteCHService {
    		}
    	    catch(IdUnusedException e1)
 	    {
-   		  logger.error("IdUnusedException thrown: "+e1.getMessage());
+   		  logger.debug("IdUnusedException thrown: "+e1.getMessage());
 	    }
    	    catch(TypeException e1)
         {
-          logger.error("TypeException thrown: "+e1.getMessage());
+          logger.debug("TypeException thrown: "+e1.getMessage());
         }
    	    catch(PermissionException e1)
         {
-          logger.error("Permission to get uploads collection is denied");
+          logger.debug("Permission to get uploads collection is denied");
         }
 	    }
 		catch (Exception e)
@@ -1212,15 +1215,15 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	   		}
 	   	    catch(IdUnusedException e1)
 		    {
-	   		  logger.error("IdUnusedException thrown: "+e1.getMessage() + delRes_id );
+	   		  logger.debug("IdUnusedException thrown: "+e1.getMessage() + delRes_id );
 		    }
 	   	    catch(TypeException e1)
 	        {
-	          logger.error("TypeException thrown: "+e1.getMessage());
+	          logger.debug("TypeException thrown: "+e1.getMessage());
 	        }
 	   	    catch(PermissionException e1)
 	        {
-	          logger.error("Permission to get uploads collection is denied");
+	          logger.debug("Permission to get uploads collection is denied");
 	        }
 	   	    catch (Exception e)
 		    {
@@ -1255,15 +1258,15 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    	}
 	    	catch (IdUnusedException e1)
 	    	{
-	    		logger.error("IdUnusedException thrown: "+e1.getMessage());
+	    		logger.debug("IdUnusedException thrown: "+e1.getMessage());
 	    	}
 	    	catch(TypeException e1)
 	        {
-	          logger.error("TypeException thrown: "+e1.getMessage());
+	          logger.debug("TypeException thrown: "+e1.getMessage());
 	        }
 	   	    catch(PermissionException e1)
 	        {
-	          logger.error("Permission to get uploads collection is denied");
+	          logger.debug("Permission to get uploads collection is denied");
 	        }
 	   	    catch (Exception e)
 		    {
@@ -1309,15 +1312,15 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	   		}
 	   	    catch(IdUnusedException e1)
 		    {
-	   		  logger.error("IdUnusedException thrown from remove Course Collection: "+e1.getMessage());
+	   		  logger.debug("IdUnusedException thrown from remove Course Collection: "+e1.getMessage());
 		    }
 	   	    catch(TypeException e1)
 	        {
-	          logger.error("TypeException thrown: "+e1.getMessage());
+	          logger.debug("TypeException thrown: "+e1.getMessage());
 	        }
 	   	    catch(PermissionException e1)
 	        {
-	          logger.error("Permission to get uploads collection is denied");
+	          logger.debug("Permission to get uploads collection is denied");
 	        }
 	   	    catch (Exception e)
 		    {
@@ -1346,7 +1349,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	   	    }
 	   	    catch(IdUnusedException e1)
 		    {
-	   		  logger.error("IdUnusedException thrown from moveResource: "+e1.getMessage());
+	   		  logger.debug("IdUnusedException thrown from moveResource: "+e1.getMessage());
 		    }
 	   	    catch (Exception e)
 		    {
