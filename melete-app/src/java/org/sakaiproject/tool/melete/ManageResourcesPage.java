@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
 **********************************************************************************/
 
 package org.sakaiproject.tool.melete;
@@ -63,28 +63,28 @@ public class ManageResourcesPage {
   private String fileType;
   private String numberItems;
 
-  
+
   /** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(ManageResourcesPage.class);
 	private MeleteCHService meleteCHService;
-	
-// delet resource variables	
-	private boolean sortAscFlag;	
+
+// delet resource variables
+	private boolean sortAscFlag;
 	private List<DisplayResources> displayResourcesList;
 	private List<DisplayResources> allResourcesList;
 	private RemoteFilesListingNav listNav;
-	  
+
   public ManageResourcesPage()
   {
-	  sortAscFlag=true;	 	
+	  sortAscFlag=true;
   }
 
   static Comparator<DisplayResources> ManageResourcesComparatorDesc = new Comparator<DisplayResources>() {
       public int compare(DisplayResources o1, DisplayResources o2) {
-             return -1 * (o1.compareTo(o2));      
+             return -1 * (o1.compareTo(o2));
       }
-   };   
-   
+   };
+
 public String addItems()
 {
 	FacesContext ctx = FacesContext.getCurrentInstance();
@@ -93,12 +93,12 @@ public String addItems()
     AddResourcesPage arPage = (AddResourcesPage)binding.getValue(ctx);
     arPage.resetValues();
     arPage.setNumberItems(this.numberItems);
-	if (this.fileType.equals("upload")) 
+	if (this.fileType.equals("upload"))
 	{
 		arPage.setFileType("upload");
 		return "file_upload_view";
 	}
-	if (this.fileType.equals("link")) 
+	if (this.fileType.equals("link"))
 	{
 		arPage.setFileType("link");
 		return "link_upload_view";
@@ -146,7 +146,7 @@ public void setNumberItems(String numberItems)
 // code for delete Resource
 public String sortResourcesAsc()
 {
-	sortAscFlag=false;	
+	sortAscFlag=false;
 	listNav.resetCurrIndex();
 	sortList();
 	return "#";
@@ -154,7 +154,7 @@ public String sortResourcesAsc()
 
 
 public String sortResourcesDesc()
-{	
+{
 	sortAscFlag=true;
 	listNav.resetCurrIndex();
 	sortList();
@@ -163,7 +163,7 @@ public String sortResourcesDesc()
 
 
 public void refreshCurrSiteResourcesList()
-{	
+{
 	displayResourcesList = null;
 	allResourcesList = null;
 	getListNav();
@@ -190,7 +190,7 @@ public List<DisplayResources> getAllResourcesList()
 			allResourcesList = new ArrayList<DisplayResources>();
 			List<ContentResource> allmembers = null;
 			allmembers = getMeleteCHService().getListofMediaFromCollection(uploadCollId);
-		
+
 			if(allmembers == null) return null;
 			Iterator<ContentResource> allmembers_iter = allmembers.iterator();
 			String serverUrl = ServerConfigurationService.getServerUrl();
@@ -200,7 +200,7 @@ public List<DisplayResources> getAllResourcesList()
 				String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 				if (displayName.length() > 50) displayName = displayName.substring(0,50) + "...";
 				String rUrl = cr.getUrl().replaceAll(" ", "%20");
-				boolean rType = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LINK);				
+				boolean rType = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LINK);
 				String rgif=  serverUrl + "/library/image/sakai/url.gif";
 				if(!rType)
 				{
@@ -211,15 +211,15 @@ public List<DisplayResources> getAllResourcesList()
 				allResourcesList.add(new DisplayResources(displayName, cr.getId(),rUrl,rType,rgif));
 			}
 			getListNav().setTotalSize(allResourcesList.size()+1);
-			Collections.sort(allResourcesList);	
+			Collections.sort(allResourcesList);
 		}
-		
-		
+
+
 		} catch (Exception e){
 			logger.error("error in creating list for server residing files" + e.toString());
 			e.printStackTrace();
 			}
-		
+
 	return allResourcesList;
 }
 
@@ -235,7 +235,7 @@ public List<DisplayResources> getDisplayResourcesList()
 
 			logger.debug("from and to index and total size" + fromIndex + "," +toIndex +"," +allResourcesList.size());
 			displayResourcesList = null;
-			if(toIndex > fromIndex)
+			if(fromIndex > 0 && toIndex > fromIndex && toIndex < allResourcesList.size())
 			{
 				displayResourcesList = (List)allResourcesList.subList(fromIndex,toIndex);
 				logger.debug("displayResourcesList" + displayResourcesList.size());
@@ -258,14 +258,14 @@ public void selectedResourceDeleteAction(ActionEvent evt)
 	UIData table = (UIData) root.findComponent("ManageContentForm:DeleteResourceView").findComponent("table");
 	DisplayResources selectedDr = (DisplayResources) table.getRowData();
 	logger.debug("selected row to delete " + selectedDr.getResource_id());
-	 
+
 	ValueBinding binding =Util.getBinding("#{deleteResourcePage}");
 	DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
 	delResPage.resetValues();
-	delResPage.setFromPage("manage_content");		
-	
+	delResPage.setFromPage("manage_content");
+
 	delResPage.setResourceName(selectedDr.getResource_title());
-	delResPage.processDeletion(selectedDr.getResource_id(), courseId);		
+	delResPage.processDeletion(selectedDr.getResource_id(), courseId);
 	return;
 }
 
@@ -354,7 +354,7 @@ public class DisplayResources implements Comparable<DisplayResources>
 	{
 		this.typeLink = isTypeLink;
 	}
-	
+
 	public String toString()
 	{
 		return resource_title;
@@ -363,14 +363,14 @@ public class DisplayResources implements Comparable<DisplayResources>
 		int res = 0;
 		// both are link or upload than equal
 		if(this.typeLink == n.isTypeLink())
-			res= this.resource_title.compareTo(n.getResource_title());		
-		
+			res= this.resource_title.compareTo(n.getResource_title());
+
 		// this is link and n is upload
 		if(this.typeLink && !n.isTypeLink()) res = 1;
-		
+
 		// this is upload and n is link
-		if(!this.typeLink && n.isTypeLink()) res = -1;		
-		
+		if(!this.typeLink && n.isTypeLink()) res = -1;
+
 		return res;
 	}
 	/**
