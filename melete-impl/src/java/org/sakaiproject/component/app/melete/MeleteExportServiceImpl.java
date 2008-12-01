@@ -311,10 +311,9 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 							k = createSectionElement(modMainItem, section, i,++k, resources,resoucesDir,imagespath);
 							} // if end add secElement only if content exists
 						catch(Exception e){
-							logger.error("err in exporting section" + e.toString());
 							Section probSection = sectionDB.getSection(Integer.parseInt(currItem.getAttribute("id")));
 							probEncounteredSections += module.getTitle() +" section: "+ probSection.getTitle();
-							logger.debug("problems found in impl" + probEncounteredSections);
+							logger.debug("problems found in export impl" + probEncounteredSections);
 					//		throw new MeleteException(probEncounteredSections);
 							continue;
 							}

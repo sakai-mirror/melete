@@ -2398,7 +2398,7 @@ public class ModuleDB implements Serializable {
 						int deletedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", delResourceId).executeUpdate();
 						meleteCHService.removeResource(delResourceId);
 						} catch(Exception e)
-						{logger.error("unable to delete resource.its still asociated with section." + delResourceId);
+						{logger.warn("unable to delete resource.its still asociated with section." + delResourceId);
 						}
 					}
 				}

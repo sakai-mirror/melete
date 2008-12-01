@@ -126,7 +126,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 			}
 		} catch(Exception e)
 		{
-			logger.error("getting archived modules list "+e.toString());
+			logger.debug("getting archived modules list "+e.toString());
 		}
 		return archiveModulesList;
 	}
@@ -328,7 +328,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 			}
 		} catch(Exception e)
 		{
-			logger.error("error in getting currList "+e.toString());
+			logger.debug("error in getting currList "+e.toString());
 		}
 		return currList;
 	}
@@ -346,7 +346,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 
 		} catch(Exception e)
 		{
-			logger.error("error in getting currList "+e.toString());
+			logger.debug("error in getting currList "+e.toString());
 		}
 		return newList;
 	}
@@ -692,8 +692,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 			currSecList  = forSelectSectionsItemsList(currSectionsList);
 		} catch(Exception e)
 		{
-			logger.error("error in getting currSecList "+e.toString());
-			e.printStackTrace();
+			logger.debug("error in getting currSecList "+e.toString());
 		}
 		return currSecList;
 	}
@@ -711,8 +710,10 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 
 		} catch(Exception e)
 		{
-			logger.error("error in getting newSecList "+e.toString());
+			if (logger.isDebugEnabled()) {
+			logger.debug("error in getting newSecList "+e.toString());
 			e.printStackTrace();
+			}
 		}
 		return newSecList;
 	}

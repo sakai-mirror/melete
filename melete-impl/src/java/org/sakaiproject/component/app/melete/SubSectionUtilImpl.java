@@ -18,14 +18,14 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
- * 
+ * permissions and limitations under the License.
+ *
  ***********************************************************************************/
 package org.sakaiproject.component.app.melete;
 
@@ -123,18 +123,21 @@ public class SubSectionUtilImpl {
 
 			//This code checks to see if this section id already exists in the xml string
 			if(thisElement == null) addSection(section_id);
-			else logger.error("Trying to insert duplicate section "+section_id);
+			else logger.debug("Trying to insert duplicate section "+section_id);
 
 		}
 		catch(DocumentException de)
 		{
-			logger.error("error reading subsections xml string" + de.toString());
+			if (logger.isDebugEnabled()) {
+			logger.debug("error reading subsections xml string" + de.toString());
 			de.printStackTrace();
+			}
 		}
 		catch (Exception ex)
-		{
-			logger.error("some other error on reading subsections xml string" + ex.toString());
+		{	if (logger.isDebugEnabled()) {
+			logger.debug("some other error on reading subsections xml string" + ex.toString());
 			ex.printStackTrace();
+			}
 		}
 	}
 	private String writeDocumentToString(org.w3c.dom.Document doc)
@@ -174,8 +177,10 @@ public class SubSectionUtilImpl {
 		}
 		catch (Exception ex)
 		{
-			logger.error("some other error on reading subsections xml string" + ex.toString());
+			if (logger.isDebugEnabled()) {
+			logger.error("some other error in creating sub section" + ex.toString());
 			ex.printStackTrace();
+			}
 			throw new MeleteException("indent_right_fail");
 		}
 	}
@@ -217,8 +222,10 @@ public class SubSectionUtilImpl {
 		}
 		catch (Exception ex)
 		{
-			logger.error("some other error on reading subsections xml string" + ex.toString());
+			if (logger.isDebugEnabled()) {
+			logger.error("some other error on indenting right" + ex.toString());
 			ex.printStackTrace();
+			}
 			throw new MeleteException("indent_right_fail");
 		}
 	}
@@ -248,8 +255,10 @@ public class SubSectionUtilImpl {
 		}
 		catch (Exception ex)
 		{
-			logger.error("some other error on delete subsections xml string" + ex.toString());
+			if (logger.isDebugEnabled()) {
+			logger.debug("some other error on delete subsections xml string" + ex.toString());
 			ex.printStackTrace();
+			}
 			throw new MeleteException("delete_module_fail");
 		}
 	}
@@ -280,9 +289,11 @@ public class SubSectionUtilImpl {
 	            }
 	            catch (Exception ex)
 	            {
-	                logger.error("some other error on moving up subsections xml string" +
+					if (logger.isDebugEnabled()) {
+	                logger.debug("some other error on moving up subsections xml string" +
 	ex.toString());
 	                ex.printStackTrace();
+					}
 	                throw new MeleteException("move_up_fail");
 	            }
 	    }
@@ -307,8 +318,10 @@ public class SubSectionUtilImpl {
 		}
 		catch (Exception ex)
 		{
-			logger.error("some other error on moving up subsections xml string" + ex.toString());
+			if (logger.isDebugEnabled()) {
+			logger.debug("some other error on moving up subsections xml string" + ex.toString());
 			ex.printStackTrace();
+			}
 			throw new MeleteException("move_up_fail");
 		}
 	}
@@ -331,8 +344,10 @@ public class SubSectionUtilImpl {
 		}
 		catch (Exception ex)
 		{
-			logger.error("some other error on moving down subsections xml string" + ex.toString());
+			if (logger.isDebugEnabled()) {
+			logger.debug("some other error on moving down subsections xml string" + ex.toString());
 			ex.printStackTrace();
+			}
 			throw new MeleteException("move_down_fail");
 		}
 	}
@@ -360,12 +375,14 @@ public class SubSectionUtilImpl {
 	            }
 	            catch (Exception ex)
 	            {
-	                logger.error("some other error on moving down subsections xml string"
+					if (logger.isDebugEnabled()) {
+	                logger.debug("some other error on moving down subsections xml string"
 	+ ex.toString());
 	                ex.printStackTrace();
+					}
 	                throw new MeleteException("move_down_fail");
 	            }
-	    }	
+	    }
 /*
  *
  */
@@ -383,9 +400,9 @@ public class SubSectionUtilImpl {
 			currParent = currItem;
 			return (org.w3c.dom.Element)currItem.getFirstChild();
 			}
-		
+
 		if(currParent == null) currParent = currItem.getParentNode();
-		
+
 		if (currItem.equals((org.w3c.dom.Element)currParent.getLastChild()))
 		{
 			while(true)
@@ -418,8 +435,10 @@ public class SubSectionUtilImpl {
 		}
 		catch (Exception ex)
 		{
-			logger.error("Error in getting subsections dom " + ex.toString());
+			if (logger.isDebugEnabled()) {
+			logger.debug("Error in getting subsections dom " + ex.toString());
 			ex.printStackTrace();
+			}
 		}
 		return subSectionW3CDOM;
 	}
@@ -476,7 +495,7 @@ public class SubSectionUtilImpl {
 		allsections = subSection4jDOM.selectNodes("//section");
 		return allsections;
 	}
-	
+
 	public org.w3c.dom.Element getPrevSection(org.w3c.dom.Element currItem) throws Exception
 	{
 		org.w3c.dom.Element rootElement = subSectionW3CDOM.getDocumentElement();
@@ -487,9 +506,9 @@ public class SubSectionUtilImpl {
 			}
 		org.w3c.dom.Node returnParrent = currItem.getParentNode();
 		returnElement = (org.w3c.dom.Element)currItem.getPreviousSibling();
-		if(returnElement == null) 
+		if(returnElement == null)
 		{
-			returnElement = (org.w3c.dom.Element)returnParrent;		
+			returnElement = (org.w3c.dom.Element)returnParrent;
 		}
 		return returnElement;
 	}

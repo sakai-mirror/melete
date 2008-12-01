@@ -374,7 +374,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		catch (Exception ex)
 		{
-			logger.error("error in updating section " + ex.toString());
+			logger.debug("error in updating section " + ex.toString());
 			String errMsg = bundle.getString("add_section_fail");
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "add_section_fail", errMsg));
 		//	ex.printStackTrace();
@@ -691,8 +691,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		catch (Exception e)
 		{
-			logger.error("error in set server file for edit section content");
+			if (logger.isDebugEnabled()) {
+			logger.debug("error in set server file for edit section content");
 			e.printStackTrace();
+			}
 			String errMsg = bundle.getString("add_section_fail");
 			ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
 			return "editContentUploadServerView";
@@ -785,8 +787,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		catch (Exception e)
 		{
-			logger.error("error in set server url for edit section content" + errMsg);
-			e.printStackTrace();
 			if (e.getMessage() != null)
 			{
 			  errMsg = bundle.getString(e.getMessage());

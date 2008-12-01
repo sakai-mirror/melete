@@ -128,7 +128,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 
 		   }catch(Exception ex)
 			{
-		   		logger.error("section business --add section failed");
+		   		logger.debug("section business --add section failed");
 			   throw new MeleteException("add_section_fail");
 			}
 	}
@@ -140,7 +140,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 		   }
 		catch(Exception ex)
 			{
-				logger.error("multiple user exception in section business");
+				logger.debug("multiple user exception in section business");
 			   throw new MeleteException("edit_section_multiple_users");
 			}
 	}
@@ -152,7 +152,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 		   }
 		catch(Exception ex)
 			{
-				logger.error("multiple user exception in section business");
+				logger.debug("multiple user exception in section business");
 			   throw new MeleteException("edit_section_multiple_users");
 			}
 	}
@@ -189,7 +189,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
                 section = sectiondb.getSection(sectionId);
 		    }catch (Exception e)
 		    {
-		           logger.error(e.toString());
+		           logger.debug(e.toString());
 		    }
         return section;
   }
@@ -221,7 +221,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
                      }
                 }catch (Exception e)
 	          {
-                   logger.error(e.toString());
+                   logger.debug(e.toString());
                 }
                 return null;
           }
@@ -254,7 +254,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 	  		return sectionsList;
 	  	}catch (Exception e)
 		{
-	          logger.error(e.toString());
+	          logger.debug(e.toString());
 		}
 	  	return null;
 	  }
@@ -269,7 +269,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			sectiondb.insertResource((MeleteResource)melResource);
 			}catch(Exception ex)
 			{
-				logger.error("AddSectionPage --add resource failed");
+				logger.debug("AddSectionPage --add resource failed");
 				throw new MeleteException(ex.toString());
 			}
 	  }
@@ -283,7 +283,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			sectiondb.updateResource((MeleteResource)melResource);
 			}catch(Exception ex)
 			{
-				logger.error("EditSectionPage --update resource failed");
+				logger.debug("EditSectionPage --update resource failed");
 				throw new MeleteException(ex.toString());
 			}
 	  }
@@ -297,7 +297,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			sectiondb.deleteResource((MeleteResource)melResource);
 			}catch(Exception ex)
 			{
-				logger.error("AddSectionPage --delete resource failed");
+				logger.debug("AddSectionPage --delete resource failed");
 				throw new MeleteException(ex.toString());
 			}
   		}
@@ -310,7 +310,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			sectiondb.insertMeleteResource((Section)section, (MeleteResource)melResource);
 			}catch(Exception ex)
 			{
-				logger.error("AddSectionPage --add section resource failed");
+				logger.debug("AddSectionPage --add section resource failed");
 				throw new MeleteException(ex.toString());
 			}
 	  }
@@ -324,7 +324,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			sectiondb.insertSectionResource((Section)section, (MeleteResource)melResource);
 			}catch(Exception ex)
 			{
-				logger.error("AddSectionPage --add section resource failed");
+				logger.debug("AddSectionPage --add section resource failed");
 				throw new MeleteException(ex.toString());
 			}
 	  }
@@ -335,7 +335,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			sectiondb.deassociateSectionResource((Section)section, (SectionResource)secResource);
 			}catch(Exception ex)
 			{
-				logger.error("EditSectionPage --deassociateSectionResource failed");
+				logger.debug("EditSectionPage --deassociateSectionResource failed");
 				throw new MeleteException(ex.toString());
 			}
 	  }
@@ -346,7 +346,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			sectiondb.updateSectionResource((Section)section, (SectionResource)secResource);
 			}catch(Exception ex)
 			{
-				logger.error("EditSectionPage --updateSectionResource failed");
+				logger.debug("EditSectionPage --updateSectionResource failed");
 				throw new MeleteException(ex.toString());
 			}
 	  }
@@ -399,7 +399,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			 sr = sectiondb.getSectionResource(secResourceId);
 			}catch(Exception ex)
 			{
-				logger.error("AddSectionPage --add section resource failed");
+				logger.debug("AddSectionPage --add section resource failed");
 			}
 		return sr;
 	  }
@@ -411,7 +411,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			 mr = sectiondb.getMeleteResource(selResourceId);
 			}catch(Exception ex)
 			{
-				logger.error("AddSectionPage --add section resource failed");
+				logger.debug("AddSectionPage --add section resource failed");
 			}
 		return mr;
 	  }

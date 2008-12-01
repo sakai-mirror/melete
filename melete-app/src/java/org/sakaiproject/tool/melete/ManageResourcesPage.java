@@ -216,8 +216,10 @@ public List<DisplayResources> getAllResourcesList()
 
 
 		} catch (Exception e){
-			logger.error("error in creating list for server residing files" + e.toString());
+			if (logger.isDebugEnabled()) {
+			logger.debug("error in creating list for server residing files" + e.toString());
 			e.printStackTrace();
+				}
 			}
 
 	return allResourcesList;
@@ -241,8 +243,12 @@ public List<DisplayResources> getDisplayResourcesList()
 				logger.debug("displayResourcesList" + displayResourcesList.size());
 			}
 		}
-	} catch (Exception e){logger.error("error in creating displayList for server residing files" + e.toString());
-							e.printStackTrace();}
+	} catch (Exception e){
+		if (logger.isDebugEnabled()) {
+			logger.debug("error in creating displayList for server residing files" + e.toString());
+			e.printStackTrace();
+			}
+		}
 
 	return displayResourcesList;
 }

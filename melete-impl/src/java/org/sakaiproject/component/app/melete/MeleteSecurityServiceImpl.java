@@ -530,13 +530,15 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		}
 		catch (IdUnusedException iue)
 		{
-			logger.error("error in melete during site archive");
+			logger.debug("error in melete during site archive");
 			return "error archiving modules";
 		}
 		catch (Exception ex)
 		{
-			logger.error("error in melete during site archive" + ex.toString());
+			if (logger.isDebugEnabled()) {
+			logger.debug("error in melete during site archive" + ex.toString());
 			ex.printStackTrace();
+			}
 			return "error archiving modules";
 		}
 		return "archiving modules: (" +count + ") modules archived successfully. \n";

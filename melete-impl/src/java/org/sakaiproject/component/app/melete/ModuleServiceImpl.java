@@ -215,7 +215,7 @@ public List getModuleDateBeans(String userId, String courseId) {
   	}catch (HibernateException e)
 	{
   		//e.printStackTrace();
-  		logger.error(e.toString());
+  		logger.debug(e.toString());
 	}
   	return moduleDateBeans;
   }
@@ -232,7 +232,7 @@ public List getModuleDateBeans(String userId, String courseId) {
   	}catch (HibernateException e)
 	{
   		//e.printStackTrace();
-  		logger.error(e.toString());
+  		logger.debug(e.toString());
 	}
   	return mdBean;
   }
@@ -245,7 +245,7 @@ public List getModuleDateBeans(String userId, String courseId) {
 	  	}catch (HibernateException e)
 		{
 	  		//e.printStackTrace();
-	  		logger.error(e.toString());
+	  		logger.debug(e.toString());
 		}
 	  	return mdBean;
 	  }
@@ -261,7 +261,7 @@ public List getModuleDateBeans(String userId, String courseId) {
   	}catch (HibernateException e)
 	{
   		//e.printStackTrace();
-  		logger.error(e.toString());
+  		logger.debug(e.toString());
 	}
   	return modules;
   }
@@ -282,7 +282,7 @@ public List getModuleDateBeans(String userId, String courseId) {
      }
     catch(Exception ex)
 	{
-		logger.error("multiple user exception in module business");
+		logger.debug("multiple user exception in module business");
 	   throw new MeleteException("edit_module_multiple_users");
 	}
   }
@@ -369,7 +369,7 @@ public List getModuleDateBeans(String userId, String courseId) {
 		  catch (HibernateException e)
 		  {
 			//e.printStackTrace();
-			logger.error(e.toString());
+			logger.debug(e.toString());
 		  }
 		  for (ListIterator j = cmodList.listIterator(); j.hasNext(); )
 	      {
@@ -401,7 +401,7 @@ public List getArchiveModules(String course_id)
 		 archModules = moduledb.getArchivedModules(course_id);
 		}catch(Exception ex)
 		{
-			logger.error("ManageModulesBusiness --get Archive Modules failed");
+			logger.debug("ManageModulesBusiness --get Archive Modules failed");
 		}
 		return archModules;
 }
@@ -413,7 +413,7 @@ public ModuleObjService getModule(int moduleId) {
   	}catch (HibernateException e)
 	{
   		//e.printStackTrace();
-  		logger.error(e.toString());
+  		logger.debug(e.toString());
 	}
   	return module;
   }
@@ -433,8 +433,10 @@ public void restoreModules(List modules) throws Exception
 		 moduledb.restoreModules(modules);
 		}catch(Exception ex)
 		{
-			logger.error("ManageModulesBusiness --restore Modules failed");
+			if (logger.isDebugEnabled()) {
+			logger.debug("ManageModulesBusiness --restore Modules failed");
 			ex.printStackTrace();
+			}
 			throw new MeleteException(ex.toString());
 		}
 }
@@ -446,7 +448,7 @@ public void restoreModules(List modules) throws Exception
       try{
         cMod = moduledb.getCourseModule(moduleId,  courseId);
       }catch(Exception ex){
-        logger.error("ManageModulesBusiness --get Archive Modules failed");
+        logger.debug("ManageModulesBusiness --get Archive Modules failed");
        }
      return cMod;
     }
@@ -1187,7 +1189,7 @@ public void restoreModules(List modules) throws Exception
 		    		    	secList = moduledb.getSections(modId);
 		    			}catch(Exception ex)
 		    			{
-		    				logger.error("ModuleServiceImpl updateSeqXml - get sections failed");
+		    				logger.debug("ModuleServiceImpl updateSeqXml - get sections failed");
 		    				throw ex;
 		    			}
 
