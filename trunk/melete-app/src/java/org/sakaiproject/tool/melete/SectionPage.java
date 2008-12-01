@@ -376,7 +376,7 @@ public abstract class SectionPage implements Serializable {
                     this.module = (Module)sec.getModule();
                     this.section = sec;
             }
-        }catch(Exception ex){logger.error(ex.toString());}
+        }catch(Exception ex){logger.debug(ex.toString());}
     }
 /*
  *  added to set module null. seggregated from the setSection method
@@ -610,8 +610,10 @@ public abstract class SectionPage implements Serializable {
 					}
 				catch(Exception e)
 					{
-					logger.error("error in creating resource for section content" + e.toString());
-					//e.printStackTrace();
+					if (logger.isDebugEnabled()) {
+					logger.debug("error in creating resource for section content" + e.toString());
+					e.printStackTrace();
+					}
 					throw new MeleteException("add_section_fail");
 					}
 	}
@@ -646,8 +648,11 @@ public abstract class SectionPage implements Serializable {
 			throw me;
 			}
 			catch(Exception e)
-				{logger.error("error in editing resource for section content" + e.toString());
-			//	e.printStackTrace();
+				{
+					if (logger.isDebugEnabled()) {
+					logger.debug("error in editing resource for section content" + e.toString());
+					e.printStackTrace();
+				}
 				throw new MeleteException("add_section_fail");
 				}
 	}

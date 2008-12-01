@@ -50,7 +50,7 @@ public void insertUserChoice(MeleteUserPreferenceService mup) throws Exception
 			userPrefdb.setUserPreferences((MeleteUserPreference)mup);
 		}catch(Exception e)
 			{
-			logger.error("melete user pref business --add editor choice failed");
+			logger.debug("melete user pref business --add editor choice failed");
 			 throw new MeleteException("add_editorchoice_fail");
 
 			}
@@ -64,7 +64,7 @@ public MeleteUserPreferenceService getUserChoice(String user_id)
 			mup = userPrefdb.getUserPreferences(user_id);
 		}catch(Exception e)
 			{
-			logger.error("melete user pref business --get editor choice failed");
+			logger.debug("melete user pref business --get editor choice failed");
 			}
 		return mup;
 	}
@@ -75,7 +75,7 @@ public void insertUserSiteChoice(MeleteSitePreferenceService msp) throws Excepti
 		userPrefdb.setSitePreferences((MeleteSitePreference)msp);
 	}catch(Exception e)
 		{
-		logger.error("melete user pref business --add editor choice failed");
+		logger.debug("melete user pref business --add editor choice failed");
 		 throw new MeleteException("add_editorchoice_fail");
 
 		}
@@ -89,7 +89,7 @@ public MeleteSitePreferenceService getSiteChoice(String site_id)
 		msp = userPrefdb.getSitePreferences(site_id);
 	}catch(Exception e)
 		{
-		logger.error("melete user pref business --get editor choice failed");
+		logger.debug("melete user pref business --get editor choice failed");
 		}
 	return msp;
 }

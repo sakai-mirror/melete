@@ -168,8 +168,6 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 		}
 		catch(Exception ex)
 		{
-			logger.error("mbusiness insert module failed:" + ex);
-			errMsg = "";
 			errMsg = bundle.getString("edit_module_fail");
 			addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
 			return "failure";

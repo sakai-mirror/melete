@@ -101,7 +101,7 @@ public class ModuleNextStepsPage implements Serializable/*,ToolBean*/ {
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.error("error in updating what's next"+e.toString());
+			logger.debug("error in updating what's next"+e.toString());
 	  		String errMsg = bundle.getString("add_post_steps_fail");
 	  		FacesMessage msg =
 		  		new FacesMessage("Error Message", errMsg);

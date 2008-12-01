@@ -359,7 +359,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 		}
 		catch(IdUnusedException unuse){
 			// if file not found exception or content is missing continue working
-			logger.error("error in reading resource content in export section");
+			logger.debug("error in reading resource content in export section");
 			return null;
 			}
 		catch(Exception e){
@@ -488,7 +488,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 				out.write(buf, 0, len);
 			}
 		} catch (FileNotFoundException e) {
-			logger.error(e.toString());
+			logger.debug(e.toString());
 		} catch (IOException e) {
 			throw e;
 		} finally{

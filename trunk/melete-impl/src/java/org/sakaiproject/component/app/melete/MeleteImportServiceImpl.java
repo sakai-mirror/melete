@@ -977,12 +977,12 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				}
 				catch(Exception e)
 				{
-					logger.error(e.toString());
+					logger.debug(e.toString());
 				}
 		 }
 		} catch (Exception e) {
 			if (logger.isErrorEnabled())
-				logger.error("ExportMeleteModules : uploadSectionDependentFile() :"+ e.toString());
+				logger.error("ImportMeleteModules : uploadSectionDependentFile() :"+ e.toString());
 		}
 		return "";
 	}
@@ -1440,7 +1440,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			ModuleShdates toModshdate = new ModuleShdates(((ModuleShdates)fromMod.getModuleshdate()).getStartDate(), ((ModuleShdates)fromMod.getModuleshdate()).getEndDate());
 			try{
 			moduleDB.addModule(toMod, toModshdate, fromMod.getUserId(), toContext);
-			}catch(Exception ex3){logger.error("error importing module");}
+			}catch(Exception ex3){logger.debug("error importing module");}
 			sectionList = fromMod.getSections();
 			//Iterate throug sections of a module
 			if (sectionList != null)
@@ -1476,8 +1476,10 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 						}
 						catch(Exception ex)
 						{
-							logger.error("error in inserting section "+ ex.toString());
+							if (logger.isDebugEnabled()) {
+							logger.debug("error in inserting section "+ ex.toString());
 							ex.printStackTrace();
+							}
 							//rollback and delete section
 							try
 							{
@@ -1485,7 +1487,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 							}
 							catch (Exception ex2)
 							{
-								logger.error("Error in deleting section "+ex2.toString());
+								logger.debug("Error in deleting section "+ex2.toString());
 							}
 						}
 
@@ -1501,7 +1503,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					}
 					catch (Exception ex)
 					{
-						logger.error("error in updating module");
+						logger.debug("error in updating module");
 					}
 
 				}
