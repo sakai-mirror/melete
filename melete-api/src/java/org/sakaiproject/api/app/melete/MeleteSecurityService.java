@@ -65,6 +65,10 @@ public interface MeleteSecurityService{
 	 * @return true if the current user has permission to perform this action, false if not.
 	 */
 	boolean allowStudent()throws Exception;
+	
+	boolean allowAuthor(String reference)throws Exception;
+	
+	boolean allowStudent(String reference)throws Exception;
 
 	public boolean isSuperUser(String userId);
 
@@ -72,5 +76,5 @@ public interface MeleteSecurityService{
 
 	public void popAdvisor();
 
-        public MeleteImportService getMeleteImportService();
+
 }
