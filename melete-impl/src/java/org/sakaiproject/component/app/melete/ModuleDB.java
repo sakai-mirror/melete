@@ -2007,11 +2007,11 @@ public class ModuleDB implements Serializable {
 					// replace with new copied section
 					copyModSeqXml = copyModSeqXml.replace(toCopySection.getSectionId().toString(), copySectionId.toString());
 				}
-				// update module seq xml
-				copyMod.setSeqXml(copyModSeqXml);
-				updateModule(copyMod);
 			}
-
+				// update module seq xml
+				Module copyMod1 = getModule(copyMod.getModuleId());
+				copyMod1.setSeqXml(copyModSeqXml);
+				updateModule(copyMod1);
 		}
 		catch (Exception ex)
 		{
