@@ -109,26 +109,23 @@ public class SectionDB implements Serializable {
 			  tx = session.beginTransaction();
 			  session.save(section);
 
-			  if(!fromImport)
-			  {
-	//				 set xml structure for sequencing and placement of sections
-			  String sectionsSeqXML = module.getSeqXml();
-			  SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
-			  logger.debug("adding section id to the xmllist" + section.getSectionId().toString());
-			  SectionUtil.addSectiontoList(sectionsSeqXML, section.getSectionId().toString());
-			  sectionsSeqXML = SectionUtil.storeSubSections();
-
-			  Query query = session.createQuery("from Module mod where mod.moduleId=:moduleId");
-			  query.setParameter("moduleId", section.getModuleId());
-			   List secModules = query.list();
-		       if(secModules != null)
-		       {
-		     		Module secModule = (Module)secModules.get(0);
-		     		secModule.setSeqXml(sectionsSeqXML);
-			  		session.saveOrUpdate(secModule);
+			  if (!fromImport) {
+					Query query = session.createQuery("from Module mod where mod.moduleId=:moduleId");
+					query.setParameter("moduleId", module.getModuleId());
+					List secModules = query.list();
+					if (secModules != null) {
+						Module secModule = (Module) secModules.get(0);
+						// set xml structure for sequencing and placement of sections
+						String sectionsSeqXML = secModule.getSeqXml();
+						SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
+						logger.debug("adding section id to the xmllist"	+ section.getSectionId().toString());
+						SectionUtil.addSectiontoList(sectionsSeqXML, section.getSectionId().toString());
+						sectionsSeqXML = SectionUtil.storeSubSections();
+						secModule.setSeqXml(sectionsSeqXML);
+						session.saveOrUpdate(secModule);
+					} else
+						throw new MeleteException("add_section_fail");
 				}
-				else throw new MeleteException("add_section_fail");
-			  }
 
 			  tx.commit();
 
