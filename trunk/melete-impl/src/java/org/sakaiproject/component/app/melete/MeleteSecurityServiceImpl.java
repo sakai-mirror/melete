@@ -138,7 +138,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		boolean result = false;
 		try
 		{
-		  result = allowAuthor("/site/"+ref.getContext()) || allowStudent("/site/"+ref.getContext());
+		  result = allowAuthor(ref.getContext()) || allowStudent(ref.getContext());
 		}
 		catch (Exception e)
 		{
@@ -203,26 +203,19 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	/**
 	 * {@inheritDoc}
 	 */
-	private boolean allowAuthor(String reference)throws Exception {
+	public boolean allowAuthor(String reference)throws Exception {
 
       try {
-    	  if (reference != null)
-			return SecurityService.unlock(SECURE_AUTHOR, reference);
-    	  else
-    		  return SecurityService.unlock(SECURE_AUTHOR, getMeleteImportService().getDestinationContext());
-		} catch (Exception e) {
+			return SecurityService.unlock(SECURE_AUTHOR, getContextSiteId(reference));
+    	} catch (Exception e) {
 			throw new Exception(this.getClass().getName()+ " : allowAuthor(reference) : " + e.toString());
 		}
 	}
 
-	private boolean allowStudent(String reference)throws Exception{
+	public boolean allowStudent(String reference)throws Exception{
 
          try {
-        	if (reference != null)
-			  return SecurityService.unlock(SECURE_STUDENT, reference);
-            else
-       		  return SecurityService.unlock(SECURE_STUDENT, getMeleteImportService().getDestinationContext());
-
+			  return SecurityService.unlock(SECURE_STUDENT, getContextSiteId(reference));
 		} catch (Exception e) {
 			throw new Exception(this.getClass().getName()+ " : allowStudent(reference) : " + e.toString());
 		}
@@ -231,7 +224,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	public boolean allowAuthor()throws Exception {
 
 		try {
-			return SecurityService.unlock(SECURE_AUTHOR, getContextSiteId());
+			return SecurityService.unlock(SECURE_AUTHOR, getContextSiteId(ToolManager.getCurrentPlacement().getContext()));
 		} catch (Exception e) {
 			throw new Exception(this.getClass().getName()+ " : allowAuthor() : " + e.toString());
 		}
@@ -240,7 +233,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	public boolean allowStudent()throws Exception{
 
 		try {
-			return SecurityService.unlock(SECURE_STUDENT, getContextSiteId());
+			return SecurityService.unlock(SECURE_STUDENT, getContextSiteId(ToolManager.getCurrentPlacement().getContext()));
 		} catch (Exception e) {
 			throw new Exception(this.getClass().getName()+ " : allowStudent() : " + e.toString());
 		}
@@ -254,11 +247,8 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	/**
 	 * @return siteId
 	 */
-	private String getContextSiteId() {
-		if (ToolManager.getCurrentPlacement() != null)
-		  return ("/site/" + ToolManager.getCurrentPlacement().getContext());
-		else
-		  return ("/site/" + getMeleteImportService().getDestinationContext());
+	private String getContextSiteId(String reference) {
+		  return ("/site/" + reference);
 	}
 
 		/*******************************************************************************************************************************
