@@ -135,7 +135,7 @@
 							                    	<td colspan="2">		                    	
 														<h:panelGrid id="uploadSView1" columns="1" width="100%">	
 														<h:column>
-																			<f:subview id="ResourceListingForm" >	
+																			<f:subview id="LinkResourceListingForm" >	
 																					<jsp:include page="list_section_resources.jsp"/> 
 																</f:subview>		
 														</h:column>													

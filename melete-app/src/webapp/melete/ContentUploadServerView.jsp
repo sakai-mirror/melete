@@ -79,7 +79,7 @@ function fillupload()
 
 <body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onload="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
 
-<h:form id="ServerViewForm" enctype="multipart/form-data">	
+<h:form id="UploadServerViewForm" enctype="multipart/form-data">	
 
 <!-- This Begins the Main Text Area -->
 	   <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
@@ -146,7 +146,7 @@ function fillupload()
 						          			<tr valign="top">
 											<td colspan="2">												
 														<!-- resource listing begin-->											
-											 	<f:subview id="ResourceListingForm">	
+											 	<f:subview id="UploadResourceListingForm">	
 																	<jsp:include page="list_section_resources.jsp"/> 
 													</f:subview>											
 				<!-- resource listing end-->		
