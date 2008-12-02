@@ -237,7 +237,7 @@ public List<DisplayResources> getDisplayResourcesList()
 
 			logger.debug("from and to index and total size" + fromIndex + "," +toIndex +"," +allResourcesList.size());
 			displayResourcesList = null;
-			if(fromIndex > 0 && toIndex > fromIndex && toIndex < allResourcesList.size())
+			if(fromIndex >= 0 && toIndex > fromIndex && toIndex <= allResourcesList.size())
 			{
 				displayResourcesList = (List)allResourcesList.subList(fromIndex,toIndex);
 				logger.debug("displayResourcesList" + displayResourcesList.size());

@@ -1034,7 +1034,7 @@ public abstract class SectionPage implements Serializable {
 
 			logger.debug("from and to index and total size" + fromIndex + "," +toIndex +"," +currSiteResourcesList.size());
 			displayResourcesList = null;
-			if(fromIndex > 0 && toIndex > fromIndex && toIndex < currSiteResourcesList.size())
+			if(fromIndex >= 0 && toIndex > fromIndex && toIndex <= currSiteResourcesList.size())
 			{
 				displayResourcesList = (List)currSiteResourcesList.subList(fromIndex,toIndex);
 				logger.debug("displayResourcesList" + displayResourcesList.size());
