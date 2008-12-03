@@ -21,26 +21,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
-<!--  Copyright (c) 2008 Etudes, Inc. -->
- 
-<!--  Licensed under the Apache License, Version 2.0 (the "License"); -->
-<!--   you may not use this file except in compliance with the License.-->
-<!--   You may obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-  
-<!--   Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project -->
-  
-<!--   Licensed under the Apache License, Version 2.0 (the "License"); you -->
-<!--   may not use this file except in compliance with the License. You may -->
-<!--   obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-<!--  Unless required by applicable law or agreed to in writing, software -->
-<!--  distributed under the License is distributed on an "AS IS" BASIS, -->
-<!--  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or -->
-<!--  implied. See the License for the specific language governing -->
-<!--  permissions and limitations under the License. -->
+
 <html>
 <head>
 <meta http-equiv="Content-Language" content="en-us">
@@ -81,14 +62,12 @@ function contentChangeSubmit()
 <!--replace with new link part Begin -->
 					<table width="100%" border="0" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >
 					<tr><td colspan="2"> &nbsp; </td></tr>						
-					<tr><td height="20" colspan="2" class="maintabledata8"> <h:outputText id="Stext_add" value="#{msgs.editcontentlinkserverview_replace}" styleClass="bold"/> 									 
-					<tr><td height="20" colspan="2"> 
-						<h:outputText id="editlinkText_6" value="#{msgs.resources_proper_pan_URL}" /> <h:outputText value="*" styleClass="required"/>
-			 			<h:outputText id="editlinkText_7" value=" " styleClass="ExtraPaddingClass"/>
-			 			<h:outputText id="editlinkText_7_1" value=" " styleClass="ExtraPaddingClass"/>
-						<h:inputText id="link_title" value="#{editSectionPage.newURLTitle}" size="40" /> 	
-					</td></tr>	
-                                        <tr><td height="20" colspan="2">
+					<tr><td height="20" colspan="2" class="maintabledata8"> <h:outputText id="Stext_add" value="#{msgs.editcontentltiserverview_replace}" styleClass="bold"/> 									 
+					
+					<tr> <td height="20" colspan="2"><h:outputText id="format_text" value="#{msgs.editcontentltiserverview_format}"/>
+						<h:outputText id="addLTIformat2" value=" " styleClass="ExtraPaddingClass"/>
+						<h:outputText id="addLTIformat3" value=" " styleClass="ExtraPaddingClass"/>
+					 	<h:outputText id="addLTIformat4" value="   " styleClass="ExtraPaddingClass"/>
                                                 <h:inputHidden id="contentChange" value=""/>
                                                 <h:selectOneMenu id="LTIDisplay" value="#{editSectionPage.LTIDisplay}" 
                                                         valueChangeListener="#{editSectionPage.toggleLTIDisplay}" 
@@ -98,11 +77,7 @@ function contentChangeSubmit()
                                                 <f:selectItem itemValue="Advanced" itemLabel="#{msgs.addmodulesections_advanced_lti}"/>
                                                 </h:selectOneMenu>
 					</td></tr> 
-					<tr><td height="20" colspan="2"> 
-						<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{editSectionPage.section.openWindow}">
-						</h:selectBooleanCheckbox>
-						<h:outputText id="editlinkText_8" value="#{msgs.editcontentlinkserverview_openwindow}" />
-					</td></tr>
+					
                                                 <f:subview id="LTIBasic" rendered="#{editSectionPage.shouldLTIDisplayBasic}">
                                                         <jsp:include page="lti_basic_edit.jsp"/>
                                                 </f:subview>

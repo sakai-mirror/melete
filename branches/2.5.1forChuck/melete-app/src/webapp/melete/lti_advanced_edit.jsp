@@ -21,6 +21,22 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <f:verbatim>
+					<tr><td height="20" colspan="2"> 
+					</f:verbatim>
+						<h:outputText id="editLTITitle" value="#{msgs.addmodulesections_lti_title}" />
+                                                <f:verbatim>
+                                                        <span class="required">*</span>
+                                                </f:verbatim>
+						<h:outputText id="editLTItitle2" value=" " styleClass="ExtraPaddingClass"/>
+						<h:outputText id="editLTItitle3" value=" " styleClass="ExtraPaddingClass"/>
+						<h:inputText id="LTI_title" value="#{editSectionPage.newURLTitle}" size="40" /> 
+					<f:verbatim>
+					</td></tr>
+					<tr><td height="20" colspan="2"> 
+					</f:verbatim>
+						<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{editSectionPage.section.openWindow}" />												
+						<h:outputText id="editLTIText_8" value="#{msgs.editcontentlinkserverview_openwindow}" />
+<f:verbatim>
   <tr><td height="20" colspan="2"> 
 </f:verbatim>
 <h:outputText id="editLTIText_9" value="#{msgs.addmodulesections_lti_descriptor}" /><span class="required">*</span>
