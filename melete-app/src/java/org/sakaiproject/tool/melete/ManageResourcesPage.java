@@ -200,13 +200,18 @@ public List<DisplayResources> getAllResourcesList()
 				String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 				if (displayName.length() > 50) displayName = displayName.substring(0,50) + "...";
 				String rUrl = cr.getUrl().replaceAll(" ", "%20");
-				boolean rType = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LINK);				
+				boolean rType = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LINK);			
+				boolean rTypeLTI = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LTI);	
 				String rgif=  serverUrl + "/library/image/sakai/url.gif";
-				if(!rType)
+				if(!rType && !rTypeLTI)
 				{
 				String contentextension = cr.getContentType();
 		 		rgif = ContentTypeImageService.getContentTypeImage(contentextension);
 		 		rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
+				}
+				else if(rTypeLTI)
+				{					
+					rgif = "images/web_service.png";
 				}
 				allResourcesList.add(new DisplayResources(displayName, cr.getId(),rUrl,rType,rgif));
 			}
