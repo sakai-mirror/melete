@@ -1128,10 +1128,10 @@ public abstract class SectionPage implements Serializable {
 					allmembers = getMeleteCHService().getListofLinksFromCollection(uploadCollId);
 				}
 
-                                if(section.getContentType().equals("typeLTI") || section.getContentType().equals("typeExistLTI"))
-                                {
-                                        allmembers = getMeleteCHService().getListFromCollection(uploadCollId, getMeleteCHService().MIME_TYPE_LTI);
-                                }
+                if(section.getContentType().equals("typeLTI"))
+                {
+                        allmembers = getMeleteCHService().getListFromCollection(uploadCollId, getMeleteCHService().MIME_TYPE_LTI);
+                }
 
 			if(allmembers == null) return null;
 			Iterator<ContentResource> allmembers_iter = allmembers.iterator();
@@ -1149,6 +1149,10 @@ public abstract class SectionPage implements Serializable {
 				String contentextension = cr.getContentType();
 		 		rgif = ContentTypeImageService.getContentTypeImage(contentextension);
 		 		rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
+				}
+				if(section.getContentType().equals("typeLTI"))
+				{
+					rgif=  "images/web_service.png";
 				}
 				currSiteResourcesList.add(new DisplaySecResources(displayName, cr.getId(),rUrl, rgif));
 			}
