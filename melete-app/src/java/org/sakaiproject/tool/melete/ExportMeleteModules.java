@@ -396,8 +396,19 @@ public class ExportMeleteModules {
 			XMLHelper.parseFile(new File(newXmlFile));
 
 			title = Validator.escapeResourceName(title);
-			String outputfilename = packagedir.getParentFile().getAbsolutePath() + File.separator + title.replace(' ', '_') + "_scorm.zip";
-
+			String outputfilename = null;
+			if(modList.equals(selectList))
+			{
+			  outputfilename = packagedir.getParentFile()
+			.getAbsolutePath()
+			+ File.separator + title.replace(' ', '_') + "_allModules_scorm.zip";
+			}
+			else {
+				outputfilename = packagedir.getParentFile()
+				.getAbsolutePath()
+				+ File.separator + title.replace(' ', '_') + "_fewModules_scorm.zip";
+			}
+		
 			File zipfile = new File(outputfilename);
 			// create zip
 			createZip(packagedir, zipfile);
