@@ -117,11 +117,12 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	 **/
 	public String saveHere()
 	{
+System.out.println("SAVING....");
 		checkUploadExists();
 		setSuccess(false);
 		FacesContext context = FacesContext.getCurrentInstance();
 		Map sessionMap = context.getExternalContext().getSessionMap();
-        ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+        	ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 
         //validation 1:	   modality is required.
 	     if (!validateModality())
@@ -183,6 +184,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 					selResourceIdFromList = null;
 					if(section.getContentType().equals("typeEditor"))
 					{
+System.out.println("Add Resource II");
 						   String newResourceId = addResourceToMeleteCollection(uploadHomeDir,addCollId);
 						   meleteResource.setResourceId(newResourceId);
 					}
@@ -338,6 +340,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	  		{
             	   String addCollectionId = getMeleteCHService().getUploadCollectionId();
             	   String uploadHomeDir = ctx.getExternalContext().getInitParameter("uploadDir");
+System.out.println("Add Resource III");
             	   String newResourceId = addResourceToMeleteCollection(uploadHomeDir,addCollectionId);
 				   meleteResource.setResourceId(newResourceId);
 				   String rUrl = getMeleteCHService().getResourceUrl(newResourceId);
@@ -383,6 +386,8 @@ public class AddSectionPage extends SectionPage implements Serializable{
 				delResPage.setFromPage("ContentUploadServerView");
 			else if (section.getContentType().equals("typeLink"))
 				delResPage.setFromPage("ContentLinkServerView");
+			else if (section.getContentType().equals("typeLTI"))
+				delResPage.setFromPage("ContentLTIServerView");
 
 			delResPage.setResourceName(selectedDr.getResource_title());
 			delResPage.processDeletion(selectedDr.getResource_id(), courseId);
@@ -406,8 +411,20 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			return "ContentLinkServerView";
 	  }
 
+	  public String gotoServerLTIView()
+	  {
+System.out.println("gotoServerLTIView");
+			gotoServerLinkView();
+			setLTIUrl(null);
+			setLTIPassword(null);
+			// Do this after the first two
+			setLTIDescriptor(null);
+			return "ContentLTIServerView";
+	  }
+
 	  public String setServerUrl()
 	{
+System.out.println("setServerUrl");
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 		String errMsg = null;
@@ -433,12 +450,13 @@ public class AddSectionPage extends SectionPage implements Serializable{
 
 				secResourceName = newURLTitle;
 				String addCollectionId = getMeleteCHService().getUploadCollectionId();
+System.out.println("Add Resource I");
 				String newResourceId = addResourceToMeleteCollection(null, addCollectionId);
 				meleteResource.setResourceId(newResourceId);
 				currLinkUrl = getLinkUrl();
 				String rUrl = getMeleteCHService().getResourceUrl(newResourceId);
-	            String checkDup = rUrl.substring(rUrl.lastIndexOf("/")+1);
-	            if(!checkDup.equals(secResourceName))secResourceName = checkDup;
+				String checkDup = rUrl.substring(rUrl.lastIndexOf("/")+1);
+				if(!checkDup.equals(secResourceName))secResourceName = checkDup;
 			}
 			logger.debug("currlink value in setServer is" + currLinkUrl);
 			createLinkUrl();
@@ -464,6 +482,58 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			}
 			return "addmodulesections";
 		}
+
+	public String setServerLTI()
+	{
+System.out.println("setServerLTI");
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+		String errMsg = null;
+		logger.debug("set server url of add page");
+		try
+		{
+System.out.println("selResourceIdFromList="+selResourceIdFromList);
+			// new link provided
+			if (selResourceIdFromList == null)
+			{
+System.out.println("LTI Desc="+getLTIDescriptor());
+				if (getLTIDescriptor().equals("http://") || getLTIDescriptor().equals("https://"))
+				{
+					errMsg = bundle.getString("select_or_cancel");
+					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "select_or_cancel", errMsg));
+					return "ContentLTIServerView";
+				}
+
+                                if(newURLTitle == null || newURLTitle.length() == 0)
+                                {
+                                        errMsg = bundle.getString("URL_title_reqd");
+                                        ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "URL_title_reqd", errMsg));
+                                        return "editContentLTI";
+                                }
+
+				secResourceName = newURLTitle;
+				String addCollectionId = getMeleteCHService().getUploadCollectionId();
+				String newResourceId = addResourceToMeleteCollection(null, addCollectionId);
+				meleteResource.setResourceId(newResourceId);
+				currLinkUrl = getLTIDescriptor();
+			}
+			logger.debug("currlink value in setServer is" + currLinkUrl);
+			createLTIDescriptor();
+			ctx.renderResponse();
+		}
+		catch (Exception e)
+		{
+			logger.error("error in set server url for edit section content" + errMsg);
+			e.printStackTrace();
+			if (e.getMessage() != null)
+			{
+				errMsg = bundle.getString(e.getMessage());
+				ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), errMsg));
+			}
+			return "ContentLTIServerView";
+		}
+		return "addmodulesections";
+	}
 
 	  public void selectedResourceAction(ActionEvent evt) {
 	    	FacesContext ctx = FacesContext.getCurrentInstance();

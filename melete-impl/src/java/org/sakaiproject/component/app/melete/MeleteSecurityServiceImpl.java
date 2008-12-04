@@ -33,11 +33,13 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletOutputStream;
 
 import org.sakaiproject.api.app.melete.MeleteExportService;
 import org.sakaiproject.api.app.melete.MeleteSecurityService;
@@ -53,6 +55,8 @@ import org.dom4j.Namespace;
 import org.dom4j.QName;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.cover.SecurityService;
+import org.sakaiproject.content.api.ContentHostingService;
+import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.Entity;
 import org.sakaiproject.entity.api.EntityAccessOverloadException;
 import org.sakaiproject.entity.api.EntityCopyrightException;
@@ -74,6 +78,7 @@ import org.w3c.dom.Node;
 import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.util.Xml;
+import org.sakaiproject.simpleti.SakaiSimpleLTI;
 
 /*
  * MeleteSecurityService is the implementation of MeleteSecurityService
@@ -88,6 +93,8 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	private ModuleService moduleService;
 	private MeleteImportService meleteImportService;
 	private MeleteExportService meleteExportService;
+
+	public static final String MIME_TYPE_LTI="ims/simplelti";
 
 	// Note: security needs a proper Resource reference
 
@@ -301,6 +308,9 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 							.getReference());
 				}
 
+				boolean handled = false;
+				// Find the site we are coming from
+				String contextId = ref.getContext();
 				// isolate the ContentHosting reference
 				Reference contentHostingRef = EntityManager.newReference(ref.getId());
 
@@ -312,12 +322,43 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 					EntityProducer service = contentHostingRef.getEntityProducer();
 					if (service == null) throw new EntityNotDefinedException(ref.getReference());
 
-					// get the producer's HttpAccess helper, it might not support one
-					HttpAccess access = service.getHttpAccess();
-					if (access == null) throw new EntityNotDefinedException(ref.getReference());
-
-					// let the helper do the work
-					access.handleAccess(req, res, contentHostingRef, copyrightAcceptedRefs);
+					if ( service instanceof ContentHostingService )
+					{
+						ContentHostingService chService = (ContentHostingService) service;
+						try 
+						{ 
+							ContentResource content = chService.getResource(contentHostingRef.getId());
+							System.out.println("Type="+content.getContentType());
+							if ( MIME_TYPE_LTI.equals(content.getContentType()) )
+							{
+								byte [] bytes = content.getContent();
+								String str = new String(bytes);
+								System.out.println("content="+str);
+								Properties props = SakaiSimpleLTI.doLaunch(str, ref.getContext(), ref.getId());
+								System.out.println("Props="+props);
+								String htmltext = props.getProperty("htmltext");
+								if ( htmltext != null ) 
+								{
+									res.setContentType("text/html");
+									ServletOutputStream out = res.getOutputStream();
+									out.println(htmltext);
+									handled = true;
+								}
+							}
+						}
+						catch (Exception e) 
+						{
+							System.out.println("Exception e "+e.getMessage());
+						}
+					}
+					if ( !handled ) {
+						// get the producer's HttpAccess helper, it might not support one
+						HttpAccess access = service.getHttpAccess();
+						if (access == null) throw new EntityNotDefinedException(ref.getReference());
+	
+						// let the helper do the work
+						access.handleAccess(req, res, contentHostingRef, copyrightAcceptedRefs);
+					}
 				}
 				finally
 				{

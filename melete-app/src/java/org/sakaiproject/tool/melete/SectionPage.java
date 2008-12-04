@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- *
+ * $$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -57,6 +58,8 @@ import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
+
+import org.imsglobal.simplelti.SimpleLTIUtil;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -84,7 +87,8 @@ import org.sakaiproject.content.cover.ContentTypeImageService;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.tool.melete.ManageResourcesPage.DisplayResources;
-
+import org.sakaiproject.util.ResourceLoader;
+import javax.faces.model.SelectItem;
 /**
  * @author Rashmi
  *
@@ -114,9 +118,12 @@ public abstract class SectionPage implements Serializable {
 	//rendering flags
 	protected boolean shouldRenderEditor=false;
 	protected boolean shouldRenderLink=false;
+	protected boolean shouldRenderLTI=false;
 	protected boolean shouldRenderUpload=false;
 	protected boolean shouldRenderResources=false;
 	protected boolean shouldRenderNotype = false;
+
+	protected boolean shouldLTIDisplayAdvanced = false;
 
 	/** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(SectionPage.class);
@@ -137,6 +144,7 @@ public abstract class SectionPage implements Serializable {
 	  private RemoteFilesListingNav listNav;
 	  private boolean sortAscFlag;
 	  private String linkUrl;
+	  private String ltiDescriptor;
 	  private byte[] secContentData;
 	  protected String selResourceIdFromList;
 	  private String nullString = null;
@@ -148,8 +156,13 @@ public abstract class SectionPage implements Serializable {
 	  protected String FCK_CollId;
 
 	 protected String currLinkUrl;
+	 protected String currLTIDescriptor;
+	 protected String currLTIPassword;
+	 protected String currLTIUrl;
      protected String displayCurrLink;
      protected String newURLTitle;
+     protected String newLTIDescriptor;
+     protected ArrayList allContentTypes;
 
      protected String selectedResourceName;
 
@@ -174,6 +187,7 @@ public abstract class SectionPage implements Serializable {
             secResource = null;
             meleteResource = null;
             sortAscFlag = true;
+            allContentTypes = null;
             }
 
 
@@ -246,7 +260,6 @@ public abstract class SectionPage implements Serializable {
 
 //  get rendering flags
 
-
     public boolean getShouldRenderEditor()
     {
             if(this.section != null && this.section.getContentType() != null)
@@ -267,6 +280,15 @@ public abstract class SectionPage implements Serializable {
             return shouldRenderLink;
     }
 
+    public boolean getShouldRenderLTI()
+    {
+            shouldRenderLTI = false;
+            if(this.section != null && this.section.getContentType() != null)
+            {
+                    shouldRenderLTI = this.section.getContentType().equals("typeLTI");
+            }
+            return shouldRenderLTI;
+    }
 
     public boolean getShouldRenderUpload()
     {
@@ -492,6 +514,7 @@ public abstract class SectionPage implements Serializable {
             shouldRenderResources = contentTypeRadio.getValue().equals("typeExistUpload") ||
             							contentTypeRadio.getValue().equals("typeExistLink");
             shouldRenderNotype = contentTypeRadio.getValue().equals("notype");
+            shouldRenderLTI = contentTypeRadio.getValue().equals("typeLTI");
 
             selResourceIdFromList = null;
             secResourceName = null;
@@ -508,6 +531,11 @@ public abstract class SectionPage implements Serializable {
             if(contentTypeRadio.findComponent(getFormName()).findComponent("link") != null)
             	{
                    contentTypeRadio.findComponent(getFormName()).findComponent("link").setRendered(shouldRenderLink);
+            	}
+
+            if(contentTypeRadio.findComponent(getFormName()).findComponent("ContentLTIView") != null)
+            	{
+                   contentTypeRadio.findComponent(getFormName()).findComponent("ContentLTIView").setRendered(shouldRenderLTI);
             	}
 
             if(shouldRenderEditor)
@@ -539,7 +567,73 @@ public abstract class SectionPage implements Serializable {
             }
     }
 
+    /**
+     * @param event
+     * @throws AbortProcessingException
+     * Changes the LTI view from basic to advanced.
+     */
+    public void toggleLTIDisplay(ValueChangeEvent event)throws AbortProcessingException
+    {
+	// Nothing to do - because the setter handles it all
+    }
 
+    public String getLTIDisplay()
+    {
+	if ( shouldLTIDisplayAdvanced ) return "Advanced";
+	return "Basic";
+    }
+
+    public void setLTIDisplay(String newDisplay)
+    {
+	shouldLTIDisplayAdvanced = "Advanced".equals(newDisplay);
+    }
+
+    public String getLTIUrl()
+    {
+	return currLTIUrl;
+    }
+    public void setLTIUrl(String LTIUrl)
+    {
+	currLTIUrl = LTIUrl;
+	fixDescriptor();
+    }
+
+    public String getLTIPassword()
+    {
+	return currLTIPassword;
+    }
+    public void setLTIPassword(String LTIPassword)
+    {
+	currLTIPassword = LTIPassword;
+	fixDescriptor();
+    }
+
+    // Produce a basic descriptor from the URL and Password
+    private void fixDescriptor()
+    {
+         if ( currLTIUrl == null ) return;
+         String desc = 
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+		"<toolInstance xmlns=\"http://www.imsglobal.org/services/cc/imsti_ptdd_v1p0\" \n" +
+		"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> \n" + 
+		"  <melete-basic>true</melete-basic> \n" +
+		"  <launchurl>"+currLTIUrl+"</launchurl> \n" ;
+         if ( currLTIPassword != null && currLTIPassword.trim().length() > 0 ) {
+		desc = desc + "  <lti_secret>"+currLTIPassword+"</lti_secret> \n" ;
+         }
+	desc = desc + "</toolInstance>\n";
+	setLTIDescriptor(desc);
+    }
+
+    public boolean getShouldLTIDisplayAdvanced()
+    {
+	return shouldLTIDisplayAdvanced;
+    }
+
+    public boolean getShouldLTIDisplayBasic()
+    {
+	return ! shouldLTIDisplayAdvanced;
+    }
 
     /*
      * modality is required. check if one is selected or not
@@ -587,6 +681,17 @@ public abstract class SectionPage implements Serializable {
 	                    secContentData = new byte[linkUrl.length()];
 	                    secContentData = linkUrl.getBytes();
 	            }
+	            if(section.getContentType().equals("typeLTI"))
+		    {
+                            String pitch = getLTIDescriptor();
+			    if ( ! SimpleLTIUtil.validateDescriptor(ltiDescriptor) ) 
+			    {
+	    		     		throw new MeleteException("add_section_bad_lti");
+			    }
+	                    res_mime_type=getMeleteCHService().MIME_TYPE_LTI;
+	                    secContentData = new byte[ltiDescriptor.length()];
+	                    secContentData = ltiDescriptor.getBytes();
+		    }
 	            if(section.getContentType().equals("typeUpload"))
 	            {
 	                    res_mime_type = uploadSectionContent("file1");
@@ -637,7 +742,7 @@ public abstract class SectionPage implements Serializable {
             		getMeleteCHService().editResource(resourceId, contentEditor);
 	            }
 
-	            if(section.getContentType().equals("typeLink") || section.getContentType().equals("typeUpload"))
+	            if(section.getContentType().equals("typeLink") || section.getContentType().equals("typeUpload") || section.getContentType().equals("typeLTI"))
 	            {
 	                  getMeleteCHService().editResourceProperties(resourceId,secResourceName,secResourceDescription);
 	            }
@@ -702,10 +807,14 @@ public abstract class SectionPage implements Serializable {
     selResourceIdFromList = null;
     meleteResource = null;
     linkUrl = null;
+    ltiDescriptor = null;
     FCK_CollId = null;
     listNav = null;
     displayResourcesList = null;
     currLinkUrl = null;
+    currLTIDescriptor = null;
+    currLTIUrl = null;
+    currLTIPassword = null;
     displayCurrLink = null;
     FacesContext ctx = FacesContext.getCurrentInstance();
   	ValueBinding binding =  Util.getBinding("#{remoteBrowserFile}");
@@ -718,10 +827,11 @@ public abstract class SectionPage implements Serializable {
 
 	shouldRenderEditor=false;
 	shouldRenderLink=false;
+	shouldRenderLTI=false;
 	shouldRenderUpload=false;
 	shouldRenderResources=false;
 	shouldRenderNotype = false;
-
+	allContentTypes = null;
     if (logger.isDebugEnabled()) logger.debug("!!!!!!!!!reseting section values done !!!!!!!");
     }
 
@@ -731,6 +841,9 @@ public abstract class SectionPage implements Serializable {
 	public void resetMeleteResourceValues()
 	{
 		currLinkUrl = null;
+		currLTIDescriptor = null;
+		currLTIUrl = null;
+		currLTIPassword = null;
 		displayCurrLink = null;
 		secResourceName = null;
 		secResourceDescription = null;
@@ -834,6 +947,22 @@ public abstract class SectionPage implements Serializable {
             this.linkUrl = linkUrl;
     }
 
+    /**
+     * @return Returns the ltiDescriptor.
+     */
+    public String getLTIDescriptor() {
+            if(ltiDescriptor == null)ltiDescriptor ="";
+            return ltiDescriptor;
+    }
+    /**
+     * @param ltiDescriptor The ltiDescriptor to set.
+     * as from section table we will remove link,contentpath and uploadpath fields.
+     * This will get stored in resources.
+     */
+    public void setLTIDescriptor(String ltiDescriptor) {
+            this.ltiDescriptor = ltiDescriptor;
+    }
+
     /*
      * get material from the new provided link
      */
@@ -842,6 +971,16 @@ public abstract class SectionPage implements Serializable {
     	if (secResourceName == null || secResourceName.length() == 0) secResourceName = linkUrl;
  	   	secContentData = new byte[getLinkUrl().length()];
         secContentData = getLinkUrl().getBytes();
+    }
+
+    /*
+     * get material from the new provided Descriptor
+     */
+    public void createLTIDescriptor()
+    {
+    	if (secResourceName == null || secResourceName.length() == 0) secResourceName = "create name in createLTIDescriptor";
+	secContentData = new byte[getLTIDescriptor().length()];
+        secContentData = getLTIDescriptor().getBytes();
     }
 
     /*
@@ -994,6 +1133,11 @@ public abstract class SectionPage implements Serializable {
 					allmembers = getMeleteCHService().getListofLinksFromCollection(uploadCollId);
 				}
 
+                if(section.getContentType().equals("typeLTI"))
+                {
+                        allmembers = getMeleteCHService().getListFromCollection(uploadCollId, getMeleteCHService().MIME_TYPE_LTI);
+                }
+
 			if(allmembers == null) return null;
 			Iterator<ContentResource> allmembers_iter = allmembers.iterator();
 			String serverUrl = serverConfigurationService.getServerUrl();
@@ -1010,6 +1154,10 @@ public abstract class SectionPage implements Serializable {
 				String contentextension = cr.getContentType();
 		 		rgif = ContentTypeImageService.getContentTypeImage(contentextension);
 		 		rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
+				}
+				if(section.getContentType().equals("typeLTI"))
+				{
+					rgif=  "images/web_service.png";
 				}
 				currSiteResourcesList.add(new DisplaySecResources(displayName, cr.getId(),rUrl, rgif));
 			}
@@ -1248,10 +1396,24 @@ public abstract class SectionPage implements Serializable {
 
 	public String getDisplayCurrLink()
 	{
-		if (currLinkUrl != null && currLinkUrl.length() > 50)
-			displayCurrLink = currLinkUrl.substring(0, 50) + "...";
+	    String retval = currLinkUrl;
+
+		if (retval != null && retval.length() > 50)
+			displayCurrLink = retval.substring(0, 50) + "...";
 		else
-			displayCurrLink = currLinkUrl;
+			displayCurrLink = retval;
+
+		return displayCurrLink;
+	}
+
+	public String getDisplayCurrLTI()
+	{
+	    String retval = secResourceName;
+
+		if (retval != null && retval.length() > 50)
+			displayCurrLink = retval.substring(0, 50) + "...";
+		else
+			displayCurrLink = retval;
 
 		return displayCurrLink;
 	}
@@ -1265,6 +1427,24 @@ public abstract class SectionPage implements Serializable {
 		return currLinkUrl;
 	}
 
+	public String getCurrLTIUrl()
+	{
+		if ( meleteResource != null ) 
+		{
+			try 
+			{
+                		ContentResource cr = getMeleteCHService().getResource(meleteResource.getResourceId());
+                                String rUrl = cr.getUrl().replaceAll(" ", "%20");
+				return rUrl;
+			} 
+			catch (Exception e)
+			{
+				return "about:blank";
+			}
+		}
+		return "about:blank";
+	}
+
 	/**
 	 * @param currLinkUrl
 	 *        The currLinkUrl to set.
@@ -1272,6 +1452,24 @@ public abstract class SectionPage implements Serializable {
 	public void setCurrLinkUrl(String currLinkUrl)
 	{
 		this.currLinkUrl = currLinkUrl;
+	}
+
+	/**
+	 * @return Returns the currLTIDescriptor.
+	 */
+	public String getCurrLTIDescriptor()
+	{
+		if (!(getLTIDescriptor().equals("http://") || getLTIDescriptor().equals("https://"))) currLTIDescriptor = getLTIDescriptor();
+		return currLTIDescriptor;
+	}
+
+	/**
+	 * @param currLTIDescriptor
+	 *        The currLTIDescriptor to set.
+	 */
+	public void setCurrLTIDescriptor(String currLTIDescriptor)
+	{
+		this.currLTIDescriptor = currLTIDescriptor;
 	}
 
 	/**
@@ -1342,6 +1540,51 @@ public abstract class SectionPage implements Serializable {
 		this.newURLTitle = newURLTitle;
 	}
 
+	/**
+	 * @return the newLTIDescriptor
+	 */
+	public String getNewLTIDescriptor()
+	{
+		return this.newLTIDescriptor;
+	}
+
+	/**
+	 * @return the newLTIDescriptor to set
+	 */
+	public void setNewLTIDescriptor(String newLTIDescriptor)
+	{
+		this.newLTIDescriptor = newLTIDescriptor;
+	}
+
+	public List getAllContentTypes() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader(
+				"org.sakaiproject.tool.melete.bundle.Messages");
+		if (allContentTypes == null) {
+			Map sessionMap = context.getExternalContext().getSessionMap();
+			String userId = (String) sessionMap.get("userId");
+
+			ValueBinding binding = Util.getBinding("#{authorPreferences}");
+			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
+			boolean userLTIChoice = preferencePage.getUserLTIChoice(userId);
+
+			allContentTypes = new ArrayList<SelectItem>(0);
+			String notypemsg = bundle.getString("addmodulesections_choose_one");
+			allContentTypes.add(new SelectItem("notype", notypemsg));
+			String typeEditormsg = bundle.getString("addmodulesections_compose");
+			allContentTypes.add(new SelectItem("typeEditor", typeEditormsg));
+			String typeUploadmsg = bundle.getString("addmodulesections_upload_local");
+			allContentTypes.add(new SelectItem("typeUpload", typeUploadmsg));
+			String typeLinkmsg = bundle.getString("addmodulesections_link_url");
+			allContentTypes.add(new SelectItem("typeLink", typeLinkmsg));
+			if (userLTIChoice) {
+				String typeLTImsg = bundle.getString("addmodulesections_lti");
+				allContentTypes.add(new SelectItem("typeLTI", typeLTImsg));
+			}
+		}
+		return allContentTypes;
+	}
+	
 	/*
 	 *
 	 * inner class to set required content resource values for display

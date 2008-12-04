@@ -193,6 +193,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
      */
     public String deleteAction()
     {
+System.out.println("deleteAction");
           if(moduleService == null)
         	moduleService = getModuleService();
         FacesContext context = FacesContext.getCurrentInstance();
@@ -209,6 +210,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			}
 			if (getSectionSelected() == true)
 			{
+			   System.out.println("sectionService.deleteSections(this.sectionBeans,getCourseId(), getUserId());");
 			   sectionService.deleteSections(this.sectionBeans,getCourseId(), getUserId());
 			}
 		}
@@ -234,6 +236,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
      */
     public String reConfirmedDeleteAction()
     {
+System.out.println("reConfirmedDeleteAction");
           if(moduleService == null)
         	moduleService = getModuleService();
         FacesContext context = FacesContext.getCurrentInstance();

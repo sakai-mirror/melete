@@ -1,6 +1,6 @@
 /**********************************************************************************
  *
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/java/org/sakaiproject/tool/melete/MoveSectionsPage.java,v 1.5 2007/11/07 00:54:16 rashmim Exp $
+ * $URL$
  *
  ***********************************************************************************
  * Copyright (c) 2008 Etudes, Inc.

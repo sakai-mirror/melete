@@ -1,6 +1,6 @@
 /**********************************************************************************
  *
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/java/org/sakaiproject/tool/melete/DeleteResourcePage.java,v 1.10 2007/06/27 16:28:53 rashmim Exp $
+ * $URL$
  *
  ***********************************************************************************
  *
@@ -129,7 +129,8 @@ public class DeleteResourcePage implements Serializable{
   			{
   				ValueBinding binding = Util.getBinding("#{addSectionPage}");
   				AddSectionPage addPage = (AddSectionPage) binding.getValue(context);
-  				if(addPage.meleteResource.getResourceId().equals(delResourceId))
+  				if(addPage.meleteResource == null || addPage.meleteResource.getResourceId() == null 
+					|| delResourceId.equals(addPage.meleteResource.getResourceId()))
   				{
   					addPage.resetMeleteResourceValues();
   					addPage.meleteResource = null;

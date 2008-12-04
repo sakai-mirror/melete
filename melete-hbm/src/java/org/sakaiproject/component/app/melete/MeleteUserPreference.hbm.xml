@@ -32,7 +32,8 @@
        		<!--  column name="USER_ID" index="USER_ID_IDX" /-->
        </property>			 
        <property name="editorChoice" column="EDITOR_CHOICE" type="string" />	
-       <property name="viewExpChoice" column="EXP_CHOICE" type="boolean"/>       
+       <property name="viewExpChoice" column="EXP_CHOICE" type="boolean"/>
+        <property name="showLTIChoice" column="LTI_CHOICE" type="boolean"/>        
 	 </class>
 	 <database-object>
 		<create>create index USER_ID_IDX on melete_user_preference(USER_ID)</create>		

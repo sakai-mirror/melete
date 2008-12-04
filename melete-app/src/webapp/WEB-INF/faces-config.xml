@@ -523,6 +523,10 @@
       <from-outcome>ContentLinkServerView</from-outcome>
       <to-view-id>/melete/ContentLinkServerView.jsp</to-view-id>     
     </navigation-case>
+    <navigation-case>
+      <from-outcome>ContentLTIServerView</from-outcome>
+      <to-view-id>/melete/ContentLTIServerView.jsp</to-view-id>     
+    </navigation-case>
         <navigation-case>
       <from-outcome>addmodulesections</from-outcome>
       <to-view-id>/melete/addmodulesections.jsp</to-view-id>
@@ -655,6 +659,24 @@
       <redirect/>
     </navigation-case>    
     </navigation-rule> 
+
+ <navigation-rule>
+    <from-view-id>/melete/ContentLTIServerView.jsp</from-view-id>
+     <navigation-case>
+      <from-outcome>addmodulesections</from-outcome>
+      <to-view-id>/melete/addmodulesections.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>    
+    <navigation-case>
+      <from-outcome>ContentLTIServerView</from-outcome>
+      <to-view-id>/melete/ContentLTIServerView.jsp</to-view-id>
+    </navigation-case> 
+    <navigation-case>
+      <from-outcome>delete_resource</from-outcome>
+      <to-view-id>/melete/delete_resource.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>    
+    </navigation-rule> 
   
 <!--edit section -->
    <navigation-rule>
@@ -672,6 +694,10 @@
     <navigation-case>
       <from-outcome>editContentLinkServerView</from-outcome>
       <to-view-id>/melete/editContentLinkServerView.jsp</to-view-id>      
+    </navigation-case>     
+    <navigation-case>
+      <from-outcome>editContentLTIServerView</from-outcome>
+      <to-view-id>/melete/editContentLTIServerView.jsp</to-view-id>      
     </navigation-case>     
     <navigation-case>
       <from-outcome>editpreview</from-outcome>
@@ -747,6 +773,25 @@
       <to-view-id>/melete/editContentLinkServerView.jsp</to-view-id>
     </navigation-case>    
     </navigation-rule>     
+
+  <navigation-rule>
+    <from-view-id>/melete/editContentLTIServerView.jsp</from-view-id>
+      <navigation-case>
+      <from-outcome>delete_resource</from-outcome>
+      <to-view-id>/melete/delete_resource.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+     <navigation-case>
+      <from-outcome>editmodulesections</from-outcome>
+      <to-view-id>/melete/editmodulesections.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
+    <navigation-case>
+      <from-outcome>editContentLTIServerView</from-outcome>
+      <to-view-id>/melete/editContentLTIServerView.jsp</to-view-id>
+    </navigation-case>
+    </navigation-rule>
+
     
     <navigation-rule>
     <from-view-id>/melete/delete_resource.jsp</from-view-id>         
@@ -760,6 +805,11 @@
       <to-view-id>/melete/editContentLinkServerView.jsp</to-view-id>
       <redirect/>
     </navigation-case>
+    <navigation-case>
+      <from-outcome>editContentLTIServerView</from-outcome>
+      <to-view-id>/melete/editContentLTIServerView.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
      <navigation-case>
       <from-outcome>ContentUploadServerView</from-outcome>
       <to-view-id>/melete/ContentUploadServerView.jsp</to-view-id>
@@ -767,6 +817,10 @@
     <navigation-case>
       <from-outcome>ContentLinkServerView</from-outcome>
       <to-view-id>/melete/ContentLinkServerView.jsp</to-view-id>
+    </navigation-case>   
+    <navigation-case>
+      <from-outcome>ContentLTIServerView</from-outcome>
+      <to-view-id>/melete/ContentLTIServerView.jsp</to-view-id>
     </navigation-case>   
     <navigation-case>
       <from-outcome>manage_content</from-outcome>

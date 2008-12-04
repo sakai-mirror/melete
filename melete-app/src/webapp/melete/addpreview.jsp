@@ -56,14 +56,14 @@
                 <h:inputHidden id="contentType" value="#{addSectionPage.section.contentType}"/>
 			     <h:outputText id="typeEditorContents" value="#{addSectionPage.previewContentData}" escape="false"  rendered="#{addSectionPage.shouldRenderEditor}"></h:outputText>		
                 <br>
-	            <h:outputLink id="viewSectionLink"  value="#{addSectionPage.previewContentData}" target="_blank" rendered="#{(addSectionPage.shouldRenderLink || addSectionPage.shouldRenderUpload) && addSectionPage.section.openWindow == true}">
+	            <h:outputLink id="viewSectionLink"  value="#{addSectionPage.previewContentData}" target="_blank" rendered="#{(addSectionPage.shouldRenderLink || addSectionPage.shouldRenderUpload || addSectionPage.shouldRenderLTI) && addSectionPage.section.openWindow == true}">
                 <h:outputText id="sectitleLink" 
                            value="#{addSectionPage.secResourceName}">
                 </h:outputText>
                 </h:outputLink>		
                 
                  <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{addSectionPage.previewContentData}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
-                 border=\"0\" frameborder= \"0\"></iframe>" rendered="#{(addSectionPage.shouldRenderUpload || addSectionPage.shouldRenderLink) && addSectionPage.section.openWindow == false}" escape="false" />
+                 border=\"0\" frameborder= \"0\"></iframe>" rendered="#{(addSectionPage.shouldRenderUpload || addSectionPage.shouldRenderLink || addSectionPage.shouldRenderLTI) && addSectionPage.section.openWindow == false}" escape="false" />
 	             
 	          
 				</td></tr>

@@ -251,24 +251,22 @@ window.open('editpreviewEditor.jsf');
                                  	  <td> 
 										<h:inputHidden id="contentType"  value="#{editSectionPage.section.contentType}"  />	  								  	
 										  <h:selectOneMenu id="contentType1" value="#{editSectionPage.section.contentType}" valueChangeListener="#{editSectionPage.showHideContent}" onchange="this.form.submit();"  tabindex="6" rendered="#{editSectionPage.shouldRenderContentTypeSelect}">
-												<f:selectItem itemValue="notype" itemLabel="#{msgs.editmodulesections_choose_one}"/>	
-											    <f:selectItem itemValue="typeEditor" itemLabel="#{msgs.editmodulesections_compose}"/>	
-												<f:selectItem itemValue="typeUpload"  itemLabel="#{msgs.editmodulesections_upload_local}"/> 
-												<f:selectItem itemValue="typeLink"   itemLabel="#{msgs.editmodulesections_link_url}"/>												
-											 </h:selectOneMenu>
+											<f:selectItems value="#{editSectionPage.allContentTypes}" />											
+										 </h:selectOneMenu>
 											 </td>
 											 </tr>
-									<tr> 
-										 <td colspan="2" >											
+									<tr><td colspan="2" >
 										 <f:subview id="ContentLinkView" rendered="#{editSectionPage.shouldRenderLink}">
-												<jsp:include page="editContentLinkView.jsp"/> 
-											</f:subview>											
-											  <f:subview id="ContentUploadView" rendered="#{editSectionPage.shouldRenderUpload}">
-												<jsp:include page="editContentUploadView.jsp"/> 
-											</f:subview>	
-											
-														</td></tr>	
-												<tr> 
+											<jsp:include page="editContentLinkView.jsp"/> 
+										</f:subview>
+										 <f:subview id="ContentLTIView" rendered="#{editSectionPage.shouldRenderLTI}">
+											<jsp:include page="editContentLTIView.jsp"/> 
+										</f:subview>
+										<f:subview id="ContentUploadView" rendered="#{editSectionPage.shouldRenderUpload}">
+											<jsp:include page="editContentUploadView.jsp"/> 
+										</f:subview>	
+									</td></tr>	
+									<tr> 
 										 <td colspan="2" align="center"> 										
 											 <f:subview id="contentEditorView" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
 												<jsp:include page="contentSferyxEditor.jsp"/> 

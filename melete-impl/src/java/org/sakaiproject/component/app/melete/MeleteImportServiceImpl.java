@@ -1095,13 +1095,32 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				}
 				melResourceName = urlTitle;
 			}
-           	else
+			else
            		{
-					// uploaded file
-					section.setContentType("typeUpload");
-					melResourceName = hrefVal.substring(hrefVal.lastIndexOf("/") + 1);
-
+				// uploaded file
+				boolean contentSet = false;
+				melResourceName = hrefVal.substring(hrefVal.lastIndexOf("/") + 1);
+				// Check if this is coming in from IMS Import
+				if (resElements != null)
+				{
+                			//Load up the resource to look at it
+					String contentEditor = new String(meleteUtil.readFromFile(new File(unZippedDirPath + File.separator + hrefVal)));
+					if ( isLTIDocument(contentEditor) ) {
+						section.setContentType("typeLTI");
+						contentSet = true;
+					}
+					String urlTitle = null;
+					for(int i=0; i < resElements.size(); i++)
+					{
+						Element urlTitleElement = (Element)resElements.get(i);
+						if(urlTitleElement.getQualifiedName().equalsIgnoreCase("imsmd:title")){
+							urlTitle = urlTitleElement.selectSingleNode( ".//imsmd:langstring").getText();
+						}
+					}
+					if ( urlTitle != null ) melResourceName = urlTitle;
 				}
+				if ( ! contentSet ) section.setContentType("typeUpload");
+			}
 
 			// read resource description
 			if (resElements != null)
@@ -1117,8 +1136,8 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				}
 			}
 			 // Everything here is going to uploads collection
-			  try{
-//			  check if the item has already been imported to this site (in uploads collection)
+			try{
+				// check if the item has already been imported to this site (in uploads collection)
 		 		String checkResourceId = "/private/meleteDocs/"+courseId+"/uploads/"+melResourceName;
 		 		getMeleteCHService().checkResource(checkResourceId);
 		 		meleteResource.setResourceId(checkResourceId);
@@ -1175,10 +1194,17 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				          melContentData = hrefVal.getBytes();
 					  	}
 					}
-					if (section.getContentType().equals("typeUpload"))
+					if (section.getContentType().equals("typeUpload") || section.getContentType().equals("typeLTI"))
 					{
-					  res_mime_type = melResourceName.substring(melResourceName.lastIndexOf(".")+1);
-					  res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
+					  if ( section.getContentType().equals("typeLTI") )
+					  {
+					  	res_mime_type = getMeleteCHService().MIME_TYPE_LTI;
+					  }
+					  else
+					  {
+					  	res_mime_type = melResourceName.substring(melResourceName.lastIndexOf(".")+1);
+					  	res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
+					  }
 			 		  if (resElements != null)
 			 		  {
 			 			melContentData = meleteUtil.readFromFile(new File(unZippedDirPath + File.separator+ hrefVal));
@@ -1189,9 +1215,13 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			 			logger.debug("reading resource properties in import from site");
 			 			ContentResource cr = getMeleteCHService().getResource(hrefVal);
 						melContentData = cr.getContent();
+				  		res_mime_type = cr.getContentType();
+						if ( getMeleteCHService().MIME_TYPE_LTI.equals(res_mime_type) ) {
+							section.setContentType("typeLTI");
+						}
 			 		  }
 					}
-			 		logger.debug("add resource again for" + melResourceName);
+			 		logger.debug("add resource type="+res_mime_type+" name=" + melResourceName);
 			 		ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,melResourceName,melResourceDescription);
 			 		newResourceId = getMeleteCHService().addResourceItem(melResourceName, res_mime_type,uploadCollId,melContentData,res );
 			 		meleteResource.setResourceId(newResourceId);
@@ -1200,6 +1230,12 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 		if (logger.isDebugEnabled())
 			logger.debug("Exiting createSection...");
+	}
+
+	private boolean isLTIDocument(String content)
+	{
+		return ( content != null && content.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+                         && content.indexOf("<toolInstance") > 0 && content.indexOf("</toolInstance>") > 0 ) ;
 	}
 
 	/* @param document document

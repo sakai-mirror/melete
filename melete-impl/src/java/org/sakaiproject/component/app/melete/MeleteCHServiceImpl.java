@@ -406,7 +406,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 			 		if (ce.isResource())
 			 		{
 			 		String contentextension = ((ContentResource)ce).getContentType();
-			 		if(contentextension.equals(MIME_TYPE_LINK) )
+			 		if(contentextension.equals(MIME_TYPE_LINK) || contentextension.equals(MIME_TYPE_EDITOR) ||
+						contentextension.equals(MIME_TYPE_LTI)	)
 			 		{
 			 			 memIt.remove();
 			 		}
@@ -473,6 +474,50 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 			return null;
 		 }
 
+	// TODO: Remove getListofLinksFromCollection
+	public List getListFromCollection(String collId, String mimeType)
+	{
+	 	try
+		{
+	        	if (!isUserAuthor())
+        		{
+	        		logger.info("User is not authorized to access meleteDocs collection");
+        		}
+	   			//          setup a security advisor
+        		meleteSecurityService.pushAdvisor();
+        	 	ContentCollection c= getContentservice().getCollection(collId);
+		 	List	mem = c.getMemberResources();
+		 	if (mem == null) return null;
+
+		 	ListIterator memIt = mem.listIterator();
+		 	while(memIt !=null && memIt.hasNext())
+		 	{
+		 		ContentEntity ce = (ContentEntity)memIt.next();
+		 		if (ce.isResource())
+		 		{
+			 		String contentextension = ((ContentResource)ce).getContentType();
+			 		if(!contentextension.equals(mimeType)) memIt.remove();
+		 		}
+				else
+				{
+					memIt.remove();
+				}
+		 	}
+
+			return mem;
+		}
+		catch(Exception e)
+		{
+			logger.error(e.toString());
+		}
+		finally
+		{
+			// clear the security advisor
+			meleteSecurityService.popAdvisor();
+		}
+		return null;
+	 }
+
 	 public List getListofMediaFromCollection(String collId)
 	 {
 		 	try
@@ -495,6 +540,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				 		if (ce.isResource())
 				 		{
 				 		String contentextension = ((ContentResource)ce).getContentType();
+				 		if(contentextension.equals(MIME_TYPE_EDITOR))
+				 			 memIt.remove();
 				 		}else  memIt.remove();
 				 	}
 
