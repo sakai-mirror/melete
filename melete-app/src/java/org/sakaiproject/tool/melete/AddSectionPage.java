@@ -413,6 +413,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			gotoServerLinkView();
 			setLTIUrl(null);
 			setLTIPassword(null);
+			setLTIDisplay("Basic");
 			// Do this after the first two
 			setLTIDescriptor(null);
 			return "ContentLTIServerView";

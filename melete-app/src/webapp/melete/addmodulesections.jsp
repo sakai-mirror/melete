@@ -246,7 +246,6 @@ function contentChangeSubmit()
 				                           				<f:subview id="ContentUploadView" rendered="#{addSectionPage.shouldRenderUpload}">
 												<jsp:include page="ContentUploadView.jsp"/> 
 											</f:subview>
-											<!--add LTI option by Dr.Chuck -->
 											 <f:subview id="ContentLTIView" rendered="#{addSectionPage.shouldRenderLTI}">
 												<jsp:include page="ContentLTIView.jsp"/> 
 											</f:subview>	
