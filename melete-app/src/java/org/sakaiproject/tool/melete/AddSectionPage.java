@@ -117,7 +117,6 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	 **/
 	public String saveHere()
 	{
-System.out.println("SAVING....");
 		checkUploadExists();
 		setSuccess(false);
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -184,7 +183,6 @@ System.out.println("SAVING....");
 					selResourceIdFromList = null;
 					if(section.getContentType().equals("typeEditor"))
 					{
-System.out.println("Add Resource II");
 						   String newResourceId = addResourceToMeleteCollection(uploadHomeDir,addCollId);
 						   meleteResource.setResourceId(newResourceId);
 					}
@@ -340,7 +338,6 @@ System.out.println("Add Resource II");
 	  		{
             	   String addCollectionId = getMeleteCHService().getUploadCollectionId();
             	   String uploadHomeDir = ctx.getExternalContext().getInitParameter("uploadDir");
-System.out.println("Add Resource III");
             	   String newResourceId = addResourceToMeleteCollection(uploadHomeDir,addCollectionId);
 				   meleteResource.setResourceId(newResourceId);
 				   String rUrl = getMeleteCHService().getResourceUrl(newResourceId);
@@ -413,7 +410,6 @@ System.out.println("Add Resource III");
 
 	  public String gotoServerLTIView()
 	  {
-System.out.println("gotoServerLTIView");
 			gotoServerLinkView();
 			setLTIUrl(null);
 			setLTIPassword(null);
@@ -424,7 +420,6 @@ System.out.println("gotoServerLTIView");
 
 	  public String setServerUrl()
 	{
-System.out.println("setServerUrl");
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 		String errMsg = null;
@@ -450,7 +445,6 @@ System.out.println("setServerUrl");
 
 				secResourceName = newURLTitle;
 				String addCollectionId = getMeleteCHService().getUploadCollectionId();
-System.out.println("Add Resource I");
 				String newResourceId = addResourceToMeleteCollection(null, addCollectionId);
 				meleteResource.setResourceId(newResourceId);
 				currLinkUrl = getLinkUrl();
@@ -485,18 +479,15 @@ System.out.println("Add Resource I");
 
 	public String setServerLTI()
 	{
-System.out.println("setServerLTI");
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 		String errMsg = null;
 		logger.debug("set server url of add page");
 		try
 		{
-System.out.println("selResourceIdFromList="+selResourceIdFromList);
 			// new link provided
 			if (selResourceIdFromList == null)
 			{
-System.out.println("LTI Desc="+getLTIDescriptor());
 				if (getLTIDescriptor().equals("http://") || getLTIDescriptor().equals("https://"))
 				{
 					errMsg = bundle.getString("select_or_cancel");

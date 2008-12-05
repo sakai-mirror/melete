@@ -1028,7 +1028,7 @@ public class XMLMap {
 
 		// Test the parsing of a Basic string Map
 		Map<String, String> tm = XMLMap.getMap(simpleText);
-		System.out.println("tm="+tm);
+		// System.out.println("tm="+tm);
 		
 		// Test the production of a basic map
 		Map<String,String> simpleMap = new TreeMap<String,String>();

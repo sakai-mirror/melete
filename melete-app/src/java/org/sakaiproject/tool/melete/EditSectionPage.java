@@ -724,7 +724,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 	public String gotoServerLTIView()
 	{
-System.out.println("gotoServerLTIView");
 		gotoServerLinkView();
 		setLTIDescriptor(null);
 		return "editContentLTIServerView";
@@ -809,7 +808,6 @@ System.out.println("gotoServerLTIView");
 
 	public String setServerLTI()
 	{
-System.out.println("setServerLTI in edit "+selResourceIdFromList);
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
 		String errMsg = null;

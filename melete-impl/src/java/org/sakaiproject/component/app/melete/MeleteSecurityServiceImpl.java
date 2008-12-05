@@ -328,14 +328,11 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 						try 
 						{ 
 							ContentResource content = chService.getResource(contentHostingRef.getId());
-							System.out.println("Type="+content.getContentType());
 							if ( MIME_TYPE_LTI.equals(content.getContentType()) )
 							{
 								byte [] bytes = content.getContent();
 								String str = new String(bytes);
-								System.out.println("content="+str);
 								Properties props = SakaiSimpleLTI.doLaunch(str, ref.getContext(), ref.getId());
-								System.out.println("Props="+props);
 								String htmltext = props.getProperty("htmltext");
 								if ( htmltext != null ) 
 								{

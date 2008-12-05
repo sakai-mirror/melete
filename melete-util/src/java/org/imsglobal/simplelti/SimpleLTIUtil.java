@@ -90,7 +90,7 @@ public class SimpleLTIUtil {
 */
 
     /** To turn on really verbose debugging */
-    private static boolean verbosePrint = true;
+    private static boolean verbosePrint = false;
 
     // Simple Debug Print Mechanism
     public static void dPrint(String str)
@@ -442,7 +442,6 @@ public class SimpleLTIUtil {
                                         String lti2FrameHeight)
     {
 
-System.out.println("pro="+retProp);
         // launchurl=http://www.youtube.com/v/f90ysF9BenI, status=success, type=iFrame
 
         String status = retProp.getProperty("status");
@@ -452,7 +451,6 @@ System.out.println("pro="+retProp);
                 return;
         }
         String theType = retProp.getProperty("type");
-System.out.println("theType="+theType);
         // Check to see if we got a POST
         String htmltext = null;
         if ( "iframe".equalsIgnoreCase(theType) )
@@ -476,7 +474,6 @@ System.out.println("theType="+theType);
         else if ( "widget".equalsIgnoreCase(theType) )
         {
                 htmltext = retProp.getProperty("launchwidget");
-System.out.println("widget htext="+htmltext);
                 retProp.setProperty("htmltext",htmltext);
         }
         else  // Post or otherwise

@@ -46,7 +46,7 @@ import org.sakaiproject.entity.api.Reference;
  */
 public class SakaiSimpleLTI {
 
-    public static final boolean verbosePrint = true;
+    public static final boolean verbosePrint = false;
 
     public static void dPrint(String str)
     {
@@ -210,7 +210,7 @@ public class SakaiSimpleLTI {
 	dPrint(" Calling doLaunch newMap = "+newMap);
 	// Do the non-Sakai bits of Launch
 	Properties pro = SimpleLTIUtil.doLaunch(lti2EndPoint, newMap);
-System.out.println("pro="+pro);
+	dPrint("pro="+pro);
 
 	// Add the HTML text to the properties
 	SimpleLTIUtil.generateHtmlText(pro, newMap, lti2FrameHeight);
