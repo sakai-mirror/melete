@@ -255,7 +255,6 @@ public List getModuleDateBeans(String userId, String courseId) {
   }
 
   public List getModules(String courseId) {
-  	logger.info("Coming to ModuleServiceImpl: getModules");
   	try {
   		modules = moduledb.getModules(courseId);
   	}catch (HibernateException e)
@@ -547,7 +546,6 @@ public void restoreModules(List modules) throws Exception
 	    	    	    	dbConnection.setAutoCommit(true);
 	    	    	    	stmt = dbConnection.createStatement();
 	    	    	    	int insRes = stmt.executeUpdate(sql);
-	    	    	    	logger.info("New installation - MELETE_MIGRATE_STATUS was inserted into "+insRes);
 	    	    	    	stmt.close();
 	    	    		}
 	    	    	}
@@ -661,7 +659,6 @@ public void restoreModules(List modules) throws Exception
 	    		}
 	    		if ((start_flag == 1)&&(complete_flag == 1))
 	    		{
-	    			logger.info("migrateMeleteDocs - The migrate process has completed");
 	    			return MIGRATE_COMPLETE;
 	    		}
 	    		if (!((start_flag == 0)&&(complete_flag ==0)))
