@@ -351,7 +351,10 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			{
 			logger.debug("error in set server file for add section content" + e.toString());
 			//e.printStackTrace();
-			String errMsg = bundle.getString(e.getMessage());
+			String errMsg;
+			try{
+				 errMsg = bundle.getString(e.getMessage());
+			} catch(Exception ex){errMsg = bundle.getString("exist_upload_fail");}
      		ctx.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"",errMsg));
 			return "ContentUploadServerView";
 			}
