@@ -219,7 +219,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			selResourceIdFromList = ((DisplaySecResources) currSiteResourcesList.get(selResIndex)).getResource_id();
 		}
 
-		logger.info("selected resource id by user in editsectionPage is " + selResourceIdFromList);
+		logger.debug("selected resource id by user in editsectionPage is " + selResourceIdFromList);
 
 		// populate properties panel with the selected resource
 		try
@@ -487,13 +487,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 				else
 				{
 					this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
-					return "editpreview";
 				}
 			}
 			else
 			{
 				this.previewContentData = null;
-				return "editpreview";
 			}
 		}
 
@@ -501,7 +499,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		{
 			logger.error(e.toString());
 		}
-		return "#";
+		return "editpreview";
 
 	}
 
