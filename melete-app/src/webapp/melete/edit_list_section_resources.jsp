@@ -86,6 +86,8 @@
 					 <h:graphicImage id="delgif" alt="" value="images/delete.gif" styleClass="AuthImgClass" />
 					 <h:outputText id="emp_space-2" value=" " />
 					 <h:commandLink id="deleteaction" actionListener="#{editSectionPage.selectedResourceDeleteAction}"  action="#{editSectionPage.redirectDeleteLink}" immediate="true" >
+				    		 <f:param name="linkactionParam1" value="#{curr_resources.resource_id}" />
+				    		<f:param name="linkactionParam2" value="#{curr_resources.resource_title}" />
 				    		 <h:outputText id="deltext" value="#{msgs.edit_list_resources_del}"  />
 					 </h:commandLink>	
 				    </h:column>

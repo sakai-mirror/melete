@@ -257,10 +257,13 @@ public class EditSectionPage extends SectionPage implements Serializable
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map sessionMap = ctx.getExternalContext().getSessionMap();
 		String courseId = (String)sessionMap.get("courseId");
-		UIViewRoot root = ctx.getViewRoot();
-		UIData table = (UIData) root.findComponent("ServerViewForm:ResourceListingForm").findComponent("table");
-		DisplaySecResources selectedDr = (DisplaySecResources) table.getRowData();
-		logger.debug("selected row to delete " + selectedDr.getResource_id());
+
+		UICommand cmdLink = (UICommand)evt.getComponent();
+
+		List cList = cmdLink.getChildren();
+		if(cList == null || cList.size() <2) return;
+		UIParameter param1 = (UIParameter) cList.get(0);
+	   	UIParameter param2 = (UIParameter) cList.get(1);
 
 		ValueBinding binding =Util.getBinding("#{deleteResourcePage}");
 		DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
@@ -272,8 +275,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		else if (section.getContentType().equals("typeLTI"))
 			delResPage.setFromPage("editContentLTIServerView");
 
-		delResPage.setResourceName(selectedDr.getResource_title());
-		delResPage.processDeletion(selectedDr.getResource_id(), courseId);
+		delResPage.setResourceName((String)param2.getValue());
+		delResPage.processDeletion((String)param1.getValue(), courseId);
 		return;
 	}
 
