@@ -612,10 +612,10 @@ public abstract class SectionPage implements Serializable {
     private void fixDescriptor()
     {
          if ( currLTIUrl == null ) return;
-         String desc = 
-		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+         String desc =
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 		"<toolInstance xmlns=\"http://www.imsglobal.org/services/cc/imsti_ptdd_v1p0\" \n" +
-		"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> \n" + 
+		"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> \n" +
 		"  <melete-basic>true</melete-basic> \n" +
 		"  <launchurl>"+currLTIUrl+"</launchurl> \n" ;
          if ( currLTIPassword != null && currLTIPassword.trim().length() > 0 ) {
@@ -684,7 +684,7 @@ public abstract class SectionPage implements Serializable {
 	            if(section.getContentType().equals("typeLTI"))
 		    {
                             String pitch = getLTIDescriptor();
-			    if ( ! SimpleLTIUtil.validateDescriptor(ltiDescriptor) ) 
+			    if ( ! SimpleLTIUtil.validateDescriptor(ltiDescriptor) )
 			    {
 	    		     		throw new MeleteException("add_section_bad_lti");
 			    }
@@ -1018,7 +1018,7 @@ public abstract class SectionPage implements Serializable {
             }
          else
          {
-            logger.info("File being uploaded is NULL");
+            logger.debug("File being uploaded is NULL");
             return null;
          }
          }
@@ -1296,7 +1296,7 @@ public abstract class SectionPage implements Serializable {
 	 * @return Returns the meleteResource.
 	 */
 	public MeleteResource getMeleteResource() {
-		logger.info("check meleteResource" + meleteResource + secResource);
+		logger.debug("check meleteResource" + meleteResource + secResource);
 
 		if(formName.equals("AddSectionForm") && meleteResource == null)
             this.meleteResource = new MeleteResource();
@@ -1429,14 +1429,14 @@ public abstract class SectionPage implements Serializable {
 
 	public String getCurrLTIUrl()
 	{
-		if ( meleteResource != null ) 
+		if ( meleteResource != null )
 		{
-			try 
+			try
 			{
                 		ContentResource cr = getMeleteCHService().getResource(meleteResource.getResourceId());
                                 String rUrl = cr.getUrl().replaceAll(" ", "%20");
 				return rUrl;
-			} 
+			}
 			catch (Exception e)
 			{
 				return "about:blank";
@@ -1584,7 +1584,7 @@ public abstract class SectionPage implements Serializable {
 		}
 		return allContentTypes;
 	}
-	
+
 	/*
 	 *
 	 * inner class to set required content resource values for display

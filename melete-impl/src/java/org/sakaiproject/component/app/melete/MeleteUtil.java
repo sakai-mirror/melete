@@ -94,7 +94,7 @@ public class MeleteUtil {
 
 	        } else {
  //	        	 File did not exist and was created
-	        	logger.info("File "+filePath+" does not exist");
+	        	logger.debug("File "+filePath+" does not exist");
 	        }
 	    } catch (Exception e) {
 	    	logger.error("error in checkFileExists"+ e.toString());

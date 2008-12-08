@@ -207,7 +207,7 @@ public class AddResourcesPage {
                }
                else
                {
-                  logger.info("File being uploaded is NULL");
+                  logger.debug("File being uploaded is NULL");
                   continue;
                 }
           }
