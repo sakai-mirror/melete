@@ -189,7 +189,6 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	  public String getContent()
 	  {
 		ContentResource resource = getContentResource();
-System.out.println("getContent res="+resource);
 		String str = null;
 		try
 		{
@@ -270,7 +269,7 @@ System.out.println("getContent res="+resource);
 
 		// TODO: Deal with POST!!! Return an iFrame
 		Properties props = SakaiSimpleLTI.doLaunch(str, context, resource.getId());
-		System.out.println("Props="+props);
+		// System.out.println("Props="+props);
 		// The resource *insisted* on a POST
 		if ( SimpleLTIUtil.isPostLaunch(props) )
 		{
