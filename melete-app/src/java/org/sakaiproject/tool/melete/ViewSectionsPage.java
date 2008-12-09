@@ -248,7 +248,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	public String getContentLTI()
 	{
 		ContentResource resource = getContentResource();
-		if ( resource == null ) 
+		if ( resource == null )
 		{
 			return "";
 		}
@@ -256,9 +256,9 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		try
 		{
 			byte[] rsrcArray = resource.getContent();
-			if ( rsrcArray == null ) 
+			if ( rsrcArray == null )
 			{
-				if (logger.isDebugEnabled()) 
+				if (logger.isDebugEnabled())
 					logger.debug("Resource has no content"+resource.getId());
 				return "";
                         }
@@ -267,9 +267,9 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		catch(Exception e)
 		{
 			e.printStackTrace();
-			return "<!-- Error unable to retrieve resource content -->\n";
+			return "";
 		}
-		
+
 		// Check to see if we are doing a POST...
 		if ( SimpleLTIUtil.isPostLaunch(str) )
 		{
@@ -280,7 +280,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 
 		// TODO: Deal with POST!!! Return an iFrame
 		Properties props = SakaiSimpleLTI.doLaunch(str, context, resource.getId());
-		// System.out.println("Props="+props);
+
 		// The resource *insisted* on a POST
 		if ( SimpleLTIUtil.isPostLaunch(props) )
 		{
@@ -294,7 +294,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		}
 
 		// htmltext not returned from launch
-		if (logger.isDebugEnabled()) 
+		if (logger.isDebugEnabled())
 			logger.debug("Unable to get htmltext for "+resource.getId());
 		return "";
 	  }
@@ -626,7 +626,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 			      this.sectionDisplaySequence=getSectionService().getSectionDisplaySequence(this.section);
 				  //Track the event
 				  EventTrackingService.post(EventTrackingService.newEvent("melete.section.read", ToolManager.getCurrentPlacement().getContext(), true));
-			};		      
+			};
 		      return this.sectionDisplaySequence;
 		          }
     public void setSection(SectionObjService section){
