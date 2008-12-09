@@ -125,10 +125,7 @@ function showEdateCal()
 					
 				</td>
               </tr>
-			  <tr>
-				<td>&nbsp;</td>
-				<td> <h:message style="color: red" for="AddModuleForm:description"/></td>
-			</tr>
+			 
               <tr>
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.add_module_descr_over_object}" /> </td>
                 <td width="472" align="left" valign="top">
@@ -137,10 +134,7 @@ function showEdateCal()
 				</h:inputTextarea>	
 				</td>
               </tr>
-			   <tr>
-				<td>&nbsp;</td>
-				<td> <h:message style="color: red" for="AddModuleForm:keywords"/></td>
-			</tr>
+			  
               <tr>
                 <td align="left" valign="top"><h:outputText value="#{msgs.add_module_keywords}" />				
                  </td>
@@ -167,10 +161,7 @@ function showEdateCal()
 					<h:outputText id="season" value="#{addModulePage.season}"/>				 
 				   </td>
               </tr>
-			   <tr>
-				<td>&nbsp;</td>
-				<td> <h:message style="color: red" for="AddModuleForm:startDate"/></td>
-			</tr>
+			   
               <tr>
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.add_module_start_date}" />
 				</td>
@@ -184,10 +175,7 @@ function showEdateCal()
            			</h:outputLink>
 					 </td>
               </tr>
-			   <tr>
-				<td>&nbsp;</td>
-				<td> <h:message style="color: red" for="AddModuleForm:endDate"/></td>
-			</tr>
+			  
               <tr>
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.add_module_end_date}" /></td>
                 <td width="472" align="left" valign="top">
