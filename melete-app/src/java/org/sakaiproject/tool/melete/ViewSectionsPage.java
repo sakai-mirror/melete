@@ -191,6 +191,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	  public String getContent()
 	  {
 		ContentResource resource = getContentResource();
+		if ( resource == null ) return "";
 		String str = null;
 		try
 		{
@@ -200,10 +201,12 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		catch(Exception e)
 		{
 			e.printStackTrace();
-			return "<!-- Error unable to retrieve resource content -->\n";
+			return "";
 		}
 		return str;
-/*
+
+/* Moved to getContentResource() -- Chuck 12/08/2008 -- Delete after QA
+
 		SectionResourceService secRes = null;
 		if (this.section != null)
 		{
@@ -247,12 +250,18 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		ContentResource resource = getContentResource();
 		if ( resource == null ) 
 		{
-			return "<!-- resource not found -->\n";
+			return "";
 		}
 		String str = null;
 		try
 		{
 			byte[] rsrcArray = resource.getContent();
+			if ( rsrcArray == null ) 
+			{
+				if (logger.isDebugEnabled()) 
+					logger.debug("Resource has no content"+resource.getId());
+				return "";
+                        }
 			str = new String(rsrcArray);
 		}
 		catch(Exception e)
@@ -284,7 +293,10 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 			return htmltext;
 		}
 
-		return "<!-- Error htmltext not returned from launch-->\n";
+		// htmltext not returned from launch
+		if (logger.isDebugEnabled()) 
+			logger.debug("Unable to get htmltext for "+resource.getId());
+		return "";
 	  }
 
 	private String getContentPost(String str)
