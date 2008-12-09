@@ -684,7 +684,7 @@ public abstract class SectionPage implements Serializable {
 	            if(section.getContentType().equals("typeLTI"))
 		    {
                             String pitch = getLTIDescriptor();
-			    if ( ltiDescriptor == null || ltiDescriptor.trim().length()==0 ) 
+			    if ( ltiDescriptor == null || ltiDescriptor.trim().length()==0 )
                             {
 	    		     		throw new MeleteException("add_section_empty_lti");
                             }
@@ -719,10 +719,10 @@ public abstract class SectionPage implements Serializable {
 					}
 				catch(Exception e)
 					{
-					if (logger.isDebugEnabled()) {
-					logger.debug("error in creating resource for section content" + e.toString());
-					e.printStackTrace();
-					}
+						if (logger.isDebugEnabled()) {
+						logger.debug("error in creating resource for section content" + e.toString());
+						//e.printStackTrace();
+						}
 					throw new MeleteException("add_section_fail");
 					}
 	}
@@ -746,7 +746,7 @@ public abstract class SectionPage implements Serializable {
             		getMeleteCHService().editResource(resourceId, contentEditor);
 	            }
 
-	            if(section.getContentType().equals("typeLink") || section.getContentType().equals("typeUpload") || section.getContentType().equals("typeLTI"))
+	            if(resourceId != null && (section.getContentType().equals("typeLink") || section.getContentType().equals("typeUpload") || section.getContentType().equals("typeLTI")))
 	            {
 	                  getMeleteCHService().editResourceProperties(resourceId,secResourceName,secResourceDescription);
 	            }

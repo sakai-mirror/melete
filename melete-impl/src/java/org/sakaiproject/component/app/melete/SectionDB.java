@@ -228,7 +228,8 @@ public class SectionDB implements Serializable {
 		 	if (!session.isOpen()) session = hibernateUtil.currentSession();
 		 	session.evict(section);
 			  tx = session.beginTransaction();
-			  	  session.saveOrUpdate(melResource);
+			  	  if(melResource != null)
+			  	 	 session.saveOrUpdate(melResource);
 			  	  session.saveOrUpdate(secResource);
 			  	  session.saveOrUpdate(section);
 				  session.flush();

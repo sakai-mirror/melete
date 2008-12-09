@@ -311,7 +311,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			// validation 3: if upload a new file check fileName format -- move to uploadSectionContent()
 
 			// validation 4: check link url title
-			if (section.getContentType().equals("typeLink") && (secResourceName == null || secResourceName.trim().length() == 0))
+			if (section.getContentType().equals("typeLink") && meleteResource != null && meleteResource.getResourceId() != null && (secResourceName == null || secResourceName.trim().length() == 0))
 				throw new UserErrorException("URL_title_reqd");
 
 			// save section
@@ -320,23 +320,32 @@ public class EditSectionPage extends SectionPage implements Serializable
 			if (section.getContentType().equals("typeExistUpload")) section.setContentType("typeUpload");
 			if (section.getContentType().equals("typeExistLink")) section.setContentType("typeLink");
 
-			if (!section.getContentType().equals("notype"))
+			if (section.getContentType().equals("notype"))
 			{
+				if(meleteResource == null)
+					sectionService.editSection(section);
+				else  throw new Exception();
+
+				}
+			else{
 				shouldRenderContentTypeSelect = false;
 				// step 1: check if new resource content or existing resource is edited
 				try
 				{
-					if (logger.isDebugEnabled()) logger.debug("Ist step of edit - check meleteResource" + meleteResource.getResourceId());
 					//The condition below was put in to handle ME-639
-					if (meleteResource.getResourceId() != null)
+					if (meleteResource != null && meleteResource.getResourceId() != null)
 					{
+						if (logger.isDebugEnabled()) logger.debug("Ist step of edit - check meleteResource" + meleteResource.getResourceId());
 					  getMeleteCHService().checkResource(meleteResource.getResourceId());
 					  editMeleteCollectionResource(uploadHomeDir, meleteResource.getResourceId());
 					}
 					else
 					{
-						if (logger.isDebugEnabled()) logger.debug("Resource ID is null");
-						throw new Exception();
+						//resource is removed
+						if (logger.isDebugEnabled()) logger.debug("Resource ID is null i.e resource is removed");
+						editMeleteCollectionResource(uploadHomeDir, null);
+						meleteResource = null;
+						//throw new Exception();
 					}
 				}
 				catch (Exception e)
@@ -352,22 +361,20 @@ public class EditSectionPage extends SectionPage implements Serializable
 				}
 
 				// step 3: edit license information
+				if(meleteResource != null)
 				meleteResource = getM_license().processLicenseInformation(meleteResource);
 
 				// step2: edit section properties
 				sectionService.editSection(section, meleteResource);
 			}
-			else
-			{
-				sectionService.editSection(section);
-			}
+
 			// uploadFileName=null;
 			String successMsg = bundle.getString("add_section_success");
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "add_section_success", successMsg));
-			
+
 			//Track the event
 			EventTrackingService.post(EventTrackingService.newEvent("melete.section.edit", ToolManager.getCurrentPlacement().getContext(), true));
-			
+
 			return "success";
 		}
 		catch (UserErrorException uex)

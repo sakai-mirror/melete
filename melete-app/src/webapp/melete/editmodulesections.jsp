@@ -278,7 +278,7 @@ window.open('editpreviewEditor.jsf');
 									  </tr>	
 								  <tr>
 								   <td colspan="2">
-												<f:subview id="ResourcePropertiesPanel" rendered="#{!editSectionPage.shouldRenderNotype}">
+												<f:subview id="ResourcePropertiesPanel" rendered="#{editSectionPage.meleteResource !=null && !editSectionPage.shouldRenderNotype}">
 													<jsp:include page="edit_sec_resourcePropertiesPanel.jsp"/>
 												</f:subview>
 									</td>	
