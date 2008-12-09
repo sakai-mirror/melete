@@ -44,6 +44,10 @@ import org.sakaiproject.component.app.melete.ModuleDateBean;
 import org.sakaiproject.api.app.melete.SectionObjService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
 //import org.sakaiproject.jsf.ToolBean;
+
+import org.sakaiproject.event.cover.EventTrackingService;
+import org.sakaiproject.tool.cover.ToolManager;
+
 /**
  * @author Mallika
  *
@@ -156,6 +160,9 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 			// add module to session
 			Map sessionMap = context.getExternalContext().getSessionMap();
 			sessionMap.put("currModule",module);
+
+			//Track the event
+			EventTrackingService.post(EventTrackingService.newEvent("melete.module.edit", ToolManager.getCurrentPlacement().getContext(), true));
 
 
 		}

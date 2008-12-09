@@ -56,6 +56,8 @@ import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
 
+import org.sakaiproject.event.cover.EventTrackingService;
+import org.sakaiproject.tool.cover.ToolManager;
 
 //import org.sakaiproject.jsf.ToolBean;
 
@@ -223,6 +225,9 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			//ex.printStackTrace();
 			return "failure";
 			}
+
+		//Track the event
+		EventTrackingService.post(EventTrackingService.newEvent("melete.section.new", ToolManager.getCurrentPlacement().getContext(), true));
 
 		return "success";
 	}

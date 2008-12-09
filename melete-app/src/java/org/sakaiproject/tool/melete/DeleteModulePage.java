@@ -50,6 +50,9 @@ import org.sakaiproject.api.app.melete.SectionObjService;
 import org.sakaiproject.api.app.melete.exception.MeleteException;
 import org.sakaiproject.component.app.melete.ModuleDateBean;
 import org.sakaiproject.component.app.melete.SectionBean;
+
+import org.sakaiproject.event.cover.EventTrackingService;
+import org.sakaiproject.tool.cover.ToolManager;
 /**
  * @author Mallika
  *
@@ -206,11 +209,26 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 				 // check if sections of selected module are selected too
 				if(sectionBeans != null)CheckSectionsSelected();
 				moduleService.deleteModules(this.moduleDateBeans,this.allmoduleDateBeans,getCourseId(), getUserId());
+				
+				Iterator it = this.moduleDateBeans.iterator();
+				while (it.hasNext()){
+					  ModuleDateBean obj = (ModuleDateBean) it.next();
+					  //Track the event
+					  EventTrackingService.post(EventTrackingService.newEvent("melete.module.delete", ToolManager.getCurrentPlacement().getContext(), true));
+				}
+			
 			}
 			if (getSectionSelected() == true)
 			{
-			   System.out.println("sectionService.deleteSections(this.sectionBeans,getCourseId(), getUserId());");
-			   sectionService.deleteSections(this.sectionBeans,getCourseId(), getUserId());
+				sectionService.deleteSections(this.sectionBeans,getCourseId(), getUserId());
+
+				Iterator it = this.sectionBeans.iterator();
+				while (it.hasNext()){
+					  SectionBean obj = (SectionBean) it.next();
+					  //Track the event
+					  EventTrackingService.post(EventTrackingService.newEvent("melete.section.delete", ToolManager.getCurrentPlacement().getContext(), true));
+				}
+			
 			}
 		}
 		catch(MeleteException me)
