@@ -315,18 +315,17 @@ public class EditSectionPage extends SectionPage implements Serializable
 				throw new UserErrorException("URL_title_reqd");
 
 			// save section
-			if (logger.isDebugEnabled()) logger.debug("EditSectionpage:save section");
+			if (logger.isDebugEnabled()) logger.debug("EditSectionpage:save section" + section.getContentType());
 			String uploadHomeDir = context.getExternalContext().getInitParameter("uploadDir");
 			if (section.getContentType().equals("typeExistUpload")) section.setContentType("typeUpload");
 			if (section.getContentType().equals("typeExistLink")) section.setContentType("typeLink");
 
+
 			if (section.getContentType().equals("notype"))
 			{
-				if(meleteResource == null)
-					sectionService.editSection(section);
-				else  throw new Exception();
-
-				}
+				meleteResource = null;
+				sectionService.editSection(section);
+			}
 			else{
 				shouldRenderContentTypeSelect = false;
 				// step 1: check if new resource content or existing resource is edited
@@ -341,6 +340,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 					}
 					else
 					{
+						logger.debug("old type is " + oldType + meleteResource);
+						if (oldType != null && oldType.equals("notype"))  throw new Exception();
+
 						//resource is removed
 						if (logger.isDebugEnabled()) logger.debug("Resource ID is null i.e resource is removed");
 						editMeleteCollectionResource(uploadHomeDir, null);
@@ -361,7 +363,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				}
 
 				// step 3: edit license information
-				if(meleteResource != null)
+				if(meleteResource != null && meleteResource.getResourceId() != null)
 				meleteResource = getM_license().processLicenseInformation(meleteResource);
 
 				// step2: edit section properties

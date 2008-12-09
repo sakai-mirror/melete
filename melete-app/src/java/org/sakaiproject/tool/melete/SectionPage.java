@@ -172,6 +172,8 @@ public abstract class SectionPage implements Serializable {
 
  	protected SectionResourceLicenseSelector m_selected_license;
 
+ 	protected String oldType;
+
     public SectionPage()
             {
             module=null;
@@ -521,6 +523,8 @@ public abstract class SectionPage implements Serializable {
             secResourceDescription = null;
             currSiteResourcesList = null;
             listNav = null;
+            oldType = section.getContentType();
+
             if(contentTypeRadio.findComponent(getFormName()).findComponent("uploadPath") != null)
                     {
                     contentTypeRadio.findComponent(getFormName()).findComponent("uploadPath").setRendered(shouldRenderUpload);
@@ -836,6 +840,7 @@ public abstract class SectionPage implements Serializable {
 	shouldRenderResources=false;
 	shouldRenderNotype = false;
 	allContentTypes = null;
+	oldType = null;
     if (logger.isDebugEnabled()) logger.debug("!!!!!!!!!reseting section values done !!!!!!!");
     }
 
