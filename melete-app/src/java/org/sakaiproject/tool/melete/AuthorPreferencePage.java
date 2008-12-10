@@ -105,7 +105,9 @@ public class AuthorPreferencePage {
   		else
   			userView = "true";
   		
- 		if (mup != null && (mup.isShowLTIChoice() == null || mup.isShowLTIChoice().booleanValue()))
+ 		if (mup != null && (mup.isShowLTIChoice() == null || !mup.isShowLTIChoice().booleanValue()))
+ 			showLTI = "false";
+ 		else
   			showLTI = "true";
   		  		
   		if(msp != null && msp.isPrintable())
