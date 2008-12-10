@@ -100,12 +100,12 @@ public class AuthorPreferencePage {
   		  	shouldRenderFCK = true;
   		 }
 
-  		if (mup != null && !mup.isViewExpChoice())
+  		if (mup != null && (mup.isViewExpChoice() == null || !mup.isViewExpChoice().booleanValue()))
   			userView = "false";
   		else
   			userView = "true";
   		
- 		if (mup != null && mup.isShowLTIChoice())
+ 		if (mup != null && (mup.isShowLTIChoice() == null || mup.isShowLTIChoice().booleanValue()))
   			showLTI = "true";
   		  		
   		if(msp != null && msp.isPrintable())

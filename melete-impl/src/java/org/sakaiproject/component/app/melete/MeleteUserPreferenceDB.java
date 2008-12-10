@@ -80,21 +80,23 @@ public class MeleteUserPreferenceDB {
 		Transaction tx = null;
 	 	try
 		{
+	 		 Session session = hibernateUtil.currentSession();
+		      tx = session.beginTransaction();
 
-	      Session session = hibernateUtil.currentSession();
+		      Query q=session.createQuery("select mup1 from MeleteUserPreference as mup1 where mup1.userId =:userId");
+			  q.setParameter("userId",mup.getUserId());
+			  MeleteUserPreference find_mup = (MeleteUserPreference)q.uniqueResult();
 
-	      tx = session.beginTransaction();
-
-          //Need to split it up this way, was throwing batch update error
-	      if (mup.getPrefId() == 0)
-	      {
-	    	  session.save(mup);
-	      }
-	      else
-	      {
-	    	 // session.saveOrUpdate(mup);
-	    	session.update(mup);
-	      }
+		      if(find_mup == null)
+		     	  session.save(mup);
+		      else
+		      {
+		    	 find_mup.setEditorChoice(mup.getEditorChoice());
+		    	 find_mup.setShowLTIChoice(mup.isShowLTIChoice());
+		    	 find_mup.setViewExpChoice(mup.isViewExpChoice());
+		    	 session.update(find_mup);
+		      }
+	     
 
 	      tx.commit();
 

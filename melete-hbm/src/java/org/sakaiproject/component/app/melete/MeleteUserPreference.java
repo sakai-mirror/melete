@@ -43,23 +43,20 @@ public class MeleteUserPreference implements Serializable,MeleteUserPreferenceSe
     /** nullable persistent field */
     private String editorChoice;
     
-    private boolean viewExpChoice;
-
-    private boolean printable;
+    private Boolean viewExpChoice;   
     
     private int prefId;
    
-    private boolean showLTIChoice;
+    private Boolean showLTIChoice;
     
 	/** full constructor
 	 * @param userId
 	 * @param editorChoice
 	 */
-	public MeleteUserPreference(String userId, String editorChoice, boolean viewExpChoice, boolean printable, boolean showLTIChoice) {
+	public MeleteUserPreference(String userId, String editorChoice, Boolean viewExpChoice, Boolean showLTIChoice) {
 		this.userId = userId;
 		this.editorChoice = editorChoice;
-		this.viewExpChoice = viewExpChoice;
-		this.printable = printable;
+		this.viewExpChoice = viewExpChoice;	
 		this.showLTIChoice = showLTIChoice;
 	}
 		
@@ -68,8 +65,7 @@ public class MeleteUserPreference implements Serializable,MeleteUserPreferenceSe
 	 */
 	public MeleteUserPreference() {
 		this.viewExpChoice = true;
-		this.showLTIChoice = false;
-		this.printable = false;
+		this.showLTIChoice = false;		
 	}
 		
 	/**
@@ -115,19 +111,19 @@ public class MeleteUserPreference implements Serializable,MeleteUserPreferenceSe
 		this.prefId = prefId;
 	}
 
-	public boolean isViewExpChoice() {
+	public Boolean isViewExpChoice() {
 		return viewExpChoice;
 	}
 
-	public void setViewExpChoice(boolean viewExpChoice) {
+	public void setViewExpChoice(Boolean viewExpChoice) {
 		this.viewExpChoice = viewExpChoice;
 	}
 	
-	public boolean isShowLTIChoice(){
+	public Boolean isShowLTIChoice(){
 		return showLTIChoice;
 	}
 
-	public void setShowLTIChoice(boolean showLTIChoice) {
+	public void setShowLTIChoice(Boolean showLTIChoice) {
 		this.showLTIChoice = showLTIChoice;
 	}
 }

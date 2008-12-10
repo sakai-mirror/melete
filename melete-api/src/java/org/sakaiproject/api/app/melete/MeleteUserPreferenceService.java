@@ -39,6 +39,8 @@ public interface MeleteUserPreferenceService {
 	public abstract void setUserId(String userId);
 	public abstract int getPrefId();
 	public abstract void setPrefId(int prefId);
-	public abstract boolean isViewExpChoice();
-	public abstract void setViewExpChoice(boolean viewExpChoice);
+	public abstract Boolean isViewExpChoice();
+	public abstract void setViewExpChoice(Boolean viewExpChoice);
+	public abstract Boolean isShowLTIChoice();
+	public abstract void setShowLTIChoice(Boolean showLTIChoice);
 }
