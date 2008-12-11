@@ -387,7 +387,11 @@ public void setShowLTI(String showLTI) {
 
 public boolean getUserLTIChoice(String userId){
 	MeleteUserPreference checkMup = (MeleteUserPreference)getAuthorPref().getUserChoice(userId);
-	if(checkMup != null) return checkMup.isShowLTIChoice();
+	if(checkMup != null) 
+	{
+		if (checkMup.isShowLTIChoice() == null) return false;
+		else return checkMup.isShowLTIChoice().booleanValue();
+	}
 	else return false;
 }
 
