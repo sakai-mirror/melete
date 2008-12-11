@@ -100,16 +100,12 @@ public class AuthorPreferencePage {
   		  	shouldRenderFCK = true;
   		 }
 
-  		if (mup != null && (mup.isViewExpChoice() == null || !mup.isViewExpChoice().booleanValue()))
-  			userView = "false";
-  		else
-  			userView = "true";
-  		
- 		if (mup != null && (mup.isShowLTIChoice() == null || !mup.isShowLTIChoice().booleanValue()))
- 			showLTI = "false";
- 		else
-  			showLTI = "true";
-  		  		
+  		 if (mup != null && mup.isViewExpChoice() != null && mup.isViewExpChoice().booleanValue())
+		       userView = "true";
+
+		if (mup != null && mup.isShowLTIChoice() != null && mup.isShowLTIChoice().booleanValue())
+		       showLTI = "true";
+
   		if(msp != null && msp.isPrintable())
   			materialPrintable = "true";
 
@@ -252,9 +248,9 @@ public String setUserChoice()
 			{
 				mup.setViewExpChoice(false);
 			}
-			
+
 			if (showLTI.equals("true"))	mup.setShowLTIChoice(true);
-			else mup.setShowLTIChoice(false);			
+			else mup.setShowLTIChoice(false);
 
 		mup.setUserId((String)sessionMap.get("userId"));
 		authorPref.insertUserChoice(mup);
@@ -387,7 +383,7 @@ public void setShowLTI(String showLTI) {
 
 public boolean getUserLTIChoice(String userId){
 	MeleteUserPreference checkMup = (MeleteUserPreference)getAuthorPref().getUserChoice(userId);
-	if(checkMup != null) 
+	if(checkMup != null)
 	{
 		if (checkMup.isShowLTIChoice() == null) return false;
 		else return checkMup.isShowLTIChoice().booleanValue();
