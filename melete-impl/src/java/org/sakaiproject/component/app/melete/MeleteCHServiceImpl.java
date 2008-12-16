@@ -962,7 +962,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 
 	    		//check for form tag and remove it
 	    		checkforimgs = meleteUtil.findFormPattern(checkforimgs);
-
+	    		logger.debug("after find form pattern "+ endSrc);
 				contentEditor = checkforimgs;
 
 		         while(checkforimgs !=null)
@@ -975,13 +975,14 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    			{
 	    				startSrc = ((Integer)embedData.get(1)).intValue();
 	    				endSrc = ((Integer)embedData.get(2)).intValue();
+	    				logger.debug("reading embeddata "+ endSrc);
 	    				foundLink = (String) embedData.get(3);
 	    			}
 	    			if (endSrc <= 0) break;
 	    			// find filename
 	    			fileName = checkforimgs.substring(startSrc, endSrc);
 	    			 String patternStr = fileName;
-	    			logger.debug("processing embed src" + fileName);
+	    			logger.debug("processing embed src" + fileName + endSrc);
 
 	    			//process for local uploaded files
 					if(fileName != null && fileName.trim().length() > 0&& (!(fileName.equals(File.separator)))
@@ -1059,6 +1060,23 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				// for internal links to make it relative
 				else
 				{
+					// add target if not provided
+	    			if(foundLink != null && foundLink.equals("link") && endSrc > 0 && checkforimgs.indexOf(">") > endSrc)
+	    			{
+	    				logger.debug("embedded link so looking for target value" + endSrc + checkforimgs.length() + checkforimgs.indexOf(">"));
+	    				String soFar =  checkforimgs.substring(0,endSrc);
+	    				String checkTarget = checkforimgs.substring(endSrc , checkforimgs.indexOf(">")+1);
+	    				String laterPart = checkforimgs.substring(checkforimgs.indexOf(">")+2);
+	    				Pattern pa = Pattern.compile("\\s[tT][aA][rR][gG][eE][tT]\\s*=");
+	    				Matcher m = pa.matcher(checkTarget);
+	    				if(!m.find())
+	    				{
+	    					String newTarget = meleteUtil.replace(checkTarget, ">", " target=_blank >");
+	    					checkforimgs = soFar + newTarget + laterPart;
+	    					contentEditor = meleteUtil.replace(contentEditor, soFar + checkTarget, soFar+newTarget);
+	    				}
+	    			}
+	    			
 					if (fileName.startsWith(ServerConfigurationService.getServerUrl()))
 					{
 						if (fileName.indexOf("/meleteDocs") != -1)
@@ -1068,18 +1086,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 							logger.debug("ref properties" + ref.getType() + "," + ref.getId());
 							String newEmbedResourceId = ref.getId();
 							newEmbedResourceId = newEmbedResourceId.replaceFirst("/content", "");
-
-							if (sectiondb.getMeleteResource(newEmbedResourceId) == null)
-							{
-								// add in melete resource database table also
-								MeleteResource meleteResource = new MeleteResource();
-								meleteResource.setResourceId(newEmbedResourceId);
-								// set default license info to "I have not determined copyright yet" option
-								meleteResource.setLicenseCode(0);
-								sectiondb.insertResource(meleteResource);
-							}
-
-						}
+							sectiondb.getMeleteResource(newEmbedResourceId);
+						}						
 						String replaceStr = meleteUtil.replace(fileName, ServerConfigurationService.getServerUrl(), "");
 						contentEditor = meleteUtil.replace(contentEditor, patternStr, replaceStr);
 						checkforimgs = meleteUtil.replace(checkforimgs, patternStr, replaceStr);
@@ -1097,21 +1105,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 
 				}
 
-				// add target if not provided
-    			if(foundLink != null && foundLink.equals("link"))
-    			{
-    				String soFar =  checkforimgs.substring(0,endSrc);
-    				String checkTarget = checkforimgs.substring(endSrc , checkforimgs.indexOf(">")+1);
-    				String laterPart = checkforimgs.substring(checkforimgs.indexOf(">")+2);
-    				Pattern pa = Pattern.compile("\\s[tT][aA][rR][gG][eE][tT]\\s*=");
-    				Matcher m = pa.matcher(checkTarget);
-    				if(!m.find())
-    				{
-    					String newTarget = meleteUtil.replace(checkTarget, ">", " target=_blank >");
-    					checkforimgs = soFar + newTarget + laterPart;
-    					contentEditor = meleteUtil.replace(contentEditor, soFar + checkTarget, soFar+newTarget);
-    				}
-    			}
+				
 		            // iterate next
     				if(endSrc > 0 && endSrc <= checkforimgs.length())
     					checkforimgs =checkforimgs.substring(endSrc);
