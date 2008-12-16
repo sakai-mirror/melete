@@ -813,6 +813,8 @@ public class SectionDB implements Serializable {
 				// set secResource fields
 				secResource.setSection(section);
 				secResource.setSectionId(section.getSectionId());
+				if(melResource != null && melResource.getResourceId() != null)
+				    melResource = getMeleteResource(melResource.getResourceId());
 				secResource.setResource(melResource);
 
 				// update Section
@@ -868,6 +870,7 @@ public class SectionDB implements Serializable {
 		    	//insert missing ones
 		    	MeleteResource mr = new MeleteResource();
 		    	mr.setResourceId(selResourceId);
+		    	mr.setLicenseCode(0);
 		    	insertResource(mr);
 		    	return mr;
 		    }
