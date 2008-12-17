@@ -1,24 +1,25 @@
 <?xml version="1.0"?>
-<!--  Copyright (c) 2008 Etudes, Inc. -->
- 
-<!--  Licensed under the Apache License, Version 2.0 (the "License"); -->
-<!--   you may not use this file except in compliance with the License.-->
-<!--   You may obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-  
-<!--   Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project -->
-  
-<!--   Licensed under the Apache License, Version 2.0 (the "License"); you -->
-<!--   may not use this file except in compliance with the License. You may -->
-<!--   obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-<!--  Unless required by applicable law or agreed to in writing, software -->
-<!--  distributed under the License is distributed on an "AS IS" BASIS, -->
-<!--  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or -->
-<!--  implied. See the License for the specific language governing -->
-<!--  permissions and limitations under the License. -->
+<!--
+ ***********************************************************************************
+ *
+ * Copyright (c) 2008 Etudes, Inc.
+ *
+ * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ **********************************************************************************
+-->
 
 <!DOCTYPE faces-config PUBLIC
   "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
@@ -27,7 +28,7 @@
 <faces-config>
 	
 		  <application>
-        <message-bundle>org.sakaiproject.tool.melete.bundle.Messages</message-bundle>
+        <message-bundle>org.etudes.tool.melete.bundle.Messages</message-bundle>
         <locale-config>
             <default-locale>en</default-locale>
         </locale-config>
@@ -38,14 +39,14 @@
 		<description>Melete Site And UserInfo</description>
 		<managed-bean-name>meleteSiteAndUserInfo</managed-bean-name>
 		<managed-bean-class> 
-			org.sakaiproject.tool.melete.MeleteSiteAndUserInfo</managed-bean-class>
+			org.etudes.tool.melete.MeleteSiteAndUserInfo</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 		<!-- a service dependency property - for the MeleteSecurityService -->
 		<managed-property>
 			<description>Service Dependency: MeleteSecurityService</description>
 			<property-name>meleteSecurityService</property-name>
 			<value> 
-				#{Components["org.sakaiproject.api.app.melete.MeleteSecurityService"]}</value>
+				#{Components["org.etudes.api.app.melete.MeleteSecurityService"]}</value>
 		</managed-property>
 		<!--<managed-property>
 			<description>Service Dependency: 
@@ -58,7 +59,7 @@
 			<description>Service Dependency: Module service</description>
 			<property-name>moduleService</property-name>
 			<value>
-				#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+				#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
 		</managed-property>
 	</managed-bean>
 	
@@ -66,69 +67,69 @@
  <managed-bean>
       <description>Manages the AddModule page</description>
       <managed-bean-name>addModulePage</managed-bean-name>
-      <managed-bean-class>org.sakaiproject.tool.melete.AddModulePage</managed-bean-class>
+      <managed-bean-class>org.etudes.tool.melete.AddModulePage</managed-bean-class>
       <managed-bean-scope>session</managed-bean-scope>
 	   <!-- a service dependency property - for the MeleteService -->
         <managed-property>
             <description>Service Dependency: Module service</description>
             <property-name>moduleService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
         </managed-property>
 	   </managed-bean>  
 	
  <managed-bean>
         <description>Melete List AuthModules Tool</description>
         <managed-bean-name>listAuthModulesPage</managed-bean-name>
-        <managed-bean-class>org.sakaiproject.tool.melete.ListAuthModulesPage</managed-bean-class>
+        <managed-bean-class>org.etudes.tool.melete.ListAuthModulesPage</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
         <!-- a service dependency property - for the MeleteService -->
         <managed-property>
             <description>Service Dependency: Modules service</description>
             <property-name>moduleService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
         </managed-property>       
     </managed-bean>
      <managed-bean>
             <description>Melete List Modules Tool</description>
             <managed-bean-name>listModulesPage</managed-bean-name>
-            <managed-bean-class>org.sakaiproject.tool.melete.ListModulesPage</managed-bean-class>
+            <managed-bean-class>org.etudes.tool.melete.ListModulesPage</managed-bean-class>
             <managed-bean-scope>session</managed-bean-scope>
             <!-- a service dependency property - for the MeleteService -->
             <managed-property>
                 <description>Service Dependency: Modules service</description>
                 <property-name>moduleService</property-name>
-                <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+                <value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
             </managed-property>                              
         </managed-bean>
 
  <managed-bean>
       <description>Manages the Edit Module page</description>
       <managed-bean-name>editModulePage</managed-bean-name>
-      <managed-bean-class>org.sakaiproject.tool.melete.EditModulePage</managed-bean-class>
+      <managed-bean-class>org.etudes.tool.melete.EditModulePage</managed-bean-class>
       <managed-bean-scope>session</managed-bean-scope>
 	   <!-- a service dependency property - for the MeleteService -->
         <managed-property>
             <description>Service Dependency: Module service</description>
             <property-name>moduleService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
         </managed-property>
      </managed-bean>  
 	
 	 <managed-bean>
       <description>Manages the DeleteModule page</description>
       <managed-bean-name>deleteModulePage</managed-bean-name>
-      <managed-bean-class>org.sakaiproject.tool.melete.DeleteModulePage</managed-bean-class>
+      <managed-bean-class>org.etudes.tool.melete.DeleteModulePage</managed-bean-class>
       <managed-bean-scope>session</managed-bean-scope>
 	   <!-- a service dependency property - for the MeleteService -->
         <managed-property>
             <description>Service Dependency: Module service</description>
             <property-name>moduleService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
         </managed-property>
   <managed-property>
             <description>Service Dependency: Section service</description>
             <property-name>sectionService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.SectionService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
         </managed-property>        
       </managed-bean>  	
       
@@ -136,18 +137,18 @@
 	<managed-bean>
       <description>Manages the AddSection page</description>
       <managed-bean-name>addSectionPage</managed-bean-name>
-      <managed-bean-class>org.sakaiproject.tool.melete.AddSectionPage</managed-bean-class>
+      <managed-bean-class>org.etudes.tool.melete.AddSectionPage</managed-bean-class>
       <managed-bean-scope>session</managed-bean-scope>
 	   <!-- a service dependency property - for the MeleteService -->
      <managed-property>
             <description>Service Dependency: Module service</description>
             <property-name>moduleService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
         </managed-property>	   
         <managed-property>
             <description>Service Dependency: Section service</description>
             <property-name>sectionService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.SectionService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
         </managed-property>
      
         <managed-property>
@@ -163,7 +164,7 @@
              <managed-property>
 	    	            <description>Service Dependency: Melete CH service</description>
 	    	            <property-name>meleteCHService</property-name>
-	    	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteCHService"]}</value>
+	    	            <value>#{Components["org.etudes.api.app.melete.MeleteCHService"]}</value>
             </managed-property>
       </managed-bean>  
       
@@ -171,18 +172,18 @@
       <managed-bean>
       <description>Manages the editSection page</description>
       <managed-bean-name>editSectionPage</managed-bean-name>
-      <managed-bean-class>org.sakaiproject.tool.melete.EditSectionPage</managed-bean-class>
+      <managed-bean-class>org.etudes.tool.melete.EditSectionPage</managed-bean-class>
       <managed-bean-scope>session</managed-bean-scope>
 	   <!-- a service dependency property - for the MeleteService -->
     <managed-property>
             <description>Service Dependency: Module service</description>
             <property-name>moduleService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
         </managed-property>	   	   
         <managed-property>
             <description>Service Dependency: Section service</description>
             <property-name>sectionService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.SectionService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
         </managed-property>
        
       <managed-property>
@@ -198,76 +199,76 @@
      <managed-property>
 	            <description>Service Dependency: Melete CH service</description>
 	            <property-name>meleteCHService</property-name>
-	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteCHService"]}</value>
+	            <value>#{Components["org.etudes.api.app.melete.MeleteCHService"]}</value>
     </managed-property>                  
       </managed-bean>  
 
    	 <managed-bean>
           <description>View Module page</description>
           <managed-bean-name>viewModulesPage</managed-bean-name>
-          <managed-bean-class>org.sakaiproject.tool.melete.ViewModulesPage</managed-bean-class>
+          <managed-bean-class>org.etudes.tool.melete.ViewModulesPage</managed-bean-class>
           <managed-bean-scope>session</managed-bean-scope>
            <managed-property>
             <description>Service Dependency: Module service</description>
             <property-name>moduleService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
         </managed-property>
     </managed-bean>  
 
  <managed-bean>
              <description>View Section page</description>
              <managed-bean-name>viewSectionsPage</managed-bean-name>
-             <managed-bean-class>org.sakaiproject.tool.melete.ViewSectionsPage</managed-bean-class>
+             <managed-bean-class>org.etudes.tool.melete.ViewSectionsPage</managed-bean-class>
              <managed-bean-scope>session</managed-bean-scope>
              <managed-property>
             <description>Service Dependency: Module service</description>
             <property-name>moduleService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
         </managed-property>
           <managed-property>
             <description>Service Dependency: Section service</description>
             <property-name>sectionService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.SectionService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
         </managed-property>    
        <managed-property>
 	            <description>Service Dependency: Melete CH service</description>
 	            <property-name>meleteCHService</property-name>
-	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteCHService"]}</value>
+	            <value>#{Components["org.etudes.api.app.melete.MeleteCHService"]}</value>
     </managed-property>                
        </managed-bean>
                 
      <managed-bean>
 		<description>Manages the Module page</description>
 		<managed-bean-name>manageModulesPage</managed-bean-name>
-		<managed-bean-class>org.sakaiproject.tool.melete.ManageModulesPage</managed-bean-class>
+		<managed-bean-class>org.etudes.tool.melete.ManageModulesPage</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 		<!-- a service dependency property - for the MeleteService -->
 		<managed-property>
 			<description>Service Dependency: Module service</description>
 			<property-name>moduleService</property-name>
-			<value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+			<value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
 		</managed-property>
 		  <managed-property>
             <description>Service Dependency: Section service</description>
             <property-name>sectionService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.SectionService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
         </managed-property>
   </managed-bean> 
    <managed-bean>
 		<description>View next steps page</description>
 		<managed-bean-name>viewNextStepsPage</managed-bean-name>
-		<managed-bean-class>org.sakaiproject.tool.melete.ViewNextStepsPage</managed-bean-class>
+		<managed-bean-class>org.etudes.tool.melete.ViewNextStepsPage</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 		 <managed-property>
             <description>Service Dependency: Modules service</description>
             <property-name>moduleService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
         </managed-property>        
   </managed-bean>                 
   <managed-bean>
           <description>date comparator</description>
           <managed-bean-name>meleteDateComparator</managed-bean-name>
-          <managed-bean-class>org.sakaiproject.tool.melete.MeleteDateComparator</managed-bean-class>
+          <managed-bean-class>org.etudes.tool.melete.MeleteDateComparator</managed-bean-class>
           <managed-bean-scope>session</managed-bean-scope>
 </managed-bean>  
   
@@ -275,7 +276,7 @@
  <managed-bean>
 		  <description>lists files at the remote site</description>
 		  <managed-bean-name>remoteBrowserFile</managed-bean-name>
-		  <managed-bean-class>org.sakaiproject.tool.melete.RemoteBrowserFile</managed-bean-class>
+		  <managed-bean-class>org.etudes.tool.melete.RemoteBrowserFile</managed-bean-class>
 		  <managed-bean-scope>session</managed-bean-scope>
 		<managed-property>
                   <description>Service Dependency: ServerConfigurationService</description>
@@ -285,7 +286,7 @@
         	  <managed-property>
 	            <description>Service Dependency: Melete CH service</description>
 	            <property-name>meleteCHService</property-name>
-	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteCHService"]}</value>
+	            <value>#{Components["org.etudes.api.app.melete.MeleteCHService"]}</value>
         </managed-property>
 		</managed-bean> 
           
@@ -293,41 +294,41 @@
 <managed-bean>
           <description>Nav page</description>
           <managed-bean-name>navPage</managed-bean-name>
-          <managed-bean-class>org.sakaiproject.tool.melete.NavPage</managed-bean-class>
+          <managed-bean-class>org.etudes.tool.melete.NavPage</managed-bean-class>
           <managed-bean-scope>session</managed-bean-scope>
     </managed-bean> 
 
  <managed-bean>
           <description>Module next steps page</description>
           <managed-bean-name>moduleNextStepsPage</managed-bean-name>
-          <managed-bean-class>org.sakaiproject.tool.melete.ModuleNextStepsPage</managed-bean-class>
+          <managed-bean-class>org.etudes.tool.melete.ModuleNextStepsPage</managed-bean-class>
           <managed-bean-scope>session</managed-bean-scope>
           <managed-property>
             <description>Service Dependency: Modules service</description>
             <property-name>moduleService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
         </managed-property>
     </managed-bean> 
   	
 	<managed-bean>
           <description>Export Modules</description>
           <managed-bean-name>exportMeleteModules</managed-bean-name>
-          <managed-bean-class>org.sakaiproject.tool.melete.ExportMeleteModules</managed-bean-class>
+          <managed-bean-class>org.etudes.tool.melete.ExportMeleteModules</managed-bean-class>
           <managed-bean-scope>session</managed-bean-scope>
           <managed-property>
             <description>Service Dependency: Modules service</description>
             <property-name>moduleService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
           </managed-property>
 		  <managed-property>
             <description>Service Dependency: Melete Import Service</description>
             <property-name>meleteImportService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.MeleteImportService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.MeleteImportService"]}</value>
           </managed-property>
            <managed-property>
             <description>Service Dependency: Melete Export Service</description>
             <property-name>meleteExportService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.MeleteExportService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.MeleteExportService"]}</value>
           </managed-property>
           <managed-property>
 			<description>Service Dependency: Melete Export Scorm Service</description>
@@ -339,89 +340,89 @@
  <managed-bean>
           <description>author preferences</description>
           <managed-bean-name>authorPreferences</managed-bean-name>
-          <managed-bean-class>org.sakaiproject.tool.melete.AuthorPreferencePage</managed-bean-class>
+          <managed-bean-class>org.etudes.tool.melete.AuthorPreferencePage</managed-bean-class>
           <managed-bean-scope>session</managed-bean-scope>
            <managed-property>
 	    	            <description>Service Dependency: Melete Author Pref service</description>
 	    	            <property-name>authorPref</property-name>
-	    	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteAuthorPrefService"]}</value>
+	    	            <value>#{Components["org.etudes.api.app.melete.MeleteAuthorPrefService"]}</value>
             </managed-property>
 </managed-bean>  
 
 <managed-bean>
           <description>student preferences</description>
           <managed-bean-name>studentPreferences</managed-bean-name>
-          <managed-bean-class>org.sakaiproject.tool.melete.StudentPreferencePage</managed-bean-class>
+          <managed-bean-class>org.etudes.tool.melete.StudentPreferencePage</managed-bean-class>
           <managed-bean-scope>session</managed-bean-scope>
            <managed-property>
 	    	            <description>Service Dependency: Melete Author Pref service</description>
 	    	            <property-name>authorPref</property-name>
-	    	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteAuthorPrefService"]}</value>
+	    	            <value>#{Components["org.etudes.api.app.melete.MeleteAuthorPrefService"]}</value>
             </managed-property>
 </managed-bean> 
 
 <managed-bean>
           <description>move sections</description>
           <managed-bean-name>moveSectionsPage</managed-bean-name>
-          <managed-bean-class>org.sakaiproject.tool.melete.MoveSectionsPage</managed-bean-class>
+          <managed-bean-class>org.etudes.tool.melete.MoveSectionsPage</managed-bean-class>
           <managed-bean-scope>session</managed-bean-scope>    
           	<managed-property>
 			<description>Service Dependency: Module service</description>
 			<property-name>moduleService</property-name>
-			<value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+			<value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
 		</managed-property>     
 </managed-bean>  
 
 <managed-bean>
           <description>print module</description>
           <managed-bean-name>printModulePage</managed-bean-name>
-          <managed-bean-class>org.sakaiproject.tool.melete.PrintModulePage</managed-bean-class>
+          <managed-bean-class>org.etudes.tool.melete.PrintModulePage</managed-bean-class>
           <managed-bean-scope>session</managed-bean-scope>    
           	<managed-property>
 			<description>Service Dependency: Module service</description>
 			<property-name>moduleService</property-name>
-			<value>#{Components["org.sakaiproject.api.app.melete.ModuleService"]}</value>
+			<value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
 		</managed-property>     
 </managed-bean>  
 
  <managed-bean>
       <description>Manages the DeleteResource page</description>
       <managed-bean-name>deleteResourcePage</managed-bean-name>
-      <managed-bean-class>org.sakaiproject.tool.melete.DeleteResourcePage</managed-bean-class>
+      <managed-bean-class>org.etudes.tool.melete.DeleteResourcePage</managed-bean-class>
       <managed-bean-scope>session</managed-bean-scope>
 	  <managed-property>
             <description>Service Dependency: Section service</description>
             <property-name>sectionService</property-name>
-            <value>#{Components["org.sakaiproject.api.app.melete.SectionService"]}</value>
+            <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
         </managed-property>   
         <managed-property>
 	    	            <description>Service Dependency: Melete CH service</description>
 	    	            <property-name>meleteCHService</property-name>
-	    	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteCHService"]}</value>
+	    	            <value>#{Components["org.etudes.api.app.melete.MeleteCHService"]}</value>
             </managed-property>   
       </managed-bean>  	
  
  <managed-bean>
       <description>Manages the Manage Content page</description>
       <managed-bean-name>manageResourcesPage</managed-bean-name>
-      <managed-bean-class>org.sakaiproject.tool.melete.ManageResourcesPage</managed-bean-class>
+      <managed-bean-class>org.etudes.tool.melete.ManageResourcesPage</managed-bean-class>
       <managed-bean-scope>session</managed-bean-scope> 
       <managed-property>
 	    	            <description>Service Dependency: Melete CH service</description>
 	    	            <property-name>meleteCHService</property-name>
-	    	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteCHService"]}</value>
+	    	            <value>#{Components["org.etudes.api.app.melete.MeleteCHService"]}</value>
             </managed-property>  
  </managed-bean>  	
  
  <managed-bean>
       <description>Add resources page</description>
       <managed-bean-name>addResourcesPage</managed-bean-name>
-      <managed-bean-class>org.sakaiproject.tool.melete.AddResourcesPage</managed-bean-class>
+      <managed-bean-class>org.etudes.tool.melete.AddResourcesPage</managed-bean-class>
       <managed-bean-scope>session</managed-bean-scope> 
        <managed-property>
 	    	            <description>Service Dependency: Melete CH service</description>
 	    	            <property-name>meleteCHService</property-name>
-	    	            <value>#{Components["org.sakaiproject.api.app.melete.MeleteCHService"]}</value>
+	    	            <value>#{Components["org.etudes.api.app.melete.MeleteCHService"]}</value>
             </managed-property>
  </managed-bean>  	     
     <!-- i18n -->
@@ -436,7 +437,7 @@
       <managed-property>
          <description>Bundle baseName</description>
          <property-name>baseName</property-name>
-         <value>org.sakaiproject.tool.melete.bundle.Messages</value>
+         <value>org.etudes.tool.melete.bundle.Messages</value>
       </managed-property>
 </managed-bean>
 
