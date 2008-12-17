@@ -235,6 +235,8 @@ public class SubSectionUtilImpl {
 			org.w3c.dom.Document subSectionW3CDOM =Xml.readDocumentFromString(sectionsSeqXML);
 			org.w3c.dom.Element root = subSectionW3CDOM.getDocumentElement();
 			org.w3c.dom.Element deleteThisElement = subSectionW3CDOM.getElementById(section_id);
+			if (deleteThisElement != null)
+			{	
 			org.w3c.dom.Node deleteElementParent =deleteThisElement.getParentNode();
 
 			// child nodes becomes children of parent node
@@ -250,6 +252,7 @@ public class SubSectionUtilImpl {
 
 			//remove the element
 			deleteElementParent.removeChild(deleteThisElement);
+			}
 
 			return writeDocumentToString(subSectionW3CDOM);
 		}
