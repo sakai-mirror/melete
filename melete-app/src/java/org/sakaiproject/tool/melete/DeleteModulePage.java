@@ -241,7 +241,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		catch(Exception ex)
 		{
 			String errMsg = bundle.getString("delete_module_fail");
-	     	context.addMessage (null, new FacesMessage(errMsg));
+	     	context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"delete_module_fail",errMsg));
 			return "delete_module";
 		}
 		setSuccess(true);
