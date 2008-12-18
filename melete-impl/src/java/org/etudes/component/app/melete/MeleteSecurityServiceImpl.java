@@ -72,7 +72,7 @@ import org.w3c.dom.Node;
 import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.util.Xml;
-import org.sakaiproject.simpleti.SakaiSimpleLTI;
+import org.etudes.simpleti.SakaiSimpleLTI;
 
 /*
  * MeleteSecurityService is the implementation of MeleteSecurityService
@@ -319,8 +319,8 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 					if ( service instanceof ContentHostingService )
 					{
 						ContentHostingService chService = (ContentHostingService) service;
-						try 
-						{ 
+						try
+						{
 							ContentResource content = chService.getResource(contentHostingRef.getId());
 							if ( MIME_TYPE_LTI.equals(content.getContentType()) )
 							{
@@ -328,7 +328,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 								String str = new String(bytes);
 								Properties props = SakaiSimpleLTI.doLaunch(str, ref.getContext(), ref.getId());
 								String htmltext = props.getProperty("htmltext");
-								if ( htmltext != null ) 
+								if ( htmltext != null )
 								{
 									res.setContentType("text/html");
 									ServletOutputStream out = res.getOutputStream();
@@ -337,7 +337,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 								}
 							}
 						}
-						catch (Exception e) 
+						catch (Exception e)
 						{
 							System.out.println("Exception e "+e.getMessage());
 						}
@@ -346,7 +346,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 						// get the producer's HttpAccess helper, it might not support one
 						HttpAccess access = service.getHttpAccess();
 						if (access == null) throw new EntityNotDefinedException(ref.getReference());
-	
+
 						// let the helper do the work
 						access.handleAccess(req, res, contentHostingRef, copyrightAcceptedRefs);
 					}
