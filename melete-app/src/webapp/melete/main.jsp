@@ -1,6 +1,9 @@
 <%@ page import="org.etudes.tool.melete.MeleteSiteAndUserInfo,java.util.Iterator,javax.faces.application.FacesMessage"%>
 <!--
  ***********************************************************************************
+ * $URL$
+ * $Id$  
+ ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
  *

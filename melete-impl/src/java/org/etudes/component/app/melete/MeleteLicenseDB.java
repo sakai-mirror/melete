@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- *
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -36,10 +36,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
-/*
- *  @author Rashmi
- * 05/22/06 - Rashmi - migrate to hibernate 3
- */
+
 
 public class MeleteLicenseDB implements Serializable{
 	ArrayList licenseTypes;

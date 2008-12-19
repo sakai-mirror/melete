@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- *
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -38,10 +38,7 @@ import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.SectionService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.sakaiproject.util.ResourceLoader;
-/**
- * @author Rashmi
- *
- */
+
 
 public class DeleteResourcePage implements Serializable{
 
@@ -123,7 +120,7 @@ public class DeleteResourcePage implements Serializable{
   			{
   				ValueBinding binding = Util.getBinding("#{addSectionPage}");
   				AddSectionPage addPage = (AddSectionPage) binding.getValue(context);
-  				if(addPage.meleteResource == null || addPage.meleteResource.getResourceId() == null 
+  				if(addPage.meleteResource == null || addPage.meleteResource.getResourceId() == null
 					|| delResourceId.equals(addPage.meleteResource.getResourceId()))
   				{
   					addPage.resetMeleteResourceValues();

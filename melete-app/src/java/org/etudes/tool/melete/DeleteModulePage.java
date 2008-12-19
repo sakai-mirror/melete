@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- *
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -34,7 +34,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
-//import org.sakaiproject.jsf.ToolBean;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.component.app.melete.SectionBean;
@@ -203,14 +203,14 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 				 // check if sections of selected module are selected too
 				if(sectionBeans != null)CheckSectionsSelected();
 				moduleService.deleteModules(this.moduleDateBeans,this.allmoduleDateBeans,getCourseId(), getUserId());
-				
+
 				Iterator it = this.moduleDateBeans.iterator();
 				while (it.hasNext()){
 					  ModuleDateBean obj = (ModuleDateBean) it.next();
 					  //Track the event
 					  EventTrackingService.post(EventTrackingService.newEvent("melete.module.delete", ToolManager.getCurrentPlacement().getContext(), true));
 				}
-			
+
 			}
 			if (getSectionSelected() == true)
 			{
@@ -222,7 +222,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 					  //Track the event
 					  EventTrackingService.post(EventTrackingService.newEvent("melete.section.delete", ToolManager.getCurrentPlacement().getContext(), true));
 				}
-			
+
 			}
 		}
 		catch(MeleteException me)

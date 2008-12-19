@@ -1,3 +1,8 @@
+# $URL$
+# $Id$
+#
+# $URL$
+# $Id$
 #
 # Copyright (c) 2008 Etudes, Inc.
 #

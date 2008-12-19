@@ -1,6 +1,9 @@
 <%@ page import="org.etudes.tool.melete.PrintModulePage,javax.faces.application.FacesMessage, java.util.ResourceBundle"%>
 <!--
  ***********************************************************************************
+ * $URL$
+ * $Id$  
+ ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
  *

@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $Header: /usr/src/sakai/melete-2.4/melete-impl/src/java/org/sakaiproject/component/app/melete/SectionServiceImpl.java,v 1.13 2007/06/25 17:03:13 rashmim Exp $
- *
+ * $Id$  
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
