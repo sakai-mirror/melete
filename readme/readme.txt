@@ -22,7 +22,7 @@
  *
  **********************************************************************************/
  
-MELETE 2.5.1 SETUP INSTRUCTIONS
+MELETE 2.6 SETUP INSTRUCTIONS
 For a patched Sakai 2.3, patched Sakai 2.4, OR Sakai 2.5
 
 Melete is a lesson builder tool for Sakai (A.K.A. Modules). To work with Melete source, you need the same development environment as Sakai, essentially Java 1.4 and Maven 1.0.2.
@@ -46,7 +46,7 @@ SETUP INSTRUCTIONS
 	** SKIP this step if you will run Melete with Sakai 2.4.**
 	
 	If you are using Sakai 2.3, you need to execute a patch that enables Sakai
-	2.3 to run with Melete 2.5.1. The patch is at /patch/meletepatchsak23.sh.
+	2.3 to run with Melete 2.6. The patch is at /patch/meletepatchsak23.sh.
 	
 	Instructions for running the patch are in /patch/patch-SAK2.3_for_melete.txt.
    
@@ -54,14 +54,14 @@ SETUP INSTRUCTIONS
 	** SKIP this step if you will run Melete with Sakai 2.3.**
 	
 	If you are using Sakai 2.4, you need to execute a patch that enables Sakai
-	2.4 to run with Melete 2.5.1. The patch is at /patch/meletepatchsak24.sh.
+	2.4 to run with Melete 2.6. The patch is at /patch/meletepatchsak24.sh.
 	
 	Instructions for running the patch are in /patch/patch-SAK2.4_for_melete.txt.	
 	
 	NOTE: No patch is needed for Sakai 2.5
 
 	
-2. Configuring Melete 2.5.1 
+2. Configuring Melete 2.6
        
   2.1 Packagingdir settings
 	
@@ -154,7 +154,7 @@ SETUP INSTRUCTIONS
 	
 	To build and deploy(using Maven version 2), run 'mvn clean install sakai:deploy'
 
-	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for Melete 2.5.1.Feel free to contact us at dev@etudes.org for melete-2.4.5 patch that you can work from.
+	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for Melete 2.6.Feel free to contact us at dev@etudes.org for melete-2.4.5 patch that you can work from.
 	
 6. Database Configuration
 
@@ -167,7 +167,7 @@ SETUP INSTRUCTIONS
 	6.1 Set up the Melete tables: 
 	
 	You can either run the sql script manually; it is provided under
-	/components/src/sql/mysql/melete25.sql, 
+	/components/src/sql/mysql/melete26.sql, 
 	
 	OR
 	

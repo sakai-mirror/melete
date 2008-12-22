@@ -22,7 +22,7 @@
  *
  **********************************************************************************/
  
-INSTRUCTIONS TO UPGRADE FROM MELETE 2.4.5 >> MELETE 2.5.1
+INSTRUCTIONS TO UPGRADE FROM MELETE 2.5.1 >> MELETE 2.6
 For a patched Sakai 2.3, patched Sakai 2.4, OR Sakai 2.5
 -----------------------------------------------------
 SETUP INSTRUCTIONS
@@ -40,17 +40,17 @@ SETUP INSTRUCTIONS
 	** SKIP this step if you will run Melete with Sakai 2.4.**
 	
 	If you are using Sakai 2.3, you need to execute a patch that enables Sakai
-	2.3 to run with Melete 2.5.1. The patch is at /patch/meletepatchsak23.sh.
+	2.3 to run with Melete 2.6. The patch is at /patch/meletepatchsak23.sh.
 	
-	Instructions for running the path are in /patch/patch-SAK2.3_for_melete.txt.
+	Instructions for running the patch are in /patch/patch-SAK2.3_for_melete.txt.
    
    b. Sakai 2.4.x Patch Instructions
 	** SKIP this step if you will run Melete with Sakai 2.3.**
 	
 	If you are using Sakai 2.4, you need to execute a patch that enables Sakai
-	2.4 to run with Melete 2.5.1. The patch is at /patch/meletepatchsak24.sh.
+	2.4 to run with Melete 2.6. The patch is at /patch/meletepatchsak24.sh.
 	
-	Instructions for running the path are in /patch/patch-SAK2.4_for_melete.txt.	
+	Instructions for running the patch are in /patch/patch-SAK2.4_for_melete.txt.	
 	
 	NOTE: No patch is needed for Sakai 2.5
 
@@ -73,7 +73,7 @@ SETUP INSTRUCTIONS
 	
 	To build and deploy(using Maven version 2), run 'mvn clean install sakai:deploy'
 
-	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for Melete 2.5.1.Feel free to contact us at dev@etudes.org for melete-2.4.5 patch that you can work from.
+	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for Melete 2.6.Feel free to contact us at dev@etudes.org for melete-2.4.5 patch that you can work from.
 	
 4. Database Configuration
   
@@ -85,22 +85,13 @@ SETUP INSTRUCTIONS
 	
 	4.1. To setup the Melete tables: 
 	
-		a. Create a backup of existing Melete tables.
-		
-		b. You need to run the Melete upgrade script manually
-		Mysql Users: /components/src/sql/mysql/melete25_upgrade.sql
-		Oracle Users: /components/src/sql/oracle/melete25_upgrade.sql
+		a. You need to run the Melete upgrade script manually
+		Mysql Users: /components/src/sql/mysql/melete26_upgrade.sql
+		Oracle Users: /components/src/sql/oracle/melete26_upgrade.sql
 		
 		NOTE: Please make sure secondary index on user_id column of melete_user_preference table is created.
 			  Hibernate sometimes doesn't create it.
-			   
-	4.2. It is necessary to run this script in order for the upgrade to run successfully.
-	    As of Melete2.5, we have moved the dtd declaration for the SEQ_XML column in MELETE_MODULE
-		from an external reference to an internal inline dtd. The script /components/src/sql/mysql/seqxml_script.sql
-		achieves this. Review the script and make sure dtdlocation variable is set up correctly
-		for your installation. Execute this script and check the MELETE_MODULE table to make sure
-		the SEQ_XML column has been updated correctly.
-		
+			   	
 	Start tomcat, make sure there are no errors in the logs.
 		
 5. Configure Site Archive to include Melete 
