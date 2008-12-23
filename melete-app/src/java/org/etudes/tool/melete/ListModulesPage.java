@@ -294,8 +294,7 @@ public class ListModulesPage implements Serializable{
 	  	    }
 	  	    catch (Exception e)
 		    {
-	  		  //e.printStackTrace();
-	  		  logger.error(e.toString());
+	  		  logger.debug(e.toString());
 		    }
 
 

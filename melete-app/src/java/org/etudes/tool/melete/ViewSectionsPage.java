@@ -173,7 +173,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			logger.debug(e.toString());
 		}
 		return null;
 	}
@@ -194,7 +194,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			logger.debug(e.toString());
 			return "";
 		}
 		return str;
@@ -260,7 +260,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			logger.debug(e.toString());
 			return "";
 		}
 
@@ -334,7 +334,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
               {
               url = null;
               contentLinkUrl = null;
-        	  e.printStackTrace();
+        	  logger.debug(e.toString());
               }
     	}
 		}
@@ -479,8 +479,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
   	  	}
   	  	catch (Exception e)
           {
-  		  //e.printStackTrace();
-  	  		logger.error(e.toString());
+  	  		logger.debug(e.toString());
           }
     	}
     	return this.module;
@@ -603,7 +602,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		}
 		catch (Exception e)
 		{
-			logger.error(e.toString());
+			logger.debug(e.toString());
 		}
 
     	return this.section;

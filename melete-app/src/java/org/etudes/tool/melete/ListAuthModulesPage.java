@@ -396,8 +396,7 @@ public class ListAuthModulesPage implements Serializable
 		}
 		catch (Exception e)
 		{
-			// e.printStackTrace();
-			logger.error(e.toString());
+			logger.debug(e.toString());
 		}
 		if (moduleDateBeans.size() == 0)
 		{
@@ -697,7 +696,7 @@ public class ListAuthModulesPage implements Serializable
 			}
 			catch (Exception ex)
 			{
-				logger.error(ex.toString());
+				logger.debug(ex.toString());
 			}
 			count = 0;
 			// Mallika - 3/24/05 added this to prevent selected value from being stored
@@ -937,8 +936,7 @@ public class ListAuthModulesPage implements Serializable
 
 		catch (Exception e)
 		{
-			// e.printStackTrace();
-			logger.error(e.toString());
+			logger.debug(e.toString());
 			String msg = bundle.getString("list_auth_modules_fail");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 			return "list_auth_modules";
@@ -1092,7 +1090,7 @@ public class ListAuthModulesPage implements Serializable
 						}
 						catch (MeleteException me)
 						{
-							logger.error(me.toString());
+							logger.debug(me.toString());
 							String msg = bundle.getString("indent_right_fail");
 							addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 						}
@@ -1138,7 +1136,7 @@ public class ListAuthModulesPage implements Serializable
 					}
 					catch (MeleteException me)
 					{
-						logger.error(me.toString());
+						logger.debug(me.toString());
 						String msg = bundle.getString("indent_right_fail");
 						addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 					}
@@ -1208,7 +1206,7 @@ public class ListAuthModulesPage implements Serializable
 				}
 				catch (MeleteException me)
 				{
-					logger.error(me.toString());
+					logger.debug(me.toString());
 					String msg = bundle.getString("indent_left_fail");
 					addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 				}
@@ -1242,7 +1240,7 @@ public class ListAuthModulesPage implements Serializable
 					}
 					catch (MeleteException me)
 					{
-						logger.error(me.toString());
+						logger.debug(me.toString());
 						String msg = bundle.getString("indent_left_fail");
 						addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 					}
@@ -1324,7 +1322,7 @@ public class ListAuthModulesPage implements Serializable
 		}
 		catch (MeleteException me)
 		{
-			logger.error(me.toString());
+			logger.debug(me.toString());
 			me.printStackTrace();
 			String msg = bundle.getString("sort_fail");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
@@ -1380,7 +1378,7 @@ public class ListAuthModulesPage implements Serializable
 		}
 		catch (MeleteException me)
 		{
-			logger.error(me.toString());
+			logger.debug(me.toString());
 			String msg = bundle.getString("sort_fail");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 		}
@@ -1405,7 +1403,7 @@ public class ListAuthModulesPage implements Serializable
 		}
 		catch (MeleteException me)
 		{
-			logger.error(me.toString());
+			logger.debug(me.toString());
 			String msg = bundle.getString("copy_fail");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 		}
@@ -1456,7 +1454,7 @@ public class ListAuthModulesPage implements Serializable
 		}
 		catch (Exception me)
 		{
-			logger.error(me.toString());
+			logger.debug(me.toString());
 			String msg = bundle.getString("copy_fail");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 		}

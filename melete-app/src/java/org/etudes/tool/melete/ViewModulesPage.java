@@ -192,8 +192,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
   	  	}
   	  	catch (Exception e)
           {
-  		  //e.printStackTrace();
-  	  		logger.error(e.toString());
+  			logger.debug(e.toString());
           }
  	  }
   	  	return this.mdbean;
@@ -492,8 +491,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 		}
 		catch (Exception e)
 		{
-	  		e.printStackTrace();
-	  		logger.error(e.toString());
+	  		logger.debug(e.toString());
 		}
     }
 
