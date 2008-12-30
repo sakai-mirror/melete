@@ -525,12 +525,20 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			{
 				 licensename = licenseUrl.substring(0,nameIdx) ;
 				 String otherInfo = licenseUrl.substring(nameIdx +1);
+				 otherInfo = otherInfo.trim();
+				 if(otherInfo != null )
+				 {
 				 int ownerIdx = otherInfo.lastIndexOf(",");
 				 if(ownerIdx != -1)
 				 {
 				 meleteResource.setCopyrightOwner(otherInfo.substring(0,ownerIdx));
 				 meleteResource.setCopyrightYear(otherInfo.substring(ownerIdx+1));
 				 }
+				 else 
+				 {
+					 meleteResource.setCopyrightOwner(otherInfo); 
+				 }
+			}
 			}
 			CcLicense ccl = meleteLicenseDB.fetchCcLicenseUrl(licensename);
 			licenseUrl = ccl.getUrl();
@@ -546,9 +554,20 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			{
 				 licensename = licenseUrl.substring(0,nameIdx) ;
 				 String otherInfo = licenseUrl.substring(nameIdx +1);
+				 otherInfo = otherInfo.trim();
+				 if(otherInfo != null )
+				 {
 				 int ownerIdx = otherInfo.lastIndexOf(",");
+				 if(ownerIdx != -1)
+				 {
 				 meleteResource.setCopyrightOwner(otherInfo.substring(0,ownerIdx));
 				 meleteResource.setCopyrightYear(otherInfo.substring(ownerIdx+1));
+				 }
+				 else 
+				 {
+					 meleteResource.setCopyrightOwner(otherInfo); 
+				 }
+			}
 			}
 			CcLicense ccl = meleteLicenseDB.fetchCcLicenseUrl(licensename);
 			licenseUrl = ccl.getUrl();
@@ -556,7 +575,8 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			meleteResource.setAllowCmrcl(ccl.isAllowCmrcl());
 			meleteResource.setAllowMod(ccl.getAllowMod());
 
-		}else if(licenseUrl.startsWith("Copyrighted Material"))
+		}
+			else if(licenseUrl.startsWith("Copyrighted Material"))
 		{
 			lcode = RESOURCE_LICENSE_FAIRUSE_CODE;
 			int nameIdx = licenseUrl.indexOf(",");
@@ -565,9 +585,20 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			{
 				 licensename = licenseUrl.substring(0,nameIdx) ;
 				 String otherInfo = licenseUrl.substring(nameIdx +1);
+				 otherInfo = otherInfo.trim();
+				 if(otherInfo != null)
+				 {
 				 int ownerIdx = otherInfo.lastIndexOf(",");
+				 if(ownerIdx != -1)
+				 {
 				 meleteResource.setCopyrightOwner(otherInfo.substring(0,ownerIdx));
 				 meleteResource.setCopyrightYear(otherInfo.substring(ownerIdx+1));
+				 }
+				 else 
+				 {
+					 meleteResource.setCopyrightOwner(otherInfo); 
+				 }
+			}
 			}
 			licenseUrl = licensename;
 		}

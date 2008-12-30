@@ -2194,7 +2194,7 @@ public class ModuleDB implements Serializable {
 		{
 		licenseStr = rl.getString("license_info_copyright");
 		if (melResource.getCopyrightYear() != null)
-			licenseStr += melResource.getCopyrightYear()+", ";
+			licenseStr += " " + melResource.getCopyrightYear()+", ";
 		if (melResource.getCopyrightOwner() != null)
 			licenseStr += melResource.getCopyrightOwner();
 		}
@@ -2203,7 +2203,7 @@ public class ModuleDB implements Serializable {
 		{
 		licenseStr = rl.getString("license_info_dedicated_to");
 		if (melResource.getCopyrightYear() != null)
-			licenseStr += melResource.getCopyrightYear()+", ";
+			licenseStr += " " +melResource.getCopyrightYear()+", ";
 		if (melResource.getCopyrightOwner() != null)
 		licenseStr += melResource.getCopyrightOwner();
 		}
@@ -2212,7 +2212,7 @@ public class ModuleDB implements Serializable {
 		{
 		licenseStr = rl.getString("license_info_licensed_under");
 		if (melResource.getCopyrightYear() != null)
-			licenseStr += melResource.getCopyrightYear()+", ";
+			licenseStr += " " +melResource.getCopyrightYear()+", ";
 		if (melResource.getCopyrightOwner() != null)
 		licenseStr += melResource.getCopyrightOwner();
 		}
@@ -2221,7 +2221,7 @@ public class ModuleDB implements Serializable {
 		{
 		licenseStr = rl.getString("license_info_fairuse");
 		if (melResource.getCopyrightYear() != null)
-			licenseStr += melResource.getCopyrightYear()+", ";
+			licenseStr += " " +melResource.getCopyrightYear()+", ";
 		if (melResource.getCopyrightOwner() != null)
 		licenseStr += melResource.getCopyrightOwner();
 		}
