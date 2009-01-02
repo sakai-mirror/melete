@@ -517,6 +517,9 @@ public class ExportMeleteModules {
 
 						// message as import is success
 						String infoMsg = bundle.getString("import_success");
+						String otherInfo= meleteImportService.getContentSourceInfo(document);
+						if( otherInfo != null)
+							infoMsg = infoMsg.concat(otherInfo);
 						FacesMessage msg = new FacesMessage(null, infoMsg);
 						msg.setSeverity(FacesMessage.SEVERITY_INFO);
 						context.addMessage(null, msg);
@@ -859,7 +862,14 @@ public class ExportMeleteModules {
 			// imsmd:general
 			Element imsmdgeneral = meleteExportService.createLOMElement(
 					"imsmd:general", "general");
-
+			
+			// imsmd:rights
+			Element imsmdrights = meleteExportService.createLOMElement(
+					"imsmd:rights", "rights");
+			Element metadataRightsDesc = meleteExportService
+			.createMetadataDescription("If you have any trouble with content pl contact at 800-xx-xxxx");
+			imsmdrights.add(metadataRightsDesc);
+	
 			// title
 			String title = getMeleteSiteAndUserInfo().getCourseTitle();
 			if (title != null) {
@@ -878,6 +888,7 @@ public class ExportMeleteModules {
 			}
 
 			imsmdlom.add(imsmdgeneral);
+			imsmdlom.add(imsmdrights);
 			manifestMetadata.add(imsmdlom);
 
 			manifest.add(manifestMetadata);

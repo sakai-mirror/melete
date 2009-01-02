@@ -1575,7 +1575,33 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 	}
 
+	public String getContentSourceInfo(Document document)
+	{
+		Map uris = new HashMap();
+		uris.put("imscp", DEFAULT_NAMESPACE_URI);
+		uris.put("imsmd", IMSMD_NAMESPACE_URI);
 
+		try
+		{
+			// description
+			XPath xpath = document.createXPath("/imscp:manifest/imscp:metadata/imsmd:lom/imsmd:rights/imsmd:description");
+			xpath.setNamespaceURIs(uris);
+
+			Element eleOrg = (Element) xpath.selectSingleNode(document);
+			if (eleOrg != null)
+			{
+				logger.debug("got desc element" + eleOrg.toString());
+				return eleOrg.selectSingleNode( ".//imsmd:langstring").getText();
+			}
+			else return null;
+		}
+		catch(Exception e)
+		{
+			logger.debug("error in reading other contact info" + e.toString());
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	/**
 	 * @return Returns the meleteCHService.
