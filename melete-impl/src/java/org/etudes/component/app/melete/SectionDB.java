@@ -807,9 +807,13 @@ public class SectionDB implements Serializable {
 				// set secResource fields
 				secResource.setSection(section);
 				secResource.setSectionId(section.getSectionId());
+				// update Section
+				tx = session.beginTransaction();
+				
 				if(melResource != null && melResource.getResourceId() != null)
-				    melResource = getMeleteResource(melResource.getResourceId());
-				secResource.setResource(melResource);
+				{
+					melResource = getMeleteResource(melResource.getResourceId());
+					secResource.setResource(melResource);
 
 				// update Section
 				tx = session.beginTransaction();
@@ -819,6 +823,7 @@ public class SectionDB implements Serializable {
 //				 save sectionResource
 		 		 session.save(secResource);
 				 section.setSectionResource(secResource);
+				}
 				 session.saveOrUpdate(section);
 
 			  // complete transaction
