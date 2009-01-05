@@ -99,11 +99,13 @@ public class AuthorPreferencePage {
   		else
   			userView = "true";
   		
- 		if (mup != null && (mup.isShowLTIChoice() == null || !mup.isShowLTIChoice().booleanValue()))
+ 		if (mup == null || mup.isShowLTIChoice() == null)
  			showLTI = "false";
  		else
-  			showLTI = "true";
-  		  		
+ 		{
+ 			logger.debug("mup LTi choice is:" + mup.isShowLTIChoice());
+  			showLTI = mup.isShowLTIChoice().toString();
+ 		} 		
   		if(msp != null && msp.isPrintable())
   			materialPrintable = "true";
 
