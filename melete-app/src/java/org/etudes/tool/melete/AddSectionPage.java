@@ -1,10 +1,10 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -339,9 +339,8 @@ public class AddSectionPage extends SectionPage implements Serializable{
             	   String uploadHomeDir = ctx.getExternalContext().getInitParameter("uploadDir");
             	   String newResourceId = addResourceToMeleteCollection(uploadHomeDir,addCollectionId);
 				   meleteResource.setResourceId(newResourceId);
-				   String rUrl = getMeleteCHService().getResourceUrl(newResourceId);
-	               String checkDup = rUrl.substring(rUrl.lastIndexOf("/")+1);
-	               if(!checkDup.equals(secResourceName))secResourceName = checkDup;
+				   secResourceName = getDisplayName(newResourceId); 
+				   logger.debug("sec name after reading from display name prop" + secResourceName);
             	}
 
 	  		ctx.renderResponse();
@@ -462,10 +461,8 @@ public class AddSectionPage extends SectionPage implements Serializable{
 				String addCollectionId = getMeleteCHService().getUploadCollectionId();
 				String newResourceId = addResourceToMeleteCollection(null, addCollectionId);
 				meleteResource.setResourceId(newResourceId);
-				currLinkUrl = getLinkUrl();
-				String rUrl = getMeleteCHService().getResourceUrl(newResourceId);
-				String checkDup = rUrl.substring(rUrl.lastIndexOf("/")+1);
-				if(!checkDup.equals(secResourceName))secResourceName = checkDup;
+				currLinkUrl = getLinkUrl();		
+				secResourceName = getDisplayName(newResourceId); 
 			}
 			logger.debug("currlink value in setServer is" + currLinkUrl);
 			createLinkUrl();
@@ -585,5 +582,5 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		  super.resetSectionValues();
 		  shouldRenderNotype = true;
 		  if(section != null) section = null;
-	    }
+	    }	 
 }

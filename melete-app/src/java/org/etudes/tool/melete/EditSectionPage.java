@@ -1,9 +1,9 @@
 /**********************************************************************************
  *
  * $URL$
- *
+ * $Id$
  ***********************************************************************************
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -51,12 +51,6 @@ import org.sakaiproject.util.ResourceLoader;
 
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.tool.cover.ToolManager;
-
-
-/**
- * @author Rashmi Mallika - upload exceed message doesn't display Rashmi - add server listing options to dropdown Rashmi - seperate method for
- *         processing replace server view link 2 me
- */
 
 public class EditSectionPage extends SectionPage implements Serializable
 {
@@ -673,9 +667,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 					selectedResource = new MeleteResource();
 					selectedResource.setResourceId(newResourceId);
 					sectionService.insertResource(selectedResource);
-					String rUrl = getMeleteCHService().getResourceUrl(newResourceId);
-					String checkDup = rUrl.substring(rUrl.lastIndexOf("/") + 1);
-					if (!checkDup.equals(secResourceName)) secResourceName = checkDup;
+					secResourceName = getDisplayName(newResourceId);					
 				}
 				else
 				{
@@ -783,6 +775,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				selectedResource = new MeleteResource();
 				selectedResource.setResourceId(newResourceId);
 				sectionService.insertResource(selectedResource);
+				secResourceName = getDisplayName(newResourceId); 
 				currLinkUrl = secResourceName;
 			}
 			else

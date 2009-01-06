@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -664,56 +664,21 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				String checkDup = resource.getUrl().substring(resource.getUrl().lastIndexOf("/") + 1);
 				ContentResourceEdit edit = null;
 				try
-				{
+				{					
 					if (!checkDup.equals(name))
 					{
-						if (logger.isDebugEnabled()) logger.debug("Found another resource with the same name or new typeEditor section");
-                        if (checkDup.lastIndexOf("-") != -1)
-                        {
-						   if (dispName.lastIndexOf(".") != -1)
-						   {
-							 checkDup = checkDup.substring(checkDup.lastIndexOf("-"), checkDup.length());
-						     dispName = dispName.substring(0, dispName.lastIndexOf("."));
-						     StringBuffer dispBuffer = new StringBuffer();
-						     dispBuffer.append(dispName);
-						     dispBuffer.append(checkDup);
-						     dispName = dispBuffer.toString();
-						   }
-						   else
-						   {
-							   dispName = checkDup;
-						   }
-                        }
-                        else //This it the condition for typeEditor Section.html sections
-                        {
-                        	dispName = checkDup;
-                        }
 						edit = getContentservice().editResource(resource.getId());
 						ResourcePropertiesEdit rp = edit.getPropertiesEdit();
 						String desc = rp.getProperty(ResourceProperties.PROP_DESCRIPTION);
 						rp.clear();
-						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, dispName);
+						logger.debug("add resource item chService  " + checkDup);
+						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, checkDup);
 						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
 						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 						getContentservice().commitResource(edit);
+						logger.debug("after saving chService  " + edit.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
 						edit = null;
 					}
-					else
-					{
-						//The code below ensures that the display name of the
-						//resource is set correctly
-						edit = getContentservice().editResource(resource.getId());
-						ResourcePropertiesEdit rp = edit.getPropertiesEdit();
-						String desc = rp.getProperty(ResourceProperties.PROP_DESCRIPTION);
-						rp.clear();
-
-						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, dispName);
-						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
-						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
-						getContentservice().commitResource(edit);
-						edit = null;
-					}
-
 				}
 				catch (Exception ex)
 				{
@@ -774,6 +739,28 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	     return resource.getId();
 	}
 
+	 public String getDisplayName(String resourceId)
+		{
+			try
+			{
+			 //	       setup a security advisor
+				meleteSecurityService.pushAdvisor();
+				ContentResourceEdit cr = getContentservice().editResource(resourceId);
+				logger.debug("prop name"  + cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
+				String dispName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
+				getContentservice().cancelResource(cr);
+				return dispName;
+			}
+			catch (Exception e)
+			{
+				logger.debug("error in reading resource properties in edit section" + e);
+			}
+			 finally{
+					meleteSecurityService.popAdvisor();
+				}
+			return null;
+		}
+	 
 	 /*
 	  *
 	  */
@@ -1452,9 +1439,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		       meleteSecurityService.popAdvisor();
 		    }
 		    return null;
-	  }
-
-
+	  }	 
 
 	    /**
 	     * @return Returns the contentservice.

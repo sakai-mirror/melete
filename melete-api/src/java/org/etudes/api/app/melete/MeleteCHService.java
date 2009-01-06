@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,5 +78,6 @@ public interface MeleteCHService{
 	 public void removeCollection(String delColl_id, String delSubColl_id) throws Exception;
 	 public void removeCourseCollection(String delColl_id) throws Exception;
 	  public String moveResource(String resourceId, String destinationColl) throws Exception;
+	  public String getDisplayName(String resourceId);
 }
 

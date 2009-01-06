@@ -646,84 +646,77 @@ public abstract class SectionPage implements Serializable {
 	/*
 	 *  adds resource to specified melete module or uploads collection.
 	 */
-	public String addResourceToMeleteCollection(String uploadHomeDir, String addCollId) throws UserErrorException,MeleteException
-	{
-		try{
-	            String res_mime_type=getMeleteCHService().MIME_TYPE_EDITOR;
-	            boolean encodingFlag = false;
+    public String addResourceToMeleteCollection(String uploadHomeDir, String addCollId) throws UserErrorException,MeleteException
+    {
+    	try{
+    		String res_mime_type=getMeleteCHService().MIME_TYPE_EDITOR;
+    		boolean encodingFlag = false;
 
-	            if(section.getContentType().equals("typeEditor"))
-	            {
-	            		contentEditor =  getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir,contentEditor);
-	                    res_mime_type= getMeleteCHService().MIME_TYPE_EDITOR;
-	                    secContentData = new byte[contentEditor.length()];
-	                    secContentData = contentEditor.getBytes();
-	                    encodingFlag = true;
-	                    secResourceName = "Section_" + section.getSectionId().toString();
-	                    secResourceDescription="compose content";
-	            }
+    		if(section.getContentType().equals("typeEditor"))
+    		{
+    			contentEditor =  getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir,contentEditor);
+    			res_mime_type= getMeleteCHService().MIME_TYPE_EDITOR;
+    			secContentData = new byte[contentEditor.length()];
+    			secContentData = contentEditor.getBytes();
+    			encodingFlag = true;
+    			secResourceName = "Section_" + section.getSectionId().toString();
+    			secResourceDescription="compose content";
+    		}
 
-	            if(section.getContentType().equals("typeLink"))
-	            {
-	                    res_mime_type=getMeleteCHService().MIME_TYPE_LINK;
-	                    Util.validateLink(getLinkUrl());
-	          /*          if (logger.isDebugEnabled()) logger.debug("check value from validating link" + check);
-	    		     	if(!check.equals("OK"))
-	    		     	{
-	    		     		throw new MeleteException("add_section_bad_url");
-	    		     	}
-	    		  */
-	                    if ((secResourceName == null)||(secResourceName.trim().length()==0))
-	                    	throw new MeleteException("URL_title_reqd");
+    		if (section.getContentType().equals("typeLink")) {
+    			res_mime_type = getMeleteCHService().MIME_TYPE_LINK;
+    			Util.validateLink(getLinkUrl());
+    		    if ((secResourceName == null)|| (secResourceName.trim().length() == 0))
+    				throw new MeleteException("URL_title_reqd");
+    			secContentData = new byte[linkUrl.length()];
+    			secContentData = linkUrl.getBytes();
+    		}
+    		if (section.getContentType().equals("typeLTI")) {
+    			String pitch = getLTIDescriptor();
+    			if (ltiDescriptor == null || ltiDescriptor.trim().length() == 0) {
+    				throw new MeleteException("add_section_empty_lti");
+    			}
+    			if (!SimpleLTIUtil.validateDescriptor(ltiDescriptor)) {
+    				throw new MeleteException("add_section_bad_lti");
+    			}
+    			res_mime_type = getMeleteCHService().MIME_TYPE_LTI;
+    			secContentData = new byte[ltiDescriptor.length()];
+    			secContentData = ltiDescriptor.getBytes();
+    		}
+    		if (section.getContentType().equals("typeUpload")) {
+    			res_mime_type = uploadSectionContent("file1");
+    			if (logger.isDebugEnabled())
+    				logger.debug("new names for upload content is"
+    						+ res_mime_type + "," + secResourceName);
+    			if (res_mime_type == null)
+    				throw new MeleteException("select_or_cancel");
+    		}
+    		ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,
+    				secResourceName, secResourceDescription);
+    		if (logger.isDebugEnabled())
+    			logger.debug("add resource now " + secResourceName);
 
-	                    secContentData = new byte[linkUrl.length()];
-	                    secContentData = linkUrl.getBytes();
-	            }
-	            if(section.getContentType().equals("typeLTI"))
-		    {
-                            String pitch = getLTIDescriptor();
-			    if ( ltiDescriptor == null || ltiDescriptor.trim().length()==0 )
-                            {
-	    		     		throw new MeleteException("add_section_empty_lti");
-                            }
-			    if ( ! SimpleLTIUtil.validateDescriptor(ltiDescriptor) )
-			    {
-	    		     		throw new MeleteException("add_section_bad_lti");
-			    }
-	                    res_mime_type=getMeleteCHService().MIME_TYPE_LTI;
-	                    secContentData = new byte[ltiDescriptor.length()];
-	                    secContentData = ltiDescriptor.getBytes();
-		    }
-	            if(section.getContentType().equals("typeUpload"))
-	            {
-	                    res_mime_type = uploadSectionContent("file1");
-	                    if (logger.isDebugEnabled()) logger.debug("new names for upload content is" + res_mime_type +"," + secResourceName);
-	                    if(res_mime_type == null) throw new MeleteException("select_or_cancel");
-	             }
-	            ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,secResourceName,secResourceDescription);
-	            if (logger.isDebugEnabled()) logger.debug("add resource now " + secResourceName );
-
-	            	String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type,addCollId,secContentData,res );
-		            return newResourceId;
-				}
-				catch(UserErrorException uex)
-					{
-					throw uex;
-					}
-				catch(MeleteException me)
-					{
-					logger.debug("error in creating resource for section content" + me.toString());
-					throw me;
-					}
-				catch(Exception e)
-					{
-						if (logger.isDebugEnabled()) {
-						logger.debug("error in creating resource for section content" + e.toString());
-						//e.printStackTrace();
-						}
-					throw new MeleteException("add_section_fail");
-					}
-	}
+    		String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type, addCollId, secContentData,res);
+    		return newResourceId;
+    	}
+    	catch(UserErrorException uex)
+    	{
+    		throw uex;
+    	}
+    	catch(MeleteException me)
+    	{
+    		logger.debug("error in creating resource for section content" + me.toString());
+    		throw me;
+    	}
+    	catch(Exception e)
+    	{
+    		if (logger.isDebugEnabled()) {
+    			logger.debug("error in creating resource for section content" + e.toString());
+    			//e.printStackTrace();
+    		}
+    		throw new MeleteException("add_section_fail");
+    	}
+    }
 
 	/*
 	 *  adds resource to specified melete module or uploads collection.
@@ -1588,6 +1581,10 @@ public abstract class SectionPage implements Serializable {
 		return allContentTypes;
 	}
 
+	 protected String getDisplayName(String resourceId)
+		{
+		 return getMeleteCHService().getDisplayName(resourceId);
+		}
 	/*
 	 *
 	 * inner class to set required content resource values for display
