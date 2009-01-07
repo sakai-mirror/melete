@@ -67,17 +67,16 @@
 				                        <td class="style2"><h:outputText value="#{msgs.sort_modules_sort}" /></td>
 										<td><div>
 										 <!-- Begin code to display images horizontally. -->
-											<h:graphicImage id="Sort_Modules-horz"
-								   							alt="#{msgs.sort_modules_sort_modules}"
-								   							url="images/Sort_Modules-down2.gif"
-								     						 width="85" height="20" styleClass="BottomImgSpace"/>
+										<h:graphicImage id="Sort_Modules-horz"	alt="#{msgs.sort_modules_sort_modules}"
+								   							url="#{msgs.im_sort_modules_down2}"
+								     						 width="85" height="20" styleClass="BottomImgSpace"/>	
 								     						 
 					     			<h:commandLink id="sortsec"  action="#{manageModulesPage.gotoSortSections}" immediate="true" >					 
-										<h:graphicImage id="sortSectionsImg" value="images/Sort_Sections.gif" width="85" height="20" styleClass="BottomImgSpace" 
-													onmouseover="this.src = 'images/Sort_Sections-over.gif'" 
-													onmouseout="this.src = 'images/Sort_Sections.gif'" 
-													onmousedown="this.src = 'images/Sort_Sections-down.gif'" 
-													onmouseup="this.src = 'images/Sort_Sections-over.gif'"/>
+										<h:graphicImage id="sortSectionsImg" value="#{msgs.im_sort_sections}" width="85" height="20" styleClass="BottomImgSpace" 
+													onmouseover="this.src = '#{msgs.im_sort_sections_over}'" 
+													onmouseout="this.src = '#{msgs.im_sort_sections}'" 
+													onmousedown="this.src = '#{msgs.im_sort_sections_down}'" 
+													onmouseup="this.src = '#{msgs.im_sort_sections}'"/>
 										</h:commandLink>			
 										<!-- End code to display images horizontally. -->
 										</div></td>

@@ -27,30 +27,6 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <%@ page import="org.etudes.tool.melete.ManageModulesPage"%>
 
-<!--
- ***********************************************************************************
- * $URL$
- * $Id$  
- ***********************************************************************************
- *
- * Copyright (c) 2008 Etudes, Inc.
- *
- * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- * implied. See the License for the specific language governing
- * permissions and limitations under the License.
- *
- **********************************************************************************
--->
 <html><head>
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
@@ -108,15 +84,15 @@ function resetModuleSelection() {
 										<td><div>
 										 <!-- Begin code to display images horizontally. -->
 										   <h:commandLink id="sortmod"  action="#{manageModulesPage.goToSortModules}" immediate="true" >	
-										 	<h:graphicImage id="sortModulesImg" value="images/Sort_Modules.gif" width="85" height="20" styleClass="BottomImgSpace" 
-													onmouseover="this.src = 'images/Sort_Modules-over.gif'" 
-													onmouseout="this.src = 'images/Sort_Modules.gif'" 
-													onmousedown="this.src = 'images/Sort_Modules-down.gif'" 
-													onmouseup="this.src = 'images/Sort_Modules-over.gif'"/>
+										 	<h:graphicImage id="sortModulesImg" value="#{msgs.im_sort_modules}" width="85" height="20" styleClass="BottomImgSpace" 
+													onmouseover="this.src = '#{msgs.im_sort_modules_over}'" 
+													onmouseout="this.src = '#{msgs.im_sort_modules}'" 
+													onmousedown="this.src = '#{msgs.im_sort_modules_down}'" 
+													onmouseup="this.src = '#{msgs.im_sort_modules_over}'"/>
 											</h:commandLink>				
 											<h:graphicImage id="Sort_Sections-horz" 
 								   							alt="#{msgs.sort_sections_sort_sections}"
-								   							url="images/Sort_Sections-down2.gif"
+								   							url="#{msgs.im_sort_sections_down2}"
 								     						 width="85" height="20" styleClass="BottomImgSpace"/>
 								     						 
 									
