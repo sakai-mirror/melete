@@ -22,7 +22,7 @@
 					<f:verbatim>
 						<tr><td height="20" colspan="2"> 
 						</f:verbatim>
-							<h:outputText id="addLTITitle" value="#{msgs.addmodulesections_lti_title}" />
+							<h:outputText id="addLTITitle" value="#{msgs.addmodulesections_lti_item_title}" />
 							<f:verbatim>
 								<span class="required">*</span>
 							</f:verbatim>
