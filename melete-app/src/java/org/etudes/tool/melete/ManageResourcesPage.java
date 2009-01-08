@@ -209,7 +209,7 @@ public List<DisplayResources> getAllResourcesList()
 		 			rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));
 				}
 				else if(rTypeLTI)
-				{					
+				{	rType = true;				
 					rgif = "images/web_service.png";
 				}
 				allResourcesList.add(new DisplayResources(displayName, cr.getId(),rUrl,rType,rgif));
