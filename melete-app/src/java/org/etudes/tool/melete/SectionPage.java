@@ -1149,7 +1149,10 @@ public abstract class SectionPage implements Serializable {
 				{
 				String contentextension = cr.getContentType();
 		 		rgif = ContentTypeImageService.getContentTypeImage(contentextension);
-		 		rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
+		 		if(rgif.startsWith("sakai"))
+		 			rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
+		 		else if (rgif.startsWith("/sakai"))
+		 			rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));		 		
 				}
 				if(section.getContentType().equals("typeLTI"))
 				{

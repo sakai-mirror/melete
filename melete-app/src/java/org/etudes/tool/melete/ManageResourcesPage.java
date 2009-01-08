@@ -202,7 +202,11 @@ public List<DisplayResources> getAllResourcesList()
 				{
 				String contentextension = cr.getContentType();
 		 		rgif = ContentTypeImageService.getContentTypeImage(contentextension);
-		 		rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
+		 		logger.debug("image provided for" + displayName +" is " +rgif);
+		 		if(rgif.startsWith("sakai"))
+		 			rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
+		 		else if (rgif.startsWith("/sakai"))
+		 			rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));
 				}
 				else if(rTypeLTI)
 				{					
