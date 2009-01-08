@@ -729,8 +729,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 	public String gotoServerLTIView()
 	{
 		gotoServerLinkView();
+		setLTIUrl(null);
+		setLTIPassword(null);
 		setLTIDisplay("Basic");
 		setLTIDescriptor(null);
+		newURLTitle ="";
 		return "editContentLTIServerView";
 	}
 
