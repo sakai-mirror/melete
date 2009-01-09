@@ -403,7 +403,7 @@ public class ExportMeleteModules {
 				.getAbsolutePath()
 				+ File.separator + title.replace(' ', '_') + "_fewModules_scorm.zip";
 			}
-		
+
 			File zipfile = new File(outputfilename);
 			// create zip
 			createZip(packagedir, zipfile);
@@ -862,14 +862,7 @@ public class ExportMeleteModules {
 			// imsmd:general
 			Element imsmdgeneral = meleteExportService.createLOMElement(
 					"imsmd:general", "general");
-			
-			// imsmd:rights
-			Element imsmdrights = meleteExportService.createLOMElement(
-					"imsmd:rights", "rights");
-			Element metadataRightsDesc = meleteExportService
-			.createMetadataDescription("If you have any trouble with content pl contact at 800-xx-xxxx");
-			imsmdrights.add(metadataRightsDesc);
-	
+
 			// title
 			String title = getMeleteSiteAndUserInfo().getCourseTitle();
 			if (title != null) {
@@ -888,7 +881,6 @@ public class ExportMeleteModules {
 			}
 
 			imsmdlom.add(imsmdgeneral);
-			imsmdlom.add(imsmdrights);
 			manifestMetadata.add(imsmdlom);
 
 			manifest.add(manifestMetadata);
