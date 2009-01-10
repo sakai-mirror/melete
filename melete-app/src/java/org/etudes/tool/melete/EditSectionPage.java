@@ -866,8 +866,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		catch (Exception e)
 		{
-			logger.error("error in set server url for edit section content" + errMsg);
-			e.printStackTrace();
+			logger.debug("error in set server url for edit section content" + errMsg);
+		//	e.printStackTrace();
 			if (e.getMessage() != null)
 			{
 			  errMsg = bundle.getString(e.getMessage());

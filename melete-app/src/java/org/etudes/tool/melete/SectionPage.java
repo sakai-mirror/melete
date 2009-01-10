@@ -672,6 +672,8 @@ public abstract class SectionPage implements Serializable {
     			secContentData = linkUrl.getBytes();
     		}
     		if (section.getContentType().equals("typeLTI")) {
+    			if(getLTIUrl() != null)
+    			Util.validateLink(getLTIUrl());
     			String pitch = getLTIDescriptor();
     			if (ltiDescriptor == null || ltiDescriptor.trim().length() == 0) {
     				throw new MeleteException("add_section_empty_lti");

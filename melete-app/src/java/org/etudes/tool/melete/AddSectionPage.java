@@ -339,7 +339,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
             	   String uploadHomeDir = ctx.getExternalContext().getInitParameter("uploadDir");
             	   String newResourceId = addResourceToMeleteCollection(uploadHomeDir,addCollectionId);
 				   meleteResource.setResourceId(newResourceId);
-				   secResourceName = getDisplayName(newResourceId); 
+				   secResourceName = getDisplayName(newResourceId);
 				   logger.debug("sec name after reading from display name prop" + secResourceName);
             	}
 
@@ -462,8 +462,8 @@ public class AddSectionPage extends SectionPage implements Serializable{
 				String addCollectionId = getMeleteCHService().getUploadCollectionId();
 				String newResourceId = addResourceToMeleteCollection(null, addCollectionId);
 				meleteResource.setResourceId(newResourceId);
-				currLinkUrl = getLinkUrl();		
-				secResourceName = getDisplayName(newResourceId); 
+				currLinkUrl = getLinkUrl();
+				secResourceName = getDisplayName(newResourceId);
 			}
 			logger.debug("currlink value in setServer is" + currLinkUrl);
 			createLinkUrl();
@@ -527,8 +527,8 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		}
 		catch (Exception e)
 		{
-			logger.error("error in set server url for edit section content" + errMsg);
-			e.printStackTrace();
+			logger.debug("error in set server url for edit section content" + errMsg);
+			// e.printStackTrace();
 			if (e.getMessage() != null)
 			{
 				errMsg = bundle.getString(e.getMessage());
@@ -583,5 +583,5 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		  super.resetSectionValues();
 		  shouldRenderNotype = true;
 		  if(section != null) section = null;
-	    }	 
+	    }
 }
