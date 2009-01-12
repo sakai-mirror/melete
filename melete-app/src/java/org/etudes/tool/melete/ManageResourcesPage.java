@@ -209,10 +209,10 @@ public List<DisplayResources> getAllResourcesList()
 		 			rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));
 				}
 				else if(rTypeLTI)
-				{	rType = true;				
+				{			
 					rgif = "images/web_service.png";
 				}
-				allResourcesList.add(new DisplayResources(displayName, cr.getId(),rUrl,rType,rgif));
+				allResourcesList.add(new DisplayResources(displayName, cr.getId(),rUrl,rType,rgif,rTypeLTI));
 			}
 			getListNav().setTotalSize(allResourcesList.size()+1);
 			Collections.sort(allResourcesList);
@@ -305,14 +305,22 @@ public class DisplayResources implements Comparable<DisplayResources>
 	String resource_url;
 	boolean typeLink;
 	String resource_gif;
+	boolean typeLTI;
 
-	public DisplayResources(String resource_title,String resource_id, String resource_url, boolean isTypeLink,String resource_gif)
+	public boolean isTypeLTI() {
+		return typeLTI;
+	}
+	public void setTypeLTI(boolean typeLTI) {
+		this.typeLTI = typeLTI;
+	}
+	public DisplayResources(String resource_title,String resource_id, String resource_url, boolean isTypeLink,String resource_gif,boolean typeLTI)
 	{
 		this.resource_title = resource_title;
 		this.resource_id = resource_id;
 		this.resource_url = resource_url;
 		this.typeLink = isTypeLink;
 		this.resource_gif = resource_gif;
+		this.typeLTI = typeLTI;
 	}
 	/**
 	 * @return Returns the resource_id.
@@ -371,16 +379,19 @@ public class DisplayResources implements Comparable<DisplayResources>
 	}
 	public int compareTo(DisplayResources n) {
 		int res = 0;
+		if(this.typeLTI) res = 1;
 		// both are link or upload than equal
-		if(this.typeLink == n.isTypeLink())
-			res= this.resource_title.compareTo(n.getResource_title());
-
+		if(this.typeLink == n.isTypeLink() && this.typeLTI == n.isTypeLTI())
+			res= this.resource_title.compareToIgnoreCase(n.getResource_title());
+		
 		// this is link and n is upload
-		if(this.typeLink && !n.isTypeLink()) res = 1;
+		if(this.typeLink && (!n.isTypeLink() || n.isTypeLTI())) res = -1;
 
 		// this is upload and n is link
-		if(!this.typeLink && n.isTypeLink()) res = -1;
-
+		if(!this.typeLink && n.isTypeLink()) res = 1;
+		
+		if(!this.typeLink && n.isTypeLTI()) res = -1;
+				
 		return res;
 	}
 	/**

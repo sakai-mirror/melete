@@ -1655,7 +1655,7 @@ public abstract class SectionPage implements Serializable {
 		}
 
 		public int compareTo(DisplaySecResources n) {
-			int res = resource_title.compareTo(n.getResource_title());
+			int res = resource_title.compareToIgnoreCase(n.getResource_title());
 			return res;
 		}
 
