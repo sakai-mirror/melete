@@ -2338,7 +2338,7 @@ public class ModuleDB implements Serializable {
 							for(Iterator i1=allModuleDelSecs.keySet().iterator();i1.hasNext();)
 							{
 								Object obj = i1.next();
-								String sobj = toDelCourseId + "/module_"+delModuleId.toString()+"/Section_"+obj;
+								String sobj = toDelCourseId + "/module_"+delModuleId.toString()+"/Section_"+obj.toString();
 								logger.debug("to del section resource" + sobj);
 								deletedEntities = session.createQuery("delete MeleteResource mr where mr.resourceId like '%" +sobj +"%'").executeUpdate();
 							}
