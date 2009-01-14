@@ -2317,7 +2317,8 @@ public class ModuleDB implements Serializable {
 						String allSecIds = null;
 						Map allModuleDelSecs = delModule.getDeletedSections();
 						allSecIds = getAllSectionIds(allModuleDelSecs);
-
+						
+					//	String selectResourceStr = "select sr.resource.resourceId from SectionResource sr where sr.section in " + allSecIds;
 						String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
 						String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
 					//	String delSectionStr = "delete Section s where s.moduleId=:moduleId";
@@ -2329,9 +2330,17 @@ public class ModuleDB implements Serializable {
 						if (allSecIds != null)
 						{
 							try{
+						//		List delSectionResources = session.createQuery(selectResourceStr).list();
+						//		logger.debug("CHECK SECTION FILES:" + delSectionResources.toString());
 							int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
 							deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
 							deletedEntities = session.createQuery(delSectionStr).executeUpdate();
+							for(Iterator i1=allModuleDelSecs.keySet().iterator();i1.hasNext();)
+							{
+								String obj = (String)i1.next();
+								obj = toDelCourseId + "/module_"+delModuleId.toString()+"/Section_"+obj;
+								session.createQuery("delete MeleteResource mr where mr.resourceId like '%" +obj +"%'").executeUpdate();
+							}
 							}
 							catch(Exception e){
 								logger.info("error deleting section and resources " + allSecIds + " for module" + delModuleId);
@@ -2370,6 +2379,11 @@ public class ModuleDB implements Serializable {
 						int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
 						deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
 						deletedEntities = session.createQuery(delSectionStr).executeUpdate();
+						for(Section sec:sectionsres)
+						{
+							String obj1 = toDelCourseId + "/module_"+sec.getModuleId()+"/Section_"+sec.getSectionId().toString();
+							session.createQuery("delete MeleteResource mr where mr.resourceId like '%" +obj1 +"%'").executeUpdate();
+						}
 						logger.debug("sucess remove of deleted sections" + deletedEntities);
 						}
 						catch(Exception e){
