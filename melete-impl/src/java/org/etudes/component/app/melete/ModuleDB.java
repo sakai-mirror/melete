@@ -2318,7 +2318,7 @@ public class ModuleDB implements Serializable {
 						Map allModuleDelSecs = delModule.getDeletedSections();
 						allSecIds = getAllSectionIds(allModuleDelSecs);
 						
-					//	String selectResourceStr = "select sr.resource.resourceId from SectionResource sr where sr.section in " + allSecIds;
+						String selectResourceStr = "select sr.resource.resourceId from SectionResource sr where sr.section in " + allSecIds;
 						String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
 						String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
 					//	String delSectionStr = "delete Section s where s.moduleId=:moduleId";
@@ -2330,8 +2330,8 @@ public class ModuleDB implements Serializable {
 						if (allSecIds != null)
 						{
 							try{
-						//		List delSectionResources = session.createQuery(selectResourceStr).list();
-						//		logger.debug("CHECK SECTION FILES:" + delSectionResources.toString());
+							List delSectionResources = session.createQuery(selectResourceStr).list();
+								logger.debug("CHECK SECTION FILES:" + delSectionResources.toString());
 							int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
 							deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
 							deletedEntities = session.createQuery(delSectionStr).executeUpdate();
@@ -2339,11 +2339,13 @@ public class ModuleDB implements Serializable {
 							{
 								String obj = (String)i1.next();
 								obj = toDelCourseId + "/module_"+delModuleId.toString()+"/Section_"+obj;
-								session.createQuery("delete MeleteResource mr where mr.resourceId like '%" +obj +"%'").executeUpdate();
+								logger.debug("to del section resource" + obj);
+								int deletedEntities = session.createQuery("delete MeleteResource mr where mr.resourceId like '%" +obj +"%'").executeUpdate();
 							}
 							}
 							catch(Exception e){
 								logger.info("error deleting section and resources " + allSecIds + " for module" + delModuleId);
+								e.printStackTrace();
 								continue;
 							}
 						}
