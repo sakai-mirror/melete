@@ -2337,10 +2337,10 @@ public class ModuleDB implements Serializable {
 							deletedEntities = session.createQuery(delSectionStr).executeUpdate();
 							for(Iterator i1=allModuleDelSecs.keySet().iterator();i1.hasNext();)
 							{
-								String obj = (String)i1.next();
-								obj = toDelCourseId + "/module_"+delModuleId.toString()+"/Section_"+obj;
-								logger.debug("to del section resource" + obj);
-								int deletedEntities = session.createQuery("delete MeleteResource mr where mr.resourceId like '%" +obj +"%'").executeUpdate();
+								Object obj = i1.next();
+								String sobj = toDelCourseId + "/module_"+delModuleId.toString()+"/Section_"+obj;
+								logger.debug("to del section resource" + sobj);
+								deletedEntities = session.createQuery("delete MeleteResource mr where mr.resourceId like '%" +sobj +"%'").executeUpdate();
 							}
 							}
 							catch(Exception e){
