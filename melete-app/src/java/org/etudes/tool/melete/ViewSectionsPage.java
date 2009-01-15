@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -55,6 +55,7 @@ import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.util.ResourceLoader;
 
 import org.sakaiproject.event.cover.EventTrackingService;
+import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.tool.cover.ToolManager;
 import org.etudes.simpleti.SakaiSimpleLTI;
 import org.imsglobal.simplelti.SimpleLTIUtil;
@@ -398,6 +399,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 
     public void setSectionId(int sectionId) {
         this.sectionId = sectionId;
+        logSectionReadEvent(sectionId);
     }
 
     public int getModuleSeqNo() {
@@ -617,8 +619,6 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
                       if (this.sectionDisplaySequence == null) {
 			      this.section = (SectionObjService) getSectionService().getSection(this.sectionId);
 			      this.sectionDisplaySequence=getSectionService().getSectionDisplaySequence(this.section);
-				  //Track the event
-				  EventTrackingService.post(EventTrackingService.newEvent("melete.section.read", ToolManager.getCurrentPlacement().getContext(), true));
 			};
 		      return this.sectionDisplaySequence;
 		          }
@@ -656,14 +656,14 @@ public String goPrevNext()
 	{
 		if (moduleIdStr.trim().length() > 0)
 		{
-		  this.moduleId = new Integer(moduleIdStr).intValue();
+		  setModuleId(new Integer(moduleIdStr).intValue());
 		}
 	}
 	if (sectionIdStr != null)
 	{
 		if (sectionIdStr.trim().length() > 0)
 		{
-	      this.sectionId = new Integer(sectionIdStr).intValue();
+	      setSectionId(new Integer(sectionIdStr).intValue());
 		}
 	}
 	this.module = null;
@@ -887,4 +887,15 @@ public void setMeleteCHService(MeleteCHService meleteCHService) {
      this.autonumber = autonumber;
     }
 
+    private void logSectionReadEvent(int sectionId) {
+    	// Log melete.section.read event, if not logged yet on this user session
+		String readEvent = "melete.section.read";
+		String reference = readEvent + "-" + String.valueOf(sectionId);
+		String sessionValue = (String) SessionManager.getCurrentSession().getAttribute(reference);
+		if (sessionValue == null || sessionValue.equals("")) {
+			SessionManager.getCurrentSession().setAttribute(reference, "true");
+			EventTrackingService.post(EventTrackingService.newEvent(readEvent, ToolManager.getCurrentPlacement().getContext(), true));
+		}
+    }
 }
+
