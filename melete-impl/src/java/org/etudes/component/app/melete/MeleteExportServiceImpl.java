@@ -267,10 +267,9 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 				mdLangString2.setText(lurl);
 				mdLicenseDesc.add(mdLangString2);
 				imsmdright.add(mdLicenseDesc);
-				// copyright info add end
-
-				secElement.add(imsmdlom);
+				// copyright info add end				
 			}	// end if contents
+			secElement.add(imsmdlom);
 	return k;
 	}
 	/**
