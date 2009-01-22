@@ -770,7 +770,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				if (resHrefAttr != null)
 				{
 					String hrefVal = resHrefAttr.getValue();
-
+					logger.debug("hrefVal:" + hrefVal);
 					// check if file is missing
 					if (hrefVal != null && hrefVal.length() != 0
 							&& !(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")))
@@ -1092,20 +1092,21 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				if (resElements != null) section.setOpenWindow(true);
 				// get url title if provided in IMS
 				String urlTitle = "";
-				if(resElements != null){
+				if(resElements != null)
+				 {
 					for(int i=0; i < resElements.size(); i++)
 					{
-					Element urlTitleElement = (Element)resElements.get(i);
-					if(urlTitleElement.getQualifiedName().equalsIgnoreCase("imsmd:title")){
-						urlTitle = urlTitleElement.selectSingleNode( ".//imsmd:langstring").getText();
-						break;
+						Element urlTitleElement = (Element)resElements.get(i);
+						if(urlTitleElement.getQualifiedName().equalsIgnoreCase("imsmd:title")){
+							urlTitle = urlTitleElement.selectSingleNode( ".//imsmd:langstring").getText();
+							break;
 						}
 					}
-				} else {
+				 } else {
 					// Import from Site
 					if(!hrefVal.equals(fromCRName))
 						urlTitle = fromCRName;
-				}
+				 }
 
 				// make last part of link as title
 				if(urlTitle.equals(""))
@@ -1180,10 +1181,12 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 						if(hrefVal.indexOf("/access/content/group") != -1)
 						{
 							String fileResourceName= hrefVal.substring(hrefVal.lastIndexOf("/")+1);
-							if(!(fileResourceName.endsWith(".html") || fileResourceName.endsWith(".htm")))
-							{
+							logger.debug("SITE RES ITEM" + fileResourceName);
+					//		if(!(fileResourceName.endsWith(".html") || fileResourceName.endsWith(".htm")))
+					//		{
 								if(resElements != null){
 									String fileName = ((Element)resElements.get(0)).attributeValue("href");
+									logger.debug("fileName read now is:" + fileName);
 									melContentData = meleteUtil.readFromFile(new File(unZippedDirPath + File.separator+ fileName));
 									res_mime_type = fileName.substring(fileName.lastIndexOf(".")+1);
 									res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
@@ -1210,7 +1213,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 								String secondResName = getMeleteCHService().getResourceUrl(newResourceId);
 						 		melContentData =secondResName.getBytes();
 						 		res_mime_type=getMeleteCHService().MIME_TYPE_LINK;
-							}
+						//	}
 						}
 						else
 					  	{
