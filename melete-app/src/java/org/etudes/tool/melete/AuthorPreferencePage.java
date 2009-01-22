@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -98,14 +98,14 @@ public class AuthorPreferencePage {
   			userView = "false";
   		else
   			userView = "true";
-  		
+
  		if (mup == null || mup.isShowLTIChoice() == null)
  			showLTI = "false";
  		else
  		{
  			logger.debug("mup LTi choice is:" + mup.isShowLTIChoice());
   			showLTI = mup.isShowLTIChoice().toString();
- 		} 		
+ 		}
   		if(msp != null && msp.isPrintable())
   			materialPrintable = "true";
 
@@ -248,9 +248,9 @@ public String setUserChoice()
 			{
 				mup.setViewExpChoice(false);
 			}
-			
+
 			if (showLTI.equals("true"))	mup.setShowLTIChoice(true);
-			else mup.setShowLTIChoice(false);			
+			else mup.setShowLTIChoice(false);
 
 		mup.setUserId((String)sessionMap.get("userId"));
 		authorPref.insertUserChoice(mup);
@@ -383,7 +383,7 @@ public void setShowLTI(String showLTI) {
 
 public boolean getUserLTIChoice(String userId){
 	MeleteUserPreference checkMup = (MeleteUserPreference)getAuthorPref().getUserChoice(userId);
-	if(checkMup != null) return checkMup.isShowLTIChoice();
+	if(checkMup != null && checkMup.isShowLTIChoice() != null) return checkMup.isShowLTIChoice();
 	else return false;
 }
 
