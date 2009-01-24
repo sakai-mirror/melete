@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -2317,7 +2317,7 @@ public class ModuleDB implements Serializable {
 						String allSecIds = null;
 						Map allModuleDelSecs = delModule.getDeletedSections();
 						allSecIds = getAllSectionIds(allModuleDelSecs);
-						
+
 						String selectResourceStr = "select sr.resource.resourceId from SectionResource sr where sr.section in " + allSecIds;
 						String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
 						String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
@@ -2330,18 +2330,16 @@ public class ModuleDB implements Serializable {
 						if (allSecIds != null)
 						{
 							try{
-							List delSectionResources = session.createQuery(selectResourceStr).list();
-								logger.debug("CHECK SECTION FILES:" + delSectionResources.toString());
+							List<String> delSectionResources = session.createQuery(selectResourceStr).list();
+							//	logger.debug("CHECK SECTION FILES:" + delSectionResources.toString());
 							int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
 							deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
 							deletedEntities = session.createQuery(delSectionStr).executeUpdate();
-							for(Iterator i1=allModuleDelSecs.keySet().iterator();i1.hasNext();)
-							{
-								Object obj = i1.next();
-								String sobj = toDelCourseId + "/module_"+delModuleId.toString()+"/Section_"+obj.toString();
-								logger.debug("to del section resource" + sobj);
-								deletedEntities = session.createQuery("delete MeleteResource mr where mr.resourceId like '%" +sobj +"%'").executeUpdate();
-							}
+
+							for(String delRes:delSectionResources)
+									session.createQuery("delete MeleteResource mr where mr.resourceId =" + delRes).executeUpdate();
+
+
 							}
 							catch(Exception e){
 								logger.info("error deleting section and resources " + allSecIds + " for module" + delModuleId);
@@ -2349,7 +2347,7 @@ public class ModuleDB implements Serializable {
 								continue;
 							}
 						}
-						logger.debug("deleting stuff for module" + delModuleId);
+					//	logger.debug("deleting stuff for module" + delModuleId);
 					//	int deletedEntities = session.createQuery(delSectionStr).setInteger("moduleId", delModuleId).executeUpdate();
 						int deletedEntities = session.createQuery(delCourseModuleStr).setInteger("moduleId", delModuleId).executeUpdate();
 						deletedEntities = session.createQuery(delModuleshDatesStr).setInteger("moduleId", delModuleId).executeUpdate();
@@ -2362,7 +2360,7 @@ public class ModuleDB implements Serializable {
      			    Query query1 = session.createQuery(queryString1);
 				    query1.setString("courseId",	toDelCourseId);
 					List<Section> sectionsres = query1.list();
-					logger.debug("found extra sections marked for delete:" + sectionsres.size());
+				//	logger.debug("found extra sections marked for delete:" + sectionsres.size());
 					if(sectionsres != null && sectionsres.size() > 0)
 					{
 					String allSecIds = "(";
@@ -2373,19 +2371,20 @@ public class ModuleDB implements Serializable {
 					if(allSecIds.lastIndexOf(",") != -1)
 						allSecIds = allSecIds.substring(0,allSecIds.lastIndexOf(","))+" )";
 
+					String selectResourceStr = "select sr.resource.resourceId from SectionResource sr where sr.section in " + allSecIds;
 					String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
 					String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
 					String delSectionStr = "delete Section s where s.sectionId in " + allSecIds;
 
 					try{
+						List<String> delSectionResources = session.createQuery(selectResourceStr).list();
 						int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
 						deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
 						deletedEntities = session.createQuery(delSectionStr).executeUpdate();
-						for(Section sec:sectionsres)
-						{
-							String obj1 = toDelCourseId + "/module_"+sec.getModuleId()+"/Section_"+sec.getSectionId().toString();
-							session.createQuery("delete MeleteResource mr where mr.resourceId like '%" +obj1 +"%'").executeUpdate();
-						}
+
+						for(String delRes:delSectionResources)
+							session.createQuery("delete MeleteResource mr where mr.resourceId =" + delRes).executeUpdate();
+
 						logger.debug("sucess remove of deleted sections" + deletedEntities);
 						}
 						catch(Exception e){
@@ -2444,7 +2443,7 @@ public class ModuleDB implements Serializable {
 
 	private void deleteEverything(String delCourseId, Session session, String allModuleIds)
 	{
-		logger.debug("delete everything for " + delCourseId + allModuleIds);
+		//logger.debug("delete everything for " + delCourseId + allModuleIds);
 		String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId like '%" + delCourseId + "%'";
 		String delSectionResourceStr = "delete SectionResource sr where sr.resource.resourceId like '%" + delCourseId + "%'";
 		String delSectionStr = "delete Section s where s.moduleId in " + allModuleIds;
@@ -2512,7 +2511,7 @@ public class ModuleDB implements Serializable {
 				else secEmbed.add(sec.getSectionResource().getResource().getResourceId());
 			}
 		  }
-		  logger.debug("before sorting and removing dups" + secEmbed.size());
+		//  logger.debug("before sorting and removing dups" + secEmbed.size());
 		  //sort list and remove duplicates
 		  SortedSet s =  new TreeSet();
 		  s.addAll(secEmbed);

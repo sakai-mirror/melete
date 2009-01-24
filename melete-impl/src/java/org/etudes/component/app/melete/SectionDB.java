@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -809,7 +809,7 @@ public class SectionDB implements Serializable {
 				secResource.setSectionId(section.getSectionId());
 				// update Section
 				tx = session.beginTransaction();
-				
+
 				if(melResource != null && melResource.getResourceId() != null)
 				{
 					melResource = getMeleteResource(melResource.getResourceId());
@@ -1245,21 +1245,20 @@ public class SectionDB implements Serializable {
 					// delete sections marked for delete
 					List<Section> delSections = (ArrayList) deletedSections.get(toDelSecCourseId);
 					String allSecIds = getAllDeleteSectionIds(delSections);
-					logger.debug("all SecIds in sectionscleanup" + allSecIds);
+				//	logger.debug("all SecIds in sectionscleanup" + allSecIds);
+				    String selectResourceStr = "select sr.resource.resourceId from SectionResource sr where sr.section in " + allSecIds;
 					String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
 					String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
 					String delSectionStr = "delete Section s where s.sectionId in " + allSecIds;
 
+					List<String> delSectionResources = session.createQuery(selectResourceStr).list();
 					int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
 					deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
 					deletedEntities = session.createQuery(delSectionStr).executeUpdate();
 
-					List<String> allSecMelResIds = getAllDeleteSectionMeleteResourceIds(delSections);
-					for(String secMelResId: allSecMelResIds)
-					{
-						session.createQuery("delete MeleteResource mr where mr.resourceId like '%" +secMelResId +"%'").executeUpdate();
-						meleteCHService.removeResource(secMelResId);
-					}
+					for(String delRes:delSectionResources)
+						session.createQuery("delete MeleteResource mr where mr.resourceId =" + delRes).executeUpdate();
+
 					// delete melete resource and from content resource
 					if(allCourseResources != null)
 					{
