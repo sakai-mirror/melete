@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008,2009 Etudes, Inc.
@@ -143,7 +143,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	  String meleteCollectionRef = Entity.SEPARATOR+"private"+ REFERENCE_ROOT;
 	  String groupCollectionRef = Entity.SEPARATOR+"group";
 	  org.sakaiproject.entity.api.Reference ref1 = null;
-	  
+
 	  if ((inputStr != null)&&(inputStr.length() > 0))
 	  {
 		  if (inputStr.startsWith(meleteCollectionRef))
@@ -158,7 +158,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 			  {
 				  inputStr = inputStr.replace(groupCollectionRef ,"/site");
 				  ref1 = org.sakaiproject.entity.cover.EntityManager.newReference(inputStr);
-				  courseId = ref1.getContainer();			  
+				  courseId = ref1.getContainer();
 			  }
 			  else
 			  {
@@ -663,7 +663,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				String checkDup = resource.getUrl().substring(resource.getUrl().lastIndexOf("/") + 1);
 				ContentResourceEdit edit = null;
 				try
-				{					
+				{
 					if (!checkDup.equals(name))
 					{
 						edit = getContentservice().editResource(resource.getId());
@@ -759,7 +759,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				}
 			return null;
 		}
-	 
+
 	 /*
 	  *
 	  */
@@ -1055,7 +1055,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    					contentEditor = meleteUtil.replace(contentEditor, soFar + checkTarget, soFar+newTarget);
 	    				}
 	    			}
-	    			
+
 					if (fileName.startsWith(ServerConfigurationService.getServerUrl()))
 					{
 						if (fileName.indexOf("/meleteDocs") != -1)
@@ -1066,7 +1066,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 							String newEmbedResourceId = ref.getId();
 							newEmbedResourceId = newEmbedResourceId.replaceFirst("/content", "");
 							sectiondb.getMeleteResource(newEmbedResourceId);
-						}						
+						}
 						String replaceStr = meleteUtil.replace(fileName, ServerConfigurationService.getServerUrl(), "");
 						contentEditor = meleteUtil.replace(contentEditor, patternStr, replaceStr);
 						checkforimgs = meleteUtil.replace(checkforimgs, patternStr, replaceStr);
@@ -1084,7 +1084,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 
 				}
 
-				
+
 		            // iterate next
     				if(endSrc > 0 && endSrc <= checkforimgs.length())
     					checkforimgs =checkforimgs.substring(endSrc);
@@ -1327,7 +1327,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        delColl_id= Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+delColl_id+ Entity.SEPARATOR;
 	    	if(delSubColl_id != null)
 	    		delColl_id = delColl_id.concat(delSubColl_id + Entity.SEPARATOR);
-	    	logger.debug("checking coll before delte" + delColl_id);
+	    	//logger.debug("checking coll before delte" + delColl_id);
 
 	    	try
 	    	{
@@ -1370,7 +1370,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		    try
 	   	    {
 		    	delColl_id= Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+delColl_id+ Entity.SEPARATOR;
-		    	logger.debug("checking course coll before delete: " + delColl_id);
+		   // 	logger.debug("checking course coll before delete: " + delColl_id);
 		    	getContentservice().checkCollection(delColl_id);
 
 		    	// if uploads directory remains and all modules are deleted
@@ -1438,7 +1438,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		       meleteSecurityService.popAdvisor();
 		    }
 		    return null;
-	  }	 
+	  }
 
 	    /**
 	     * @return Returns the contentservice.
