@@ -1257,7 +1257,7 @@ public class SectionDB implements Serializable {
 					deletedEntities = session.createQuery(delSectionStr).executeUpdate();
 
 					for(String delRes:delSectionResources)
-						session.createQuery("delete MeleteResource mr where mr.resourceId =" + delRes).executeUpdate();
+						session.createQuery("delete MeleteResource mr where mr.resourceId =:resourceId").setString("resourceId", delRes).executeUpdate();
 
 					// delete melete resource and from content resource
 					if(allCourseResources != null)
