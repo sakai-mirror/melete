@@ -1258,8 +1258,11 @@ public class SectionDB implements Serializable {
 
 					if(delSectionResources != null && delSectionResources.size() > 0)
 					{
-					for(String delRes:delSectionResources)
-						session.createQuery("delete MeleteResource mr where mr.resourceId =:resourceId").setString("resourceId", delRes).executeUpdate();
+					   for(String delRes:delSectionResources)
+							{
+								session.createQuery("delete MeleteResource mr where mr.resourceId =:resourceId").setString("resourceId", delRes).executeUpdate();
+								meleteCHService.removeResource(delRes);
+							}
 					}
 					// delete melete resource and from content resource
 					if(allCourseResources != null)

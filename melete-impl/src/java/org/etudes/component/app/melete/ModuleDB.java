@@ -2338,8 +2338,11 @@ public class ModuleDB implements Serializable {
 
 							if(delSectionResources != null && delSectionResources.size() > 0)
 								{
-									for(String delRes:delSectionResources)
-								    	session.createQuery("delete MeleteResource mr where mr.resourceId =:resourceId").setString("resourceId", delRes).executeUpdate();
+								   for(String delRes:delSectionResources)
+					    			{
+					    			session.createQuery("delete MeleteResource mr where mr.resourceId =:resourceId").setString("resourceId", delRes).executeUpdate();
+									meleteCHService.removeResource(delRes);
+									}
 								}
 
 							}
@@ -2387,7 +2390,10 @@ public class ModuleDB implements Serializable {
 						if(delSectionResources != null && delSectionResources.size() > 0)
 							{
 					    		for(String delRes:delSectionResources)
+					    		{
 					    			session.createQuery("delete MeleteResource mr where mr.resourceId =:resourceId").setString("resourceId", delRes).executeUpdate();
+									meleteCHService.removeResource(delRes);
+								}
 							}
 
 						logger.debug("sucess remove of deleted sections" + deletedEntities);
