@@ -1246,7 +1246,7 @@ public class SectionDB implements Serializable {
 					List<Section> delSections = (ArrayList) deletedSections.get(toDelSecCourseId);
 					String allSecIds = getAllDeleteSectionIds(delSections);
 				//	logger.debug("all SecIds in sectionscleanup" + allSecIds);
-				    String selectResourceStr = "select sr.resource.resourceId from SectionResource sr where sr.section in " + allSecIds;
+				    String selectResourceStr = "select sr.resource.resourceId from SectionResource sr where sr.section.contentType ='typeEditor' and sr.section in " + allSecIds;
 					String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
 					String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
 					String delSectionStr = "delete Section s where s.sectionId in " + allSecIds;
@@ -1256,9 +1256,11 @@ public class SectionDB implements Serializable {
 					deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
 					deletedEntities = session.createQuery(delSectionStr).executeUpdate();
 
+					if(delSectionResources != null && delSectionResources.size() > 0)
+					{
 					for(String delRes:delSectionResources)
 						session.createQuery("delete MeleteResource mr where mr.resourceId =:resourceId").setString("resourceId", delRes).executeUpdate();
-
+					}
 					// delete melete resource and from content resource
 					if(allCourseResources != null)
 					{
