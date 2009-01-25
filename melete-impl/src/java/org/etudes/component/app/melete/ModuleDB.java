@@ -2318,7 +2318,7 @@ public class ModuleDB implements Serializable {
 						Map allModuleDelSecs = delModule.getDeletedSections();
 						allSecIds = getAllSectionIds(allModuleDelSecs);
 
-						String selectResourceStr = "select sr.resource.resourceId from SectionResource sr where sr.section in " + allSecIds;
+						String selectResourceStr = "select sr.resource.resourceId from SectionResource sr where sr.section.contentType ='typeEditor' and sr.section in " + allSecIds;
 						String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
 						String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
 					//	String delSectionStr = "delete Section s where s.moduleId=:moduleId";
@@ -2336,9 +2336,11 @@ public class ModuleDB implements Serializable {
 							deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
 							deletedEntities = session.createQuery(delSectionStr).executeUpdate();
 
-							for(String delRes:delSectionResources)
-									session.createQuery("delete MeleteResource mr where mr.resourceId =" + delRes).executeUpdate();
-
+							if(delSectionResources != null && delSectionResources.size() > 0)
+								{
+									for(String delRes:delSectionResources)
+								    	session.createQuery("delete MeleteResource mr where mr.resourceId =:resourceId").setString("resourceId", delRes).executeUpdate();
+								}
 
 							}
 							catch(Exception e){
@@ -2371,7 +2373,7 @@ public class ModuleDB implements Serializable {
 					if(allSecIds.lastIndexOf(",") != -1)
 						allSecIds = allSecIds.substring(0,allSecIds.lastIndexOf(","))+" )";
 
-					String selectResourceStr = "select sr.resource.resourceId from SectionResource sr where sr.section in " + allSecIds;
+					String selectResourceStr = "select sr.resource.resourceId from SectionResource sr where sr.section.contentType ='typeEditor' and sr.section in " + allSecIds;
 					String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
 					String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
 					String delSectionStr = "delete Section s where s.sectionId in " + allSecIds;
@@ -2382,8 +2384,11 @@ public class ModuleDB implements Serializable {
 						deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
 						deletedEntities = session.createQuery(delSectionStr).executeUpdate();
 
-						for(String delRes:delSectionResources)
-							session.createQuery("delete MeleteResource mr where mr.resourceId =" + delRes).executeUpdate();
+						if(delSectionResources != null && delSectionResources.size() > 0)
+							{
+					    		for(String delRes:delSectionResources)
+					    			session.createQuery("delete MeleteResource mr where mr.resourceId =:resourceId").setString("resourceId", delRes).executeUpdate();
+							}
 
 						logger.debug("sucess remove of deleted sections" + deletedEntities);
 						}
