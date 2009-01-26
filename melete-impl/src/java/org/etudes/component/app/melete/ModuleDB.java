@@ -2233,6 +2233,7 @@ public class ModuleDB implements Serializable {
 	{
 		if (!meleteSecurityService.isSuperUser(UserDirectoryService.getCurrentUser().getId())) throw new MeleteException("admin_allow_cleanup");
 
+		logger.debug("clean up process started");
 		int delCount = 0;
 		long totalStart = System.currentTimeMillis();
 		try
