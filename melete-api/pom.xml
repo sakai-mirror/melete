@@ -34,6 +34,7 @@
   <name>Etudes Melete Service</name>
   <groupId>org.etudes</groupId>
   <artifactId>etudes-melete-api</artifactId>
+  <version>2.6</version>
   <organization>
     <name>Etudes</name>
     <url>http://etudes.org/</url>

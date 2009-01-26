@@ -36,7 +36,8 @@
 	<name>etudes-melete-tool</name>
 	<groupId>org.etudes</groupId>
 	<artifactId>etudes-melete-tool</artifactId>
-	<organization>
+	<version>2.6</version>	
+<organization>
 		<name>Etudes</name>
 		<url>http://etudes.org/</url>
 	</organization>
@@ -46,24 +47,25 @@
 		<dependency>
 			<groupId>org.etudes</groupId>
 			<artifactId>etudes-melete-util</artifactId>
+                          <version>2.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.etudes</groupId>
 			<artifactId>etudes-melete-impl</artifactId>
-			
+			 <version>2.6</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.etudes</groupId>
 			<artifactId>etudes-melete-hbm</artifactId>
-			
+			 <version>2.6</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.etudes</groupId>
 			<artifactId>etudes-melete-api</artifactId>
-			
+			 <version>2.6</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -75,54 +77,55 @@
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-authz-api</artifactId>
-			
+			 <version>${sakai.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-entity-api</artifactId>
-			
+			 <version>${sakai.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-site-api</artifactId>
-			
+			 <version>${sakai.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-user-api</artifactId>
-			
+			 <version>${sakai.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-content-api</artifactId>
-			
+			 <version>${sakai.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-util-api</artifactId>
-			
+			 <version>${sakai.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-component-api</artifactId>
-			
+			 <version>${sakai.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-tool-api</artifactId>
-			
+			 <version>${sakai.version}</version>
 			<scope>provided</scope>
 		</dependency>
         <dependency>
 			<groupId>org.sakaiproject</groupId>
             <artifactId>sakai-event-api</artifactId>
+ <version>${sakai.version}</version>
             <scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -152,18 +155,18 @@
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-util</artifactId>
-			
+		 <version>${sakai.version}</version>	
 		</dependency>
 		<!--JSF DEPENDENCIES -->
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-jsf-tool</artifactId>
-			
+			 <version>${sakai.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-jsf-app</artifactId>
-			
+			 <version>${sakai.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -179,7 +182,7 @@
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-depend-jsf-widgets-sun</artifactId>
-			
+			 <version>${sakai.version}</version>
 			<type>pom</type>
 			<exclusions>
 				<exclusion>

@@ -34,6 +34,7 @@
   <name>Etudes Melete Pack</name>
   <groupId>org.etudes</groupId>
   <artifactId>etudes-melete-pack</artifactId>
+  <version>2.6</version>
   <organization>
     <name>Etudes</name>
     <url>http://etudes.org/</url>
@@ -47,15 +48,17 @@
     <dependency>
       <groupId>org.etudes</groupId>
       <artifactId>etudes-melete-impl</artifactId>
-    </dependency>
+  	 <version>2.6</version>
+  </dependency>
     <dependency>
       <groupId>org.etudes</groupId>
       <artifactId>etudes-melete-util</artifactId>
-    </dependency>
+       <version>2.6</version>
+ </dependency>
     <dependency>
       <groupId>org.sakaiproject</groupId>
       <artifactId>sakai-util</artifactId>
-      
+     <version>${sakai.version}</version> 
 
     </dependency>
 <!--    <dependency>
