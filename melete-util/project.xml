@@ -25,7 +25,7 @@
     <name>Etudes Melete Utilities</name>
     <groupId>etudes</groupId>
     <id>etudes-melete-util</id>
-    <currentVersion>${sakai.version}</currentVersion>
+    <currentVersion>${melete.version}</currentVersion>
     <organization>
         <name>Etudes</name>
         <url>http://etudes.org/</url>

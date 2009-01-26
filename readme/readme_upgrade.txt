@@ -64,12 +64,14 @@ SETUP INSTRUCTIONS
 	
 	3.1 Sakai 2.4 and previous versions
 	
+	Note: Undeploy any previous versions from the previous version Melete source before deploying this new one.
+	
 	To build(using Maven version 1), run 'maven sakai:build' and then to deploy 'maven sakai:deploy'
 	
 	(for more instructions, see section titled 'Sakai Maven Goals' in the 
 	"How we build Sakai Using Maven" document provided by Sakai lead developers)
 	
-	3.2 Sakai 2.5 
+	3.2 Sakai 2.5 and above versions
 	
 	To build and deploy(using Maven version 2), run 'mvn clean install sakai:deploy'
 

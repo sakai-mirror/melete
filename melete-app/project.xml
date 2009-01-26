@@ -29,7 +29,7 @@
 	<name>etudes-melete-tool</name>
 	<groupId>etudes</groupId>
 	<id>etudes-melete-tool</id>
-	<currentVersion>${sakai.version}</currentVersion>
+	  <currentVersion>${melete.version}</currentVersion>
 	<organization>
 		<name>Etudes</name>
 		<url>http://etudes.org/</url>
@@ -43,22 +43,22 @@
 		<dependency>
 			<groupId>etudes</groupId>
 			<artifactId>etudes-melete-impl</artifactId>
-			<version>${sakai.version}</version>
+			<version>${melete.version}</version>
 		</dependency>
 		<dependency>
 					<groupId>etudes</groupId>
 					<artifactId>etudes-melete-hbm</artifactId>
-					<version>${sakai.version}</version>
+					<version>${melete.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>etudes</groupId>
 			<artifactId>etudes-melete-api</artifactId>
-			<version>${sakai.version}</version>
+			<version>${melete.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>etudes</groupId>
 			<artifactId>etudes-melete-util</artifactId>
-			<version>${sakai.version}</version>
+			<version>${melete.version}</version>
 			<properties>
 				<war.bundle>true</war.bundle>
 			</properties>   

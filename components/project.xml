@@ -29,7 +29,7 @@
     <name>Etudes Melete Pack</name>
     <groupId>etudes</groupId>
     <id>etudes-melete-pack</id>
-    <currentVersion>${sakai.version}</currentVersion>
+    <currentVersion>${melete.version}</currentVersion>
     <organization>
         <name>Etudes</name>
         <url>http://etudes.org/</url>
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>etudes</groupId>
             <artifactId>etudes-melete-impl</artifactId>
-            <version>${sakai.version}</version>
+            <version>${melete.version}</version>
              <properties>
 				<war.bundle>true</war.bundle>
 			</properties>
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>etudes</groupId>
             <artifactId>etudes-melete-util</artifactId>
-            <version>${sakai.version}</version>
+            <version>${melete.version}</version>
 	    <properties>
 	   	 <war.bundle>true</war.bundle>
 	    </properties>

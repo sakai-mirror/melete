@@ -30,7 +30,7 @@
     <name>Etudes Melete Service</name>
     <groupId>etudes</groupId>
     <id>etudes-melete-api</id>
-    <currentVersion>${sakai.version}</currentVersion>
+     <currentVersion>${melete.version}</currentVersion>
     <organization>
         <name>Etudes</name>
         <url>http://etudes.org/</url>

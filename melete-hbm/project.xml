@@ -30,7 +30,7 @@
     <name>etudes-melete-hbm</name>
     <groupId>etudes</groupId>
     <id>etudes-melete-hbm</id>
-	<currentVersion>${sakai.version}</currentVersion>
+	  <currentVersion>${melete.version}</currentVersion>
     <organization>
         <name>Etudes</name>
         <url>http://etudes.org/</url>
@@ -46,7 +46,7 @@
 	    <dependency>
   	  		<groupId>etudes</groupId>
         	<artifactId>etudes-melete-api</artifactId>
-			<version>${sakai.version}</version>
+			<version>${melete.version}</version>
     	</dependency>
 	
 	<dependency>

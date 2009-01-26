@@ -145,15 +145,17 @@ SETUP INSTRUCTIONS
 	
 	5.1 Sakai 2.4 and previous versions
 	
+	Note: Undeploy any previous versions from the previous version Melete source before deploying this new one.
+	
 	To build(using Maven version 1), run 'maven sakai:build' and then to deploy 'maven sakai:deploy'
 	
 	(for more instructions, see section titled 'Sakai Maven Goals' in the 
 	"How we build Sakai Using Maven" document provided by Sakai lead developers)
 	
-	5.2 Sakai 2.5 
+	5.2 Sakai 2.5 and above versions
 	
 	To build and deploy(using Maven version 2), run 'mvn clean install sakai:deploy'
-
+	
 	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for Melete 2.6.Feel free to contact us at dev@etudes.org for melete-2.4.5 patch that you can work from.
 	
 6. Database Configuration

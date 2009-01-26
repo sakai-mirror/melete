@@ -28,6 +28,7 @@
     <pomVersion>3</pomVersion>
     <name>Etudes Melete</name>
     <groupId>etudes-melete</groupId>
+    <currentVersion>${melete.version}</currentVersion>
     <organization>
         <name>Etudes</name>
         <url>http://etudes.org/</url>
