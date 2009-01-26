@@ -28,7 +28,7 @@
   <parent>
     <artifactId>melete-base</artifactId>
     <groupId>org.etudes</groupId>
-    <version>${sakai.version}</version>
+    <version>2.5.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <name>Etudes Melete Pack</name>
