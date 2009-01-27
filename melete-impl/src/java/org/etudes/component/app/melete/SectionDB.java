@@ -1216,8 +1216,9 @@ public class SectionDB implements Serializable {
 						deletedSections.put(keyStr, delSection);
 					}
 				}
-				logger.debug("map is created" + deletedSections.size());
+				logger.info("Process deleted sections from active modules of " + deletedSections.size() +" sites");
 				delCount = deletedSections.size();
+				int i=0;
 				// for each course id
 				Set alldelSecCourses = deletedSections.keySet();
 				for (Iterator iter = alldelSecCourses.iterator(); iter.hasNext();)
@@ -1225,7 +1226,7 @@ public class SectionDB implements Serializable {
 					// for that course id get all melete resources from melete_resource
 					long starttime = System.currentTimeMillis();
 					String toDelSecCourseId = (String) iter.next();
-					logger.debug("processing for " + toDelSecCourseId);
+					logger.info("processing " + i++ +" course with id " + toDelSecCourseId);
 					List activenArchModules = moduleDB.getActivenArchiveModules(toDelSecCourseId);
 					// parse and list all names which are in use
 					List<String> activeResources = moduleDB.getActiveResourcesFromList(activenArchModules);
@@ -1239,7 +1240,7 @@ public class SectionDB implements Serializable {
 					tx = session.beginTransaction();
 					if (allCourseResources != null && activeResources != null)
 					{
-						logger.debug("active list and all" + activeResources.size() + " ; " + allCourseResources.size());
+						//logger.debug("active list and all" + activeResources.size() + " ; " + allCourseResources.size());
 						allCourseResources.removeAll(activeResources);
 					}
 					// delete sections marked for delete
@@ -1258,8 +1259,11 @@ public class SectionDB implements Serializable {
 
 					if(delSectionResources != null && delSectionResources.size() > 0)
 					{
-					for(String delRes:delSectionResources)
-						session.createQuery("delete MeleteResource mr where mr.resourceId =:resourceId").setString("resourceId", delRes).executeUpdate();
+					   for(String delRes:delSectionResources)
+							{
+								session.createQuery("delete MeleteResource mr where mr.resourceId =:resourceId").setString("resourceId", delRes).executeUpdate();
+								meleteCHService.removeResource(delRes);
+							}
 					}
 					// delete melete resource and from content resource
 					if(allCourseResources != null)
@@ -1269,7 +1273,7 @@ public class SectionDB implements Serializable {
 					{
 						String delResourceId = (String) delIter.next();
 						try{
-						logger.debug("now deleteing mr" + delResourceId);
+						//logger.debug("now deleteing mr" + delResourceId);
 						String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
 						deletedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", delResourceId).executeUpdate();
 						meleteCHService.removeResource(delResourceId);
@@ -1279,11 +1283,11 @@ public class SectionDB implements Serializable {
 
 					tx.commit();
 					long endtime = System.currentTimeMillis();
-					logger.debug("to cleanup course with " + allresourcesz + " resources and del sections " + delSections.size() +" and del resources"+ delresourcesz+", it took "
+					logger.info("to cleanup course with " + allresourcesz + " resources and del sections " + delSections.size() +" and del resources"+ delresourcesz+", it took "
 							+ (endtime - starttime) + "ms");
 				} // for end
 				long totalend = System.currentTimeMillis();
-				logger.debug("to cleanup " + deletedSections.size() + "courses it took " + (totalend - totalStart) + "ms");
+				logger.info("to cleanup " + deletedSections.size() + "courses it took " + (totalend - totalStart) + "ms");
 			}
 			catch (HibernateException he)
 			{

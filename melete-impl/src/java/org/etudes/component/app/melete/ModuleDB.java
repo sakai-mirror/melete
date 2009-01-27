@@ -2233,6 +2233,7 @@ public class ModuleDB implements Serializable {
 	{
 		if (!meleteSecurityService.isSuperUser(UserDirectoryService.getCurrentUser().getId())) throw new MeleteException("admin_allow_cleanup");
 
+		logger.info("clean up process started");
 		int delCount = 0;
 		long totalStart = System.currentTimeMillis();
 		try
@@ -2263,7 +2264,7 @@ public class ModuleDB implements Serializable {
 						deletedModules.put(cm.getCourseId(), delmodule);
 					}
 				}
-				logger.debug("map is created" + deletedModules.size());
+				logger.info("Process deleted modules from " + deletedModules.size() + " sites");
 				delCount = deletedModules.size();
 				int i=0;
 				// for each course id
@@ -2273,7 +2274,7 @@ public class ModuleDB implements Serializable {
 					// for that course id get all melete resources from melete_resource
 					long starttime = System.currentTimeMillis();
 					String toDelCourseId = (String) iter.next();
-					logger.debug("processing " + i++ +" course with id " + toDelCourseId);
+					logger.info("processing " + i++ +" course with id " + toDelCourseId);
 					List activenArchModules = getActivenArchiveModules(toDelCourseId);
 					List<Module> delModules = (ArrayList) deletedModules.get(toDelCourseId);
 
@@ -2305,7 +2306,7 @@ public class ModuleDB implements Serializable {
 					tx = session.beginTransaction();
 					if (allCourseResources != null && activeResources != null)
 					{
-						logger.debug("active resources list sz and all resources" + activeResources.size() + " ; " + allCourseResources.size());
+						//logger.debug("active resources list sz and all resources" + activeResources.size() + " ; " + allCourseResources.size());
 						allCourseResources.removeAll(activeResources);
 					}
 					// delete modules and module collection and sections marked for delete
@@ -2338,8 +2339,11 @@ public class ModuleDB implements Serializable {
 
 							if(delSectionResources != null && delSectionResources.size() > 0)
 								{
-									for(String delRes:delSectionResources)
-								    	session.createQuery("delete MeleteResource mr where mr.resourceId =:resourceId").setString("resourceId", delRes).executeUpdate();
+								   for(String delRes:delSectionResources)
+					    			{
+					    			session.createQuery("delete MeleteResource mr where mr.resourceId =:resourceId").setString("resourceId", delRes).executeUpdate();
+									meleteCHService.removeResource(delRes);
+									}
 								}
 
 							}
@@ -2354,7 +2358,11 @@ public class ModuleDB implements Serializable {
 						int deletedEntities = session.createQuery(delCourseModuleStr).setInteger("moduleId", delModuleId).executeUpdate();
 						deletedEntities = session.createQuery(delModuleshDatesStr).setInteger("moduleId", delModuleId).executeUpdate();
 						deletedEntities = session.createQuery(delModuleStr).setInteger("moduleId", delModuleId).executeUpdate();
-						meleteCHService.removeCollection(toDelCourseId, "module_"+delModuleId.toString());
+						try{
+							meleteCHService.removeCollection(toDelCourseId, "module_"+delModuleId.toString());
+							}
+						catch(Exception e){continue;}
+
 					}
 
 					// look for sections just marked for delete
@@ -2387,10 +2395,13 @@ public class ModuleDB implements Serializable {
 						if(delSectionResources != null && delSectionResources.size() > 0)
 							{
 					    		for(String delRes:delSectionResources)
+					    		{
 					    			session.createQuery("delete MeleteResource mr where mr.resourceId =:resourceId").setString("resourceId", delRes).executeUpdate();
+									meleteCHService.removeResource(delRes);
+								}
 							}
 
-						logger.debug("sucess remove of deleted sections" + deletedEntities);
+						//logger.debug("sucess remove of deleted sections" + deletedEntities);
 						}
 						catch(Exception e){
 							e.printStackTrace();
@@ -2407,7 +2418,7 @@ public class ModuleDB implements Serializable {
 					{
 						String delResourceId = (String) delIter.next();
 						try{
-						logger.debug("now deleting mr " + delResourceId);
+						//logger.debug("now deleting mr " + delResourceId);
 						String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
 						int deletedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", delResourceId).executeUpdate();
 						meleteCHService.removeResource(delResourceId);
@@ -2421,11 +2432,11 @@ public class ModuleDB implements Serializable {
 
 					tx.commit();
 					long endtime = System.currentTimeMillis();
-					logger.debug("to cleanup course with " + allresourcesz + " resources and del modules " + delModules.size() +" and del resources"+ delresourcesz+", it took "
+					logger.info("to cleanup course with " + allresourcesz + " resources and del modules " + delModules.size() +" and del resources"+ delresourcesz+", it took "
 							+ (endtime - starttime) + "ms");
 				} // for end
 				long totalend = System.currentTimeMillis();
-				logger.debug("to cleanup deleted modules from " + deletedModules.size() + "courses it took " + (totalend - totalStart) + "ms");
+				logger.info("to cleanup deleted modules from " + deletedModules.size() + "courses it took " + (totalend - totalStart) + "ms");
 			}
 			catch (HibernateException he)
 			{
@@ -2457,17 +2468,17 @@ public class ModuleDB implements Serializable {
 		String delModuleStr = "delete Module m where m.moduleId in " + allModuleIds;
 
 		int deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
-		logger.debug("deleted sr " + deletedEntities);
+		//logger.debug("deleted sr " + deletedEntities);
 		deletedEntities = session.createQuery(delSectionStr).executeUpdate();
-		logger.debug("deleted section " + deletedEntities);
+		//logger.debug("deleted section " + deletedEntities);
 		deletedEntities = session.createQuery(delModuleshDatesStr).executeUpdate();
-		logger.debug("deleted msh " + deletedEntities);
+		//logger.debug("deleted msh " + deletedEntities);
 		deletedEntities = session.createQuery(delCourseModuleStr).executeUpdate();
-		logger.debug("deleted cm " + deletedEntities);
+		//logger.debug("deleted cm " + deletedEntities);
 		deletedEntities = session.createQuery(delModuleStr).executeUpdate();
-		logger.debug("deleted module " + deletedEntities);
+		//logger.debug("deleted module " + deletedEntities);
 		deletedEntities = session.createQuery(delMeleteResourceStr).executeUpdate();
-		logger.debug("deleted mr " + deletedEntities);
+		//logger.debug("deleted mr " + deletedEntities);
 	}
 
 
