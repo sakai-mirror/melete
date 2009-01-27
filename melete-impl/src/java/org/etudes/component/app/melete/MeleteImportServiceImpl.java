@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -534,9 +534,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				 meleteResource.setCopyrightOwner(otherInfo.substring(0,ownerIdx));
 				 meleteResource.setCopyrightYear(otherInfo.substring(ownerIdx+1));
 				 }
-				 else 
+				 else
 				 {
-					 meleteResource.setCopyrightOwner(otherInfo); 
+					 meleteResource.setCopyrightOwner(otherInfo);
 				 }
 			}
 			}
@@ -563,9 +563,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				 meleteResource.setCopyrightOwner(otherInfo.substring(0,ownerIdx));
 				 meleteResource.setCopyrightYear(otherInfo.substring(ownerIdx+1));
 				 }
-				 else 
+				 else
 				 {
-					 meleteResource.setCopyrightOwner(otherInfo); 
+					 meleteResource.setCopyrightOwner(otherInfo);
 				 }
 			}
 			}
@@ -594,9 +594,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				 meleteResource.setCopyrightOwner(otherInfo.substring(0,ownerIdx));
 				 meleteResource.setCopyrightYear(otherInfo.substring(ownerIdx+1));
 				 }
-				 else 
+				 else
 				 {
-					 meleteResource.setCopyrightOwner(otherInfo); 
+					 meleteResource.setCopyrightOwner(otherInfo);
 				 }
 			}
 			}
@@ -973,7 +973,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			 			logger.debug("reading resource properties in import from site");
 			 			ContentResource cr = getMeleteCHService().getResource(hrefVal);
 						melContentData = cr.getContent();
-						uploadCollId = getMeleteCHService().getUploadCollectionId();
+						uploadCollId = getMeleteCHService().getUploadCollectionId(courseId);
 			 		}
 
 			 		res_mime_type = filename.substring(filename.lastIndexOf(".")+1);
