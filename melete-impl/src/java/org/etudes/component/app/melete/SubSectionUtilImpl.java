@@ -493,16 +493,21 @@ public class SubSectionUtilImpl {
 		return allsections;
 	}
 
-	public org.w3c.dom.Element getPrevSection(org.w3c.dom.Element currItem) throws Exception
+	public org.w3c.dom.Element getPrevSection(org.w3c.dom.Document ssW3cDom, org.w3c.dom.Element currItem) throws Exception
 	{
-		org.w3c.dom.Element rootElement = subSectionW3CDOM.getDocumentElement();
+		org.w3c.dom.Element rootElement = ssW3cDom.getDocumentElement();
 		org.w3c.dom.Element returnElement = null;
 		if(currItem == rootElement.getFirstChild())
 			{
 			return null;
 			}
 		org.w3c.dom.Node returnParrent = currItem.getParentNode();
+		
 		returnElement = (org.w3c.dom.Element)currItem.getPreviousSibling();
+		
+		if(returnElement != null && returnElement.hasChildNodes())
+			returnElement = (org.w3c.dom.Element)returnElement.getLastChild();
+		
 		if(returnElement == null)
 		{
 			returnElement = (org.w3c.dom.Element)returnParrent;

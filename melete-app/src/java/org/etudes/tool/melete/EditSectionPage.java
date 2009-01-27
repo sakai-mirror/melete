@@ -667,7 +667,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 					selectedResource = new MeleteResource();
 					selectedResource.setResourceId(newResourceId);
 					sectionService.insertResource(selectedResource);
-					secResourceName = getDisplayName(newResourceId);					
+					secResourceName = getDisplayName(newResourceId);
 				}
 				else
 				{
@@ -778,7 +778,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				selectedResource = new MeleteResource();
 				selectedResource.setResourceId(newResourceId);
 				sectionService.insertResource(selectedResource);
-				secResourceName = getDisplayName(newResourceId); 
+				secResourceName = getDisplayName(newResourceId);
 				currLinkUrl = secResourceName;
 			}
 			else
@@ -962,7 +962,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		catch (Exception e)
 		{
 			logger.debug("error in finding next so probably this is the last one");
-			e.printStackTrace();
+			//e.printStackTrace();
 			return cancel();
 		}
 		// reset section model to refresh and set to next
@@ -1013,7 +1013,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		catch (Exception e)
 		{
 			logger.debug("error in finding prev section to edit");
-			e.printStackTrace();
+			//e.printStackTrace();
 			return cancel();
 		}
 		// reset section model to refresh and set to next

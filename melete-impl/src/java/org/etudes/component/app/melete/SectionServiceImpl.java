@@ -456,7 +456,7 @@ System.out.println("deleteSection c="+courseId+" u="+userId);
 		  SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
 		  org.w3c.dom.Document sectionDocument = SectionUtil.getSubSectionW3CDOM(seqXML);
 		  org.w3c.dom.Element currItem = sectionDocument.getElementById(curr_id);
-		  org.w3c.dom.Element prevItem = SectionUtil.getPrevSection(currItem);
+		  org.w3c.dom.Element prevItem = SectionUtil.getPrevSection(sectionDocument,currItem);
 			if (prevItem != null)
 			{
 				SectionObjService prevSection = getSection(Integer.parseInt(prevItem.getAttribute("id")));
