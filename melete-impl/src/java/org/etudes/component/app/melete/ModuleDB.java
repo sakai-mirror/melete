@@ -2110,6 +2110,7 @@ public class ModuleDB implements Serializable {
 				} else {
  						printText = new StringBuffer("<h3>" + module.getTitle() + "</h3>");
 				};
+				if (module.getDescription()!= null && module.getDescription().length() !=0 ) printText.append("<p> " + module.getDescription() + "</p>");
 				SubSectionUtilImpl ssuImpl = new SubSectionUtilImpl();
 				ssuImpl.traverseDom(module.getSeqXml(),new Integer(module.getCoursemodule().getSeqNo()).toString());
 				List<SecLevelObj> xmlSecList = ssuImpl.getXmlSecList();
