@@ -1178,7 +1178,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					if(section.getContentType().equals("typeLink"))
 					{
 //					 	 link points to Site Resources item so move it to MeleteDocs collection
-						if(hrefVal.indexOf("/access/content/group") != -1)
+						if(hrefVal.indexOf("/access/content/group") != -1 || hrefVal.indexOf("/access/meleteDocs") != -1)
 						{
 							String fileResourceName= hrefVal.substring(hrefVal.lastIndexOf("/")+1);
 							logger.debug("SITE RES ITEM" + fileResourceName);
@@ -1196,8 +1196,11 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 						 			//This is executed by import from site
 						 			String findEntity = hrefVal.substring(hrefVal.indexOf("/access")+7);
 									Reference ref = EntityManager.newReference(findEntity);
+									String ref_id = ref.getId();
 									logger.debug("ref properties" + ref.getType() +"," +ref.getId());
-						 			ContentResource cr = getMeleteCHService().getResource(ref.getId());
+									if(ref.getType().equals("sakai:meleteDocs"))
+										ref_id = ref_id.substring(ref_id.indexOf("/content")+ 8);
+						 			ContentResource cr = getMeleteCHService().getResource(ref_id);
 									melContentData = cr.getContent();
 									res_mime_type = cr.getContentType();
 						 		  }
@@ -1219,7 +1222,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					  	{
 					  	  res_mime_type=getMeleteCHService().MIME_TYPE_LINK;
 						  melContentData = new byte[hrefVal.length()];
-				          melContentData = hrefVal.getBytes();
+				          melContentData = hrefVal.getBytes();				          
 					  	}
 					}
 					if (section.getContentType().equals("typeUpload") || section.getContentType().equals("typeLTI"))
