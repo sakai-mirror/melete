@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -145,7 +145,7 @@ SETUP INSTRUCTIONS
 	
 	5.1 Sakai 2.4 and previous versions
 	
-	Note: Undeploy any previous versions from the previous version Melete source before deploying this new one.
+	Note: Undeploy any previous Melete versions from your source before deploying Melete 2.6 as artifacts name has changed. 
 	
 	To build(using Maven version 1), run 'maven sakai:build' and then to deploy 'maven sakai:deploy'
 	
@@ -175,16 +175,17 @@ SETUP INSTRUCTIONS
 	
 	OR
 	
-	When tomcat starts, hibernate will generate the melete tables 
-	on its own by reading xml files. 
+	When tomcat starts, hibernate will generate the melete tables on its own by reading xml files. 
 	
 	NOTE: a. Make sure secondary indices on user_id column of melete_user_preference table and on course_id of melete_course_module table
-	 		 are created.Hibernate sometimes doesn't create it. 
-		  b. Melete stores content in the database tables as well as in the /private/meleteDocs folder in ContentHosting. 
+	 	 are created.Hibernate sometimes doesn't create it. 
+	      b. We see duplicate indices created by hibernate on module_id column of melete_course_module and melete_module_shdates table.
+	         section_id column of melete_section_resource table. please remove the duplicate keys. It will improve the performance.
+	      c. Melete stores content in the database tables as well as in the /private/meleteDocs folder in ContentHosting. 
         	 Through Melete, users only have access to the /private/meleteDocs folder and not other parts of Resources.
 
 7. Configure Site Archive to include Melete 
-	Melete now participates in Site Archive. Modify archive\archive-impl\pack\src\webapp\WEB-INF\components.xml, add
+	Melete participates in Site Archive. Modify archive\archive-impl\pack\src\webapp\WEB-INF\components.xml, add
 	<value>MeleteSecurityService</value> in the filterServices list.
 	
 	Compile and deploy archive again.	

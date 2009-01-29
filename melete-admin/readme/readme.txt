@@ -22,32 +22,34 @@
 
 MELETE ADMIN TOOL SETUP INSTRUCTIONS
 
-Melete Admin tool is an administrative tool which lets admin users to clean up old deleted modules and sections and clean up their resources from database and the file System. To work with Melete Admin source, you need the same development environment as Sakai, essentially Java 1.4 and Maven 1.0.2.
+Prior to version 2.5, Melete left behind deleted data (deleted modules and sections and their associated resources). If you have used previous Melete versions, you might consider running this admin tool. Melete Admin is an administrative tool which lets admin users to clean up old deleted modules and sections and clean up their resources from database and the file System. There are few queries (provided further down in this document) you can run to find out the numbers and make the decision. 
+
+To work with Melete Admin source, you need the same development environment as Sakai, essentially Java 1.4 and Maven 1.0.2.
+
+NOTE : IT IS RECOMMENDED TO CREATE BACKUPS OF DATABASE AND THE FILE SYSTEM WHERE CONTENT RESIDES BEFORE RUNNING THIS TOOL.
 
 -----------------------------------------------------
 SETUP INSTRUCTIONS
 
-1. Add to the Admin Workspace	
+1. Add tool to Admin Workspace	
 
-	1.1. Log on as Sakai admin. Add this new tool sakai.meleteAdmin in the Administrative Workspace.
+	1.1. Log on as Sakai admin. Add sakai.meleteAdmin in the Administrative Workspace.
 	
-	1.2 To add Tool, go to Sites and pick !admin and than Edit Pages and add a new Page and provide the title for this new Tool like 'Melete Admin' and than add a new tool sakai.meleteAdmin. 		
+	1.2 To add Tool, go to Sites, select !admin and then click on Pages. Add a new Page and provide the title for this new tool (i.e. 'Melete Admin'). Then, select sakai.meleteAdmin and save your changes. 		
 	
 	
-NOTE : IT IS RECOMMENDED TO CREATE BACKUPS OF DATABASE AND THE FILE SYSTEM WHERE CONTENT RESIDES BEFORE RUNNING THIS TOOL.
-
-Melete before version 2.5 left behind deleted data and this tool cleans up such data from database and file storage. If you have used previous versions than you might consider running this tool.
-There are few queries you can run to find out the numbers and make the decision.
+HOW TO FIND DELETED MELETE DATA (THAT WEREN'T DEEP DELETED):
 
 To find deleted modules:
+
 SELECT GROUP_CONCAT(cmod.module_id),count(cmod.module_id),cmod.course_id, s.title from melete_course_module cmod,SAKAI_SITE s where cmod.delete_flag = 1 and cmod.course_id = s.site_id GROUP BY cmod.course_id order by s.title;
 
 To find deleted sections from active modules:
+
 SELECT GROUP_CONCAT(sec.section_id),count(sec.section_id),GROUP_CONCAT(sec.module_id),cmod.course_id, s.title
 FROM melete_section sec,melete_course_module cmod, SAKAI_SITE s
 where sec.delete_flag = 1 AND sec.module_id = cmod.module_id AND
 cmod.course_id NOT IN (select c1.course_id from melete_course_module c1 where c1.delete_flag =1)
 AND cmod.delete_flag = 0 AND cmod.course_id = s.site_id GROUP BY cmod.course_id order by s.title;
 
-We tested this tool on our production data and we had 17513 deleted modules and 4853 deleted sections from active modules and in all affecting 3005 sites.
-It took us around 3 hrs to cleanup deleted data.
+Melete Admin Deep Delete tool has been tested with Etudes production data. We had 17513 deleted modules and 4853 deleted sections from active modules and in all, affecting 3005 sites. It took around 3 hrs to cleanup the old deleted data.
