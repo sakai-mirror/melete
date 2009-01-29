@@ -86,7 +86,7 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
      *  process section type and create resource element object
      */
     @Override
-	void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String sectionFileName,int i) throws Exception
+    public void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String sectionFileName,int i) throws Exception
     {
         if (section.getContentType().equals("typeLink")){
             String linkData = new String(content_data1);
@@ -168,7 +168,7 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
     }
 
     @Override
-	public int createSectionElement(Element ParentSection, Section section, int i, int k, Element resources, File resoucesDir, String imagespath) throws Exception
+    public int createSectionElement(Element ParentSection, Section section, int i, int k, Element resources, File resoucesDir, String imagespath) throws Exception
     {
             Element secElement = ParentSection.addElement("item");
             secElement.addAttribute("identifier", "ITEM"+ k);
