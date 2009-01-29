@@ -95,7 +95,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 
     abstract public void initValues();
     abstract public Element createMetadataCopyright(int licenseCode);
-    abstract void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String sectionFileName,int i) throws Exception;
+    abstract public void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String sectionFileName,int i) throws Exception;
     abstract public int createSectionElement(Element ParentSection, Section section, int i, int k, Element resources, File resoucesDir, String imagespath) throws Exception;
     abstract public List generateOrganizationResourceItems(List modList, File packagedir,String maintitle)throws Exception;
 
@@ -394,6 +394,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 			while(checkforimgs !=null) {
 
 				ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
+				logger.debug("editor embed data" + (String)embedData.get(0));
 				checkforimgs = (String)embedData.get(0);
 				if (embedData.size() > 1)
 				{
@@ -420,7 +421,10 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 						String patternStr = imgSrcPath;
 						String replacementStr =ServerConfigurationService.getServerUrl() + imgSrcPath;
 						modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
-						return modifiedSecContent;
+						checkforimgs =checkforimgs.substring(endSrc);
+			            startSrc=0; endSrc = 0;
+						continue;
+					//	return modifiedSecContent;
 					}
 
 					ArrayList img_content = new ArrayList();
@@ -442,21 +446,24 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 					modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
 
 					//add image to resources element
+					logger.debug("adding file element for" + imgName);
 					Element file = resource.addElement("file");
 					file.addAttribute("href", "resources/images/"+ imgName);
 					}
 				}
 				else if(imgSrcPath.startsWith("/")){
 					//internal link resides somewhere within sakai
+					logger.debug("embedded media is from internal sakai" + imgSrcPath);
 					String patternStr = imgSrcPath;
 					String replacementStr =ServerConfigurationService.getServerUrl() + imgSrcPath;
 					modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
-					return modifiedSecContent;
+					//return modifiedSecContent;
 				}
 				checkforimgs =checkforimgs.substring(endSrc);
 	            startSrc=0; endSrc = 0;
 			}
 		}catch (Exception e) {
+			e.printStackTrace();
 			throw e;
 		}
 

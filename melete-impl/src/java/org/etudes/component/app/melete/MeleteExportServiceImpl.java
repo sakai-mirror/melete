@@ -109,15 +109,27 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 	/*
 	 *  process section type and create resource element object
 	 */
-	void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String sectionFileName,int item_ref_num) throws Exception
+	public void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String sectionFileName,int item_ref_num) throws Exception
 	{
 		if (section.getContentType().equals("typeLink")){
 			String linkData = new String(content_data1);
 
-			if(linkData.startsWith(ServerConfigurationService.getServerUrl()) && linkData.indexOf("/access/content/group")!= -1)
+			if(linkData.startsWith(ServerConfigurationService.getServerUrl()) && 
+					(linkData.indexOf("/access/content/group")!= -1)|| (linkData.indexOf("/access/meleteDocs")!= -1))
 			{
-				String link_resource_id = meleteUtil.replace(linkData,ServerConfigurationService.getServerUrl()+"/access/content","");
-
+				String findEntity = linkData.substring(linkData.indexOf("/access")+7);
+				Reference ref = EntityManager.newReference(findEntity);
+				logger.debug("ref properties" + ref.getType() +"," +ref.getId());
+				String link_resource_id = linkData;
+				if(ref.getType().equals(ContentHostingService.APPLICATION_ID))
+				{
+					link_resource_id = ref.getId();	
+				}
+				if(ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
+				{
+					link_resource_id = ref.getId().replaceFirst("/content","");	
+				}
+			
 				// read resource and create a file
 				ArrayList link_content = new ArrayList();
 				logger.debug("calling secContent from create resource ");
