@@ -1042,7 +1042,8 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 
 		//html file
 		if (!(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:"))&&
-				(hrefVal.lastIndexOf('.') != -1	&& (hrefVal.substring(hrefVal.lastIndexOf('.') + 1).equalsIgnoreCase("html")
+				(hrefVal.lastIndexOf('/') != -1 && hrefVal.substring(hrefVal.lastIndexOf('/') +1).startsWith("Section"))
+				 && (hrefVal.lastIndexOf('.') != -1	&& (hrefVal.substring(hrefVal.lastIndexOf('.') + 1).equalsIgnoreCase("html")
 				|| hrefVal.substring(hrefVal.lastIndexOf('.') + 1).equalsIgnoreCase("htm")))) {
 			//This is for typeEditor sections
 			section.setContentType("typeEditor");
@@ -1355,13 +1356,14 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		//save uploaded img inside content editor to destination directory
 		String checkforimgs = contentEditor;
 		int imgindex = -1;
-        String imgSrcPath, imgName, imgLoc;
+		String imgSrcPath, imgName, imgLoc;
 
 		int startSrc =0;
 		int endSrc = 0;
 
 		while (checkforimgs != null) {
 			ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
+			logger.debug("EMBED DATA in create Content File" + embedData.get(0));
 			checkforimgs = (String)embedData.get(0);
 			if (embedData.size() > 1)
 			{
@@ -1378,64 +1380,66 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				//This part executed by IMS import
 				if (!(imgSrcPath.startsWith("http://")|| imgSrcPath.startsWith("https://")) )
 				{
-				// if img src is in library or any other inside sakai path then don't process
-				if(imgSrcPath.startsWith("images"))
-				{
-				checkforimgs = checkforimgs.substring(endSrc);
-				String imgActualPath="";
-				for (Iterator iter = resElements.iterator(); iter.hasNext();) {
-					Element element = (Element) iter.next();
-					if (element.getQualifiedName().equalsIgnoreCase("file")) {
-						Attribute hrefAttr = element.attribute("href");
-						if ((hrefAttr.getValue().indexOf(imgSrcPath)) != -1)
-						{
-							imgActualPath = hrefAttr.getValue().trim();
-							break;
+					// if img src is in library or any other inside sakai path then don't process
+					if(imgSrcPath.startsWith("images"))
+					{
+						checkforimgs = checkforimgs.substring(endSrc);
+						String imgActualPath="";
+						for (Iterator iter = resElements.iterator(); iter.hasNext();) {
+							Element element = (Element) iter.next();
+							if (element.getQualifiedName().equalsIgnoreCase("file")) {
+								Attribute hrefAttr = element.attribute("href");
+								if ((hrefAttr.getValue().indexOf(imgSrcPath)) != -1)
+								{
+									imgActualPath = hrefAttr.getValue().trim();
+									break;
+								}
+							}
 						}
-					}
-				}
-				contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, true, unZippedDirPath);
-			    } // if check for images
-			    } //if http check end
+						contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, true, unZippedDirPath);
+					} // if check for images
+				} //if http check end
 			}//IMS import (original code) ends here
 			else
 			{
-              //This part executed by import from site
+				//This part executed by import from site
 				String imgActualPath = "";
-			  if (!(imgSrcPath.startsWith("http://")|| imgSrcPath.startsWith("https://")) )
-			  {
-			  // if img src is in library or any other inside sakai path then don't process
-				 if(imgSrcPath.indexOf("/access") !=-1)
+				if (!(imgSrcPath.startsWith("http://")|| imgSrcPath.startsWith("https://")) )
+				{
+					// if img src is in library or any other inside sakai path then don't process
+					if(imgSrcPath.indexOf("/access") !=-1)
 					{
-					String findEntity = imgSrcPath.substring(imgSrcPath.indexOf("/access")+7);
-					Reference ref = EntityManager.newReference(findEntity);
-					logger.debug("ref properties" + ref.getType() +"," +ref.getId());
+						String findEntity = imgSrcPath.substring(imgSrcPath.indexOf("/access")+7);
+						Reference ref = EntityManager.newReference(findEntity);
+						logger.debug("ref properties" + ref.getType() +"," +ref.getId());
 
-					if(ref.getType().equals(ContentHostingService.APPLICATION_ID) || ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
-					{
-						if(ref.getType().equals(ContentHostingService.APPLICATION_ID))
+						if(ref.getType().equals(ContentHostingService.APPLICATION_ID) || ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
 						{
-//							Item resides in resources
-						    checkforimgs = checkforimgs.substring(endSrc);
-						    imgActualPath = ref.getId();
-						    contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, false, unZippedDirPath);
+							if(ref.getType().equals(ContentHostingService.APPLICATION_ID) && ref.getId().startsWith("/group"))
+							{
+								//							Item resides in resources
+								checkforimgs = checkforimgs.substring(endSrc);
+								imgActualPath = ref.getId();
+								contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, false, unZippedDirPath);
 
-						}
-						if (ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
-						{
+							}
+							if (ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
+							{
 
-							//Item resides in meleteDocs, so need not check under resources
-							checkforimgs = checkforimgs.substring(endSrc);
-							imgActualPath = ref.getId().replaceFirst("/content","");
-							contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, false, unZippedDirPath);
+								//Item resides in meleteDocs, so need not check under resources
+								checkforimgs = checkforimgs.substring(endSrc);
+								imgActualPath = ref.getId().replaceFirst("/content","");
+								contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, false, unZippedDirPath);
+							}
 						}
+						// for other inside sakai paths
+						else checkforimgs = checkforimgs.substring(endSrc);
 					}
-			     }
-			     }
-			     }
+				}
+			}
 			//Import from site ends here
 			imgindex = -1;
-            startSrc=0; endSrc = 0;
+			startSrc=0; endSrc = 0;
 		}
 		return contentEditor;
 	}
