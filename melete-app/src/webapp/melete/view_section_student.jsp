@@ -95,23 +95,26 @@
 			
 		<br>
       
-	 <h:outputLink id="viewSectionLink"  value="#{viewSectionsPage.contentLink}" target="_blank" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}">
+	<h:outputLink id="viewSectionLink"  value="#{viewSectionsPage.contentLink}" target="_blank" 
+       rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink ||
+ 		viewSectionsPage.section.contentType == viewSectionsPage.typeUpload || 
+ 		viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)
+ 		&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}">
       <h:outputText id="sectitleLink" 
                            value="#{viewSectionsPage.linkName}">
       </h:outputText>
     </h:outputLink>
-    <h:outputLink id="viewSectionUpload"  value="#{viewSectionsPage.contentLink}" target="_blank" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeUpload)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}">
-      <h:outputText id="sectitleUpload" 
-                           value="#{viewSectionsPage.linkName}">
-      </h:outputText>
-    </h:outputLink>
+    
     <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{viewSectionsPage.content}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\" border=\"0\" frameborder= \"0\"></iframe>" rendered="#{((viewSectionsPage.section.contentType ==viewSectionsPage.typeLink)&&(viewSectionsPage.linkName !=
     viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
     
   <h:outputText value="#{viewSectionsPage.content}" escape="false" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeEditor)&&(viewSectionsPage.content != viewSectionsPage.nullString))}"/>
 	<h:outputText id="contentUploadFrame" value="<iframe id=\"iframe2\" src=\"#{viewSectionsPage.contentLink}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
     border=\"0\" frameborder= \"0\"></iframe>" rendered="#{((viewSectionsPage.section.contentType ==viewSectionsPage.typeUpload)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
-	</td> 
+	
+	<h:outputText id="contentLTI" value="#{viewSectionsPage.contentLTI}" 
+              rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
+	</td>
 	</tr>
 
 

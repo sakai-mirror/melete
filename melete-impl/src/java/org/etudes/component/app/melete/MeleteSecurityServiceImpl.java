@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -339,7 +339,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 						}
 						catch (Exception e)
 						{
-							System.out.println("Exception e "+e.getMessage());
+							// System.out.println("Exception e "+e.getMessage());
 						}
 					}
 					if ( !handled ) {
