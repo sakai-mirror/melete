@@ -262,7 +262,7 @@ public class SectionDB implements Serializable {
 	private void deleteFromMeleteTables(Section sec, String userId, int deleteFrom, String embedResourceId) throws MeleteException
 	{
 		SectionResource secRes = null;
-		int affectedEntities;
+		int affectedEntities =0;
 
 		//These are the queries
 		String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.sectionId=:sectionId";
@@ -292,7 +292,7 @@ public class SectionDB implements Serializable {
 		    			   if (embedResourceId != null)
 		    			   {
 		    			     affectedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", embedResourceId).executeUpdate();
-		    			     //logger.debug(affectedEntities+" row was deleted from MELETE_RESOURCE");
+		    			     logger.debug(affectedEntities+" row was deleted from MELETE_RESOURCE");
 		    			   }
 		    		   }
 		    		   if (deleteFrom == MELETE_RESOURCE_SECTION_RESOURCE)
@@ -305,7 +305,7 @@ public class SectionDB implements Serializable {
 		    			   {
 		    			     affectedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", secRes.getResource().getResourceId()).executeUpdate();
 		    			   }
-		    			   //logger.debug(affectedEntities+" row was deleted from MELETE_RESOURCE");
+		    			   logger.debug(affectedEntities+" row was deleted from MELETE_RESOURCE");
 		    		   }
 	    	          }
 
@@ -315,7 +315,7 @@ public class SectionDB implements Serializable {
 		    			 if (secRes.getSectionId() != null)
 		    			 {
 		    			   affectedEntities = session.createQuery(delSectionResourceStr).setInteger("sectionId", secRes.getSectionId()).executeUpdate();
-		    			   //logger.debug(affectedEntities+" row was deleted from SECTION_RESOURCE");
+		    			   logger.debug(affectedEntities+" row was deleted from SECTION_RESOURCE");
 		    			 }
 		    		 }
 		    	   }
@@ -337,14 +337,14 @@ public class SectionDB implements Serializable {
 		    	   		sectionsSeqXML =SectionUtil.deleteSection(sectionsSeqXML, sectionId.toString());
 		    	   		//logger.debug("New sectionsseqxml is "+sectionsSeqXML);
 		    	   		affectedEntities = session.createQuery(updModuleStr).setInteger("moduleId", module.getModuleId()).setString("seqXml", sectionsSeqXML).executeUpdate();
-		    	   		//logger.debug(affectedEntities+" row was updated in MELETE_MODULE");
+		    	   		logger.debug(affectedEntities+" row was updated in MELETE_MODULE");
 		    	     }
 
 		    	     //Delete section
 		    	     if (sectionId != null)
 		    	     {
 		    	       affectedEntities = session.createQuery(delSectionStr).setInteger("sectionId",sectionId).executeUpdate();
-		    	       //logger.debug(affectedEntities+" row was deleted from MELETE_SECTION");
+		    	       logger.debug(affectedEntities+" row was deleted from MELETE_SECTION");
 		    	     }
 
 
@@ -416,6 +416,7 @@ public class SectionDB implements Serializable {
 				}
 			    else
 			    {
+			     
 			      //Checks all typeEditor sections for embedded media references
 			      //to this resource
 				  List resourceUseList = findResourceInUse(resourceId, courseId);
@@ -1022,8 +1023,35 @@ public class SectionDB implements Serializable {
 		     query.setParameter("courseId",courseId);
 		     query.setParameter("resourceId",selResourceId);
 		     List result_list = query.list();
+		  
+		  //   logger.debug("result_list for sec resources " + result_list.size() + result_list.toString());
+		    
+		     // test if resource is bound to deleted section
+		     logger.debug("now check in deleted sections");
+		     String checkInDeleteString = "Select b from Section a, SectionResource b, CourseModule c where a.sectionId = b.sectionId AND " +
+			   "a.moduleId = c.moduleId AND c.courseId=:courseId " +
+				   " AND b.resource.resourceId=:resourceId AND a.deleteFlag=1" ;
+		     
+		     Query query1 = session.createQuery(checkInDeleteString);
+		     query1.setParameter("courseId",courseId);
+		     query1.setParameter("resourceId",selResourceId);
+		     List result_list1 = query1.list();
+		     if (result_list1 != null) 
+		     {
+		    	 logger.debug("found in deleted" + result_list1.toString());
+		    	 for(Iterator<SectionResource> itr=result_list1.listIterator(); itr.hasNext();)
+		    	 {
+		    		SectionResource delsecres = itr.next();
+		    		String delResourceId = delsecres.getResource().getResourceId();
+		    		String updSharedResourcesStr = "update SectionResource sr set sr.resource = null where sr.resource.resourceId=:resourceId";
+		    		int updateEntities = session.createQuery(updSharedResourcesStr).setString("resourceId", delResourceId).executeUpdate();
+		    		String delSectionResourceStr = "delete SectionResource sr where sr.section.sectionId=:sectionId";
+				    String delSectionStr = "delete Section s where s.sectionId =:sectionId";
+				    int deletedEntities = session.createQuery(delSectionResourceStr).setInteger("sectionId", delsecres.getSectionId()).executeUpdate();
+					deletedEntities = session.createQuery(delSectionStr).setInteger("sectionId", delsecres.getSectionId()).executeUpdate();
+		    	 }
+		     }
 		     if (result_list == null) return null;
-		     logger.debug("result_list for sec resources " + result_list.size() + result_list.toString());
 		     return result_list;
 		     /*List foundResources = new ArrayList<String> (0);
 		     for(Iterator<Section> itr=result_list.listIterator(); itr.hasNext();)
