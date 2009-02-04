@@ -1042,8 +1042,8 @@ public class SectionDB implements Serializable {
 		    	 {
 		    		SectionResource delsecres = itr.next();
 		    		String delResourceId = delsecres.getResource().getResourceId();
-		    		String updSharedResourcesStr = "update SectionResource sr set sr.resource = null where sr.resource.resourceId=:resourceId";
-		    		int updateEntities = session.createQuery(updSharedResourcesStr).setString("resourceId", delResourceId).executeUpdate();
+		    	//	String updSharedResourcesStr = "update SectionResource sr set sr.resource = null where sr.resource.resourceId=:resourceId";
+		    	//	int updateEntities = session.createQuery(updSharedResourcesStr).setString("resourceId", delResourceId).executeUpdate();
 		    		String delSectionResourceStr = "delete SectionResource sr where sr.section.sectionId=:sectionId";
 				    String delSectionStr = "delete Section s where s.sectionId =:sectionId";
 				    int deletedEntities = session.createQuery(delSectionResourceStr).setInteger("sectionId", delsecres.getSectionId()).executeUpdate();
