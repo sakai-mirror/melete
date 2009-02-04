@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $Header: /usr/src/sakai/melete-2.4/melete-impl/src/java/org/sakaiproject/component/app/melete/SectionServiceImpl.java,v 1.13 2007/06/25 17:03:13 rashmim Exp $
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -153,7 +153,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 
 	public void deleteSection(SectionObjService sec, String courseId, String userId) throws MeleteException
 	{
-System.out.println("deleteSection c="+courseId+" u="+userId);
+
 			try
 			{
 		  		sectiondb.deleteSection((Section)sec, courseId, userId);

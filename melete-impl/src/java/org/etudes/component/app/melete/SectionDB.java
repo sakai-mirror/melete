@@ -384,7 +384,6 @@ public class SectionDB implements Serializable {
 	public void deleteSection(Section sec, String courseId, String userId) throws MeleteException
 	 {
 		  logger.debug("deleteSection begin");
-		  System.out.println("deleteSection begin");
 
 		  //find in embedded data
 		  long starttime = System.currentTimeMillis();
@@ -416,7 +415,7 @@ public class SectionDB implements Serializable {
 				}
 			    else
 			    {
-			     
+
 			      //Checks all typeEditor sections for embedded media references
 			      //to this resource
 				  List resourceUseList = findResourceInUse(resourceId, courseId);
@@ -592,8 +591,8 @@ public class SectionDB implements Serializable {
 			{
 		      Session session = hibernateUtil.currentSession();
 
-		      String queryString = "from Section section  where section.module.coursemodule.courseId = :courseId  and section.module.coursemodule.archvFlag = 0 and section.module.coursemodule.deleteFlag = 0 and section.contentType='typeEditor'";
-
+		//      String queryString = "from Section section  where section.module.coursemodule.courseId = :courseId  and section.module.coursemodule.archvFlag = 0 and section.module.coursemodule.deleteFlag = 0 and section.contentType='typeEditor'";
+		        String queryString = "from Section section  where section.module.coursemodule.courseId = :courseId  and section.module.coursemodule.deleteFlag = 0 and section.contentType='typeEditor'";
 		      Query query = session.createQuery(queryString);
 		      query.setParameter("courseId", courseId);
 
@@ -1023,20 +1022,20 @@ public class SectionDB implements Serializable {
 		     query.setParameter("courseId",courseId);
 		     query.setParameter("resourceId",selResourceId);
 		     List result_list = query.list();
-		  
+
 		  //   logger.debug("result_list for sec resources " + result_list.size() + result_list.toString());
-		    
+
 		     // test if resource is bound to deleted section
 		     logger.debug("now check in deleted sections");
 		     String checkInDeleteString = "Select b from Section a, SectionResource b, CourseModule c where a.sectionId = b.sectionId AND " +
 			   "a.moduleId = c.moduleId AND c.courseId=:courseId " +
 				   " AND b.resource.resourceId=:resourceId AND a.deleteFlag=1" ;
-		     
+
 		     Query query1 = session.createQuery(checkInDeleteString);
 		     query1.setParameter("courseId",courseId);
 		     query1.setParameter("resourceId",selResourceId);
 		     List result_list1 = query1.list();
-		     if (result_list1 != null) 
+		     if (result_list1 != null)
 		     {
 		    	 logger.debug("found in deleted" + result_list1.toString());
 		    	 for(Iterator<SectionResource> itr=result_list1.listIterator(); itr.hasNext();)
