@@ -198,7 +198,10 @@ return newWindow;
    	 </h:column>   
       <h:column rendered="#{listModulesPage.printable}"> 
          <h:outputText id="emp_space5" value="  " styleClass="ExtraPaddingClass" />
-  	  	<h:graphicImage id="printImgLink" value="images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass" onclick="OpenPrintWindow(#{listModulesPage.printModuleId},'Melete Print Window');" rendered="#{mdbean.visibleFlag}"/>
+           <h:outputLink id="printModuleLink" value="list_modules_inst" onclick="OpenPrintWindow(#{listModulesPage.printModuleId},'Melete Print Window');" rendered="#{mdbean.visibleFlag}">
+	  	    	<h:graphicImage id="printImgLink" value="images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
+	 	 </h:outputLink>
+  	  	
        </h:column>  
     </h:dataTable>   
   		<h:outputText id="nomodstext" value="#{msgs.no_modules}" rendered="#{listModulesPage.nomodsFlag}" style="text-align:left"/>    
