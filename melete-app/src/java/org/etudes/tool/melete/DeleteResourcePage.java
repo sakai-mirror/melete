@@ -93,8 +93,8 @@ public class DeleteResourcePage implements Serializable{
   			if(delResourceId != null)
   			{
   				// delete from content resource
-  				meleteCHService.removeResource(this.delResourceId);
   				sectionService.deleteResourceInUse(this.delResourceId, this.courseId);
+  				meleteCHService.removeResource(this.delResourceId);
   				logger.debug("delete resource is done now move back to page");
   			}
   			if (fromPage.startsWith("edit"))
