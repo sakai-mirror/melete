@@ -37,6 +37,7 @@ SETUP INSTRUCTIONS
 	
 	1.2 To add Tool, go to Sites, select !admin and then click on Pages. Add a new Page and provide the title for this new tool (i.e. 'Melete Admin'). Then, select sakai.meleteAdmin and save your changes. 		
 	
+	We recommend to turn INFO log ON for org.etudes.component.app.melete to see the process completion information.
 	
 HOW TO FIND DELETED MELETE DATA (THAT WEREN'T DEEP DELETED):
 
