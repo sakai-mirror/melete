@@ -16,5 +16,6 @@
 --  implied. See the License for the specific language governing  
 --  permissions and limitations under the License. 
 -- ********************************************************************* 
-ALTER TABLE melete_user_preference add column LTI_CHOICE number(1);
+ALTER TABLE melete_user_preference add LTI_CHOICE number(1);
+
 
