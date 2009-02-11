@@ -43,7 +43,7 @@
 <title>Melete - Delete Module Confirmation</title>
 </head>
 <f:view>
-<body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onLoad="chooseTab('Author');setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
+<body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
  <h:form id="DeleteConfirmModuleForm">
 <table border="0" cellpadding="0" cellspacing="0" class ="table3" width="100%">
 	<tr>
