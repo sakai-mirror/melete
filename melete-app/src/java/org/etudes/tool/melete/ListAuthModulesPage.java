@@ -676,6 +676,7 @@ public class ListAuthModulesPage implements Serializable
 				mdbean = (ModuleDateBean) moduleDateBeans.get(((Integer) i.next()).intValue());
 				selModBeans.add(mdbean);
 			}
+			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 			try
 			{
 				int origSeqNo = mdbean.getCmod().getSeqNo();
@@ -689,7 +690,6 @@ public class ListAuthModulesPage implements Serializable
 					modTitles.append(", ");
 				}
 				modTitles.delete(modTitles.toString().length() - 2, modTitles.toString().length());
-				ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 				String msg1 = bundle.getString("inactivate_message1");
 				String msg2 = bundle.getString("inactivate_message2");
 				addMessage(ctx, "Inactivate Message", msg1 + modTitles.toString() + msg2, FacesMessage.SEVERITY_INFO);
@@ -697,6 +697,9 @@ public class ListAuthModulesPage implements Serializable
 			catch (Exception ex)
 			{
 				logger.debug(ex.toString());
+				String errmsg = bundle.getString("archive_fail");
+				addMessage(ctx, "Error Message", errmsg, FacesMessage.SEVERITY_ERROR);
+				return "list_auth_modules";
 			}
 			count = 0;
 			// Mallika - 3/24/05 added this to prevent selected value from being stored
@@ -796,6 +799,7 @@ public class ListAuthModulesPage implements Serializable
 			DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
 			// dmPage.setMdbean(mdbean);
 			dmPage.setModuleDateBeans(delModBeans);
+		//	List <> allActivenArchvModules = moduleService.getAllActivenArchvModules();
 			dmPage.setAllmoduleDateBeans(moduleDateBeans);
 			dmPage.setModuleSelected(true);
 			count = 0;

@@ -64,7 +64,7 @@ public interface ModuleService{
 
 	public void updateProperties(List moduleDateBeans)  throws Exception;
 
-	public void archiveModules(List moduleDateBeans, String courseId);
+	public void archiveModules(List moduleDateBeans, String courseId) throws Exception;
 
 	public ModuleObjService getModule(int moduleId);
 

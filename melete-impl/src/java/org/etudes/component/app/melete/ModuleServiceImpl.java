@@ -340,42 +340,29 @@ public List getModuleDateBeans(String userId, String courseId) {
       }
   }*/
 
-  public void archiveModules(List moduleDateBeans, String courseId)
-  {
-	  List cmodList = null;
-
-	  for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext(); )
-      {
-		ModuleDateBean mdbean = (ModuleDateBean)i.next();
-		 try
-		  {
-		    cmodList = moduledb.getCourseModules(courseId);
-
-	      }
-		  catch (HibernateException e)
-		  {
-			//e.printStackTrace();
-			logger.debug(e.toString());
-		  }
-		  for (ListIterator j = cmodList.listIterator(); j.hasNext(); )
-	      {
-			  CourseModule cmod = (CourseModule) j.next();
-			  if (cmod.getModuleId().intValue() == mdbean.getCmod().getModule().getModuleId().intValue())
-			  {
-				  try
-					{
-				  		moduledb.archiveModule(cmod);
-					}
-				  	catch (Exception ex)
-					{
-
-					}
-				  	break;
-			  }
-	      }
-
-      }
-  }
+ public void archiveModules(List moduleDateBeans, String courseId) throws Exception
+ {
+	 List cmodList = null;
+	 try
+	 {
+		 for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext(); )
+		 {
+			 ModuleDateBean mdbean = (ModuleDateBean)i.next();
+		//	 CourseModule archvmod = moduledb.getCourseModule(mdbean.getModuleId(), courseId);
+			 moduledb.archiveModule(mdbean.getModuleId(), courseId);
+		 }
+	 }
+	 catch (HibernateException e)
+	 {
+		 //e.printStackTrace();
+		 logger.debug(e.toString());
+		 throw new MeleteException("archive_fail");
+	 }
+	 catch (Exception ex)
+	 {
+		 throw new MeleteException("archive_fail");
+	 }     
+ }
 
 /*
  * @see org.foothillglobalaccess.melete.ManageModuleService#getArchiveModules(int, int)

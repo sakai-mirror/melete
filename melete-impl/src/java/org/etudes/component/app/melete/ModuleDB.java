@@ -1427,7 +1427,7 @@ public class ModuleDB implements Serializable {
 	  }
 
 
-     public void archiveModule(CourseModule cmod) throws Exception {
+     public void archiveModule(int archvModuleId, String courseId) throws Exception {
      	Transaction tx = null;
 	 	try
 		{
@@ -1435,18 +1435,24 @@ public class ModuleDB implements Serializable {
 	      Session session = hibernateUtil.currentSession();
 
 	      tx = session.beginTransaction();
-	    int modSeqNo = -1;
-
+	      String getArchvQueryString =  "select cmod from CourseModule as cmod where cmod.module.moduleId = :moduleId  and cmod.courseId = :courseId";
+	      Query getArchvQuery =
+		  session.createQuery(getArchvQueryString);
+	      getArchvQuery.setParameter("moduleId", new Integer(archvModuleId));
+	      getArchvQuery.setParameter("courseId", courseId);
+	      CourseModule cmod = (CourseModule)getArchvQuery.uniqueResult();
+	      
+	      int modSeqNo = -1;
+	      modSeqNo = cmod.getSeqNo();
+	      cmod.setSeqNo(-1);
 	      cmod.setArchvFlag(true);
 	      Date currentDate = Calendar.getInstance().getTime();
 	      cmod.setDateArchived(currentDate);
 	      session.saveOrUpdate(cmod);
-	      modSeqNo = cmod.getSeqNo();
-	      cmod.setSeqNo(-1);
-
-	       String queryString = "from CourseModule cmod where cmod.courseId = :courseId  and cmod.seqNo > :seqno";
+	     
+	      String queryString = "from CourseModule cmod1 where cmod1.courseId = :courseId  and cmod1.seqNo > :seqno";
 	      Query query = session.createQuery(queryString);
-	      query.setParameter("courseId",cmod.getCourseId());
+	      query.setParameter("courseId",courseId);
 	      query.setParameter("seqno",new Integer(modSeqNo));
 
 	      Iterator itr = query.iterate();
