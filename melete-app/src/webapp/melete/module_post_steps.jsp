@@ -72,7 +72,7 @@
                   <tr>
                     <td>  <h:outputText id="text4"  value="#{moduleNextStepsPage.mdBean.module.title}" /></td>
                   </tr>
-                  <tr><td><h:message style="color: red" for="nextsteps"/></td></tr>
+                
                   <tr>
                     <td>
                     <h:inputTextarea id="nextsteps" cols="65" rows="7" value="#{moduleNextStepsPage.mdBean.module.whatsNext}" styleClass="formtext"> <f:validateLength maximum="700" minimum="1" /> </h:inputTextarea>   </td>

@@ -39,8 +39,7 @@
 				  <h:outputText value="#{msgs.add_section_cclicense_form_allow_commercial}"/>
 		</h:column>			
 		<h:column>  
-                  <h:message style="color: red" for="allowCmrcl"/>
-				  <h:selectOneRadio id="allowCmrcl" value="#{addSectionPage.m_license.allowCmrcl}">
+                 		  <h:selectOneRadio id="allowCmrcl" value="#{addSectionPage.m_license.allowCmrcl}">
 				  	<f:selectItem itemValue="true" itemLabel="#{msgs.add_section_cclicense_form_allowmod2}"/>
 					<f:selectItem  itemValue="false" itemLabel="#{msgs.add_section_cclicense_form_allowmod0}"/>
 				  </h:selectOneRadio>
@@ -49,7 +48,7 @@
 				   <h:outputText value="#{msgs.add_section_cclicense_form_allow_modification}"/>
     	 </h:column>
 		 <h:column>          
-				  	<h:message style="color: red" for="allowMod"/>
+				  	
 				    <h:selectOneRadio id="allowMod" value="#{addSectionPage.m_license.allowMod}">
 				  	<f:selectItem itemValue="2" itemLabel="#{msgs.add_section_cclicense_form_allowmod2}"/>
 					<f:selectItem itemValue="1" itemLabel="#{msgs.add_section_cclicense_form_allowmod1}"/>

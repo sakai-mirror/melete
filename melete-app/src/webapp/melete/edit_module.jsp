@@ -142,21 +142,19 @@ function showEdateCal()
                 <td  align="left" valign="top">
 					<h:outputText value="#{editModulePage.module.modifiedByFname}"></h:outputText>&nbsp;<h:outputText value="#{editModulePage.module.modifiedByLname}"></h:outputText>&nbsp;&nbsp;
 					<h:outputText value="#{editModulePage.module.modificationDate}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm:ss a"/></h:outputText>
-					</br> <h:message style="color: red" for="title"/>
+					</br> 
 				</td>
               </tr>       
               <tr>
                 <td  align="left" valign="top"> <h:outputText value="#{msgs.edit_module_module_title}" /> <span class="required">*</span>  </td>
                 <td  align="left" valign="top">  
 						<h:inputText id="title" size="45" value="#{editModulePage.module.title}" required="true" styleClass="formtext" />											
-					
 				</td>
               </tr>
              
               <tr>
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.edit_module_descr_over_object}" /> </td>
                 <td width="472" align="left" valign="top">
-				 <h:message style="color: red" for="description"/>
 				<h:inputTextarea id="description" cols="45" rows="5" value="#{editModulePage.module.description}" styleClass="formtext">
 					<f:validateLength maximum="500" minimum="1"/>
 				</h:inputTextarea>	
@@ -166,16 +164,12 @@ function showEdateCal()
                 <td align="left" valign="top"><h:outputText value="#{msgs.edit_module_keywords}" />  
                 </td>
                 <td align="left" valign="top">
-				 <h:message style="color: red" for="keywords"/>
 				<h:inputTextarea id="keywords" cols="45" rows="3" value="#{editModulePage.module.keywords}" styleClass="formtext">
 						<f:validateLength maximum="250" minimum="3" />
 				</h:inputTextarea>		
 				</td>
               </tr>
-       	  <tr>
-			  <td colspan="2">&nbsp;</td>
-			  </tr>
-			   <tr>
+       	 	   <tr>
                 <td align="left" valign="top"><h:outputText value="#{msgs.edit_module_term_year}" /></td>
                <td align="left" valign="top">
 					<h:outputText id="season" value="#{editModulePage.season}"/>
@@ -183,10 +177,6 @@ function showEdateCal()
 				   </td>
               </tr>
 			  <tr>
-				<td>&nbsp;</td>
-				<td> <h:message style="color: red" for="startDate"/></td>
-			</tr>
-              <tr>
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.edit_module_start_date}" /></td>
                 <td width="472" align="left" valign="top">					
 					  <a name="startCalender"></a><h:inputText id="startDate" 
@@ -199,10 +189,6 @@ function showEdateCal()
 					 </td>
               </tr>
 			  <tr>
-				<td>&nbsp;</td>
-				<td> <h:message style="color: red" for="endDate"/></td>
-			</tr>
-              <tr>
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.edit_module_end_date}" /></td>
                 <td width="472" align="left" valign="top">
 					 <a name="endCalender"></a> <h:inputText id="endDate" 
