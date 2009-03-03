@@ -2506,7 +2506,7 @@ public class ModuleDB implements Serializable {
 			a = allIds.substring(0,allIds.lastIndexOf(","))+" )";
 		return a;
 	}
-
+	
 	protected List getActiveResourcesFromList(List activenArchModules)
 	{
 		List<String> secEmbed = new ArrayList();
@@ -2515,21 +2515,20 @@ public class ModuleDB implements Serializable {
 		  while (i.hasNext())
 		  {
 			Module mod = i.next();
-
-			String modSeqXml = mod.getSeqXml();
-			SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
-			if(modSeqXml == null) continue;
-			List<Element> allsec = SectionUtil.getAllSections(modSeqXml);
-			if(allsec == null)continue;
-			for (Iterator<Element> itr = allsec.iterator(); itr.hasNext();)
+			Map sectionMap = mod.getSections();
+			Iterator it = sectionMap.entrySet().iterator();
+			while (it.hasNext())
 			{
-				Section sec = sectionDB.getSection(Integer.parseInt(((Element) itr.next()).attributeValue("id")));
+			  Map.Entry pairs = (Map.Entry)it.next();
+			  Section sec = (Section)pairs.getValue();
+			
 				if(sec == null || sec.getContentType() == null || sec.getContentType().equals("notype") || sec.getSectionResource() == null || sec.getSectionResource().getResource() == null) continue;
 
 				if (sec.getContentType().equals("typeEditor"))
 				{
 					List l = meleteCHService.findAllEmbeddedImages(sec.getSectionResource().getResource().getResourceId());
 					if(l != null)secEmbed.addAll(l);
+				
 				}
 				else secEmbed.add(sec.getSectionResource().getResource().getResourceId());
 			}
@@ -2543,8 +2542,9 @@ public class ModuleDB implements Serializable {
 		}
 		catch(Exception e){e.printStackTrace();return null;}
 		  return secEmbed;
-	}
+	}	
 
+	
 
 	protected List getAllMeleteResourcesOfCourse(String toDelCourseId)
 	{
