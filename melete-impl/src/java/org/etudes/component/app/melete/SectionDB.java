@@ -403,7 +403,7 @@ public class SectionDB implements Serializable {
 			  {
 			  resourceId = sec.getSectionResource().getResource().getResourceId();
 			  //Check in SECTION_RESOURCE table
-			  List srUseList = checkInSectionResources(resourceId, courseId);
+			  List srUseList = checkInSectionResources(resourceId);
 			  if (srUseList != null)
 			  {
 				//This means there is the reference for this section
@@ -511,7 +511,7 @@ public class SectionDB implements Serializable {
 
 				  //Check to see if this media is also associated with a typeLink
 				  //or typeUpload section
-				  List srUseList = checkInSectionResources(resourceId, courseId);
+				  List srUseList = checkInSectionResources(resourceId);
 				  //If it is, continue to the next media reference
 				  if ((srUseList != null) &&(srUseList.size() > 0))
 				  {
@@ -1011,18 +1011,16 @@ public class SectionDB implements Serializable {
 			}
 	}
 
-	public List checkInSectionResources(String selResourceId, String courseId)
+	public List checkInSectionResources(String selResourceId)
 	{
 
 		try{
 		     Session session = hibernateUtil.currentSession();
 
-		     String queryString = "Select a from Section a, SectionResource b, CourseModule c where a.sectionId = b.sectionId AND " +
-		     					   "a.moduleId = c.moduleId AND c.courseId=:courseId AND c.deleteFlag=0" +
-		     					   " AND b.resource.resourceId=:resourceId AND a.deleteFlag=0" ;
+		     String queryString = "Select a from Section a, SectionResource b where a.sectionId = b.sectionId " +
+		     					    " AND a.deleteFlag=0 AND b.resource.resourceId=:resourceId" ;
 
 		     Query query = session.createQuery(queryString);
-		     query.setParameter("courseId",courseId);
 		     query.setParameter("resourceId",selResourceId);
 		     List result_list = query.list();
 		     if (result_list == null) return null;

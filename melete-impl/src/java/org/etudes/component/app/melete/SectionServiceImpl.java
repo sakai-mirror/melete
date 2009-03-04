@@ -414,7 +414,7 @@ public class SectionServiceImpl implements Serializable, SectionService{
 	  {
 		  List resourceUseList = null;
 		  //found in section resources so break
-		  resourceUseList = sectiondb.checkInSectionResources(selResourceId, courseId);
+		  resourceUseList = sectiondb.checkInSectionResources(selResourceId);
 		  if (resourceUseList != null && resourceUseList.size() > 0)
 		  {
 			  return resourceUseList;
