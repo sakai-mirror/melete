@@ -426,9 +426,9 @@ public class SectionServiceImpl implements Serializable, SectionService{
 		  return resourceUseList;
 	  }
 
-	  public void deleteResourceInUse(String delResourceId,String courseId) throws Exception
+	  public void deleteResourceInUse(String delResourceId) throws Exception
 	  {
-		  sectiondb.deleteResourceInUse(delResourceId, courseId);
+		  sectiondb.deleteResourceInUse(delResourceId);
 	  }
 
 	  public int cleanUpDeletedSections() throws Exception

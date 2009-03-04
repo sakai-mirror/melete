@@ -1133,7 +1133,7 @@ public class SectionDB implements Serializable {
 	  }
 
 
-	public void deleteResourceInUse(String delResourceId,String courseId) throws MeleteException
+	public void deleteResourceInUse(String delResourceId) throws MeleteException
 	{
 		try
 		{
@@ -1141,13 +1141,11 @@ public class SectionDB implements Serializable {
 			Transaction tx = null;
 			try
 			{
-				String queryString = "update SectionResource secResource set secResource.resource.resourceId = null where secResource.sectionId IN "
-						+ "(select a.sectionId from Section a, CourseModule b where a.moduleId = b.moduleId AND b.courseId=:courseId) "
-						+ "AND secResource.resource.resourceId=:resourceId";
+				String queryString = "update SectionResource secResource set secResource.resource.resourceId = null where secResource.resource.resourceId=:resourceId";
 
 				tx = session.beginTransaction();
 
-				int delResources = session.createQuery(queryString).setString("courseId", courseId).setString("resourceId", delResourceId)
+				int delResources = session.createQuery(queryString).setString("resourceId", delResourceId)
 						.executeUpdate();
 
 				logger.debug(delResources + "section resources are set to null");
