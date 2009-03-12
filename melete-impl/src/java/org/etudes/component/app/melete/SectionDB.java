@@ -1192,25 +1192,29 @@ public class SectionDB implements Serializable {
 			try
 			{
 				// get deleted modules group by course id
-				String queryString = " from Section sec where sec.deleteFlag = 1 order by sec.moduleId";
+				String queryString = "select cmod.courseId,sec.sectionId from CourseModule cmod,Section sec where cmod.moduleId=sec.moduleId and sec.deleteFlag=1 order by sec.moduleId";
 				Query query = session.createQuery(queryString);
-				List<Section> res = query.list();
+				List res = query.list();
+			
 				Map deletedSections = new HashMap<String, ArrayList<Section>>();
 
-				for (Iterator<Section> itr = res.listIterator(); itr.hasNext();)
+				for (Iterator itr = res.listIterator(); itr.hasNext();)
 				{
-					Section s = itr.next();
-					String keyStr = s.getModule().getCoursemodule().getCourseId();
+					Object pair[] = (Object[])itr.next();
+					String courseId = (String)pair[0];
+					Integer sectionId = (Integer)pair[1];
+
+					String keyStr = courseId;
 					if (deletedSections.containsKey(keyStr))
 					{
 						ArrayList delsections = (ArrayList) deletedSections.get(keyStr);
-						delsections.add(s);
+						delsections.add(sectionId);
 						deletedSections.put(keyStr, delsections);
 					}
 					else
 					{
 						ArrayList delSection = new ArrayList();
-						delSection.add(s);
+						delSection.add(sectionId);
 						deletedSections.put(keyStr, delSection);
 					}
 				}
@@ -1242,7 +1246,7 @@ public class SectionDB implements Serializable {
 						allCourseResources.removeAll(activeResources);
 					}
 					// delete sections marked for delete
-					List<Section> delSections = (ArrayList) deletedSections.get(toDelSecCourseId);
+					List<Integer> delSections = (ArrayList) deletedSections.get(toDelSecCourseId);
 					String allSecIds = getAllDeleteSectionIds(delSections);
 				//	logger.debug("all SecIds in sectionscleanup" + allSecIds);
 				    String selectResourceStr = "select sr.resource.resourceId from SectionResource sr where sr.section.contentType ='typeEditor' and sr.section in " + allSecIds;
@@ -1257,26 +1261,13 @@ public class SectionDB implements Serializable {
 
 					if(delSectionResources != null && delSectionResources.size() > 0)
 					{
-					   for(String delRes:delSectionResources)
-							{
-								session.createQuery("delete MeleteResource mr where mr.resourceId =:resourceId").setString("resourceId", delRes).executeUpdate();
-								meleteCHService.removeResource(delRes);
-							}
-					}
+						  deleteResources(session,delSectionResources,true);
+		    	    }					
+					
 					// delete melete resource and from content resource
-					if(allCourseResources != null)
+					if ((allCourseResources != null)&&(allCourseResources.size() > 0))
 					{
-						delresourcesz = allCourseResources.size();
-					for (Iterator delIter = allCourseResources.listIterator(); delIter.hasNext();)
-					{
-						String delResourceId = (String) delIter.next();
-						try{
-						//logger.debug("now deleteing mr" + delResourceId);
-						String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
-						deletedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", delResourceId).executeUpdate();
-						meleteCHService.removeResource(delResourceId);
-						} catch(Exception e){logger.error("unable to delete resource. still associated with section.");}
-					}
+						deleteResources(session,allCourseResources,true);
 					}
 
 					tx.commit();
@@ -1306,13 +1297,13 @@ public class SectionDB implements Serializable {
 		return delCount;
 	}
 
-	private String getAllDeleteSectionIds(List<Section> delSections)
+	private String getAllDeleteSectionIds(List<Integer> delSections)
 	{
 		StringBuffer allIds = new StringBuffer("( ");
 		String a = null;
-		for(Section s:delSections)
+		for(Integer s:delSections)
 		{
-			allIds.append(s.getSectionId()+",");
+			allIds.append(Integer.toString(s)+",");
 		}
 		if(allIds.lastIndexOf(",") != -1)
 			a = allIds.substring(0,allIds.lastIndexOf(","))+" )";
@@ -1330,6 +1321,31 @@ public class SectionDB implements Serializable {
 		return a;
 	}
 
+	public void deleteResources(Session session,List<String> delResources,boolean removeResourceFlag)
+	{
+		  StringBuffer delResourceIds = new StringBuffer("(");
+          // delete melete resource
+		  for(String delRes:delResources)
+    	  {
+	        if (delRes == null) continue;
+	        delResourceIds.append("'"+delRes + "',");
+	        if (removeResourceFlag == true)
+	        {
+	        	try
+	        	{
+	        	meleteCHService.removeResource(delRes);
+    	        } catch(Exception e)
+			    {
+    	        	logger.warn("unable to delete resource.its still asociated with section." + delRes);
+			    }
+			}
+	      }
+          
+          if (delResourceIds.lastIndexOf(",") != -1) delResourceIds = new StringBuffer(delResourceIds.substring(0, delResourceIds.lastIndexOf(",")) + " )");
+         
+          String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId in "+delResourceIds;
+          int deletedEntities = session.createQuery(delMeleteResourceStr).executeUpdate();
+   }
 
 	/**
 	 * @return Returns the hibernateUtil.
