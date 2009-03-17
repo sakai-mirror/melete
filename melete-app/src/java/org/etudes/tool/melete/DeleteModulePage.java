@@ -291,7 +291,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		ValueBinding binding = Util.getBinding("#{listModulesPage}");
 		ListModulesPage listPage = (ListModulesPage)
 	        binding.getValue(context);
-		listPage.setModuleDateBeans(null);
+		listPage.setViewModuleBeans(null);
 		return "list_auth_modules";
 	}
 

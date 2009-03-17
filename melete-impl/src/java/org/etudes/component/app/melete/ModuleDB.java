@@ -27,6 +27,7 @@ package org.etudes.component.app.melete;
 import java.io.File;
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -35,6 +36,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -44,6 +46,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Iterator;
 import java.util.Calendar;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.PreparedStatement;
 
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -68,6 +75,8 @@ import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.util.ResourceLoader;
 import org.dom4j.Element;
 import org.etudes.component.app.melete.MeleteUserPreferenceDB;
+
+import org.sakaiproject.db.cover.SqlService;
 
 import org.etudes.api.app.melete.MeleteAuthorPrefService;
 
@@ -417,6 +426,222 @@ public class ModuleDB implements Serializable {
 		}
 	    return modList;
 	  }
+	 
+	 public List getViewModulesAndDates(String userId, String courseId) throws HibernateException {
+		 	List modList = null;
+		 	Module mod = null;
+
+	        try
+			{
+		       modList = getViewModules(courseId);
+		    }
+		    catch (Exception e)
+		    {
+			  logger.error(e.toString());
+			  e.printStackTrace();
+		    }
+		    return modList;
+
+		  }
+	 
+	 public List getViewModules(String courseId) throws Exception {
+		 Connection dbConnection = null;
+		 	List resList = new ArrayList();
+		 	List courseIdList = new ArrayList();
+		 	List sectionsList = null;
+		 	Module mod = null;
+		 	Query sectionQuery = null;
+		 	
+			try {
+				dbConnection = SqlService.borrowConnection();
+		    	ResultSet rs = null;
+
+	            String sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 order by c.seq_no";
+	            PreparedStatement pstmt = dbConnection.prepareStatement(sql);
+	            pstmt.setString(1,courseId);
+		    	rs = pstmt.executeQuery();
+		    	ViewSecBean vsBean = null;
+		    	Map vsBeanMap = null;
+		    	SubSectionUtilImpl ssuImpl;
+				StringBuffer rowClassesBuf;
+				List vsBeanList = null;
+		    	int prevModId =0,prevSeqNo = 0;
+		    	int moduleId,seqNo;
+		    	ViewModBean vmBean = null;
+		    	String seqXml,prevSeqXml = null;
+		    	java.sql.Timestamp startTimestamp,endTimestamp;
+		    	if (rs != null)
+		    	{
+		    		while (rs.next())
+		    		{
+		    			
+		    			moduleId = rs.getInt("module_id");
+		    			seqNo = rs.getInt("seq_no");
+		    			seqXml = rs.getString("seq_xml");
+		    			
+//		    			Associate vsBeans to vmBean
+		    			//This means its a new module
+		    			if ((prevModId != 0)&&(moduleId != prevModId))
+		    			{	
+		    			  if (vsBeanMap != null)
+		   				  {
+		   				  	if (vsBeanMap.size() > 0)
+		   				    {
+		   				      ssuImpl = new SubSectionUtilImpl();
+		   				      ssuImpl.traverseDom(prevSeqXml,Integer.toString(prevSeqNo));
+		   				      xmlSecList = ssuImpl.getXmlSecList();
+		   				      rowClassesBuf = new StringBuffer();
+
+		   				      //Comment for now
+		   				      xmlSecList = correctSections(vsBeanMap,mod,xmlSecList);
+		   				      vsBeanList = new ArrayList();
+		   				      processViewSections(vsBeanMap, vsBeanList,xmlSecList,rowClassesBuf);
+		   				      vmBean.setVsBeans(vsBeanList);
+		   				       vmBean.setRowClasses(rowClassesBuf.toString());
+		   				    }
+		   				   }					
+		    			   vsBeanMap = null;
+		    			 }
+		    			
+		    			//Populate each vsBean and add to vsBeanMap
+		    			int sectionId = rs.getInt("section_id");
+		    			if (sectionId != 0)
+		    			{
+		    				if (vsBeanMap == null) vsBeanMap = new LinkedHashMap();
+		    				
+		    				vsBean = new ViewSecBean();
+		    				vsBean.setSectionId(sectionId);
+		    				vsBean.setContentType(rs.getString("content_type"));
+		    				vsBean.setTitle(rs.getString("secTitle"));
+		    				vsBeanMap.put(new Integer(sectionId),vsBean);
+		    			}
+		    			
+		    			//Populate vmBean
+		    			//This means its the first module or a new module
+		    			if ((prevModId == 0)||(moduleId != prevModId))
+		    			{
+		    				vmBean = new ViewModBean();
+		    				vmBean.setModuleId(moduleId);
+		    				vmBean.setSeqNo(seqNo);
+		    				vmBean.setTitle(rs.getString("modTitle"));
+		    				vmBean.setWhatsNext(rs.getString("whats_next"));
+		    				vmBean.setSeqXml(seqXml);
+		    				
+		    				startTimestamp = rs.getTimestamp("start_date");
+		    				endTimestamp = rs.getTimestamp("end_date");
+		    				
+		    				java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+
+		 				    if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
+		 				    {
+		 					   vmBean.setVisibleFlag(true);
+		 				    }
+		 				    else
+		 				    {
+		 					   vmBean.setVisibleFlag(false);
+		 				    }
+		 				    if (startTimestamp != null)
+		 				    {
+		 				    	vmBean.setStartDate(new java.util.Date(startTimestamp.getTime() + (startTimestamp.getNanos()/1000000))); 	
+		 				    }
+		 				   if (endTimestamp != null)
+		 				    {
+		 				    	vmBean.setEndDate(new java.util.Date(endTimestamp.getTime() + (endTimestamp.getNanos()/1000000))); 	
+		 				    }
+		 				   resList.add(vmBean);
+		    			}
+		    			
+		    			
+		    			prevModId = moduleId;
+		    			prevSeqNo = seqNo;
+		    			prevSeqXml = seqXml;
+		    			
+		    		}//End while
+		    		
+		    		
+		    		//The last module will not have had its sections added
+		    		//so we do it here
+		    		 if (vsBeanMap != null)
+	   				  {
+	   				  	if (vsBeanMap.size() > 0)
+	   				    {
+	   				  	  ssuImpl = new SubSectionUtilImpl();
+	   				      ssuImpl.traverseDom(prevSeqXml,Integer.toString(prevSeqNo));
+	   				      xmlSecList = ssuImpl.getXmlSecList();
+	   				      rowClassesBuf = new StringBuffer();
+
+	   				      xmlSecList = correctSections(vsBeanMap,mod,xmlSecList);
+	   				      vsBeanList = new ArrayList();
+	   				      processViewSections(vsBeanMap, vsBeanList,xmlSecList,rowClassesBuf);
+	   				      vmBean.setVsBeans(vsBeanList);
+	   				      vmBean.setRowClasses(rowClassesBuf.toString());
+	   				    }
+	   				   }	
+		    		rs.close();
+		    		pstmt.close();
+		    	}	
+		    	} catch (Exception e) {
+					if (logger.isErrorEnabled()) logger.error(e);
+					throw e;
+				} finally{
+					try{
+						if (dbConnection != null)
+							SqlService.returnConnection(dbConnection);
+					}catch (Exception e1){
+						if (logger.isErrorEnabled()) logger.error(e1);
+						throw e1;
+					}
+				}		    		
+		 
+		 	return resList;
+		  }
+	 	 
+	 private java.sql.Timestamp getTime(String dateTime)
+	 {
+	   SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
+	   Date dd = null;
+	   try
+	   {
+	     dd = sdf.parse(dateTime);
+	   }
+	   catch (Exception pe)
+	   {
+		   if (logger.isErrorEnabled()) logger.error(pe);
+	   }
+	   SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.fffffffff");
+	   String jdbcTime = sdf1.format(dd);
+	   return java.sql.Timestamp.valueOf(jdbcTime);
+	 }
+	 private void processViewSections(Map vsBeanMap, List vsBeanList,List xmlSecList,StringBuffer rowClassesBuf)
+	 {
+		ViewSecBean vsBean = null;
+		//SectionBean secBean = null;
+
+		if ((vsBeanMap != null) && (xmlSecList != null))
+		{
+		  if (vsBeanMap.size() == xmlSecList.size())
+		  {
+		  for (ListIterator k = xmlSecList.listIterator(); k.hasNext(); )
+		  {
+   		  SecLevelObj slObj = (SecLevelObj)k.next();
+   		  if (slObj != null)
+   		  {
+   			vsBean =(ViewSecBean)vsBeanMap.get(new Integer(slObj.getSectionId()));
+   			if (vsBean != null)
+   			{
+   			vsBean.setDisplaySequence(slObj.getDispSeq());
+   			vsBeanList.add(vsBean);
+   			rowClassesBuf.append("secrow"+slObj.getLevel()+",");
+   			}
+   		    }
+   	      }
+	 	  rowClassesBuf.delete(rowClassesBuf.toString().length()-1,rowClassesBuf.toString().length());
+		  }
+		}
+	 }	 
+
+	 
+		 
 
 	 public List getActivenArchiveModules(String courseId) throws HibernateException {
 		 	List modList = new ArrayList();

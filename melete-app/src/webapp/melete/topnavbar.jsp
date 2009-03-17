@@ -48,4 +48,4 @@ final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)faces
 
 </sakai:view_content>
 </sakai:view_container>
-</html>
+

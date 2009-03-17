@@ -96,6 +96,7 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 
 	private ModuleDB moduledb;
 	private List moduleDateBeans = null;
+	private List viewModuleBeans = null;
 	private List modules = null;
 	private Module module = null;
 	private ModuleDateBean mdBean = null;
@@ -212,6 +213,19 @@ public List getModuleDateBeans(String userId, String courseId) {
   		logger.debug(e.toString());
 	}
   	return moduleDateBeans;
+  }
+
+public List getViewModules(String userId, String courseId) {
+  	if (moduledb == null) moduledb = ModuleDB.getModuleDB();
+
+  	try {
+  		viewModuleBeans = moduledb.getViewModulesAndDates(userId, courseId);
+  	}catch (HibernateException e)
+	{
+  		//e.printStackTrace();
+  		logger.debug(e.toString());
+	}
+  	return viewModuleBeans;
   }
 
   public void setModuleDateBeans(List moduleDateBeansList) {
@@ -1219,6 +1233,16 @@ public void restoreModules(List modules) throws Exception
     public void setSectionService(SectionService sectionService) {
         this.sectionService = sectionService;
     }
+
+	public List getViewModuleBeans()
+	{
+		return this.viewModuleBeans;
+	}
+
+	public void setViewModuleBeans(List viewModuleBeans)
+	{
+		this.viewModuleBeans = viewModuleBeans;
+	}
 
 
 	/**

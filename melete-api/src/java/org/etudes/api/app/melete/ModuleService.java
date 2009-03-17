@@ -47,6 +47,8 @@ public interface ModuleService{
 
 
 	public void insertProperties(ModuleObjService module, ModuleShdatesService moduleshdates,String userId, String courseId) throws Exception;
+	
+	public List getViewModules(String userId, String courseId);
 
 	public List getModuleDateBeans(String userId, String courseId);
 

@@ -285,7 +285,7 @@ public String goTOC()
 	ValueBinding binding = Util.getBinding("#{listModulesPage}");
 	ListModulesPage listPage = (ListModulesPage)
         binding.getValue(context);
-	listPage.setModuleDateBeans(null);
+	listPage.setViewModuleBeans(null);
 	listPage.setAutonumberMaterial(null);
 	if (instRole) return "list_modules_inst";
 	else return "list_modules_student";
