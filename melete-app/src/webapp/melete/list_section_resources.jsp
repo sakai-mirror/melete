@@ -36,7 +36,7 @@
 </h:panelGrid>
 
 <!-- navigation with showing 15 recs --> 
-<h:panelGrid id="selresNavigationPanel" columns="2"  width="auto" border="0" columnClasses="TitleWid4,ActionWid2" rendered="#{addSectionPage.expandAllFlag && addSectionPage.listNav.displayNav}" >
+<h:panelGrid id="selresNavigationPanel" columns="2"  width="100%" border="0" columnClasses="TitleWid4,ActionWid2" rendered="#{addSectionPage.expandAllFlag && addSectionPage.listNav.displayNav}" >
 <h:column/>
 <h:column>
  <h:outputText id="nav_spaces_left1" value="" styleClass="ExtraPaddingClass" />
