@@ -1,23 +1,27 @@
-<!--  Copyright (c) 2008 Etudes, Inc. -->
- 
-<!--  Licensed under the Apache License, Version 2.0 (the "License"); -->
-<!--   you may not use this file except in compliance with the License.-->
-<!--   You may obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-  
-<!--   Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project -->
-  
-<!--   Licensed under the Apache License, Version 2.0 (the "License"); you -->
-<!--   may not use this file except in compliance with the License. You may -->
-<!--   obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-<!--  Unless required by applicable law or agreed to in writing, software -->
-<!--  distributed under the License is distributed on an "AS IS" BASIS, -->
-<!--  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or -->
-<!--  implied. See the License for the specific language governing -->
-<!--  permissions and limitations under the License. -->
+<!--
+ ***********************************************************************************
+ * $URL$
+ * $Id$  
+ ***********************************************************************************
+ *
+ * Copyright (c) 2008 Etudes, Inc.
+ *
+ * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ **********************************************************************************
+-->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 
@@ -60,13 +64,13 @@
 		      <h:inputHidden id="contentType" value="#{editSectionPage.section.contentType}"/>
 			  <h:outputText id="typeEditorContents" value="#{editSectionPage.previewContentData}" escape="false"  rendered="#{editSectionPage.shouldRenderEditor}"></h:outputText>		 
                 <br>
-	            <h:outputLink id="viewSectionLink"  value="#{editSectionPage.previewContentData}" target="_blank" rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderUpload) && editSectionPage.section.openWindow == true}">
+	            <h:outputLink id="viewSectionLink"  value="#{editSectionPage.previewContentData}" target="_blank" rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLTI) && editSectionPage.section.openWindow == true}">
                 <h:outputText id="sectitleLink" 
                            value="#{editSectionPage.secResourceName}">
                 </h:outputText>
                 </h:outputLink>	
                     <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{editSectionPage.previewContentData}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
-               	    border=\"0\" frameborder= \"0\"></iframe>" rendered="#{(editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLink) && editSectionPage.section.openWindow == false}" escape="false" />			
+               	    border=\"0\" frameborder= \"0\"></iframe>" rendered="#{(editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLink|| editSectionPage.shouldRenderLTI) && editSectionPage.section.openWindow == false}" escape="false" />			
 		      </td></tr>
 	       
 			<tr><td><div align="center">

@@ -1,27 +1,31 @@
-<!--  Copyright (c) 2008 Etudes, Inc. -->
- 
-<!--  Licensed under the Apache License, Version 2.0 (the "License"); -->
-<!--   you may not use this file except in compliance with the License.-->
-<!--   You may obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-  
-<!--   Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project -->
-  
-<!--   Licensed under the Apache License, Version 2.0 (the "License"); you -->
-<!--   may not use this file except in compliance with the License. You may -->
-<!--   obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-<!--  Unless required by applicable law or agreed to in writing, software -->
-<!--  distributed under the License is distributed on an "AS IS" BASIS, -->
-<!--  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or -->
-<!--  implied. See the License for the specific language governing -->
-<!--  permissions and limitations under the License. -->
+<!--
+ ***********************************************************************************
+ * $URL$
+ * $Id$  
+ ***********************************************************************************
+ *
+ * Copyright (c) 2008 Etudes, Inc.
+ *
+ * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ **********************************************************************************
+-->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://javascript4jsf.dev.java.net/" prefix="j4j" %>
-<html">
+<html>
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
@@ -38,7 +42,7 @@
 		if( status != null && !status.equalsIgnoreCase("ok"))
 		{
 			final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
-			ResourceBundle bundle = ResourceBundle.getBundle("org.sakaiproject.tool.melete.bundle.Messages", facesContext.getViewRoot().getLocale());
+			ResourceBundle bundle = ResourceBundle.getBundle("org.etudes.tool.melete.bundle.Messages", facesContext.getViewRoot().getLocale());
 			String infoMsg = bundle.getString("error_importing_large");
 			FacesMessage msg = new FacesMessage(null, infoMsg);
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);

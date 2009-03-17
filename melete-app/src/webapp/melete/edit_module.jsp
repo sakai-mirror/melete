@@ -1,23 +1,27 @@
-<!--  Copyright (c) 2008 Etudes, Inc. -->
- 
-<!--  Licensed under the Apache License, Version 2.0 (the "License"); -->
-<!--   you may not use this file except in compliance with the License.-->
-<!--   You may obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-  
-<!--   Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project -->
-  
-<!--   Licensed under the Apache License, Version 2.0 (the "License"); you -->
-<!--   may not use this file except in compliance with the License. You may -->
-<!--   obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-<!--  Unless required by applicable law or agreed to in writing, software -->
-<!--  distributed under the License is distributed on an "AS IS" BASIS, -->
-<!--  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or -->
-<!--  implied. See the License for the specific language governing -->
-<!--  permissions and limitations under the License. -->
+<!--
+ ***********************************************************************************
+ * $URL$
+ * $Id$  
+ ***********************************************************************************
+ *
+ * Copyright (c) 2008 Etudes, Inc.
+ *
+ * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ **********************************************************************************
+-->
 <html>
 <head>
 <link rel="stylesheet" href="rtbc004.css" type="text/css">
@@ -29,7 +33,7 @@
 <%@ page import="org.sakaiproject.util.ResourceLoader"%>
 
 <% 
-	ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 	String mensaje=bundle .getString("JS_date");
 	
 %>
@@ -138,21 +142,19 @@ function showEdateCal()
                 <td  align="left" valign="top">
 					<h:outputText value="#{editModulePage.module.modifiedByFname}"></h:outputText>&nbsp;<h:outputText value="#{editModulePage.module.modifiedByLname}"></h:outputText>&nbsp;&nbsp;
 					<h:outputText value="#{editModulePage.module.modificationDate}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm:ss a"/></h:outputText>
-					</br> <h:message style="color: red" for="title"/>
+					</br> 
 				</td>
               </tr>       
               <tr>
                 <td  align="left" valign="top"> <h:outputText value="#{msgs.edit_module_module_title}" /> <span class="required">*</span>  </td>
                 <td  align="left" valign="top">  
 						<h:inputText id="title" size="45" value="#{editModulePage.module.title}" required="true" styleClass="formtext" />											
-					
 				</td>
               </tr>
              
               <tr>
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.edit_module_descr_over_object}" /> </td>
                 <td width="472" align="left" valign="top">
-				 <h:message style="color: red" for="description"/>
 				<h:inputTextarea id="description" cols="45" rows="5" value="#{editModulePage.module.description}" styleClass="formtext">
 					<f:validateLength maximum="500" minimum="1"/>
 				</h:inputTextarea>	
@@ -162,16 +164,12 @@ function showEdateCal()
                 <td align="left" valign="top"><h:outputText value="#{msgs.edit_module_keywords}" />  
                 </td>
                 <td align="left" valign="top">
-				 <h:message style="color: red" for="keywords"/>
 				<h:inputTextarea id="keywords" cols="45" rows="3" value="#{editModulePage.module.keywords}" styleClass="formtext">
 						<f:validateLength maximum="250" minimum="3" />
 				</h:inputTextarea>		
 				</td>
               </tr>
-       	  <tr>
-			  <td colspan="2">&nbsp;</td>
-			  </tr>
-			   <tr>
+       	 	   <tr>
                 <td align="left" valign="top"><h:outputText value="#{msgs.edit_module_term_year}" /></td>
                <td align="left" valign="top">
 					<h:outputText id="season" value="#{editModulePage.season}"/>
@@ -179,10 +177,6 @@ function showEdateCal()
 				   </td>
               </tr>
 			  <tr>
-				<td>&nbsp;</td>
-				<td> <h:message style="color: red" for="startDate"/></td>
-			</tr>
-              <tr>
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.edit_module_start_date}" /></td>
                 <td width="472" align="left" valign="top">					
 					  <a name="startCalender"></a><h:inputText id="startDate" 
@@ -195,10 +189,6 @@ function showEdateCal()
 					 </td>
               </tr>
 			  <tr>
-				<td>&nbsp;</td>
-				<td> <h:message style="color: red" for="endDate"/></td>
-			</tr>
-              <tr>
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.edit_module_end_date}" /></td>
                 <td width="472" align="left" valign="top">
 					 <a name="endCalender"></a> <h:inputText id="endDate" 

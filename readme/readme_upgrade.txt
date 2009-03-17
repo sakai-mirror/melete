@@ -1,27 +1,28 @@
-/*
-* Copyright (c) 2008 Etudes, Inc.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
-*
-* Licensed under the Apache License, Version 2.0 (the "License"); you
-* may not use this file except in compliance with the License. You may
-* obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-* implied. See the License for the specific language governing
-* permissions and limitations under the License.
-*/
-INSTRUCTIONS TO UPGRADE FROM MELETE 2.4.5 >> MELETE 2.5.1
+/**********************************************************************************
+ *
+ * $URL$
+ * $Id$  
+ ***********************************************************************************
+ *
+ * Copyright (c) 2008,2009 Etudes, Inc.
+ *
+ * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ **********************************************************************************/
+ 
+INSTRUCTIONS TO UPGRADE FROM MELETE 2.5 >> MELETE 2.6
 For a patched Sakai 2.3, patched Sakai 2.4, OR Sakai 2.5
 -----------------------------------------------------
 SETUP INSTRUCTIONS
@@ -30,8 +31,6 @@ SETUP INSTRUCTIONS
 2. Internationalize Messages (Optional)
 3. Compile Melete 
 4. Database Configuration
-5. Configure Site Archive to include Melete
-6. Sakai 2.5 Portal Icons
 ---------------------------------
 
 1. Patch Instructions
@@ -39,17 +38,17 @@ SETUP INSTRUCTIONS
 	** SKIP this step if you will run Melete with Sakai 2.4.**
 	
 	If you are using Sakai 2.3, you need to execute a patch that enables Sakai
-	2.3 to run with Melete 2.5.1. The patch is at /patch/meletepatchsak23.sh.
+	2.3 to run with Melete 2.6. The patch is at /patch/meletepatchsak23.sh.
 	
-	Instructions for running the path are in /patch/patch-SAK2.3_for_melete.txt.
+	Instructions for running the patch are in /patch/patch-SAK2.3_for_melete.txt.
    
    b. Sakai 2.4.x Patch Instructions
 	** SKIP this step if you will run Melete with Sakai 2.3.**
 	
 	If you are using Sakai 2.4, you need to execute a patch that enables Sakai
-	2.4 to run with Melete 2.5.1. The patch is at /patch/meletepatchsak24.sh.
+	2.4 to run with Melete 2.6. The patch is at /patch/meletepatchsak24.sh.
 	
-	Instructions for running the path are in /patch/patch-SAK2.4_for_melete.txt.	
+	Instructions for running the patch are in /patch/patch-SAK2.4_for_melete.txt.	
 	
 	NOTE: No patch is needed for Sakai 2.5
 
@@ -63,16 +62,20 @@ SETUP INSTRUCTIONS
 	
 	3.1 Sakai 2.4 and previous versions
 	
+	Note: Undeploy any previous Melete versions from your source before deploying Melete 2.6 as artifacts name has changed. 
+	
 	To build(using Maven version 1), run 'maven sakai:build' and then to deploy 'maven sakai:deploy'
 	
 	(for more instructions, see section titled 'Sakai Maven Goals' in the 
 	"How we build Sakai Using Maven" document provided by Sakai lead developers)
 	
-	3.2 Sakai 2.5 
+	3.2 Sakai 2.5 and above versions
 	
 	To build and deploy(using Maven version 2), run 'mvn clean install sakai:deploy'
+	
+	Note: If you are using sakai version other than 2.5.0 before building change the version in pom.xml. The default version in pom.xml is <version>2.5.0</version>. Sakai version can be obtained from master/pom.xml from version element.
 
-	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for Melete 2.5.1.Feel free to contact us at dev@etudes.org for melete-2.4.5 patch that you can work from.
+	NOTE: For Oracle, you will need to apply a patch to handle NULL values. There is no patch available for Melete 2.6.Feel free to contact us at dev@etudes.org for melete-2.4.5 patch that you can work from.
 	
 4. Database Configuration
   
@@ -84,67 +87,17 @@ SETUP INSTRUCTIONS
 	
 	4.1. To setup the Melete tables: 
 	
-		a. Create a backup of existing Melete tables.
+		a. You need to run the Melete upgrade script manually
+		Mysql Users: /components/src/sql/mysql/melete26_upgrade.sql
+		Oracle Users: /components/src/sql/oracle/melete26_upgrade.sql
 		
-		b. You need to run the Melete upgrade script manually
-		Mysql Users: /components/src/sql/mysql/melete25_upgrade.sql
-		Oracle Users: /components/src/sql/oracle/melete25_upgrade.sql
-		
-		NOTE: Please make sure secondary index on user_id column of melete_user_preference table is created.
+		NOTE: a. Please make sure secondary index on user_id column of melete_user_preference table is created.
 			  Hibernate sometimes doesn't create it.
-			   
-	4.2. It is necessary to run this script in order for the upgrade to run successfully.
-	    As of Melete2.5, we have moved the dtd declaration for the SEQ_XML column in MELETE_MODULE
-		from an external reference to an internal inline dtd. The script /components/src/sql/mysql/seqxml_script.sql
-		achieves this. Review the script and make sure dtdlocation variable is set up correctly
-		for your installation. Execute this script and check the MELETE_MODULE table to make sure
-		the SEQ_XML column has been updated correctly.
-		
+		      b. We see duplicate indices created by hibernate on module_id column of melete_course_module and melete_module_shdates table.
+	         	section_id column of melete_section_resource table. please remove the duplicate keys. It will improve the performance.	   	
+	
 	Start tomcat, make sure there are no errors in the logs.
 		
-5. Configure Site Archive to include Melete 
-	Melete now participates in Site Archive. Modify archive\archive-impl\pack\src\webapp\WEB-INF\components.xml, add
-	<value>MeleteSecurityService</value> in the filterServices list.
-	
-	Compile and deploy archive again.	
-	
-6. Sakai 2.5 Portal Icons
-
-Sakai 2.5 and later supports icons in the portal for each tool. Sakai comes with icons for the tools that are bundled,
-and you can make a few simple edits to add icons for other tools such as Melete. The icons are part of the Sakai skin.
-The skin files are in the "library" webapp, which is located in your deployed tomcat in the folder webapps/library/skin
-
-The skin has to be enhanced in two ways:
-
-    * make the new icons available
-    * change the skin .css file to reference them
-
-There is a "default" skin, and perhaps, depending on your customizations of Sakai, other skins. You need to make these 
-changes for the skins that you are using. 
-
-The following instructions show how to change the "default" skin, in the "library/skin/default" folder. To change the others,
-apply these same changes to the other skins, located in folders under "library/skin/".
-
-		You can add an icon for Melete here:
-		webapps/library/skin/default/icons/
-
-		Create this folder, and download the icon into it:
-
-		The Melete tool icon is modules-menu.png 
-		
-		You can get it from melete-app/src/webapp/images
-
-		The file "portal.css" is where the icons are referenced. For the default skin, this file is here:
-
-      webapps/library/skin/default/portal.css
-
-      There is a section in there that lists lots of tools. We want to add one more:
-
-      .icon-sakai-melete
-      {
-      background-image: url(icons/modules-menu.png);
-      }
-
 For future development, tutorials and solutions to common setup problems, see:
 http://etudes.org/melete.htm
 		

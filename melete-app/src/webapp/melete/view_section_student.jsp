@@ -1,23 +1,27 @@
-<!--  Copyright (c) 2008 Etudes, Inc. -->
- 
-<!--  Licensed under the Apache License, Version 2.0 (the "License"); -->
-<!--   you may not use this file except in compliance with the License.-->
-<!--   You may obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-  
-<!--   Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project -->
-  
-<!--   Licensed under the Apache License, Version 2.0 (the "License"); you -->
-<!--   may not use this file except in compliance with the License. You may -->
-<!--   obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-<!--  Unless required by applicable law or agreed to in writing, software -->
-<!--  distributed under the License is distributed on an "AS IS" BASIS, -->
-<!--  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or -->
-<!--  implied. See the License for the specific language governing -->
-<!--  permissions and limitations under the License. -->
+<!--
+ ***********************************************************************************
+ * $URL$
+ * $Id$  
+ ***********************************************************************************
+ *
+ * Copyright (c) 2008 Etudes, Inc.
+ *
+ * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ **********************************************************************************
+-->
 <html>
 <head>
 
@@ -91,23 +95,26 @@
 			
 		<br>
       
-	 <h:outputLink id="viewSectionLink"  value="#{viewSectionsPage.contentLink}" target="_blank" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}">
+	<h:outputLink id="viewSectionLink"  value="#{viewSectionsPage.contentLink}" target="_blank" 
+       rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink ||
+ 		viewSectionsPage.section.contentType == viewSectionsPage.typeUpload || 
+ 		viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)
+ 		&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}">
       <h:outputText id="sectitleLink" 
                            value="#{viewSectionsPage.linkName}">
       </h:outputText>
     </h:outputLink>
-    <h:outputLink id="viewSectionUpload"  value="#{viewSectionsPage.contentLink}" target="_blank" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeUpload)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}">
-      <h:outputText id="sectitleUpload" 
-                           value="#{viewSectionsPage.linkName}">
-      </h:outputText>
-    </h:outputLink>
+    
     <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{viewSectionsPage.content}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\" border=\"0\" frameborder= \"0\"></iframe>" rendered="#{((viewSectionsPage.section.contentType ==viewSectionsPage.typeLink)&&(viewSectionsPage.linkName !=
     viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
     
   <h:outputText value="#{viewSectionsPage.content}" escape="false" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeEditor)&&(viewSectionsPage.content != viewSectionsPage.nullString))}"/>
 	<h:outputText id="contentUploadFrame" value="<iframe id=\"iframe2\" src=\"#{viewSectionsPage.contentLink}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
     border=\"0\" frameborder= \"0\"></iframe>" rendered="#{((viewSectionsPage.section.contentType ==viewSectionsPage.typeUpload)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
-	</td> 
+	
+	<h:outputText id="contentLTI" value="#{viewSectionsPage.contentLTI}" 
+              rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
+	</td>
 	</tr>
 
 

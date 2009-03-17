@@ -1,23 +1,27 @@
-<!--  Copyright (c) 2008 Etudes, Inc. -->
- 
-<!--  Licensed under the Apache License, Version 2.0 (the "License"); -->
-<!--   you may not use this file except in compliance with the License.-->
-<!--   You may obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-  
-<!--   Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project -->
-  
-<!--   Licensed under the Apache License, Version 2.0 (the "License"); you -->
-<!--   may not use this file except in compliance with the License. You may -->
-<!--   obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-<!--  Unless required by applicable law or agreed to in writing, software -->
-<!--  distributed under the License is distributed on an "AS IS" BASIS, -->
-<!--  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or -->
-<!--  implied. See the License for the specific language governing -->
-<!--  permissions and limitations under the License. -->
+<!--
+ ***********************************************************************************
+ * $URL$
+ * $Id$  
+ ***********************************************************************************
+ *
+ * Copyright (c) 2008 Etudes, Inc.
+ *
+ * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ **********************************************************************************
+-->
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -28,7 +32,7 @@
 <%@ page import="org.sakaiproject.util.ResourceLoader"%>
 
 <% 
-	ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 	String mensaje=bundle .getString("JS_date");
 	
 %>
@@ -125,10 +129,7 @@ function showEdateCal()
 					
 				</td>
               </tr>
-			  <tr>
-				<td>&nbsp;</td>
-				<td> <h:message style="color: red" for="description"/></td>
-			</tr>
+			 
               <tr>
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.add_module_descr_over_object}" /> </td>
                 <td width="472" align="left" valign="top">
@@ -137,10 +138,7 @@ function showEdateCal()
 				</h:inputTextarea>	
 				</td>
               </tr>
-			   <tr>
-				<td>&nbsp;</td>
-				<td> <h:message style="color: red" for="keywords"/></td>
-			</tr>
+			  
               <tr>
                 <td align="left" valign="top"><h:outputText value="#{msgs.add_module_keywords}" />				
                  </td>
@@ -167,10 +165,7 @@ function showEdateCal()
 					<h:outputText id="season" value="#{addModulePage.season}"/>				 
 				   </td>
               </tr>
-			   <tr>
-				<td>&nbsp;</td>
-				<td> <h:message style="color: red" for="startDate"/></td>
-			</tr>
+			   
               <tr>
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.add_module_start_date}" />
 				</td>
@@ -184,10 +179,7 @@ function showEdateCal()
            			</h:outputLink>
 					 </td>
               </tr>
-			   <tr>
-				<td>&nbsp;</td>
-				<td> <h:message style="color: red" for="endDate"/></td>
-			</tr>
+			  
               <tr>
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.add_module_end_date}" /></td>
                 <td width="472" align="left" valign="top">

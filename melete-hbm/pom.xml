@@ -1,38 +1,43 @@
 <?xml version="1.0"?>
-<!--  Copyright (c) 2008 Etudes, Inc. -->
- 
-<!--  Licensed under the Apache License, Version 2.0 (the "License"); -->
-<!--   you may not use this file except in compliance with the License.-->
-<!--   You may obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-  
-<!--   Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project -->
-  
-<!--   Licensed under the Apache License, Version 2.0 (the "License"); you -->
-<!--   may not use this file except in compliance with the License. You may -->
-<!--   obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-<!--  Unless required by applicable law or agreed to in writing, software -->
-<!--  distributed under the License is distributed on an "AS IS" BASIS, -->
-<!--  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or -->
-<!--  implied. See the License for the specific language governing -->
-<!--  permissions and limitations under the License. -->
+<!--
+ ***********************************************************************************
+ * $URL$
+ * $Id$  
+ ***********************************************************************************
+ *
+ * Copyright (c) 2008 Etudes, Inc.
+ *
+ * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ **********************************************************************************
+-->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>melete-base</artifactId>
-    <groupId>org.sakaiproject</groupId>
-    <version>2.5</version>
+    <groupId>org.etudes</groupId>
+    <version>2.5.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <name>sakai-melete-hbm</name>
-  <groupId>org.sakaiproject</groupId>
-  <artifactId>sakai-melete-hbm</artifactId>
+  <name>etudes-melete-hbm</name>
+  <groupId>org.etudes</groupId>
+  <artifactId>etudes-melete-hbm</artifactId>
+   <version>2.6</version>
   <organization>
-    <name>Sakai Project</name>
-    <url>http://sakaiproject.org/</url>
+    <name>Etudes</name>
+    <url>http://etudes.org/</url>
   </organization>
   <inceptionYear>2004</inceptionYear>
   <packaging>jar</packaging>
@@ -41,9 +46,10 @@
   </properties>
   <dependencies>
     <dependency>
-      <groupId>org.sakaiproject</groupId>
-      <artifactId>sakai-melete-api</artifactId>
-    </dependency>
+      <groupId>org.etudes</groupId>
+      <artifactId>etudes-melete-api</artifactId>
+ <version>2.6</version>   
+ </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>

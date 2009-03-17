@@ -1,27 +1,31 @@
-<!--  Copyright (c) 2008 Etudes, Inc. -->
- 
-<!--  Licensed under the Apache License, Version 2.0 (the "License"); -->
-<!--   you may not use this file except in compliance with the License.-->
-<!--   You may obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-  
-<!--   Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project -->
-  
-<!--   Licensed under the Apache License, Version 2.0 (the "License"); you -->
-<!--   may not use this file except in compliance with the License. You may -->
-<!--   obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-<!--  Unless required by applicable law or agreed to in writing, software -->
-<!--  distributed under the License is distributed on an "AS IS" BASIS, -->
-<!--  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or -->
-<!--  implied. See the License for the specific language governing -->
-<!--  permissions and limitations under the License. -->
+<!--
+ ***********************************************************************************
+ * $URL$
+ * $Id$  
+ ***********************************************************************************
+ *
+ * Copyright (c) 2008 Etudes, Inc.
+ *
+ * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ **********************************************************************************
+-->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
-<html">
+<html>
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
@@ -76,6 +80,17 @@
 					<h:selectOneRadio value="#{authorPreferences.userView}" layout="pageDirection">
 						<f:selectItem itemLabel="#{msgs.author_preference_Expanded}" itemValue="true" />
 						<f:selectItem itemLabel="#{msgs.author_preference_Collapsed}" itemValue="false"/>
+					</h:selectOneRadio>	
+				</h:column>
+				 </h:panelGrid>
+<h:panelGrid id="LTIPrefPanel" columns="1" width="95%" cellpadding="0" cellspacing="3" border="0">
+				<h:column>
+				 	<h:outputText id="LTI1" value="#{msgs.author_preference_LTI_select}"  styleClass="bold"/>      
+				 </h:column>
+               	 <h:column>
+					<h:selectOneRadio value="#{authorPreferences.showLTI}" layout="pageDirection">
+						<f:selectItem itemLabel="#{msgs.author_preference_yes}" itemValue="true" />
+						<f:selectItem itemLabel="#{msgs.author_preference_no}" itemValue="false"/>
 					</h:selectOneRadio>	
 				</h:column>
 				 </h:panelGrid>

@@ -1,46 +1,30 @@
-<!--  Copyright (c) 2008 Etudes, Inc. -->
- 
-<!--  Licensed under the Apache License, Version 2.0 (the "License"); -->
-<!--   you may not use this file except in compliance with the License.-->
-<!--   You may obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-  
-<!--   Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project -->
-  
-<!--   Licensed under the Apache License, Version 2.0 (the "License"); you -->
-<!--   may not use this file except in compliance with the License. You may -->
-<!--   obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-<!--  Unless required by applicable law or agreed to in writing, software -->
-<!--  distributed under the License is distributed on an "AS IS" BASIS, -->
-<!--  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or -->
-<!--  implied. See the License for the specific language governing -->
-<!--  permissions and limitations under the License. -->
+<!--
+ ***********************************************************************************
+ * $URL$
+ * $Id$  
+ ***********************************************************************************
+ *
+ * Copyright (c) 2008 Etudes, Inc.
+ *
+ * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ **********************************************************************************
+-->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
-<!--  Copyright (c) 2008 Etudes, Inc. -->
- 
-<!--  Licensed under the Apache License, Version 2.0 (the "License"); -->
-<!--   you may not use this file except in compliance with the License.-->
-<!--   You may obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-  
-<!--   Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project -->
-  
-<!--   Licensed under the Apache License, Version 2.0 (the "License"); you -->
-<!--   may not use this file except in compliance with the License. You may -->
-<!--   obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-<!--  Unless required by applicable law or agreed to in writing, software -->
-<!--  distributed under the License is distributed on an "AS IS" BASIS, -->
-<!--  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or -->
-<!--  implied. See the License for the specific language governing -->
-<!--  permissions and limitations under the License. -->
 <html><head>
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
@@ -83,17 +67,16 @@
 				                        <td class="style2"><h:outputText value="#{msgs.sort_modules_sort}" /></td>
 										<td><div>
 										 <!-- Begin code to display images horizontally. -->
-											<h:graphicImage id="Sort_Modules-horz"
-								   							alt="#{msgs.sort_modules_sort_modules}"
-								   							url="images/Sort_Modules-down2.gif"
-								     						 width="85" height="20" styleClass="BottomImgSpace"/>
+										<h:graphicImage id="Sort_Modules-horz"	alt="#{msgs.sort_modules_sort_modules}"
+								   							url="#{msgs.im_sort_modules_down2}"
+								     						 width="85" height="20" styleClass="BottomImgSpace"/>	
 								     						 
 					     			<h:commandLink id="sortsec"  action="#{manageModulesPage.gotoSortSections}" immediate="true" >					 
-										<h:graphicImage id="sortSectionsImg" value="images/Sort_Sections.gif" width="85" height="20" styleClass="BottomImgSpace" 
-													onmouseover="this.src = 'images/Sort_Sections-over.gif'" 
-													onmouseout="this.src = 'images/Sort_Sections.gif'" 
-													onmousedown="this.src = 'images/Sort_Sections-down.gif'" 
-													onmouseup="this.src = 'images/Sort_Sections-over.gif'"/>
+										<h:graphicImage id="sortSectionsImg" value="#{msgs.im_sort_sections}" width="85" height="20" styleClass="BottomImgSpace" 
+													onmouseover="this.src = '#{msgs.im_sort_sections_over}'" 
+													onmouseout="this.src = '#{msgs.im_sort_sections}'" 
+													onmousedown="this.src = '#{msgs.im_sort_sections_down}'" 
+													onmouseup="this.src = '#{msgs.im_sort_sections}'"/>
 										</h:commandLink>			
 										<!-- End code to display images horizontally. -->
 										</div></td>

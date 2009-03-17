@@ -1,37 +1,24 @@
---  Copyright (c) 2008 Etudes, Inc.  
- 
---  Licensed under the Apache License, Version 2.0 (the "License");  
---   you may not use this file except in compliance with the License. 
---   You may obtain a copy of the License at  
+declare
+  dtdlocation varchar2(100);
+  doctype_dtd varchar2(255);
+  seqxml_update varchar2(4000);
+begin
+  dtdlocation :=  '/var/melete/packagefiles/moduleSeq.dtd';
+  doctype_dtd := '<!DOCTYPE module SYSTEM "'||dtdlocation||'">';
+  seqxml_update := 'update melete_module_seqxml set seq_xml=replace(seq_xml,'''||doctype_dtd||''',''<!DOCTYPE module [
+    <!ELEMENT module (section+)>
+    <!ELEMENT section (section*)>
+    <!ATTLIST section id ID #REQUIRED>
+  ]>'') where seq_xml is not NULL';
   
---   http://www.apache.org/licenses/LICENSE-2.0  
+  begin
+  	execute immediate 'drop table melete_module_seqxml';
+  exception
+  	when others then
+  		null;
+  end;
   
---   Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project  
-  
---   Licensed under the Apache License, Version 2.0 (the "License"); you  
---   may not use this file except in compliance with the License. You may  
---   obtain a copy of the License at  
-  
---   http://www.apache.org/licenses/LICENSE-2.0  
---  Unless required by applicable law or agreed to in writing, software  
---  distributed under the License is distributed on an "AS IS" BASIS,  
---  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or  
---  implied. See the License for the specific language governing  
---  permissions and limitations under the License.  
-set @dtdlocation='/var/melete/packagefiles/moduleSeq.dtd';
-set @doctype_dtd=concat('<!DOCTYPE module SYSTEM \"',@dtdlocation);
-set @doctype_dtd=concat(@doctype_dtd,'\">');
-
-drop table if exists melete_module_seqxml;
-create table melete_module_seqxml as select * from melete_module;
-update melete_module_seqxml set seq_xml=replace(seq_xml,@doctype_dtd,'<!DOCTYPE module [
-  <!ELEMENT module (section+)>
-  <!ELEMENT section (section*)>
-  <!ATTLIST section id ID #REQUIRED>
-]>') where seq_xml is not NULL;
-
-
-
-
-
-
+  execute immediate 'create table melete_module_seqxml as select * from melete_module';
+  execute immediate seqxml_update;
+end;
+/

@@ -1,23 +1,27 @@
-<!--  Copyright (c) 2008 Etudes, Inc. -->
- 
-<!--  Licensed under the Apache License, Version 2.0 (the "License"); -->
-<!--   you may not use this file except in compliance with the License.-->
-<!--   You may obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-  
-<!--   Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project -->
-  
-<!--   Licensed under the Apache License, Version 2.0 (the "License"); you -->
-<!--   may not use this file except in compliance with the License. You may -->
-<!--   obtain a copy of the License at -->
-  
-<!--   http://www.apache.org/licenses/LICENSE-2.0 -->
-<!--  Unless required by applicable law or agreed to in writing, software -->
-<!--  distributed under the License is distributed on an "AS IS" BASIS, -->
-<!--  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or -->
-<!--  implied. See the License for the specific language governing -->
-<!--  permissions and limitations under the License. -->
+<!--
+ ***********************************************************************************
+ * $URL$
+ * $Id$  
+ ***********************************************************************************
+ *
+ * Copyright (c) 2008 Etudes, Inc.
+ *
+ * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ **********************************************************************************
+-->
 <html>
 <head>
 <title>Melete: Add Module Sections</title>
@@ -35,7 +39,7 @@
 <%@ page import="javax.faces.application.FacesMessage, org.sakaiproject.util.ResourceLoader"%>
 
 <% 
-	ResourceLoader bundle = new ResourceLoader("org.sakaiproject.tool.melete.bundle.Messages");
+	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 	String mensaje=bundle .getString("addmodulesections_uploading");
 	String mensaje2=bundle .getString("addmodulesections_done");
 
@@ -228,16 +232,13 @@ function contentChangeSubmit()
 									<h:outputText id="text14" value="#{msgs.addmodulesections_auditory_content}"/>			
 										</td>
 									  </tr>	
-									  <tr><td colspan="2">	 <h:message style="color: red" for="link"/></td></tr>
+									 
 								  <tr>
 								  	  <td  align="left" valign="middle"><h:outputText id="text15" value="#{msgs.addmodulesections_content_type}" /></td>
                                  	  <td> 
 										   <h:inputHidden id="contentChange" value=""/>								  
 												  <h:selectOneMenu id="contentType" value="#{addSectionPage.section.contentType}" valueChangeListener="#{addSectionPage.showHideContent}" onchange="contentChangeSubmit();this.form.submit();"  tabindex="6">
-												<f:selectItem itemValue="notype" itemLabel="#{msgs.addmodulesections_choose_one}"/>	
-											    <f:selectItem itemValue="typeEditor" itemLabel="#{msgs.addmodulesections_compose}"/>	
-												<f:selectItem itemValue="typeUpload"  itemLabel="#{msgs.addmodulesections_upload_local}"/> 										
-												<f:selectItem itemValue="typeLink"   itemLabel="#{msgs.addmodulesections_link_url}"/>												
+													<f:selectItems value="#{addSectionPage.allContentTypes}" />
 											 </h:selectOneMenu>
 										</td>
 										</tr>
@@ -246,9 +247,12 @@ function contentChangeSubmit()
 											 <f:subview id="ContentLinkView" rendered="#{addSectionPage.shouldRenderLink}">
 												<jsp:include page="ContentLinkView.jsp"/> 
 											</f:subview>											
-				                           <f:subview id="ContentUploadView" rendered="#{addSectionPage.shouldRenderUpload}">
-											<jsp:include page="ContentUploadView.jsp"/> 
-											</f:subview>						     
+				                           				<f:subview id="ContentUploadView" rendered="#{addSectionPage.shouldRenderUpload}">
+												<jsp:include page="ContentUploadView.jsp"/> 
+											</f:subview>
+											 <f:subview id="ContentLTIView" rendered="#{addSectionPage.shouldRenderLTI}">
+												<jsp:include page="ContentLTIView.jsp"/> 
+											</f:subview>	
 									     </td>
 									     </tr>
 									     <tr>			
