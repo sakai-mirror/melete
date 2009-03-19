@@ -224,18 +224,16 @@ public class ModuleDB implements Serializable {
 	    return prevSeqNo ;
 }
 
-	private void assignSeqs(Session session, List moduleBeans)
+	private void assignSeqs(Session session, List courseModuleBeans)
 	{
 		int seqNo = 1;
-		for (ListIterator i = moduleBeans.listIterator(); i.hasNext(); )
+		for (ListIterator i = courseModuleBeans.listIterator(); i.hasNext(); )
 		{
-			 Module mdbean = (Module)i.next();
-			 CourseModule cmod = (CourseModule) mdbean.getCoursemodule();
+			 CourseModule cmod = (CourseModule)i.next();
 			 if ((cmod.isArchvFlag()==false)&&(cmod.isDeleteFlag() == false))
 			 {
 			   cmod.setSeqNo(seqNo);
 			   session.saveOrUpdate(cmod);
-			   System.out.println("Assigning seq num "+cmod.getSeqNo());
 			   seqNo ++;
 			 }
 
@@ -1271,8 +1269,15 @@ public class ModuleDB implements Serializable {
 
 
 			// delete module collection
+			
 			logger.debug("updating seq_number now");
-			assignSeqs(session, allModules);
+			 List<CourseModule> courseModules = new ArrayList<CourseModule>(0);
+			 for (ListIterator i = allModules.listIterator(); i.hasNext(); )
+			 {
+				 Module mdbean = (Module)i.next();
+				 courseModules.add((CourseModule)mdbean.getCoursemodule());
+			 }
+			assignSeqs(session, courseModules);
 
 			logger.debug("Removing collections now");
 			Collections.reverse(DelModuleInfoList);
@@ -1394,276 +1399,6 @@ public class ModuleDB implements Serializable {
 
 
 
-    // Deletemodule bulk method
-    /*
-    public void deleteModules(List delModules, String courseId, String userId) throws Exception {
-
-   	     logger.debug("deleteModules begin");
-
-   		  long starttime = System.currentTimeMillis();
-   	      Transaction tx = null;
-
-    	  	try
-    		{
-    	      Session session = hibernateUtil.currentSession();
-
-    	      //Get resources for modules that need to be deleted
-    	      List delResourcesList = getActiveResourcesFromList(delModules);
-    	      if (delResourcesList != null) logger.debug("DelResourcesList size is "+delResourcesList.size());
-
-    	      //If there is media or typeUpload/typeLink sections
-    	      if ((delResourcesList != null)&&(delResourcesList.size() > 0))
-    	      {
-    	    	//Get all modules of course
-    	    	List<Module> activenArchModules = getActivenArchiveModules(courseId);
-
-    	    	//After the command below,activenArchModules will contain all modules in the
-      	        //course except for the ones that need to be deleted
-      	        if ((activenArchModules != null)&&(activenArchModules.size() > 0))
-      	        {
-      	    	 boolean res = activenArchModules.removeAll(delModules);
-      	         logger.debug("Undeleted modules minus modules to delete in site is "+activenArchModules.size());
-      	        }
-
-      	        List activeResourcesList = new ArrayList();
-      	        //This is to make sure not all modules in the course are being deleted
-      	        if ((activenArchModules != null)&&(activenArchModules.size() > 0))
-    	        {
-    	          //Resources belonging to modules that are not being deleted
-    	          activeResourcesList = getActiveResourcesFromList(activenArchModules);
-    	          if ((activeResourcesList != null)&&(activeResourcesList.size() > 0))
-    	          {
-    	        	  logger.debug("ActiveResourcesList size is "+activeResourcesList.size());
-    	          	  //Remove resources from delResourcesList that can't be deleted since they
-    	              //are being used by activeResourcesList
-    	              delResourcesList.removeAll(activeResourcesList);
-    	              if (delResourcesList != null) logger.debug("Final DelResourcesList size is "+delResourcesList.size());
-    	          }
-    	        }
-    	      }
-
-    	      if (!session.isOpen()) session = hibernateUtil.currentSession();
-			  tx = session.beginTransaction();
-    	      if (delModules != null)
-    	      {
-    	    	  logger.debug("Modules to delete in site is "+delModules.size());
-    	    	  for (ListIterator<Module> k = delModules.listIterator(); k.hasNext(); )
-    	    	  {
-		  		   		Module delModule = (Module)k.next();
-		  		   		Integer delModuleId = delModule.getModuleId();
-			            String allSecIds = getAllSectionIds(delModule.getSections());
-			            String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
-			            String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
-			            String delSectionStr = "delete Section s where s.moduleId=:moduleId";
-			            String selCmodseqStr = "select cmod.seqNo from CourseModule cmod where cmod.courseId=:courseId and cmod.moduleId=:moduleId";
-			            String delCourseModuleStr = "delete CourseModule cm where cm.moduleId=:moduleId";
-                        String updCmodseqStr = "update CourseModule cmod set cmod.seqNo=cmod.seqNo-1 where cmod.courseId=:courseId and cmod.seqNo>:seqNo";
-			            String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId=:moduleId";
-			            String delModuleStr = "delete Module m where m.moduleId=:moduleId";
-
-
-			  		    if (allSecIds != null)
-			            {
-					      int deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
-					      deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
-					    }
-
-			  		    int deletedEntities = session.createQuery(delSectionStr).setInteger("moduleId", delModuleId).executeUpdate();
-                        Query q=session.createQuery(selCmodseqStr);
-	                    q.setParameter("courseId", courseId);
-		                q.setParameter("moduleId",delModuleId);
-		                Integer seqNo = (Integer)q.uniqueResult();
-		                deletedEntities = session.createQuery(delCourseModuleStr).setInteger("moduleId", delModuleId).executeUpdate();
-	                    deletedEntities = session.createQuery(updCmodseqStr).setString("courseId", courseId).setInteger("seqNo", seqNo).executeUpdate();
-
-			            deletedEntities = session.createQuery(delModuleshDatesStr).setInteger("moduleId", delModuleId).executeUpdate();
-			            deletedEntities = session.createQuery(delModuleStr).setInteger("moduleId", delModuleId).executeUpdate();
-			            meleteCHService.removeCollection(courseId, "module_"+delModuleId.toString());
-
-			            if ((delResourcesList != null)&&(delResourcesList.size() > 0))
-			    	    {
-			              // delete melete resource and from content resource
-			              for (Iterator delIter = delResourcesList.listIterator(); delIter.hasNext();)
-			              {
-					      String delResourceId = (String) delIter.next();
-					      String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
-					      deletedEntities = session.createQuery(delMeleteResourceStr).setString("resourceId", delResourceId).executeUpdate();
-					      meleteCHService.removeResource(delResourceId);
-				          }
-			    	    }
-    	    	      }
-    	            }
-			      tx.commit();
-
-    		  }
-    	    catch (HibernateException he)
-    	    {
-    		  logger.error(he.toString());
-    		  throw he;
-    	    }
-    	    catch (Exception e) {
-    	      if (tx!=null) tx.rollback();
-    	      logger.error(e.toString());
-    	      throw e;
-    	    }
-    	    finally
-    		{
-    	    	try
-    			  {
-    		      	hibernateUtil.closeSession();
-    			  }
-    		      catch (HibernateException he)
-    			  {
-    				  logger.error(he.toString());
-    				  throw he;
-    			  }
-    		}
-
-    		    long endtime = System.currentTimeMillis();
-
-    			logger.debug("delete modules ends " +(endtime - starttime));
-    }
-*/
-    //The deleteModule method below iterate through each section and deletes
-    //them individually
-    /*
-    public void deleteModule(CourseModule cmod, String userId) throws Exception {
-
-    int affectedEntities;
-	String delModuleShdatesStr = "delete ModuleShdates ms where ms.moduleId=:moduleId";
-	String delModuleStr = "delete Module mod where mod.moduleId=:moduleId";
-	String selCmodseqStr = "select cmod.seqNo from CourseModule cmod where cmod.courseId=:courseId and cmod.moduleId=:moduleId";
-	String delCourseModuleStr = "delete CourseModule cmod where cmod.courseId=:courseId and cmod.moduleId=:moduleId";
-	String updCmodseqStr = "update CourseModule cmod set cmod.seqNo=cmod.seqNo-1 where cmod.courseId=:courseId and cmod.seqNo>:seqNo";
-
-
-
-     logger.debug("deleteModule begin");
-
-	  long starttime = System.currentTimeMillis();
-      Module mod = (Module) cmod.getModule();
-      Map sectionMap = mod.getSections();
-      String courseId = cmod.getCourseId();
-      Integer modModuleId = cmod.getModuleId();
-      Transaction tx = null;
-
-      //First delete all the sections
-      String queryString = "from Section sec where sec.moduleId = :moduleId";
-      List secList = null;
-  	try
-	{
-
-      Session session = hibernateUtil.currentSession();
-      Query query = session.createQuery(queryString);
-      query.setParameter("moduleId",modModuleId);
-
-      Iterator itr = query.iterate();
-
-      Section sec = null;
-      secList = new ArrayList();
-      while (itr.hasNext()) {
-      	sec = (Section) itr.next();
-      	secList.add(sec);
-       }
-
-    if (secList != null)
-    {
-      for (ListIterator i = secList.listIterator(); i.hasNext(); )
-      {
-		sectionDB.deleteSection((Section)i.next(), courseId, userId);
-      }
-    }
-	  }
-    catch (HibernateException he)
-    {
-	  logger.error(he.toString());
-	  throw he;
-    }
-    catch (Exception e) {
-      if (tx!=null) tx.rollback();
-      logger.error(e.toString());
-      throw e;
-    }
-    finally
-	{
-    	try
-		  {
-	      	hibernateUtil.closeSession();
-		  }
-	      catch (HibernateException he)
-		  {
-			  logger.error(he.toString());
-			  throw he;
-		  }
-	}
-    try
-	{
-
-      Session session = hibernateUtil.currentSession();
-
-	      tx = session.beginTransaction();
-
-	      affectedEntities = session.createQuery(delModuleShdatesStr).setInteger("moduleId", modModuleId).executeUpdate();
-	      System.out.println(affectedEntities+" row was deleted from MELETE_MODULE_SHDATES");
-
-	      affectedEntities = session.createQuery(delModuleStr).setInteger("moduleId", modModuleId).executeUpdate();
-	      System.out.println(affectedEntities+" row was deleted from MELETE_MODULE");
-
-	      Query q=session.createQuery(selCmodseqStr);
-	      q.setParameter("courseId", courseId);
-		  q.setParameter("moduleId",modModuleId);
-		  Integer seqNo = (Integer)q.uniqueResult();
-		  System.out.println("Seq no of deleted module is "+seqNo.intValue());
-
-		  affectedEntities = session.createQuery(delCourseModuleStr).setString("courseId",courseId).setInteger("moduleId", modModuleId).executeUpdate();
-	      System.out.println(affectedEntities+" row was deleted from MELETE_COURSE_MODULE");
-
-	      affectedEntities = session.createQuery(updCmodseqStr).setString("courseId", courseId).setInteger("seqNo", seqNo).executeUpdate();
-	      System.out.println(affectedEntities+" row was updated in MELETE_COURSE_MODULE");
-
-
-	      tx.commit();
-	      logger.debug("Deleted module");
-
-
-	    }
-	    catch (HibernateException he)
-	    {
-		  logger.error(he.toString());
-		  throw he;
-	    }
-	    catch (Exception e) {
-	      if (tx!=null) tx.rollback();
-	      logger.error(e.toString());
-	      throw e;
-	    }
-	    finally
-		{
-	    	try
-			  {
-		      	hibernateUtil.closeSession();
-			  }
-		      catch (HibernateException he)
-			  {
-				  logger.error(he.toString());
-				  throw he;
-			  }
-		}
-	    if (userId != null)
-	    {
-	    MeleteBookmarks mb = new MeleteBookmarks();
-		mb.setUserId(userId);
-		mb.setCourseId(courseId);
-		mb.setModuleId(modModuleId);
-		bookmarksDB.deleteBookmark(mb);
-	    }
-	    long endtime = System.currentTimeMillis();
-
-		logger.debug("delete module end " +(endtime - starttime));
-
-     }*/
-
-
 	 public Module getModule(int moduleId) throws HibernateException {
 	 	Module mod = null;
 	 	try
@@ -1739,19 +1474,18 @@ public class ModuleDB implements Serializable {
 			}
 			moduleIds.delete(moduleIds.toString().length() - 2, moduleIds.toString().length());
 			moduleIds.append(")");
-			System.out.println("MOdule ids is "+moduleIds.toString());
 			String updCourseModuleStr = "update CourseModule cm set cm.seqNo=-1, cm.archvFlag=1,cm.dateArchived=:currentDate where cm.moduleId in " + moduleIds.toString();
 			int updatedEntities = session.createQuery(updCourseModuleStr).setParameter("currentDate",currentDate).executeUpdate();
 			logger.debug("course module updated " +updatedEntities);
 			moduleDateBeans.removeAll(selModBeans);
-			 List<Module> allModules = new ArrayList<Module>(0);
+			 List<CourseModule> courseModules = new ArrayList<CourseModule>(0);
 			 for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext(); )
 			 {
 				 mdbean = (ModuleDateBean)i.next();
-				 allModules.add((Module)mdbean.getCmod().getModule());
+				 courseModules.add((CourseModule)mdbean.getCmod());
 			 }
-			 logger.debug("Updating sequence for all other modules");
-			assignSeqs(session,allModules);
+			logger.debug("Updating sequence for all other modules");
+			assignSeqs(session,courseModules);
             tx.commit();
 
 		}
@@ -1899,7 +1633,7 @@ public class ModuleDB implements Serializable {
 
 		   try{
 			   int startSeqNo = assignSequenceNumber(session,courseId);
-	   			
+
 	   		//	1.for each element of list
 		   		for(int i=0; i < restoreModules.size(); i++ )
 		   		{
@@ -1914,8 +1648,6 @@ public class ModuleDB implements Serializable {
 		   			coursemodule1.setDeleteFlag(false);
 
   			//  seq no as max+1
-		   			System.out.println("RESTORE SEQNO is "+startSeqNo);
-		   		  
 		   			coursemodule1.setSeqNo(startSeqNo);
 		   			startSeqNo++;
 
