@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -296,7 +296,7 @@ public List getViewModules(String userId, String courseId) {
 
 
 // end - mallika
- public void deleteModules(List moduleDateBeans, List allmoduleDateBeans, String courseId, String userId) throws Exception
+ public void deleteModules(List moduleDateBeans, String courseId, String userId) throws Exception
  {
 	 List cmodList = null;
 	 List<Module> delModules = new ArrayList<Module>(0);
@@ -354,17 +354,12 @@ public List getViewModules(String userId, String courseId) {
       }
   }*/
 
- public void archiveModules(List moduleDateBeans, String courseId) throws Exception
+ public void archiveModules(List selModBeans, List moduleDateBeans) throws Exception
  {
 	 List cmodList = null;
 	 try
 	 {
-		 for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext(); )
-		 {
-			 ModuleDateBean mdbean = (ModuleDateBean)i.next();
-		//	 CourseModule archvmod = moduledb.getCourseModule(mdbean.getModuleId(), courseId);
-			 moduledb.archiveModule(mdbean.getModuleId(), courseId);
-		 }
+		 moduledb.archiveModules(selModBeans, moduleDateBeans);
 	 }
 	 catch (HibernateException e)
 	 {
@@ -375,7 +370,7 @@ public List getViewModules(String userId, String courseId) {
 	 catch (Exception ex)
 	 {
 		 throw new MeleteException("archive_fail");
-	 }     
+	 }
  }
 
 /*
@@ -413,11 +408,11 @@ public void setModule(ModuleObjService mod) {
 /*
  * @see org.foothillglobalaccess.melete.ManageModuleService#restoreModules(java.util.List, int, int)
  */
-public void restoreModules(List modules) throws Exception
+public void restoreModules(List modules, String courseId) throws Exception
 {
 
 	try{
-		 moduledb.restoreModules(modules);
+		 moduledb.restoreModules(modules, courseId);
 		}catch(Exception ex)
 		{
 			if (logger.isDebugEnabled()) {
@@ -440,14 +435,7 @@ public void restoreModules(List modules) throws Exception
      return cMod;
     }
 
-	 public int getMaxSeqNo(String courseId)
-	  {
-	  	int maxseq=0;
 
-	  	maxseq=moduledb.getMaxSeqNo(courseId);
-
-	  	return maxseq;
-	  }
 
 	 public int getNextSeqNo(String courseId, int currSeqNo)
 	  {

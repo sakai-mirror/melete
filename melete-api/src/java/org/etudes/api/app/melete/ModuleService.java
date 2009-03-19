@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -12,13 +12,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  **********************************************************************************/
 
@@ -47,7 +47,7 @@ public interface ModuleService{
 
 
 	public void insertProperties(ModuleObjService module, ModuleShdatesService moduleshdates,String userId, String courseId) throws Exception;
-	
+
 	public List getViewModules(String userId, String courseId);
 
 	public List getModuleDateBeans(String userId, String courseId);
@@ -66,7 +66,7 @@ public interface ModuleService{
 
 	public void updateProperties(List moduleDateBeans)  throws Exception;
 
-	public void archiveModules(List moduleDateBeans, String courseId) throws Exception;
+	public void archiveModules(List selModBeans, List moduleDateBeans) throws Exception;
 
 	public ModuleObjService getModule(int moduleId);
 
@@ -74,13 +74,12 @@ public interface ModuleService{
 
 	public List getArchiveModules(String course_id);
 
-	public void restoreModules(List modules) throws Exception;
+	public void restoreModules(List modules, String courseId) throws Exception;
 
 	public CourseModuleService getCourseModule(int moduleId,  String courseId) throws Exception;
 
 //	public void deleteModules(List moduleDateBeans, String courseId, String userId) throws Exception;
-	public void deleteModules(List moduleDateBeans,List allmoduleDateBeans, String courseId, String userId) throws Exception;
-	public int getMaxSeqNo(String courseId);
+	public void deleteModules(List moduleDateBeans, String courseId, String userId) throws Exception;
 	public int getNextSeqNo(String courseId, int currSeqNo);
 	public int getPrevSeqNo(String courseId, int currSeqNo);
 
@@ -105,6 +104,6 @@ public interface ModuleService{
 	public void moveSections(List sectionBeans,ModuleObjService selectedModule) throws MeleteException;
 
 	public String printModule(ModuleObjService module) throws MeleteException;
-	
+
 	public int cleanUpDeletedModules() throws Exception;
 }
