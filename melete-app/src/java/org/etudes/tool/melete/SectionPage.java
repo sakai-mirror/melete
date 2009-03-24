@@ -1154,7 +1154,7 @@ public abstract class SectionPage implements Serializable {
 		 		if(rgif.startsWith("sakai"))
 		 			rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
 		 		else if (rgif.startsWith("/sakai"))
-		 			rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));		 		
+		 			rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));
 				}
 				if(section.getContentType().equals("typeLTI"))
 				{
@@ -1366,6 +1366,7 @@ public abstract class SectionPage implements Serializable {
 		{
 			listNav = new RemoteFilesListingNav(0,0,30);
 		}
+
 		return listNav;
 	}
 	/**

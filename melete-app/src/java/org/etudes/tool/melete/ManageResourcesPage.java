@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -19,7 +19,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
 **********************************************************************************/
 
 package org.etudes.tool.melete;
@@ -195,8 +195,8 @@ public List<DisplayResources> getAllResourcesList()
 				String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 				if (displayName.length() > 50) displayName = displayName.substring(0,50) + "...";
 				String rUrl = cr.getUrl().replaceAll(" ", "%20");
-				boolean rType = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LINK);			
-				boolean rTypeLTI = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LTI);	
+				boolean rType = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LINK);
+				boolean rTypeLTI = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LTI);
 				String rgif=  serverUrl + "/library/image/sakai/url.gif";
 				if(!rType && !rTypeLTI)
 				{
@@ -209,7 +209,7 @@ public List<DisplayResources> getAllResourcesList()
 		 			rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));
 				}
 				else if(rTypeLTI)
-				{			
+				{
 					rgif = "images/web_service.png";
 				}
 				allResourcesList.add(new DisplayResources(displayName, cr.getId(),rUrl,rType,rgif,rTypeLTI));
@@ -383,15 +383,15 @@ public class DisplayResources implements Comparable<DisplayResources>
 		// both are link or upload than equal
 		if(this.typeLink == n.isTypeLink() && this.typeLTI == n.isTypeLTI())
 			res= this.resource_title.compareToIgnoreCase(n.getResource_title());
-		
+
 		// this is link and n is upload
 		if(this.typeLink && (!n.isTypeLink() || n.isTypeLTI())) res = -1;
 
 		// this is upload and n is link
 		if(!this.typeLink && n.isTypeLink()) res = 1;
-		
+
 		if(!this.typeLink && n.isTypeLTI()) res = -1;
-				
+
 		return res;
 	}
 	/**
@@ -434,7 +434,6 @@ public RemoteFilesListingNav getListNav() {
 	if(listNav == null)
 	{
 		listNav = new RemoteFilesListingNav(0,0,30);
-		listNav.setFromPage("manage_content");
 	}
 	return listNav;
 }
