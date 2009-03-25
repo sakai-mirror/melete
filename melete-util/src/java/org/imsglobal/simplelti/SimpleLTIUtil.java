@@ -234,9 +234,6 @@ public class SimpleLTIUtil {
 
     public static boolean validateDescriptor(String descriptor)
     {
-        Properties newMap = new Properties();
-        newMap.setProperty("action", "launchresolve");
-        // Map<String, String> tm = XMLMap.getMap(descriptor);
         Map<String,Object> tm = XMLMap.getFullMap(descriptor);
 
         if ( tm == null )
@@ -279,8 +276,39 @@ public class SimpleLTIUtil {
 
     }
 
+    /* This is deprecated because in the future BasicLTI and full LTI 2.0 will
+       only support the POST-style launches.  It will continue to work with a
+       a warning message.
+
+       The proper way to handle a launch is as follows:
+
+        Properties newMap = getLaunchProperties(descriptor, siteId, resourceId);
+        if ( newMap == null ) {
+            System.out.println("Invalid descriptor");
+            return null;
+        }
+        Properties pro = new Properties();
+        String lti2EndPoint = newMap.getProperty("launchurl");
+        // We hope all descriptors are "POST"
+        if ( SimpleLTIUtil.isPostLaunch(descriptor) ) {
+             String htmltext = SimpleLTIUtil.postLaunchHTML(newMap);
+             pro.setProperty("htmltext",htmltext);
+             pro.setProperty("status","success");
+             pro.setProperty("type","post");
+             pro.setProperty("launchurl",lti2EndPoint);
+        // Deprecated path - will generate widget or iFrame
+        } else {
+            String lti2FrameHeight = newMap.getProperty("frameheight");
+            // Make the web-service call
+            pro = SimpleLTIUtil.doLaunch(lti2EndPoint, newMap);
+            // Add the HTML text to the properties
+            SimpleLTIUtil.generateHtmlText(pro, newMap, lti2FrameHeight);
+        }
+
+    */
     public static Properties doLaunch(String lti2EndPoint, Properties newMap)
     {
+        System.out.println("Warning: SimpleLTIUtil using deprecated non-POST launch to -" + lti2EndPoint);
         Properties retProp = new Properties();
 	retProp.setProperty("status","fail");
 
@@ -293,10 +321,9 @@ public class SimpleLTIUtil {
 		String value = newMap.getProperty(key);
 		if ( value == null ) continue;
 		if ( value.equals("") ) continue;
-		// Should this be UTF-8 ???
-		value = URLEncoder.encode(value);
+		value = encodeFormText(value);
 		if ( postData.length() > 0 ) postData = postData + "&";
-                        postData = postData + URLEncoder.encode(key) + "=" + value;
+                        postData = postData + encodeFormText(key) + "=" + value;
 	}
         if ( postData != null) retProp.setProperty("_post_data",postData);
         dPrint("LTI2 POST="+postData);
@@ -379,9 +406,21 @@ public class SimpleLTIUtil {
                 setErrorMessage(retProp, "Web Service Returned Nothing");
                 return retProp;
         } else {
+                if ( postResponse.indexOf("<?xml") != 0 ) {
+                   int pos = postResponse.indexOf("<launchResponse");
+                   if ( pos > 0 ) {
+                      System.out.println("Warning: Dropping first "+pos+" non-XML characters of response to find <launchResponse");
+                      postResponse = postResponse.substring(pos);
+		   }
+                }
                 respMap = XMLMap.getMap(postResponse);
         }
         if ( respMap == null) {
+		String errorOut = postResponse;
+                if ( errorOut.length() > 500 ) {
+                       errorOut = postResponse.substring(0,500);
+                }
+                System.out.println("Error Parsing Web Service XML:\n"+errorOut+"\n");
                 setErrorMessage(retProp, "Error Parsing Web Service XML");
                 return retProp;
         }
@@ -478,49 +517,15 @@ public class SimpleLTIUtil {
         }
         else  // Post or otherwise
         {
-                // Not good
-                if ( launchurl == null ) return;
-                StringBuffer text = new StringBuffer();
-                text.append(postText1);
-                text.append("<form action=\""+launchurl+"\" name=\"ltiLaunchForm\" method=\"post\">\n" );
-                for(Object okey : newMap.keySet() )
-                {
-                        if ( ! (okey instanceof String) ) continue;
-                        String key = (String) okey;
-                        if ( key == null ) continue;
-                        String value = newMap.getProperty(key);
-                        if ( value == null ) continue;
-                        if ( "action".equalsIgnoreCase(key) ) continue;
-                        if ( value.equals("") ) continue;
-                        // Should this be UTF-8 ???
-                        // value = URLEncoder.encode(value);
-                        // key = URLEncoder.encode(key);
-                        text.append("<input type=\"hidden\" size=\"40\" name=\"");
-                        text.append(key);
-                        text.append("\" value=\"");
-                        text.append(value);
-                        text.append("\"/>\n");
-                }
-                text.append(postText2);
-                htmltext = text.toString();
+                // This is not so good - we will be returning a form which will be
+		// likely dropped into a background document, which when auto
+		// submitted will take over the whole screen.  At least the 
+		// user will see the content eventually.
+                System.out.println("Warning: SimpleLTIUtil web service response using POST -" + launchurl);
+		htmltext = postLaunchHTML(retProp);
                 retProp.setProperty("htmltext",htmltext);
         }
     }
-
-    private final static String postText1 =
-"<head>\n" +
-"  <script language=\"javascript\"> \n" +
-"    function go() { \n" +
-"        document.ltiLaunchForm.submit(); \n" +
-"    } \n" +
-" </script> \n" +
-"</head>\n" +
-"<body onLoad=\"go()\">\n";
-
-    private final static String postText2 =
-" <input type=\"hidden\" size=\"40\" name=\"action\" value=\"direct\"/>\n" +
-" <input type=\"submit\" value=\"Continue\">  If you are not redirected in 15 seconds press Continue.\n" +
-"</form>\n";
 
     // Determine if a post launch was requested
     public static boolean isPostLaunch(Properties props)
@@ -545,10 +550,92 @@ public class SimpleLTIUtil {
 	return false;
     }
 
+    // Create the HTML to render a POST form and then automatically submit it
+    public static String postLaunchHTML(Properties newMap) {
+	String launchurl = newMap.getProperty("launchurl");
+        if ( launchurl == null ) return null;
+        StringBuffer text = new StringBuffer();
+        text.append("<form action=\""+launchurl+"\" name=\"ltiLaunchForm\" method=\"post\">\n" );
+        for(Object okey : newMap.keySet() )
+        {
+                if ( ! (okey instanceof String) ) continue;
+                String key = (String) okey;
+                if ( key == null ) continue;
+                String value = newMap.getProperty(key);
+                if ( value == null ) continue;
+                if ( key.startsWith("internal_") ) continue;
+                if ( key.startsWith("_") ) continue;
+                if ( "action".equalsIgnoreCase(key) ) continue;
+                if ( "launchurl".equalsIgnoreCase(key) ) continue;
+                if ( value.equals("") ) continue;
+		// This will escape the contents pretty much - at least 
+		// we will be safe and not generate dangerous HTML
+                key = encodeFormText(key);
+                value = encodeFormText(value);
+                text.append("<input type=\"hidden\" size=\"40\" name=\"");
+                text.append(key);
+                text.append("\" value=\"");
+                text.append(value);
+                text.append("\"/>\n");
+        }
+        text.append("<div id=\"ltiLaunchFormSubmitArea\">\n" +
+                "  <input type=\"hidden\" size=\"40\" name=\"action\" value=\"direct\"/>\n" +
+                "  <input type=\"submit\" value=\"Continue\">  If you are not redirected in 15 seconds press Continue.\n" +
+                "</div>\n" +
+                "</form>\n" + 
+                " <script language=\"javascript\"> \n" +
+		"    document.getElementById(\"ltiLaunchFormSubmitArea\").style.display = \"none\";\n" +
+                "    document.ltiLaunchForm.submit(); \n" +
+                " </script> \n");
+
+        String htmltext = text.toString();
+	return htmltext;
+    }
+
     public static Properties getToolSettings(String str)
     {
 	Map<String,Object> tm = XMLMap.getFullMap(str);
 	return getToolSettings(tm);
+    }
+
+    public static Properties parseDescriptor(String descriptor)
+    {
+      
+        Map<String,Object> tm = null;
+        try
+        {
+                tm = XMLMap.getFullMap(descriptor);
+        } 
+        catch (Exception e) {
+                System.out.println("SimpleLTIUtil exception parsing SimpleLTI descriptor"+e.getMessage());
+		e.printStackTrace();
+		return null;
+        }
+
+        dPrint("tm="+tm);
+        if ( tm == null )
+        {
+                // TODO: Need to send back an error code
+                return null;
+        }
+
+        // We demand an endpoint
+        String lti2EndPoint = XMLMap.getString(tm,"/toolInstance/launchurl");
+        if ( lti2EndPoint == null || lti2EndPoint.trim().length() < 1 )
+        {
+                // TODO: Need to send back an error code
+                return null;
+        }
+
+        Properties retval = getToolSettings(tm);
+
+        String lti2ToolId = XMLMap.getString(tm,"/toolInstance/tool_id");
+        String lti2LaunchTypes = XMLMap.getString(tm,"/toolInstance/accept_targets");
+
+        if ( lti2EndPoint != null ) retval.setProperty("launchurl", lti2EndPoint);
+        if ( lti2ToolId != null ) retval.setProperty("tool_id", lti2ToolId);
+        if ( lti2LaunchTypes != null ) retval.setProperty("accept_targets", lti2LaunchTypes);
+        return retval;
     }
 
     public static Properties getToolSettings(Map<String,Object> tm)
@@ -571,6 +658,18 @@ public class SimpleLTIUtil {
         String frameHeight = getToolSettings(str).getProperty("frameheight");
 	if ( frameHeight == null ) frameHeight = "1200";
 	return frameHeight;
+    }
+
+    // Basic utility to encode form text - handle the "safe cases"
+    public static String encodeFormText(String input)
+    {
+	String retval = input.replace("&", "&amp;");
+	retval = retval.replace("\"", "&quot;");
+	retval = retval.replace("<", "&lt;");
+	retval = retval.replace(">", "&gt;");
+	retval = retval.replace(">", "&gt;");
+	retval = retval.replace("=", "&#61;");
+	return retval;
     }
 
 }
