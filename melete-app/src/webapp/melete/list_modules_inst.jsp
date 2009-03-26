@@ -163,6 +163,12 @@ return newWindow;
              
             </h:column>
           </h:dataTable>
+          <h:outputText id="emp_space6" value="  " styleClass="MorePaddingClass" />
+         <h:commandLink id="whatsNext" action="#{listModulesPage.goWhatsNext}" immediate="true" rendered="#{(vmbean.whatsNext != listModulesPage.isNull)}">
+		  <h:outputText  id="whatsNextMsg" value="#{msgs.list_modules_stud_next_steps}"></h:outputText>
+		    <f:param name="modidx2" value="#{listModulesPage.modTable.rowIndex}" />
+		    <f:param name="modseqno" value="#{vmbean.seqNo}" />
+          </h:commandLink>            
            </h:column>
            <h:column>
                <h:graphicImage id="closed_gif" value="images/closed.gif" alt="#{msgs.list_modules_inst_closed}" rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag}" styleClass="ExpClass"/>

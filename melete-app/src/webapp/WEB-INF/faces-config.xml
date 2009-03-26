@@ -477,7 +477,7 @@
        <navigation-case>
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
-     </navigation-case>    
+     </navigation-case>     
   </navigation-rule>    
   
 <!-- rules for confirm add module -->
@@ -1419,7 +1419,11 @@
        <navigation-case>
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
-     </navigation-case>                                                             
+     </navigation-case>                                  
+     <navigation-case>
+      <from-outcome>view_whats_next</from-outcome>
+      <to-view-id>/melete/view_whats_next.jsp</to-view-id>
+     </navigation-case>                           
    </navigation-rule>       
      
  <!--Rule for view_module -->    
@@ -1568,7 +1572,11 @@
       <navigation-case>
       <from-outcome>student_preference</from-outcome>
       <to-view-id>/melete/student_preference.jsp</to-view-id>
-     </navigation-case>                                                                   
+     </navigation-case>  
+     <navigation-case>
+      <from-outcome>view_whats_next</from-outcome>
+      <to-view-id>/melete/view_whats_next.jsp</to-view-id>
+     </navigation-case>                                                                  
    </navigation-rule>             
 
 

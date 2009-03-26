@@ -572,6 +572,66 @@ public class ListModulesPage implements Serializable{
 
 	    vsPage.setModuleSeqNo(modSeqNo);
    }
+      
+      public String goWhatsNext()
+      {
+        ViewModBean vmBean = null;
+    	FacesContext ctx = FacesContext.getCurrentInstance();
+    	Map params = ctx.getExternalContext().getRequestParameterMap();
+    	int selModIndex=0,modSeqNo=-1;
+    	
+    	if(params != null)
+    	 {
+    		  String modidxStr = (String) params.get("modidx2");
+    		  //This condition was added to fix ME-809 bug report issue
+    		  if ((modidxStr != null)&&(modidxStr.length() > 0)&&(!(modidxStr.equals("null"))))
+    		  {
+    		    selModIndex = Integer.parseInt(modidxStr);
+    		  }
+    		  else
+    		  {
+    			 selModIndex = 0;
+    		  }
+    		  String modSeqStr = (String) params.get("modseqno");
+    		  if ((modSeqStr != null)&&(modSeqStr.length() > 0)&&(!(modSeqStr.equals("null"))))
+    		  {
+    		    modSeqNo = Integer.parseInt(modSeqStr);
+    		  }
+    		  else
+    		  {
+    			 modSeqNo = -1;
+    		  }
+    	}
+    	 
+    	  ValueBinding binding =
+              Util.getBinding("#{viewNextStepsPage}");
+            ViewNextStepsPage vnPage = (ViewNextStepsPage)
+              binding.getValue(ctx);
+    	  if (getRole()!= null && (getRole().equals("INSTRUCTOR") || getRole().equals("STUDENT"))) 
+    	  {
+  			if ((viewModuleBeans != null)&&(viewModuleBeans.size() > 0))
+  			{
+  		    	vmBean = (ViewModBean) viewModuleBeans.get(selModIndex);
+  			}
+  		}    	  
+      	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNo));
+      	vnPage.setNextSeqNo(nextSeqNo);
+      	vnPage.setModule(getModuleService().getModule(vmBean.getModuleId()));
+      	if ((vmBean.getVsBeans() == null)||(vmBean.getVsBeans().size() == 0))
+      	{	
+      	  vnPage.setPrevSecId(0);
+      	  vnPage.setPrevModId(vmBean.getModuleId());
+      	}
+      	else
+      	{
+      		vnPage.setPrevModId(vmBean.getModuleId());
+      		ViewSecBean vsBean = (ViewSecBean) vmBean.getVsBeans().get(vmBean.getVsBeans().size()-1);
+      	    vnPage.setPrevSecId(vsBean.getSectionId());   
+      	}
+
+      	return "view_whats_next";
+
+      }      
 
 	  private void addNoModulesMessage(FacesContext ctx){
 	  	FacesMessage msg =
