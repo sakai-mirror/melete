@@ -321,7 +321,63 @@ public class ModuleDB implements Serializable {
 
   }
 
+	void addArchivedModule(Module module, ModuleShdates moduleshowdates, String userId, String courseId, CourseModule coursemodule) throws Exception
+	{
 
+	try{
+	     Session session = hibernateUtil.currentSession();
+           Transaction tx = null;
+
+		try
+		{
+		  module.setCreationDate(new java.util.Date());
+		  module.setUserId(userId);
+		  //module.setModificationDate(new java.util.Date());
+
+		  moduleshowdates.setModule(module);
+
+		  tx = session.beginTransaction();
+             // save module
+
+		 session.save(module);
+
+		// save module show dates
+		 session.save(moduleshowdates);
+
+		// save course module
+ 		 session.save(coursemodule);
+
+		 CourseModule cms = (CourseModule)module.getCoursemodule();
+		 if (cms == null)
+		 {
+		 	cms = coursemodule;
+		 }
+		 module.setCoursemodule(cms);
+
+		 session.saveOrUpdate(module);
+
+		  tx.commit();
+		  logger.debug("add module success" + module.getModuleId() + module.getCoursemodule().getCourseId());
+		  return ;
+
+	     }
+	     catch (HibernateException he)
+	     {
+			if(tx !=null) tx.rollback();
+			logger.error(he.toString());
+			//he.printStackTrace();
+			throw he;
+	     }
+		finally{
+		hibernateUtil.closeSession();
+		 }
+	}catch(Exception ex){
+   // Throw application specific error
+		logger.error("error at module db level");
+		throw new MeleteException("add_module_fail");
+	}
+
+  }
    // end rashmi stuff
 
 
@@ -1269,7 +1325,7 @@ public class ModuleDB implements Serializable {
 
 
 			// delete module collection
-			
+
 			logger.debug("updating seq_number now");
 			 List<CourseModule> courseModules = new ArrayList<CourseModule>(0);
 			 for (ListIterator i = allModules.listIterator(); i.hasNext(); )

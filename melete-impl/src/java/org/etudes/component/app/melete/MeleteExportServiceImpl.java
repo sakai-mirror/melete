@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -114,7 +114,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 		if (section.getContentType().equals("typeLink")){
 			String linkData = new String(content_data1);
 
-			if(linkData.startsWith(ServerConfigurationService.getServerUrl()) && 
+			if(linkData.startsWith(ServerConfigurationService.getServerUrl()) &&
 					(linkData.indexOf("/access/content/group")!= -1)|| (linkData.indexOf("/access/meleteDocs")!= -1))
 			{
 				String findEntity = linkData.substring(linkData.indexOf("/access")+7);
@@ -123,13 +123,13 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 				String link_resource_id = linkData;
 				if(ref.getType().equals(ContentHostingService.APPLICATION_ID))
 				{
-					link_resource_id = ref.getId();	
+					link_resource_id = ref.getId();
 				}
 				if(ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
 				{
-					link_resource_id = ref.getId().replaceFirst("/content","");	
+					link_resource_id = ref.getId().replaceFirst("/content","");
 				}
-			
+
 				// read resource and create a file
 				ArrayList link_content = new ArrayList();
 				logger.debug("calling secContent from create resource ");
@@ -279,7 +279,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 				mdLangString2.setText(lurl);
 				mdLicenseDesc.add(mdLangString2);
 				imsmdright.add(mdLicenseDesc);
-				// copyright info add end				
+				// copyright info add end
 			}	// end if contents
 			secElement.add(imsmdlom);
 	return k;
@@ -315,6 +315,10 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 				Element modMainItem = organization.addElement("item");
 				modMainItem.addAttribute("identifier", "MF01_ORG1_MELETE_MOD"+ ++i);
 
+				if (module.getCoursemodule().isArchvFlag() == true)
+				{
+					modMainItem.addAttribute("isvisible","false");
+				}
 				Element title = modMainItem.addElement("title");
 				if (module.getTitle() != null && module.getTitle().trim().length() > 0)
 					title.setText(module.getTitle());
@@ -330,7 +334,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 						try{
 							logger.debug("exporting item from generateOrgan" + currItem.getAttribute("id"));
 							Section section = sectionDB.getSection(Integer.parseInt(currItem.getAttribute("id")));
-						
+
 							// create secElement only if data exists
 							logger.debug("exporting section from generateOrgan" + section.getTitle());
 							k = createSectionElement(modMainItem, section, i,++k, resources,resoucesDir,imagespath);

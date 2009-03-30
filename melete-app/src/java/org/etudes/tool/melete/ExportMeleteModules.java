@@ -49,6 +49,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.etudes.component.app.melete.CourseModule;
 import org.etudes.component.app.melete.MeleteScormExportServiceImpl;
 import org.etudes.component.app.melete.Module;
 import org.etudes.api.app.melete.MeleteExportService;
@@ -146,7 +147,7 @@ public class ExportMeleteModules {
 		if(selectedModules == null || selectedModules.size() == 0)return null;
 		if(selectedModules.size() == 1 && selectedModules.get(0).equals("all"))
 			return modList;
-
+        
 		List<Module> returnList = new ArrayList<Module>(0);
 		for(String sel:selectedModules)
 		{
@@ -173,6 +174,21 @@ public class ExportMeleteModules {
 			List<Module>selectList = createSelectedList();
 
 			if (selectList != null && selectList.size() > 0) {
+				if(selectedModules.size() == 1 && selectedModules.get(0).equals("all"))
+				{
+					String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
+					List cmodArchList = getModuleService().getArchiveModules(courseId);
+				    if ((cmodArchList != null)&&(cmodArchList.size() > 0))
+				    {	
+					  Iterator i = cmodArchList.iterator();
+				      List<Module> archModList=new ArrayList();
+				      while (i.hasNext()) {
+				    	  CourseModule cmod = (CourseModule) i.next();
+				    	  archModList.add((Module)cmod.getModule());
+				      }
+				      selectList.addAll(archModList);
+				    }  
+				}
 				if(selectFormat.startsWith("IMS")) exportIMSModules(selectList);
 				else exportScormModules(selectList);
 

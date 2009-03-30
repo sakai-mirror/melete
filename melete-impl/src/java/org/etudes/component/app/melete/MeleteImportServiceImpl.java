@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -414,6 +415,14 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 //		create module object
 		Module module = new Module();
 		boolean moduleTitleFlag = false;
+		if (eleItem.attribute("isvisible") != null)
+		{
+			if (((Attribute)eleItem.attribute("isvisible")).getValue().equals("false"))
+			{
+			CourseModule cmod = new CourseModule(courseId, -1, true, null, false, module);
+			module.setCoursemodule(cmod);
+			}
+		}
 		if (eleItem.elements("title") != null && eleItem.elements("title").size() != 0)
 		{
 			Element titleEle = (Element) eleItem.elements("title").get(0);
@@ -428,6 +437,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			}
 		}
 		if(!moduleTitleFlag) module.setTitle("Untitled Module");
+
 
 		boolean keywords = false;
 		boolean descr = false;
@@ -664,7 +674,19 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		module.setCreatedByFname(firstName);
 		module.setCreatedByLname(lastName);
 		module.setModuleshdate(getModuleShdates());
-		moduleDB.addModule(module, getModuleShdates(), userId, courseId);
+		if (module.getCoursemodule() != null)
+		{
+			if (module.getCoursemodule().isArchvFlag() == true)
+		   {
+			CourseModule cmod = new CourseModule(courseId, -1, true, null, false, module);
+
+			moduleDB.addArchivedModule(module, getModuleShdates(), userId, courseId, (CourseModule)module.getCoursemodule());
+	       }
+		}
+		else
+		{
+			moduleDB.addModule(module, getModuleShdates(), userId, courseId);
+		}
 		if (logger.isDebugEnabled())
 			logger.debug("Exiting createModule...");
 	}
@@ -1223,7 +1245,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					  	{
 					  	  res_mime_type=getMeleteCHService().MIME_TYPE_LINK;
 						  melContentData = new byte[hrefVal.length()];
-				          melContentData = hrefVal.getBytes();				          
+				          melContentData = hrefVal.getBytes();
 					  	}
 					}
 					if (section.getContentType().equals("typeUpload") || section.getContentType().equals("typeLTI"))
@@ -1479,7 +1501,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		Map sectionList = null;
 		MeleteResource toMres = null;
 		int fromSecId, toSecId;
-		List fromModuleList = moduleDB.getModules(fromContext);
+		List fromModuleList = moduleDB.getActivenArchiveModules(fromContext);
 		//Iterate through all modules in site A
 		if (fromModuleList == null || fromModuleList.size() <= 0) return;
 
@@ -1491,9 +1513,22 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			//Copy module properties and insert, seqXml is null for now
 			Module toMod = new Module(fromMod.getTitle(), fromMod.getLearnObj(), fromMod.getDescription(), fromMod.getKeywords(), fromMod.getCreatedByFname(), fromMod.getCreatedByLname(), fromMod.getUserId(), fromMod.getModifiedByFname(), fromMod.getModifiedByLname(), fromMod.getInstitute(), fromMod.getWhatsNext(), fromMod.getCreationDate(), fromMod.getModificationDate(), null);
 			ModuleShdates toModshdate = new ModuleShdates(((ModuleShdates)fromMod.getModuleshdate()).getStartDate(), ((ModuleShdates)fromMod.getModuleshdate()).getEndDate());
-			try{
-			moduleDB.addModule(toMod, toModshdate, fromMod.getUserId(), toContext);
-			}catch(Exception ex3){logger.debug("error importing module");}
+			if (fromMod.getCoursemodule().isArchvFlag() == false)
+			{
+			  try{
+			  moduleDB.addModule(toMod, toModshdate, fromMod.getUserId(), toContext);
+			  }catch(Exception ex3){logger.debug("error importing module");}
+			}
+			else
+			{
+				CourseModule toCmod = new CourseModule(toContext, -1, true, fromMod.getCoursemodule().getDateArchived(), false, toMod);
+				try{
+					  moduleDB.addArchivedModule(toMod, toModshdate, fromMod.getUserId(), toContext, toCmod);
+				}
+				catch(Exception ex3){logger.debug("error importing archived module");}
+
+			}
+
 			sectionList = fromMod.getSections();
 			//Iterate throug sections of a module
 			if (sectionList != null)
