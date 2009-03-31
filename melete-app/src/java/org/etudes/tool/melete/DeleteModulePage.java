@@ -237,7 +237,11 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			return "delete_module";
 		}
 		setSuccess(true);
-       return "confirm_delete_module";
+		String deleteMsg = bundle.getString("confirm_delete_module_msg");
+		FacesMessage msg = new FacesMessage("Delete Confirmation",deleteMsg);
+		msg.setSeverity(FacesMessage.SEVERITY_INFO);
+		context.addMessage(null,msg);
+		 return "list_auth_modules";
     }
 
     /*
