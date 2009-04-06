@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -56,6 +56,7 @@ import org.sakaiproject.content.cover.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.entity.api.ResourceProperties;
+import org.sakaiproject.entity.api.Reference;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.tool.cover.ToolManager;
@@ -1426,37 +1427,45 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			{
 				//This part executed by import from site
 				String imgActualPath = "";
-				if (!(imgSrcPath.startsWith("http://")|| imgSrcPath.startsWith("https://")) )
+
+				// if img src is in library or any other inside sakai path then don't process
+				if(imgSrcPath.indexOf("/access") !=-1)
 				{
-					// if img src is in library or any other inside sakai path then don't process
-					if(imgSrcPath.indexOf("/access") !=-1)
+					String findEntity = imgSrcPath.substring(imgSrcPath.indexOf("/access")+7);
+					Reference ref = EntityManager.newReference(findEntity);
+					logger.debug("ref properties" + ref.getType() +"," +ref.getId());
+
+					if(ref.getType().equals(ContentHostingService.APPLICATION_ID) || ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
 					{
-						String findEntity = imgSrcPath.substring(imgSrcPath.indexOf("/access")+7);
-						Reference ref = EntityManager.newReference(findEntity);
-						logger.debug("ref properties" + ref.getType() +"," +ref.getId());
-
-						if(ref.getType().equals(ContentHostingService.APPLICATION_ID) || ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
+						if(ref.getType().equals(ContentHostingService.APPLICATION_ID) && ref.getId().startsWith("/group"))
 						{
-							if(ref.getType().equals(ContentHostingService.APPLICATION_ID) && ref.getId().startsWith("/group"))
-							{
-								//							Item resides in resources
-								checkforimgs = checkforimgs.substring(endSrc);
-								imgActualPath = ref.getId();
-								contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, false, unZippedDirPath);
+							//							Item resides in resources
+							checkforimgs = checkforimgs.substring(endSrc);
+							imgActualPath = ref.getId();
+							contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, false, unZippedDirPath);
 
-							}
-							if (ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
+							if(ref.getId().endsWith(".htm") || ref.getId().endsWith(".html"))
 							{
-
-								//Item resides in meleteDocs, so need not check under resources
-								checkforimgs = checkforimgs.substring(endSrc);
-								imgActualPath = ref.getId().replaceFirst("/content","");
-								contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, false, unZippedDirPath);
+								// look for its embedded data
+								ContentResource embedResource = ContentHostingService.getResource(ref.getId());
+								if(embedResource.getContentLength() > 0)
+								{
+									String moreContentData = new String(embedResource.getContent());
+									moreContentData = createContentFile(moreContentData, module, section, null, unZippedDirPath, courseId);
+								}
 							}
 						}
-						// for other inside sakai paths
-						else checkforimgs = checkforimgs.substring(endSrc);
+						if (ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
+						{
+
+							//Item resides in meleteDocs, so need not check under resources
+							checkforimgs = checkforimgs.substring(endSrc);
+							imgActualPath = ref.getId().replaceFirst("/content","");
+							contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, false, unZippedDirPath);
+						}
 					}
+					// for other inside sakai paths
+					else checkforimgs = checkforimgs.substring(endSrc);
 				}
 			}
 			//Import from site ends here
