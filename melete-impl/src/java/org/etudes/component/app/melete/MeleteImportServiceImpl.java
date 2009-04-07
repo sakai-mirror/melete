@@ -1404,7 +1404,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				if (!(imgSrcPath.startsWith("http://")|| imgSrcPath.startsWith("https://")) )
 				{
 					// if img src is in library or any other inside sakai path then don't process
-					if(imgSrcPath.startsWith("images"))
+					if(!imgSrcPath.startsWith("/"))
 					{
 						checkforimgs = checkforimgs.substring(endSrc);
 						String imgActualPath="";
@@ -1418,6 +1418,13 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 									break;
 								}
 							}
+						}
+						//look for embedded data within resources html file
+						if(imgSrcPath.endsWith(".htm") || imgSrcPath.endsWith(".html"))
+						{
+							String embedContentData = new String(meleteUtil.readFromFile(new File(unZippedDirPath + File.separator + imgActualPath)));
+							embedContentData = createContentFile(embedContentData, module, section, resElements, unZippedDirPath, courseId);						
+							embedContentData = ReplaceEmbedMediaWithResourceURL(embedContentData, imgSrcPath, imgActualPath, courseId, true, unZippedDirPath);
 						}
 						contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, true, unZippedDirPath);
 					} // if check for images
@@ -1510,7 +1517,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		Map sectionList = null;
 		MeleteResource toMres = null;
 		int fromSecId, toSecId;
+		
 		List fromModuleList = moduleDB.getActivenArchiveModules(fromContext);
+		
 		//Iterate through all modules in site A
 		if (fromModuleList == null || fromModuleList.size() <= 0) return;
 

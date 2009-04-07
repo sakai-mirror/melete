@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -373,7 +373,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 	 * @param resource
 	 * @return the content with modifed image path
 	 */
-	String replaceImagePath(String secContent, String imagespath, Element resource)throws Exception{
+	String replaceImagePath(String secContent, String imagespath, Element resource, boolean nested)throws Exception{
 		StringBuffer strBuf = new StringBuffer();
 		String checkforimgs = secContent;
 		int imgindex = -1;
@@ -427,19 +427,34 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 					//	return modifiedSecContent;
 					}
 
+					byte[] img_data = null;
 					ArrayList img_content = new ArrayList();
-					byte[] img_data =setContentResourceData(img_resource_id, img_content);
-					if(img_data == null) {
-						checkforimgs =checkforimgs.substring(endSrc);
-			            startSrc=0; endSrc = 0;
-						continue;
+					if(ref.getType().equals(ContentHostingService.APPLICATION_ID) && ref.getId().startsWith("/group") &&
+							(ref.getId().endsWith(".htm") || ref.getId().endsWith(".html")))
+					{
+						// look for embedded data within resources html file
+						img_data =setContentResourceData(img_resource_id, img_content);
+						logger.debug("in htm and hml data: " + img_data);
+						String newimg_data = replaceImagePath(new String(img_data), imagespath, resource,true);
+						img_data = newimg_data.getBytes();
+						//	return modifiedSecContent;
+					}
+					else{
+						img_data =setContentResourceData(img_resource_id, img_content);
+						if(img_data == null) {
+							checkforimgs =checkforimgs.substring(endSrc);
+							startSrc=0; endSrc = 0;
+							continue;
+						}
 					}
 					imgName= (String)img_content.get(0);
 					imgName = Validator.escapeResourceName(imgName);
 					createFileFromContent(img_data,imagesDir.getAbsolutePath()+File.separator+ imgName);
 
 					String patternStr = imgSrcPath;
-					String replacementStr = "images/"+ imgName;
+					String replacementStr = "";
+					replacementStr = (nested)? imgName : "images/"+ imgName;
+					 
 					Pattern pattern = Pattern.compile(Pattern.quote(patternStr));
 
 					// Replace all occurrences of pattern in input

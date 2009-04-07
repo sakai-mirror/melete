@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -174,7 +174,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 			//read the content to modify the path for images
 
 			//replace image path and create image files
-			String modSecContent = replaceImagePath(new String(content_data1), imagespath, resource);
+			String modSecContent = replaceImagePath(new String(content_data1), imagespath, resource,false);
 
 			//create the file
 			File resfile = new File(resoucesDir+ "/"+fileName);
