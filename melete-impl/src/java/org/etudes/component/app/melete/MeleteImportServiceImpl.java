@@ -512,22 +512,26 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	 * add by rashmi
 	 */
 
+
 	private void buildLicenseInformation(MeleteResource meleteResource,String licenseUrl)
 	{
-		int lcode = RESOURCE_LICENSE_CODE ;
 
+		int lcode = RESOURCE_LICENSE_CODE ;
+		
 		if(licenseUrl.startsWith("Copyright (c)"))
 		{
 			 lcode = RESOURCE_LICENSE_COPYRIGHT_CODE;
 			 // remove copyright(c) phrase
-			 String owner = licenseUrl.substring(13);
-			 int delimIdx = owner.lastIndexOf(",");
-			 if(delimIdx !=-1){
-			 meleteResource.setCopyrightOwner(owner.substring(0,delimIdx));
-			 meleteResource.setCopyrightYear(owner.substring(delimIdx +1));
+			 String otherInfo = licenseUrl.substring(13);
+			 otherInfo = otherInfo.trim();
+			 int commaPos = otherInfo.indexOf(",");
+			 if (commaPos != -1)
+			 {
+				 processLicenseStr(otherInfo, meleteResource);
 			 }
 
-		}else if(licenseUrl.startsWith("Public Domain"))
+		}
+		else if(licenseUrl.startsWith("Public Domain"))
 		{
 			lcode = RESOURCE_LICENSE_PD_CODE;
 			int nameIdx = licenseUrl.indexOf(",");
@@ -539,17 +543,17 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				 otherInfo = otherInfo.trim();
 				 if(otherInfo != null )
 				 {
-				 int ownerIdx = otherInfo.lastIndexOf(",");
-				 if(ownerIdx != -1)
-				 {
-				 meleteResource.setCopyrightOwner(otherInfo.substring(0,ownerIdx));
-				 meleteResource.setCopyrightYear(otherInfo.substring(ownerIdx+1));
-				 }
-				 else
-				 {
-					 meleteResource.setCopyrightOwner(otherInfo);
-				 }
-			}
+					 int commaPos = otherInfo.indexOf(",");
+					 if (commaPos != -1)
+					 {
+						 processLicenseStr(otherInfo, meleteResource);
+					 }		
+					 else
+					 {
+						 meleteResource.setCopyrightOwner(otherInfo);
+					 }
+				 
+			     }
 			}
 			CcLicense ccl = meleteLicenseDB.fetchCcLicenseUrl(licensename);
 			licenseUrl = ccl.getUrl();
@@ -568,17 +572,17 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				 otherInfo = otherInfo.trim();
 				 if(otherInfo != null )
 				 {
-				 int ownerIdx = otherInfo.lastIndexOf(",");
-				 if(ownerIdx != -1)
-				 {
-				 meleteResource.setCopyrightOwner(otherInfo.substring(0,ownerIdx));
-				 meleteResource.setCopyrightYear(otherInfo.substring(ownerIdx+1));
-				 }
-				 else
-				 {
-					 meleteResource.setCopyrightOwner(otherInfo);
-				 }
-			}
+					 int commaPos = otherInfo.indexOf(",");
+					 if (commaPos != -1)
+					 {
+						 processLicenseStr(otherInfo, meleteResource);
+					 }		
+					 else
+					 {
+						 meleteResource.setCopyrightOwner(otherInfo);
+					 }
+				 
+			      }
 			}
 			CcLicense ccl = meleteLicenseDB.fetchCcLicenseUrl(licensename);
 			licenseUrl = ccl.getUrl();
@@ -599,23 +603,45 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				 otherInfo = otherInfo.trim();
 				 if(otherInfo != null)
 				 {
-				 int ownerIdx = otherInfo.lastIndexOf(",");
-				 if(ownerIdx != -1)
-				 {
-				 meleteResource.setCopyrightOwner(otherInfo.substring(0,ownerIdx));
-				 meleteResource.setCopyrightYear(otherInfo.substring(ownerIdx+1));
-				 }
-				 else
-				 {
-					 meleteResource.setCopyrightOwner(otherInfo);
-				 }
-			}
+					 int commaPos = otherInfo.indexOf(",");
+					 if (commaPos != -1)
+					 {
+					   processLicenseStr(otherInfo, meleteResource);
+					 }		
+					 else
+					 {
+						 meleteResource.setCopyrightOwner(otherInfo);
+					 }
+				 
+			      }
 			}
 			licenseUrl = licensename;
 		}
 
 		meleteResource.setLicenseCode(lcode);
 		meleteResource.setCcLicenseUrl(licenseUrl);
+	}
+
+	private void processLicenseStr(String otherInfo, MeleteResource meleteResource)
+	{
+		String firstStr=null, secondStr=null;
+		int commaPos = otherInfo.indexOf(",");
+		 while (commaPos != -1)
+		   {
+			 firstStr = otherInfo.substring(0,commaPos).trim();
+			 secondStr = otherInfo.substring(commaPos+1).trim();
+		    if (!(Character.isDigit(firstStr.charAt(firstStr.length()-1)))&&(Character.isDigit(secondStr.charAt(0))))
+		     {
+		       break;
+		     }
+		     else
+		     {
+		       commaPos = otherInfo.indexOf(",",commaPos+1);
+		     }  
+
+		   }
+		   meleteResource.setCopyrightOwner(firstStr);
+		   meleteResource.setCopyrightYear(secondStr);		
 	}
 
 	/*
