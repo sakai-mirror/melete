@@ -118,6 +118,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	protected int RESOURCE_LICENSE_FAIRUSE_CODE = 4; //FairUse Exception
 
 	protected MeleteUtil meleteUtil = new MeleteUtil();
+	static final String REFERENCE_ROOT = Entity.SEPARATOR+"meleteDocs";
 
 
 	/**
@@ -522,14 +523,16 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		{
 			 lcode = RESOURCE_LICENSE_COPYRIGHT_CODE;
 			 // remove copyright(c) phrase
-			 String owner = licenseUrl.substring(13);
-			 int delimIdx = owner.lastIndexOf(",");
-			 if(delimIdx !=-1){
-			 meleteResource.setCopyrightOwner(owner.substring(0,delimIdx));
-			 meleteResource.setCopyrightYear(owner.substring(delimIdx +1));
+			 String otherInfo = licenseUrl.substring(13);
+			 otherInfo = otherInfo.trim();
+			 int commaPos = otherInfo.indexOf(",");
+			 if (commaPos != -1)
+			 {
+				 processLicenseStr(otherInfo, meleteResource);
 			 }
 
-		}else if(licenseUrl.startsWith("Public Domain"))
+		}
+		else if(licenseUrl.startsWith("Public Domain"))
 		{
 			lcode = RESOURCE_LICENSE_PD_CODE;
 			int nameIdx = licenseUrl.indexOf(",");
@@ -541,17 +544,17 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				 otherInfo = otherInfo.trim();
 				 if(otherInfo != null )
 				 {
-				 int ownerIdx = otherInfo.lastIndexOf(",");
-				 if(ownerIdx != -1)
-				 {
-				 meleteResource.setCopyrightOwner(otherInfo.substring(0,ownerIdx));
-				 meleteResource.setCopyrightYear(otherInfo.substring(ownerIdx+1));
-				 }
-				 else
-				 {
-					 meleteResource.setCopyrightOwner(otherInfo);
-				 }
-			}
+					 int commaPos = otherInfo.indexOf(",");
+					 if (commaPos != -1)
+					 {
+						 processLicenseStr(otherInfo, meleteResource);
+					 }
+					 else
+					 {
+						 meleteResource.setCopyrightOwner(otherInfo);
+					 }
+
+			     }
 			}
 			CcLicense ccl = meleteLicenseDB.fetchCcLicenseUrl(licensename);
 			licenseUrl = ccl.getUrl();
@@ -570,17 +573,17 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				 otherInfo = otherInfo.trim();
 				 if(otherInfo != null )
 				 {
-				 int ownerIdx = otherInfo.lastIndexOf(",");
-				 if(ownerIdx != -1)
-				 {
-				 meleteResource.setCopyrightOwner(otherInfo.substring(0,ownerIdx));
-				 meleteResource.setCopyrightYear(otherInfo.substring(ownerIdx+1));
-				 }
-				 else
-				 {
-					 meleteResource.setCopyrightOwner(otherInfo);
-				 }
-			}
+					 int commaPos = otherInfo.indexOf(",");
+					 if (commaPos != -1)
+					 {
+						 processLicenseStr(otherInfo, meleteResource);
+					 }
+					 else
+					 {
+						 meleteResource.setCopyrightOwner(otherInfo);
+					 }
+
+			      }
 			}
 			CcLicense ccl = meleteLicenseDB.fetchCcLicenseUrl(licensename);
 			licenseUrl = ccl.getUrl();
@@ -601,23 +604,45 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				 otherInfo = otherInfo.trim();
 				 if(otherInfo != null)
 				 {
-				 int ownerIdx = otherInfo.lastIndexOf(",");
-				 if(ownerIdx != -1)
-				 {
-				 meleteResource.setCopyrightOwner(otherInfo.substring(0,ownerIdx));
-				 meleteResource.setCopyrightYear(otherInfo.substring(ownerIdx+1));
-				 }
-				 else
-				 {
-					 meleteResource.setCopyrightOwner(otherInfo);
-				 }
-			}
+					 int commaPos = otherInfo.indexOf(",");
+					 if (commaPos != -1)
+					 {
+					   processLicenseStr(otherInfo, meleteResource);
+					 }
+					 else
+					 {
+						 meleteResource.setCopyrightOwner(otherInfo);
+					 }
+
+			      }
 			}
 			licenseUrl = licensename;
 		}
 
 		meleteResource.setLicenseCode(lcode);
 		meleteResource.setCcLicenseUrl(licenseUrl);
+	}
+
+	private void processLicenseStr(String otherInfo, MeleteResource meleteResource)
+	{
+		String firstStr=null, secondStr=null;
+		int commaPos = otherInfo.indexOf(",");
+		 while (commaPos != -1)
+		   {
+			 firstStr = otherInfo.substring(0,commaPos).trim();
+			 secondStr = otherInfo.substring(commaPos+1).trim();
+		    if (!(Character.isDigit(firstStr.charAt(firstStr.length()-1)))&&(Character.isDigit(secondStr.charAt(0))))
+		     {
+		       break;
+		     }
+		     else
+		     {
+		       commaPos = otherInfo.indexOf(",",commaPos+1);
+		     }
+
+		   }
+		   meleteResource.setCopyrightOwner(firstStr);
+		   meleteResource.setCopyrightYear(secondStr);
 	}
 
 	/*
@@ -1531,6 +1556,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 	{
 		//Copy the uploads collection
 	   	buildModules(fromContext, toContext);
+	   	transferManageItems(fromContext, toContext);
   	//   	setMeleteSitePreference(fromContext, toContext);
 	}
 
@@ -1645,6 +1671,89 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			}
 
 		}
+
+	}
+
+	private void transferManageItems(String fromContext, String toContext)
+	{
+		long totalstart = System.currentTimeMillis();
+		
+		String fromUploadsColl = Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+fromContext+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR;
+		String toUploadsColl = Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+toContext+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR;
+
+		List fromContextList = meleteCHService.getMemberNamesCollection(fromUploadsColl);
+		
+		List toContextList = meleteCHService.getMemberNamesCollection(toUploadsColl);
+		
+		if ((fromContextList != null)&&(toContextList != null))
+		{
+			ListIterator memIt = fromContextList.listIterator();
+			List replaceContextList = new ArrayList();
+		 	while(memIt !=null && memIt.hasNext())
+		 	{
+		 		String resId = (String) memIt.next();
+		 		resId = resId.replace(fromContext, toContext);
+		 		replaceContextList.add(resId);
+		 	}
+		 	if (replaceContextList != null)
+		 	{
+		 		if (replaceContextList.size() > 0)
+		 		{
+		 			replaceContextList.removeAll(toContextList);
+		 			if (replaceContextList.size() > 0)
+		 			{
+		 				ListIterator repIt = replaceContextList.listIterator();
+		 				while (repIt != null && repIt.hasNext())
+		 				{
+		 					String resId = (String) repIt.next();
+		 					resId = resId.replace(toContext,fromContext);
+		 					byte[] melContentData;
+		 					String res_mime_type,melResourceName;
+		 					try
+		 					{
+		 					  ContentResource cr = getMeleteCHService().getResource(resId);
+							  melContentData = cr.getContent();
+							  res_mime_type = cr.getContentType();
+							  melResourceName =  cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
+							  try
+							  {
+								// check if the item has already been imported to this site (in uploads collection)
+							 	String checkResourceId = toUploadsColl+melResourceName;
+							 	getMeleteCHService().checkResource(checkResourceId);
+							  }
+							  catch (IdUnusedException ex)
+							  {
+							    ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false,melResourceName,"");
+			 				    try
+			 				    {
+						 		  String newResourceId = getMeleteCHService().addResourceItem(melResourceName, res_mime_type,toUploadsColl,melContentData,res );
+						 		}
+			 				    catch(Exception e)
+			 				    {
+			 						logger.debug("Error thrown in exporting of manage resources");
+			 						logger.debug(e.toString());
+			 				    }
+							  }
+		 					}
+		 					catch(IdUnusedException unuse)
+		 					{
+		 						// if file not found exception or content is missing continue working
+		 						logger.debug("error in reading resource content in exporting manage resources");
+		 					}
+		 					catch(Exception e)
+		 					{
+		 						logger.error("error in reading resource in export manage resource");
+		 					}
+
+		 				}//End while repIt
+		 			}//End if
+		 		}
+		 	}
+		}
+
+		long totalend = System.currentTimeMillis();
+
+		logger.debug("TRANSFER took "+(totalend-totalstart)+" millisecs");
 
 	}
 	/*METHODS USED BY IMPORT FROM SITE END*/

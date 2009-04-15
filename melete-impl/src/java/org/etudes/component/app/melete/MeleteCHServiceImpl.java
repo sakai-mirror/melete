@@ -551,6 +551,35 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 			return null;
 		 }
 
+	 public List getMemberNamesCollection(String collId)
+	 {
+		 	try
+		    {
+	        	if (!isUserAuthor())
+	        		{
+	        		logger.info("User is not authorized to access meleteDocs collection");
+	        		return null;
+	        		}
+	   			//          setup a security advisor
+	        		meleteSecurityService.pushAdvisor();
+	        	 	ContentCollection c= getContentservice().getCollection(collId);
+				 	List	mem = c.getMembers();
+				 	if (mem == null) return null;
+
+				return mem;
+		    }
+			catch(Exception e)
+			{
+				logger.error(e.toString());
+			}
+			finally
+			  {
+				// clear the security advisor
+				meleteSecurityService.popAdvisor();
+			  }
+			return null;
+		 }
+
 	/*
 	 *
 	 */
