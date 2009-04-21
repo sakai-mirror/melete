@@ -31,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -174,8 +175,8 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 			//read the content to modify the path for images
 
 			//replace image path and create image files
-			String modSecContent = replaceImagePath(new String(content_data1), imagespath, resource,false);
-
+			ArrayList rData = replaceImagePath(new String(content_data1), imagespath, resource,false,new HashSet<String>());
+			 String modSecContent = (String)rData.get(0);
 			//create the file
 			File resfile = new File(resoucesDir+ "/"+fileName);
 			createFileFromContent( modSecContent.getBytes(), resfile.getAbsolutePath());
