@@ -887,10 +887,8 @@ public class SectionDB implements Serializable {
 	{
 		try{
 		     Session session = hibernateUtil.currentSession();
-		     String queryString = "select meleteresource.resourceId from MeleteResource meleteresource where meleteresource.resourceId like '%:resourceId%'";
+		     String queryString = "select meleteresource.resourceId from MeleteResource meleteresource where meleteresource.resourceId like '%" + courseId + "%'";
 		     Query query = session.createQuery(queryString);
-		     String selResourceId = "/private/meleteDocs/"+courseId+"/uploads/";
-		     query.setParameter("resourceId",selResourceId);
 		     List result_list = query.list();
 		     return result_list;
 		    }

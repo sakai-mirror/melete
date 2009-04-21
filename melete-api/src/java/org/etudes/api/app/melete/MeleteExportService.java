@@ -102,9 +102,10 @@ public interface MeleteExportService{
 	 * @return - returns the list of manifest elements
 	 * @throws Exception
 	 */
-	public List generateOrganizationResourceItems(List modDateBeans,
-			File packagedir, String title) throws Exception;
-
+	public List generateOrganizationResourceItems(List modDateBeans, boolean allFlag,
+			File packagedir, String title, String courseId) throws Exception;
+	
+	
 	/**
 	 * creates file from input path to output path
 	 * @param inputpath - input path for file

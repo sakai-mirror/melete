@@ -543,8 +543,8 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 				count = selectList.size();
 				File basePackDir = new File(archivePath);
 				List orgResElements = getMeleteExportService()
-					.generateOrganizationResourceItems(selectList,
-							basePackDir, SiteService.getSite(siteId).getTitle());
+					.generateOrganizationResourceItems(selectList,true,
+							basePackDir, SiteService.getSite(siteId).getTitle(), siteId);
 
 					if (orgResElements != null && orgResElements.size() > 0) {
 

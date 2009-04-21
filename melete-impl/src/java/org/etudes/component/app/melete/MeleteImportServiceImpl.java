@@ -267,6 +267,174 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		if (logger.isDebugEnabled()) logger.debug("Exiting mergeAndBuildModules");
 		return count;
 	}
+
+	private void processManageResources(Element rootEle, String unZippedDirPath, String fromSiteId, Document document) throws Exception
+	{
+		String melResourceName = null;
+		String melResourceDescription = null;
+		String res_mime_type = null;
+		byte[] melContentData = null;
+		boolean encodingFlag = false;
+		String newResourceId = "";
+		String fromCRName = null;
+		String urlTitle = "";
+
+		//Processing Manage resources
+//		 resources
+		//List elements = rootEle.selectNodes("/resource");
+		List elements = rootEle.elements();
+		int count = elements.size();
+		for (Iterator iter = elements.iterator(); iter.hasNext();)
+		{
+			Element element = (Element) iter.next();
+
+			if (element.attributeValue("identifier").startsWith("MANAGERESOURCE"))
+			{
+						Attribute resHrefAttr = element.attribute("href");
+
+						if (resHrefAttr != null)
+						{
+							String hrefVal = resHrefAttr.getValue();
+							// check if file is missing
+							if (hrefVal != null && hrefVal.length() != 0
+									&& !(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")))
+							{
+								if (!meleteUtil.checkFileExists(unZippedDirPath + File.separator + hrefVal))
+								{
+									logger.info("content file for section is missing so move ON");
+									continue;
+								}
+							}
+							// end missing file check
+
+							// create meleteResourceObject
+							 List resElements = element.elements();
+							//typeLink resource
+							if (hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:"))
+							{
+							  if(resElements != null)
+							  {
+								urlTitle = null;
+								for(int i=0; i < resElements.size(); i++)
+								{
+									Element urlTitleElement = (Element)resElements.get(i);
+									if(urlTitleElement.getQualifiedName().equalsIgnoreCase("imsmd:title")){
+										urlTitle = urlTitleElement.selectSingleNode( ".//imsmd:langstring").getText();
+										break;
+									}
+								}
+							  }
+
+							  // make last part of link as title
+							  if(urlTitle.equals(""))
+							  {
+								urlTitle = hrefVal.substring(hrefVal.lastIndexOf("/")+1);
+								if(urlTitle == null || urlTitle.length() == 0)
+								{
+									urlTitle = hrefVal.substring(0,hrefVal.lastIndexOf("/"));
+									urlTitle = urlTitle.substring(urlTitle.lastIndexOf("/")+1);
+								}
+							  }
+							  melResourceName = urlTitle;
+						  }
+						  else
+			           	  {
+							// uploaded file
+							boolean contentSet = false;
+							melResourceName = hrefVal.substring(hrefVal.lastIndexOf("/") + 1);
+							// Check if this is coming in from IMS Import
+							if (resElements != null)
+							{
+			                			//Load up the resource to look at it
+								String contentEditor = new String(meleteUtil.readFromFile(new File(unZippedDirPath + File.separator + hrefVal)));
+								urlTitle = null;
+								for(int i=0; i < resElements.size(); i++)
+								{
+									Element urlTitleElement = (Element)resElements.get(i);
+									if(urlTitleElement.getQualifiedName().equalsIgnoreCase("imsmd:title")){
+										urlTitle = urlTitleElement.selectSingleNode( ".//imsmd:langstring").getText();
+									}
+								}
+								if ( urlTitle != null ) melResourceName = urlTitle;
+							}
+
+						  }
+
+ 						  for (int i = 0; i < resElements.size(); i++)
+						  {
+							Element resDescElement = (Element) resElements.get(i);
+							if (resDescElement.getQualifiedName().equalsIgnoreCase("imsmd:description"))
+							{
+								melResourceDescription = resDescElement.selectSingleNode(".//imsmd:langstring").getText();
+								break;
+							}
+						  }
+
+						 // Everything here is going to uploads collection
+						try{
+							// check if the item has already been imported to this site (in uploads collection)
+							String checkResourceId = "/private/meleteDocs/"+fromSiteId+"/uploads/"+melResourceName;
+					 		getMeleteCHService().checkResource(checkResourceId);
+					 		}catch (IdUnusedException ex)
+							{
+						 		// actual insert
+						 		// if not found in meleteDocs collection include it
+						 		String uploadCollId = getMeleteCHService().getUploadCollectionId(fromSiteId);
+
+							  	// data is generally large so read it only if need to insert
+								if(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:"))
+								{
+//								 	 link points to Site Resources item so move it to MeleteDocs collection
+									if(hrefVal.indexOf("/access/content/group") != -1 || hrefVal.indexOf("/access/meleteDocs") != -1)
+									{
+										String fileResourceName= hrefVal.substring(hrefVal.lastIndexOf("/")+1);
+										logger.debug("SITE RES ITEM" + fileResourceName);
+								//		if(!(fileResourceName.endsWith(".html") || fileResourceName.endsWith(".htm")))
+								//		{
+											if(resElements != null){
+												String fileName = ((Element)resElements.get(0)).attributeValue("href");
+												logger.debug("fileName read now is:" + fileName);
+												melContentData = meleteUtil.readFromFile(new File(unZippedDirPath + File.separator+ fileName));
+												res_mime_type = fileName.substring(fileName.lastIndexOf(".")+1);
+												res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
+												}
+
+											logger.debug("first add resource" + fileResourceName);
+											ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,fileResourceName,melResourceDescription);
+											newResourceId = getMeleteCHService().addResourceItem(fileResourceName, res_mime_type,uploadCollId,melContentData,res );
+
+											// this section points to the link location of added resource item
+											String secondResName = getMeleteCHService().getResourceUrl(newResourceId);
+									 		melContentData =secondResName.getBytes();
+									 		res_mime_type=getMeleteCHService().MIME_TYPE_LINK;
+									//	}
+									}
+									else
+								  	{
+								  	  res_mime_type=getMeleteCHService().MIME_TYPE_LINK;
+									  melContentData = new byte[hrefVal.length()];
+							          melContentData = hrefVal.getBytes();
+								  	}
+								}
+								else
+								{ //typeUpload resource
+								  	res_mime_type = melResourceName.substring(melResourceName.lastIndexOf(".")+1);
+								  	res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
+
+						 		  if (resElements != null)
+						 		  {
+						 			melContentData = meleteUtil.readFromFile(new File(unZippedDirPath + File.separator+ hrefVal));
+						 		  }
+
+								}
+						 		ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,melResourceName,melResourceDescription);
+						 		newResourceId = getMeleteCHService().addResourceItem(melResourceName, res_mime_type,uploadCollId,melContentData,res );
+						 	} // catch end
+						} // resHrefAttr check end
+			}
+		}//End for loop
+	}
+
 	/**
 	 * Parses the manifest and build modules
 	 *
@@ -297,7 +465,14 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			{
 				Element element = (Element) iter.next();
 				buildModule(element, document, unZippedDirPath,ToolManager.getCurrentPlacement().getContext() );
+
 			}
+			xpath = document.createXPath("/imscp:manifest/imscp:resources");
+			xpath.setNamespaceURIs(uris);
+
+			eleOrg = (Element) xpath.selectSingleNode(document);
+			processManageResources(eleOrg, unZippedDirPath, ToolManager.getCurrentPlacement().getContext(), document);
+
 		}
 		catch (Exception e)
 		{

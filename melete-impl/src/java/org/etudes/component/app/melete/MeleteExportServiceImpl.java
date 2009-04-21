@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,6 +61,7 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.content.cover.ContentHostingService;
+import org.sakaiproject.entity.api.Entity;
 
 /**
  * @author Faculty
@@ -292,7 +294,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 	 * @return - returns the list of manifest elements
 	 * @throws Exception
 	 */
-	public List generateOrganizationResourceItems(List modList, File packagedir,String maintitle)throws Exception{
+	public List generateOrganizationResourceItems(List modList,boolean allFlag, File packagedir,String maintitle, String courseId)throws Exception{
 		String probEncounteredSections ="";
 		try{
 			String packagedirpath = packagedir.getAbsolutePath();
@@ -387,6 +389,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 				modMainItem.add(imsmdlom);
 
 			}
+			if (allFlag == true) resources = transferManageItems(resources, courseId, resoucesDir, k+1);
 			ArrayList manElements = new ArrayList();
 			manElements.add(organizations);
 			manElements.add(resources);
@@ -399,6 +402,107 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 		}
 
 	}
+	
+	public Element transferManageItems(Element resources, String courseId, File resoucesDir, int item_ref_num) throws Exception
+	{
+		String fromUploadsColl = Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR;
+		List fromContextList = meleteCHService.getMemberNamesCollection(fromUploadsColl);
+		if ((fromContextList != null)&&(fromContextList.size() > 0))
+		{
+		  List meleteResourceList = sectionDB.getAllMeleteResourcesOfCourse(courseId);
+		  if ((meleteResourceList != null)&&(meleteResourceList.size() > 0))
+		  {
+			  fromContextList.removeAll(meleteResourceList);
+		  if ((fromContextList != null)&&(fromContextList.size() > 0))
+		  {
+			  ListIterator repIt = fromContextList.listIterator();
+				while (repIt != null && repIt.hasNext())
+				{
+					String content_resource_id = (String) repIt.next();
+					ArrayList content_data = new ArrayList();
+					logger.debug("calling secContent from create section");
+					Element resource = resources.addElement("resource");
+					resource.addAttribute("identifier","MANAGERESOURCE"+ item_ref_num);
+					resource.addAttribute("type ","webcontent");
+					byte[] content_data1 =setContentResourceData(content_resource_id,content_data);
+					String sectionFileName = (String)content_data.get(0);
+					if(((String)content_data.get(2)).equals(getMeleteCHService().MIME_TYPE_LINK))
+			 		{
+							String linkData = new String(content_data1);
+
+							if(linkData.startsWith(ServerConfigurationService.getServerUrl()) &&
+									(linkData.indexOf("/access/content/group")!= -1)|| (linkData.indexOf("/access/meleteDocs")!= -1))
+							{
+								String findEntity = linkData.substring(linkData.indexOf("/access")+7);
+								Reference ref = EntityManager.newReference(findEntity);
+								logger.debug("ref properties" + ref.getType() +"," +ref.getId());
+								String link_resource_id = linkData;
+								if(ref.getType().equals(ContentHostingService.APPLICATION_ID))
+								{
+									link_resource_id = ref.getId();
+								}
+								if(ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
+								{
+									link_resource_id = ref.getId().replaceFirst("/content","");
+								}
+
+								// read resource and create a file
+								ArrayList link_content = new ArrayList();
+								logger.debug("calling secContent from create resource ");
+								byte[] linkdata =setContentResourceData(link_resource_id, link_content);
+								if(linkdata == null) {resource =null;}
+								if(!((String)link_content.get(2)).equals(getMeleteCHService().MIME_TYPE_LINK))
+						 		{
+									logger.debug("link resource points to site res item as file. Include file in zip");
+									// Site resource item is file and not URL
+						 		String resfileName = Validator.escapeResourceName((String)link_content.get(0));
+								File resfile = new File(resoucesDir+ "/"+ resfileName);
+								createFileFromContent(linkdata, resfile.getAbsolutePath());
+
+								Element file = resource.addElement("file");
+								file.addAttribute("href", "resources/"+ resfileName);
+						 		}
+							}
+//							 resource will always point to link location otherwise it changes type to upload on import
+							resource.addAttribute("href", linkData);
+							// preserve url title
+							if(!sectionFileName.equals(linkData))
+							{
+							Element urlTitle = createLOMElement("imsmd:title", "title");
+							Element imsmdlangstring = createLOMElement("imsmd:"+getLangString(), getLangString());
+					        imsmdlangstring.setText(sectionFileName);
+					        urlTitle.add(imsmdlangstring);
+					        resource.add(urlTitle);
+							}
+						}
+						else
+						{
+						  Element file = resource.addElement("file");
+						  String fileName = Validator.escapeResourceName(sectionFileName);
+
+			              if (fileName.startsWith("module_"))
+						  {
+							int und_index = fileName.indexOf("_",7);
+							fileName = fileName.substring(und_index+1, fileName.length());
+					      }
+
+						  file.addAttribute("href", "resources/"+ fileName);
+						  resource.addAttribute("href", "resources/"+ fileName);
+
+						  //create the file
+						  File resfile = new File(resoucesDir+ "/"+ fileName);
+						  createFileFromContent(content_data1, resfile.getAbsolutePath());
+					}
+					item_ref_num++;
+
+				}//End while repIt
+		  }
+		  }
+		}
+		return resources;
+	}	
+	
+
 
 
 }

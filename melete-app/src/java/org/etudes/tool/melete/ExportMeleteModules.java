@@ -285,9 +285,11 @@ public class ExportMeleteModules {
 					packagedir.getAbsolutePath() + File.separator
 					+ "xml.xsd");
 
+			
 			List orgResElements = meleteExportService
-			.generateOrganizationResourceItems(selectList,
-					packagedir, title);
+			.generateOrganizationResourceItems(selectList,selectList.equals(modList),
+					packagedir, title, courseId);
+			
 
 			if (orgResElements != null && orgResElements.size() > 0) {
 				manifest.add((Element) orgResElements.get(0));
@@ -388,7 +390,7 @@ public class ExportMeleteModules {
 			// copy the schema files
 			File schemaFilesDir = basePackDir;
 
-			List orgResElements = meleteExportScormService.generateOrganizationResourceItems(selectList, packagedir, title);
+			List orgResElements = meleteExportScormService.generateOrganizationResourceItems(selectList, selectList.equals(modList), packagedir, title, courseId);
 
 			if (orgResElements != null && orgResElements.size() > 0)
 			{

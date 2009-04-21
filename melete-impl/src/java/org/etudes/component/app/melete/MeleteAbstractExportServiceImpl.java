@@ -33,6 +33,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,6 +63,7 @@ import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.content.cover.ContentHostingService;
 import org.sakaiproject.id.cover.IdManager;
 import java.util.Set;
+import org.sakaiproject.entity.api.Entity;
 
 /**
  * @author Faculty
@@ -94,12 +96,14 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
     protected String schema;
     protected String schemaVersion;
     protected String langString;
+    static final String REFERENCE_ROOT = Entity.SEPARATOR+"meleteDocs";
 
     abstract public void initValues();
     abstract public Element createMetadataCopyright(int licenseCode);
     abstract public void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String sectionFileName,int i) throws Exception;
     abstract public int createSectionElement(Element ParentSection, Section section, int i, int k, Element resources, File resoucesDir, String imagespath) throws Exception;
-    abstract public List generateOrganizationResourceItems(List modList, File packagedir,String maintitle)throws Exception;
+    abstract public List generateOrganizationResourceItems(List modList, boolean allFlag, File packagedir,String maintitle, String courseId)throws Exception;
+    abstract public Element transferManageItems(Element resources, String courseId, File resoucesDir, int item_ref_num) throws Exception;
 
 
 	/**
