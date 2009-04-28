@@ -586,7 +586,14 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	 public ResourcePropertiesEdit fillInSectionResourceProperties(boolean encodingFlag,String secResourceName, String secResourceDescription)
 	{
 	    ResourcePropertiesEdit resProperties = getContentservice().newResourceProperties();
-
+	    try
+		 {
+		   secResourceName = URLDecoder.decode(secResourceName,"UTF-8");
+		 }
+		 catch(Exception e)
+		 {
+		   logger.debug("error with decode in fillInSectionResourceProperties");
+	     }
 	//  resProperties.addProperty (ResourceProperties.PROP_COPYRIGHT,);
 	//  resourceProperties.addProperty(ResourceProperties.PROP_COPYRIGHT_CHOICE,);
 	    //Glenn said to not set the two properties below
@@ -608,6 +615,14 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	 */
 	 public ResourcePropertiesEdit fillEmbeddedImagesResourceProperties(String name)
 	{
+		 try
+		 {
+		   name = URLDecoder.decode(name,"UTF-8");
+		 }
+		 catch(Exception e)
+		 {
+		   logger.debug("error with decode in fillEmbeddedImagesResourceProperties");
+	     }
 	    ResourcePropertiesEdit resProperties = getContentservice().newResourceProperties();
 
 		//Glenn said to not set the two properties below
@@ -664,6 +679,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 
 		 //Storing the original filename so it can be used in the display name
 		 String dispName = name;
+		 name = URLDecoder.decode(name,"UTF-8");
 		 name = Validator.escapeResourceName(name);
 
 		 String courseId = getCourseId(addCollId);
