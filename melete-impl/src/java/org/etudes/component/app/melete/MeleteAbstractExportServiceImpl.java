@@ -379,7 +379,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 	 * @param resource
 	 * @return the content with modifed image path
 	 */
-	ArrayList replaceImagePath(String secContent, String imagespath, Element resource, boolean nested, Set<String> checkEmbedHTMLResources)throws Exception{
+	ArrayList replaceImagePath(String secContent, String imagespath, Element resource, boolean nested, Set<String> checkEmbedHTMLResources, String parentRef)throws Exception{
 		StringBuffer strBuf = new StringBuffer();
 		String checkforimgs = secContent;
 		int imgindex = -1;
@@ -410,6 +410,18 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 			
 				if (endSrc <= 0) break;
 				imgSrcPath = checkforimgs.substring(startSrc, endSrc);
+				
+				// make it full url 
+				if(imgSrcPath.indexOf("://") == -1 && imgSrcPath.indexOf("/") == -1)
+				{
+					logger.debug("found relative path with no /access");
+					if(parentRef != null)
+					{
+						modifiedSecContent = meleteUtil.replace(modifiedSecContent,imgSrcPath, parentRef + imgSrcPath);
+						imgSrcPath = parentRef + imgSrcPath;
+					}					
+				}
+				
 				if(imgSrcPath.indexOf("/access") !=-1)
 				{
 					String findEntity = imgSrcPath.substring(imgSrcPath.indexOf("/access")+7);
@@ -449,7 +461,8 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 								// look for embedded data within resources html file
 								img_data =setContentResourceData(img_resource_id, img_content);
 								logger.debug("in htm and hml data: " + (String)img_content.get(0));
-								ArrayList newimgarr_data = replaceImagePath(new String(img_data), imagespath, resource,true,checkEmbedHTMLResources);
+								String parentStr = "/access/content" + ref.getId().substring(0,ref.getId().lastIndexOf("/")+1);
+								ArrayList newimgarr_data = replaceImagePath(new String(img_data), imagespath, resource,true,checkEmbedHTMLResources, parentStr);
 								String newimg_data = (String)newimgarr_data.get(0);
 								img_data = newimg_data.getBytes();
 								checkEmbedHTMLResources = (Set)newimgarr_data.get(1);

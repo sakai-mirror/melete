@@ -177,7 +177,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 			//read the content to modify the path for images
 
 			//replace image path and create image files
-			ArrayList rData = replaceImagePath(new String(content_data1), imagespath, resource,false,new HashSet<String>());
+			ArrayList rData = replaceImagePath(new String(content_data1), imagespath, resource,false,new HashSet<String>(),null);
 			 String modSecContent = (String)rData.get(0);
 			//create the file
 			File resfile = new File(resoucesDir+ "/"+fileName);
