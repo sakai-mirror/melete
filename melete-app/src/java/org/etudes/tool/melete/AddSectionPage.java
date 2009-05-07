@@ -189,7 +189,11 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			//step 3: insert section resource in melete table i.e. if new resource then insert in melete resource table
 			//	otherwise just insert in sectionResource table
 				if(selResourceIdFromList == null) sectionService.insertMeleteResource(section, meleteResource);
-				else sectionService.insertSectionResource(section, meleteResource);
+				else
+				{
+					sectionService.updateResource(meleteResource);
+					sectionService.insertSectionResource(section, meleteResource);
+				}	
 			}
 
 		}
@@ -560,7 +564,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			    	//just take resource properties from this object as its assoc with another section
 			    	if(existResource != null)
 			    		{
-			    		meleteResource = existResource;
+						meleteResource = existResource;
 			    		getM_license().setInitialValues(formName, sectionService, existResource);
 
 					// render selected file name
