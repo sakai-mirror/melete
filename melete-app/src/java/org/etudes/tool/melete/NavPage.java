@@ -102,7 +102,15 @@ public class NavPage implements Serializable {
  		FacesContext ctx = FacesContext.getCurrentInstance();
 	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
 		role = (String)sessionMap.get("role");
-		if (role.equals("INSTRUCTOR")) return "author_preference";
+		if (role.equals("INSTRUCTOR")) 
+		{
+			  ValueBinding binding =
+		       Util.getBinding("#{authorPreferences}");
+		     AuthorPreferencePage apPage = (AuthorPreferencePage)
+		            binding.getValue(ctx);
+		     	 apPage.resetValues();
+			return "author_preference";
+		}
 		else return "student_preference";
      }
 

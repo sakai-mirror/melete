@@ -43,15 +43,42 @@ public class MeleteUserPreference implements Serializable,MeleteUserPreferenceSe
    
     private Boolean showLTIChoice;
     
+    /** nullable persistent field */
+    private Integer licenseCode;
+
+    /** nullable persistent field */
+    private String ccLicenseUrl;
+
+    /** nullable persistent field */
+    private Boolean reqAttr;
+
+    /** nullable persistent field */
+    private Boolean allowCmrcl;
+
+    /** nullable persistent field */
+    private Integer allowMod;
+    
+    private String copyrightOwner;
+    
+    private String copyrightYear;  
+    
+    
 	/** full constructor
 	 * @param userId
 	 * @param editorChoice
 	 */
-	public MeleteUserPreference(String userId, String editorChoice, Boolean viewExpChoice, Boolean showLTIChoice) {
+	public MeleteUserPreference(String userId, String editorChoice, Boolean viewExpChoice, Boolean showLTIChoice, Integer licenseCode, String ccLicenseUrl, Boolean reqAttr, Boolean allowCmrcl, Integer allowMod, int version, org.etudes.component.app.melete.Section section, String copyrightOwner, String copyrightYear) {
 		this.userId = userId;
 		this.editorChoice = editorChoice;
 		this.viewExpChoice = viewExpChoice;	
 		this.showLTIChoice = showLTIChoice;
+		this.licenseCode = licenseCode;
+        this.ccLicenseUrl = ccLicenseUrl;
+        this.reqAttr = reqAttr;
+        this.allowCmrcl = allowCmrcl;
+        this.allowMod = allowMod;
+        this.copyrightOwner = copyrightOwner;
+        this.copyrightYear = copyrightYear;
 	}
 		
 	/**
@@ -59,7 +86,8 @@ public class MeleteUserPreference implements Serializable,MeleteUserPreferenceSe
 	 */
 	public MeleteUserPreference() {
 		this.viewExpChoice = true;
-		this.showLTIChoice = false;		
+		this.showLTIChoice = false;
+		this.licenseCode = 0;
 	}
 		
 	/**
@@ -120,4 +148,68 @@ public class MeleteUserPreference implements Serializable,MeleteUserPreferenceSe
 	public void setShowLTIChoice(Boolean showLTIChoice) {
 		this.showLTIChoice = showLTIChoice;
 	}
+	   public Integer getLicenseCode() {
+	        return this.licenseCode;
+	    }
+
+	    public void setLicenseCode(Integer licenseCode) {
+	        this.licenseCode = licenseCode;
+	    }
+
+	    public String getCcLicenseUrl() {
+	        return this.ccLicenseUrl;
+	    }
+
+	    public void setCcLicenseUrl(String ccLicenseUrl) {
+	        this.ccLicenseUrl = ccLicenseUrl;
+	    }
+
+	    public Boolean isReqAttr() {
+	        return this.reqAttr;
+	    }
+
+	    public void setReqAttr(Boolean reqAttr) {
+	        this.reqAttr = reqAttr;
+	    }
+
+	    public Boolean isAllowCmrcl() {
+	        return this.allowCmrcl;
+	    }
+
+	    public void setAllowCmrcl(Boolean allowCmrcl) {
+	        this.allowCmrcl = allowCmrcl;
+	    }
+
+	    public Integer getAllowMod() {
+	        return this.allowMod;
+	    }
+
+	    public void setAllowMod(Integer allowMod) {
+	        this.allowMod = allowMod;
+	    }
+	
+	/**
+	 * @return Returns the copyrightOwner.
+	 */
+	public String getCopyrightOwner() {
+		return copyrightOwner;
+	}
+	/**
+	 * @param copyrightOwner The copyrightOwner to set.
+	 */
+	public void setCopyrightOwner(String copyrightOwner) {
+		this.copyrightOwner = copyrightOwner;
+	}
+	/**
+	 * @return Returns the copyrightYear.
+	 */
+	public String getCopyrightYear() {
+		return copyrightYear;
+	}
+	/**
+	 * @param copyrightYear The copyrightYear to set.
+	 */
+	public void setCopyrightYear(String copyrightYear) {
+		this.copyrightYear = copyrightYear;
+	}	
 }
