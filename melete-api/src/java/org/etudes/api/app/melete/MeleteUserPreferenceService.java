@@ -38,4 +38,33 @@ public interface MeleteUserPreferenceService {
 	public abstract void setViewExpChoice(Boolean viewExpChoice);
 	public abstract Boolean isShowLTIChoice();
 	public abstract void setShowLTIChoice(Boolean showLTIChoice);
+	public abstract Integer getLicenseCode();
+
+	public abstract void setLicenseCode(Integer licenseCode);
+
+	public abstract String getCcLicenseUrl();
+
+	public abstract void setCcLicenseUrl(String ccLicenseUrl);
+
+	public abstract Boolean isReqAttr();
+
+	public abstract void setReqAttr(Boolean reqAttr);
+
+	public abstract Boolean isAllowCmrcl();
+
+	public abstract void setAllowCmrcl(Boolean allowCmrcl);
+
+	public abstract Integer getAllowMod();
+
+	public abstract void setAllowMod(Integer allowMod);
+	
+	public abstract String getCopyrightOwner();
+
+	
+	public abstract void setCopyrightOwner(String copyrightOwner);
+
+	
+	public abstract String getCopyrightYear();
+
+	public abstract void setCopyrightYear(String copyrightYear);	
 }
