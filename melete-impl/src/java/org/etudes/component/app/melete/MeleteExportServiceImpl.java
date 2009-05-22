@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -31,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -114,7 +115,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 		if (section.getContentType().equals("typeLink")){
 			String linkData = new String(content_data1);
 
-			if(linkData.startsWith(ServerConfigurationService.getServerUrl()) && 
+			if(linkData.startsWith(ServerConfigurationService.getServerUrl()) &&
 					(linkData.indexOf("/access/content/group")!= -1)|| (linkData.indexOf("/access/meleteDocs")!= -1))
 			{
 				String findEntity = linkData.substring(linkData.indexOf("/access")+7);
@@ -123,13 +124,13 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 				String link_resource_id = linkData;
 				if(ref.getType().equals(ContentHostingService.APPLICATION_ID))
 				{
-					link_resource_id = ref.getId();	
+					link_resource_id = ref.getId();
 				}
 				if(ref.getType().equals(MeleteSecurityService.APPLICATION_ID))
 				{
-					link_resource_id = ref.getId().replaceFirst("/content","");	
+					link_resource_id = ref.getId().replaceFirst("/content","");
 				}
-			
+
 				// read resource and create a file
 				ArrayList link_content = new ArrayList();
 				logger.debug("calling secContent from create resource ");
@@ -174,8 +175,8 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 			//read the content to modify the path for images
 
 			//replace image path and create image files
-			String modSecContent = replaceImagePath(new String(content_data1), imagespath, resource);
-
+			ArrayList rData = replaceImagePath(new String(content_data1), imagespath, resource,false,new HashSet<String>(),null);
+			 String modSecContent = (String)rData.get(0);
 			//create the file
 			File resfile = new File(resoucesDir+ "/"+fileName);
 			createFileFromContent( modSecContent.getBytes(), resfile.getAbsolutePath());
@@ -315,6 +316,10 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 				Element modMainItem = organization.addElement("item");
 				modMainItem.addAttribute("identifier", "MF01_ORG1_MELETE_MOD"+ ++i);
 
+				if (module.getCoursemodule().isArchvFlag() == true)
+				{
+					modMainItem.addAttribute("isvisible","false");
+				}
 				Element title = modMainItem.addElement("title");
 				if (module.getTitle() != null && module.getTitle().trim().length() > 0)
 					title.setText(module.getTitle());

@@ -558,11 +558,21 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	{
 	    ResourcePropertiesEdit resProperties = getContentservice().newResourceProperties();
 
+		 try
+		 {
+		   secResourceName = URLDecoder.decode(secResourceName,"UTF-8");
+		 }
+		 catch(Exception e)
+		 {
+		   logger.debug("error with decode in fillInSectionResourceProperties");
+	     }
+
 	//  resProperties.addProperty (ResourceProperties.PROP_COPYRIGHT,);
 	//  resourceProperties.addProperty(ResourceProperties.PROP_COPYRIGHT_CHOICE,);
 	    //Glenn said to not set the two properties below
 	  //  resProperties.addProperty(ResourceProperties.PROP_COPYRIGHT_ALERT,Boolean.TRUE.toString());
 		//resProperties.addProperty(ResourceProperties.PROP_IS_COLLECTION,Boolean.FALSE.toString());
+
 		resProperties.addProperty(ResourceProperties.PROP_DISPLAY_NAME,	secResourceName);
 		resProperties.addProperty(ResourceProperties.PROP_DESCRIPTION, secResourceDescription);
 		resProperties.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
@@ -581,6 +591,14 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	{
 	    ResourcePropertiesEdit resProperties = getContentservice().newResourceProperties();
 
+	 	try
+		 {
+		   name = URLDecoder.decode(name,"UTF-8");
+		 }
+		 catch(Exception e)
+		 {
+		   logger.debug("error with decode in fillInSectionResourceProperties");
+	     }
 		//Glenn said to not set the two properties below
 		//resProperties.addProperty(ResourceProperties.PROP_COPYRIGHT_ALERT,Boolean.TRUE.toString());
 		//resProperties.addProperty(ResourceProperties.PROP_IS_COLLECTION,Boolean.FALSE.toString());
@@ -635,8 +653,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 
 		 //Storing the original filename so it can be used in the display name
 		 String dispName = name;
-		 name = Validator.escapeResourceName(name);
-
+		// to preserve the name
+		name = URLDecoder.decode(name,"UTF-8");
 		 String courseId = getCourseId(addCollId);
 		 if (logger.isDebugEnabled()) logger.debug("IN addResourceItem "+name+" addCollId "+addCollId);
 		// need to add notify logic here and set the arg6 accordingly.
@@ -659,6 +677,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 					name = name.substring(0, name.length() - extraChars);
 				}
 				resource = getContentservice().addResource(name, addCollId, MAXIMUM_ATTEMPTS_FOR_UNIQUENESS, res_mime_type, secContentData, res, 0);
+				logger.debug("resource id on adding" + resource.getId());
 				// check if its duplicate file and edit the resource name if it is
 				String checkDup = resource.getUrl().substring(resource.getUrl().lastIndexOf("/") + 1);
 				ContentResourceEdit edit = null;
@@ -675,7 +694,6 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
 						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 						getContentservice().commitResource(edit);
-						logger.debug("after saving chService  " + edit.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
 						edit = null;
 					}
 				}

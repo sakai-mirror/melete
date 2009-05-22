@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -24,6 +24,7 @@
 package org.etudes.component.app.melete;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,7 @@ import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.util.Xml;
 import org.etudes.simpleti.SakaiSimpleLTI;
+import org.sakaiproject.thread_local.api.ThreadLocalManager;
 
 /*
  * MeleteSecurityService is the implementation of MeleteSecurityService
@@ -98,9 +100,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 
 	/** Dependency: a logger component. */
 	private Log logger = LogFactory.getLog(MeleteSecurityServiceImpl.class);
-
-
-
+	private ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
 /**
 	 * Setup a security advisor.
 	 */
@@ -585,6 +585,11 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		try
 		{
 			logger.debug("transer copy Melete items by transferCopyEntities");
+			 ArrayList importResources =  new ArrayList<String>();
+			 ArrayList secondaryHTMLResources =  new ArrayList<String>();
+			 threadLocalManager.set("MELETE_importResources" , importResources);
+			 threadLocalManager.set("MELETE_secondaryHTMLResources" , secondaryHTMLResources);
+			 
 			getMeleteImportService().copyModules(fromContext, toContext);
 			logger.debug("importResources: End importing melete data");
 		}
