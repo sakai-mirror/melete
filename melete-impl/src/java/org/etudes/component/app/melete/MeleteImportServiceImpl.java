@@ -40,6 +40,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.net.URLDecoder;
 
 import org.dom4j.Attribute;
 import org.dom4j.Document;
@@ -1438,7 +1439,14 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 									melContentData = cr.getContent();
 									res_mime_type = cr.getContentType();
 						 		  }
-
+								try
+								{
+									String checkResourceId = "/private/meleteDocs/"+courseId+"/uploads/"+fileResourceName;
+		 							getMeleteCHService().checkResource(checkResourceId);
+		 							newResourceId = checkResourceId;
+								}
+								catch(IdUnusedException iue)
+								{
 								// logger.debug("first add resource" + fileResourceName);
 								ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,fileResourceName,melResourceDescription);
 								//Add to the list
@@ -1447,7 +1455,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 								MeleteResource firstResource = new MeleteResource();
 								firstResource.setResourceId(newResourceId);
 				            	sectionDB.insertResource(firstResource);
-
+								}
 								// this section points to the link location of added resource item
 								String secondResName = getMeleteCHService().getResourceUrl(newResourceId);
 						 		melContentData =secondResName.getBytes();
@@ -1654,9 +1662,14 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 									String filename = imgActualPath.substring( imgActualPath.lastIndexOf('/') + 1);
 									try
 									{
+										String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+filename;
+										getMeleteCHService().checkResource(checkResourceId);
+									}catch (IdUnusedException ex)
+									{
 										addResource(filename, embedContentData.getBytes(), courseId);
-									}catch(Exception e){
-										logger.debug("error adding a secondary html resource on import");
+									}
+									catch(Exception e){
+										logger.debug("error adding a secondary html resource on ims import");
 									}
 								}
 							} else
@@ -1937,6 +1950,10 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				Set meleteSkippedFiles = new HashSet<String>(importResources);
 				String meleteimportstatus = meleteSkippedFiles.toString();
 				meleteimportstatus = meleteimportstatus.substring(1,meleteimportstatus.length()-1);
+				try
+				{
+					meleteimportstatus = URLDecoder.decode(meleteimportstatus,"UTF-8");
+				} catch (Exception e){ 	}
 				logger.debug("meleteimportstatus:" + meleteimportstatus);
 				meleteimportstatus="<li>"+rl.getString("import_site_resourceException") + meleteimportstatus +"</li>";
 				if(importstatus == null) new StringBuffer();
