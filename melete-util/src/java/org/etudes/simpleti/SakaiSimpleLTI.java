@@ -24,6 +24,8 @@ package org.etudes.simpleti;
 import java.util.Map;
 import java.util.List;
 import java.util.Properties;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.net.URL;
 import java.net.URLEncoder;
@@ -46,61 +48,38 @@ import org.sakaiproject.entity.api.Reference;
  */
 public class SakaiSimpleLTI {
 
+    private static Log M_log = LogFactory.getLog(SakaiSimpleLTI.class);
+
     public static final boolean verbosePrint = false;
 
     public static void dPrint(String str)
     {
-        if ( verbosePrint ) System.out.println(str);
+        if ( verbosePrint ) M_log.warn(str);
     }
 
-    public static Properties doLaunch(String descriptor, String siteId, String resourceId)
+    public static Properties getLaunchProperties(String descriptor, String siteId, String resourceId)
     {
-        Properties newMap = new Properties();
+        Properties newMap = SimpleLTIUtil.parseDescriptor(descriptor);
         newMap.setProperty("action", "launchresolve");
-        // Map<String, String> tm = XMLMap.getMap(descriptor);
-        Map<String,Object> tm = XMLMap.getFullMap(descriptor);
-
-	dPrint("tm="+tm);
-        if ( tm == null ) 
-	{
-		// TODO: Need to send back an error code
-		return null;
-	}
+        if ( newMap == null ) return null;
 
 	// We demand an endpoint
-        String lti2EndPoint = XMLMap.getString(tm,"/toolInstance/launchurl");
+        String lti2EndPoint = newMap.getProperty("launchurl");
         if ( lti2EndPoint == null || lti2EndPoint.trim().length() < 1 )
 	{
 		// TODO: Need to send back an error code
 		return null;
 	}
 
-        String lti2ToolId = XMLMap.getString(tm,"/toolInstance/tool_id");
-        String lti2LaunchTypes = XMLMap.getString(tm,"/toolInstance/accept_targets");
+        String lti2ToolId = newMap.getProperty("tool_id");
+        String lti2LaunchTypes = newMap.getProperty("accept_targets");
 
-        String lti2Password = null;
-        String lti2Resource = null;
-        String lti2Widget = null;
-        String lti2Height = null;
-        String lti2Width = null;
-        String lti2FrameHeight = null;
-
-	// Loop throught the tool settings
-	/*  <setting key="secret">secret</setting> */
-        List<Map<String,Object>> theList = XMLMap.getList(tm, "/toolInstance/tool-settings/setting");
-        for ( Map<String,Object> setting : theList) {
-		// dPrint("Setting="+setting);
-		String key = XMLMap.getString(setting,"/!key"); // Get the key atribute
-		String value = XMLMap.getString(setting,"/"); // Get the value
-		// dPrint("key="+key+" val="+value);
-		if ( "secret".equals(key) ) lti2Password = value;
-		if ( "resource".equals(key) ) lti2Resource = value;
-		if ( "height".equals(key) ) lti2Height = value;
-		if ( "width".equals(key) ) lti2Width = value;
-		/*  <setting key="widget">on</setting> */
-		if ( "widget".equals(key) ) lti2Widget = value;
-		if ( "frameheight".equals(key) ) lti2FrameHeight = value;
-	}
+        String lti2Password = newMap.getProperty("secret");
+        String lti2Resource = newMap.getProperty("resource");
+        String lti2Widget = newMap.getProperty("widget");
+        String lti2Height = newMap.getProperty("height");
+        String lti2Width = newMap.getProperty("width");
+        String lti2FrameHeight = newMap.getProperty("frameheight");
 
 	// When in doubt be very secretive...
 	if ( lti2Password == null ) lti2Password = "secret";
@@ -157,26 +136,19 @@ public class SakaiSimpleLTI {
                 newMap.setProperty("user_locale","en_US"); // TODO: Really get this
         }
 
-
-        String theRole = "Student";
-        if ( SecurityService.isSuperUser() )
-        {
-                theRole = "Administrator";
-        }
-        else if ( SiteService.allowUpdateSite(siteId) )
-        {
-                theRole = "Instructor";
-        }
-        newMap.setProperty("user_role",theRole);
-
         Site site = null;
         try {
                 site = SiteService.getSite(siteId);
         } catch (Exception e) {
                 dPrint("Could retrieve siteId="+siteId);
         }
-
 	dPrint("site="+site);
+
+        String theRole = "Student";
+        if ( SecurityService.isSuperUser() )
+        {
+                theRole = "Administrator";
+        }
 
         if ( site != null ) {
                 newMap.setProperty("course_id",site.getId());
@@ -190,6 +162,10 @@ public class SakaiSimpleLTI {
 		{
                 	newMap.setProperty("course_name",desc);
 		}
+        	if ( SiteService.allowUpdateSite(site.getId()) )
+        	{
+                	theRole = "Instructor";
+        	}
                 String courseRoster = getExternalRealmId(site.getId());
                 if ( courseRoster != null )
                 {
@@ -198,22 +174,49 @@ public class SakaiSimpleLTI {
                 // Hack for now - someday we will look deeper to find the precise user roster
                 if ( courseRoster != null ) newMap.setProperty("user_roster",courseRoster);
         }
+        newMap.setProperty("user_role",theRole);
 
         if( lti2Resource != null && lti2Resource.length() > 0 ) {
                 newMap.setProperty("launch_resource_url",lti2Resource);
         }
-/*
-        newMap.put("org_title", ServerConfigurationService.getString("simplelti.org_title",null));
-        newMap.put("org_name", ServerConfigurationService.getString("simplelti.org_name",null));
-        newMap.put("org_url", ServerConfigurationService.getString("simplelti.org_url",null));
-*/
-	dPrint(" Calling doLaunch newMap = "+newMap);
-	// Do the non-Sakai bits of Launch
-	Properties pro = SimpleLTIUtil.doLaunch(lti2EndPoint, newMap);
-	dPrint("pro="+pro);
 
-	// Add the HTML text to the properties
-	SimpleLTIUtil.generateHtmlText(pro, newMap, lti2FrameHeight);
+        newMap.setProperty("launchurl",lti2EndPoint);
+        if ( lti2FrameHeight != null ) newMap.setProperty("frameheight",lti2FrameHeight);
+	dPrint("getLaunchProperties returning newMap = "+newMap);
+        return newMap;
+    }
+
+    /* Do the Launch.  At this point, we are in a page where we want to embed the tool.
+       This returns some HTML text that can be dropped into a web page.  If possible,
+       this page will return a form with some HTML and Javascript to automatically 
+       submit the form.  Alternatively is this is an iframe response, the iframe text
+       will be returned.  If this is a widget response, the widget text will be returned.
+       
+       The non-POST approach is effectively deprecated because of the upcoming transition
+       to BasicLTI and full LTI 2.0 will only support the POST launch.
+     */
+    public static Properties doLaunch(String descriptor, String siteId, String resourceId)
+    {
+        Properties newMap = getLaunchProperties(descriptor, siteId, resourceId);
+        if ( newMap == null ) {
+            M_log.warn("SakaiSimpleLTI.doLaunch, invalid descriptor");
+            return null;
+        }
+        Properties pro = new Properties();
+        String lti2EndPoint = newMap.getProperty("launchurl");
+        if ( SimpleLTIUtil.isPostLaunch(descriptor) ) {
+             String htmltext = SimpleLTIUtil.postLaunchHTML(newMap);
+             pro.setProperty("htmltext",htmltext);
+             pro.setProperty("status","success");
+             pro.setProperty("type","post");
+             pro.setProperty("launchurl",lti2EndPoint);
+        } else {
+            String lti2FrameHeight = newMap.getProperty("frameheight");
+	    // Make the web-service call and then generate the HTML
+            pro = SimpleLTIUtil.doLaunch(lti2EndPoint, newMap);
+            // Add the HTML text to the properties
+            SimpleLTIUtil.generateHtmlText(pro, newMap, lti2FrameHeight);
+        }
 
 	return pro;
     }

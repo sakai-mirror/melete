@@ -326,20 +326,39 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 							{
 								byte [] bytes = content.getContent();
 								String str = new String(bytes);
-								Properties props = SakaiSimpleLTI.doLaunch(str, ref.getContext(), ref.getId());
-								String htmltext = props.getProperty("htmltext");
-								if ( htmltext != null )
+								Properties props = null;
+								// We must remove our advisor while we do the launch and then put it back
+								// Otherwise the launch will give the user too much power
+								try
 								{
-									res.setContentType("text/html");
-									ServletOutputStream out = res.getOutputStream();
-									out.println(htmltext);
-									handled = true;
+									popAdvisor();
+									props = SakaiSimpleLTI.doLaunch(str, ref.getContext(), ref.getId());
+								}
+								catch (Exception e)
+								{
+									logger.info("Exception e "+e.getMessage());
+									e.printStackTrace();
+								}
+								finally 
+								{
+									pushAdvisor();
+								}
+								if ( props != null ) {
+									String htmltext = props.getProperty("htmltext");
+									if ( htmltext != null )
+									{
+										res.setContentType("text/html");
+										ServletOutputStream out = res.getOutputStream();
+										out.println(htmltext);
+										handled = true;
+									}
 								}
 							}
 						}
 						catch (Exception e)
 						{
-							// System.out.println("Exception e "+e.getMessage());
+							logger.info("Exception e "+e.getMessage());
+							e.printStackTrace();
 						}
 					}
 					if ( !handled ) {
