@@ -164,7 +164,7 @@ return newWindow;
             </h:column>
           </h:dataTable>
           <h:outputText id="emp_space6" value="  " styleClass="MorePaddingClass" />
-         <h:commandLink id="whatsNext" action="#{listModulesPage.goWhatsNext}" immediate="true" rendered="#{(vmbean.whatsNext != listModulesPage.isNull)}">
+         <h:commandLink id="whatsNext" action="#{listModulesPage.goWhatsNext}" immediate="true" rendered="#{((vmbean.whatsNext != listModulesPage.isNull)&&(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}">
 		  <h:outputText  id="whatsNextMsg" value="#{msgs.list_modules_stud_next_steps}"></h:outputText>
 		    <f:param name="modidx2" value="#{listModulesPage.modTable.rowIndex}" />
 		    <f:param name="modseqno" value="#{vmbean.seqNo}" />
