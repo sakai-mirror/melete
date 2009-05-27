@@ -321,8 +321,6 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 						ContentHostingService chService = (ContentHostingService) service;
 						try
 						{
-							chService.checkResource(contentHostingRef.getId());
-							
 							ContentResource content = chService.getResource(contentHostingRef.getId());
 							if ( MIME_TYPE_LTI.equals(content.getContentType()) )
 							{
@@ -338,7 +336,8 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 								}
 								catch (Exception e)
 								{
-									 e.printStackTrace();
+									logger.info("Exception e "+e.getMessage());
+									e.printStackTrace();
 								}
 								finally 
 								{
@@ -358,6 +357,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 						}
 						catch (Exception e)
 						{
+							logger.info("Exception e "+e.getMessage());
 							e.printStackTrace();
 						}
 					}

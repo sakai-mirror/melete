@@ -24,6 +24,8 @@ package org.etudes.simpleti;
 import java.util.Map;
 import java.util.List;
 import java.util.Properties;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.net.URL;
 import java.net.URLEncoder;
@@ -46,11 +48,13 @@ import org.sakaiproject.entity.api.Reference;
  */
 public class SakaiSimpleLTI {
 
+    private static Log M_log = LogFactory.getLog(SakaiSimpleLTI.class);
+
     public static final boolean verbosePrint = false;
 
     public static void dPrint(String str)
     {
-        if ( verbosePrint ) System.out.println(str);
+        if ( verbosePrint ) M_log.warn(str);
     }
 
     public static Properties getLaunchProperties(String descriptor, String siteId, String resourceId)
@@ -195,7 +199,7 @@ public class SakaiSimpleLTI {
     {
         Properties newMap = getLaunchProperties(descriptor, siteId, resourceId);
         if ( newMap == null ) {
-            System.out.println("SakaiSimpleLTI.doLaunch, invalid descriptor");
+            M_log.warn("SakaiSimpleLTI.doLaunch, invalid descriptor");
             return null;
         }
         Properties pro = new Properties();

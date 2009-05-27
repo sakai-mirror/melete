@@ -40,6 +40,7 @@ import java.net.HttpURLConnection;
 
 import java.util.Map;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.imsglobal.simplelti.XMLMap;
 
@@ -62,36 +63,16 @@ import java.io.ByteArrayOutputStream;
  */
 public class SimpleLTIUtil {
 
-/*
-   	public static void main(String[] av)
-   	{
-		String testDates[] = {
-			"2008-06-17T22:29:17Z",
-			"2008-06-17T18:29:17-0400",
-			"2008-06-17T22:29:17" }; // Will assume GMT
-	
-		Date first = parseISO8601(testDates[0]);
-		System.out.println(testDates[0]+" -> "+first);
-        	for(int i=1; i<testDates.length; i++) 
-		{
-			Date next = parseISO8601(testDates[i]);
-			if ( next == null )
-			{
-				System.out.println(testDates[i]+" ***** Parse failed");
-				continue;
-			}
-			System.out.println(testDates[i]+" -> "+next);
-			if ( first.getTime() != next.getTime() )
-			{
-				System.out.println("Mismatch first="+first+" test="+testDates[i]+" new="+next);
-			}
-		}
-   	}
-*/
+    // We use the built-in Java logger because this code needs to be very generic
+    private static Logger M_log = Logger.getLogger(SimpleLTIUtil.class.toString());
 
     /** To turn on really verbose debugging */
     private static boolean verbosePrint = false;
 
+    public static void setVerbosePrint(boolean value) 
+    {
+	verbosePrint = value;
+    }
     // Simple Debug Print Mechanism
     public static void dPrint(String str)
     {
@@ -308,7 +289,7 @@ public class SimpleLTIUtil {
     */
     public static Properties doLaunch(String lti2EndPoint, Properties newMap)
     {
-        System.out.println("Warning: SimpleLTIUtil using deprecated non-POST launch to -" + lti2EndPoint);
+        M_log.warning("Warning: SimpleLTIUtil using deprecated non-POST launch to -" + lti2EndPoint);
         Properties retProp = new Properties();
 	retProp.setProperty("status","fail");
 
@@ -409,7 +390,7 @@ public class SimpleLTIUtil {
                 if ( postResponse.indexOf("<?xml") != 0 ) {
                    int pos = postResponse.indexOf("<launchResponse");
                    if ( pos > 0 ) {
-                      System.out.println("Warning: Dropping first "+pos+" non-XML characters of response to find <launchResponse");
+                      M_log.warning("Warning: Dropping first "+pos+" non-XML characters of response to find <launchResponse");
                       postResponse = postResponse.substring(pos);
 		   }
                 }
@@ -420,7 +401,7 @@ public class SimpleLTIUtil {
                 if ( errorOut.length() > 500 ) {
                        errorOut = postResponse.substring(0,500);
                 }
-                System.out.println("Error Parsing Web Service XML:\n"+errorOut+"\n");
+                M_log.warning("Error Parsing Web Service XML:\n"+errorOut+"\n");
                 setErrorMessage(retProp, "Error Parsing Web Service XML");
                 return retProp;
         }
@@ -438,7 +419,7 @@ public class SimpleLTIUtil {
 
 /* Remove until we have jTidy 0.8 or later in the repository
                 if ( launchWidget != null && launchWidget.length() > 0 ) {
-			System.out.println("Pre Tidy:\n"+launchWidget);
+			M_log.warning("Pre Tidy:\n"+launchWidget);
 			Tidy tidy = new Tidy();
 			tidy.setIndentContent(true);
 			tidy.setSmartIndent(true);
@@ -450,13 +431,13 @@ public class SimpleLTIUtil {
 			OutputStream os = new ByteArrayOutputStream();
 			tidy.parse(is,os);
 			String tidyOutput = os.toString();
-			System.out.println("Post Tidy:\n"+tidyOutput);
+			M_log.warning("Post Tidy:\n"+tidyOutput);
 			if ( tidyOutput != null && tidyOutput.length() > 0 ) launchWidget = os.toString();
 		}
 */
 	}
 
-        dPrint("XXX launchUrl = "+launchUrl);
+        dPrint("launchUrl = "+launchUrl);
         dPrint("launchWidget = "+launchWidget);
 
 	if ( launchUrl == null && launchWidget == null ) 
@@ -480,9 +461,6 @@ public class SimpleLTIUtil {
     public static void generateHtmlText(Properties retProp, Properties newMap,
                                         String lti2FrameHeight)
     {
-
-        // launchurl=http://www.youtube.com/v/f90ysF9BenI, status=success, type=iFrame
-
         String status = retProp.getProperty("status");
         String launchurl = retProp.getProperty("launchurl");
         if ( ! "success".equalsIgnoreCase(status) )
@@ -521,7 +499,7 @@ public class SimpleLTIUtil {
 		// likely dropped into a background document, which when auto
 		// submitted will take over the whole screen.  At least the 
 		// user will see the content eventually.
-                System.out.println("Warning: SimpleLTIUtil web service response using POST -" + launchurl);
+                M_log.warning("Warning: SimpleLTIUtil web service response using POST -" + launchurl);
 		htmltext = postLaunchHTML(retProp);
                 retProp.setProperty("htmltext",htmltext);
         }
@@ -553,7 +531,26 @@ public class SimpleLTIUtil {
     // Create the HTML to render a POST form and then automatically submit it
     public static String postLaunchHTML(Properties newMap) {
 	String launchurl = newMap.getProperty("launchurl");
-        if ( launchurl == null ) return null;
+        if ( launchurl == null ) {
+                M_log.warning("SimpleLTIUtil could not find launchurl");
+                M_log.warning(newMap.toString());
+		return null;
+	}
+        // Check to see if we already have a nonce
+	String nonce = newMap.getProperty("sec_nonce");
+        if ( nonce == null ) {
+		String secret = newMap.getProperty("_secret");
+		String org_secret = newMap.getProperty("_org_secret");
+		String org_id = newMap.getProperty("org_id");
+		addNonce(newMap, secret, org_id, org_secret);
+	}
+	// Check for required parameters - Non-fatal
+	String course_id = newMap.getProperty("course_id");
+	String user_id = newMap.getProperty("user_id");
+	if ( course_id == null ||  user_id == null ) {
+                M_log.warning("SimpleLTIUtil requires both course_id and user_id");
+                M_log.warning(newMap.toString());
+	}
         StringBuffer text = new StringBuffer();
         text.append("<form action=\""+launchurl+"\" name=\"ltiLaunchForm\" method=\"post\">\n" );
         for(Object okey : newMap.keySet() )
@@ -607,7 +604,7 @@ public class SimpleLTIUtil {
                 tm = XMLMap.getFullMap(descriptor);
         } 
         catch (Exception e) {
-                System.out.println("SimpleLTIUtil exception parsing SimpleLTI descriptor"+e.getMessage());
+                M_log.warning("SimpleLTIUtil exception parsing SimpleLTI descriptor"+e.getMessage());
 		e.printStackTrace();
 		return null;
         }
