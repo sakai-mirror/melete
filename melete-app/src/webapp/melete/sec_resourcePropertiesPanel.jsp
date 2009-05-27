@@ -46,24 +46,17 @@
 							<h:inputTextarea id="res_desc" cols="45" rows="3" value="#{addSectionPage.secResourceDescription}" styleClass="formtext"    rendered="#{addSectionPage.shouldRenderLink || addSectionPage.shouldRenderUpload || addSectionPage.shouldRenderResources}" />
 					</h:column>
 						<!-- copyright license code -->
-			<h:column>
-						  <h:outputText value="#{msgs.resources_proper_pan_cstatus}" rendered="#{!addSectionPage.shouldRenderNotype}"/>	 
-			</h:column>	
-			<h:column>						
-						 <h:selectOneMenu id="licenseCodes" value="#{addSectionPage.m_license.licenseCodes}" valueChangeListener="#{addSectionPage.m_license.hideLicense}" onchange="transferEditordata(); this.form.submit();" rendered="#{!addSectionPage.shouldRenderNotype}">
-												 <f:selectItems value="#{addSectionPage.m_license.licenseTypes}" />							
-							 </h:selectOneMenu>
-							 <h:outputText value="          " styleClass="ExtraPaddingClass" />
-							 <h:outputLink value="licenses_explained.htm" rendered="#{!addSectionPage.shouldRenderNotype}" target="_blank">  <h:graphicImage value="images/help.gif" alt="Learn More about The License Options" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
-			</h:column>	
+			
 		</h:panelGrid>
 		
-		<h:panelGrid id="propertiesPanel3" columns="1" width="100%">
+		<f:subview id="LicenseForm" rendered="#{!addSectionPage.shouldRenderNotype}">
+		<h:panelGrid id="licproppanel" columns="1" width="100%">
 					<h:column>
-						  <f:subview id="CCLicenseForm" rendered="#{addSectionPage.m_license.shouldRenderCC || addSectionPage.m_license.shouldRenderCopyright || addSectionPage.m_license.shouldRenderPublicDomain || addSectionPage.m_license.shouldRenderFairUse}">	
-												<jsp:include page="addsection_cclicenseform.jsp"/> 
-											</f:subview>
+						  						<jsp:include page="licenseform.jsp"/>
+						  						
+											
 					</h:column>	
 		</h:panelGrid>
+		</f:subview>
 		
 			        <!-- end license code -->		

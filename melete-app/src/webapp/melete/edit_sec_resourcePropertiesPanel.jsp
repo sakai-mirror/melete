@@ -47,25 +47,16 @@
 			rendered="#{!editSectionPage.shouldRenderEditor}"  />																			
 		</h:column>
 						<!-- copyright license code -->
-			<h:column>
-						  <h:outputText value="#{msgs.editsec_resources_proper_pan_cstatus}"/>	 
-			</h:column>	
-			<h:column>						
-						 <h:selectOneMenu id="licenseCodes" value="#{editSectionPage.m_license.licenseCodes}" valueChangeListener="#{editSectionPage.m_license.hideLicense}" onchange="transferEditordata();this.form.submit();" >
-												 <f:selectItems value="#{editSectionPage.m_license.licenseTypes}" />							
-							 </h:selectOneMenu>	 		
-							 	 <h:outputText value="          " styleClass="ExtraPaddingClass" />
-							 <h:outputLink value="licenses_explained.htm" rendered="#{!editSectionPage.shouldRenderNotype}" target="_blank">  <h:graphicImage value="images/help.gif" alt="#{msgs.editsec_resources_proper_pan_learn}" width="16" height="16" /></h:outputLink>		
-			</h:column>	
-		</h:panelGrid>
+				</h:panelGrid>
 
 
-<h:panelGrid id="propertiesPanel3" columns="1" width="100%">
+    <f:subview id="EditLicenseForm" rendered="#{!editSectionPage.shouldRenderNotype}">
+		<h:panelGrid id="licproppanel" columns="1" width="100%">
 					<h:column>
-						  <f:subview id="CCLicenseForm" rendered="#{editSectionPage.m_license.shouldRenderCC || editSectionPage.m_license.shouldRenderCopyright ||  editSectionPage.m_license.shouldRenderPublicDomain || editSectionPage.m_license.shouldRenderFairUse}">	
-												<jsp:include page="editsection_cclicenseform.jsp"/> 
-											</f:subview>
+						  						<jsp:include page="licenseform.jsp"/>  
+											
 					</h:column>	
 		</h:panelGrid>
+		</f:subview>
 		
 			        <!-- end license code -->		

@@ -126,12 +126,16 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"add_section_modality_reqd",errMsg));
 			return "failure";
 	     }
+	     ValueBinding binding = Util.getBinding("#{licensePage}");
+
+	     LicensePage lPage = (LicensePage)binding.getValue(context);
+	     lPage.setFormName(getFormName());
 	     //validation 2: if content is provided then check for copyright license
 	     try
 		   {
-	          if(!section.getContentType().equals("notype") && getM_license().getLicenseCodes().equals(SectionResourceLicenseSelector.Copyright_CODE))
+	          if(!section.getContentType().equals("notype") && lPage.getLicenseCodes().equals(lPage.Copyright_CODE))
 	          {
-	        	getM_license().checkForRequiredFields();
+	        	lPage.checkForRequiredFields();
 	          }
 		   }
 		catch(UserErrorException uex)
@@ -163,7 +167,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 //			Step2: if section has content then only create section resource and resource
 			if(!section.getContentType().equals("notype"))
 			{
-				meleteResource = getM_license().processLicenseInformation(getMeleteResource());
+				meleteResource = lPage.processLicenseInformation(getMeleteResource());
 
 			//	step 2.1:existing resource is selected for section content
 				if(!section.getContentType().equals("typeEditor") && selResourceIdFromList != null)
@@ -193,7 +197,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 				{
 					sectionService.updateResource(meleteResource);
 					sectionService.insertSectionResource(section, meleteResource);
-				}	
+				}
 			}
 
 		}
@@ -342,8 +346,8 @@ public class AddSectionPage extends SectionPage implements Serializable{
             	   String addCollectionId = getMeleteCHService().getUploadCollectionId();
             	   String uploadHomeDir = ctx.getExternalContext().getInitParameter("uploadDir");
             	   String newResourceId = addResourceToMeleteCollection(uploadHomeDir,addCollectionId);
-				   meleteResource.setResourceId(newResourceId);
-				   secResourceName = getDisplayName(newResourceId);
+				   getMeleteResource().setResourceId(newResourceId);
+            	   secResourceName = getDisplayName(newResourceId);
 				   logger.debug("sec name after reading from display name prop" + secResourceName);
             	}
 
@@ -465,7 +469,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 				secResourceName = newURLTitle;
 				String addCollectionId = getMeleteCHService().getUploadCollectionId();
 				String newResourceId = addResourceToMeleteCollection(null, addCollectionId);
-				meleteResource.setResourceId(newResourceId);
+				getMeleteResource().setResourceId(newResourceId);
 				currLinkUrl = getLinkUrl();
 				secResourceName = getDisplayName(newResourceId);
 			}
@@ -565,7 +569,10 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			    	if(existResource != null)
 			    		{
 						meleteResource = existResource;
-			    		getM_license().setInitialValues(formName, sectionService, existResource);
+						ValueBinding binding = Util.getBinding("#{licensePage}");
+
+						LicensePage lPage = (LicensePage)binding.getValue(ctx);
+						lPage.setInitialValues(formName, existResource);
 
 					// render selected file name
 			    		selectedResourceName = secResourceName;

@@ -132,7 +132,6 @@ public abstract class SectionPage implements Serializable {
 
     // rashmi - 3.0 added variables
 	 protected String access;
-	  private SectionResourceLicenseSelector m_license;
 	  protected SectionResourceService secResource;
 	  protected List<DisplaySecResources> currSiteResourcesList;
 	  private List<DisplaySecResources> displayResourcesList;
@@ -165,8 +164,7 @@ public abstract class SectionPage implements Serializable {
 
  	protected MeleteResource selectedResource;
 
- 	protected SectionResourceLicenseSelector m_selected_license;
-
+ 	
  	protected String oldType;
 
     public SectionPage()
@@ -503,6 +501,8 @@ public abstract class SectionPage implements Serializable {
      */
     public void showHideContent(ValueChangeEvent event)throws AbortProcessingException
     {
+    	FacesContext context = FacesContext.getCurrentInstance();
+
             UIInput contentTypeRadio = (UIInput)event.getComponent();
 
             shouldRenderEditor = contentTypeRadio.getValue().equals("typeEditor");
@@ -539,8 +539,7 @@ public abstract class SectionPage implements Serializable {
 
               if(shouldRenderEditor)
 	            {
-            	  FacesContext context = FacesContext.getCurrentInstance();
-   	    		  ValueBinding binding = Util.getBinding("#{authorPreferences}");
+            	  ValueBinding binding = Util.getBinding("#{authorPreferences}");
    	    		  AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
 	               String usereditor = preferencePage.getUserEditor();
 	    		   this.contentEditor = new String("Compose content here");
@@ -564,6 +563,27 @@ public abstract class SectionPage implements Serializable {
                 getCurrSiteResourcesList();
               contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm").setRendered(shouldRenderResources);
             }
+            ValueBinding binding = Util.getBinding("#{licensePage}");
+
+            LicensePage lPage = (LicensePage)binding.getValue(context);
+            lPage.setFormName(this.formName);
+
+            if(lPage.getLicenseCodes() == null)
+            {
+                    if (getMeleteResource().getResourceId() != null)
+                    {
+                    	lPage.setInitialValues(this.formName, getMeleteResource());
+                    }
+                    else
+                    {
+                    	ValueBinding binding2 = Util.getBinding("#{authorPreferences}");
+         	    		AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding2.getValue(context);
+         	    		MeleteUserPreference mup = preferencePage.getMup();
+         	    		lPage.setInitialValues(this.formName, mup);
+                    }
+
+            }
+
     }
 
     /**
@@ -796,7 +816,6 @@ public abstract class SectionPage implements Serializable {
  	hiddenUpload=null;
  	checkUploadChange=null;
  	uploadFileName = null;
-    m_license = null;
     secResource = null;
     secResourceName = null;
     secResourceDescription=null;
@@ -804,6 +823,7 @@ public abstract class SectionPage implements Serializable {
     currSiteResourcesList = null;
     selResourceIdFromList = null;
     meleteResource = null;
+    setLicenseCodes(null);
     linkUrl = null;
     ltiDescriptor = null;
     FCK_CollId = null;
@@ -847,7 +867,7 @@ public abstract class SectionPage implements Serializable {
 		secResourceName = null;
 		secResourceDescription = null;
 		uploadFileName = null;
-		setM_license(null);
+		setLicenseCodes(null);
 	}
 
     /**
@@ -914,7 +934,7 @@ public abstract class SectionPage implements Serializable {
     /**
      * @return Returns the m_license.
      */
-    public SectionResourceLicenseSelector getM_license() {
+   /* public SectionResourceLicenseSelector getM_license() {
             if(m_license == null)
             {
                     m_license = new SectionResourceLicenseSelector();
@@ -933,13 +953,22 @@ public abstract class SectionPage implements Serializable {
 
             }
             return m_license;
-    }
+    }*/
 
     /**
      * @param m_license The m_license to set.
      */
-    public void setM_license(SectionResourceLicenseSelector m_license) {
+   /* public void setM_license(SectionResourceLicenseSelector m_license) {
             this.m_license = m_license;
+    }*/
+
+    public void setLicenseCodes(String licenseCodes)
+    {
+    	FacesContext context = FacesContext.getCurrentInstance();
+    	ValueBinding binding = Util.getBinding("#{licensePage}");
+  		LicensePage lPage = (LicensePage)binding.getValue(context);
+  		lPage.setFormName(formName);
+		lPage.setLicenseCodes(licenseCodes);
     }
 
 	/**
@@ -1313,7 +1342,9 @@ public abstract class SectionPage implements Serializable {
 		logger.debug("check meleteResource" + meleteResource + secResource);
 
 		if(formName.equals("AddSectionForm") && meleteResource == null)
-            this.meleteResource = new MeleteResource();
+		{
+		    this.meleteResource = new MeleteResource();
+		}
 
        if(formName.equals("EditSectionForm") && meleteResource == null)
        {

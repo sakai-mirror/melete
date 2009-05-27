@@ -32,13 +32,15 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import javax.faces.el.ValueBinding;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.component.app.melete.MeleteSitePreference;
 import org.etudes.component.app.melete.MeleteUserPreference;
 import org.etudes.api.app.melete.MeleteAuthorPrefService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
-import org.etudes.api.app.melete.SectionService;
+
 
 public class AuthorPreferencePage {
   final static String SFERYX = "Sferyx Editor";
@@ -60,8 +62,6 @@ public class AuthorPreferencePage {
   private String materialPrintable="false";
   private String materialAutonumber="false";
   public String formName;
-  private SectionResourceLicenseSelector m_license;
-  protected SectionService sectionService;
 
   /** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(AuthorPreferencePage.class);
@@ -69,15 +69,12 @@ public class AuthorPreferencePage {
   public AuthorPreferencePage()
   {
   }
-  
-  public void resetValues()
-  {
-	  setM_license(null);
-  }
+
+
 
   private void getUserChoice()
   {
-		FacesContext context = FacesContext.getCurrentInstance();
+	  	FacesContext context = FacesContext.getCurrentInstance();
   		Map sessionMap = context.getExternalContext().getSessionMap();
 
   		mup = getMup((String)sessionMap.get("userId"));
@@ -120,11 +117,18 @@ public class AuthorPreferencePage {
 
   		if(msp != null && msp.isAutonumber())
   			materialAutonumber = "true";
-  		
-  		
+
+  		ValueBinding binding =
+  	        Util.getBinding("#{licensePage}");
+  		LicensePage lPage = (LicensePage)binding.getValue(context);
+  		if (lPage.getLicenseCodes() == null)
+  		{
+  	    lPage.setInitialValues(this.formName, mup);
+  		}
+
   	return;
   	}
-  
+
   public MeleteUserPreference getMup(String userId)
   {
 	  MeleteUserPreference mup = (MeleteUserPreference) getAuthorPref().getUserChoice(userId);
@@ -269,7 +273,10 @@ public String setUserChoice()
 			if (showLTI.equals("true"))	mup.setShowLTIChoice(true);
 			else mup.setShowLTIChoice(false);
 
-		mup = m_license.processLicenseInformation(mup);	
+		ValueBinding binding =
+	  	        Util.getBinding("#{licensePage}");
+		LicensePage lPage = (LicensePage)binding.getValue(context);
+		mup = lPage.processLicenseInformation(mup);
 		mup.setUserId((String)sessionMap.get("userId"));
 		authorPref.insertUserChoice(mup);
 
@@ -404,25 +411,7 @@ public boolean getUserLTIChoice(String userId){
 	if(checkMup != null && checkMup.isShowLTIChoice() != null) return checkMup.isShowLTIChoice();
 	else return false;
 }
-/**
- * @return Returns the m_license.
- */
-public SectionResourceLicenseSelector getM_license() {
-        if(m_license == null)
-        {
-                m_license = new SectionResourceLicenseSelector();
-                m_license.setInitialValues("UserPreferenceForm",sectionService,mup);
-        }        
 
-        return m_license;
-}
-
-/**
- * @param m_license The m_license to set.
- */
-public void setM_license(SectionResourceLicenseSelector m_license) {
-        this.m_license = m_license;
-}
 
 public String getFormName(){
     return formName;
@@ -436,17 +425,5 @@ public void setFormName(String formName){
     this.formName = formName;
 }
 
-/**
-* @return Returns the SectionService.
-*/
-public SectionService getSectionService() {
-       return sectionService;
-}
 
-/**
-* @param SectionService The SectionService to set.
-*/
-public void setSectionService(SectionService sectionService) {
-       this.sectionService = sectionService;
-}
 }

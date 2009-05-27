@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008, 2009 Etudes, Inc.
@@ -12,13 +12,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
- * permissions and limitations under the License. 
+ * permissions and limitations under the License.
  *
  **********************************************************************************/
 
@@ -102,13 +102,18 @@ public class NavPage implements Serializable {
  		FacesContext ctx = FacesContext.getCurrentInstance();
 	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
 		role = (String)sessionMap.get("role");
-		if (role.equals("INSTRUCTOR")) 
+		if (role.equals("INSTRUCTOR"))
 		{
-			  ValueBinding binding =
-		       Util.getBinding("#{authorPreferences}");
-		     AuthorPreferencePage apPage = (AuthorPreferencePage)
-		            binding.getValue(ctx);
-		     	 apPage.resetValues();
+			 ValueBinding binding =
+			       Util.getBinding("#{licensePage}");
+			     LicensePage lPage = (LicensePage)
+			            binding.getValue(ctx);
+			     	 lPage.resetValues();
+		      ValueBinding authBinding =
+		    	  Util.getBinding("#{authorPreferences}");
+		      AuthorPreferencePage aPage = (AuthorPreferencePage)
+		      authBinding.getValue(ctx);
+		      aPage.setFormName("UserPreferenceForm");
 			return "author_preference";
 		}
 		else return "student_preference";
@@ -140,7 +145,7 @@ public class NavPage implements Serializable {
 	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
 		role = (String)sessionMap.get("role");
 		if ((role != null)&&(role.length() > 0))
-		{	
+		{
 		  if (role.equals("INSTRUCTOR")) return true;
 		  else return false;
 		}
