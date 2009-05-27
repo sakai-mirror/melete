@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -36,7 +36,7 @@
 </h:panelGrid>
 
 <!-- navigation with showing 15 recs --> 
-<h:panelGrid id="selresNavigationPanel" columns="2"  width="auto" border="0" columnClasses="TitleWid4,ActionWid2" rendered="#{addSectionPage.expandAllFlag && addSectionPage.listNav.displayNav}" >
+<h:panelGrid id="selresNavigationPanel" columns="2"  width="100%" border="0" columnClasses="TitleWid4,ActionWid2" rendered="#{addSectionPage.expandAllFlag && addSectionPage.listNav.displayNav}" >
 <h:column/>
 <h:column>
  <h:outputText id="nav_spaces_left1" value="" styleClass="ExtraPaddingClass" />
@@ -50,8 +50,10 @@
 						 <h:graphicImage id="leftImg" value="images/nav_left.jpg" alt="#{msgs.list_section_resources_previous2}" styleClass="ModCheckClass" style="border:0" />
 		   </h:commandLink>		 
 		   	 <h:outputText id="nav_spaces_left" value="" styleClass="ExtraPaddingClass" />
-		  <h:selectOneMenu id="chunkSize">
-								<f:selectItem itemValue="15" itemLabel="#{msgs.list_section_resources_show15}"/>	
+		  <h:selectOneMenu id="chunkSize"  valueChangeListener="#{addSectionPage.listNav.changeChunkSize}" onchange="this.form.submit();">
+								<f:selectItem itemValue="30" itemLabel="#{msgs.list_section_resources_show30}"/>	
+								<f:selectItem itemValue="100" itemLabel="#{msgs.list_section_resources_show100}"/>	
+								<f:selectItem itemValue="-1" itemLabel="#{msgs.list_section_resources_showall}"/>	
 		 </h:selectOneMenu>
 		 <h:outputText id="nav_spaces" value="" styleClass="ExtraPaddingClass" />
 				<h:commandLink id="next_nav" action="#{addSectionPage.listNav.goNext}" rendered="#{addSectionPage.listNav.displayNext}">

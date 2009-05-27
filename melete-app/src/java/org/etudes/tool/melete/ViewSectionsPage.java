@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -638,7 +638,7 @@ public String goTOC()
 	ValueBinding binding = Util.getBinding("#{listModulesPage}");
 	ListModulesPage listPage = (ListModulesPage)
         binding.getValue(context);
-	listPage.setModuleDateBeans(null);
+	listPage.setViewModuleBeans(null);
 	listPage.setAutonumberMaterial(null);
 	if (getInstRole()) return "list_modules_inst";
 	else return "list_modules_student";

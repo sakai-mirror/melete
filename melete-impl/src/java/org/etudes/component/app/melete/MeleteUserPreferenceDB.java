@@ -89,6 +89,13 @@ public class MeleteUserPreferenceDB {
 		    	 find_mup.setEditorChoice(mup.getEditorChoice());
 		    	 find_mup.setShowLTIChoice(mup.isShowLTIChoice());
 		    	 find_mup.setViewExpChoice(mup.isViewExpChoice());
+		 		 find_mup.setCcLicenseUrl(mup.getCcLicenseUrl());
+		 		 find_mup.setLicenseCode(mup.getLicenseCode());
+		 		 find_mup.setReqAttr(mup.isReqAttr());
+		 		 find_mup.setAllowCmrcl(mup.isAllowCmrcl());
+		 		 find_mup.setAllowMod(mup.getAllowMod());
+		 		 find_mup.setCopyrightOwner(mup.getCopyrightOwner());
+		 		 find_mup.setCopyrightYear(mup.getCopyrightYear());		    	 
 		    	 session.update(find_mup);
 		      }
 	     

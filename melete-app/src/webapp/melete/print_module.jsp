@@ -39,8 +39,10 @@
 				final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 				final org.sakaiproject.util.ResourceLoader msg = (org.sakaiproject.util.ResourceLoader)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "msgs");
 				String printMsg = msg.getString("print_module_msg");
+				String printNoteMsg = msg.getString("print_note_msg");
 %>			
-				<div class="meletePortletToolBarMessage"><img src="images/printer.png" alt="" width="16" height="16" align="absmiddle" onclick="javascript:window.print()"> <a href="#" onclick="javascript:window.print()"><%=printMsg%></a> </div>
+				<div class="meletePortletToolBarMessage"><img src="images/printer.png" alt="" width="16" height="16" align="absmiddle" onclick="javascript:window.print()"> <a href="#" onclick="javascript:window.print()"><%=printMsg%></a>
+				<br><%=printNoteMsg%> </div>
 		</td></tr>
 
 		<tr><td colspan="2" height="20" class="maintabledata5">&nbsp;</td></tr>	

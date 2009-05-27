@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -24,6 +24,7 @@
 package org.etudes.component.app.melete;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,7 @@ import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.util.Xml;
 import org.etudes.simpleti.SakaiSimpleLTI;
+import org.sakaiproject.thread_local.api.ThreadLocalManager;
 
 /*
  * MeleteSecurityService is the implementation of MeleteSecurityService
@@ -98,9 +100,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 
 	/** Dependency: a logger component. */
 	private Log logger = LogFactory.getLog(MeleteSecurityServiceImpl.class);
-
-
-
+	private ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
 /**
 	 * Setup a security advisor.
 	 */
@@ -326,20 +326,39 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 							{
 								byte [] bytes = content.getContent();
 								String str = new String(bytes);
-								Properties props = SakaiSimpleLTI.doLaunch(str, ref.getContext(), ref.getId());
-								String htmltext = props.getProperty("htmltext");
-								if ( htmltext != null )
+								Properties props = null;
+								// We must remove our advisor while we do the launch and then put it back
+								// Otherwise the launch will give the user too much power
+								try
 								{
-									res.setContentType("text/html");
-									ServletOutputStream out = res.getOutputStream();
-									out.println(htmltext);
-									handled = true;
+									popAdvisor();
+									props = SakaiSimpleLTI.doLaunch(str, ref.getContext(), ref.getId());
+								}
+								catch (Exception e)
+								{
+									logger.info("Exception e "+e.getMessage());
+									e.printStackTrace();
+								}
+								finally 
+								{
+									pushAdvisor();
+								}
+								if ( props != null ) {
+									String htmltext = props.getProperty("htmltext");
+									if ( htmltext != null )
+									{
+										res.setContentType("text/html");
+										ServletOutputStream out = res.getOutputStream();
+										out.println(htmltext);
+										handled = true;
+									}
 								}
 							}
 						}
 						catch (Exception e)
 						{
-							// System.out.println("Exception e "+e.getMessage());
+							logger.info("Exception e "+e.getMessage());
+							e.printStackTrace();
 						}
 					}
 					if ( !handled ) {
@@ -524,8 +543,8 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 				count = selectList.size();
 				File basePackDir = new File(archivePath);
 				List orgResElements = getMeleteExportService()
-					.generateOrganizationResourceItems(selectList,
-							basePackDir, SiteService.getSite(siteId).getTitle());
+					.generateOrganizationResourceItems(selectList,true,
+							basePackDir, SiteService.getSite(siteId).getTitle(), siteId);
 
 					if (orgResElements != null && orgResElements.size() > 0) {
 
@@ -585,8 +604,13 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		try
 		{
 			logger.debug("transer copy Melete items by transferCopyEntities");
+			 ArrayList importResources =  new ArrayList<String>();
+			 ArrayList secondaryHTMLResources =  new ArrayList<String>();
+			 threadLocalManager.set("MELETE_importResources" , importResources);
+			 threadLocalManager.set("MELETE_secondaryHTMLResources" , secondaryHTMLResources);
+			 
 			getMeleteImportService().copyModules(fromContext, toContext);
-			logger.debug("importResources: End importing melete data");
+			logger.debug("importResources: End importing melete data");			
 		}
 		catch (Exception e)
 		{

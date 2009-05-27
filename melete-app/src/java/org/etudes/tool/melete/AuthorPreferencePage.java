@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -38,6 +38,7 @@ import org.etudes.component.app.melete.MeleteSitePreference;
 import org.etudes.component.app.melete.MeleteUserPreference;
 import org.etudes.api.app.melete.MeleteAuthorPrefService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.etudes.api.app.melete.SectionService;
 
 public class AuthorPreferencePage {
   final static String SFERYX = "Sferyx Editor";
@@ -58,6 +59,9 @@ public class AuthorPreferencePage {
   private MeleteSitePreference msp;
   private String materialPrintable="false";
   private String materialAutonumber="false";
+  public String formName;
+  private SectionResourceLicenseSelector m_license;
+  protected SectionService sectionService;
 
   /** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(AuthorPreferencePage.class);
@@ -65,13 +69,18 @@ public class AuthorPreferencePage {
   public AuthorPreferencePage()
   {
   }
+  
+  public void resetValues()
+  {
+	  setM_license(null);
+  }
 
   private void getUserChoice()
   {
 		FacesContext context = FacesContext.getCurrentInstance();
   		Map sessionMap = context.getExternalContext().getSessionMap();
 
-  		mup = (MeleteUserPreference) getAuthorPref().getUserChoice((String)sessionMap.get("userId"));
+  		mup = getMup((String)sessionMap.get("userId"));
   		msp = (MeleteSitePreference) getAuthorPref().getSiteChoice((String)sessionMap.get("courseId"));
 
   		// if no choice is set then read default from sakai.properties
@@ -111,8 +120,16 @@ public class AuthorPreferencePage {
 
   		if(msp != null && msp.isAutonumber())
   			materialAutonumber = "true";
+  		
+  		
   	return;
   	}
+  
+  public MeleteUserPreference getMup(String userId)
+  {
+	  MeleteUserPreference mup = (MeleteUserPreference) getAuthorPref().getUserChoice(userId);
+	  return mup;
+  }
 
 
 
@@ -252,6 +269,7 @@ public String setUserChoice()
 			if (showLTI.equals("true"))	mup.setShowLTIChoice(true);
 			else mup.setShowLTIChoice(false);
 
+		mup = m_license.processLicenseInformation(mup);	
 		mup.setUserId((String)sessionMap.get("userId"));
 		authorPref.insertUserChoice(mup);
 
@@ -386,5 +404,49 @@ public boolean getUserLTIChoice(String userId){
 	if(checkMup != null && checkMup.isShowLTIChoice() != null) return checkMup.isShowLTIChoice();
 	else return false;
 }
+/**
+ * @return Returns the m_license.
+ */
+public SectionResourceLicenseSelector getM_license() {
+        if(m_license == null)
+        {
+                m_license = new SectionResourceLicenseSelector();
+                m_license.setInitialValues("UserPreferenceForm",sectionService,mup);
+        }        
 
+        return m_license;
+}
+
+/**
+ * @param m_license The m_license to set.
+ */
+public void setM_license(SectionResourceLicenseSelector m_license) {
+        this.m_license = m_license;
+}
+
+public String getFormName(){
+    return formName;
+    }
+
+
+/**
+* @param formName
+*/
+public void setFormName(String formName){
+    this.formName = formName;
+}
+
+/**
+* @return Returns the SectionService.
+*/
+public SectionService getSectionService() {
+       return sectionService;
+}
+
+/**
+* @param SectionService The SectionService to set.
+*/
+public void setSectionService(SectionService sectionService) {
+       this.sectionService = sectionService;
+}
 }

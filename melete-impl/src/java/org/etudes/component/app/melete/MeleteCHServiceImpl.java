@@ -69,22 +69,6 @@ import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.util.Validator;
 
-/*
- * Created on Sep 18, 2006 by rashmi
- *
- *  This is a basic class to do all content hosting service work through melete
- *  Rashmi - 12/8/06 - add checks for upload img being greater than 1Mb
- * Rashmi - 12/16/06 - fck editor upload image goes to melete collection and not resources.
- * Rashmi - 1/16/07 - remove word inserted comments
- * Mallika - 1/29/06 - Needed to add some new code to add url for embedded images
- * Rashmi - changed logic to get list of images and url
- * Rashmi - 2/12/07 - add alternate reference property at collection level too
- * Rashmi - 3/6/07 - revised display name of modules collection with no slashes
- * Rashmi - 5/9/07 - revised iteration to get listoflinks
- * Mallika - 5/31/07 - added Validator
- * Mallika - 6/4/07 - Added two new methods (copyIntoFolder,getCollection)
- * Mallika - 6/4/07 - Added logic to check for resource in findlocal
- */
 public class MeleteCHServiceImpl implements MeleteCHService {
 	/** Dependency:  The logging service. */
 	 public Log logger = LogFactory.getLog(MeleteCHServiceImpl.class);
@@ -551,13 +535,49 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 			return null;
 		 }
 
+	 public List getMemberNamesCollection(String collId)
+	 {
+		 	try
+		    {
+	        	if (!isUserAuthor())
+	        		{
+	        		logger.info("User is not authorized to access meleteDocs collection");
+	        		return null;
+	        		}
+	   			//          setup a security advisor
+	        		meleteSecurityService.pushAdvisor();
+	        	 	ContentCollection c= getContentservice().getCollection(collId);
+				 	List	mem = c.getMembers();
+				 	if (mem == null) return null;
+
+				return mem;
+		    }
+			catch(Exception e)
+			{
+				logger.error(e.toString());
+			}
+			finally
+			  {
+				// clear the security advisor
+				meleteSecurityService.popAdvisor();
+			  }
+			return null;
+		 }
+
 	/*
 	 *
 	 */
 	 public ResourcePropertiesEdit fillInSectionResourceProperties(boolean encodingFlag,String secResourceName, String secResourceDescription)
 	{
 	    ResourcePropertiesEdit resProperties = getContentservice().newResourceProperties();
-
+	    try
+		 {
+		   secResourceName = URLDecoder.decode(secResourceName,"UTF-8");
+		 }
+		 catch(Exception e)
+		 {
+		   logger.debug("error with decode in fillInSectionResourceProperties");
+	     }
 	//  resProperties.addProperty (ResourceProperties.PROP_COPYRIGHT,);
 	//  resourceProperties.addProperty(ResourceProperties.PROP_COPYRIGHT_CHOICE,);
 	    //Glenn said to not set the two properties below
@@ -579,6 +599,14 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	 */
 	 public ResourcePropertiesEdit fillEmbeddedImagesResourceProperties(String name)
 	{
+		 try
+		 {
+		   name = URLDecoder.decode(name,"UTF-8");
+		 }
+		 catch(Exception e)
+		 {
+		   logger.debug("error with decode in fillEmbeddedImagesResourceProperties");
+	     }
 	    ResourcePropertiesEdit resProperties = getContentservice().newResourceProperties();
 
 		//Glenn said to not set the two properties below
@@ -635,7 +663,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 
 		 //Storing the original filename so it can be used in the display name
 		 String dispName = name;
-		 name = Validator.escapeResourceName(name);
+		// to preserve the name
+		name = URLDecoder.decode(name,"UTF-8");
 
 		 String courseId = getCourseId(addCollId);
 		 if (logger.isDebugEnabled()) logger.debug("IN addResourceItem "+name+" addCollId "+addCollId);
@@ -675,7 +704,6 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
 						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 						getContentservice().commitResource(edit);
-						logger.debug("after saving chService  " + edit.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
 						edit = null;
 					}
 				}

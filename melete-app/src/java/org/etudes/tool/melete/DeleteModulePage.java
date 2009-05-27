@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -68,7 +68,6 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 	private boolean moduleSelected;
 	private boolean sectionSelected;
 	private List moduleDateBeans = null;
-	private List allmoduleDateBeans = null;
 	private List sectionBeans = null;
 	String courseId;
 	String userId;
@@ -82,7 +81,6 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
     	sameModuleSectionSelected = false;
     	courseId = null;
     	userId = null;
-    	allmoduleDateBeans = null;
     }
 
   	/*
@@ -202,7 +200,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			{
 				 // check if sections of selected module are selected too
 				if(sectionBeans != null)CheckSectionsSelected();
-				moduleService.deleteModules(this.moduleDateBeans,this.allmoduleDateBeans,getCourseId(), getUserId());
+				moduleService.deleteModules(this.moduleDateBeans,getCourseId(), getUserId());
 
 				Iterator it = this.moduleDateBeans.iterator();
 				while (it.hasNext()){
@@ -239,7 +237,11 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			return "delete_module";
 		}
 		setSuccess(true);
-       return "confirm_delete_module";
+		String deleteMsg = bundle.getString("confirm_delete_module_msg");
+		FacesMessage msg = new FacesMessage("Delete Confirmation",deleteMsg);
+		msg.setSeverity(FacesMessage.SEVERITY_INFO);
+		context.addMessage(null,msg);
+		 return "list_auth_modules";
     }
 
     /*
@@ -259,7 +261,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			{
 				 // check if sections of selected module are selected too
 		        removeSectionsSelectedToModule();
-				moduleService.deleteModules(this.moduleDateBeans,allmoduleDateBeans,getCourseId(), getUserId());
+				moduleService.deleteModules(this.moduleDateBeans,getCourseId(), getUserId());
 				sameModuleSectionSelected = false;
 			}
 			if (getSectionSelected() == true)
@@ -284,14 +286,13 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		setSection(null);
 		setSectionSelected(false);
 		setModuleDateBeans(null);
-		setAllmoduleDateBeans(null);
 		setSectionBeans(null);
 		sameModuleSectionSelected = false;
 		FacesContext context = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{listModulesPage}");
 		ListModulesPage listPage = (ListModulesPage)
 	        binding.getValue(context);
-		listPage.setModuleDateBeans(null);
+		listPage.setViewModuleBeans(null);
 		return "list_auth_modules";
 	}
 
@@ -362,11 +363,5 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		return sameModuleSectionSelected;
 	}
 
-	/**
-	 * @param allmoduleDateBeans the allmoduleDateBeans to set
-	 */
-	public void setAllmoduleDateBeans(List allmoduleDateBeans)
-	{
-		this.allmoduleDateBeans = allmoduleDateBeans;
-	}
+	
  }

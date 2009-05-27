@@ -4,7 +4,7 @@
  * $$
  * $Id$  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -57,6 +57,7 @@ import org.etudes.component.app.melete.MeleteResource;
 import org.etudes.component.app.melete.Module;
 import org.etudes.component.app.melete.Section;
 import org.etudes.component.app.melete.SectionResource;
+import org.etudes.component.app.melete.MeleteUserPreference;
 import org.imsglobal.simplelti.SimpleLTIUtil;
 
 import org.apache.commons.logging.Log;
@@ -536,13 +537,13 @@ public abstract class SectionPage implements Serializable {
                    contentTypeRadio.findComponent(getFormName()).findComponent("ContentLTIView").setRendered(shouldRenderLTI);
             	}
 
-            if(shouldRenderEditor)
+              if(shouldRenderEditor)
 	            {
-	            FacesContext context = FacesContext.getCurrentInstance();
-	    		ValueBinding binding = Util.getBinding("#{authorPreferences}");
-	    		AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
-	    		String usereditor = preferencePage.getUserEditor();
-	    		this.contentEditor = new String("Compose content here");
+            	  FacesContext context = FacesContext.getCurrentInstance();
+   	    		  ValueBinding binding = Util.getBinding("#{authorPreferences}");
+   	    		  AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
+	               String usereditor = preferencePage.getUserEditor();
+	    		   this.contentEditor = new String("Compose content here");
 		           if(contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor") != null && usereditor.equals(preferencePage.FCKEDITOR))
 		                {
 		                contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor").setRendered(shouldRenderEditor);
@@ -917,7 +918,19 @@ public abstract class SectionPage implements Serializable {
             if(m_license == null)
             {
                     m_license = new SectionResourceLicenseSelector();
-                    m_license.setInitialValues(this.formName, sectionService,getMeleteResource());
+                    if (getMeleteResource().getResourceId() != null)
+                    {
+                    	m_license.setInitialValues(this.formName, sectionService,getMeleteResource());
+                    }
+                    else
+                    {
+                    	FacesContext context = FacesContext.getCurrentInstance();
+         	    		ValueBinding binding = Util.getBinding("#{authorPreferences}");
+         	    		AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
+         	    		MeleteUserPreference mup = preferencePage.getMup();
+         	    		m_license.setInitialValues(this.formName, sectionService, mup);
+                    }
+
             }
             return m_license;
     }
@@ -1154,7 +1167,7 @@ public abstract class SectionPage implements Serializable {
 		 		if(rgif.startsWith("sakai"))
 		 			rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
 		 		else if (rgif.startsWith("/sakai"))
-		 			rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));		 		
+		 			rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));
 				}
 				if(section.getContentType().equals("typeLTI"))
 				{
@@ -1366,6 +1379,7 @@ public abstract class SectionPage implements Serializable {
 		{
 			listNav = new RemoteFilesListingNav(0,0,30);
 		}
+
 		return listNav;
 	}
 	/**

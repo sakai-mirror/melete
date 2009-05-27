@@ -22,7 +22,7 @@
  *
  **********************************************************************************
 -->
-<%@ page import="org.sakaiproject.tool.melete.AddResourcesPage,javax.faces.application.FacesMessage, java.util.ResourceBundle"%>
+<%@ page import="org.etudes.tool.melete.AddResourcesPage,javax.faces.application.FacesMessage, java.util.ResourceBundle"%>
 <% 
 	final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 	final org.sakaiproject.util.ResourceLoader msg = (org.sakaiproject.util.ResourceLoader)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "msgs");

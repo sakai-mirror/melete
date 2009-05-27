@@ -110,7 +110,7 @@ rendered="#{addSectionPage.section.sectionResource.resource.licenseCode == 1}"/>
 
       <!--End license code Copyright-->
  <!--License code Public domain-->
-   <h:outputText id="lic2_val1" value="add_preview_dedicated_to" 
+   <h:outputText id="lic2_val1" value="#{msgs.add_preview_dedicated_to}" 
 
 rendered="#{addSectionPage.section.sectionResource.resource.licenseCode == 2}"/> 
    <h:outputLink value="#{addSectionPage.section.sectionResource.resource.ccLicenseUrl}" target="_blank" 

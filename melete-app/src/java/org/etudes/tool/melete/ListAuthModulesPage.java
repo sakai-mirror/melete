@@ -3,7 +3,7 @@
  * $URL$
  *
  ***********************************************************************************
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -680,7 +680,7 @@ public class ListAuthModulesPage implements Serializable
 			try
 			{
 				int origSeqNo = mdbean.getCmod().getSeqNo();
-				getModuleService().archiveModules(selModBeans, courseId);
+				getModuleService().archiveModules(selModBeans,moduleDateBeans);
 				StringBuffer modTitles = new StringBuffer();
 				mdbean = null;
 				for (ListIterator i = selModBeans.listIterator(); i.hasNext();)
@@ -800,7 +800,6 @@ public class ListAuthModulesPage implements Serializable
 			// dmPage.setMdbean(mdbean);
 			dmPage.setModuleDateBeans(delModBeans);
 		//	List <> allActivenArchvModules = moduleService.getAllActivenArchvModules();
-			dmPage.setAllmoduleDateBeans(moduleDateBeans);
 			dmPage.setModuleSelected(true);
 			count = 0;
 			moduleSelected = false;

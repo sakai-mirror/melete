@@ -1,10 +1,10 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -96,6 +96,7 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 
 	private ModuleDB moduledb;
 	private List moduleDateBeans = null;
+	private List viewModuleBeans = null;
 	private List modules = null;
 	private Module module = null;
 	private ModuleDateBean mdBean = null;
@@ -214,6 +215,19 @@ public List getModuleDateBeans(String userId, String courseId) {
   	return moduleDateBeans;
   }
 
+public List getViewModules(String userId, String courseId) {
+  	if (moduledb == null) moduledb = ModuleDB.getModuleDB();
+
+  	try {
+  		viewModuleBeans = moduledb.getViewModulesAndDates(userId, courseId);
+  	}catch (HibernateException e)
+	{
+  		//e.printStackTrace();
+  		logger.debug(e.toString());
+	}
+  	return viewModuleBeans;
+  }
+
   public void setModuleDateBeans(List moduleDateBeansList) {
     moduleDateBeans = moduleDateBeansList;
   }
@@ -282,7 +296,7 @@ public List getModuleDateBeans(String userId, String courseId) {
 
 
 // end - mallika
- public void deleteModules(List moduleDateBeans, List allmoduleDateBeans, String courseId, String userId) throws Exception
+ public void deleteModules(List moduleDateBeans, String courseId, String userId) throws Exception
  {
 	 List cmodList = null;
 	 List<Module> delModules = new ArrayList<Module>(0);
@@ -340,17 +354,12 @@ public List getModuleDateBeans(String userId, String courseId) {
       }
   }*/
 
- public void archiveModules(List moduleDateBeans, String courseId) throws Exception
+ public void archiveModules(List selModBeans, List moduleDateBeans) throws Exception
  {
 	 List cmodList = null;
 	 try
 	 {
-		 for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext(); )
-		 {
-			 ModuleDateBean mdbean = (ModuleDateBean)i.next();
-		//	 CourseModule archvmod = moduledb.getCourseModule(mdbean.getModuleId(), courseId);
-			 moduledb.archiveModule(mdbean.getModuleId(), courseId);
-		 }
+		 moduledb.archiveModules(selModBeans, moduleDateBeans);
 	 }
 	 catch (HibernateException e)
 	 {
@@ -361,7 +370,7 @@ public List getModuleDateBeans(String userId, String courseId) {
 	 catch (Exception ex)
 	 {
 		 throw new MeleteException("archive_fail");
-	 }     
+	 }
  }
 
 /*
@@ -399,11 +408,11 @@ public void setModule(ModuleObjService mod) {
 /*
  * @see org.foothillglobalaccess.melete.ManageModuleService#restoreModules(java.util.List, int, int)
  */
-public void restoreModules(List modules) throws Exception
+public void restoreModules(List modules, String courseId) throws Exception
 {
 
 	try{
-		 moduledb.restoreModules(modules);
+		 moduledb.restoreModules(modules, courseId);
 		}catch(Exception ex)
 		{
 			if (logger.isDebugEnabled()) {
@@ -426,14 +435,7 @@ public void restoreModules(List modules) throws Exception
      return cMod;
     }
 
-	 public int getMaxSeqNo(String courseId)
-	  {
-	  	int maxseq=0;
 
-	  	maxseq=moduledb.getMaxSeqNo(courseId);
-
-	  	return maxseq;
-	  }
 
 	 public int getNextSeqNo(String courseId, int currSeqNo)
 	  {
@@ -1219,6 +1221,16 @@ public void restoreModules(List modules) throws Exception
     public void setSectionService(SectionService sectionService) {
         this.sectionService = sectionService;
     }
+
+	public List getViewModuleBeans()
+	{
+		return this.viewModuleBeans;
+	}
+
+	public void setViewModuleBeans(List viewModuleBeans)
+	{
+		this.viewModuleBeans = viewModuleBeans;
+	}
 
 
 	/**

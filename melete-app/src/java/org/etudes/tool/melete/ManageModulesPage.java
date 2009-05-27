@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -185,6 +185,8 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 	  {
 		FacesContext context = FacesContext.getCurrentInstance();
 	   ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+	   Map sessionMap = context.getExternalContext().getSessionMap();
+
 		if(count <=0)
 		{
 			String errMsg = bundle.getString("no_module_selected");
@@ -193,7 +195,8 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		}
 		// 1. restore modules
 		try{
-			getModuleService().restoreModules(restoreModulesList);
+			String courseId = (String)sessionMap.get("courseId");
+			getModuleService().restoreModules(restoreModulesList,courseId);
 			count=0;
 			}
 		catch(Exception me)

@@ -350,6 +350,11 @@
 	    	            <property-name>authorPref</property-name>
 	    	            <value>#{Components["org.etudes.api.app.melete.MeleteAuthorPrefService"]}</value>
             </managed-property>
+            <managed-property>
+              <description>Service Dependency: Section service</description>
+              <property-name>sectionService</property-name>
+              <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
+        </managed-property>
 </managed-bean>  
 
 <managed-bean>
@@ -477,7 +482,7 @@
        <navigation-case>
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
-     </navigation-case>    
+     </navigation-case>     
   </navigation-rule>    
   
 <!-- rules for confirm add module -->
@@ -1283,11 +1288,7 @@
     <navigation-case>
 		   <from-outcome>delete_module</from-outcome>
         <to-view-id>/melete/delete_module.jsp</to-view-id>
-      </navigation-case>
-     <navigation-case>
-		   <from-outcome>confirm_delete_module</from-outcome>
-        <to-view-id>/melete/confirm_delete_module.jsp</to-view-id>
-      </navigation-case>      
+      </navigation-case>  
     <navigation-case>
 		   <from-outcome>list_auth_modules</from-outcome>
         <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
@@ -1308,31 +1309,6 @@
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
      </navigation-case>                                                                   
-   </navigation-rule>   
-
-<!--Rule for confirm_delete_module -->
-<navigation-rule>
-    <from-view-id>/melete/confirm_delete_module.jsp</from-view-id>   
-    <navigation-case>
-		   <from-outcome>list_auth_modules</from-outcome>
-        <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
-      </navigation-case>        
-       <navigation-case>
-		   <from-outcome>list_modules_inst</from-outcome>
-        <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
-      </navigation-case>          
-    <navigation-case>
-		   <from-outcome>list_modules_student</from-outcome>
-        <to-view-id>/melete/list_modules_student.jsp</to-view-id>
-      </navigation-case>                                 
-   <navigation-case>
-		   <from-outcome>modules_author_manage</from-outcome>
-        <to-view-id>/melete/modules_author_manage.jsp</to-view-id>
-      </navigation-case>  
-       <navigation-case>
-      <from-outcome>author_preference</from-outcome>
-      <to-view-id>/melete/author_preference.jsp</to-view-id>
-     </navigation-case>                                                               
    </navigation-rule>   
 
 
@@ -1419,7 +1395,11 @@
        <navigation-case>
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
-     </navigation-case>                                                             
+     </navigation-case>                                  
+     <navigation-case>
+      <from-outcome>view_whats_next</from-outcome>
+      <to-view-id>/melete/view_whats_next.jsp</to-view-id>
+     </navigation-case>                           
    </navigation-rule>       
      
  <!--Rule for view_module -->    
@@ -1568,7 +1548,11 @@
       <navigation-case>
       <from-outcome>student_preference</from-outcome>
       <to-view-id>/melete/student_preference.jsp</to-view-id>
-     </navigation-case>                                                                   
+     </navigation-case>  
+     <navigation-case>
+      <from-outcome>view_whats_next</from-outcome>
+      <to-view-id>/melete/view_whats_next.jsp</to-view-id>
+     </navigation-case>                                                                  
    </navigation-rule>             
 
 
