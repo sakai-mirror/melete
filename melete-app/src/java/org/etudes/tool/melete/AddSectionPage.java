@@ -526,7 +526,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 				secResourceName = newURLTitle;
 				String addCollectionId = getMeleteCHService().getUploadCollectionId();
 				String newResourceId = addResourceToMeleteCollection(null, addCollectionId);
-				meleteResource.setResourceId(newResourceId);
+				getMeleteResource().setResourceId(newResourceId);
 				currLinkUrl = getLTIDescriptor();
 			}
 			logger.debug("currlink value in setServer is" + currLinkUrl);
