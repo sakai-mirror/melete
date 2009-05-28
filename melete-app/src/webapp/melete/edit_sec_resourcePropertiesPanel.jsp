@@ -34,10 +34,10 @@
 	</h:panelGrid>
 	<h:panelGrid id="propertiesPanel2" columns="2" width="82%" cellpadding="3" columnClasses="copyrightColumn1,copyrightColumn2" border="0">
 		<h:column>
-				 <h:outputText value="#{msgs.editsec_resources_proper_pan_URL}"  rendered="#{editSectionPage.shouldRenderLink}" /><h:outputText value="*" styleClass="required" rendered="#{editSectionPage.shouldRenderLink}"/>
+				 <h:outputText value="#{msgs.editsec_resources_proper_pan_URL}"  rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderLTI)}" /><h:outputText value="*" styleClass="required" rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderLTI)}"/>
 		</h:column>	 
 			<h:column>				
-					 <h:inputText id="res_name" size="45" value="#{editSectionPage.secResourceName}" styleClass="formtext" rendered="#{editSectionPage.shouldRenderLink}" />		
+					 <h:inputText id="res_name" size="45" value="#{editSectionPage.secResourceName}" styleClass="formtext" rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderLTI)}" />		
 		</h:column>					                  
 		<h:column>
 					 <h:outputText value="#{msgs.editsec_resources_proper_pan_description}" rendered="#{ !editSectionPage.shouldRenderEditor}"  />											
