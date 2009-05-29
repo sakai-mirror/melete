@@ -28,6 +28,8 @@ import java.io.Serializable;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import java.util.Iterator;
+import java.util.Map;
 
 public class HibernateUtil implements Serializable{
 
@@ -57,6 +59,48 @@ public class HibernateUtil implements Serializable{
 	        if (s != null)
 	            s.close();
 	    }
+	    
+		public void ensureModuleHasNonNulls(Module mod)
+		{
+			Map sections = mod.getSections(); 
+			if (sections != null && sections.size() > 0)
+			{
+				Iterator iter = sections.keySet().iterator(); 
+				
+				while (iter.hasNext())
+				{
+					Object key; 
+					Section cur;  
+					
+					key = iter.next(); 
+					cur = (Section) sections.get(key); 
+					ensureSectionHasNonNull(cur);
+				}
+			}
+			if (null == mod.getCreatedByFname())
+			{
+				mod.setCreatedByFname("");
+			}
+			if (null == mod.getCreatedByFname())
+			{
+				mod.setCreatedByFname("");
+			}
+
+		}
+		
+		public void ensureSectionHasNonNull(Section sec)
+		{
+			if (null == sec.getCreatedByFname() )
+			{
+				sec.setCreatedByFname("");
+			}
+
+			if (null == sec.getCreatedByLname() )
+			{
+				sec.setCreatedByLname("");
+			}
+		}	    
+	    
 		/**
 		 * @return Returns the sessionFactory.
 		 */

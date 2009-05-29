@@ -255,6 +255,12 @@ public class ModuleDB implements Serializable {
 	 */
 	public void addModule(Module module, ModuleShdates moduleshowdates, String userId, String courseId) throws Exception
 	{
+		/*
+   	 * Since Oracle silently transforms "" to nulls, we need to check to see if 
+		 * these non null properties are in fact null. 
+		 */
+
+		hibernateUtil.ensureModuleHasNonNulls(module);
 
 	try{
 	     Session session = hibernateUtil.currentSession();
@@ -1152,12 +1158,23 @@ public class ModuleDB implements Serializable {
 
 	 public void updateModule(Module mod) throws Exception
 	 {
+	 
+	  hibernateUtil.ensureModuleHasNonNulls(mod);
 	 	Transaction tx = null;
 	 	try
 		{
 
 	      Session session = hibernateUtil.currentSession();
 
+		  if (null == mod.getCreatedByFname())
+		  {
+			  mod.setCreatedByFname("");
+		  }
+		  
+		  if (null == mod.getCreatedByLname())
+		  {
+			  mod.setCreatedByLname("");
+		  }
 	      tx = session.beginTransaction();
 
 	      //Update module properties
