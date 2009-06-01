@@ -339,7 +339,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 									logger.info("Exception e "+e.getMessage());
 									e.printStackTrace();
 								}
-								finally 
+								finally
 								{
 									pushAdvisor();
 								}
@@ -357,8 +357,8 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 						}
 						catch (Exception e)
 						{
-							logger.info("Exception e "+e.getMessage());
-							e.printStackTrace();
+						//	logger.info("Exception e "+e.getMessage());
+						//	e.printStackTrace();
 						}
 					}
 					if ( !handled ) {
@@ -608,9 +608,9 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 			 ArrayList secondaryHTMLResources =  new ArrayList<String>();
 			 threadLocalManager.set("MELETE_importResources" , importResources);
 			 threadLocalManager.set("MELETE_secondaryHTMLResources" , secondaryHTMLResources);
-			 
+
 			getMeleteImportService().copyModules(fromContext, toContext);
-			logger.debug("importResources: End importing melete data");			
+			logger.debug("importResources: End importing melete data");
 		}
 		catch (Exception e)
 		{
