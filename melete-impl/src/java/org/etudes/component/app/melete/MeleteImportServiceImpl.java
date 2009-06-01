@@ -1421,11 +1421,15 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 							// logger.debug("SITE RES ITEM" + fileResourceName);
 					  			if(resElements != null){
 									String fileName = ((Element)resElements.get(0)).attributeValue("href");
-									// logger.debug("fileName read now is:" + fileName);
-									melContentData = meleteUtil.readFromFile(new File(unZippedDirPath + File.separator+ fileName));
-									res_mime_type = fileName.substring(fileName.lastIndexOf(".")+1);
-									res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
+									//if file doesn't exist in exported package then skip it
+									File fileResource = new File(unZippedDirPath + File.separator+ fileName);
+									if(fileResource.exists())
+									{
+										melContentData = meleteUtil.readFromFile(fileResource);
+										res_mime_type = fileName.substring(fileName.lastIndexOf(".")+1);
+										res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
 									}
+								  }
 								else
 						 		  {
 						 			//This is executed by import from site
@@ -1480,10 +1484,12 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					  	res_mime_type = melResourceName.substring(melResourceName.lastIndexOf(".")+1);
 					  	res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
 					  }
-			 		  if (resElements != null)
-			 		  {
-			 			melContentData = meleteUtil.readFromFile(new File(unZippedDirPath + File.separator+ hrefVal));
-			 		  }
+					  if (resElements != null)
+					  {
+						  File fileUploadResource = new File(unZippedDirPath + File.separator+ hrefVal);
+						  if(fileUploadResource.exists())
+							  melContentData = meleteUtil.readFromFile(fileUploadResource);
+					  }
 			 		  else
 			 		  {
 			 			//This is executed by import from site
