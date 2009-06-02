@@ -454,35 +454,32 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		uris.put("imscp", DEFAULT_NAMESPACE_URI);
 		uris.put("imsmd", IMSMD_NAMESPACE_URI);
 
-		try
+
+		// organizations
+		XPath xpath = document.createXPath("/imscp:manifest/imscp:organizations/imscp:organization");
+		xpath.setNamespaceURIs(uris);
+
+		Element eleOrg = (Element) xpath.selectSingleNode(document);
+
+		// build module
+		// loop thru organization elements - item elements
+		if(eleOrg != null)
 		{
-			// organizations
-			XPath xpath = document.createXPath("/imscp:manifest/imscp:organizations/imscp:organization");
-			xpath.setNamespaceURIs(uris);
-
-			Element eleOrg = (Element) xpath.selectSingleNode(document);
-
-			// build module
-			// loop thru organization elements - item elements
 			List elements = eleOrg.elements();
 			for (Iterator iter = elements.iterator(); iter.hasNext();)
 			{
 				Element element = (Element) iter.next();
 				buildModule(element, document, unZippedDirPath,ToolManager.getCurrentPlacement().getContext() );
-
 			}
-			xpath = document.createXPath("/imscp:manifest/imscp:resources");
-			xpath.setNamespaceURIs(uris);
-
-			eleOrg = (Element) xpath.selectSingleNode(document);
-			processManageResources(eleOrg, unZippedDirPath, ToolManager.getCurrentPlacement().getContext(), document);
-
 		}
-		catch (Exception e)
-		{
-			// no organization tag so create one flat module
-			buildFlatModule(document, unZippedDirPath,ToolManager.getCurrentPlacement().getContext());
-		}
+		// flat structure for packages created by RELOAD 
+		else buildFlatModule(document, unZippedDirPath,ToolManager.getCurrentPlacement().getContext());
+
+		xpath = document.createXPath("/imscp:manifest/imscp:resources");
+		xpath.setNamespaceURIs(uris);
+
+		eleOrg = (Element) xpath.selectSingleNode(document);
+		processManageResources(eleOrg, unZippedDirPath, ToolManager.getCurrentPlacement().getContext(), document);
 
 		if (logger.isDebugEnabled()) logger.debug("Exiting parseAndBuildModules");
 	}
