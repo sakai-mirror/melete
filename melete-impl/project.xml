@@ -21,17 +21,17 @@
  **********************************************************************************
 -->
 <project>
-	<extend>../../master/project.xml</extend>
+	<extend>../project.xml</extend>
 	<pomVersion>3</pomVersion>
 	<name>Etudes Melete Impl</name>
 	<groupId>etudes</groupId>
 	<id>etudes-melete-impl</id>
-	  <currentVersion>${melete.version}</currentVersion>
+	<currentVersion>${melete.version}</currentVersion>
 	<organization>
-		<name>Etudes</name>
-		<url>http://etudes.org/</url>
-	</organization>
-	<inceptionYear>2003</inceptionYear>
+	  <name>Etudes, Inc.</name>
+	  <url>http://etudes.org</url>
+        </organization>
+	<inceptionYear>2004</inceptionYear>
 	<properties>
 		<deploy.type>jar</deploy.type>		
 	</properties>

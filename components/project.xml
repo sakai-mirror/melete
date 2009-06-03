@@ -24,17 +24,17 @@
  **********************************************************************************
 -->
 <project>
-	<extend>../../master/project.xml</extend>
+	<extend>../project.xml</extend>
     <pomVersion>3</pomVersion>
     <name>Etudes Melete Pack</name>
     <groupId>etudes</groupId>
     <id>etudes-melete-pack</id>
     <currentVersion>${melete.version}</currentVersion>
     <organization>
-        <name>Etudes</name>
+        <name>Etudes, Inc</name>
         <url>http://etudes.org/</url>
     </organization>
-    <inceptionYear>2003</inceptionYear>
+    <inceptionYear>2004</inceptionYear>
     <properties>
         <deploy.type>components</deploy.type>
     </properties>

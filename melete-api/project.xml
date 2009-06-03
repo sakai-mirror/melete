@@ -25,15 +25,15 @@
 -->
 
 <project>
-	<extend>../../master/project.xml</extend>
+	<extend>../project.xml</extend>
     <pomVersion>3</pomVersion>
     <name>Etudes Melete Service</name>
     <groupId>etudes</groupId>
     <id>etudes-melete-api</id>
-     <currentVersion>${melete.version}</currentVersion>
+    <currentVersion>${melete.version}</currentVersion>
     <organization>
-        <name>Etudes</name>
-        <url>http://etudes.org/</url>
+       	<name>Etudes, Inc.</name>
+       	<url>http://etudes.org</url>
     </organization>
     <inceptionYear>2004</inceptionYear>
     <properties>

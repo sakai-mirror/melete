@@ -30,10 +30,10 @@
 	<id>etudes-meleteAdmin-tool</id>
 	<currentVersion>${melete.version}</currentVersion>
 	<organization>
-		<name>Etudes</name>
-		<url>http://etudes.org/</url>
-	</organization>
-	<inceptionYear>2003</inceptionYear>
+    	  <name>Etudes, Inc.</name>
+    	  <url>http://etudes.org</url>
+    	</organization>
+	<inceptionYear>2004</inceptionYear>
 
    	<properties>
 		<deploy.type>war</deploy.type>
