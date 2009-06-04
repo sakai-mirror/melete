@@ -300,9 +300,9 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 				buildModule(element, document, unZippedDirPath,ToolManager.getCurrentPlacement().getContext() );
 			}
 		}
-		// flat structure for packages created by RELOAD 
+		// flat structure for packages created by RELOAD
 		else buildFlatModule(document, unZippedDirPath,ToolManager.getCurrentPlacement().getContext());
-	
+
 		if (logger.isDebugEnabled()) logger.debug("Exiting parseAndBuildModules");
 	}
 
@@ -1223,6 +1223,8 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 										res_mime_type = fileName.substring(fileName.lastIndexOf(".")+1);
 										res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
 									}
+									//set data as blank
+									else return;
 								  }
 								else
 						 		  {
@@ -1235,6 +1237,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 										ref_id = ref_id.substring(ref_id.indexOf("/content")+ 8);
 						 			ContentResource cr = getMeleteCHService().getResource(ref_id);
 									melContentData = cr.getContent();
+									if(melContentData == null || melContentData.length <= 0) return;
 									res_mime_type = cr.getContentType();
 						 		  }
 								try
@@ -1283,6 +1286,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 						  File fileUploadResource = new File(unZippedDirPath + File.separator+ hrefVal);
 						  if(fileUploadResource.exists())
 							  melContentData = meleteUtil.readFromFile(fileUploadResource);
+						  else return;
 					  }
 			 		  else
 			 		  {
@@ -1290,6 +1294,8 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 			 			// logger.debug("reading resource properties in import from site");
 			 			ContentResource cr = getMeleteCHService().getResource(hrefVal);
 						melContentData = cr.getContent();
+						if(melContentData == null || melContentData.length <= 0) return;
+
 				  		res_mime_type = cr.getContentType();
 						if ( getMeleteCHService().MIME_TYPE_LTI.equals(res_mime_type) ) {
 							section.setContentType("typeLTI");
