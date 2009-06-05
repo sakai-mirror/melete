@@ -24,7 +24,7 @@
  **********************************************************************************
 -->
 <project>
-	<extend>../master/project.xml</extend>
+	<extend>../master/jsf-sun-tool.xml</extend>
     <pomVersion>3</pomVersion>
     <name>Etudes Melete</name>
     <groupId>etudes</groupId>
