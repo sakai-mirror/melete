@@ -24,7 +24,7 @@
 -->
 <project>
 	<pomVersion>3</pomVersion>
-	<extend>../../master/jsf-sun-tool.xml</extend>
+	<extend>../project.xml</extend>
 	<name>etudes-meleteAdmin-tool</name>
 	<groupId>etudes</groupId>
 	<id>etudes-meleteAdmin-tool</id>
