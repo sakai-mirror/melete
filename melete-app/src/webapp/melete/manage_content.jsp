@@ -120,7 +120,7 @@
 			 <tr>
         		 <td align="center">
 				  <f:subview id="DeleteResourceView">
-						<jsp:include page="manage_delete_resources.jsp"/> 
+						<jsp:include page="list_resources.jsp"/> 
 				  </f:subview>	
 				</td>
 			</tr>									

@@ -40,10 +40,10 @@
 					 <h:inputText id="res_name" size="45" value="#{addSectionPage.secResourceName}" styleClass="formtext" rendered="#{addSectionPage.shouldRenderLink}" />
 		</h:column>
 		<h:column>
-					 <h:outputText value="#{msgs.resources_proper_pan_description}" rendered="#{addSectionPage.shouldRenderLink || addSectionPage.shouldRenderUpload || addSectionPage.shouldRenderResources}"/>
+					 <h:outputText value="#{msgs.resources_proper_pan_description}" rendered="#{addSectionPage.shouldRenderLink || addSectionPage.shouldRenderUpload}"/>
 		</h:column>	
 		<h:column>		
-							<h:inputTextarea id="res_desc" cols="45" rows="3" value="#{addSectionPage.secResourceDescription}" styleClass="formtext"    rendered="#{addSectionPage.shouldRenderLink || addSectionPage.shouldRenderUpload || addSectionPage.shouldRenderResources}" />
+							<h:inputTextarea id="res_desc" cols="45" rows="3" value="#{addSectionPage.secResourceDescription}" styleClass="formtext"    rendered="#{addSectionPage.shouldRenderLink || addSectionPage.shouldRenderUpload}" />
 					</h:column>
 						<!-- copyright license code -->
 			

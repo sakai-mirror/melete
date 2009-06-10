@@ -123,26 +123,11 @@ function fillupload()
 				<!-- start main -->
 						            <tr>
 						              <td width="100%" valign="top" align="center">
-						          			<table width="100%" border="0" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >												<tr valign="top">
-											<td colspan="2">												
-												<h:outputText value="You have selected "  rendered="#{editSectionPage.renderSelectedResource}" styleClass="blue" />
-											<h:outputText value="#{editSectionPage.selectedResourceName}" rendered="#{editSectionPage.renderSelectedResource}" styleClass="bold"/>												<h:outputText value="#{msgs.editcontentuploadserverview_click}"  rendered="#{editSectionPage.renderSelectedResource}" styleClass="blue"/>
-											</td></tr>		
-											<tr><td height="20" colspan="2" class="maintabledata8"> <h:outputText id="Stext_3" value="#{msgs.editcontentuploadserverview_select}" styleClass="bold"/> 							
-							                  	<tr valign="top">
-							                    	<td colspan="2">		
-							                    	<h:panelGrid id="uploadSView2" columns="1" width="100%">	
-															<h:column>						                    													
-																<f:subview id="UploadResourceListingForm" >	
-																		<jsp:include page="edit_list_section_resources.jsp"/> 
-																</f:subview>																																	
-														</h:column>
-														</h:panelGrid>
-							                    	</td>							                    	
-							                  	</tr>						
-		             	         	</td>
-			                  	</tr>
-			              		</table>
+						          								                    													
+											<f:subview id="UploadResourceListingForm" >	
+												<jsp:include page="list_resources.jsp"/> 
+											</f:subview>																																	
+														
 						  </td>
 			            </tr>
 			            <tr>

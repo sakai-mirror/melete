@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/java/org/etudes/tool/melete/AuthorPreferencePage.java $
- * $Id: AuthorPreferencePage.java 60573 2009-05-19 20:17:20Z mallika@etudes.org $
+ * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/java/org/etudes/tool/melete/LicensePage.java $
+ * $Id: LicensePage.java 60573 2009-05-19 20:17:20Z mallika@etudes.org $
  ***********************************************************************************
  *
  * Copyright (c) 2008, 2009 Etudes, Inc.

@@ -1,8 +1,8 @@
 <%@ page import="org.etudes.tool.melete.LicensePage"%>
 <!--
  ***********************************************************************************
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/webapp/melete/sec_resourcePropertiesPanel.jsp $
- * $Id: sec_resourcePropertiesPanel.jsp 56408 2008-12-19 21:16:52Z rashmi@etudes.org $  
+ * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/webapp/melete/licenseform.jsp $
+ * $Id: licenseform.jsp 56408 2008-12-19 21:16:52Z rashmi@etudes.org $  
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -25,13 +25,7 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
-<%
-/*final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
-final LicensePage licensePage = (LicensePage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "licensePage");
-String formName = (String)request.getParameter("formName");
-System.out.println("REQ formname is "+formName);
-licensePage.setFormName(formName);*/
-%>
+
 <f:subview id="SectionView" rendered="#{licensePage.callFromSection}">
  <h:outputText value="#{msgs.resources_proper_pan_cstatus}" />	 
  <h:outputText value="          " styleClass="MediumPaddingClass" />

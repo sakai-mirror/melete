@@ -12,7 +12,7 @@
  * obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
@@ -45,7 +45,7 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.Entity;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.tool.cover.ToolManager;
-import org.etudes.tool.melete.SectionPage.DisplaySecResources;
+
 
 /**
  * @author Rashmi Created on Jan 7, 2005 To get the server side files for wysiwyg editor remote browse

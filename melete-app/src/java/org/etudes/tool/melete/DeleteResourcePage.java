@@ -85,6 +85,15 @@ public class DeleteResourcePage implements Serializable{
   		delResourceName = title;
   	}
 
+  	private void refreshCurrSiteResourcesList()
+  	{
+  		FacesContext ctx = FacesContext.getCurrentInstance();
+		ValueBinding binding =Util.getBinding("#{listResourcesPage}");
+		ListResourcesPage listResPage = (ListResourcesPage) binding.getValue(ctx);
+		listResPage.setFromPage(this.fromPage);
+        listResPage.refreshCurrSiteResourcesList();
+  	}
+  	
   	public String deleteResource()
   	{
   		FacesContext context = FacesContext.getCurrentInstance();
@@ -108,13 +117,13 @@ public class DeleteResourcePage implements Serializable{
   					editPage.meleteResource = null;
   					editPage.resetMeleteResourceValues();
   				}
-  				editPage.refreshCurrSiteResourcesList();
+  				refreshCurrSiteResourcesList();
   			}
   			else if(fromPage.startsWith("manage"))
   			{
   				ValueBinding binding = Util.getBinding("#{manageResourcesPage}");
   				ManageResourcesPage managePage = (ManageResourcesPage) binding.getValue(context);
-  				managePage.refreshCurrSiteResourcesList();
+  				refreshCurrSiteResourcesList();
   			}
   			else
   			{
@@ -126,7 +135,7 @@ public class DeleteResourcePage implements Serializable{
   					addPage.resetMeleteResourceValues();
   					addPage.meleteResource = null;
   				}
-  				addPage.refreshCurrSiteResourcesList();
+  				refreshCurrSiteResourcesList();
   			}
   			return fromPage;
   		}

@@ -125,19 +125,13 @@ function fillupload()
 				<!-- start main -->
 						            <tr>
 						              <td width="100%" valign="top" align="center">
-						          			<table width="100%" border="0" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >
-											<tr><td height="20" colspan="2" class="maintabledata8"> <h:outputText id="Stext_3" value="#{msgs.editcontentuploadserverview_select}" styleClass="bold"/> 						          			
-						          			<tr valign="top">
-											<td colspan="2">												
+						          															
 														<!-- resource listing begin-->											
 											 	<f:subview id="UploadResourceListingForm">	
-																	<jsp:include page="list_section_resources.jsp"/> 
+													<jsp:include page="list_resources.jsp"/> 
 													</f:subview>											
 				<!-- resource listing end-->		
-											</td></tr>		
-		             	         	</td>
-			                  	</tr>
-			              		</table>
+											
 						  </td>
 			            </tr>
 			            <tr>

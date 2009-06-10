@@ -439,7 +439,19 @@
 	    	            <property-name>meleteCHService</property-name>
 	    	            <value>#{Components["org.etudes.api.app.melete.MeleteCHService"]}</value>
             </managed-property>
- </managed-bean>  	     
+ </managed-bean>  
+ 
+<managed-bean>
+      <description>Manages the list resources page</description>
+      <managed-bean-name>listResourcesPage</managed-bean-name>
+      <managed-bean-class>org.etudes.tool.melete.ListResourcesPage</managed-bean-class>
+      <managed-bean-scope>session</managed-bean-scope> 
+      <managed-property>
+	    	            <description>Service Dependency: Melete CH service</description>
+	    	            <property-name>meleteCHService</property-name>
+	    	            <value>#{Components["org.etudes.api.app.melete.MeleteCHService"]}</value>
+            </managed-property>  
+ </managed-bean>   	     
     <!-- i18n -->
 
 <managed-bean>

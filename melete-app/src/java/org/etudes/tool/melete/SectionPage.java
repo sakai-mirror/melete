@@ -81,7 +81,6 @@ import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.cover.ContentTypeImageService;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.tool.cover.SessionManager;
-import org.etudes.tool.melete.ManageResourcesPage.DisplayResources;
 import org.sakaiproject.util.ResourceLoader;
 import javax.faces.model.SelectItem;
 /**
@@ -115,7 +114,6 @@ public abstract class SectionPage implements Serializable {
 	protected boolean shouldRenderLink=false;
 	protected boolean shouldRenderLTI=false;
 	protected boolean shouldRenderUpload=false;
-	protected boolean shouldRenderResources=false;
 	protected boolean shouldRenderNotype = false;
 
 	protected boolean shouldLTIDisplayAdvanced = false;
@@ -133,17 +131,12 @@ public abstract class SectionPage implements Serializable {
     // rashmi - 3.0 added variables
 	 protected String access;
 	  protected SectionResourceService secResource;
-	  protected List<DisplaySecResources> currSiteResourcesList;
-	  private List<DisplaySecResources> displayResourcesList;
-	  private RemoteFilesListingNav listNav;
-	  private boolean sortAscFlag;
+
 	  private String linkUrl;
 	  private String ltiDescriptor;
 	  private byte[] secContentData;
 	  protected String selResourceIdFromList;
 	  private String nullString = null;
-	  protected boolean renderSelectedResource;
-	  protected boolean expandAllFlag;
 	  protected String secResourceName;
 	  protected String secResourceDescription;
 	  protected MeleteResource meleteResource;
@@ -164,7 +157,7 @@ public abstract class SectionPage implements Serializable {
 
  	protected MeleteResource selectedResource;
 
- 	
+
  	protected String oldType;
 
     public SectionPage()
@@ -178,47 +171,12 @@ public abstract class SectionPage implements Serializable {
             secResourceName=null;
             secResourceDescription="";
             selResourceIdFromList = null;
-            expandAllFlag = true;
             secResource = null;
             meleteResource = null;
-            sortAscFlag = true;
             allContentTypes = null;
             }
 
 
-    static Comparator<DisplaySecResources> SectionResourcesComparatorDesc = new Comparator<DisplaySecResources>() {
-        public int compare(DisplaySecResources o1, DisplaySecResources o2) {
-               return -1 * (o1.compareTo(o2));
-        }
-     };
-
-     public String sortResourcesAsc()
-     {
-     	sortAscFlag=false;
-     	listNav.resetCurrIndex();
-     	sortList();
-     	return "#";
-     }
-
-
-     public String sortResourcesDesc()
-     {
-     	sortAscFlag=true;
-     	listNav.resetCurrIndex();
-     	sortList();
-     	return "#";
-     }
-
-     private void sortList()
-     {
-     	if(sortAscFlag) java.util.Collections.sort(currSiteResourcesList);
-     	else Collections.sort(currSiteResourcesList,SectionResourcesComparatorDesc);
-     }
-
-     public boolean getSortAscFlag()
-     {
-    	 return this.sortAscFlag;
-     }
     /**
        * @return Returns the ModuleService.
        */
@@ -295,17 +253,7 @@ public abstract class SectionPage implements Serializable {
     }
 
 
-	/**
-	 * @return Returns the shouldRenderResources.
-	 */
-	public boolean isShouldRenderResources() {
-		 if(this.section != null && this.section.getContentType() != null)
-         {
-		 	shouldRenderResources = this.section.getContentType().equals("typeExistUpload") ||
-		 							this.section.getContentType().equals("typeExistLink")	;
-         }
-		return shouldRenderResources;
-	}
+
 	/**
 	 * @return Returns the shouldRenderNotype.
 	 */
@@ -508,16 +456,12 @@ public abstract class SectionPage implements Serializable {
             shouldRenderEditor = contentTypeRadio.getValue().equals("typeEditor");
             shouldRenderLink = contentTypeRadio.getValue().equals("typeLink");
             shouldRenderUpload = contentTypeRadio.getValue().equals("typeUpload");
-            shouldRenderResources = contentTypeRadio.getValue().equals("typeExistUpload") ||
-            							contentTypeRadio.getValue().equals("typeExistLink");
             shouldRenderNotype = contentTypeRadio.getValue().equals("notype");
             shouldRenderLTI = contentTypeRadio.getValue().equals("typeLTI");
 
             selResourceIdFromList = null;
             secResourceName = null;
             secResourceDescription = null;
-            currSiteResourcesList = null;
-            listNav = null;
             oldType = section.getContentType();
 
             if(contentTypeRadio.findComponent(getFormName()).findComponent("uploadPath") != null)
@@ -558,10 +502,8 @@ public abstract class SectionPage implements Serializable {
 
             if(contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm") != null)
             {
-            	expandAllFlag=true;
             	section.setContentType((String)contentTypeRadio.getValue());
-                getCurrSiteResourcesList();
-              contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm").setRendered(shouldRenderResources);
+              contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm").setRendered(false);
             }
             ValueBinding binding = Util.getBinding("#{licensePage}");
 
@@ -820,16 +762,13 @@ public abstract class SectionPage implements Serializable {
     secResourceName = null;
     secResourceDescription=null;
     secContentData=null;
-    currSiteResourcesList = null;
     selResourceIdFromList = null;
     meleteResource = null;
     setLicenseCodes(null);
     linkUrl = null;
     ltiDescriptor = null;
     FCK_CollId = null;
-    listNav = null;
-    displayResourcesList = null;
-    currLinkUrl = null;
+   currLinkUrl = null;
     currLTIDescriptor = null;
     currLTIUrl = null;
     currLTIPassword = null;
@@ -847,7 +786,6 @@ public abstract class SectionPage implements Serializable {
 	shouldRenderLink=false;
 	shouldRenderLTI=false;
 	shouldRenderUpload=false;
-	shouldRenderResources=false;
 	shouldRenderNotype = false;
 	allContentTypes = null;
 	oldType = null;
@@ -869,7 +807,36 @@ public abstract class SectionPage implements Serializable {
 		uploadFileName = null;
 		setLicenseCodes(null);
 	}
+	  protected void processSelectedResource(String selResourceIdFromList)
+	  {
+		  FacesContext ctx = FacesContext.getCurrentInstance();
+		  try{
+  			ContentResource cr= getMeleteCHService().getResource(selResourceIdFromList);
+		    	this.secResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
+		    	this.secResourceDescription = cr.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION);
+		    	if(cr.getContentLength() > 0)
+					currLinkUrl = new String(cr.getContent());
+  		   //get resource object
+		    	selectedResource = (MeleteResource)sectionService.getMeleteResource(selResourceIdFromList);
+		    	//just take resource properties from this object as its assoc with another section
+		    	if(selectedResource != null)
+		    	{
+					meleteResource = selectedResource;
+					ValueBinding binding = Util.getBinding("#{licensePage}");
 
+					LicensePage lPage = (LicensePage)binding.getValue(ctx);
+					lPage.setInitialValues(formName, selectedResource);
+
+				// render selected file name
+		    		selectedResourceName = secResourceName;
+		    		if (logger.isDebugEnabled()) logger.debug("values changed in resource action for res name and desc" + secResourceName + secResourceDescription);
+		    	}
+  	    }
+  	    catch(Exception ex)
+		 {
+  		logger.debug("error while accessing content resource" + ex.toString());
+		 }	  		  		  
+	  }
     /**
      * @return remove values from session before closing
      */
@@ -1125,115 +1092,7 @@ public abstract class SectionPage implements Serializable {
 		return nullString;
 	}
 
-	/**
-	 * @return Returns the renderSelectedResource.
-	 */
-	public boolean isRenderSelectedResource() {
-		return renderSelectedResource;
-	}
 
-/**
-	 * @return Returns the renderSelectedResource.
-	 */
-	public boolean isExpandAllFlag() {
-		return expandAllFlag;
-	}
-
-	public void refreshCurrSiteResourcesList(){
-		currSiteResourcesList = null;
-		getCurrSiteResourcesList();
-		return;
-	}
-
-	/**
-	 * @return Returns the currSiteResourcesList.
-	 */
-	public List<DisplaySecResources> getCurrSiteResourcesList() {
-		try{
-		if(currSiteResourcesList ==null)
-		{
-			logger.debug("from getCurrSiteResourcesList - i am null");
-			// get current site upload collection
-			String uploadCollId = getMeleteCHService().getUploadCollectionId();
-
-			// get list of all resources for upload type for the current site
-			currSiteResourcesList = new ArrayList<DisplaySecResources>();
-
-			List<ContentResource> allmembers = null;
-			if(section == null || section.getContentType() == null) return null;
-
-			//to create list of resource whose type is typeUpload
-				if(section.getContentType().equals("typeUpload") || section.getContentType().equals("typeExistUpload"))
-				{
-					allmembers = getMeleteCHService().getListofFilesFromCollection(uploadCollId);
-				}
-
-				if(section.getContentType().equals("typeLink") || section.getContentType().equals("typeExistLink"))
-				{
-					allmembers = getMeleteCHService().getListofLinksFromCollection(uploadCollId);
-				}
-
-                if(section.getContentType().equals("typeLTI"))
-                {
-                        allmembers = getMeleteCHService().getListFromCollection(uploadCollId, getMeleteCHService().MIME_TYPE_LTI);
-                }
-
-			if(allmembers == null) return null;
-			Iterator<ContentResource> allmembers_iter = allmembers.iterator();
-			String serverUrl = serverConfigurationService.getServerUrl();
-			while(allmembers_iter != null && allmembers_iter.hasNext())
-			{
-				ContentResource cr = allmembers_iter.next();
-				String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
-//							 duplicate listing
-				if (displayName.length() > 50) displayName = displayName.substring(0,50) + "...";
-				String rUrl = cr.getUrl().replaceAll(" ", "%20");
-				String rgif=  serverUrl + "/library/image/sakai/url.gif";
-				if(section.getContentType().equals("typeUpload"))
-				{
-				String contentextension = cr.getContentType();
-		 		rgif = ContentTypeImageService.getContentTypeImage(contentextension);
-		 		if(rgif.startsWith("sakai"))
-		 			rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
-		 		else if (rgif.startsWith("/sakai"))
-		 			rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));
-				}
-				if(section.getContentType().equals("typeLTI"))
-				{
-					rgif=  "images/web_service.png";
-				}
-				currSiteResourcesList.add(new DisplaySecResources(displayName, cr.getId(),rUrl, rgif));
-			}
-			java.util.Collections.sort(currSiteResourcesList);
-			getListNav().setTotalSize(currSiteResourcesList.size()+1);
-		}
-		} catch (Exception e){logger.warn("error in creating list for server residing files" + e.toString());}
-		return currSiteResourcesList;
-	}
-
-	/*
-	 *  to display listing in chunks
-	 */
-	public List getDisplayResourcesList()
-	{
-		try{
-		if(currSiteResourcesList == null) getCurrSiteResourcesList();
-		if(currSiteResourcesList != null)
-		{
-			int fromIndex = getListNav().getCurrIndex();
-			int toIndex = getListNav().getEndIndex();
-
-			logger.debug("from and to index and total size" + fromIndex + "," +toIndex +"," +currSiteResourcesList.size());
-			displayResourcesList = null;
-			if(fromIndex >= 0 && toIndex > fromIndex && toIndex <= currSiteResourcesList.size())
-			{
-				displayResourcesList = (List)currSiteResourcesList.subList(fromIndex,toIndex);
-				logger.debug("displayResourcesList" + displayResourcesList.size());
-			}
-		}
-		} catch (Exception e){logger.warn("error in creating displayList for server residing files" + e.toString());}
-		return displayResourcesList;
-	}
 
 	 //Mallika - 10/13/06 - new method to check if uploads directory exists
     public void checkUploadExists()
@@ -1402,27 +1261,15 @@ public abstract class SectionPage implements Serializable {
 		return FCK_CollId;
 	}
 
-	/**
-	 * @return Returns the listNav.
-	 */
-	public RemoteFilesListingNav getListNav() {
-		if(listNav == null)
-		{
-			listNav = new RemoteFilesListingNav(0,0,30);
-		}
 
-		return listNav;
-	}
-	/**
-	 * @param listNav The listNav to set.
-	 */
-	public void setListNav(RemoteFilesListingNav listNav) {
-		this.listNav = listNav;
-	}
 	/**
 	 * @return Returns the selResourceIdFromList.
 	 */
 	public String getSelResourceIdFromList() {
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ValueBinding binding =Util.getBinding("#{listResourcesPage}");
+		ListResourcesPage listResPage = (ListResourcesPage) binding.getValue(ctx);
+		selResourceIdFromList = listResPage.getSelResourceIdFromList();
 		return selResourceIdFromList;
 	}
 
@@ -1570,6 +1417,7 @@ public abstract class SectionPage implements Serializable {
 		this.selectedResourceName = selectedResourceName;
 	}
 
+	
 	/**
 	 * @return the newURLTitle
 	 */
@@ -1635,95 +1483,6 @@ public abstract class SectionPage implements Serializable {
 		{
 		 return getMeleteCHService().getDisplayName(resourceId);
 		}
-	/*
-	 *
-	 * inner class to set required content resource values for display
-	 *
-	 */
-	public class DisplaySecResources implements Comparable<DisplaySecResources>
-	{
-		String resource_title;
-		String resource_id;
-		String resource_url;
-		String resource_gif;
-
-		public DisplaySecResources(String resource_title,String resource_id, String resource_url)
-		{
-			this.resource_title = resource_title;
-			this.resource_id = resource_id;
-			this.resource_url = resource_url;
-			this.resource_gif = "";
-		}
-
-		public DisplaySecResources(String resource_title,String resource_id, String resource_url, String resource_gif)
-		{
-			this.resource_title = resource_title;
-			this.resource_id = resource_id;
-			this.resource_url = resource_url;
-			this.resource_gif = resource_gif;
-		}
-		/**
-		 * @return Returns the resource_id.
-		 */
-		public String getResource_id() {
-			return resource_id;
-		}
-		/**
-		 * @param resource_id The resource_id to set.
-		 */
-		public void setResource_id(String resource_id) {
-			this.resource_id = resource_id;
-		}
-		/**
-		 * @return Returns the resource_title.
-		 */
-		public String getResource_title() {
-			return resource_title;
-		}
-		/**
-		 * @param resource_title The resource_title to set.
-		 */
-		public void setResource_title(String resource_title) {
-			this.resource_title = resource_title;
-		}
-		/**
-		 * @return Returns the resource_url.
-		 */
-		public String getResource_url() {
-			return resource_url;
-		}
-		/**
-		 * @param resource_url The resource_url to set.
-		 */
-		public void setResource_url(String resource_url) {
-			this.resource_url = resource_url;
-		}
-
-		public int compareTo(DisplaySecResources n) {
-			int res = resource_title.compareToIgnoreCase(n.getResource_title());
-			return res;
-		}
-
-		public String toString() {
-			return resource_title;
-		}
-
-		/**
-		 * @return the resource_gif
-		 */
-		public String getResource_gif()
-		{
-			return this.resource_gif;
-		}
-
-		/**
-		 * @param resource_gif the resource_gif to set
-		 */
-		public void setResource_gif(String resource_gif)
-		{
-			this.resource_gif = resource_gif;
-		}
-	}
 
 
 }
