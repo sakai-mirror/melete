@@ -96,6 +96,7 @@ public class ModuleDB implements Serializable {
 	private MeleteSecurityService meleteSecurityService;
 
 	private MeleteUserPreferenceDB userPrefdb;
+	private int MAX_IN_CLAUSES = 500;
 
 	/** Dependency:  The logging service. */
 	private Log logger = LogFactory.getLog(ModuleDB.class);
@@ -255,6 +256,12 @@ public class ModuleDB implements Serializable {
 	 */
 	public void addModule(Module module, ModuleShdates moduleshowdates, String userId, String courseId) throws Exception
 	{
+		/*
+   	 * Since Oracle silently transforms "" to nulls, we need to check to see if 
+		 * these non null properties are in fact null. 
+		 */
+
+		hibernateUtil.ensureModuleHasNonNulls(module);
 
 	try{
 	     Session session = hibernateUtil.currentSession();
@@ -497,7 +504,7 @@ public class ModuleDB implements Serializable {
 				dbConnection = SqlService.borrowConnection();
 		    	ResultSet rs = null;
 
-	            String sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 order by c.seq_no";
+	            String sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and s.delete_flag=0 order by c.seq_no";
 	            PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 	            pstmt.setString(1,courseId);
 		    	rs = pstmt.executeQuery();
@@ -857,6 +864,7 @@ public class ModuleDB implements Serializable {
 		 SubSectionUtilImpl ssuImpl = new SubSectionUtilImpl();
 		 String updSeqXml = null;
 		 if (sectionMap == null || sectionMap.size() == 0) return null;
+		 
 		 if (sectionMap != null)
 		 {
 
@@ -1151,12 +1159,23 @@ public class ModuleDB implements Serializable {
 
 	 public void updateModule(Module mod) throws Exception
 	 {
+	 
+	  hibernateUtil.ensureModuleHasNonNulls(mod);
 	 	Transaction tx = null;
 	 	try
 		{
 
 	      Session session = hibernateUtil.currentSession();
 
+		  if (null == mod.getCreatedByFname())
+		  {
+			  mod.setCreatedByFname("");
+		  }
+		  
+		  if (null == mod.getCreatedByLname())
+		  {
+			  mod.setCreatedByLname("");
+		  }
 	      tx = session.beginTransaction();
 
 	      //Update module properties
@@ -1257,9 +1276,11 @@ public class ModuleDB implements Serializable {
 			// update seq_no for each deleted_module
 			StringBuffer allModuleIds = new StringBuffer("(");
 			StringBuffer allSectionIds = new StringBuffer("(");
+			ArrayList<StringBuffer> allSectionIdsArray = new ArrayList<StringBuffer>(); 
 			String delModuleIds = null;
-			String delSectionIds = null;
+			//String delSectionIds = null;
 			ArrayList<DelModuleInfo> DelModuleInfoList = new ArrayList<DelModuleInfo>(0);
+			int count = 1;
 			for (Iterator dmIter = delModules.iterator(); dmIter.hasNext();)
 			{
 				Module dm = (Module) dmIter.next();
@@ -1269,27 +1290,48 @@ public class ModuleDB implements Serializable {
 				{
 					for (Iterator i = delSections.keySet().iterator(); i.hasNext();)
 					{
-						allSectionIds.append(i.next() + ",");
+						 if (count % MAX_IN_CLAUSES == 0) { 
+							 allSectionIds.append(i.next() + ")"); 
+							 allSectionIdsArray.add(allSectionIds); 
+							 allSectionIds = new StringBuffer("("); 
+							 } 
+							 else { 
+							 allSectionIds.append(i.next() + ","); 
+							 } 
+							 count++; 				
 					}
-				}
+				 }
+			
 
 				Map delDeletedSections = dm.getDeletedSections();
 				if (delDeletedSections != null && !delDeletedSections.isEmpty())
 				{
 					for (Iterator i1 = delDeletedSections.keySet().iterator(); i1.hasNext();)
 					{
-						allSectionIds.append(i1.next() + ",");
-					}
+						if (count % MAX_IN_CLAUSES == 0) { 
+						 allSectionIds.append(i1.next() + ")"); 
+						 allSectionIdsArray.add(allSectionIds); 
+						 allSectionIds = new StringBuffer("("); 
+						 } 
+						 else { 
+						 allSectionIds.append(i1.next() + ","); 
+						 } 
+						count++; 
+					} 					
 				}
 
 				// record seq_no and id
 				DelModuleInfoList.add(new DelModuleInfo(dm.getModuleId().toString(),dm.getCoursemodule().getSeqNo()));
 			}
+			
 			if (allModuleIds.lastIndexOf(",") != -1) delModuleIds = allModuleIds.substring(0, allModuleIds.lastIndexOf(",")) + " )";
 
-			if (allSectionIds.lastIndexOf(",") != -1) delSectionIds = allSectionIds.substring(0, allSectionIds.lastIndexOf(",")) + " )";
-
-
+			//if (allSectionIds.lastIndexOf(",") != -1) delSectionIds = allSectionIds.substring(0, allSectionIds.lastIndexOf(",")) + " )";
+			 if (count % MAX_IN_CLAUSES != 0) { 
+			 allSectionIds.replace(allSectionIds.lastIndexOf(","), allSectionIds.lastIndexOf(",")+1, ")"); 
+			 allSectionIdsArray.add(allSectionIds); 
+			 } 
+			
 			Session session = hibernateUtil.currentSession();
 			tx = session.beginTransaction();
 
@@ -1297,19 +1339,22 @@ public class ModuleDB implements Serializable {
 			int deletedEntities;
 
 			// delete modules and sections
-			String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + delSectionIds;
-			String delSectionResourceStr = "delete SectionResource sr where sr.section in " + delSectionIds;
+			String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in "; 
+			String delSectionResourceStr = "delete SectionResource sr where sr.section in "; 	
 			String delSectionStr = "delete Section s where s.moduleId in " + delModuleIds;
 			String delCourseModuleStr = "delete CourseModule cm where cm.moduleId in " + delModuleIds;
 			String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId in " + delModuleIds;
 			String delModuleStr = "delete Module m where m.moduleId in " + delModuleIds;
 
 
-			if (delSectionIds != null)
+			if (allSectionIdsArray != null)
 			{
-				deletedEntities = session.createQuery(updSectionResourceStr).executeUpdate();
-				logger.debug("section resource deleted" + deletedEntities);
-				deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
+				for (int i=0; i<allSectionIdsArray.size(); i++) { 
+					 allSectionIds = allSectionIdsArray.get(i); 
+					 deletedEntities = session.createQuery(updSectionResourceStr + allSectionIds.toString()).executeUpdate(); 
+					 logger.debug("section resource deleted" + deletedEntities); 
+					 deletedEntities = session.createQuery(delSectionResourceStr + allSectionIds.toString()).executeUpdate(); 
+				} 		
 			}
 
 			if (delModuleIds != null)

@@ -454,35 +454,32 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 		uris.put("imscp", DEFAULT_NAMESPACE_URI);
 		uris.put("imsmd", IMSMD_NAMESPACE_URI);
 
-		try
+
+		// organizations
+		XPath xpath = document.createXPath("/imscp:manifest/imscp:organizations/imscp:organization");
+		xpath.setNamespaceURIs(uris);
+
+		Element eleOrg = (Element) xpath.selectSingleNode(document);
+
+		// build module
+		// loop thru organization elements - item elements
+		if(eleOrg != null)
 		{
-			// organizations
-			XPath xpath = document.createXPath("/imscp:manifest/imscp:organizations/imscp:organization");
-			xpath.setNamespaceURIs(uris);
-
-			Element eleOrg = (Element) xpath.selectSingleNode(document);
-
-			// build module
-			// loop thru organization elements - item elements
 			List elements = eleOrg.elements();
 			for (Iterator iter = elements.iterator(); iter.hasNext();)
 			{
 				Element element = (Element) iter.next();
 				buildModule(element, document, unZippedDirPath,ToolManager.getCurrentPlacement().getContext() );
-
 			}
-			xpath = document.createXPath("/imscp:manifest/imscp:resources");
-			xpath.setNamespaceURIs(uris);
-
-			eleOrg = (Element) xpath.selectSingleNode(document);
-			processManageResources(eleOrg, unZippedDirPath, ToolManager.getCurrentPlacement().getContext(), document);
-
 		}
-		catch (Exception e)
-		{
-			// no organization tag so create one flat module
-			buildFlatModule(document, unZippedDirPath,ToolManager.getCurrentPlacement().getContext());
-		}
+		// flat structure for packages created by RELOAD 
+		else buildFlatModule(document, unZippedDirPath,ToolManager.getCurrentPlacement().getContext());
+
+		xpath = document.createXPath("/imscp:manifest/imscp:resources");
+		xpath.setNamespaceURIs(uris);
+
+		eleOrg = (Element) xpath.selectSingleNode(document);
+		processManageResources(eleOrg, unZippedDirPath, ToolManager.getCurrentPlacement().getContext(), document);
 
 		if (logger.isDebugEnabled()) logger.debug("Exiting parseAndBuildModules");
 	}
@@ -1421,11 +1418,17 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 							// logger.debug("SITE RES ITEM" + fileResourceName);
 					  			if(resElements != null){
 									String fileName = ((Element)resElements.get(0)).attributeValue("href");
-									// logger.debug("fileName read now is:" + fileName);
-									melContentData = meleteUtil.readFromFile(new File(unZippedDirPath + File.separator+ fileName));
-									res_mime_type = fileName.substring(fileName.lastIndexOf(".")+1);
-									res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
+									//if file doesn't exist in exported package then skip it
+									File fileResource = new File(unZippedDirPath + File.separator+ fileName);
+									if(fileResource.exists())
+									{
+										melContentData = meleteUtil.readFromFile(fileResource);
+										res_mime_type = fileName.substring(fileName.lastIndexOf(".")+1);
+										res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
 									}
+									//set data as blank
+									else return;
+								  }
 								else
 						 		  {
 						 			//This is executed by import from site
@@ -1437,6 +1440,7 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 										ref_id = ref_id.substring(ref_id.indexOf("/content")+ 8);
 						 			ContentResource cr = getMeleteCHService().getResource(ref_id);
 									melContentData = cr.getContent();
+									if(melContentData == null || melContentData.length <= 0) return;
 									res_mime_type = cr.getContentType();
 						 		  }
 								try
@@ -1480,16 +1484,21 @@ public class MeleteImportServiceImpl implements MeleteImportService{
 					  	res_mime_type = melResourceName.substring(melResourceName.lastIndexOf(".")+1);
 					  	res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
 					  }
-			 		  if (resElements != null)
-			 		  {
-			 			melContentData = meleteUtil.readFromFile(new File(unZippedDirPath + File.separator+ hrefVal));
-			 		  }
+					  if (resElements != null)
+					  {
+						  File fileUploadResource = new File(unZippedDirPath + File.separator+ hrefVal);
+						  if(fileUploadResource.exists())
+							  melContentData = meleteUtil.readFromFile(fileUploadResource);
+						  else return;
+					  }
 			 		  else
 			 		  {
 			 			//This is executed by import from site
 			 			// logger.debug("reading resource properties in import from site");
 			 			ContentResource cr = getMeleteCHService().getResource(hrefVal);
 						melContentData = cr.getContent();
+						if(melContentData == null || melContentData.length <= 0) return;
+
 				  		res_mime_type = cr.getContentType();
 						if ( getMeleteCHService().MIME_TYPE_LTI.equals(res_mime_type) ) {
 							section.setContentType("typeLTI");

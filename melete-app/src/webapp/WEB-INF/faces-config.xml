@@ -350,11 +350,6 @@
 	    	            <property-name>authorPref</property-name>
 	    	            <value>#{Components["org.etudes.api.app.melete.MeleteAuthorPrefService"]}</value>
             </managed-property>
-            <managed-property>
-              <description>Service Dependency: Section service</description>
-              <property-name>sectionService</property-name>
-              <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
-        </managed-property>
 </managed-bean>  
 
 <managed-bean>
@@ -367,6 +362,18 @@
 	    	            <property-name>authorPref</property-name>
 	    	            <value>#{Components["org.etudes.api.app.melete.MeleteAuthorPrefService"]}</value>
             </managed-property>
+</managed-bean> 
+
+<managed-bean>
+          <description>license page</description>
+          <managed-bean-name>licensePage</managed-bean-name>
+          <managed-bean-class>org.etudes.tool.melete.LicensePage</managed-bean-class>
+          <managed-bean-scope>session</managed-bean-scope>
+          <managed-property>
+              <description>Service Dependency: Section service</description>
+              <property-name>sectionService</property-name>
+              <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
+        </managed-property>
 </managed-bean> 
 
 <managed-bean>

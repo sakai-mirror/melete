@@ -94,22 +94,10 @@
 					</h:selectOneRadio>	
 				</h:column>
 				<h:column>
-				  <h:outputText value="#{msgs.author_preference_select_license}" styleClass="bold"/>	 
-                </h:column>
+				 </h:column>
                 <h:column>
-				  <h:selectOneMenu id="licenseCodes" value="#{authorPreferences.m_license.licenseCodes}" valueChangeListener="#{authorPreferences.m_license.hideLicense}" onchange="this.form.submit();" >
-				    <f:selectItems value="#{authorPreferences.m_license.licenseTypes}" />							
-				  </h:selectOneMenu>
-				  <h:outputText value="          " styleClass="ExtraPaddingClass" />
-				  <h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="images/help.gif" alt="Learn More about The License Options" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
-			   </h:column>	
-		       <h:panelGrid id="propertiesPanel3" columns="1" width="100%">
-			     <h:column>
-				 <f:subview id="CCLicenseForm" rendered="#{authorPreferences.m_license.shouldRenderCC || authorPreferences.m_license.shouldRenderCopyright || authorPreferences.m_license.shouldRenderPublicDomain || authorPreferences.m_license.shouldRenderFairUse}">	
-				   <jsp:include page="authorpref_cclicenseform.jsp"/> 
-				 </f:subview>
+				<jsp:include page="licenseform.jsp"/>
 				 </h:column>	
-		       </h:panelGrid>
 				 </h:panelGrid>
 				</td></tr>			
 				<tr>

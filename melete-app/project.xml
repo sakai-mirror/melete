@@ -25,16 +25,16 @@
 -->
 <project>
 	<pomVersion>3</pomVersion>
-	<extend>../../master/jsf-sun-tool.xml</extend>
+	<extend>../project.xml</extend>
 	<name>etudes-melete-tool</name>
 	<groupId>etudes</groupId>
 	<id>etudes-melete-tool</id>
-	  <currentVersion>${melete.version}</currentVersion>
+	<currentVersion>${melete.version}</currentVersion>
 	<organization>
-		<name>Etudes</name>
-		<url>http://etudes.org/</url>
-	</organization>
-	<inceptionYear>2003</inceptionYear>
+    		<name>Etudes, Inc.</name>
+    		<url>http://etudes.org</url>
+    	</organization>
+    	<inceptionYear>2004</inceptionYear>
 
    	<properties>
 		<deploy.type>war</deploy.type>

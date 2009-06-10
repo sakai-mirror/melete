@@ -120,51 +120,51 @@
    	         <tr>
 	         <td align="center" class="meleteLicenseMsg center"><B>
 	          <h:outputText id="lic1_val0" value="    "
-rendered="#{editSectionPage.m_license.licenseCodes == 0}"/>      
+rendered="#{editSectionPage.meleteResource.licenseCode == 0}"/>      
              <!--License code Copyright-->
    <h:outputText id="lic1_val1" value="#{msgs.edit_preview_copyright}" 
 
-rendered="#{editSectionPage.m_license.licenseCodes == 1}"/>      
-   <h:outputText id="lic1_val4" value="#{editSectionPage.m_license.copyright_year}" rendered="#{((editSectionPage.m_license.licenseCodes == 1)&&(editSectionPage.m_license.copyright_year != editSectionPage.nullString))}"/> 
-   <h:outputText id="lic1_val2" escape="false" value="<BR>#{editSectionPage.m_license.copyright_owner}" rendered="#{editSectionPage.m_license.licenseCodes == 1}"/> 
+rendered="#{editSectionPage.meleteResource.licenseCode == 1}"/>      
+   <h:outputText id="lic1_val4" value="#{editSectionPage.meleteResource.copyrightYear}" rendered="#{((editSectionPage.meleteResource.licenseCode == 1)&&(editSectionPage.meleteResource.copyrightYear != editSectionPage.nullString))}"/> 
+   <h:outputText id="lic1_val2" escape="false" value="<BR>#{editSectionPage.meleteResource.copyrightOwner}" rendered="#{editSectionPage.meleteResource.licenseCode == 1}"/> 
       <!--End license code Copyright-->
  <!--License code Public domain-->
    <h:outputText id="lic2_val1" value="#{msgs.edit_preview_dedicated_to}" 
 
-rendered="#{editSectionPage.m_license.licenseCodes == 2}"/> 
+rendered="#{editSectionPage.meleteResource.licenseCode == 2}"/> 
    
    <h:outputText id="lic2_val2" value="#{msgs.edit_preview_public_domain}" 
 
-rendered="#{editSectionPage.m_license.licenseCodes == 2}"/>  
+rendered="#{editSectionPage.meleteResource.licenseCode == 2}"/>  
    
-  <h:outputText id="lic2_val5" value="#{editSectionPage.m_license.copyright_year}" rendered="#{((editSectionPage.m_license.licenseCodes == 2)&&(editSectionPage.m_license.copyright_year != editSectionPage.nullString))}"/> 
- <h:outputText id="lic2_val3" escape="false" value="<BR>#{editSectionPage.m_license.copyright_owner} "  
+  <h:outputText id="lic2_val5" value="#{editSectionPage.meleteResource.copyrightYear}" rendered="#{((editSectionPage.meleteResource.licenseCode == 2)&&(editSectionPage.meleteResource.copyrightYear != editSectionPage.nullString))}"/> 
+ <h:outputText id="lic2_val3" escape="false" value="<BR>#{editSectionPage.meleteResource.copyrightOwner} "  
 
-rendered="#{((editSectionPage.m_license.licenseCodes == 2)&&(editSectionPage.m_license.copyright_owner != editSectionPage.nullString))}"/>	
+rendered="#{((editSectionPage.meleteResource.licenseCode == 2)&&(editSectionPage.meleteResource.copyrightOwner != editSectionPage.nullString))}"/>	
  
       <!--End license code Public domain-->   
       <!--License code CC license-->
    <h:outputText id="lic3_val1" value="#{msgs.edit_preview_licensed_under}" 
 
-rendered="#{editSectionPage.m_license.licenseCodes == 3}"/> 
+rendered="#{editSectionPage.meleteResource.licenseCode == 3}"/> 
    
    <h:outputText id="lic3_val2" value="#{msgs.edit_preview_creative_commons}" 
 
-rendered="#{editSectionPage.m_license.licenseCodes == 3}"/>
+rendered="#{editSectionPage.meleteResource.licenseCode == 3}"/>
 
-   <h:outputText id="lic3_val5" value="#{editSectionPage.m_license.copyright_year}" rendered="#{((editSectionPage.m_license.licenseCodes == 3)&&(editSectionPage.m_license.copyright_year != editSectionPage.nullString))}"/> 
-	  <h:outputText id="lic3_val3" escape="false" value="<BR>#{editSectionPage.m_license.copyright_owner} "  
+   <h:outputText id="lic3_val5" value="#{editSectionPage.meleteResource.copyrightYear}" rendered="#{((editSectionPage.meleteResource.licenseCode == 3)&&(editSectionPage.meleteResource.copyrightYear != editSectionPage.nullString))}"/> 
+	  <h:outputText id="lic3_val3" escape="false" value="<BR>#{editSectionPage.meleteResource.copyrightOwner} "  
 
-rendered="#{((editSectionPage.m_license.licenseCodes == 3)&&(editSectionPage.m_license.copyright_owner != editSectionPage.nullString))}"/> 
+rendered="#{((editSectionPage.meleteResource.licenseCode == 3)&&(editSectionPage.meleteResource.copyrightOwner != editSectionPage.nullString))}"/> 
       <!--End license code CC license-->     	
 	 
         <!--License code fairuse license-->
-      <h:outputText id="lic4_val2" value="#{msgs.edit_preview_fairuse}"  rendered="#{editSectionPage.m_license.licenseCodes == 4}"/>
+      <h:outputText id="lic4_val2" value="#{msgs.edit_preview_fairuse}"  rendered="#{editSectionPage.meleteResource.licenseCode == 4}"/>
        
-   <h:outputText id="lic4_val5" value="#{editSectionPage.m_license.copyright_year}" rendered="#{((editSectionPage.m_license.licenseCodes == 4)&&(editSectionPage.m_license.copyright_year != editSectionPage.nullString))}"/> 
-<h:outputText id="lic4_val3" escape="false" value="<BR>#{editSectionPage.m_license.copyright_owner} "  
+   <h:outputText id="lic4_val5" value="#{editSectionPage.meleteResource.copyrightYear}" rendered="#{((editSectionPage.meleteResource.licenseCode == 4)&&(editSectionPage.meleteResource.copyrightYear != editSectionPage.nullString))}"/> 
+<h:outputText id="lic4_val3" escape="false" value="<BR>#{editSectionPage.meleteResource.copyrightOwner} "  
 
-rendered="#{((editSectionPage.m_license.licenseCodes == 4)&&(editSectionPage.m_license.copyright_owner != editSectionPage.nullString))}"/> 
+rendered="#{((editSectionPage.meleteResource.licenseCode == 4)&&(editSectionPage.meleteResource.copyrightOwner != editSectionPage.nullString))}"/> 
 
          <!--End license code fairuse license-->             
               </B></TD></TR>

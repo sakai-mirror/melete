@@ -96,6 +96,13 @@ public class SectionDB implements Serializable {
 			  section.setModificationDate(new java.util.Date());
 			  section.setModuleId(module.getModuleId().intValue());
 			  section.setDeleteFlag(false);
+				
+				/*
+			   * Since Oracle silently transforms "" to nulls, we need to check to see if 
+			   * these non null properties are in fact null. 
+			   */
+
+			  hibernateUtil.ensureSectionHasNonNull(section);
 			  	// save object
 			  if (!session.isOpen()) {
 				  session = hibernateUtil.currentSession();
@@ -164,6 +171,9 @@ public class SectionDB implements Serializable {
 			  // set default values for not-null fields
 			  section.setCreationDate(new java.util.Date());
 			  section.setModificationDate(new java.util.Date());
+
+			  hibernateUtil.ensureSectionHasNonNull(section);
+
 	 	  	  // save object
 	 	  	  if (!session.isOpen()) session = hibernateUtil.currentSession();
 			  session.evict(section);
@@ -207,7 +217,9 @@ public class SectionDB implements Serializable {
 	         Transaction tx = null;
 			try
 			{
-			  // set default values for not-null fields
+			  hibernateUtil.ensureSectionHasNonNull(section);
+				
+				// set default values for not-null fields
 				SectionResource secResource = (SectionResource)section.getSectionResource();
 				if(secResource == null)
 					secResource = new SectionResource();
@@ -279,6 +291,8 @@ public class SectionDB implements Serializable {
 		       try
 		       	{
 		    	   tx = session.beginTransaction();
+						 
+						 hibernateUtil.ensureSectionHasNonNull(sec);
 
 		    	   secRes = (SectionResource) sec.getSectionResource();
 
@@ -751,6 +765,8 @@ public class SectionDB implements Serializable {
 	         Transaction tx = null;
 			try
 			{
+				hibernateUtil.ensureSectionHasNonNull(section);
+				
 				SectionResource secResource = (SectionResource)section.getSectionResource();
 				if (secResource == null) secResource = new  SectionResource();
 				// set secResource fields
@@ -805,6 +821,8 @@ public class SectionDB implements Serializable {
 	         Transaction tx = null;
 			try
 			{
+				hibernateUtil.ensureSectionHasNonNull(section);
+				
 				SectionResource secResource = (SectionResource)section.getSectionResource();
 				if (secResource == null) secResource = new  SectionResource();
 				// set secResource fields
@@ -929,6 +947,8 @@ public class SectionDB implements Serializable {
 	         Transaction tx = null;
 			try
 			{
+				hibernateUtil.ensureSectionHasNonNull(section);
+				
 				// delete SectionResource
 				tx = session.beginTransaction();
 				section.setSectionResource(null);
@@ -971,6 +991,8 @@ public class SectionDB implements Serializable {
 	         Transaction tx = null;
 			try
 			{
+				hibernateUtil.ensureSectionHasNonNull(section);
+				
 				// set secResource fields
 				secResource.setSection(section);
 				secResource.setSectionId(section.getSectionId());
