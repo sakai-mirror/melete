@@ -478,14 +478,24 @@ public class EditSectionPage extends SectionPage implements Serializable
 	public String getPreviewPage()
 	{
 	   ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+	   FacesContext context = FacesContext.getCurrentInstance();
+		
 
+	   if(meleteResource != null && meleteResource.getResourceId() != null)
+	   {
+		   System.out.println("Processing license in preview");
+		   ValueBinding binding = Util.getBinding("#{licensePage}");
+		   LicensePage lPage = (LicensePage)binding.getValue(context);
+		     lPage.setFormName(getFormName());
+			meleteResource = lPage.processLicenseInformation(meleteResource);
+	   }
+			
 		try
 		{
 			if (!section.getContentType().equals("notype"))
 			{
 				if (this.section.getContentType().equals("typeEditor"))
 				{
-					FacesContext context = FacesContext.getCurrentInstance();
 					String uploadHomeDir = context.getExternalContext().getInitParameter("uploadDir");
 					try
 					{
