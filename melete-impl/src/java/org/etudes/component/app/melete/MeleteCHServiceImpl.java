@@ -80,7 +80,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	 protected MeleteUtil meleteUtil = new MeleteUtil();
 
 	 /** This string starts the references to resources in this service. */
-		static final String REFERENCE_ROOT = Entity.SEPARATOR+"meleteDocs";
+	 static final String REFERENCE_ROOT = Entity.SEPARATOR+"meleteDocs";
 
 	 /**
 		 * Check if the current user has permission as author.
@@ -861,6 +861,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		meleteSecurityService.pushAdvisor();
         		resourceId = URLDecoder.decode(resourceId,"UTF-8");
         		getContentservice().checkResource(resourceId);
+        	//  for manage items which are just in CH and NOT in Melete Resource then insert them
+        		sectiondb.getMeleteResource(resourceId);
         		return;
 	    }
 	 	catch (IdUnusedException ex)
@@ -1194,20 +1196,20 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 
 
 
-	  public void copyIntoFolder(String fromColl,String toColl)
+	  public String copyIntoFolder(String fromColl,String toColl)
 	  {
 			try
 		    {
 	        if (!isUserAuthor())
 	        {
 	        		logger.info("User is not authorized to perform the copyIntoFolder function");
-	        		return;
+	        		return "";
 	        }
 	   			//          setup a security advisor
 	        meleteSecurityService.pushAdvisor();
 		    try
 			{
-	         getContentservice().copyIntoFolder(fromColl, toColl);
+		       return getContentservice().copyIntoFolder(fromColl, toColl);
 	       }
 	       catch(InconsistentException e)
           {
@@ -1258,7 +1260,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	     {
 	       meleteSecurityService.popAdvisor();
 	     }
-
+	     return "";
 		}
 
 

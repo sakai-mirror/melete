@@ -28,26 +28,10 @@ import org.dom4j.Document;
 
 
 /**
- * <p>MeleteImportExportService provides the methods for import export</p>
+ * run import from site
  * @author Foothill College
  *
  */
-public interface MeleteImportService{
-
-	/**
-	 * deletes the file and its children
-	 * @param delfile - file to be deleted
-	 */
-	public void deleteFiles(File delfile);
-
-	/**
-	 * Parses the manifest and build modules
-	 *
-	 * @param document document
-	 * @param unZippedDirPath unZipped fiels Directory Path
-	 * @exception throws exception
-	 */
-	public void parseAndBuildModules(Document document, String unZippedDirPath) throws Exception;
-	public int mergeAndBuildModules(Document ArchiveDoc, String unZippedDirPath, String fromSiteId) throws Exception;
-	public String getContentSourceInfo(Document document);
+public interface MeleteImportfromSiteService{
+	public void copyModules(String fromContext, String toContext);
 }

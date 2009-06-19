@@ -39,6 +39,7 @@ import javax.servlet.ServletOutputStream;
 import org.etudes.api.app.melete.MeleteExportService;
 import org.etudes.api.app.melete.MeleteSecurityService;
 import org.etudes.api.app.melete.ModuleService;
+import org.etudes.api.app.melete.MeleteImportfromSiteService;
 import org.etudes.api.app.melete.MeleteImportService;
 import org.sakaiproject.authz.cover.FunctionManager;
 import org.sakaiproject.tool.cover.ToolManager;
@@ -87,6 +88,7 @@ import org.sakaiproject.thread_local.api.ThreadLocalManager;
 public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityProducer,EntityTransferrer {
 
 	private ModuleService moduleService;
+	private MeleteImportfromSiteService meleteImportfromSiteService;
 	private MeleteImportService meleteImportService;
 	private MeleteExportService meleteExportService;
 
@@ -609,7 +611,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 			 threadLocalManager.set("MELETE_importResources" , importResources);
 			 threadLocalManager.set("MELETE_secondaryHTMLResources" , secondaryHTMLResources);
 
-			getMeleteImportService().copyModules(fromContext, toContext);
+			getMeleteImportfromSiteService().copyModules(fromContext, toContext);
 			logger.debug("importResources: End importing melete data");
 		}
 		catch (Exception e)
@@ -628,14 +630,14 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	 }
 
 
-    public MeleteImportService getMeleteImportService() {
-	return meleteImportService;
+    public MeleteImportfromSiteService getMeleteImportfromSiteService() {
+	return meleteImportfromSiteService;
    }
 
 
-     public void setMeleteImportService(
-		MeleteImportService meleteImportService) {
-	this.meleteImportService = meleteImportService;
+     public void setMeleteImportfromSiteService(
+		MeleteImportfromSiteService meleteImportfromSiteService) {
+	this.meleteImportfromSiteService = meleteImportfromSiteService;
     }
 
 
@@ -656,5 +658,11 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		this.meleteExportService = meleteExportService;
 	}
 
+	public MeleteImportService getMeleteImportService() {
+		return meleteImportService;
+	}
 
+	public void setMeleteImportService(MeleteImportService meleteImportService) {
+		this.meleteImportService = meleteImportService;
+	}
 }

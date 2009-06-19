@@ -31,6 +31,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.entity.api.Reference;
+import org.sakaiproject.entity.cover.EntityManager;
 
 public class MeleteUtil {
 	/** Dependency:  The logging service. */
@@ -202,5 +204,50 @@ public class MeleteUtil {
 			}
 			return checkforimgs;
 
+		}
+	
+		public ArrayList<String> findResourceSource(String Data, String oldCourseId, String toSiteId, boolean newId)
+		{
+			try
+			{
+			ArrayList<String> rData = new ArrayList<String>();
+			String findEntity = Data.substring(Data.indexOf("/access")+7);
+			Reference ref = EntityManager.newReference(findEntity);
+			String ref_id = ref.getId();		
+			String checkReferenceId=null;
+			if(ref.getType().equals("sakai:meleteDocs"))
+			{
+				ref_id = ref_id.substring(ref_id.indexOf("/content")+ 8);
+				if(newId) checkReferenceId = ref_id.replace(oldCourseId, toSiteId);			
+			}
+			else
+			{
+				//for site resources item
+				if(newId)
+				{
+					checkReferenceId = ref_id.replace(oldCourseId, toSiteId+"/uploads");
+					checkReferenceId = checkReferenceId.replace("/group/", "/private/meleteDocs/");
+				}
+			}
+			rData.add(ref_id);
+			if(newId) rData.add(checkReferenceId);
+			return rData;
+			}
+			catch (Exception e)
+			{
+				return null;
+			}
+		}
+		
+		public String findParentReference(String ref_id)
+		{
+			String parentStr = ref_id.substring(0,ref_id.lastIndexOf("/")+1);
+			if (parentStr != null)
+			{
+				if (parentStr.startsWith("/private/meleteDocs")) parentStr = "/access/meleteDocs/content" + parentStr;
+				else if (parentStr.startsWith("/group"))parentStr = "/access/content" + parentStr;
+				else parentStr = null;
+			}
+			return parentStr;
 		}
 }
