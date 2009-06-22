@@ -235,7 +235,24 @@ public class SectionDB implements Serializable {
 		 	session.evict(section);
 			  tx = session.beginTransaction();
 			  	  if(melResource != null)
-			  	 	 session.saveOrUpdate(melResource);
+			  	  {
+			  		 String queryString = "from MeleteResource meleteresource where meleteresource.resourceId=:resourceId";
+				     Query query = session.createQuery(queryString);
+				     query.setParameter("resourceId",melResource.getResourceId());
+				     List result_list = query.list();
+				     if(result_list != null && result_list.size()!= 0)
+				     { 
+			  		 MeleteResource newMelResource = (MeleteResource)result_list.get(0);
+			  		 newMelResource.setLicenseCode(melResource.getLicenseCode());
+			  		 newMelResource.setCcLicenseUrl(melResource.getCcLicenseUrl());
+			  		 newMelResource.setReqAttr(melResource.isReqAttr());
+			  		 newMelResource.setAllowCmrcl(melResource.isAllowCmrcl());
+			  		 newMelResource.setAllowMod(melResource.getAllowMod());
+			  		 newMelResource.setCopyrightYear(melResource.getCopyrightYear());
+			  		 newMelResource.setCopyrightOwner(melResource.getCopyrightOwner());
+			  		 session.saveOrUpdate(newMelResource);
+				     }
+			  	  }	 
 			  	  session.saveOrUpdate(secResource);
 			  	  session.saveOrUpdate(section);
 				  session.flush();
@@ -873,6 +890,8 @@ public class SectionDB implements Serializable {
 			}
 	}
 
+
+	
 	/*
 	 *  get the melete resource based on resource id.
 	 */
