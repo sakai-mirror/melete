@@ -26,6 +26,7 @@ package org.etudes.component.app.melete;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -606,10 +607,10 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		try
 		{
 			logger.debug("transer copy Melete items by transferCopyEntities");
-			 ArrayList importResources =  new ArrayList<String>();
-			 ArrayList secondaryHTMLResources =  new ArrayList<String>();
+			 Set<String> importResources =  new HashSet<String>();
+			 Set<String> addNowResources =  new HashSet<String>();
 			 threadLocalManager.set("MELETE_importResources" , importResources);
-			 threadLocalManager.set("MELETE_secondaryHTMLResources" , secondaryHTMLResources);
+			 threadLocalManager.set("MELETE_addedNowResource" , addNowResources);
 
 			getMeleteImportfromSiteService().copyModules(fromContext, toContext);
 			logger.debug("importResources: End importing melete data");
