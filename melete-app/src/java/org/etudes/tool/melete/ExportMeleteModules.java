@@ -3,7 +3,7 @@
  * $URL$
  *
  ***********************************************************************************
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -147,7 +147,7 @@ public class ExportMeleteModules {
 		if(selectedModules == null || selectedModules.size() == 0)return null;
 		if(selectedModules.size() == 1 && selectedModules.get(0).equals("all"))
 			return modList;
-
+        
 		List<Module> returnList = new ArrayList<Module>(0);
 		for(String sel:selectedModules)
 		{
@@ -285,9 +285,11 @@ public class ExportMeleteModules {
 					packagedir.getAbsolutePath() + File.separator
 					+ "xml.xsd");
 
+			
 			List orgResElements = meleteExportService
-			.generateOrganizationResourceItems(selectList,
-					packagedir, title);
+			.generateOrganizationResourceItems(selectList,selectList.equals(modList),
+					packagedir, title, courseId);
+			
 
 			if (orgResElements != null && orgResElements.size() > 0) {
 				manifest.add((Element) orgResElements.get(0));
@@ -388,7 +390,7 @@ public class ExportMeleteModules {
 			// copy the schema files
 			File schemaFilesDir = basePackDir;
 
-			List orgResElements = meleteExportScormService.generateOrganizationResourceItems(selectList, packagedir, title);
+			List orgResElements = meleteExportScormService.generateOrganizationResourceItems(selectList, selectList.equals(modList), packagedir, title, courseId);
 
 			if (orgResElements != null && orgResElements.size() > 0)
 			{

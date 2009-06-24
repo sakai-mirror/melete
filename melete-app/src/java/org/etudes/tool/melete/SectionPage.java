@@ -1143,7 +1143,7 @@ public abstract class SectionPage implements Serializable {
 			{
 				ContentResource cr = allmembers_iter.next();
 				String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
-			//							 duplicate listing
+//							 duplicate listing
 				if (displayName.length() > 50) displayName = displayName.substring(0,50) + "...";
 				String rUrl = cr.getUrl().replaceAll(" ", "%20");
 				String rgif=  serverUrl + "/library/image/sakai/url.gif";
@@ -1154,7 +1154,7 @@ public abstract class SectionPage implements Serializable {
 		 		if(rgif.startsWith("sakai"))
 		 			rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
 		 		else if (rgif.startsWith("/sakai"))
-		 			rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));
+		 			rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));		 		
 				}
 				if(section.getContentType().equals("typeLTI"))
 				{

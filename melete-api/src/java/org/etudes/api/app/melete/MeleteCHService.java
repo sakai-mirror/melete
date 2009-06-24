@@ -65,13 +65,14 @@ public interface MeleteCHService{
 	 public List getListFromCollection(String collId, String mimeType);
 	 public List getListofMediaFromCollection(String collId);
 	 public List getListofFilesFromCollection(String collId);
+	 public List getMemberNamesCollection(String collId);
 	 public String findLocalImagesEmbeddedInEditor(String uploadHomeDir, String contentEditor)throws MeleteException;
 	 public ContentResource getResource(String resourceId) throws Exception;
 	 public void checkResource(String resourceId) throws Exception;
 	 public void editResource(String resourceId, String contentEditor) throws Exception;
 	 public List getAllResources(String uploadCollId);
 	 public String getResourceUrl(String resourceId);
-	 public void copyIntoFolder(String fromColl,String toColl);
+	 public String copyIntoFolder(String fromColl,String toColl);
 	 public ContentCollection getCollection(String toColl);
 	 public List<String> findAllEmbeddedImages(String sec_resid) throws Exception;
 	 public void removeResource(String delRes_id) throws Exception;

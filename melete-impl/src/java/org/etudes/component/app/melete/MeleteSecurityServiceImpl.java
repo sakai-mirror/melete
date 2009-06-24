@@ -26,6 +26,7 @@ package org.etudes.component.app.melete;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -39,6 +40,7 @@ import javax.servlet.ServletOutputStream;
 import org.etudes.api.app.melete.MeleteExportService;
 import org.etudes.api.app.melete.MeleteSecurityService;
 import org.etudes.api.app.melete.ModuleService;
+import org.etudes.api.app.melete.MeleteImportfromSiteService;
 import org.etudes.api.app.melete.MeleteImportService;
 import org.sakaiproject.authz.cover.FunctionManager;
 import org.sakaiproject.tool.cover.ToolManager;
@@ -87,6 +89,7 @@ import org.sakaiproject.thread_local.api.ThreadLocalManager;
 public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityProducer,EntityTransferrer {
 
 	private ModuleService moduleService;
+	private MeleteImportfromSiteService meleteImportfromSiteService;
 	private MeleteImportService meleteImportService;
 	private MeleteExportService meleteExportService;
 
@@ -543,8 +546,8 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 				count = selectList.size();
 				File basePackDir = new File(archivePath);
 				List orgResElements = getMeleteExportService()
-					.generateOrganizationResourceItems(selectList,
-							basePackDir, SiteService.getSite(siteId).getTitle());
+					.generateOrganizationResourceItems(selectList,true,
+							basePackDir, SiteService.getSite(siteId).getTitle(), siteId);
 
 					if (orgResElements != null && orgResElements.size() > 0) {
 
@@ -604,12 +607,12 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		try
 		{
 			logger.debug("transer copy Melete items by transferCopyEntities");
-			 ArrayList importResources =  new ArrayList<String>();
-			 ArrayList secondaryHTMLResources =  new ArrayList<String>();
+			 Set<String> importResources =  new HashSet<String>();
+			 Set<String> addNowResources =  new HashSet<String>();
 			 threadLocalManager.set("MELETE_importResources" , importResources);
-			 threadLocalManager.set("MELETE_secondaryHTMLResources" , secondaryHTMLResources);
+			 threadLocalManager.set("MELETE_addedNowResource" , addNowResources);
 
-			getMeleteImportService().copyModules(fromContext, toContext);
+			getMeleteImportfromSiteService().copyModules(fromContext, toContext);
 			logger.debug("importResources: End importing melete data");
 		}
 		catch (Exception e)
@@ -628,14 +631,14 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	 }
 
 
-    public MeleteImportService getMeleteImportService() {
-	return meleteImportService;
+    public MeleteImportfromSiteService getMeleteImportfromSiteService() {
+	return meleteImportfromSiteService;
    }
 
 
-     public void setMeleteImportService(
-		MeleteImportService meleteImportService) {
-	this.meleteImportService = meleteImportService;
+     public void setMeleteImportfromSiteService(
+		MeleteImportfromSiteService meleteImportfromSiteService) {
+	this.meleteImportfromSiteService = meleteImportfromSiteService;
     }
 
 
@@ -656,5 +659,11 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		this.meleteExportService = meleteExportService;
 	}
 
+	public MeleteImportService getMeleteImportService() {
+		return meleteImportService;
+	}
 
+	public void setMeleteImportService(MeleteImportService meleteImportService) {
+		this.meleteImportService = meleteImportService;
+	}
 }
