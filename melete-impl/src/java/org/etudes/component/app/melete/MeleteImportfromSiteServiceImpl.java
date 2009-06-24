@@ -72,15 +72,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 	protected Log logger = LogFactory.getLog(MeleteImportfromSiteServiceImpl.class);
 
 	/**
-	 * creates the section
-	 * @param module Module
-	 * @param section Section
-	 * @param hrefVal href value of the item
-	 * @return @throws
-	 *         MalformedURLException
-	 * @throws UnknownHostException
-	 * @throws MeleteException
-	 * @throws Exception
+	 * Imports composed section files and for other content types, imports the resource if it not exists in site
 	 */
 	private void createContentResource(Module module,Section section,MeleteResource meleteResource, String hrefVal, String courseId, String oldCourseId)
 	throws MalformedURLException, UnknownHostException, MeleteException, Exception {
@@ -117,7 +109,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 	}
 
 	/*
-	 * check if resource exists in the meletedocs collection else add it 
+	 * check if resource exists in the meletedocs collection else add it and record it for skipped files
 	 */
 	private ArrayList<String> checkAndAddResource(String hrefVal,String toSiteId, boolean addDB, String oldCourseId) throws Exception
 	{
@@ -173,13 +165,17 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				newResourceId = copyResource(getMeleteCHService().getResourceUrl(cr.getId()), oldCourseId, toSiteId, uploadCollId);
 			}
 
-			addToThreadList(melResourceName, "MELETE_secondaryHTMLResources");	
+			addToThreadList(melResourceName, "MELETE_addedNowResource");	
 			rdata.add("new");
 			rdata.add(newResourceId);
 			return rdata;
 		} // catch end
 	}
-
+	
+	/*
+	 *  Finds the source of resource item - meletedocs or group collection.
+	 *  If resource is html then call processEmbed method otherwise create a new resource
+	 */
 	private String copyResource(String Data, String oldCourseId, String toSiteId, String uploadCollId) throws Exception
 	{
 		String firstReferId = null;
@@ -196,19 +192,25 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		{
 			String extn = ref_id.substring(ref_id.lastIndexOf(".")+1);
 			if (extn.equals("htm") || extn.equals("html"))
+			{
 				firstReferId = processEmbedDatafromHTML(ref_id,null,toSiteId,uploadCollId);
+			}
 			else
 			{
 				ContentResource cr1 = getMeleteCHService().getResource(ref_id);
 				String fileResourceName = cr1.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false,fileResourceName,cr1.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION));
 				firstReferId = getMeleteCHService().addResourceItem(fileResourceName, cr1.getContentType(),uploadCollId,cr1.getContent(),res );
-			}
+				addToThreadList(fileResourceName, "MELETE_addedNowResource");
+			}				
 		}
 
 		return firstReferId;
 	}
 
+	/*
+	 *  process HTML resources.
+	 */
 	private String processEmbedDatafromHTML(String ref_id,String fileResourceName, String toSiteId,String uploadCollId) throws Exception
 	{
 		ContentResource cr1 = getMeleteCHService().getResource(ref_id);
@@ -217,16 +219,25 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		String parentStr = meleteUtil.findParentReference(cr1.getId());
 		ArrayList content = createHTMLFile(contentEditor,toSiteId,new HashSet<String>() ,parentStr);
 		contentEditor = (String)content.get(0);
+		addToThreadList(fileResourceName, "MELETE_addedNowResource");
 		ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true,fileResourceName,cr1.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION));
 		return getMeleteCHService().addResourceItem(fileResourceName, cr1.getContentType(),uploadCollId,contentEditor.getBytes(),res );
 	}
 
+	/*
+	 * Abstract method implementation to read from a content resource
+	 */
 	protected byte[] readData(String unZippedDirPath, String hrefVal) throws Exception
 	{			
 		ContentResource cr = getMeleteCHService().getResource(hrefVal);
 		return cr.getContent();
 	}
 
+	/*
+	 * Parse HTML files and create resources for embedded data.
+	 * If embedded data is an html file then calls itself again to process.
+	 * Set is used to record the html files processed in one recursion cycle to avoid circular references.
+	 */
 	protected ArrayList createHTMLFile(String contentEditor, String courseId, Set<String> checkEmbedHTMLResources, String parentRef)throws Exception{
 		//save uploaded img inside content editor to destination directory
 		String checkforimgs = contentEditor;
@@ -276,13 +287,13 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				imgActualPath = r.get(0);
 
 				String importResName = imgActualPath.substring(imgActualPath.lastIndexOf('/')+1);
-				addToThreadList(importResName, "MELETE_importResources");
+				addToThreadList(URLDecoder.decode(importResName,"UTF-8"), "MELETE_importResources");
 
 				if(imgActualPath.endsWith(".htm") || imgActualPath.endsWith(".html"))
 				{
 					// if not processed yet then add to the set
-					if(checkEmbedHTMLResources.contains(imgActualPath)) {
-						addToThreadList(importResName, "MELETE_secondaryHTMLResources");
+					if(checkEmbedHTMLResources.contains(imgActualPath))
+					{
 						imgindex = -1;
 						startSrc=0; endSrc = 0;
 						String replacementStr = "/access/meleteDocs/content/private/meleteDocs/" + courseId + "/uploads/" + imgSrcPath.substring( imgSrcPath.lastIndexOf('/') + 1);
@@ -297,10 +308,10 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 					{
 						String moreContentData = new String(embedResource.getContent());
 						String parentStr = meleteUtil.findParentReference(imgActualPath);
+						String filename = imgActualPath.substring( imgActualPath.lastIndexOf('/') + 1);
 						ArrayList contentData = createHTMLFile(moreContentData,courseId,checkEmbedHTMLResources,parentStr);
 						moreContentData = (String)contentData.get(0);
 						checkEmbedHTMLResources = (Set<String>)contentData.get(1);
-						String filename = imgActualPath.substring( imgActualPath.lastIndexOf('/') + 1);
 						try
 						{
 							String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+filename;
@@ -329,6 +340,9 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		return returnData;
 	}
 
+	/*
+	 * Call for import from site process
+	 */
 	public void copyModules(String fromContext, String toContext)
 	{
 		//Copy the uploads collection
@@ -337,12 +351,18 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		//   	setMeleteSitePreference(fromContext, toContext);
 	}
 
+	/*
+	 * 
+	 */
 	private void setMeleteSitePreference(String fromContext, String toContext)
 	{
 		MeleteSitePreference fromMsp = meleteUserPrefDB.getSitePreferences(fromContext);
 		meleteUserPrefDB.setSitePreferences(toContext,fromMsp.isPrintable(),fromMsp.isAutonumber());
 	}
 
+	/*
+	 * Imports all acive and archived modules
+	 */
 	private void buildModules(String fromContext, String toContext)
 	{
 		//		Get modules in site A
@@ -455,6 +475,11 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		reportSkippedFiles(fromContext);
 	}
 
+	/*
+	 * Report skipped files at the end of import from site process.
+	 * MELETE_importResources records all files referred and MELETE_addedNowResource records the one
+	 * added in the current process.
+	 */
 	private void reportSkippedFiles(String fromContext)
 	{
 		// if siteAction is collecting success data on import from site
@@ -465,30 +490,20 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			ResourceLoader rl = new ResourceLoader("melete_license");
 
 			// remove the ones from importResources
-			List<String> importResources = (ArrayList)threadLocalManager.get("MELETE_importResources" );
-			List<String> multipleReferred = (ArrayList)threadLocalManager.get("MELETE_secondaryHTMLResources");
+			Set<String> importResources = (Set)threadLocalManager.get("MELETE_importResources" );
+			Set<String> addReferred = (Set)threadLocalManager.get("MELETE_addedNowResource");
 			logger.debug("RASHMI __import resources:" + importResources.toString());
-			logger.debug("multipleReferred resources:" + multipleReferred.toString());
+			logger.debug("addReferred resources:" + addReferred.toString());
 
-			if(multipleReferred != null && multipleReferred.size() > 0)
+			if(addReferred != null && addReferred.size() > 0)
 			{
-				for(String s:multipleReferred)
-				{
-					//remove first occurance
-					if(importResources.indexOf(s) != -1)importResources.remove(importResources.indexOf(s));
-				}
+				importResources.removeAll(addReferred);
 			}
 			logger.debug("import resources size after all removal:" + importResources.size());
 			if(importResources != null && importResources.size() > 0)
 			{
-				//make a Set now to remove duplicates
-				Set meleteSkippedFiles = new HashSet<String>(importResources);
-				String meleteimportstatus = meleteSkippedFiles.toString();
+				String meleteimportstatus = importResources.toString();
 				meleteimportstatus = meleteimportstatus.substring(1,meleteimportstatus.length()-1);
-				try
-				{
-					meleteimportstatus = URLDecoder.decode(meleteimportstatus,"UTF-8");
-				} catch (Exception e){ 	}
 				logger.debug("meleteimportstatus:" + meleteimportstatus);
 				meleteimportstatus="<li>"+rl.getString("import_site_resourceException") + meleteimportstatus +"</li>";
 				if(importstatus == null) new StringBuffer();
@@ -499,6 +514,9 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		} // SiteAction if end
 	}
 
+	/*
+	 * Import of unreferred meletedocs items
+	 */
 	private void transferManageItems(String fromContext, String toContext)
 	{
 		long totalstart = System.currentTimeMillis();
