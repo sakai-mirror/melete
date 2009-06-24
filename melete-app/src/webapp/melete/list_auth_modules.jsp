@@ -113,13 +113,34 @@ if (window.focus) { newWindow.focus(); } ; // force the window to the front if t
 return newWindow;
 
 }
+
+function selectAll()
+{
+  var listSizeStr = "listauthmodulesform:listSize";
+  var listSizeVal = document.getElementById(listSizeStr).value;
+  for (i=0;i<parseInt(listSizeVal);i++)
+  {
+	  var modchStr = "listauthmodulesform:table:"+i+":modCheck";
+	  if (document.getElementById(modchStr).checked == false)
+	  {	  
+	    document.getElementById(modchStr).checked=true;
+	  }  	  
+  }  	  
+  
+}
+
+function resetCheck()
+{
+	document.getElementById("listauthmodulesform:table:allmodcheck").checked=false;
+}
+
 </script>
 </head>
 
 
 <f:view>
 
-<body onload="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');" >
+<body onload="resetCheck();setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');" >
 <h:form id="listauthmodulesform">
 <%
 
@@ -172,11 +193,13 @@ if (msg != null)
       </h:commandLink>
       <h:commandLink id="collapseAllAction" action="#{listAuthModulesPage.collapseAllAction}" immediate="true">
         <h:graphicImage id="col_all_gif" alt="#{msgs.list_auth_modules_authoring_collapse}" title="#{msgs.list_auth_modules_authoring_collapse}" value="images/collapse-expand.gif"   rendered="#{listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
-      </h:commandLink>      
+      </h:commandLink>   
+       <h:selectBooleanCheckbox id="allmodcheck" value="#{listAuthModulesPage.selectAllFlag}" onclick="selectAll()" valueChangeListener="#{listAuthModulesPage.selectAllModules}"  rendered="#{listAuthModulesPage.nomodsFlag == false}"/>   
     </h:panelGroup> 
      </f:facet>
-            
-      <h:selectBooleanCheckbox value="#{mdbean.selected}" valueChangeListener="#{listAuthModulesPage.selectedModuleSection}"/>
+       <h:outputText id="modempspace" value="  " styleClass="ExtraPaddingClass" />
+                
+      <h:selectBooleanCheckbox id="modCheck" value="#{mdbean.selected}" valueChangeListener="#{listAuthModulesPage.selectedModuleSection}" />
          <h:graphicImage id="err_gif" value="images/pin_red.gif" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
     </h:column>
   
@@ -298,6 +321,7 @@ if (msg != null)
 	    
           
     </h:dataTable>   
+    <h:inputHidden id="listSize" value="#{listAuthModulesPage.listSize}"/>
 				   
  
     </br>

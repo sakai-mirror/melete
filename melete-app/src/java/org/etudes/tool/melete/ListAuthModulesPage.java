@@ -128,6 +128,8 @@ public class ListAuthModulesPage implements Serializable
 	int selectedSecIndex;
 
 	boolean sectionSelected;
+	
+	boolean selectAllFlag;
 
 	private ModuleService moduleService;
 
@@ -136,6 +138,8 @@ public class ListAuthModulesPage implements Serializable
 	private List nullList = null;
 
 	private Integer printModuleId;
+	
+	int listSize;
 
 	// added by rashmi on apr 8
 	private String isNull = null;
@@ -181,6 +185,7 @@ public class ListAuthModulesPage implements Serializable
 		{
 			expandAllFlag = false;
 		}
+		selectAllFlag = false;
 	}
 
 	public void resetValues()
@@ -222,7 +227,9 @@ public class ListAuthModulesPage implements Serializable
 		{  autonumber = true;
 		} else {
 		   autonumber = false;
-		};
+		}
+		System.out.println("SETTING SELECTALL to FALSE");
+		selectAllFlag = false;
 	}
 
 	public boolean isAutonumber()
@@ -282,6 +289,9 @@ public class ListAuthModulesPage implements Serializable
 	 */
 	public void selectedModuleSection(ValueChangeEvent event) throws AbortProcessingException
 	{
+		if (selectAllFlag == false)
+		{	
+		
 		FacesContext context = FacesContext.getCurrentInstance();
 		UIInput mod_Selected = (UIInput) event.getComponent();
 		if (((Boolean) mod_Selected.getValue()).booleanValue() == true)
@@ -302,6 +312,7 @@ public class ListAuthModulesPage implements Serializable
 		}
 		selectedModIndices.add(new Integer(selectedModIndex));
 		moduleSelected = true;
+		}
 		return;
 	}
 
@@ -333,11 +344,32 @@ public class ListAuthModulesPage implements Serializable
 
 		return;
 	}
+	
+	public void selectAllModules(ValueChangeEvent event) throws AbortProcessingException
+	{
+		selectAllFlag= true;
+		int k = 0;
+		if (selectedModIndices == null)
+		{
+			selectedModIndices = new ArrayList();
+		}
+		for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();)
+		{
+			ModuleDateBean mdbean = (ModuleDateBean) i.next();
+			mdbean.setSelected(true);
+			selectedModIndices.add(new Integer(k));
+			k++;
+		}
+		count = moduleDateBeans.size();
+		moduleSelected = true;
+		return;
+	}	
 
 	public void resetSelectedLists()
 	{
 		selectedModIndices = null;
 		selectedSecModIndices = null;
+		selectAllFlag = false;
 	}
 
 	public List getModuleDateBeans()
@@ -351,6 +383,7 @@ public class ListAuthModulesPage implements Serializable
 		{
 			ModuleService modServ = getModuleService();
 			moduleDateBeans = modServ.getModuleDateBeans(userId, courseId);
+			listSize = moduleDateBeans.size();
 			Iterator itr = context.getMessages();
 			while (itr.hasNext())
 			{
@@ -464,7 +497,28 @@ public class ListAuthModulesPage implements Serializable
 	{
 		this.expandAllFlag = expandAllFlag;
 	}
+	
+	public boolean getSelectAllFlag()
+	{
+		System.out.println("SELECTALL in GET is "+selectAllFlag);
+		return selectAllFlag;
+	}
 
+	public void setSelectAllFlag(boolean selectAllFlag)
+	{
+		this.selectAllFlag = selectAllFlag;
+	}	
+
+	public int getListSize()
+	{
+		return listSize;
+	}
+	
+	public void setListSize(int listSize)
+	{
+		this.listSize = listSize;
+	}
+	
 	public String showAuthSections()
 	{
 		resetSelectedLists();
