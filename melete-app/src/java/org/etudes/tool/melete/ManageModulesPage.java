@@ -87,6 +87,8 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 	private List newSectionsList;
 	private List newSecList;
 	private String newSelectedSection;
+	boolean selectAllFlag;
+	int listSize;
 
 	/** Dependency:  The logging service. */
 	 protected Log logger = LogFactory.getLog(ManageModulesPage.class);
@@ -100,6 +102,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		restoreModulesList = new ArrayList();
 		shouldRenderEmptyList=false;
 		archiveModulesList = null;
+		selectAllFlag = false;
 	}
 
 	/**
@@ -122,6 +125,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		{
 			logger.debug("getting archived modules list "+e.toString());
 		}
+		listSize = archiveModulesList.size();
 		return archiveModulesList;
 	}
 
@@ -303,6 +307,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		allModules = null;
 		allModulesList = null;
 		currModule = null;
+		selectAllFlag = false;
 	}
 
 	/* sort pages */
@@ -849,6 +854,27 @@ catch (MeleteException me)
 return "sections_sort";
 }
 	// end sort code
+  
+  public boolean getSelectAllFlag()
+	{
+		return selectAllFlag;
+	}
+
+	public void setSelectAllFlag(boolean selectAllFlag)
+	{
+		this.selectAllFlag = selectAllFlag;
+	}	  
+  
+	public int getListSize()
+	{
+		return listSize;
+	}
+	
+	public void setListSize(int listSize)
+	{
+		this.listSize = listSize;
+	}
+	  
 	/**
 	 * @return Returns the ModuleService.
 	 */

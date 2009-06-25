@@ -35,10 +35,30 @@
 
 <title>Melete - Restore Inactive Modules</title>
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
+<script type="text/javascript" language="javascript">
+function selectAll()
+{
+  var listSizeStr = "RestoreModuleForm:listSize";
+  var listSizeVal = document.getElementById(listSizeStr).value;
+  for (i=0;i<parseInt(listSizeVal);i++)
+  {
+	  var modchStr = "RestoreModuleForm:table1:"+i+":modCheck";
+	  if (document.getElementById(modchStr).checked == false)
+	  {	  
+	    document.getElementById(modchStr).checked=true;
+	  }  	  
+  }  	  
+  
+}
+function resetCheck()
+{
+	document.getElementById("RestoreModuleForm:table1:allmodcheck").checked=false;
+}
+</script>
 </head>
 
 <f:view>
-<body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onload="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');" >
+<body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onload="resetCheck();setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');" >
 <h:form id="RestoreModuleForm">
 <!-- This Begins the Main Text Area -->
 
@@ -66,9 +86,12 @@
 			  						<h:dataTable id="table1"  value="#{manageModulesPage.archiveModulesList}" var="aml" width="110%"  headerClass="tableheader2" columnClasses="style3" >
 			  							<h:column>
 			  							<f:facet name="header">
-																   <h:outputText id="t1" value="#{msgs.restore_modules_select_modules}" />          
+			  							<h:panelGroup>
+			  							 <h:selectBooleanCheckbox id="allmodcheck" value="" onclick="selectAll()" rendered="#{(manageModulesPage.shouldRenderEmptyList == manageModulesPage.falseBool)}"/>   
+			  							 <h:outputText id="t1" value="#{msgs.restore_modules_select_modules}" />
+			  							 </h:panelGroup>         
 										 </f:facet>
-											<h:selectBooleanCheckbox value="" valueChangeListener="#{manageModulesPage.selectedRestoreModule}"/>
+											<h:selectBooleanCheckbox id="modCheck" value="" valueChangeListener="#{manageModulesPage.selectedRestoreModule}"/>
 					 						<h:outputText id="modname" value="#{aml.module.title}"/>
 										</h:column>
 										<h:column>
@@ -78,6 +101,7 @@
 											<h:outputText id="deactivateDate" value="#{aml.dateArchived}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/></h:outputText>
 										</h:column>			
 			 						</h:dataTable>
+			 						 <h:inputHidden id="listSize" value="#{manageModulesPage.listSize}"/>
 			  						<h:outputText value="#{msgs.restore_modules_no_archive_modules}" rendered="#{manageModulesPage.shouldRenderEmptyList}" />
 			  					</td>
             				</tr>
