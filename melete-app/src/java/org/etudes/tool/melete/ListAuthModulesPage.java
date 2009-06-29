@@ -228,7 +228,6 @@ public class ListAuthModulesPage implements Serializable
 		} else {
 		   autonumber = false;
 		}
-		System.out.println("SETTING SELECTALL to FALSE");
 		selectAllFlag = false;
 	}
 
@@ -500,7 +499,6 @@ public class ListAuthModulesPage implements Serializable
 	
 	public boolean getSelectAllFlag()
 	{
-		System.out.println("SELECTALL in GET is "+selectAllFlag);
 		return selectAllFlag;
 	}
 
