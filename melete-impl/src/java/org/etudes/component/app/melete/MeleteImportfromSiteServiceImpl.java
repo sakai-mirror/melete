@@ -39,6 +39,7 @@ import java.util.regex.Pattern;
 import java.net.URLDecoder;
 
 import org.etudes.component.app.melete.MeleteUtil;
+import org.etudes.util.XrefHelper;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.MeleteImportfromSiteService;
 import org.etudes.api.app.melete.exception.MeleteException;
@@ -473,7 +474,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			}
 
 		}
-		reportSkippedFiles(fromContext);
+		reportSkippedFiles(toContext);
 	}
 
 	/*
@@ -481,38 +482,23 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 	 * MELETE_importResources records all files referred and MELETE_addedNowResource records the one
 	 * added in the current process.
 	 */
-	private void reportSkippedFiles(String fromContext)
+	private void reportSkippedFiles(String toContext)
 	{
-		// if siteAction is collecting success data on import from site
-		if(threadLocalManager.get("IMPORTSITE_PROCESS") != null)
+		// remove the ones from importResources
+		Set<String> importResources = (Set<String>) threadLocalManager.get("MELETE_importResources");
+		Set<String> addReferred = (Set<String>) threadLocalManager.get("MELETE_addedNowResource");
+		if ((importResources != null) && (addReferred != null))
 		{
-			HashMap hm = (HashMap)threadLocalManager.get("IMPORTSITE_PROCESS"); 
-			StringBuffer importstatus = (StringBuffer) hm.get(fromContext);
-			ResourceLoader rl = new ResourceLoader("melete_license");
-
-			// remove the ones from importResources
-			Set<String> importResources = (Set)threadLocalManager.get("MELETE_importResources" );
-			Set<String> addReferred = (Set)threadLocalManager.get("MELETE_addedNowResource");
-			logger.debug("RASHMI __import resources:" + importResources.toString());
-			logger.debug("addReferred resources:" + addReferred.toString());
-
-			if(addReferred != null && addReferred.size() > 0)
+			importResources.removeAll(addReferred);
+		}
+		if (importResources != null)
+		{
+			for (String name : importResources)
 			{
-				importResources.removeAll(addReferred);
+				String chsId = "/private/meleteDocs/" + toContext + "/uploads/" + name;
+				XrefHelper.recordFileSkipped(chsId);
 			}
-			logger.debug("import resources size after all removal:" + importResources.size());
-			if(importResources != null && importResources.size() > 0)
-			{
-				String meleteimportstatus = importResources.toString();
-				meleteimportstatus = meleteimportstatus.substring(1,meleteimportstatus.length()-1);
-				logger.debug("meleteimportstatus:" + meleteimportstatus);
-				meleteimportstatus="<li>"+rl.getString("import_site_resourceException") + meleteimportstatus +"</li>";
-				if(importstatus == null) new StringBuffer();
-				importstatus.append(meleteimportstatus);
-			}
-			hm.put(fromContext, importstatus);
-			threadLocalManager.set("IMPORTSITE_PROCESS",hm);
-		} // SiteAction if end
+		}
 	}
 
 	/*
