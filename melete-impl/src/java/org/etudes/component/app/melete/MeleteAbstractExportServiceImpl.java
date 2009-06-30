@@ -515,8 +515,8 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 
 	protected void createFileElement(String fileName, byte[]content_data1, Element resource, String imagespath, File resourcesDir, String dirLocationInPackage, boolean processHTML,boolean addToResourceTag) throws Exception
 	{
-		//read the content to modify the path for images
-		String modSecContent = new String(content_data1);
+		String modSecContent = null;
+		byte[] modContentData = null;
 
 		if (fileName.startsWith("module_"))
 		{
@@ -527,6 +527,8 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 		//replace image path and create image files
 		if(!processHTML && (fileName.endsWith(".htm") || fileName.endsWith(".html")))
 		{
+			//read the content to modify the path for images
+			modSecContent = new String(content_data1);
 			logger.debug("replace image called for " + fileName);
 			ArrayList rData = replaceImagePath(modSecContent, imagespath, resource,false,new HashSet<String>(),meleteUtil.findParentReference(fileName));
 			modSecContent = (String)rData.get(0);
@@ -549,7 +551,16 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 			}
 		}
 
-		if(!found && modSecContent != null)
+		
+		if (fileName.endsWith(".htm") || fileName.endsWith(".html"))
+		{
+			modContentData = modSecContent.getBytes();
+		}
+		else
+		{
+			modContentData = content_data1;
+		}
+		if(!found && modContentData != null)
 		{	
 			logger.debug("actual file insert" + fileName);
 			if(!fileName.startsWith("Section_"))
@@ -557,11 +568,11 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 				Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
 				if (recordFiles != null) recordFiles.add(fileName);
 			}
-			createFileFromContent(modSecContent.getBytes(),resourcesDir.getAbsolutePath()+File.separator+ fileName);
+			createFileFromContent(modContentData,resourcesDir.getAbsolutePath()+File.separator+ fileName);
 			Element file = resource.addElement("file");
 			file.addAttribute("href", dirLocationInPackage+ fileName);
 		}	
-		if(addToResourceTag) resource.addAttribute("href", dirLocationInPackage+ fileName);	
+		if(addToResourceTag) resource.addAttribute("href", dirLocationInPackage+ fileName);
 	}
 	
 	/**
