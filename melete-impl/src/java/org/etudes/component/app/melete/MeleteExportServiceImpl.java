@@ -363,6 +363,8 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 	public Element transferManageItems(Element resources, String courseId, File resoucesDir, int item_ref_num) throws Exception
 	{
 		logger.debug("recorded files so far: " + exportThreadLocal.get("MeleteExportFiles").toString());
+		String imagespath  = resoucesDir.getAbsolutePath();
+
 		String fromUploadsColl = getMeleteCHService().getUploadCollectionId(courseId);
 		List fromContextList = meleteCHService.getMemberNamesCollection(fromUploadsColl);
 		if ((fromContextList == null)||(fromContextList.size() == 0)) return null;
@@ -400,7 +402,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 				if(type.equals(getMeleteCHService().MIME_TYPE_LINK)) sec.setContentType("typeLink");
 				else if (type.equals(getMeleteCHService().MIME_TYPE_LTI)) sec.setContentType("typeLTI");
 				else sec.setContentType("typeUpload");
-				createResourceElement(sec, resource, content_data1, resoucesDir, null,sectionFileName,item_ref_num);
+				createResourceElement(sec, resource, content_data1, resoucesDir, imagespath,sectionFileName,item_ref_num);
 				item_ref_num++;
 			}//End while repIt
 		}
