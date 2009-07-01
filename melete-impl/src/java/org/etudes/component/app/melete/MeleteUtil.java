@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008,2009 Etudes, Inc.
@@ -102,8 +102,78 @@ public class MeleteUtil {
 	    return success;
 	 }
 
+	   private String anchorCheck(String checkforimgs)
+	   {
+		   Pattern p1 = Pattern.compile("<[aA]\\s");
+		   Pattern pa = Pattern.compile(">|\\s[hH][rR][eE][fF]\\s*=");
+		   Pattern ps = Pattern.compile("\\S");
+		   Pattern pe = Pattern.compile("\\s|>");
+		   
+			int startSrc = 0;
+			int endSrc = 0;
+			while(checkforimgs !=null) {
+				    // look for <img or <a
+			        Matcher m = p1.matcher(checkforimgs);
+				if (!m.find()) // found anything?
+				    break;
+				checkforimgs = checkforimgs.substring(m.start());
+				// href=
+				    m = pa.matcher(checkforimgs);
+
+				// end = start+1 means that we found a >
+				// i.e. the attribute we're looking for isn't there
+				if (!m.find() || (m.end() == m.start() + 1)) {
+				    // prevent infinite loop by consuming the <
+				    checkforimgs = checkforimgs.substring(1);
+				    continue;
+				}
+
+				checkforimgs = checkforimgs.substring(m.end());
+
+				// look for start of arg, a non-whitespace
+			        m = ps.matcher(checkforimgs);
+				if (!m.find()) // found anything?
+				    break;
+
+				checkforimgs = checkforimgs.substring(m.start());
+
+				startSrc = 0;
+				endSrc = 0;
+
+				// handle either quoted or nonquoted arg
+				if (checkforimgs.startsWith("\"") ||
+				    checkforimgs.startsWith("\'")) {
+					String quotestr = checkforimgs.substring(0,1);
+				    startSrc = 1;
+				    endSrc = checkforimgs.indexOf(quotestr, startSrc);
+				    break;
+				} else {
+				    startSrc = 0;
+				    // ends with whitespace or >
+				    m = pe.matcher(checkforimgs);
+				    if (!m.find()) // found anything?
+					continue;
+				    endSrc = m.start();
+				}
+
+			} //while end
+			String anchorStr = checkforimgs.substring(startSrc,endSrc);
+			if (anchorStr != null)
+			{	
+			  if (anchorStr.startsWith("#"))
+			  {
+				checkforimgs = checkforimgs.substring(endSrc);
+			  }
+			}
+			return checkforimgs;	   
+			
+			
+	   }
+	   
+	   
 		public ArrayList findEmbedItemPattern(String checkforimgs)
 		{
+			checkforimgs = anchorCheck(checkforimgs);
 			ArrayList returnData = new ArrayList();
 			Pattern p1 = Pattern.compile("<[iI][mM][gG]\\s|<[aA]\\s");
 			Pattern pi = Pattern.compile(">|\\s[sS][rR][cC]\\s*=");
@@ -205,7 +275,7 @@ public class MeleteUtil {
 			return checkforimgs;
 
 		}
-	
+
 		public ArrayList<String> findResourceSource(String Data, String oldCourseId, String toSiteId, boolean newId)
 		{
 			try
@@ -213,12 +283,12 @@ public class MeleteUtil {
 			ArrayList<String> rData = new ArrayList<String>();
 			String findEntity = Data.substring(Data.indexOf("/access")+7);
 			Reference ref = EntityManager.newReference(findEntity);
-			String ref_id = ref.getId();		
+			String ref_id = ref.getId();
 			String checkReferenceId=null;
 			if(ref.getType().equals("sakai:meleteDocs"))
 			{
 				ref_id = ref_id.substring(ref_id.indexOf("/content")+ 8);
-				if(newId) checkReferenceId = ref_id.replace(oldCourseId, toSiteId);			
+				if(newId) checkReferenceId = ref_id.replace(oldCourseId, toSiteId);
 			}
 			else
 			{
@@ -238,7 +308,7 @@ public class MeleteUtil {
 				return null;
 			}
 		}
-		
+
 		public String findParentReference(String ref_id)
 		{
 			String parentStr = ref_id.substring(0,ref_id.lastIndexOf("/")+1);
