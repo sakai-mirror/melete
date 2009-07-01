@@ -102,147 +102,95 @@ public class MeleteUtil {
 	    return success;
 	 }
 
-	   private String anchorCheck(String checkforimgs)
-	   {
-		   Pattern p1 = Pattern.compile("<[aA]\\s");
-		   Pattern pa = Pattern.compile(">|\\s[hH][rR][eE][fF]\\s*=");
-		   Pattern ps = Pattern.compile("\\S");
-		   Pattern pe = Pattern.compile("\\s|>");
-		   
-			int startSrc = 0;
-			int endSrc = 0;
-			while(checkforimgs !=null) {
-				    // look for <img or <a
-			        Matcher m = p1.matcher(checkforimgs);
-				if (!m.find()) // found anything?
-				    break;
-				checkforimgs = checkforimgs.substring(m.start());
-				// href=
-				    m = pa.matcher(checkforimgs);
+	 public ArrayList findEmbedItemPattern(String checkforimgs)
+	 {
+		 ArrayList returnData = new ArrayList();
+		 Pattern p1 = Pattern.compile("<[iI][mM][gG]\\s|<[aA]\\s");
+		 Pattern pi = Pattern.compile(">|\\s[sS][rR][cC]\\s*=");
+		 Pattern pa = Pattern.compile(">|\\s[hH][rR][eE][fF]\\s*=");
+		 Pattern ps = Pattern.compile("\\S");
+		 Pattern pe = Pattern.compile("\\s|>");
 
-				// end = start+1 means that we found a >
-				// i.e. the attribute we're looking for isn't there
-				if (!m.find() || (m.end() == m.start() + 1)) {
-				    // prevent infinite loop by consuming the <
-				    checkforimgs = checkforimgs.substring(1);
-				    continue;
-				}
+		 int startSrc = 0;
+		 int endSrc = 0;
+		 String foundPattern = null;
+		 while(checkforimgs !=null) {
+			 foundPattern = null;
+			 // look for <img or <a
+			 Matcher m = p1.matcher(checkforimgs);
+			 if (!m.find()) // found anything?
+				 break;
+			 checkforimgs = checkforimgs.substring(m.start());
+			 // look for src= or href=
+			 if (checkforimgs.startsWith("<i") ||
+					 checkforimgs.startsWith("<I") ||
+					 checkforimgs.startsWith("<e") ||
+					 checkforimgs.startsWith("<E"))
+				 m = pi.matcher(checkforimgs);
+			 else
+				 m = pa.matcher(checkforimgs);
 
-				checkforimgs = checkforimgs.substring(m.end());
+			 if(m.pattern().pattern().equals(pa.pattern())){foundPattern = "link";}
+			 // end = start+1 means that we found a >
+			 // i.e. the attribute we're looking for isn't there
+			 if (!m.find() || (m.end() == m.start() + 1)) {
+				 // prevent infinite loop by consuming the <
+				 checkforimgs = checkforimgs.substring(1);
+				 continue;
+			 }
 
-				// look for start of arg, a non-whitespace
-			        m = ps.matcher(checkforimgs);
-				if (!m.find()) // found anything?
-				    break;
+			 checkforimgs = checkforimgs.substring(m.end());
 
-				checkforimgs = checkforimgs.substring(m.start());
+			 // look for start of arg, a non-whitespace
+			 m = ps.matcher(checkforimgs);
+			 if (!m.find()) // found anything?
+				 break;
 
-				startSrc = 0;
-				endSrc = 0;
+			 checkforimgs = checkforimgs.substring(m.start());
 
-				// handle either quoted or nonquoted arg
-				if (checkforimgs.startsWith("\"") ||
-				    checkforimgs.startsWith("\'")) {
-					String quotestr = checkforimgs.substring(0,1);
-				    startSrc = 1;
-				    endSrc = checkforimgs.indexOf(quotestr, startSrc);
-				    break;
-				} else {
-				    startSrc = 0;
-				    // ends with whitespace or >
-				    m = pe.matcher(checkforimgs);
-				    if (!m.find()) // found anything?
-					continue;
-				    endSrc = m.start();
-				}
+			 startSrc = 0;
+			 endSrc = 0;
 
-			} //while end
-			String anchorStr = checkforimgs.substring(startSrc,endSrc);
-			if (anchorStr != null)
-			{	
-			  if (anchorStr.startsWith("#"))
-			  {
-				checkforimgs = checkforimgs.substring(endSrc);
-			  }
-			}
-			return checkforimgs;	   
-			
-			
-	   }
-	   
-	   
-		public ArrayList findEmbedItemPattern(String checkforimgs)
-		{
-			checkforimgs = anchorCheck(checkforimgs);
-			ArrayList returnData = new ArrayList();
-			Pattern p1 = Pattern.compile("<[iI][mM][gG]\\s|<[aA]\\s");
-			Pattern pi = Pattern.compile(">|\\s[sS][rR][cC]\\s*=");
-			Pattern pa = Pattern.compile(">|\\s[hH][rR][eE][fF]\\s*=");
-			Pattern ps = Pattern.compile("\\S");
-			Pattern pe = Pattern.compile("\\s|>");
+			 // handle either quoted or nonquoted arg
+			 if (checkforimgs.startsWith("\"") ||
+					 checkforimgs.startsWith("\'")) {
+				 String quotestr = checkforimgs.substring(0,1);
+				 startSrc = 1;
+				 endSrc = checkforimgs.indexOf(quotestr, startSrc);
+				 break;
+			 } else {
+				 startSrc = 0;
+				 // ends with whitespace or >
+				 m = pe.matcher(checkforimgs);
+				 if (!m.find()) // found anything?
+					 continue;
+				 endSrc = m.start();
+			 }				
+		 } //while end
+		
+		 if(foundPattern != null && foundPattern.equals("link"))
+		 {
+			 String anchorStr = checkforimgs.substring(startSrc,endSrc);
+			 if (anchorStr != null && anchorStr.startsWith("#")) 
+			 {
+				 checkforimgs = checkforimgs.substring(endSrc);
+				 if(checkforimgs != null)
+				 {
+					 ArrayList r = findEmbedItemPattern(checkforimgs);
+					 checkforimgs = (String)r.get(0);
+					 if (r.size() > 1)
+					 {
+						 startSrc = ((Integer)r.get(1)).intValue();
+						 endSrc = ((Integer)r.get(2)).intValue();
+					 }	
+				 }
+			 }
+		 }
+		 returnData.add(checkforimgs);
+		 if (endSrc != 0) {returnData.add(new Integer(startSrc)); returnData.add(new Integer(endSrc)); returnData.add(foundPattern);}
 
-			int startSrc = 0;
-			int endSrc = 0;
-			String foundPattern = null;
-			while(checkforimgs !=null) {
-					foundPattern = null;
-			        // look for <img or <a
-			        Matcher m = p1.matcher(checkforimgs);
-				if (!m.find()) // found anything?
-				    break;
-				checkforimgs = checkforimgs.substring(m.start());
-				// look for src= or href=
-				if (checkforimgs.startsWith("<i") ||
-					    checkforimgs.startsWith("<I") ||
-					    checkforimgs.startsWith("<e") ||
-					    checkforimgs.startsWith("<E"))
-				    m = pi.matcher(checkforimgs);
-				else
-				    m = pa.matcher(checkforimgs);
-
-				if(m.pattern().pattern().equals(pa.pattern())){foundPattern = "link";}
-				// end = start+1 means that we found a >
-				// i.e. the attribute we're looking for isn't there
-				if (!m.find() || (m.end() == m.start() + 1)) {
-				    // prevent infinite loop by consuming the <
-				    checkforimgs = checkforimgs.substring(1);
-				    continue;
-				}
-
-				checkforimgs = checkforimgs.substring(m.end());
-
-				// look for start of arg, a non-whitespace
-			        m = ps.matcher(checkforimgs);
-				if (!m.find()) // found anything?
-				    break;
-
-				checkforimgs = checkforimgs.substring(m.start());
-
-				startSrc = 0;
-				endSrc = 0;
-
-				// handle either quoted or nonquoted arg
-				if (checkforimgs.startsWith("\"") ||
-				    checkforimgs.startsWith("\'")) {
-				    String quotestr = checkforimgs.substring(0,1);
-				    startSrc = 1;
-				    endSrc = checkforimgs.indexOf(quotestr, startSrc);
-				    break;
-				} else {
-				    startSrc = 0;
-				    // ends with whitespace or >
-				    m = pe.matcher(checkforimgs);
-				    if (!m.find()) // found anything?
-					continue;
-				    endSrc = m.start();
-				}
-
-			} //while end
-			returnData.add(checkforimgs);
-			if (endSrc != 0) {returnData.add(new Integer(startSrc)); returnData.add(new Integer(endSrc)); returnData.add(foundPattern);}
-
-			return returnData;
-		}
+		 return returnData;
+	 }
 
 		/*
 		 *  remove form tag if found in the composed content as IE chokes on nested forms
