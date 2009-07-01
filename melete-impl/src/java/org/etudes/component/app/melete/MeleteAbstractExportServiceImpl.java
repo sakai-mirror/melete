@@ -515,9 +515,6 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 
 	protected void createFileElement(String fileName, byte[]content_data1, Element resource, String imagespath, File resourcesDir, String dirLocationInPackage, boolean processHTML,boolean addToResourceTag) throws Exception
 	{
-		String modSecContent = null;
-		byte[] modContentData = null;
-
 		if (fileName.startsWith("module_"))
 		{
 			int und_index = fileName.indexOf("_",7);
@@ -528,16 +525,16 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 		if(!processHTML && (fileName.endsWith(".htm") || fileName.endsWith(".html")))
 		{
 			//read the content to modify the path for images
-			modSecContent = new String(content_data1);
+			String modSecContent = new String(content_data1);
 			logger.debug("replace image called for " + fileName);
 			ArrayList rData = replaceImagePath(modSecContent, imagespath, resource,false,new HashSet<String>(),meleteUtil.findParentReference(fileName));
 			modSecContent = (String)rData.get(0);
+			content_data1 = modSecContent.getBytes();
 		}
 		
 		//create the file
 		if(fileName.lastIndexOf("/") != -1) fileName = fileName.substring(fileName.lastIndexOf("/")+1);
-		fileName= Validator.escapeResourceName(fileName);
-
+		fileName = URLDecoder.decode(fileName, "UTF-8");
 		// look for file element 
 		org.dom4j.Node node = null;
 		boolean found = false;
@@ -551,16 +548,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 			}
 		}
 
-		
-		if (fileName.endsWith(".htm") || fileName.endsWith(".html"))
-		{
-			modContentData = modSecContent.getBytes();
-		}
-		else
-		{
-			modContentData = content_data1;
-		}
-		if(!found && modContentData != null)
+		if(!found && content_data1 != null)
 		{	
 			logger.debug("actual file insert" + fileName);
 			if(!fileName.startsWith("Section_"))
@@ -568,7 +556,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 				Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
 				if (recordFiles != null) recordFiles.add(fileName);
 			}
-			createFileFromContent(modContentData,resourcesDir.getAbsolutePath()+File.separator+ fileName);
+			createFileFromContent(content_data1,resourcesDir.getAbsolutePath()+File.separator+ fileName);
 			Element file = resource.addElement("file");
 			file.addAttribute("href", dirLocationInPackage+ fileName);
 		}	
