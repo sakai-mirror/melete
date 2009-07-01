@@ -318,7 +318,6 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 							getMeleteCHService().checkResource(checkResourceId);
 						}catch (IdUnusedException ex)
 						{
-							logger.debug("adding file from createHTML and sh add in referredlist");
 							addResource(filename, moreContentData.getBytes(), courseId);
 						}
 						catch(Exception e){
