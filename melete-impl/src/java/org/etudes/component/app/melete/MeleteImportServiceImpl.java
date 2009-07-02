@@ -243,7 +243,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 					if (hrefVal.substring(hrefVal.lastIndexOf('/') +1).startsWith("Section_")) continue;
 					// LTI RESOURCE
 					//Load up the resource to look at it
-					String fileName = ((Element)resElements.get(0)).attributeValue("href");
+			//		String fileName = ((Element)resElements.get(0)).attributeValue("href");
+					String fileName = getFileNamefromElement(resElements, melResourceName);
 					String contentEditor = new String(readData(unZippedDirPath, fileName));
 					if(contentEditor == null) continue;
 					if ( isLTIDocument(contentEditor) )
@@ -254,7 +255,6 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 					if ( fileTitle != null ) melResourceName = fileTitle;
 					melResourceDescription = readDescriptionFromElement(resElements);
 				}
-				logger.debug("process manage items -" + hrefVal);
 				checkAndAddResource(hrefVal,contentType,fromSiteId, resElements, unZippedDirPath, false);
 			}
 		} //for end
@@ -400,7 +400,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		{
 			logger.debug("copy resource is adding " + fileResourceName);
 			String extn = fileResourceName.substring(fileResourceName.lastIndexOf(".")+1);
-			String fileName = ((Element)resElements.get(0)).attributeValue("href");
+			String fileName = getFileNamefromElement(resElements,fileResourceName);
+	
 			if (extn.equals("htm") || extn.equals("html"))
 				firstReferId = processEmbedDatafromHTML(fileName,fileResourceName,toSiteId,uploadCollId,resElements,unZippedDirPath);
 			else
@@ -417,6 +418,20 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		return firstReferId;
 	}
 
+	/*
+	 * find File element from manifest file which tells the exact location of file in the package
+	 */
+	private String getFileNamefromElement(List resElements, String fileResourceName)
+	{
+		String actualFileLocation = null;
+		for(int i=0; i < resElements.size(); i++)
+		{
+			Element FileEle = (Element)resElements.get(i);
+			actualFileLocation = FileEle.attributeValue("href");
+			if (actualFileLocation != null && actualFileLocation.indexOf(fileResourceName) != -1) return actualFileLocation;
+		}
+		return null;
+	}
 	/*
 	 * Abstract method implementation to read data from the zip file
 	 */
@@ -451,7 +466,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			if (endSrc <= 0) break;
 
 			imgSrcPath = checkforimgs.substring(startSrc, endSrc);
-
+			logger.debug("processing img src during import in CreateHTML:" + imgSrcPath);
 			// changed on 10/16/06 - add https condition too
 			if (resElements != null)
 			{
@@ -499,6 +514,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 										getMeleteCHService().checkResource(checkResourceId);
 									}catch (IdUnusedException ex)
 									{
+										logger.debug("importing embedded file:" + filename);
 										addResource(filename, embedContentData.getBytes(), courseId);
 									}
 									catch(Exception e){
@@ -1160,6 +1176,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 */
 	private String processEmbedDatafromHTML(String hrefVal,String fileResourceName, String courseId,String uploadCollId, List resElements, String unZippedDirPath) throws Exception
 	{
+		logger.debug("processing embed html :" + hrefVal);
 		byte[] contentData = readData(unZippedDirPath, hrefVal);
 
 		if(contentData != null)
@@ -1215,7 +1232,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		else
 		{
 			//Load up the resource to look at it
-			String fileName = ((Element)resElements.get(0)).attributeValue("href");
+		//	String fileName = ((Element)resElements.get(0)).attributeValue("href");
+			String fileName = getFileNamefromElement(resElements, hrefVal);
 			String contentEditor = new String(readData(unZippedDirPath, fileName));
 			if(contentEditor == null) return;
 			if ( isLTIDocument(contentEditor) )
