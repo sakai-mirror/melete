@@ -199,7 +199,7 @@ if (msg != null)
      </f:facet>
        <h:outputText id="modempspace" value="  " styleClass="ExtraPaddingClass" />
                 
-      <h:selectBooleanCheckbox id="modCheck" value="#{mdbean.selected}" valueChangeListener="#{listAuthModulesPage.selectedModuleSection}" />
+      <h:selectBooleanCheckbox id="modCheck" value="#{mdbean.selected}" onclick="resetCheck()" valueChangeListener="#{listAuthModulesPage.selectedModuleSection}" />
          <h:graphicImage id="err_gif" value="images/pin_red.gif" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
     </h:column>
   
