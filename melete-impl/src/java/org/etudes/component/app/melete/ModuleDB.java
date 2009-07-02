@@ -257,8 +257,8 @@ public class ModuleDB implements Serializable {
 	public void addModule(Module module, ModuleShdates moduleshowdates, String userId, String courseId) throws Exception
 	{
 		/*
-   	 * Since Oracle silently transforms "" to nulls, we need to check to see if 
-		 * these non null properties are in fact null. 
+   	 * Since Oracle silently transforms "" to nulls, we need to check to see if
+		 * these non null properties are in fact null.
 		 */
 
 		hibernateUtil.ensureModuleHasNonNulls(module);
@@ -409,6 +409,8 @@ public class ModuleDB implements Serializable {
 		    moduleDateBeansList.add(mdBean);
 	      	mod = null;
 	      }
+	      //moduleDateBeansList = populateModuleDateBeansList(modList);
+
 
 	    }
 	    catch (Exception he)
@@ -432,6 +434,21 @@ public class ModuleDB implements Serializable {
 
 	  }
 
+	 /*public List populateModuleBeansList(List modList) throws Exception
+	 {
+		 List moduleDateBeansList = new ArrayList();
+		  Iterator i = modList.iterator();
+
+	      while (i.hasNext()) {
+	      	ModuleDateBean mdBean = new ModuleDateBean();
+	      	Module mod = (Module) i.next();
+
+	      	populateModuleBean(mod, mdBean);
+
+		    moduleDateBeansList.add(mdBean);
+	      	mod = null;
+	      }
+	 }*/
 
 
 	 public List getModules(String courseId) throws HibernateException {
@@ -864,7 +881,7 @@ public class ModuleDB implements Serializable {
 		 SubSectionUtilImpl ssuImpl = new SubSectionUtilImpl();
 		 String updSeqXml = null;
 		 if (sectionMap == null || sectionMap.size() == 0) return null;
-		 
+
 		 if (sectionMap != null)
 		 {
 
@@ -1159,7 +1176,7 @@ public class ModuleDB implements Serializable {
 
 	 public void updateModule(Module mod) throws Exception
 	 {
-	 
+
 	  hibernateUtil.ensureModuleHasNonNulls(mod);
 	 	Transaction tx = null;
 	 	try
@@ -1171,7 +1188,7 @@ public class ModuleDB implements Serializable {
 		  {
 			  mod.setCreatedByFname("");
 		  }
-		  
+
 		  if (null == mod.getCreatedByLname())
 		  {
 			  mod.setCreatedByLname("");
@@ -1276,7 +1293,7 @@ public class ModuleDB implements Serializable {
 			// update seq_no for each deleted_module
 			StringBuffer allModuleIds = new StringBuffer("(");
 			StringBuffer allSectionIds = new StringBuffer("(");
-			ArrayList<StringBuffer> allSectionIdsArray = new ArrayList<StringBuffer>(); 
+			ArrayList<StringBuffer> allSectionIdsArray = new ArrayList<StringBuffer>();
 			String delModuleIds = null;
 			//String delSectionIds = null;
 			ArrayList<DelModuleInfo> DelModuleInfoList = new ArrayList<DelModuleInfo>(0);
@@ -1290,48 +1307,48 @@ public class ModuleDB implements Serializable {
 				{
 					for (Iterator i = delSections.keySet().iterator(); i.hasNext();)
 					{
-						 if (count % MAX_IN_CLAUSES == 0) { 
-							 allSectionIds.append(i.next() + ")"); 
-							 allSectionIdsArray.add(allSectionIds); 
-							 allSectionIds = new StringBuffer("("); 
-							 } 
-							 else { 
-							 allSectionIds.append(i.next() + ","); 
-							 } 
-							 count++; 				
+						 if (count % MAX_IN_CLAUSES == 0) {
+							 allSectionIds.append(i.next() + ")");
+							 allSectionIdsArray.add(allSectionIds);
+							 allSectionIds = new StringBuffer("(");
+							 }
+							 else {
+							 allSectionIds.append(i.next() + ",");
+							 }
+							 count++;
 					}
 				 }
-			
+
 
 				Map delDeletedSections = dm.getDeletedSections();
 				if (delDeletedSections != null && !delDeletedSections.isEmpty())
 				{
 					for (Iterator i1 = delDeletedSections.keySet().iterator(); i1.hasNext();)
 					{
-						if (count % MAX_IN_CLAUSES == 0) { 
-						 allSectionIds.append(i1.next() + ")"); 
-						 allSectionIdsArray.add(allSectionIds); 
-						 allSectionIds = new StringBuffer("("); 
-						 } 
-						 else { 
-						 allSectionIds.append(i1.next() + ","); 
-						 } 
-						count++; 
-					} 					
+						if (count % MAX_IN_CLAUSES == 0) {
+						 allSectionIds.append(i1.next() + ")");
+						 allSectionIdsArray.add(allSectionIds);
+						 allSectionIds = new StringBuffer("(");
+						 }
+						 else {
+						 allSectionIds.append(i1.next() + ",");
+						 }
+						count++;
+					}
 				}
 
 				// record seq_no and id
 				DelModuleInfoList.add(new DelModuleInfo(dm.getModuleId().toString(),dm.getCoursemodule().getSeqNo()));
 			}
-			
+
 			if (allModuleIds.lastIndexOf(",") != -1) delModuleIds = allModuleIds.substring(0, allModuleIds.lastIndexOf(",")) + " )";
 
 			//if (allSectionIds.lastIndexOf(",") != -1) delSectionIds = allSectionIds.substring(0, allSectionIds.lastIndexOf(",")) + " )";
-			 if (count % MAX_IN_CLAUSES != 0) { 
-			 allSectionIds.replace(allSectionIds.lastIndexOf(","), allSectionIds.lastIndexOf(",")+1, ")"); 
-			 allSectionIdsArray.add(allSectionIds); 
-			 } 
-			
+			 if (count % MAX_IN_CLAUSES != 0) {
+			 allSectionIds.replace(allSectionIds.lastIndexOf(","), allSectionIds.lastIndexOf(",")+1, ")");
+			 allSectionIdsArray.add(allSectionIds);
+			 }
+
 			Session session = hibernateUtil.currentSession();
 			tx = session.beginTransaction();
 
@@ -1339,8 +1356,8 @@ public class ModuleDB implements Serializable {
 			int deletedEntities;
 
 			// delete modules and sections
-			String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in "; 
-			String delSectionResourceStr = "delete SectionResource sr where sr.section in "; 	
+			String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in ";
+			String delSectionResourceStr = "delete SectionResource sr where sr.section in ";
 			String delSectionStr = "delete Section s where s.moduleId in " + delModuleIds;
 			String delCourseModuleStr = "delete CourseModule cm where cm.moduleId in " + delModuleIds;
 			String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId in " + delModuleIds;
@@ -1349,12 +1366,12 @@ public class ModuleDB implements Serializable {
 
 			if (allSectionIdsArray != null)
 			{
-				for (int i=0; i<allSectionIdsArray.size(); i++) { 
-					 allSectionIds = allSectionIdsArray.get(i); 
-					 deletedEntities = session.createQuery(updSectionResourceStr + allSectionIds.toString()).executeUpdate(); 
-					 logger.debug("section resource deleted" + deletedEntities); 
-					 deletedEntities = session.createQuery(delSectionResourceStr + allSectionIds.toString()).executeUpdate(); 
-				} 		
+				for (int i=0; i<allSectionIdsArray.size(); i++) {
+					 allSectionIds = allSectionIdsArray.get(i);
+					 deletedEntities = session.createQuery(updSectionResourceStr + allSectionIds.toString()).executeUpdate();
+					 logger.debug("section resource deleted" + deletedEntities);
+					 deletedEntities = session.createQuery(delSectionResourceStr + allSectionIds.toString()).executeUpdate();
+				}
 			}
 
 			if (delModuleIds != null)

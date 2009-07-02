@@ -37,6 +37,7 @@ import javax.faces.el.ValueBinding;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.etudes.component.app.melete.Module;
 import org.etudes.component.app.melete.SectionBean;
 import org.etudes.api.app.melete.ModuleDateBeanService;
 import org.etudes.api.app.melete.ModuleService;
@@ -67,7 +68,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 	private boolean success;
 	private boolean moduleSelected;
 	private boolean sectionSelected;
-	private List moduleDateBeans = null;
+	private List modules = null;
 	private List sectionBeans = null;
 	String courseId;
 	String userId;
@@ -76,7 +77,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
     public DeleteModulePage(){
        	this.mdbean = null;
     	this.section = null;
-    	this.moduleDateBeans = null;
+    	this.modules = null;
     	this.sectionBeans = null;
     	sameModuleSectionSelected = false;
     	courseId = null;
@@ -96,13 +97,13 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		return this.mdbean;
 	}
 
-	public void setModuleDateBeans(List moduleDateBeansList) {
-		    this.moduleDateBeans = moduleDateBeansList;
+	public void setModules(List modules) {
+		    this.modules = modules;
 
 	}
 
-	public List getModuleDateBeans() {
-		 return this.moduleDateBeans;
+	public List getModules() {
+		 return this.modules;
 	  }
   	/*
 	 * setting section
@@ -151,10 +152,10 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 	private void CheckSectionsSelected() throws Exception
 	{
 		HashMap modulekeys = new HashMap();
-		for (int i=0; i < moduleDateBeans.size(); i++)
+		for (int i=0; i < modules.size(); i++)
 		{
-			ModuleDateBean mdbean = (ModuleDateBean)moduleDateBeans.get(i);
-			Integer mkey = new Integer(mdbean.getModuleId());
+			Module mod = (Module)modules.get(i);
+			Integer mkey = new Integer(mod.getModuleId());
 			modulekeys.put(mkey,mkey);
 		}
 
@@ -169,10 +170,10 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 	private void removeSectionsSelectedToModule() throws Exception
 	{
 		HashMap modulekeys = new HashMap();
-		for (int i=0; i < moduleDateBeans.size(); i++)
+		for (int i=0; i < modules.size(); i++)
 		{
-			ModuleDateBean mdbean = (ModuleDateBean)moduleDateBeans.get(i);
-			Integer mkey = new Integer(mdbean.getModuleId());
+			Module mod = (Module)modules.get(i);
+			Integer mkey = new Integer(mod.getModuleId());
 			modulekeys.put(mkey,mkey);
 		}
 		Iterator iter = sectionBeans.iterator();
@@ -200,11 +201,11 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			{
 				 // check if sections of selected module are selected too
 				if(sectionBeans != null)CheckSectionsSelected();
-				moduleService.deleteModules(this.moduleDateBeans,getCourseId(), getUserId());
+				moduleService.deleteModules(this.modules,getCourseId(), getUserId());
 
-				Iterator it = this.moduleDateBeans.iterator();
+				Iterator it = this.modules.iterator();
 				while (it.hasNext()){
-					  ModuleDateBean obj = (ModuleDateBean) it.next();
+					  Module obj = (Module) it.next();
 					  //Track the event
 					  EventTrackingService.post(EventTrackingService.newEvent("melete.module.delete", ToolManager.getCurrentPlacement().getContext(), true));
 				}
@@ -261,7 +262,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			{
 				 // check if sections of selected module are selected too
 		        removeSectionsSelectedToModule();
-				moduleService.deleteModules(this.moduleDateBeans,getCourseId(), getUserId());
+				moduleService.deleteModules(this.modules,getCourseId(), getUserId());
 				sameModuleSectionSelected = false;
 			}
 			if (getSectionSelected() == true)
@@ -285,7 +286,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		setModuleSelected(false);
 		setSection(null);
 		setSectionSelected(false);
-		setModuleDateBeans(null);
+		setModules(null);
 		setSectionBeans(null);
 		sameModuleSectionSelected = false;
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -305,7 +306,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		setModuleSelected(false);
 		setSection(null);
 		setSectionSelected(false);
-		setModuleDateBeans(null);
+		setModules(null);
 		setSectionBeans(null);
 		sameModuleSectionSelected = false;
 

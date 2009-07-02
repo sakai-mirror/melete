@@ -83,13 +83,13 @@
 							                    	<td align="center" class="menu left">
 								                    	<h:commandLink id="restoregoto" action="#{manageModulesPage.goToRestoreModules}">
 															<h:graphicImage id="image"
-									   							alt="#{msgs.modules_author_manage_restore_inactive}"
+									   							alt="#{msgs.modules_author_manage_archive}"
 									   							url="images/folder_into.gif"
 									   							 styleClass="AuthImgClass"/>
-									   							<h:outputText id="re" value="#{msgs.modules_author_manage_restore}" />
+									   							<h:outputText id="re" value="#{msgs.modules_author_manage_archive_title}" />
 														</h:commandLink>
 							                    	</td>
-							                    	<td  align="left"><h:outputText value="#{msgs.modules_author_manage_restore_inactive_to_active_list}" /></td>
+							                    	<td  align="left"><h:outputText value="#{msgs.modules_author_manage_archive_delete_list}" /></td>
 							                  	</tr>
 							                   	<tr>
 													<td align="center" class="menu left">

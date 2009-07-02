@@ -114,7 +114,15 @@ function resetCheck()
 											onmouseout="this.src = '#{msgs.im_restore}'" 
 											onmousedown="this.src = '#{msgs.im_restore_down}'" 
 						   				  	onmouseup="this.src = '#{msgs.im_restore_over}'"/>
-                						</h:commandLink>				
+                						</h:commandLink>	
+                						
+                						<h:commandLink id="deleteModule"  action="#{manageModulesPage.deleteModules}" rendered="#{(manageModulesPage.shouldRenderEmptyList == manageModulesPage.falseBool)}" >
+											<h:graphicImage id="deleteModImg" value="#{msgs.im_delete}" styleClass="BottomImgSpace" 
+											onmouseover="this.src = '#{msgs.im_delete_over}'" 
+											onmouseout="this.src = '#{msgs.im_delete}'" 
+											onmousedown="this.src = '#{msgs.im_delete_down}'" 
+						   				  	onmouseup="this.src = '#{msgs.im_delete_over}'"/>
+                						</h:commandLink>
 
 									<h:graphicImage id="restoreModImg1" value="#{msgs.im_restore}" styleClass="BottomImgSpace"  rendered="#{manageModulesPage.shouldRenderEmptyList}" 	onmouseover="this.src = '#{msgs.im_restore_over}'" 
 											onmouseout="this.src = '#{msgs.im_restore}'" 

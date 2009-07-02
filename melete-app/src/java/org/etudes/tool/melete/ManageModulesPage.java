@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008, 2009 Etudes, Inc.
@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import org.sakaiproject.util.ResourceLoader;
 
@@ -44,6 +45,8 @@ import javax.faces.model.SelectItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.component.app.melete.SectionBean;
+import org.etudes.component.app.melete.CourseModule;
+import org.etudes.component.app.melete.Module;
 //import org.sakaiproject.jsf.ToolBean;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.ModuleService;
@@ -216,6 +219,42 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 
 	  	return "confirm_restore_modules";
 	  }
+
+	public String deleteModules()
+	  {
+		List<Module> delModules = new ArrayList<Module>(0);
+
+		FacesContext context = FacesContext.getCurrentInstance();
+	   ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+	   Map sessionMap = context.getExternalContext().getSessionMap();
+
+		if(count <=0)
+		{
+			String errMsg = bundle.getString("no_module_selected");
+			context.addMessage (null, new FacesMessage(errMsg));
+			return "restore_modules";
+		}
+
+        for (ListIterator i = restoreModulesList.listIterator(); i.hasNext(); )
+         {
+	       CourseModule cmod  = (CourseModule)i.next();
+	      delModules.add((Module)cmod.getModule());
+         }
+
+
+			ValueBinding binding = Util.getBinding("#{deleteModulePage}");
+			DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(context);
+			dmPage.setModules(delModules);
+			dmPage.setModuleSelected(true);
+			count=0;
+
+
+		// 2. clear archivelist
+			archiveModulesList = null;
+
+	  	return "delete_module";
+	  }
+
 
 	/**
 	 * clear lists on cancel
@@ -854,7 +893,7 @@ catch (MeleteException me)
 return "sections_sort";
 }
 	// end sort code
-  
+
   public boolean getSelectAllFlag()
 	{
 		return selectAllFlag;
@@ -863,18 +902,18 @@ return "sections_sort";
 	public void setSelectAllFlag(boolean selectAllFlag)
 	{
 		this.selectAllFlag = selectAllFlag;
-	}	  
-  
+	}
+
 	public int getListSize()
 	{
 		return listSize;
 	}
-	
+
 	public void setListSize(int listSize)
 	{
 		this.listSize = listSize;
 	}
-	  
+
 	/**
 	 * @return Returns the ModuleService.
 	 */

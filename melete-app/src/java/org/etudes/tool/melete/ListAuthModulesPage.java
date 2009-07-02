@@ -208,7 +208,7 @@ public class ListAuthModulesPage implements Serializable
 		dmPage.setModuleSelected(false);
 		dmPage.setSection(null);
 		dmPage.setSectionSelected(false);
-		dmPage.setModuleDateBeans(null);
+		dmPage.setModules(null);
 		dmPage.setSectionBeans(null);
 
 		binding = Util.getBinding("#{authorPreferences}");
@@ -228,7 +228,6 @@ public class ListAuthModulesPage implements Serializable
 		} else {
 		   autonumber = false;
 		}
-		System.out.println("SETTING SELECTALL to FALSE");
 		selectAllFlag = false;
 	}
 
@@ -500,7 +499,6 @@ public class ListAuthModulesPage implements Serializable
 	
 	public boolean getSelectAllFlag()
 	{
-		System.out.println("SELECTALL in GET is "+selectAllFlag);
 		return selectAllFlag;
 	}
 
@@ -820,7 +818,7 @@ public class ListAuthModulesPage implements Serializable
 	{
 
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		List delModBeans = null;
+		List delMods = null;
 		List delSecBeans = null;
 
 		count = 0;
@@ -837,22 +835,22 @@ public class ListAuthModulesPage implements Serializable
 		if (moduleSelected)
 		{
 			ModuleDateBean mdbean = null;
-			if (delModBeans == null)
+			if (delMods == null)
 			{
-				delModBeans = new ArrayList();
+				delMods = new ArrayList();
 			}
 			if (selectedModIndices != null)
 			{
 			  for (ListIterator i = selectedModIndices.listIterator(); i.hasNext();)
 			  {
 				mdbean = (ModuleDateBean) moduleDateBeans.get(((Integer) i.next()).intValue());
-				delModBeans.add(mdbean);
+				delMods.add(mdbean.getModule());
 			  }
 			}
 			ValueBinding binding = Util.getBinding("#{deleteModulePage}");
 			DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
 			// dmPage.setMdbean(mdbean);
-			dmPage.setModuleDateBeans(delModBeans);
+			dmPage.setModules(delMods);
 		//	List <> allActivenArchvModules = moduleService.getAllActivenArchvModules();
 			dmPage.setModuleSelected(true);
 			count = 0;

@@ -1111,6 +1111,10 @@
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
      </navigation-case> 
+       <navigation-case>
+      <from-outcome>delete_module</from-outcome>
+      <to-view-id>/melete/delete_module.jsp</to-view-id>
+     </navigation-case> 
   </navigation-rule>   
    
 	<navigation-rule>

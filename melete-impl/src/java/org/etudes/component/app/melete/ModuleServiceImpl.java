@@ -296,16 +296,11 @@ public List getViewModules(String userId, String courseId) {
 
 
 // end - mallika
- public void deleteModules(List moduleDateBeans, String courseId, String userId) throws Exception
+ public void deleteModules(List delModules, String courseId, String userId) throws Exception
  {
 	 List cmodList = null;
-	 List<Module> delModules = new ArrayList<Module>(0);
 	 List<Module> allModules = new ArrayList<Module>(0);
-	 for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext(); )
-	 {
-		 ModuleDateBean mdbean = (ModuleDateBean)i.next();
-		 delModules.add((Module)mdbean.getCmod().getModule());
-	 }
+	
 	 try{
 		 allModules = moduledb.getActivenArchiveModules(courseId);
 		 moduledb.deleteModules(delModules, allModules, courseId, userId);

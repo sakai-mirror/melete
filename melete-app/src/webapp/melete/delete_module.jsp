@@ -76,11 +76,11 @@
                         <br><h:outputText value="#{msgs.delete_module_module2}" styleClass="bold"  rendered="#{deleteModulePage.moduleSelected}"/>  
 						<h:outputText value=": " styleClass="bold"   rendered="#{deleteModulePage.moduleSelected}"/>
 						 <h:dataTable id="tablemod"
-                         value="#{deleteModulePage.moduleDateBeans}"
-                         var="mdbean"
+                         value="#{deleteModulePage.modules}"
+                         var="module"
                          rendered="#{deleteModulePage.moduleSelected}">
                          <h:column>
-		                 <br><h:outputText value="#{mdbean.module.title}" styleClass="bold"  rendered="#{deleteModulePage.moduleSelected}" />
+		                 <br><h:outputText value="#{module.title}" styleClass="bold"  rendered="#{deleteModulePage.moduleSelected}" />
                          </h:column>
                          </h:dataTable>   
 						
