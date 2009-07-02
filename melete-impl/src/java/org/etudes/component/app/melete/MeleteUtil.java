@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008,2009 Etudes, Inc.
@@ -165,27 +165,33 @@ public class MeleteUtil {
 				 if (!m.find()) // found anything?
 					 continue;
 				 endSrc = m.start();
-			 }				
-		 } //while end
-		
-		 if(foundPattern != null && foundPattern.equals("link"))
-		 {
-			 String anchorStr = checkforimgs.substring(startSrc,endSrc);
-			 if (anchorStr != null && anchorStr.startsWith("#")) 
-			 {
-				 checkforimgs = checkforimgs.substring(endSrc);
-				 if(checkforimgs != null)
-				 {
-					 ArrayList r = findEmbedItemPattern(checkforimgs);
-					 checkforimgs = (String)r.get(0);
-					 if (r.size() > 1)
-					 {
-						 startSrc = ((Integer)r.get(1)).intValue();
-						 endSrc = ((Integer)r.get(2)).intValue();
-					 }	
-				 }
 			 }
-		 }
+		 } //while end
+
+		 if(foundPattern != null && foundPattern.equals("link"))
+			 {
+				 String anchorStr = checkforimgs.substring(startSrc,endSrc);
+				 if (anchorStr != null && anchorStr.startsWith("#"))
+				 {
+					 checkforimgs = checkforimgs.substring(endSrc);
+					 if(checkforimgs != null)
+					 {
+						 ArrayList r = findEmbedItemPattern(checkforimgs);
+						 checkforimgs = (String)r.get(0);
+						 if (r.size() > 1 && ((Integer)r.get(2)).intValue() > 0)
+						 {
+							 startSrc = ((Integer)r.get(1)).intValue();
+							 endSrc = ((Integer)r.get(2)).intValue();
+							 foundPattern = (String)r.get(3);
+						 }
+						 else
+						 {
+							 startSrc = 0; endSrc = 0;
+						 }
+					}
+				}
+			}
+
 		 returnData.add(checkforimgs);
 		 if (endSrc != 0) {returnData.add(new Integer(startSrc)); returnData.add(new Integer(endSrc)); returnData.add(foundPattern);}
 
@@ -223,7 +229,7 @@ public class MeleteUtil {
 			return checkforimgs;
 
 		}
-	
+
 		public ArrayList<String> findResourceSource(String Data, String oldCourseId, String toSiteId, boolean newId)
 		{
 			try
@@ -231,12 +237,12 @@ public class MeleteUtil {
 			ArrayList<String> rData = new ArrayList<String>();
 			String findEntity = Data.substring(Data.indexOf("/access")+7);
 			Reference ref = EntityManager.newReference(findEntity);
-			String ref_id = ref.getId();		
+			String ref_id = ref.getId();
 			String checkReferenceId=null;
 			if(ref.getType().equals("sakai:meleteDocs"))
 			{
 				ref_id = ref_id.substring(ref_id.indexOf("/content")+ 8);
-				if(newId) checkReferenceId = ref_id.replace(oldCourseId, toSiteId);			
+				if(newId) checkReferenceId = ref_id.replace(oldCourseId, toSiteId);
 			}
 			else
 			{
@@ -256,7 +262,7 @@ public class MeleteUtil {
 				return null;
 			}
 		}
-		
+
 		public String findParentReference(String ref_id)
 		{
 			String parentStr = ref_id.substring(0,ref_id.lastIndexOf("/")+1);
