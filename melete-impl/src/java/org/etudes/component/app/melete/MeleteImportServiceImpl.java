@@ -211,6 +211,9 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		return count;
 	}
 
+	/*
+	 * imports unreferred file tag items.
+	 */
 	private void processManageItems(Element rootEle, String unZippedDirPath, String fromSiteId, Document document) throws Exception
 	{
 		List elements = rootEle.elements();
@@ -240,7 +243,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 					if (hrefVal.substring(hrefVal.lastIndexOf('/') +1).startsWith("Section_")) continue;
 					// LTI RESOURCE
 					//Load up the resource to look at it
-					String fileName = ((Element)resElements.get(0)).attributeValue("href");
+			//		String fileName = ((Element)resElements.get(0)).attributeValue("href");
+					String fileName = getFileNamefromElement(resElements, melResourceName);
 					String contentEditor = new String(readData(unZippedDirPath, fileName));
 					if(contentEditor == null) continue;
 					if ( isLTIDocument(contentEditor) ) 
@@ -251,12 +255,14 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 					if ( fileTitle != null ) melResourceName = fileTitle;
 					melResourceDescription = readDescriptionFromElement(resElements);
 				}
-				logger.debug("process manage items -" + hrefVal);
-				checkAndAddResource(hrefVal,contentType,fromSiteId, resElements, unZippedDirPath, false);				
+				checkAndAddResource(hrefVal,contentType,fromSiteId, resElements, unZippedDirPath, false);
 			}
 		} //for end
 	}
 
+	/*
+	 * Get resource title. For links, if not provided then last part of url becomes title.
+	 */
 	private String readTitlefromElement(List resElements, boolean link, String hrefVal)
 	{
 		String urlTitle = null;
@@ -284,7 +290,10 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		  }
 		  return urlTitle;
 	}
-	
+
+	/*
+	 * Get Resource description 
+	 */
 	private String readDescriptionFromElement(List resElements)
 	{
 		String melResourceDescription =null;
@@ -373,7 +382,10 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		} // catch end
 
 	}
-	
+
+	/*
+	 * For embedded links, if they refer to a file item then get it
+	 */
 	private String copyResource(String hrefVal, String toSiteId, String uploadCollId, List resElements, String unZippedDirPath) throws Exception
 	{
 		String firstReferId = null;
@@ -388,7 +400,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		{
 			logger.debug("copy resource is adding " + fileResourceName);
 			String extn = fileResourceName.substring(fileResourceName.lastIndexOf(".")+1);
-			String fileName = ((Element)resElements.get(0)).attributeValue("href");	
+			String fileName = getFileNamefromElement(resElements,fileResourceName);
+	
 			if (extn.equals("htm") || extn.equals("html"))
 				firstReferId = processEmbedDatafromHTML(fileName,fileResourceName,toSiteId,uploadCollId,resElements,unZippedDirPath);
 			else
@@ -404,7 +417,24 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 
 		return firstReferId;
 	}
-	
+
+	/*
+	 * find File element from manifest file which tells the exact location of file in the package
+	 */
+	private String getFileNamefromElement(List resElements, String fileResourceName)
+	{
+		String actualFileLocation = null;
+		for(int i=0; i < resElements.size(); i++)
+		{
+			Element FileEle = (Element)resElements.get(i);
+			actualFileLocation = FileEle.attributeValue("href");
+			if (actualFileLocation != null && actualFileLocation.indexOf(fileResourceName) != -1) return actualFileLocation;
+		}
+		return null;
+	}
+	/*
+	 * Abstract method implementation to read data from the zip file
+	 */
 	protected byte[] readData(String unZippedDirPath, String hrefVal) throws Exception
 	{
 		File fileUploadResource = new File(unZippedDirPath + File.separator+ hrefVal);
@@ -1088,7 +1118,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		else
 		{
 			//Load up the resource to look at it
-			String fileName = ((Element)resElements.get(0)).attributeValue("href");
+		//	String fileName = ((Element)resElements.get(0)).attributeValue("href");
+			String fileName = getFileNamefromElement(resElements, hrefVal);
 			String contentEditor = new String(readData(unZippedDirPath, fileName));
 			if(contentEditor == null) return;
 			if ( isLTIDocument(contentEditor) ) 
