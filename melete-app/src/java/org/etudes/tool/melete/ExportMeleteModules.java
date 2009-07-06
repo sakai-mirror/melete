@@ -147,7 +147,7 @@ public class ExportMeleteModules {
 		if(selectedModules == null || selectedModules.size() == 0)return null;
 		if(selectedModules.size() == 1 && selectedModules.get(0).equals("all"))
 			return modList;
-        
+
 		List<Module> returnList = new ArrayList<Module>(0);
 		for(String sel:selectedModules)
 		{
@@ -172,14 +172,16 @@ public class ExportMeleteModules {
 
 		try {
 			List<Module>selectList = createSelectedList();
+			boolean allFlag = false;
 
 			if (selectList != null && selectList.size() > 0) {
-				if(selectedModules.size() == 1 && selectedModules.get(0).equals("all"))
+				if(selectedModules.get(0).equals("all"))
 				{
+					allFlag = true;
 					String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
 					List cmodArchList = getModuleService().getArchiveModules(courseId);
 				    if ((cmodArchList != null)&&(cmodArchList.size() > 0))
-				    {	
+				    {
 					  Iterator i = cmodArchList.iterator();
 				      List<Module> archModList=new ArrayList();
 				      while (i.hasNext()) {
@@ -187,10 +189,10 @@ public class ExportMeleteModules {
 				    	  archModList.add((Module)cmod.getModule());
 				      }
 				      selectList.addAll(archModList);
-				    }  
+				    }
 				}
-				if(selectFormat.startsWith("IMS")) exportIMSModules(selectList);
-				else exportScormModules(selectList);
+				if(selectFormat.startsWith("IMS")) exportIMSModules(selectList,allFlag);
+				else exportScormModules(selectList,allFlag);
 
 			}
 			else {
@@ -224,7 +226,7 @@ public class ExportMeleteModules {
 	 *
 	 * @return navigation page
 	 */
-	public void exportIMSModules(List<Module> selectList) throws Exception{
+	public void exportIMSModules(List<Module> selectList,boolean allFlag) throws Exception{
 		if (logger.isDebugEnabled())
 			logger.debug("Starting export IMS Modules....");
 
@@ -285,11 +287,11 @@ public class ExportMeleteModules {
 					packagedir.getAbsolutePath() + File.separator
 					+ "xml.xsd");
 
-			
+
 			List orgResElements = meleteExportService
-			.generateOrganizationResourceItems(selectList,selectList.equals(modList),
+			.generateOrganizationResourceItems(selectList,allFlag,
 					packagedir, title, courseId);
-			
+
 
 			if (orgResElements != null && orgResElements.size() > 0) {
 				manifest.add((Element) orgResElements.get(0));
@@ -310,7 +312,7 @@ public class ExportMeleteModules {
 			title = Validator.escapeResourceName(title);
 
 			String outputfilename = null;
-			if(modList.equals(selectList))
+			if(allFlag)
 			{
 			outputfilename = packagedir.getParentFile()
 			.getAbsolutePath()
@@ -353,7 +355,7 @@ public class ExportMeleteModules {
 	 *
 	 * @return navigation page
 	 */
-	public void exportScormModules(List<Module> selectList) throws Exception
+	public void exportScormModules(List<Module> selectList,boolean allFlag) throws Exception
 	{
 		if (logger.isDebugEnabled()) logger.debug("Starting exportModules....");
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -390,7 +392,7 @@ public class ExportMeleteModules {
 			// copy the schema files
 			File schemaFilesDir = basePackDir;
 
-			List orgResElements = meleteExportScormService.generateOrganizationResourceItems(selectList, selectList.equals(modList), packagedir, title, courseId);
+			List orgResElements = meleteExportScormService.generateOrganizationResourceItems(selectList, allFlag, packagedir, title, courseId);
 
 			if (orgResElements != null && orgResElements.size() > 0)
 			{
@@ -410,7 +412,7 @@ public class ExportMeleteModules {
 
 			title = Validator.escapeResourceName(title);
 			String outputfilename = null;
-			if(modList.equals(selectList))
+			if(allFlag)
 			{
 			  outputfilename = packagedir.getParentFile()
 			.getAbsolutePath()
