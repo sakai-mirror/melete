@@ -169,29 +169,29 @@ public class MeleteUtil {
 		 } //while end
 
 		 if(foundPattern != null && foundPattern.equals("link"))
+		 {
+			 String anchorStr = checkforimgs.substring(startSrc,endSrc);
+			 if (anchorStr != null && anchorStr.startsWith("#")) 
 			 {
-				 String anchorStr = checkforimgs.substring(startSrc,endSrc);
-				 if (anchorStr != null && anchorStr.startsWith("#"))
+				 checkforimgs = checkforimgs.substring(endSrc);
+				 if(checkforimgs != null)
 				 {
-					 checkforimgs = checkforimgs.substring(endSrc);
-					 if(checkforimgs != null)
+					 ArrayList r = findEmbedItemPattern(checkforimgs);
+					 checkforimgs = (String)r.get(0);
+					 if (r.size() > 1 && ((Integer)r.get(2)).intValue() > 0) 
 					 {
-						 ArrayList r = findEmbedItemPattern(checkforimgs);
-						 checkforimgs = (String)r.get(0);
-						 if (r.size() > 1 && ((Integer)r.get(2)).intValue() > 0)
-						 {
-							 startSrc = ((Integer)r.get(1)).intValue();
-							 endSrc = ((Integer)r.get(2)).intValue();
-							 foundPattern = (String)r.get(3);
-						 }
-						 else
-						 {
-							 startSrc = 0; endSrc = 0;
-						 }
-					}
-				}
-			}
-
+						 startSrc = ((Integer)r.get(1)).intValue();
+						 endSrc = ((Integer)r.get(2)).intValue();
+						 foundPattern = (String)r.get(3);						
+					 }	
+					 else
+					 {
+						 startSrc = 0; endSrc = 0;
+					 }
+				 }
+			 }
+		 }
+		
 		 returnData.add(checkforimgs);
 		 if (endSrc != 0) {returnData.add(new Integer(startSrc)); returnData.add(new Integer(endSrc)); returnData.add(foundPattern);}
 
