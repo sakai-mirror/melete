@@ -26,6 +26,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/tool-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/site-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db-api"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/etudes-util"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
