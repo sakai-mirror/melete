@@ -360,6 +360,7 @@ public class ListAuthModulesPage implements Serializable
 			k++;
 		}
 		count = moduleDateBeans.size();
+		if (count == 1) selectedModIndex = 0;
 		moduleSelected = true;
 		return;
 	}	
