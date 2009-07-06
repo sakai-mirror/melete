@@ -91,7 +91,7 @@
 												onmouseup="this.src = '#{msgs.im_continue_over}'"/>
 										</h:commandLink> 
 				
-									<h:commandLink id="cancelButton_1" action="#{addSectionPage.cancelServerFile}" immediate="true">
+									<h:commandLink id="cancelButton_1" action="#{addSectionPage.cancelServerFile}">
 										<h:graphicImage id="cancelImg_1" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
 											onmouseover="this.src = '#{msgs.im_cancel_over}'" 
 											onmouseout="this.src = '#{msgs.im_cancel}'" 
@@ -146,7 +146,7 @@
 				/>
 				</h:commandLink> 
 				
-				<h:commandLink id="cancelButton"  action="#{addSectionPage.cancelServerFile}"  immediate="true">
+				<h:commandLink id="cancelButton"  action="#{addSectionPage.cancelServerFile}">
 					<h:graphicImage id="cancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
 						onmouseover="this.src = '#{msgs.im_cancel_over}'" 
 						onmouseout="this.src = '#{msgs.im_cancel}'" 

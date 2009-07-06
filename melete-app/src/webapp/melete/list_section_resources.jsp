@@ -93,14 +93,14 @@
 					 </f:facet>
 					  <h:graphicImage id="linkgif" alt="" value="images/link2me.png" styleClass="AuthImgClass" />
 				      <h:outputText id="emp_space-3" value=" " />
-				     <h:commandLink id="linkaction" actionListener="#{addSectionPage.selectedResourceAction}"  action="#{addSectionPage.redirectLink}" immediate="true">
+				     <h:commandLink id="linkaction" actionListener="#{addSectionPage.selectedResourceAction}"  action="#{addSectionPage.redirectLink}">
 				     <f:param name="linkactionParam" value="#{curr_resources.resource_id}" />
 						<h:outputText value="#{msgs.list_section_resources_link}" />
 					 </h:commandLink>	
 					  <h:outputText id="emp_space-1" value="     "  styleClass="ExtraPaddingClass" />
 					 <h:graphicImage id="delgif" alt="" value="images/delete.gif" styleClass="AuthImgClass" />
 					 <h:outputText id="emp_space-2" value=" " />
-					 <h:commandLink id="deleteaction" actionListener="#{addSectionPage.selectedResourceDeleteAction}"  action="#{addSectionPage.redirectDeleteLink}" immediate="true" >
+					 <h:commandLink id="deleteaction" actionListener="#{addSectionPage.selectedResourceDeleteAction}"  action="#{addSectionPage.redirectDeleteLink}">
 				    		<f:param name="linkactionParam1" value="#{curr_resources.resource_id}" />
 				    		<f:param name="linkactionParam2" value="#{curr_resources.resource_title}" />
 				    		<h:outputText id="deltext" value="#{msgs.list_section_resources_del}"  />

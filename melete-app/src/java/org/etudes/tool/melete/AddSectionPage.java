@@ -363,7 +363,11 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	  {
 	  		selResourceIdFromList = null;
 	  		renderSelectedResource = false;
-	  		setLinkUrl(currLinkUrl);
+	  		setLinkUrl(null);
+	  		currLinkUrl = null;
+	  		displayCurrLink = null;
+	  		secResourceName = null;
+			secResourceDescription = null;
 	  		return "addmodulesections";
 	  }
 
