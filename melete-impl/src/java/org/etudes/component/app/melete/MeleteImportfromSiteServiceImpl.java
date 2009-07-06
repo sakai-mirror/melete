@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
 import java.net.URLDecoder;
 
 import org.etudes.component.app.melete.MeleteUtil;
-import org.etudes.util.XrefHelper;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.MeleteImportfromSiteService;
 import org.etudes.api.app.melete.exception.MeleteException;
@@ -471,31 +470,6 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				}
 			}
 
-		}
-		reportSkippedFiles(toContext);
-	}
-
-	/*
-	 * Report skipped files at the end of import from site process.
-	 * MELETE_importResources records all files referred and MELETE_addedNowResource records the one
-	 * added in the current process.
-	 */
-	private void reportSkippedFiles(String toContext)
-	{
-		// remove the ones from importResources
-		Set<String> importResources = (Set<String>) threadLocalManager.get("MELETE_importResources");
-		Set<String> addReferred = (Set<String>) threadLocalManager.get("MELETE_addedNowResource");
-		if ((importResources != null) && (addReferred != null))
-		{
-			importResources.removeAll(addReferred);
-		}
-		if (importResources != null)
-		{
-			for (String name : importResources)
-			{
-				String chsId = "/private/meleteDocs/" + toContext + "/uploads/" + name;
-				XrefHelper.recordFileSkipped(chsId);
-			}
 		}
 	}
 

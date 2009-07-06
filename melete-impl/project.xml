@@ -138,12 +138,6 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>etudes</groupId>
-			<artifactId>etudes-util</artifactId>
-			<version>1.0</version>
-		</dependency>
-		
-		<dependency>
 			<groupId>servletapi</groupId>
 			<artifactId>servletapi</artifactId>
 			<version>2.4</version>
