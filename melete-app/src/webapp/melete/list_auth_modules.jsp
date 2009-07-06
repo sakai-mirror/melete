@@ -131,7 +131,10 @@ function selectAll()
 
 function resetCheck()
 {
-	document.getElementById("listauthmodulesform:table:allmodcheck").checked=false;
+	if (document.getElementById("listauthmodulesform:table:allmodcheck") != null)
+	{	
+	  document.getElementById("listauthmodulesform:table:allmodcheck").checked=false;
+	}  
 }
 
 </script>
@@ -176,7 +179,7 @@ if (msg != null)
 		<tr>
 		<td align="left">
 			<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-			 <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" > 
+			 <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" height="100%" id="AutoNumber1" > 
                    <tr class="maintabledata3">
 				   <td colspan="7" white-space="nowrap">
 				     <h:dataTable id="table" 

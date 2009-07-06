@@ -52,7 +52,10 @@ function selectAll()
 }
 function resetCheck()
 {
+      if (document.getElementById("RestoreModuleForm:table1:allmodcheck") != null)
+      {
 	document.getElementById("RestoreModuleForm:table1:allmodcheck").checked=false;
+      }	
 }
 </script>
 </head>
