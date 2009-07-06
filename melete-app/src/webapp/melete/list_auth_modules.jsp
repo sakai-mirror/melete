@@ -131,7 +131,10 @@ function selectAll()
 
 function resetCheck()
 {
-	document.getElementById("listauthmodulesform:table:allmodcheck").checked=false;
+	if (document.getElementById("listauthmodulesform:table:allmodcheck") != null)
+	{	
+	  document.getElementById("listauthmodulesform:table:allmodcheck").checked=false;
+	}  
 }
 
 </script>
