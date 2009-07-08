@@ -430,20 +430,19 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 				logger.debug("imgsrcpath :" + imgSrcPath);
 				if(imgSrcPath.indexOf("/access") !=-1)
 				{
-					String img_resource_id = meleteUtil.findResourceSource(imgSrcPath, null, null, false).get(0);
-
-					/*	if(!img_resource_id.startsWith("/group"))
-						{
-							// not a site resource item so make it a full URL
-							String patternStr = imgSrcPath;
-							String replacementStr =ServerConfigurationService.getServerUrl() + imgSrcPath;
-							modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
-							checkforimgs =checkforimgs.substring(endSrc);
-							startSrc=0; endSrc = 0;
-							continue;
-							//	return modifiedSecContent;
-						}*/
-
+					ArrayList r = meleteUtil.findResourceSource(imgSrcPath, null, null, false);					
+					if(r == null || r.size() == 0)
+					{
+						/*// not a site resource item so make it a full URL
+						String patternStr = imgSrcPath;
+						String replacementStr =ServerConfigurationService.getServerUrl() + imgSrcPath;
+						modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);*/
+						checkforimgs =checkforimgs.substring(endSrc);
+						startSrc=0; endSrc = 0;
+						continue;
+					}
+					String img_resource_id = (String)r.get(0);
+					
 					byte[] img_data = null;
 					ArrayList img_content = new ArrayList();
 					if(img_resource_id.endsWith(".htm") || img_resource_id.endsWith(".html"))
@@ -491,14 +490,15 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 					// Replace all occurrences of pattern in input
 					modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);	
 				} // /access check end 
-				else if(imgSrcPath.startsWith("/")){
+				// no need to make full url for internal links - 8/7/09
+				/*else if(imgSrcPath.startsWith("/")){
 					//internal link resides somewhere within sakai
 					logger.debug("embedded media is from internal sakai" + imgSrcPath);
 					String patternStr = imgSrcPath;
 					String replacementStr =ServerConfigurationService.getServerUrl() + imgSrcPath;
 					modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
 					//return modifiedSecContent;
-				}
+				}*/
 				checkforimgs =checkforimgs.substring(endSrc);
 				startSrc=0; endSrc = 0;
 			}

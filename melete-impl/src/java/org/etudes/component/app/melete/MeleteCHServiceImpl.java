@@ -143,17 +143,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				  inputStr = inputStr.replace(groupCollectionRef ,"/site");
 				  ref1 = org.sakaiproject.entity.cover.EntityManager.newReference(inputStr);
 				  courseId = ref1.getContainer();
-			  }
-			  else
-			  {
-				  logger.warn("getCourseId - inputStr does not contain prefix structure of melete or group "+inputStr);
-			  }
+			  }			
 		  }
 	  }
-	  else
-	  {
-		  logger.warn("getCourseId - inputStr is null");
-	  }
+	
 	  return courseId;
 
    }

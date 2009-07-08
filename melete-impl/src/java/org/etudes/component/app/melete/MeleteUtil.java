@@ -239,12 +239,13 @@ public class MeleteUtil {
 			Reference ref = EntityManager.newReference(findEntity);
 			String ref_id = ref.getId();
 			String checkReferenceId=null;
+			
 			if(ref.getType().equals("sakai:meleteDocs"))
 			{
 				ref_id = ref_id.substring(ref_id.indexOf("/content")+ 8);
 				if(newId) checkReferenceId = ref_id.replace(oldCourseId, toSiteId);
 			}
-			else
+			else if (ref.getType().equals("sakai:content") && ref.getId().startsWith("/group"))
 			{
 				//for site resources item
 				if(newId)
@@ -253,6 +254,7 @@ public class MeleteUtil {
 					checkReferenceId = checkReferenceId.replace("/group/", "/private/meleteDocs/");
 				}
 			}
+			else return null;
 			rData.add(ref_id);
 			if(newId) rData.add(checkReferenceId);
 			return rData;
