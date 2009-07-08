@@ -343,6 +343,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 			logger.debug("end time to get all collectionMap" + (endtime - starttime));
 			return mem;
 		}
+		catch (IdUnusedException ex)
+		{
+	 		logger.debug("This collection does not exist "+collId);
+		}	
 		catch (Exception e)
 		{
 			logger.error(e.toString());
@@ -386,6 +390,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		logger.debug("end time to get all collectionMap" + (endtime - starttime));
 			return mem;
 	    }
+		catch (IdUnusedException ex)
+		{
+	 		logger.debug("This collection does not exist "+collId);
+		}	
 		catch(Exception e)
 		{
 			logger.error(e.toString());
@@ -431,6 +439,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 
 				return mem;
 		    }
+			catch (IdUnusedException ex)
+			{
+		 		logger.debug("This collection does not exist "+collId);
+			}	
 			catch(Exception e)
 			{
 				logger.error(e.toString());
@@ -475,6 +487,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 
 			return mem;
 		}
+		catch (IdUnusedException ex)
+		{
+	 		logger.debug("This collection does not exist "+collId);
+		}	
 		catch(Exception e)
 		{
 			logger.error(e.toString());
@@ -516,6 +532,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 
 				return mem;
 		    }
+			catch (IdUnusedException ex)
+			{
+		 		logger.debug("This collection does not exist "+collId);
+			}	
 			catch(Exception e)
 			{
 				logger.error(e.toString());
@@ -545,7 +565,11 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 
 				return mem;
 		    }
-			catch(Exception e)
+		 	catch (IdUnusedException ex)
+			{
+		 		logger.debug("This collection does not exist "+collId);
+			}	
+		 	catch(Exception e)
 			{
 				logger.error(e.toString());
 			}
