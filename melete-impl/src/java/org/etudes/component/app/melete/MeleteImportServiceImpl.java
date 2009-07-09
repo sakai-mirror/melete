@@ -533,7 +533,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 							}
 						}
 						contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, unZippedDirPath);
-					} // if check for images
+					} // if check for images				
 				} //if http check end
 			}//IMS import (original code) ends here
 
@@ -1005,7 +1005,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			if (eleRes != null)
 			{
 				Attribute resHrefAttr = eleRes.attribute("href");
-
+			
 				if (resHrefAttr != null)
 				{
 					String hrefVal = resHrefAttr.getValue();
@@ -1014,6 +1014,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 					if (hrefVal != null && hrefVal.length() != 0
 							&& !(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")))
 					{
+						hrefVal = getFileNamefromElement(eleRes.elements(),hrefVal);
 						if (!meleteUtil.checkFileExists(unZippedDirPath + File.separator + hrefVal))
 						{
 							logger.info("content file for section is missing so move ON");
@@ -1208,11 +1209,10 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 
 		if (logger.isDebugEnabled())
 			logger.debug("Entering createSection...");
-
+		
 		//html file
 		if (!(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:"))&&
-				(hrefVal.lastIndexOf('/') != -1 && hrefVal.substring(hrefVal.lastIndexOf('/') +1).startsWith("Section"))
-				&& (hrefVal.lastIndexOf('.') != -1	&& (hrefVal.substring(hrefVal.lastIndexOf('.') + 1).equalsIgnoreCase("html")
+			 (hrefVal.lastIndexOf('.') != -1	&& (hrefVal.substring(hrefVal.lastIndexOf('.') + 1).equalsIgnoreCase("html")
 						|| hrefVal.substring(hrefVal.lastIndexOf('.') + 1).equalsIgnoreCase("htm")))) {
 			//This is for typeEditor sections
 			section.setContentType("typeEditor");

@@ -105,7 +105,7 @@ public class MeleteUtil {
 	 public ArrayList findEmbedItemPattern(String checkforimgs)
 	 {
 		 ArrayList returnData = new ArrayList();
-		 Pattern p1 = Pattern.compile("<[iI][mM][gG]\\s|<[aA]\\s");
+		 Pattern p1 = Pattern.compile("<[iI][mM][gG]\\s|<[aA]\\s|<[eE][mM][bB][eE][dD]\\s");
 		 Pattern pi = Pattern.compile(">|\\s[sS][rR][cC]\\s*=");
 		 Pattern pa = Pattern.compile(">|\\s[hH][rR][eE][fF]\\s*=");
 		 Pattern ps = Pattern.compile("\\S");
