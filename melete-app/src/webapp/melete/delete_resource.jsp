@@ -42,6 +42,15 @@
  <h:form id="DeleteResourceForm">
   <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
        <!-- This Begins the Main Text Area -->
+  		<tr>
+          <td width="100%" height="20" bordercolor="#E2E4E8">
+			<!-- top nav bar -->
+			<f:subview id="top">
+				<jsp:include page="topnavbar.jsp"/> 
+			</f:subview>
+				</td>
+        </tr>
+        <tr>       
       <td width="100%" valign="top" >
        <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
         <tr>
