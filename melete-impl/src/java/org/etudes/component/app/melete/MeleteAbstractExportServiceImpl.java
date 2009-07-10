@@ -355,7 +355,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 			resourceId = URLDecoder.decode(resourceId,"UTF-8");
 	       	ContentResource cr = getMeleteCHService().getResource(resourceId);
 	       	if(cr == null)return null;
-
+	       	
 	       	data.add(cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
 	       	data.add(cr.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION));
 	       	data.add(cr.getContentType());
@@ -478,7 +478,11 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 						}						
 					}
 					imgName= (String)img_content.get(0);
-					logger.debug("create file element for " + imgName);
+					if(imgName.indexOf(".") == -1 && img_resource_id.lastIndexOf(".") != -1)
+					{
+						imgName = imgName + img_resource_id.substring(img_resource_id.lastIndexOf("."));
+					}
+					logger.debug("create file element for " + imgName );
 					createFileElement(imgName, img_data, resource, imagespath, imagesDir, "resources/images/", true, false);
 
 					String patternStr = imgSrcPath;

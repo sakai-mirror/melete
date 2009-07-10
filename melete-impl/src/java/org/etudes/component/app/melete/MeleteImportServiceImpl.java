@@ -26,6 +26,7 @@ package org.etudes.component.app.melete;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.MalformedURLException;
+import java.net.URLDecoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -402,7 +403,6 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			logger.debug("copy resource is adding " + fileResourceName);
 			String extn = fileResourceName.substring(fileResourceName.lastIndexOf(".")+1);
 			String fileName = getFileNamefromElement(resElements,fileResourceName);
-	
 			if (extn.equals("htm") || extn.equals("html"))
 				firstReferId = processEmbedDatafromHTML(fileName,fileResourceName,toSiteId,uploadCollId,resElements,unZippedDirPath);
 			else
@@ -422,9 +422,10 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	/*
 	 * find File element from manifest file which tells the exact location of file in the package
 	 */
-	private String getFileNamefromElement(List resElements, String fileResourceName)
+	private String getFileNamefromElement(List resElements, String fileResourceName) throws Exception
 	{
 		String actualFileLocation = null;
+		fileResourceName = URLDecoder.decode(fileResourceName, "UTF-8");
 		for(int i=0; i < resElements.size(); i++)
 		{
 			Element FileEle = (Element)resElements.get(i);
@@ -1250,7 +1251,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		if (hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:")) {
 			//				link
 			section.setContentType("typeLink");
-			section.setOpenWindow(true);
+			section.setOpenWindow(true);			
 		}
 		else
 		{
