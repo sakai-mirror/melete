@@ -245,8 +245,9 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 					//Load up the resource to look at it
 			//		String fileName = ((Element)resElements.get(0)).attributeValue("href");
 					String fileName = getFileNamefromElement(resElements, melResourceName);
-					String contentEditor = new String(readData(unZippedDirPath, fileName));
-					if(contentEditor == null) continue;
+					byte[] data = readData(unZippedDirPath, fileName);
+					if (data == null) continue;
+					String contentEditor = new String(data);
 					if ( isLTIDocument(contentEditor) )
 						contentType = "typeLTI";
 
@@ -546,6 +547,20 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		return returnData;
 	}
 
+	private org.dom4j.Element checkModuleItem(org.dom4j.Element eleItem, org.dom4j.Element eleParentOrganization)throws Exception
+	{
+		org.dom4j.Attribute identifierref = eleItem.attribute("identifierref");
+		if (identifierref == null) return null;
+		List elements = eleParentOrganization.elements();
+		org.dom4j.Element newModuleElement = eleParentOrganization.addElement("item");
+		for (Iterator iter = elements.iterator(); iter.hasNext();)
+		{
+			org.dom4j.Element e = (org.dom4j.Element)iter.next();
+			newModuleElement.add(e.createCopy());
+			eleParentOrganization.remove(e);
+		}		
+		return newModuleElement;
+	}
 
 	/**
 	 * Parses the manifest and build modules
@@ -573,19 +588,27 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		if(eleOrg != null)
 		{
 			List elements = eleOrg.elements();
-			for (Iterator iter = elements.iterator(); iter.hasNext();)
+			for (Iterator iter = eleOrg.elementIterator("item"); iter.hasNext();)
 			{
 				Element element = (Element) iter.next();
-				buildModule(element, document, unZippedDirPath,ToolManager.getCurrentPlacement().getContext() );
+				// for moodle packages which don't have parent item tag for modules. 
+				Element blankElement = checkModuleItem(element,eleOrg);
+				if(blankElement != null)
+				{
+					buildModule(blankElement, document, unZippedDirPath,ToolManager.getCurrentPlacement().getContext() );
+					break;
+				}
+				else
+					buildModule(element, document, unZippedDirPath,ToolManager.getCurrentPlacement().getContext() );
 			}
 		}
 
 		xpath = document.createXPath("/imscp:manifest/imscp:resources");
 		xpath.setNamespaceURIs(uris);
 
-		eleOrg = (Element) xpath.selectSingleNode(document);
-		if (eleOrg != null)
-			processManageItems(eleOrg, unZippedDirPath, ToolManager.getCurrentPlacement().getContext(), document);
+		Element eleResource = (Element) xpath.selectSingleNode(document);
+		if (eleResource != null)
+			processManageItems(eleResource, unZippedDirPath, ToolManager.getCurrentPlacement().getContext(), document);
 
 		if (logger.isDebugEnabled()) logger.debug("Exiting parseAndBuildModules");
 	}
