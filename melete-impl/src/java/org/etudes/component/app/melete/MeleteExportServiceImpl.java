@@ -111,7 +111,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 	/*
 	 *  process section type and create resource element object
 	 */
-	public void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String sectionFileName,int item_ref_num) throws Exception
+	public void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String resource_id, String resourceDisplayName,int item_ref_num) throws Exception
 	{
 		logger.debug("create resource ele" + section.getContentType());
 		if (section.getContentType().equals("typeLink"))
@@ -119,7 +119,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 			String linkData = new String(content_data1);
 			
 			Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
-			if (recordFiles != null) recordFiles.add(sectionFileName);
+			if (recordFiles != null) recordFiles.add(resourceDisplayName);
 			
 		// LINK POINTS TO SITE RESOURCES OR MELETEDOCS FILE	
 			if(linkData.indexOf("/access/content/group")!= -1|| linkData.indexOf("/access/meleteDocs")!= -1)
@@ -139,17 +139,17 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 //			 resource will always point to link location otherwise it changes type to upload on import
 			resource.addAttribute("href", linkData);
 			// preserve url title
-			if(!sectionFileName.equals(linkData))
+			if(!resourceDisplayName.equals(linkData))
 			{
 			Element urlTitle = createLOMElement("imsmd:title", "title");
 			Element imsmdlangstring = createLOMElement("imsmd:"+getLangString(), getLangString());
-	        imsmdlangstring.setText(sectionFileName);
+	        imsmdlangstring.setText(resourceDisplayName);
 	        urlTitle.add(imsmdlangstring);
 	        resource.add(urlTitle);
 			}
 		// COMPOSE SECTIONS	
 		}else if (section.getContentType().equals("typeEditor")){
-			createFileElement(sectionFileName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
+			createFileElement(resourceDisplayName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
 		
 		// LTI RESOURCE	
 		} else if (section.getContentType().equals("typeLTI")){
@@ -160,16 +160,17 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 			// add title
 			Element urlTitle = createLOMElement("imsmd:title", "title");
 			Element imsmdlangstring = createLOMElement("imsmd:"+getLangString(), getLangString());
-			imsmdlangstring.setText(sectionFileName);
+			imsmdlangstring.setText(resourceDisplayName);
 			urlTitle.add(imsmdlangstring);
 			resource.add(urlTitle);
 			
 			Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
-			if (recordFiles != null) recordFiles.add(sectionFileName);
+			if (recordFiles != null) recordFiles.add(resourceDisplayName);
 			
 		// UPLOAD RESOURCE	
-		}else if(section.getContentType().equals("typeUpload")){            
-            createFileElement(sectionFileName, content_data1,resource,imagespath, resoucesDir,"resources/", false,true);			
+		}else if(section.getContentType().equals("typeUpload")){ 
+			logger.debug("create resource element is processing for upload file:" + resourceDisplayName +", resource_id" + resource_id);
+			createFileElement(resource_id, content_data1, resource,imagespath, resoucesDir,"resources/", false,true);			
 		}
 	}
 
@@ -219,7 +220,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 				Element resource = resources.addElement("resource");
 				resource.addAttribute("identifier","RESOURCE"+ item_ref_num);
 				resource.addAttribute("type ","webcontent");
-				createResourceElement(section, resource, content_data1, resoucesDir, imagespath,(String)content_data.get(0),item_ref_num);
+				createResourceElement(section, resource, content_data1, resoucesDir, imagespath,content_resource_id,(String)content_data.get(0),item_ref_num);
 
 					//preserve resource description
 				if (content_data.get(1) != null && ((String)content_data.get(1)).length() != 0)
@@ -402,7 +403,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 				if(type.equals(getMeleteCHService().MIME_TYPE_LINK)) sec.setContentType("typeLink");
 				else if (type.equals(getMeleteCHService().MIME_TYPE_LTI)) sec.setContentType("typeLTI");
 				else sec.setContentType("typeUpload");
-				createResourceElement(sec, resource, content_data1, resoucesDir, imagespath,sectionFileName,item_ref_num);
+				createResourceElement(sec, resource, content_data1, resoucesDir, imagespath,content_resource_id,sectionFileName,item_ref_num);
 				item_ref_num++;
 			}//End while repIt
 		}
