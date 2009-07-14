@@ -193,7 +193,8 @@ abstract public class MeleteImportBaseImpl {
 		{
 			replacementStr = replacementStr.replace(ServerConfigurationService.getServerUrl(), "");
 		}
-		Pattern pattern = Pattern.compile(Pattern.quote(imgSrcPath));
+		imgSrcPath = "=\""+imgSrcPath+"\"";
+		replacementStr = "=\""+replacementStr+"\"";
 		// Replace all occurrences of pattern in input
 		contentEditor = meleteUtil.replace(contentEditor,imgSrcPath, replacementStr);
 
