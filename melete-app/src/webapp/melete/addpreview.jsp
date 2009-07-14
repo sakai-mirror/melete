@@ -147,7 +147,7 @@ rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 3)&
       <!--End license code CC license-->     	
 	 
         <!--License code fairuse license-->
-      <h:outputText id="lic4_val2" value="#{addSectionPage.section.sectionResource.resource.ccLicenseUrl}"  rendered="#{addSectionPage.section.sectionResource.resource.licenseCode == 4}"/>
+      <h:outputText id="lic4_val2" value="#{msgs.add_preview_fairuse}"  rendered="#{addSectionPage.section.sectionResource.resource.licenseCode == 4}"/>
     
    <h:outputText id="lic4_val5" value="#{addSectionPage.section.sectionResource.resource.copyrightYear}" rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 4)&&(addSectionPage.section.sectionResource.resource.copyrightYear != addSectionPage.nullString))}"/> 
 	   <h:outputText id="lic4_val3" escape="false" value="<BR>#{addSectionPage.section.sectionResource.resource.copyrightOwner} "  
