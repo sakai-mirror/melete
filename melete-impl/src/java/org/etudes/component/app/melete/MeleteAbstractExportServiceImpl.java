@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008,2009 Etudes, Inc.
@@ -78,7 +78,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 	/** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(MeleteAbstractExportServiceImpl.class);
 	protected ThreadLocalManager exportThreadLocal = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
-	
+
 	/**default namespace and metadata namespace*/
 	protected String DEFAULT_NAMESPACE_URI = "http://www.imsglobal.org/xsd/imscp_v1p1";
 
@@ -103,7 +103,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 
     abstract public void initValues();
     abstract public Element createMetadataCopyright(int licenseCode);
-    abstract public void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String sectionFileName,int i) throws Exception;
+    abstract public void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath,String resource_id, String resourceDisplayName,int i) throws Exception;
     abstract public int createSectionElement(Element ParentSection, Section section, int i, int k, Element resources, File resoucesDir, String imagespath) throws Exception;
     abstract public List generateOrganizationResourceItems(List modList, boolean allFlag, File packagedir,String maintitle, String courseId)throws Exception;
     abstract public Element transferManageItems(Element resources, String courseId, File resoucesDir, int item_ref_num) throws Exception;
@@ -416,7 +416,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 				if (endSrc <= 0) break;
 				imgSrcPath = checkforimgs.substring(startSrc, endSrc);
 
-				// make it full url 
+				// make it full url
 				if(imgSrcPath.indexOf("://") == -1 && imgSrcPath.indexOf("/") == -1)
 				{
 					logger.debug("found relative path with no /access, parent ref is " + parentRef);
@@ -424,25 +424,24 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 					{
 						modifiedSecContent = meleteUtil.replace(modifiedSecContent,imgSrcPath, parentRef + imgSrcPath);
 						imgSrcPath = parentRef + imgSrcPath;
-					}					
+					}
 				}
 
 				logger.debug("imgsrcpath :" + imgSrcPath);
 				if(imgSrcPath.indexOf("/access") !=-1)
 				{
-					String img_resource_id = meleteUtil.findResourceSource(imgSrcPath, null, null, false).get(0);
-
-					/*	if(!img_resource_id.startsWith("/group"))
-						{
-							// not a site resource item so make it a full URL
-							String patternStr = imgSrcPath;
-							String replacementStr =ServerConfigurationService.getServerUrl() + imgSrcPath;
-							modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
-							checkforimgs =checkforimgs.substring(endSrc);
-							startSrc=0; endSrc = 0;
-							continue;
-							//	return modifiedSecContent;
-						}*/
+					ArrayList r = meleteUtil.findResourceSource(imgSrcPath, null, null, false);
+					if(r == null || r.size() == 0)
+					{
+						/*// not a site resource item so make it a full URL
+						String patternStr = imgSrcPath;
+						String replacementStr =ServerConfigurationService.getServerUrl() + imgSrcPath;
+						modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);*/
+						checkforimgs =checkforimgs.substring(endSrc);
+						startSrc=0; endSrc = 0;
+						continue;
+					}
+					String img_resource_id = (String)r.get(0);
 
 					byte[] img_data = null;
 					ArrayList img_content = new ArrayList();
@@ -452,7 +451,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 						if(checkEmbedHTMLResources.contains(img_resource_id))
 						{
 							logger.debug("FOUND ALREADY PROCESSED HTML FILE" + img_resource_id);
-							setContentResourceData(img_resource_id, img_content);							
+							setContentResourceData(img_resource_id, img_content);
 						}
 						else
 						{
@@ -471,14 +470,19 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 					else
 					{
 						img_data =setContentResourceData(img_resource_id, img_content);
-						if(img_data == null) 
+						if(img_data == null)
 						{
 							checkforimgs =checkforimgs.substring(endSrc);
 							startSrc=0; endSrc = 0;
 							continue;
-						}						
+						}
 					}
 					imgName= (String)img_content.get(0);
+					// for composed html files through site resource. display name/title can be without extn
+					if(imgName.indexOf(".") == -1 && img_resource_id.lastIndexOf(".") != -1)
+					{
+						imgName = imgName + img_resource_id.substring(img_resource_id.lastIndexOf("."));
+					}
 					logger.debug("create file element for " + imgName);
 					createFileElement(imgName, img_data, resource, imagespath, imagesDir, "resources/images/", true, false);
 
@@ -489,16 +493,17 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 					Pattern pattern = Pattern.compile(Pattern.quote(patternStr));
 
 					// Replace all occurrences of pattern in input
-					modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);	
-				} // /access check end 
-				else if(imgSrcPath.startsWith("/")){
+					modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
+				} // /access check end
+				// no need to make full url for internal links - 8/7/09
+				/*else if(imgSrcPath.startsWith("/")){
 					//internal link resides somewhere within sakai
 					logger.debug("embedded media is from internal sakai" + imgSrcPath);
 					String patternStr = imgSrcPath;
 					String replacementStr =ServerConfigurationService.getServerUrl() + imgSrcPath;
 					modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
 					//return modifiedSecContent;
-				}
+				}*/
 				checkforimgs =checkforimgs.substring(endSrc);
 				startSrc=0; endSrc = 0;
 			}
@@ -531,11 +536,11 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 			modSecContent = (String)rData.get(0);
 			content_data1 = modSecContent.getBytes();
 		}
-		
+
 		//create the file
 		if(fileName.lastIndexOf("/") != -1) fileName = fileName.substring(fileName.lastIndexOf("/")+1);
 		fileName = URLDecoder.decode(fileName, "UTF-8");
-		// look for file element 
+		// look for file element
 		org.dom4j.Node node = null;
 		boolean found = false;
 		List<Element> allfiles = resource.elements();
@@ -549,7 +554,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 		}
 
 		if(!found && content_data1 != null)
-		{	
+		{
 			logger.debug("actual file insert" + fileName);
 			if(!fileName.startsWith("Section_"))
 			{
@@ -559,10 +564,10 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 			createFileFromContent(content_data1,resourcesDir.getAbsolutePath()+File.separator+ fileName);
 			Element file = resource.addElement("file");
 			file.addAttribute("href", dirLocationInPackage+ fileName);
-		}	
+		}
 		if(addToResourceTag) resource.addAttribute("href", dirLocationInPackage+ fileName);
 	}
-	
+
 	/**
 	 * creates file from input path to output path
 	 * @param inputpath - input path for file

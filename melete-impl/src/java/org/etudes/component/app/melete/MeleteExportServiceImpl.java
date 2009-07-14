@@ -111,66 +111,66 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 	/*
 	 *  process section type and create resource element object
 	 */
-	public void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String sectionFileName,int item_ref_num) throws Exception
-	{
-		logger.debug("create resource ele" + section.getContentType());
-		if (section.getContentType().equals("typeLink"))
+		public void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String resource_id, String resourceDisplayName,int item_ref_num) throws Exception
 		{
-			String linkData = new String(content_data1);
-			
-			Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
-			if (recordFiles != null) recordFiles.add(sectionFileName);
-			
-		// LINK POINTS TO SITE RESOURCES OR MELETEDOCS FILE	
-			if(linkData.indexOf("/access/content/group")!= -1|| linkData.indexOf("/access/meleteDocs")!= -1)
+			logger.debug("create resource ele" + section.getContentType());
+			if (section.getContentType().equals("typeLink"))
 			{
-				ArrayList<String> r = meleteUtil.findResourceSource(linkData, null, null, false);
-				if (r == null) return;
-				String link_resource_id = r.get(0);
-				
-				// read resource and create a file
-				ArrayList link_content = new ArrayList();
-				byte[] linkdata =setContentResourceData(link_resource_id, link_content);
-				if(linkdata == null) {resource =null;return;}	
-				//get referred resource
-				logger.debug("link resource id and first element " + link_resource_id + (String)link_content.get(0));
-				createFileElement(link_resource_id, linkdata,resource,imagespath, resoucesDir, "resources/", false, false);
-			}
-//			 resource will always point to link location otherwise it changes type to upload on import
-			resource.addAttribute("href", linkData);
-			// preserve url title
-			if(!sectionFileName.equals(linkData))
-			{
-			Element urlTitle = createLOMElement("imsmd:title", "title");
-			Element imsmdlangstring = createLOMElement("imsmd:"+getLangString(), getLangString());
-	        imsmdlangstring.setText(sectionFileName);
-	        urlTitle.add(imsmdlangstring);
-	        resource.add(urlTitle);
-			}
-		// COMPOSE SECTIONS	
-		}else if (section.getContentType().equals("typeEditor")){
-			createFileElement(sectionFileName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
-		
-		// LTI RESOURCE	
-		} else if (section.getContentType().equals("typeLTI")){
-			resource.addAttribute("type ","SimpleLTI");			
-			String fileName = "simplelti-"+item_ref_num;			
-			createFileElement(fileName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
+				String linkData = new String(content_data1);
 
-			// add title
-			Element urlTitle = createLOMElement("imsmd:title", "title");
-			Element imsmdlangstring = createLOMElement("imsmd:"+getLangString(), getLangString());
-			imsmdlangstring.setText(sectionFileName);
-			urlTitle.add(imsmdlangstring);
-			resource.add(urlTitle);
-			
-			Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
-			if (recordFiles != null) recordFiles.add(sectionFileName);
-			
-		// UPLOAD RESOURCE	
-		}else if(section.getContentType().equals("typeUpload")){            
-            createFileElement(sectionFileName, content_data1,resource,imagespath, resoucesDir,"resources/", false,true);			
-		}
+				Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
+				if (recordFiles != null) recordFiles.add(resourceDisplayName);
+
+			// LINK POINTS TO SITE RESOURCES OR MELETEDOCS FILE
+				if(linkData.indexOf("/access/content/group")!= -1|| linkData.indexOf("/access/meleteDocs")!= -1)
+				{
+					ArrayList<String> r = meleteUtil.findResourceSource(linkData, null, null, false);
+					if (r == null) return;
+					String link_resource_id = r.get(0);
+
+					// read resource and create a file
+					ArrayList link_content = new ArrayList();
+					byte[] linkdata =setContentResourceData(link_resource_id, link_content);
+					if(linkdata == null) {resource =null;return;}
+					//get referred resource
+					logger.debug("link resource id and first element " + link_resource_id + (String)link_content.get(0));
+					createFileElement(link_resource_id, linkdata,resource,imagespath, resoucesDir, "resources/", false, false);
+				}
+	//			 resource will always point to link location otherwise it changes type to upload on import
+				resource.addAttribute("href", linkData);
+				// preserve url title
+				if(!resourceDisplayName.equals(linkData))
+				{
+				Element urlTitle = createLOMElement("imsmd:title", "title");
+				Element imsmdlangstring = createLOMElement("imsmd:"+getLangString(), getLangString());
+		        imsmdlangstring.setText(resourceDisplayName);
+		        urlTitle.add(imsmdlangstring);
+		        resource.add(urlTitle);
+				}
+			// COMPOSE SECTIONS
+			}else if (section.getContentType().equals("typeEditor")){
+				createFileElement(resourceDisplayName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
+
+			// LTI RESOURCE
+			} else if (section.getContentType().equals("typeLTI")){
+				resource.addAttribute("type ","SimpleLTI");
+				String fileName = "simplelti-"+item_ref_num;
+				createFileElement(fileName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
+
+				// add title
+				Element urlTitle = createLOMElement("imsmd:title", "title");
+				Element imsmdlangstring = createLOMElement("imsmd:"+getLangString(), getLangString());
+				imsmdlangstring.setText(resourceDisplayName);
+				urlTitle.add(imsmdlangstring);
+				resource.add(urlTitle);
+
+				Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
+				if (recordFiles != null) recordFiles.add(resourceDisplayName);
+
+			// UPLOAD RESOURCE
+			}else if(section.getContentType().equals("typeUpload")){
+				createFileElement(resource_id, content_data1, resource,imagespath, resoucesDir,"resources/", false,true);
+			}
 	}
 
 	public int createSectionElement(Element ParentSection, Section section, int i, int k, Element resources, File resoucesDir, String imagespath) throws Exception
@@ -219,7 +219,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 				Element resource = resources.addElement("resource");
 				resource.addAttribute("identifier","RESOURCE"+ item_ref_num);
 				resource.addAttribute("type ","webcontent");
-				createResourceElement(section, resource, content_data1, resoucesDir, imagespath,(String)content_data.get(0),item_ref_num);
+				createResourceElement(section, resource, content_data1, resoucesDir, imagespath,content_resource_id,(String)content_data.get(0),item_ref_num);
 
 					//preserve resource description
 				if (content_data.get(1) != null && ((String)content_data.get(1)).length() != 0)
@@ -262,7 +262,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 			Element resources = createResources();
 			Element organization = addOrganization(organizations);
 			organizations.addAttribute("default", organization.attributeValue("identifier"));
-			
+
 		// record all files being added in the package
 			exportThreadLocal.set("MeleteExportFiles", new HashSet<String>());
 			Iterator modIter = modList.iterator();
@@ -359,7 +359,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 		}
 
 	}
-	
+
 	public Element transferManageItems(Element resources, String courseId, File resoucesDir, int item_ref_num) throws Exception
 	{
 		logger.debug("recorded files so far: " + exportThreadLocal.get("MeleteExportFiles").toString());
@@ -402,10 +402,10 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 				if(type.equals(getMeleteCHService().MIME_TYPE_LINK)) sec.setContentType("typeLink");
 				else if (type.equals(getMeleteCHService().MIME_TYPE_LTI)) sec.setContentType("typeLTI");
 				else sec.setContentType("typeUpload");
-				createResourceElement(sec, resource, content_data1, resoucesDir, imagespath,sectionFileName,item_ref_num);
+				createResourceElement(sec, resource, content_data1, resoucesDir, imagespath,content_resource_id,sectionFileName,item_ref_num);
 				item_ref_num++;
 			}//End while repIt
 		}
 		return resources;
-	}	
+	}
 }

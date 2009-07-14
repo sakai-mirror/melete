@@ -96,10 +96,10 @@ public class SectionDB implements Serializable {
 			  section.setModificationDate(new java.util.Date());
 			  section.setModuleId(module.getModuleId().intValue());
 			  section.setDeleteFlag(false);
-				
+
 				/*
-			   * Since Oracle silently transforms "" to nulls, we need to check to see if 
-			   * these non null properties are in fact null. 
+			   * Since Oracle silently transforms "" to nulls, we need to check to see if
+			   * these non null properties are in fact null.
 			   */
 
 			  hibernateUtil.ensureSectionHasNonNull(section);
@@ -218,7 +218,7 @@ public class SectionDB implements Serializable {
 			try
 			{
 			  hibernateUtil.ensureSectionHasNonNull(section);
-				
+
 				// set default values for not-null fields
 				SectionResource secResource = (SectionResource)section.getSectionResource();
 				if(secResource == null)
@@ -241,7 +241,7 @@ public class SectionDB implements Serializable {
 				     query.setParameter("resourceId",melResource.getResourceId());
 				     List result_list = query.list();
 				     if(result_list != null && result_list.size()!= 0)
-				     { 
+				     {
 			  		 MeleteResource newMelResource = (MeleteResource)result_list.get(0);
 			  		 newMelResource.setLicenseCode(melResource.getLicenseCode());
 			  		 newMelResource.setCcLicenseUrl(melResource.getCcLicenseUrl());
@@ -252,7 +252,7 @@ public class SectionDB implements Serializable {
 			  		 newMelResource.setCopyrightOwner(melResource.getCopyrightOwner());
 			  		 session.saveOrUpdate(newMelResource);
 				     }
-			  	  }	 
+			  	  }
 			  	  session.saveOrUpdate(secResource);
 			  	  session.saveOrUpdate(section);
 				  session.flush();
@@ -308,7 +308,7 @@ public class SectionDB implements Serializable {
 		       try
 		       	{
 		    	   tx = session.beginTransaction();
-						 
+
 						 hibernateUtil.ensureSectionHasNonNull(sec);
 
 		    	   secRes = (SectionResource) sec.getSectionResource();
@@ -783,7 +783,7 @@ public class SectionDB implements Serializable {
 			try
 			{
 				hibernateUtil.ensureSectionHasNonNull(section);
-				
+
 				SectionResource secResource = (SectionResource)section.getSectionResource();
 				if (secResource == null) secResource = new  SectionResource();
 				// set secResource fields
@@ -814,7 +814,7 @@ public class SectionDB implements Serializable {
 				     {
 						if(tx !=null) tx.rollback();
 						logger.error(he.toString());
-						he.printStackTrace();
+					//	he.printStackTrace();
 						throw he;
 				     }
 	        	finally{
@@ -822,7 +822,7 @@ public class SectionDB implements Serializable {
 				 }
 		}catch(Exception ex){
 				// Throw application specific error
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			throw new MeleteException("add_section_fail");
 			}
 	}
@@ -839,7 +839,7 @@ public class SectionDB implements Serializable {
 			try
 			{
 				hibernateUtil.ensureSectionHasNonNull(section);
-				
+
 				SectionResource secResource = (SectionResource)section.getSectionResource();
 				if (secResource == null) secResource = new  SectionResource();
 				// set secResource fields
@@ -891,7 +891,7 @@ public class SectionDB implements Serializable {
 	}
 
 
-	
+
 	/*
 	 *  get the melete resource based on resource id.
 	 */
@@ -967,7 +967,7 @@ public class SectionDB implements Serializable {
 			try
 			{
 				hibernateUtil.ensureSectionHasNonNull(section);
-				
+
 				// delete SectionResource
 				tx = session.beginTransaction();
 				section.setSectionResource(null);
@@ -1011,7 +1011,7 @@ public class SectionDB implements Serializable {
 			try
 			{
 				hibernateUtil.ensureSectionHasNonNull(section);
-				
+
 				// set secResource fields
 				secResource.setSection(section);
 				secResource.setSectionId(section.getSectionId());
@@ -1234,7 +1234,7 @@ public class SectionDB implements Serializable {
 				String queryString = "select cmod.courseId,sec.sectionId from CourseModule cmod,Section sec where cmod.moduleId=sec.moduleId and sec.deleteFlag=1 order by sec.moduleId";
 				Query query = session.createQuery(queryString);
 				List res = query.list();
-			
+
 				Map deletedSections = new HashMap<String, ArrayList<Section>>();
 
 				for (Iterator itr = res.listIterator(); itr.hasNext();)
@@ -1301,8 +1301,8 @@ public class SectionDB implements Serializable {
 					if(delSectionResources != null && delSectionResources.size() > 0)
 					{
 						  deleteResources(session,delSectionResources,true);
-		    	    }					
-					
+		    	    }
+
 					// delete melete resource and from content resource
 					if ((allCourseResources != null)&&(allCourseResources.size() > 0))
 					{
@@ -1379,9 +1379,9 @@ public class SectionDB implements Serializable {
 			    }
 			}
 	      }
-          
+
           if (delResourceIds.lastIndexOf(",") != -1) delResourceIds = new StringBuffer(delResourceIds.substring(0, delResourceIds.lastIndexOf(",")) + " )");
-         
+
           String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId in "+delResourceIds;
           int deletedEntities = session.createQuery(delMeleteResourceStr).executeUpdate();
    }

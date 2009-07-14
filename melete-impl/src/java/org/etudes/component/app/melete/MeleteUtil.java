@@ -105,7 +105,7 @@ public class MeleteUtil {
 	 public ArrayList findEmbedItemPattern(String checkforimgs)
 	 {
 		 ArrayList returnData = new ArrayList();
-		 Pattern p1 = Pattern.compile("<[iI][mM][gG]\\s|<[aA]\\s");
+		 Pattern p1 = Pattern.compile("<[iI][mM][gG]\\s|<[aA]\\s|<[eE][mM][bB][eE][dD]\\s");
 		 Pattern pi = Pattern.compile(">|\\s[sS][rR][cC]\\s*=");
 		 Pattern pa = Pattern.compile(">|\\s[hH][rR][eE][fF]\\s*=");
 		 Pattern ps = Pattern.compile("\\S");
@@ -171,19 +171,19 @@ public class MeleteUtil {
 		 if(foundPattern != null && foundPattern.equals("link"))
 		 {
 			 String anchorStr = checkforimgs.substring(startSrc,endSrc);
-			 if (anchorStr != null && anchorStr.startsWith("#")) 
+			 if (anchorStr != null && anchorStr.startsWith("#"))
 			 {
 				 checkforimgs = checkforimgs.substring(endSrc);
 				 if(checkforimgs != null)
 				 {
 					 ArrayList r = findEmbedItemPattern(checkforimgs);
 					 checkforimgs = (String)r.get(0);
-					 if (r.size() > 1 && ((Integer)r.get(2)).intValue() > 0) 
+					 if (r.size() > 1 && ((Integer)r.get(2)).intValue() > 0)
 					 {
 						 startSrc = ((Integer)r.get(1)).intValue();
 						 endSrc = ((Integer)r.get(2)).intValue();
-						 foundPattern = (String)r.get(3);						
-					 }	
+						 foundPattern = (String)r.get(3);
+					 }
 					 else
 					 {
 						 startSrc = 0; endSrc = 0;
@@ -191,7 +191,7 @@ public class MeleteUtil {
 				 }
 			 }
 		 }
-		
+
 		 returnData.add(checkforimgs);
 		 if (endSrc != 0) {returnData.add(new Integer(startSrc)); returnData.add(new Integer(endSrc)); returnData.add(foundPattern);}
 
@@ -244,7 +244,7 @@ public class MeleteUtil {
 				ref_id = ref_id.substring(ref_id.indexOf("/content")+ 8);
 				if(newId) checkReferenceId = ref_id.replace(oldCourseId, toSiteId);
 			}
-			else
+			else if (ref.getType().equals("sakai:content") && ref.getId().startsWith("/group"))
 			{
 				//for site resources item
 				if(newId)
@@ -253,6 +253,7 @@ public class MeleteUtil {
 					checkReferenceId = checkReferenceId.replace("/group/", "/private/meleteDocs/");
 				}
 			}
+			else return null;
 			rData.add(ref_id);
 			if(newId) rData.add(checkReferenceId);
 			return rData;

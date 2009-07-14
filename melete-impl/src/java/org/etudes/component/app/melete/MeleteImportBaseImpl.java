@@ -95,7 +95,7 @@ abstract public class MeleteImportBaseImpl {
 	}
 
 	/**
-	 * Process embed data found in HTML files 
+	 * Process embed data found in HTML files
 	 */
 	protected String uploadSectionDependentFile(String hrefVal, String courseId, String unZippedDirPath) {
 		try {
@@ -116,7 +116,7 @@ abstract public class MeleteImportBaseImpl {
 					return getMeleteCHService().getResourceUrl(checkResourceId);
 				}catch (IdUnusedException ex)
 				{
-					melContentData = readData(unZippedDirPath, hrefVal);					
+					melContentData = readData(unZippedDirPath, hrefVal);
 					return addResource(filename, melContentData, courseId);
 				}
 				catch(Exception e)
@@ -193,7 +193,8 @@ abstract public class MeleteImportBaseImpl {
 		{
 			replacementStr = replacementStr.replace(ServerConfigurationService.getServerUrl(), "");
 		}
-		Pattern pattern = Pattern.compile(Pattern.quote(imgSrcPath));
+		imgSrcPath = "=\""+imgSrcPath+"\"";
+		replacementStr = "=\""+replacementStr+"\"";
 		// Replace all occurrences of pattern in input
 		contentEditor = meleteUtil.replace(contentEditor,imgSrcPath, replacementStr);
 
@@ -217,7 +218,7 @@ abstract public class MeleteImportBaseImpl {
 			delfile.delete();
 
 	}
-		
+
 	/**
 	 * @return Returns the meleteCHService.
 	 */
