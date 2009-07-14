@@ -144,7 +144,9 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				//LINKS POINTING TO RESOURCES AND MELETEDOCS COLLECTION
 				if(linkData.indexOf("/access/content/group") != -1 || linkData.indexOf("/access/meleteDocs/content") != -1)
 				{						
-					String firstReferId = copyResource(linkData, oldCourseId, toSiteId, uploadCollId);
+					rdata = copyResource(linkData, oldCourseId, toSiteId, uploadCollId);
+					if (rdata == null) return null;
+					String firstReferId = rdata.get(1);
 					// link item should point to new address
 					byte[] melContentData = (getMeleteCHService().getResourceUrl(firstReferId)).getBytes();
 					ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true,melResourceName,melResourceDescription);
@@ -162,7 +164,8 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			else
 			{
 				// upload resource
-				newResourceId = copyResource(getMeleteCHService().getResourceUrl(cr.getId()), oldCourseId, toSiteId, uploadCollId);
+				rdata = copyResource(getMeleteCHService().getResourceUrl(cr.getId()), oldCourseId, toSiteId, uploadCollId);
+				return rdata;
 			}
 
 			addToThreadList(melResourceName, "MELETE_addedNowResource");	
@@ -176,9 +179,9 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 	 *  Finds the source of resource item - meletedocs or group collection.
 	 *  If resource is html then call processEmbed method otherwise create a new resource
 	 */
-	private String copyResource(String Data, String oldCourseId, String toSiteId, String uploadCollId) throws Exception
-	{
-		String firstReferId = null;
+	private ArrayList<String> copyResource(String Data, String oldCourseId, String toSiteId, String uploadCollId) throws Exception
+	{		
+		ArrayList<String> checkResource = new ArrayList<String>();
 		ArrayList<String> r = meleteUtil.findResourceSource(Data, oldCourseId, toSiteId, true);
 		if(r == null || r.size() == 0) return null;
 		String ref_id = r.get(0);
@@ -186,10 +189,12 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		try
 		{						
 			getMeleteCHService().checkResource(checkReferenceId);
-			firstReferId = checkReferenceId;
+			checkResource.add("exists");
+			checkResource.add(checkReferenceId);
 		}
 		catch (IdUnusedException iue)
 		{
+			String firstReferId = null;
 			String extn = ref_id.substring(ref_id.lastIndexOf(".")+1);
 			if (extn.equals("htm") || extn.equals("html"))
 			{
@@ -202,10 +207,12 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false,fileResourceName,cr1.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION));
 				firstReferId = getMeleteCHService().addResourceItem(fileResourceName, cr1.getContentType(),uploadCollId,cr1.getContent(),res );
 				addToThreadList(fileResourceName, "MELETE_addedNowResource");
-			}				
+			}
+			checkResource.add("new");
+			checkResource.add(firstReferId);
 		}
 
-		return firstReferId;
+		return checkResource;
 	}
 
 	/*

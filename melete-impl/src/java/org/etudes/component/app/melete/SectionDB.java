@@ -798,7 +798,7 @@ public class SectionDB implements Serializable {
 				     {
 						if(tx !=null) tx.rollback();
 						logger.error(he.toString());
-						he.printStackTrace();
+						//he.printStackTrace();
 						throw he;
 				     }
 	        	finally{
@@ -806,7 +806,7 @@ public class SectionDB implements Serializable {
 				 }
 		}catch(Exception ex){
 				// Throw application specific error
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			throw new MeleteException("add_section_fail");
 			}
 	}
