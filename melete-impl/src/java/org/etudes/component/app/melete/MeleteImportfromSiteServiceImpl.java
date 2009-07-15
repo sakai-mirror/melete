@@ -199,6 +199,8 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			if (extn.equals("htm") || extn.equals("html"))
 			{
 				firstReferId = processEmbedDatafromHTML(ref_id,null,toSiteId,uploadCollId);
+				checkResource.add("exists");
+				checkResource.add(firstReferId);
 			}
 			else
 			{
@@ -207,11 +209,10 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false,fileResourceName,cr1.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION));
 				firstReferId = getMeleteCHService().addResourceItem(fileResourceName, cr1.getContentType(),uploadCollId,cr1.getContent(),res );
 				addToThreadList(fileResourceName, "MELETE_addedNowResource");
+				checkResource.add("new");
+				checkResource.add(firstReferId);
 			}
-			checkResource.add("new");
-			checkResource.add(firstReferId);
 		}
-
 		return checkResource;
 	}
 
