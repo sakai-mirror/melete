@@ -410,7 +410,11 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			String extn = fileResourceName.substring(fileResourceName.lastIndexOf(".")+1);
 			String fileName = getFileNamefromElement(resElements,fileResourceName);
 			if (extn.equals("htm") || extn.equals("html"))
+			{
 				firstReferId = processEmbedDatafromHTML(fileName,fileResourceName,toSiteId,uploadCollId,resElements,unZippedDirPath);
+				checkResource.add("exists");
+				checkResource.add(firstReferId);
+			}
 			else
 			{	String fileResourceDescription = readDescriptionFromElement(resElements);
 			String res_mime_type = fileResourceName.substring(fileResourceName.lastIndexOf(".")+1);
@@ -419,9 +423,9 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			if(contentData == null) return null;
 			ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false,fileResourceName,fileResourceDescription);
 			firstReferId = getMeleteCHService().addResourceItem(fileResourceName, res_mime_type,uploadCollId,contentData,res );			
-			}
 			checkResource.add("new");
 			checkResource.add(firstReferId);
+			}			
 		}
 		return checkResource;
 	}
