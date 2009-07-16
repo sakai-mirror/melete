@@ -838,7 +838,7 @@ public class SectionDB implements Serializable {
 				// update Section
 				//save resource
 				// comment below line just for checking if this removes sose exception for IMS import
-				session.saveOrUpdate(melResource);
+				// session.update(melResource);
 //				 save sectionResource
 		 		 session.save(secResource);
 				 section.setSectionResource(secResource);
