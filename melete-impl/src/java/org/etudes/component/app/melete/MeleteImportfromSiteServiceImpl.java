@@ -91,19 +91,14 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			return;
 		}
 		//for any other section upload/link/LTI check the resource exists and associate with it
-		ArrayList rdata = checkAndAddResource(hrefVal,courseId,true, oldCourseId);
-		// if exists then associate with section else insert everywhere
-		logger.debug("associate now" + rdata.toString());
-		if(rdata != null && rdata.get(0).equals("exists") && rdata.get(1) != null)
+		String rdata = checkAndAddResource(hrefVal,courseId,true, oldCourseId);
+	
+		if(rdata != null && rdata.length()!= 0)
 		{
-			meleteResource.setResourceId((String)rdata.get(1));		 				 		
-			sectionDB.insertSectionResource((Section)section, (MeleteResource)meleteResource);
-		}
-		else if(rdata != null && rdata.get(0).equals("new") && rdata.get(1) != null )
-		{
-			meleteResource.setResourceId((String)rdata.get(1));
+			meleteResource.setResourceId(rdata);		 				 		
 			sectionDB.insertMeleteResource((Section)section, (MeleteResource)meleteResource);
 		}
+	
 		if (logger.isDebugEnabled())
 			logger.debug("Exiting createSection...");
 	}
@@ -111,7 +106,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 	/*
 	 * check if resource exists in the meletedocs collection else add it and record it for skipped files
 	 */
-	private ArrayList<String> checkAndAddResource(String hrefVal,String toSiteId, boolean addDB, String oldCourseId) throws Exception
+	private String checkAndAddResource(String hrefVal,String toSiteId, boolean addDB, String oldCourseId) throws Exception
 	{
 		ArrayList<String> rdata = new ArrayList<String>();
 		ContentResource cr = null;
@@ -128,9 +123,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			addToThreadList(melResourceName, "MELETE_importResources");
 			String checkResourceId = "/private/meleteDocs/"+toSiteId+"/uploads/"+melResourceName;
 			getMeleteCHService().checkResource(checkResourceId);
-			rdata.add("exists");
-			rdata.add(checkResourceId);
-			return rdata;
+			return checkResourceId;
 		}catch (IdUnusedException ex)
 		{
 			// if not found in meleteDocs collection include it
@@ -147,6 +140,12 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 					rdata = copyResource(linkData, oldCourseId, toSiteId, uploadCollId);
 					if (rdata == null) return null;
 					String firstReferId = rdata.get(1);
+					if(addDB && rdata.get(0).equals("new"))
+					{
+						MeleteResource firstResource = new MeleteResource();
+						firstResource.setResourceId(firstReferId);
+						sectionDB.insertResource(firstResource);
+					}
 					// link item should point to new address
 					byte[] melContentData = (getMeleteCHService().getResourceUrl(firstReferId)).getBytes();
 					ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true,melResourceName,melResourceDescription);
@@ -165,13 +164,11 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			{
 				// upload resource
 				rdata = copyResource(getMeleteCHService().getResourceUrl(cr.getId()), oldCourseId, toSiteId, uploadCollId);
-				return rdata;
+				return rdata.get(1);
 			}
 
 			addToThreadList(melResourceName, "MELETE_addedNowResource");	
-			rdata.add("new");
-			rdata.add(newResourceId);
-			return rdata;
+			return newResourceId;
 		} // catch end
 	}
 	
@@ -433,11 +430,11 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 							//Replace old references of sections to new references in SEQ xml
 							//TODO : Move the update seqxml lower down so sequence does not update
 							//if exception is thrown
-							if(!fromSec.getContentType().equals("notype") && fromSec.getSectionResource() != null)
+							if(!fromSec.getContentType().equals("notype") && fromSec.getSectionResource() != null && fromSec.getSectionResource().getResource() != null)
 							{
 								toMres = new MeleteResource((MeleteResource)fromSec.getSectionResource().getResource());
 								toMres.setResourceId(null);
-								createContentResource(toMod,toSec,toMres,((MeleteResource)fromSec.getSectionResource().getResource()).getResourceId(),toContext,fromContext);
+								createContentResource(toMod,toSec,toMres,fromSec.getSectionResource().getResource().getResourceId(),toContext,fromContext);
 							}
 							if (fromModSeqXml!=null)
 								fromModSeqXml = fromModSeqXml.replace(Integer.toString(fromSecId), Integer.toString(toSecId));

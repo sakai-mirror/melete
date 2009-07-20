@@ -317,19 +317,19 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	/*
 	 * Test if resource is already in meletedocs collection. If not, read it from package file and add it.
 	 */
-	private ArrayList<String> checkAndAddResource(String hrefVal,String contentType,String courseId, List resElements, String unZippedDirPath, boolean addDB) throws Exception
+	private String checkAndAddResource(String hrefVal,String contentType,String courseId, List resElements, String unZippedDirPath, boolean addDB) throws Exception
 	{
-		ArrayList<String> checkResource = new ArrayList<String>();
+		ArrayList<String> checkResource = null;
 		String melResourceName = readTitlefromElement(resElements,true,hrefVal);
 		String melResourceDescription = readDescriptionFromElement(resElements);
+		
+		logger.debug("name read from title element in check and add Resource is :" + melResourceName);
 		// Everything here is going to uploads collection
 		try{
 			// check if the item has already been imported to this site (in uploads collection)
 			String checkResourceId = "/private/meleteDocs/"+courseId+"/uploads/"+melResourceName;
 			getMeleteCHService().checkResource(checkResourceId);
-			checkResource.add("exists");
-			checkResource.add(checkResourceId);
-			return checkResource;
+			return checkResourceId;
 		}catch (IdUnusedException ex)
 		{
 			// actual insert
@@ -374,16 +374,14 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			{
 				//uploaded file
 				checkResource = copyResource(hrefVal, courseId,uploadCollId,resElements,unZippedDirPath);
-				return checkResource;
+				return checkResource.get(1);
 			}
 			if(!contentType.equals("typeUpload"))
 			{
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true,melResourceName,melResourceDescription);
 				newResourceId = getMeleteCHService().addResourceItem(melResourceName, res_mime_type,uploadCollId,melContentData,res );
-			}
-			checkResource.add("new");
-			checkResource.add(newResourceId);
-			return checkResource;
+			}			
+			return newResourceId;
 		} // catch end
 
 	}
@@ -406,7 +404,6 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		}
 		catch (IdUnusedException iue)
 		{
-			logger.debug("copy resource is adding " + fileResourceName);
 			String extn = fileResourceName.substring(fileResourceName.lastIndexOf(".")+1);
 			String fileName = getFileNamefromElement(resElements,fileResourceName);
 			if (extn.equals("htm") || extn.equals("html"))
@@ -1269,24 +1266,12 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			else section.setContentType("typeUpload");
 		}
 
-		ArrayList<String> rdata = checkAndAddResource(hrefVal, section.getContentType(), courseId, resElements, unZippedDirPath, true);
-		if(rdata != null && rdata.get(0).equals("exists") && rdata.get(1) != null)
+		String rdata = checkAndAddResource(hrefVal, section.getContentType(), courseId, resElements, unZippedDirPath, true);
+		if(rdata != null && rdata.length() != 0)
 		{			
-			meleteResource.setResourceId(rdata.get(1));
-			sectionDB.insertSectionResource((Section)section, (MeleteResource)meleteResource);
-		}
-		else if(rdata != null && rdata.get(0).equals("new") && rdata.get(1) != null)
-		{
-			meleteResource.setResourceId(rdata.get(1));
-			//sometimes this throws Duplicate Exception 
-			try
-			{
-				sectionDB.insertMeleteResource((Section)section, (MeleteResource)meleteResource);
-			} catch (Exception e)
-			{
-				sectionDB.insertSectionResource((Section)section, (MeleteResource)meleteResource);
-			}
-		}
+			meleteResource.setResourceId(rdata);
+			sectionDB.insertMeleteResource((Section)section, (MeleteResource)meleteResource);
+		}		
 
 		if (logger.isDebugEnabled())
 			logger.debug("Exiting createSection...");
