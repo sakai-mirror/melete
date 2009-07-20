@@ -118,15 +118,31 @@ function selectAll()
 {
   var listSizeStr = "listauthmodulesform:listSize";
   var listSizeVal = document.getElementById(listSizeStr).value;
-  for (i=0;i<parseInt(listSizeVal);i++)
-  {
+  if (document.getElementById("listauthmodulesform:table:allmodcheck") != null)
+  {	  
+  if (document.getElementById("listauthmodulesform:table:allmodcheck").checked == true)
+  {	  
+    for (i=0;i<parseInt(listSizeVal);i++)
+    {
 	  var modchStr = "listauthmodulesform:table:"+i+":modCheck";
 	  if (document.getElementById(modchStr).checked == false)
 	  {	  
 	    document.getElementById(modchStr).checked=true;
 	  }  	  
-  }  	  
-  
+    }
+  } 
+  else
+  {	  
+	    for (i=0;i<parseInt(listSizeVal);i++)
+	    {
+		  var modchStr = "listauthmodulesform:table:"+i+":modCheck";
+		  if (document.getElementById(modchStr).checked == true)
+		  {	  
+		    document.getElementById(modchStr).checked=false;
+		  }  	  
+	    }
+	  } 	   	  
+  }
 }
 
 function resetCheck()

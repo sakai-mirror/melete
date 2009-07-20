@@ -40,14 +40,31 @@ function selectAll()
 {
   var listSizeStr = "RestoreModuleForm:listSize";
   var listSizeVal = document.getElementById(listSizeStr).value;
-  for (i=0;i<parseInt(listSizeVal);i++)
-  {
+  if (document.getElementById("RestoreModuleForm:table1:allmodcheck") != null)
+  {	  
+    if (document.getElementById("RestoreModuleForm:table1:allmodcheck").checked == true)
+    {	
+      for (i=0;i<parseInt(listSizeVal);i++)
+      {
 	  var modchStr = "RestoreModuleForm:table1:"+i+":modCheck";
 	  if (document.getElementById(modchStr).checked == false)
 	  {	  
 	    document.getElementById(modchStr).checked=true;
 	  }  	  
-  }  	  
+      } 
+    }
+    else
+    {	
+      for (i=0;i<parseInt(listSizeVal);i++)
+      {
+      var modchStr = "RestoreModuleForm:table1:"+i+":modCheck";
+      if (document.getElementById(modchStr).checked == true)
+      {	  
+    	    document.getElementById(modchStr).checked=false;
+      }  	  
+      } 
+     }
+  }          	  
   
 }
 function resetCheck()
