@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -944,10 +944,8 @@ public class SectionDB implements Serializable {
 	{
 		try{
 		     Session session = hibernateUtil.currentSession();
-		     String queryString = "select meleteresource.resourceId from MeleteResource meleteresource where meleteresource.resourceId like '%:resourceId%'";
+		     String queryString = "select meleteresource.resourceId from MeleteResource meleteresource where meleteresource.resourceId like '%" + courseId + "%'";
 		     Query query = session.createQuery(queryString);
-		     String selResourceId = "/private/meleteDocs/"+courseId+"/uploads/";
-		     query.setParameter("resourceId",selResourceId);
 		     List result_list = query.list();
 		     return result_list;
 		    }
