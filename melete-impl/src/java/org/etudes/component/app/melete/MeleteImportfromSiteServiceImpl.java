@@ -91,19 +91,14 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			return;
 		}
 		//for any other section upload/link/LTI check the resource exists and associate with it
-		ArrayList rdata = checkAndAddResource(hrefVal,courseId,true, oldCourseId);
-		// if exists then associate with section else insert everywhere
-		logger.debug("associate now" + rdata.toString());
-		if(rdata != null && rdata.get(0).equals("exists") && rdata.get(1) != null)
+		String rdata = checkAndAddResource(hrefVal,courseId,true, oldCourseId);
+	
+		if(rdata != null && rdata.length()!= 0)
 		{
-			meleteResource.setResourceId((String)rdata.get(1));
-			sectionDB.insertSectionResource((Section)section, (MeleteResource)meleteResource);
-		}
-		else if(rdata != null && rdata.get(0).equals("new") && rdata.get(1) != null )
-		{
-			meleteResource.setResourceId((String)rdata.get(1));
+			meleteResource.setResourceId(rdata);		 				 		
 			sectionDB.insertMeleteResource((Section)section, (MeleteResource)meleteResource);
 		}
+	
 		if (logger.isDebugEnabled())
 			logger.debug("Exiting createSection...");
 	}
@@ -111,8 +106,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 	/*
 	 * check if resource exists in the meletedocs collection else add it and record it for skipped files
 	 */
-
-	private ArrayList<String> checkAndAddResource(String hrefVal,String toSiteId, boolean addDB, String oldCourseId) throws Exception
+	private String checkAndAddResource(String hrefVal,String toSiteId, boolean addDB, String oldCourseId) throws Exception
 	{
 		ArrayList<String> rdata = new ArrayList<String>();
 		ContentResource cr = null;
@@ -129,14 +123,12 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			addToThreadList(melResourceName, "MELETE_importResources");
 			String checkResourceId = "/private/meleteDocs/"+toSiteId+"/uploads/"+melResourceName;
 			getMeleteCHService().checkResource(checkResourceId);
-			rdata.add("exists");
-			rdata.add(checkResourceId);
-			return rdata;
+			return checkResourceId;
 		}catch (IdUnusedException ex)
 		{
 			// if not found in meleteDocs collection include it
 			String uploadCollId = getMeleteCHService().getUploadCollectionId(toSiteId);
-			String newResourceId = null;
+			String newResourceId = null;		
 
 			if(cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LINK))
 			{
@@ -144,35 +136,39 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 
 				//LINKS POINTING TO RESOURCES AND MELETEDOCS COLLECTION
 				if(linkData.indexOf("/access/content/group") != -1 || linkData.indexOf("/access/meleteDocs/content") != -1)
-				{
+				{						
 					rdata = copyResource(linkData, oldCourseId, toSiteId, uploadCollId);
 					if (rdata == null) return null;
 					String firstReferId = rdata.get(1);
+					if(addDB && rdata.get(0).equals("new"))
+					{
+						MeleteResource firstResource = new MeleteResource();
+						firstResource.setResourceId(firstReferId);
+						sectionDB.insertResource(firstResource);
+					}
 					// link item should point to new address
 					byte[] melContentData = (getMeleteCHService().getResourceUrl(firstReferId)).getBytes();
 					ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true,melResourceName,melResourceDescription);
-					newResourceId = getMeleteCHService().addResourceItem(melResourceName, getMeleteCHService().MIME_TYPE_LINK,uploadCollId,melContentData,res );
+					newResourceId = getMeleteCHService().addResourceItem(melResourceName, getMeleteCHService().MIME_TYPE_LINK,uploadCollId,melContentData,res );			 		
 				}
 				//external urls or my workspace etc
 				else newResourceId = getMeleteCHService().copyIntoFolder(cr.getId(), uploadCollId);
 			}
 			//LTI resource
 			else if(cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LTI))
-			{
+			{		
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true,melResourceName,melResourceDescription);
-				newResourceId = getMeleteCHService().addResourceItem(melResourceName, getMeleteCHService().MIME_TYPE_LTI,uploadCollId,cr.getContent(),res );
-			}
+				newResourceId = getMeleteCHService().addResourceItem(melResourceName, getMeleteCHService().MIME_TYPE_LTI,uploadCollId,cr.getContent(),res );			
+			}	
 			else
 			{
 				// upload resource
 				rdata = copyResource(getMeleteCHService().getResourceUrl(cr.getId()), oldCourseId, toSiteId, uploadCollId);
-				return rdata;
+				return rdata.get(1);
 			}
 
-			addToThreadList(melResourceName, "MELETE_addedNowResource");
-			rdata.add("new");
-			rdata.add(newResourceId);
-			return rdata;
+			addToThreadList(melResourceName, "MELETE_addedNowResource");	
+			return newResourceId;
 		} // catch end
 	}
 
@@ -200,6 +196,8 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			if (extn.equals("htm") || extn.equals("html"))
 			{
 				firstReferId = processEmbedDatafromHTML(ref_id,null,toSiteId,uploadCollId);
+				checkResource.add("exists");
+				checkResource.add(firstReferId);
 			}
 			else
 			{
@@ -208,11 +206,10 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false,fileResourceName,cr1.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION));
 				firstReferId = getMeleteCHService().addResourceItem(fileResourceName, cr1.getContentType(),uploadCollId,cr1.getContent(),res );
 				addToThreadList(fileResourceName, "MELETE_addedNowResource");
+				checkResource.add("new");
+				checkResource.add(firstReferId);
 			}
-			checkResource.add("new");
-			checkResource.add(firstReferId);
 		}
-
 		return checkResource;
 	}
 

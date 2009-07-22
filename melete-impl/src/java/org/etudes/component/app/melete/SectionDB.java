@@ -778,53 +778,63 @@ public class SectionDB implements Serializable {
 	public void insertMeleteResource(Section section, MeleteResource melResource) throws Exception
 	{
 		try{
-		     Session session = hibernateUtil.currentSession();
-	         Transaction tx = null;
+			boolean secResExists = false;
+			boolean melResExists = false;
+			MeleteResource findResource = findMeleteResource(melResource.getResourceId());
+			if (findResource != null )melResExists = true;
+
+			Session session = hibernateUtil.currentSession();
+			Transaction tx = null;
 			try
 			{
 				hibernateUtil.ensureSectionHasNonNull(section);
 
 				SectionResource secResource = (SectionResource)section.getSectionResource();
-				if (secResource == null) secResource = new  SectionResource();
+				if (secResource == null) {
+					secResource = new  SectionResource();					
+				} else secResExists = true;
 				// set secResource fields
 				secResource.setSection(section);
 				secResource.setSectionId(section.getSectionId());
-				secResource.setResource(melResource);
+				if(melResExists) secResource.setResource(findResource);
+				else secResource.setResource(melResource);
 
 				// update Section
 				tx = session.beginTransaction();
-			//save resource
+				//save resource
 				logger.debug("inserting mel resource" + melResource.toString());
-				session.save(melResource);
-//				 save sectionResource
-		 		 session.save(secResource);
-				 section.setSectionResource(secResource);
-				 session.saveOrUpdate(section);
+				if(!melResExists)session.save(melResource);
+				
+				//	 save sectionResource
+				if(secResExists)session.update(secResource);
+				else session.save(secResource);
+				section.setSectionResource(secResource);
+				session.saveOrUpdate(section);
 
-			  // complete transaction
+				// complete transaction
 				tx.commit();
 
-		 	  if (logger.isDebugEnabled()) logger.debug("section resource association and resource is added" );
+				if (logger.isDebugEnabled()) logger.debug("section resource association and resource is added" );
 			}
 			catch(StaleObjectStateException sose)
-		     {
+			{
 				logger.error("stale object exception" + sose.toString());
-		     }
+			}
 			catch(HibernateException he)
-				     {
-						if(tx !=null) tx.rollback();
-						logger.error(he.toString());
-					//	he.printStackTrace();
-						throw he;
-				     }
-	        	finally{
+			{
+				if(tx !=null) tx.rollback();
+				logger.error(he.toString());
+				//he.printStackTrace();
+				throw he;
+			}
+			finally{
 				hibernateUtil.closeSession();
-				 }
+			}
 		}catch(Exception ex){
-				// Throw application specific error
+			// Throw application specific error
 			//ex.printStackTrace();
 			throw new MeleteException("add_section_fail");
-			}
+		}
 	}
 
 	/*
@@ -833,36 +843,37 @@ public class SectionDB implements Serializable {
 	public void insertSectionResource(Section section, MeleteResource melResource) throws Exception
 	{
 		try{
-
+			boolean existFlag = true;
+	        if (melResource != null && melResource.getResourceId() != null)
+	        	melResource = getMeleteResource(melResource.getResourceId());
+							
 		     Session session = hibernateUtil.currentSession();
-	         Transaction tx = null;
+	         Transaction tx = null;	         
 			try
 			{
 				hibernateUtil.ensureSectionHasNonNull(section);
 
 				SectionResource secResource = (SectionResource)section.getSectionResource();
-				if (secResource == null) secResource = new  SectionResource();
+				if (secResource == null) 
+					{
+					secResource = new  SectionResource();
+					existFlag = false;
+					}
 				// set secResource fields
 				secResource.setSection(section);
 				secResource.setSectionId(section.getSectionId());
 				// update Section
 				tx = session.beginTransaction();
-
 				if(melResource != null && melResource.getResourceId() != null)
 				{
-					melResource = getMeleteResource(melResource.getResourceId());
-					secResource.setResource(melResource);
-
-				// update Section
-				tx = session.beginTransaction();
-			//save resource
-				// comment below line just for checking if this removes sose exception for IMS import
-//				session.saveOrUpdate(melResource);
-//				 save sectionResource
-		 		 session.save(secResource);
-				 section.setSectionResource(secResource);
+					secResource.setResource(melResource);									
+					//	save sectionResource
+					if (existFlag)session.update(secResource);
+					else session.save(secResource);
+					// update Section
+					section.setSectionResource(secResource);
 				}
-				 session.saveOrUpdate(section);
+				session.saveOrUpdate(section);							 
 
 			  // complete transaction
 				tx.commit();
@@ -890,15 +901,14 @@ public class SectionDB implements Serializable {
 			}
 	}
 
-
-
 	/*
 	 *  get the melete resource based on resource id.
 	 */
 	public MeleteResource getMeleteResource(String selResourceId)
 	{
+		Session session = null;
 		try{
-		     Session session = hibernateUtil.currentSession();
+		     session = hibernateUtil.currentSession();
 		     String queryString = "from MeleteResource meleteresource where meleteresource.resourceId=:resourceId";
 		     Query query = session.createQuery(queryString);
 		     query.setParameter("resourceId",selResourceId);
@@ -918,8 +928,36 @@ public class SectionDB implements Serializable {
 			logger.error(ex.toString());
 			return null;
 			}
+		finally{
+			hibernateUtil.closeSession();
+			 }
 	}
-
+	/*
+	 *  find melete resource is to just look for it.
+	 *  If it doesn't exist then return null
+	 */
+	private MeleteResource findMeleteResource(String selResourceId)
+	{
+		Session session = null;
+		try{
+		     session = hibernateUtil.currentSession();
+		     String queryString = "from MeleteResource meleteresource where meleteresource.resourceId=:resourceId";
+		     Query query = session.createQuery(queryString);
+		     query.setParameter("resourceId",selResourceId);
+		     List result_list = query.list();
+		     if(result_list != null && result_list.size()!= 0)
+		     	return (MeleteResource)result_list.get(0);
+		    else return null;
+		}
+		catch(Exception ex){
+			logger.error(ex.toString());
+			return null;
+			}
+		finally{
+			hibernateUtil.closeSession();
+			 }
+	}
+	
 	public List getAllMeleteResourcesOfCourse(String courseId)
 	{
 		try{
