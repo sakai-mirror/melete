@@ -115,8 +115,9 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		checkUploadExists();
 		setSuccess(false);
 		FacesContext context = FacesContext.getCurrentInstance();
+		checkRequestForEmbedData(context.getExternalContext().getRequestMap(),context.getExternalContext().getInitParameter("uploadDir"));
 		Map sessionMap = context.getExternalContext().getSessionMap();
-        ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+        	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 
         //validation 1:	   modality is required.
 	     if (!validateModality())
@@ -363,7 +364,6 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	  public String cancelServerFile()
 	  {
 			selResourceIdFromList = null;
-	  		renderSelectedResource = false;
 	  		setLinkUrl(null);
 	  		currLinkUrl = null;
 	  		displayCurrLink = null;
