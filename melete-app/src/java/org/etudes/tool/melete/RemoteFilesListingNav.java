@@ -68,10 +68,9 @@ public class RemoteFilesListingNav {
 	{
 		if(currIndex <= 0)
 				currIndex  = 0;
-
-		return currIndex;
+     	return currIndex;
 	}
-
+	
 	public void changeChunkSize(ValueChangeEvent event)throws AbortProcessingException
 	{
 
@@ -96,10 +95,9 @@ public class RemoteFilesListingNav {
 			endIndex = totalSize-1;
 		if((totalSize + 1) <= chunkSize)endIndex = totalSize-1;
 
-
 		return endIndex;
 	}
-
+	
 	public void resetCurrIndex()
 	{
 		this.currIndex  = 0;
@@ -111,6 +109,7 @@ public class RemoteFilesListingNav {
 	public String goPrev()
 	{
 		currIndex = currIndex - chunkSize;
+		if (currIndex < 0) currIndex = 0;
 		endIndex = currIndex + chunkSize;
 		return fromPage;
 	}
@@ -165,7 +164,7 @@ public class RemoteFilesListingNav {
 	 */
 	public int getDisplayEndIndex() {
 	//	displayEndIndex = endIndex + 1;
-		displayEndIndex = endIndex;
+		displayEndIndex = getEndIndex();
 		return displayEndIndex;
 	}
 	/**
