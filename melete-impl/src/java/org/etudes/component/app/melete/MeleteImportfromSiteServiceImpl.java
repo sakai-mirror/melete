@@ -56,6 +56,7 @@ import org.sakaiproject.entity.api.Entity;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.util.ResourceLoader;
+import org.sakaiproject.util.Validator;
 import org.sakaiproject.entity.cover.EntityManager;
 
 /**
@@ -112,7 +113,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		ContentResource cr = null;
 		String melResourceName = null;
 		String melResourceDescription = null;
-
+	
 		try{
 			cr = getMeleteCHService().getResource(hrefVal);
 			if (cr == null) return null;
@@ -121,7 +122,8 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 
 			// check if the item has already been imported to this site (in uploads collection)
 			addToThreadList(melResourceName, "MELETE_importResources");
-			String checkResourceId = "/private/meleteDocs/"+toSiteId+"/uploads/"+melResourceName;
+			String checkResourceId = null;
+			checkResourceId = "/private/meleteDocs/"+toSiteId+"/uploads/"+ Validator.escapeResourceName(melResourceName);
 			getMeleteCHService().checkResource(checkResourceId);
 			return checkResourceId;
 		}catch (IdUnusedException ex)
@@ -164,7 +166,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			{
 				// upload resource
 				rdata = copyResource(getMeleteCHService().getResourceUrl(cr.getId()), oldCourseId, toSiteId, uploadCollId);
-				return rdata.get(1);
+				return rdata.get(1);				
 			}
 
 			addToThreadList(melResourceName, "MELETE_addedNowResource");	
@@ -495,66 +497,63 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		if ((fromContextList != null)&&(toContextList != null))
 		{
 			ListIterator memIt = fromContextList.listIterator();
-			List replaceContextList = new ArrayList();
+			List<String> replaceContextList = new ArrayList<String>();
 			while(memIt !=null && memIt.hasNext())
 			{
 				String resId = (String) memIt.next();
-				resId = resId.replace(fromContext, toContext);
+				resId = resId.replaceFirst(fromContext, toContext);
 				replaceContextList.add(resId);
 			}
-			if (replaceContextList != null)
+			if (replaceContextList != null && replaceContextList.size() > 0)
 			{
+				replaceContextList.removeAll(toContextList);
 				if (replaceContextList.size() > 0)
 				{
-					replaceContextList.removeAll(toContextList);
-					if (replaceContextList.size() > 0)
+					ListIterator repIt = replaceContextList.listIterator();
+					while (repIt != null && repIt.hasNext())
 					{
-						ListIterator repIt = replaceContextList.listIterator();
-						while (repIt != null && repIt.hasNext())
+						String resId = (String) repIt.next();
+						resId = resId.replaceFirst(toContext,fromContext);
+						byte[] melContentData;
+						String res_mime_type,melResourceName;
+						try
 						{
-							String resId = (String) repIt.next();
-							resId = resId.replace(toContext,fromContext);
-							byte[] melContentData;
-							String res_mime_type,melResourceName;
+							ContentResource cr = getMeleteCHService().getResource(resId);
+							melContentData = cr.getContent();
+							res_mime_type = cr.getContentType();
+							melResourceName =  cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 							try
 							{
-								ContentResource cr = getMeleteCHService().getResource(resId);
-								melContentData = cr.getContent();
-								res_mime_type = cr.getContentType();
-								melResourceName =  cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
+								// check if the item has already been imported to this site (in uploads collection)
+								String checkResourceId = toUploadsColl+Validator.escapeResourceName(melResourceName);
+								getMeleteCHService().checkResource(checkResourceId);
+							}
+							catch (IdUnusedException ex)
+							{
+								ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false,melResourceName,"");
 								try
 								{
-									// check if the item has already been imported to this site (in uploads collection)
-									String checkResourceId = toUploadsColl+melResourceName;
-									getMeleteCHService().checkResource(checkResourceId);
+									String newResourceId = getMeleteCHService().addResourceItem(melResourceName, res_mime_type,toUploadsColl,melContentData,res );
 								}
-								catch (IdUnusedException ex)
+								catch(Exception e)
 								{
-									ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false,melResourceName,"");
-									try
-									{
-										String newResourceId = getMeleteCHService().addResourceItem(melResourceName, res_mime_type,toUploadsColl,melContentData,res );
-									}
-									catch(Exception e)
-									{
-										logger.debug("Error thrown in exporting of manage resources");
-										logger.debug(e.toString());
-									}
+									logger.debug("Error thrown in exporting of manage resources");
+									logger.debug(e.toString());
 								}
 							}
-							catch(IdUnusedException unuse)
-							{
-								// if file not found exception or content is missing continue working
-								logger.debug("error in reading resource content in exporting manage resources");
-							}
-							catch(Exception e)
-							{
-								logger.error("error in reading resource in export manage resource");
-							}
+						}
+						catch(IdUnusedException unuse)
+						{
+							// if file not found exception or content is missing continue working
+							logger.debug("error in reading resource content in exporting manage resources");
+						}
+						catch(Exception e)
+						{
+							logger.error("error in reading resource in export manage resource");
+						}
 
-						}//End while repIt
-					}//End if
-				}
+					}//End while repIt
+				}//End if
 			}
 		}
 

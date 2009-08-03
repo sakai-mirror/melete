@@ -139,14 +139,12 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 //			 resource will always point to link location otherwise it changes type to upload on import
 			resource.addAttribute("href", linkData);
 			// preserve url title
-			if(!resourceDisplayName.equals(linkData))
-			{
 			Element urlTitle = createLOMElement("imsmd:title", "title");
 			Element imsmdlangstring = createLOMElement("imsmd:"+getLangString(), getLangString());
 	        imsmdlangstring.setText(resourceDisplayName);
 	        urlTitle.add(imsmdlangstring);
 	        resource.add(urlTitle);
-			}
+	        
 		// COMPOSE SECTIONS	
 		}else if (section.getContentType().equals("typeEditor")){
 			createFileElement(resourceDisplayName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
@@ -169,6 +167,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 			
 		// UPLOAD RESOURCE	
 		}else if(section.getContentType().equals("typeUpload")){ 
+			//NOTE: resourceDisplayName is not send as it might have unsafe characters. XMLParser fails to validate '%' characters in the name.
 			logger.debug("create resource element is processing for upload file:" + resourceDisplayName +", resource_id" + resource_id);
 			createFileElement(resource_id, content_data1, resource,imagespath, resoucesDir,"resources/", false,true);			
 		}
@@ -321,7 +320,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 					nextTitleEle.setText("NEXTSTEPS");
 
 					Element resource = resources.addElement("resource");
-					resource.addAttribute("identifier","RESOURCE"+ k);
+					resource.addAttribute("identifier","NEXTSTEPS_RESOURCE"+ k);
 					resource.addAttribute("type ","webcontent");
 
 //					create the file

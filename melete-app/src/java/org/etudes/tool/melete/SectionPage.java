@@ -659,7 +659,7 @@ public abstract class SectionPage implements Serializable {
     			secContentData = new byte[contentEditor.length()];
     			secContentData = contentEditor.getBytes();
     			encodingFlag = true;
-    			secResourceName = "Section_" + section.getSectionId().toString();
+    			secResourceName = "Section_" + section.getSectionId().toString()+".html";
     			secResourceDescription="compose content";
     		}
 
@@ -708,13 +708,12 @@ public abstract class SectionPage implements Serializable {
     	catch(MeleteException me)
     	{
     		logger.debug("error in creating resource for section content" + me.toString());
-    		throw me;
+       		throw me;
     	}
     	catch(Exception e)
     	{
     		if (logger.isDebugEnabled()) {
     			logger.debug("error in creating resource for section content" + e.toString());
-    			//e.printStackTrace();
     		}
     		throw new MeleteException("add_section_fail");
     	}
