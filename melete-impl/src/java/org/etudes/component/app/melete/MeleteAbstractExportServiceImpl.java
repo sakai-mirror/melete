@@ -458,6 +458,12 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 							checkEmbedHTMLResources.add(img_resource_id);
 							// look for embedded data within resources html file
 							img_data =setContentResourceData(img_resource_id, img_content);
+							if(img_data == null)
+							{
+								checkforimgs =checkforimgs.substring(endSrc);
+								startSrc=0; endSrc = 0;
+								continue;
+							}
 							String parentStr = meleteUtil.findParentReference(img_resource_id);
 							logger.debug("parent str is" + parentStr);
 							ArrayList newimgarr_data = replaceImagePath(new String(img_data), imagespath, resource,true,checkEmbedHTMLResources, parentStr);

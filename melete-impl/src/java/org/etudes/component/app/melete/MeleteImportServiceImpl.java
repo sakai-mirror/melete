@@ -64,6 +64,7 @@ import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.util.Validator;
 
 /**
  * MeleteImportServiceImpl is the implementation of MeleteImportService
@@ -221,6 +222,9 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		for (Iterator iter = elements.iterator(); iter.hasNext();)
 		{
 			Element element = (Element) iter.next();
+			// for next steps file don't bring in as unreferrrenced material
+			if (element.attributeValue("identifier").startsWith("NEXTSTEPS")) continue;
+		
 			Attribute resHrefAttr = element.attribute("href");
 
 			if (resHrefAttr != null)
@@ -326,7 +330,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		// Everything here is going to uploads collection
 		try{
 			// check if the item has already been imported to this site (in uploads collection)
-			String checkResourceId = "/private/meleteDocs/"+courseId+"/uploads/"+melResourceName;
+			String checkResourceId = "/private/meleteDocs/"+courseId+"/uploads/"+Validator.escapeResourceName(melResourceName);
 			getMeleteCHService().checkResource(checkResourceId);
 			return checkResourceId;
 		}catch (IdUnusedException ex)
@@ -403,6 +407,15 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		}
 		catch (IdUnusedException iue)
 		{
+			//NOTE: the decode is absolutely reqd otherwise display name of site resources links pointing to files with funky characters loses those characters
+			// ex:- student$guide.pdf becomes student%24guide.pdf
+			try
+			{
+				fileResourceName = URLDecoder.decode(fileResourceName, "UTF-8");
+			} catch(Exception e)
+			{
+				// if decode fails then just use the fileResourceName as is
+			}
 			String extn = fileResourceName.substring(fileResourceName.lastIndexOf(".")+1);
 			String fileName = getFileNamefromElement(resElements,fileResourceName);
 			if (extn.equals("htm") || extn.equals("html"))
@@ -432,6 +445,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	private String getFileNamefromElement(List resElements, String fileResourceName) throws Exception
 	{
 		String actualFileLocation = null;
+		//NOTE:this decoder is reqd. It helps in reading the right file.ex:-href says student%24guide.pdf and the file is 
+		// under resources as student$guide.pdf
 		fileResourceName = URLDecoder.decode(fileResourceName, "UTF-8");
 		// to look for exact filename ex:- menu.jpg and applemenu.jpg. menu.jpg search shouldnot pick applemenu.jpg
 		if(fileResourceName.indexOf("/") == -1)	fileResourceName = "/" + fileResourceName;
@@ -504,7 +519,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 							if(!checkEmbedHTMLResources.contains(imgActualPath)) {
 								checkEmbedHTMLResources.add(imgActualPath);
 								String embedContentData = null;
-								if((embedContentData = new String(readData(unZippedDirPath, imgActualPath)) )!= null)
+								byte[] embedByteData = readData(unZippedDirPath, imgActualPath);
+								if( embedByteData != null && (embedContentData = new String(embedByteData) )!= null)
 								{
 									ArrayList contentData = createHTMLFile(embedContentData, resElements, unZippedDirPath, courseId, checkEmbedHTMLResources,null);
 									embedContentData = (String)contentData.get(0);

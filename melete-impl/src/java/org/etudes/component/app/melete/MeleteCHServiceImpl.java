@@ -653,12 +653,15 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	 public String addResourceItem(String name, String res_mime_type,String addCollId, byte[] secContentData, ResourcePropertiesEdit res ) throws Exception
 	{
 		 ContentResource resource = null;
-
-		 //Storing the original filename so it can be used in the display name
-		 String dispName = name;
-		// to preserve the name
-		name = URLDecoder.decode(name,"UTF-8");
-
+		 try
+		 {
+			 name = URLDecoder.decode(name,"UTF-8");
+		 }
+		 catch(Exception e)
+		 {
+			 // if decode fails then use name as is
+			 name = Validator.escapeResourceName(name);
+		 }
 		 String courseId = getCourseId(addCollId);
 		 if (logger.isDebugEnabled()) logger.debug("IN addResourceItem "+name+" addCollId "+addCollId);
 		// need to add notify logic here and set the arg6 accordingly.
@@ -683,17 +686,28 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				resource = getContentservice().addResource(name, addCollId, MAXIMUM_ATTEMPTS_FOR_UNIQUENESS, res_mime_type, secContentData, res, 0);
 				// check if its duplicate file and edit the resource name if it is
 				String checkDup = resource.getUrl().substring(resource.getUrl().lastIndexOf("/") + 1);
+				String numberStr = null;
+				if ((addCollId.endsWith("uploads/")&&(!checkDup.equals(Validator.escapeResourceName(name)))))
+				{	
+				   int lastDashIndex = checkDup.lastIndexOf("-");
+				   int lastDotIndex = checkDup.lastIndexOf(".");	
+				   if ((lastDashIndex != -1)&&(lastDotIndex != -1))
+				   {	  
+				      numberStr = checkDup.substring(lastDashIndex, lastDotIndex);
+				      checkDup = checkDup.substring(0,lastDotIndex);
+				   }  
+				}
 				ContentResourceEdit edit = null;
 				try
 				{
-					if (!checkDup.equals(name))
+					if (numberStr != null && !checkDup.equals(Validator.escapeResourceName(name)))
 					{
 						edit = getContentservice().editResource(resource.getId());
 						ResourcePropertiesEdit rp = edit.getPropertiesEdit();
 						String desc = rp.getProperty(ResourceProperties.PROP_DESCRIPTION);
 						rp.clear();
-						logger.debug("add resource item chService  " + checkDup);
-						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, checkDup);
+						name = createDuplicateName(name,numberStr);
+						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, name);
 						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
 						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 						getContentservice().commitResource(edit);
@@ -758,7 +772,25 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		}
 	     return resource.getId();
 	}
-
+		 
+	/*
+	 *  create a new display name with -1, -2 etc for duplicate resources
+	 */
+	private String createDuplicateName(String name, String numberStr)
+	{
+		String dupName = null;
+		int index = name.lastIndexOf(".");
+		String base = null;
+		String ext = null;
+		if (index > 0)
+		{
+			base = name.substring(0, index);
+			ext = name.substring(index);
+		}
+		dupName = base+numberStr+ext;	 	
+		return dupName;
+	}		 
+	 
 	 public String getDisplayName(String resourceId)
 		{
 			try
@@ -824,6 +856,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		}
    			//          setup a security advisor
         		meleteSecurityService.pushAdvisor();
+        		// absolute reqd otherwise import from site creates desert Landscape.jpg and desert%20Landscape-1.jpg
         		resourceId = URLDecoder.decode(resourceId,"UTF-8");
         		return (getContentservice().getResource(resourceId));
 	    }
@@ -865,7 +898,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		}
 		catch(Exception e)
 		{
-			logger.error(e.toString());
+			logger.debug("checkResource error " + e.toString());
 		}
 		finally
 		  {

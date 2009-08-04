@@ -292,11 +292,8 @@ public class ExportMeleteModules {
 			.generateOrganizationResourceItems(selectList,allFlag,
 					packagedir, title, courseId);
 
-
-			if (orgResElements != null && orgResElements.size() > 0) {
-				manifest.add((Element) orgResElements.get(0));
-				manifest.add((Element) orgResElements.get(1));
-			}
+			if (orgResElements != null && orgResElements.size() > 0) manifest.add((Element) orgResElements.get(0));
+			if (orgResElements != null && orgResElements.size() > 1) manifest.add((Element) orgResElements.get(1));			
 
 			// create xml document and add element
 			Document document = XMLHelper.createXMLDocument(manifest);
@@ -553,7 +550,7 @@ public class ExportMeleteModules {
 						FacesMessage msg = new FacesMessage(null, infoMsg);
 						msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 						context.addMessage(null, msg);
-						e.printStackTrace();
+				//		e.printStackTrace();
 					} finally {
 						// delete the files - Directory courseid_instructorid
 						// and

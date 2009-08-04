@@ -108,69 +108,66 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 		return mdCopyright;
 	}
 
-	/*
-	 *  process section type and create resource element object
-	 */
-		public void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String resource_id, String resourceDisplayName,int item_ref_num) throws Exception
+public void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String resource_id, String resourceDisplayName,int item_ref_num) throws Exception
+	{
+		logger.debug("create resource ele" + section.getContentType());
+		if (section.getContentType().equals("typeLink"))
 		{
-			logger.debug("create resource ele" + section.getContentType());
-			if (section.getContentType().equals("typeLink"))
+			String linkData = new String(content_data1);
+
+			Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
+			if (recordFiles != null) recordFiles.add(resourceDisplayName);
+
+		// LINK POINTS TO SITE RESOURCES OR MELETEDOCS FILE
+			if(linkData.indexOf("/access/content/group")!= -1|| linkData.indexOf("/access/meleteDocs")!= -1)
 			{
-				String linkData = new String(content_data1);
+				ArrayList<String> r = meleteUtil.findResourceSource(linkData, null, null, false);
+				if (r == null) return;
+				String link_resource_id = r.get(0);
 
-				Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
-				if (recordFiles != null) recordFiles.add(resourceDisplayName);
-
-			// LINK POINTS TO SITE RESOURCES OR MELETEDOCS FILE
-				if(linkData.indexOf("/access/content/group")!= -1|| linkData.indexOf("/access/meleteDocs")!= -1)
-				{
-					ArrayList<String> r = meleteUtil.findResourceSource(linkData, null, null, false);
-					if (r == null) return;
-					String link_resource_id = r.get(0);
-
-					// read resource and create a file
-					ArrayList link_content = new ArrayList();
-					byte[] linkdata =setContentResourceData(link_resource_id, link_content);
-					if(linkdata == null) {resource =null;return;}
-					//get referred resource
-					logger.debug("link resource id and first element " + link_resource_id + (String)link_content.get(0));
-					createFileElement(link_resource_id, linkdata,resource,imagespath, resoucesDir, "resources/", false, false);
-				}
-	//			 resource will always point to link location otherwise it changes type to upload on import
-				resource.addAttribute("href", linkData);
-				// preserve url title
-				if(!resourceDisplayName.equals(linkData))
-				{
-				Element urlTitle = createLOMElement("imsmd:title", "title");
-				Element imsmdlangstring = createLOMElement("imsmd:"+getLangString(), getLangString());
-		        imsmdlangstring.setText(resourceDisplayName);
-		        urlTitle.add(imsmdlangstring);
-		        resource.add(urlTitle);
-				}
-			// COMPOSE SECTIONS
-			}else if (section.getContentType().equals("typeEditor")){
-				createFileElement(resourceDisplayName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
-
-			// LTI RESOURCE
-			} else if (section.getContentType().equals("typeLTI")){
-				resource.addAttribute("type ","SimpleLTI");
-				String fileName = "simplelti-"+item_ref_num;
-				createFileElement(fileName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
-
-				// add title
-				Element urlTitle = createLOMElement("imsmd:title", "title");
-				Element imsmdlangstring = createLOMElement("imsmd:"+getLangString(), getLangString());
-				imsmdlangstring.setText(resourceDisplayName);
-				urlTitle.add(imsmdlangstring);
-				resource.add(urlTitle);
-
-				Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
-				if (recordFiles != null) recordFiles.add(resourceDisplayName);
-
-			// UPLOAD RESOURCE
-			}else if(section.getContentType().equals("typeUpload")){
-				createFileElement(resource_id, content_data1, resource,imagespath, resoucesDir,"resources/", false,true);
+				// read resource and create a file
+				ArrayList link_content = new ArrayList();
+				byte[] linkdata =setContentResourceData(link_resource_id, link_content);
+				if(linkdata == null) {resource =null;return;}
+				//get referred resource
+				logger.debug("link resource id and first element " + link_resource_id + (String)link_content.get(0));
+				createFileElement(link_resource_id, linkdata,resource,imagespath, resoucesDir, "resources/", false, false);
 			}
+//			 resource will always point to link location otherwise it changes type to upload on import
+			resource.addAttribute("href", linkData);
+			// preserve url title
+			Element urlTitle = createLOMElement("imsmd:title", "title");
+			Element imsmdlangstring = createLOMElement("imsmd:"+getLangString(), getLangString());
+	        imsmdlangstring.setText(resourceDisplayName);
+	        urlTitle.add(imsmdlangstring);
+	        resource.add(urlTitle);
+
+		// COMPOSE SECTIONS
+		}else if (section.getContentType().equals("typeEditor")){
+			createFileElement(resourceDisplayName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
+
+		// LTI RESOURCE
+		} else if (section.getContentType().equals("typeLTI")){
+			resource.addAttribute("type ","SimpleLTI");
+			String fileName = "simplelti-"+item_ref_num;
+			createFileElement(fileName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
+
+			// add title
+			Element urlTitle = createLOMElement("imsmd:title", "title");
+			Element imsmdlangstring = createLOMElement("imsmd:"+getLangString(), getLangString());
+			imsmdlangstring.setText(resourceDisplayName);
+			urlTitle.add(imsmdlangstring);
+			resource.add(urlTitle);
+
+			Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
+			if (recordFiles != null) recordFiles.add(resourceDisplayName);
+
+		// UPLOAD RESOURCE
+		}else if(section.getContentType().equals("typeUpload")){
+			//NOTE: resourceDisplayName is not send as it might have unsafe characters. XMLParser fails to validate '%' characters in the name.
+			logger.debug("create resource element is processing for upload file:" + resourceDisplayName +", resource_id" + resource_id);
+			createFileElement(resource_id, content_data1, resource,imagespath, resoucesDir,"resources/", false,true);
+		}
 	}
 
 	public int createSectionElement(Element ParentSection, Section section, int i, int k, Element resources, File resoucesDir, String imagespath) throws Exception
@@ -320,7 +317,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 					nextTitleEle.setText("NEXTSTEPS");
 
 					Element resource = resources.addElement("resource");
-					resource.addAttribute("identifier","RESOURCE"+ k);
+					resource.addAttribute("identifier","NEXTSTEPS_RESOURCE"+ k);
 					resource.addAttribute("type ","webcontent");
 
 //					create the file

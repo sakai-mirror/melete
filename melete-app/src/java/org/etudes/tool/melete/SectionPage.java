@@ -622,7 +622,7 @@ public abstract class SectionPage implements Serializable {
     			secContentData = new byte[contentEditor.length()];
     			secContentData = contentEditor.getBytes();
     			encodingFlag = true;
-    			secResourceName = "Section_" + section.getSectionId().toString();
+    			secResourceName = "Section_" + section.getSectionId().toString()+".html";
     			secResourceDescription="compose content";
     		}
 
@@ -835,7 +835,7 @@ public abstract class SectionPage implements Serializable {
   	    catch(Exception ex)
 		 {
   		logger.debug("error while accessing content resource" + ex.toString());
-		 }	  		  		  
+		 }
 	  }
     /**
      * @return remove values from session before closing
@@ -1417,7 +1417,7 @@ public abstract class SectionPage implements Serializable {
 		this.selectedResourceName = selectedResourceName;
 	}
 
-	
+
 	/**
 	 * @return the newURLTitle
 	 */
