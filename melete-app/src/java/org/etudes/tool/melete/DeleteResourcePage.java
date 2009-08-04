@@ -110,10 +110,11 @@ public class DeleteResourcePage implements Serializable{
   			{
   				ValueBinding binding = Util.getBinding("#{editSectionPage}");
   				EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
-  				if(editPage.meleteResource.getResourceId().equals(delResourceId))
+  				if(editPage.meleteResource != null && editPage.meleteResource.getResourceId() != null && 
+  				   editPage.meleteResource.getResourceId().equals(delResourceId))
   				{
   					logger.debug("remove resource from cache" );
-  					editPage.secResource.setResource(null);
+  					if (editPage.secResource != null) editPage.secResource.setResource(null);
   					editPage.meleteResource = null;
   					editPage.resetMeleteResourceValues();
   				}
