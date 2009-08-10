@@ -290,8 +290,8 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 					startSrc=0; endSrc = 0;
 					continue;
 				}
-				imgActualPath = r.get(0);
-
+				imgActualPath = r.get(0);		
+				
 				String importResName = imgActualPath.substring(imgActualPath.lastIndexOf('/')+1);
 				addToThreadList(URLDecoder.decode(importResName,"UTF-8"), "MELETE_importResources");
 
@@ -323,7 +323,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 							String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+filename;
 							getMeleteCHService().checkResource(checkResourceId);
 						}catch (IdUnusedException ex)
-						{
+						{							
 							addResource(filename, moreContentData.getBytes(), courseId);
 						}
 						catch(Exception e){
@@ -346,6 +346,43 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		return returnData;
 	}
 
+	/*
+	 * abstract implementation for processing embedded media
+	 */
+	protected String uploadSectionDependentFile(String imgActualPath, String courseId, String unZippedDirPath) 
+	{	
+		try
+		{
+			ContentResource embedResource = getMeleteCHService().getResource(imgActualPath);
+			if(embedResource != null && embedResource.getContentLength() > 0)
+			{			
+				String filename = embedResource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
+				String checkname = imgActualPath.substring( imgActualPath.lastIndexOf('/') + 1);
+				try
+				{
+					String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+checkname;
+					getMeleteCHService().checkResource(checkResourceId);
+					//			 	found it so return it
+					return getMeleteCHService().getResourceUrl(checkResourceId);
+				}catch (IdUnusedException ex)
+				{
+					try
+					{						
+						return addResource(filename, embedResource.getContent(), courseId);
+					}
+					catch (Exception ex1){}
+				}
+				catch(Exception e)
+				{
+					logger.debug("error adding a resource on import from site");
+				}
+			}
+		} catch(Exception getResourceEx)
+		{
+			// do nothing
+		}
+		return "";
+	}
 	/*
 	 * Call for import from site process
 	 */

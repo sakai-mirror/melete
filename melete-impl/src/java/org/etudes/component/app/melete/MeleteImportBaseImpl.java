@@ -41,6 +41,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.tool.cover.ToolManager;
+import org.sakaiproject.util.Validator;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.exception.IdUnusedException;
@@ -97,39 +98,8 @@ abstract public class MeleteImportBaseImpl {
 	/**
 	 * Process embed data found in HTML files 
 	 */
-	protected String uploadSectionDependentFile(String hrefVal, String courseId, String unZippedDirPath) {
-		try {
-			String filename = null;
-			String res_mime_type = null;
-			byte[] melContentData = null;
+	abstract protected String uploadSectionDependentFile(String hrefVal, String courseId, String unZippedDirPath);
 
-			if (hrefVal.lastIndexOf('/') != -1)
-				filename = hrefVal.substring( hrefVal.lastIndexOf('/') + 1);
-
-			if (filename != null && filename.trim().length() > 0){
-
-				try{
-					String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+filename;
-					getMeleteCHService().checkResource(checkResourceId);
-
-					// 	found it so return it
-					return getMeleteCHService().getResourceUrl(checkResourceId);
-				}catch (IdUnusedException ex)
-				{
-					melContentData = readData(unZippedDirPath, hrefVal);
-					return addResource(filename, melContentData, courseId);
-				}
-				catch(Exception e)
-				{
-					//logger.debug(e.toString());
-				}
-			}
-		} catch (Exception e) {
-			//			if (logger.isErrorEnabled())
-			//				logger.error("ImportMeleteModules : uploadSectionDependentFile() :"+ e.toString());
-		}
-		return "";
-	}
 
    /**
 	* Abstract method to read data from exported package and read data from content resource for import from site

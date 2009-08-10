@@ -563,7 +563,45 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		returnData.add(checkEmbedHTMLResources);
 		return returnData;
 	}
+	/*
+	 *  abstract method implementation to process embed media found in html files
+	 *  hrefVal is the embedded resource url
+	 */
+	protected String uploadSectionDependentFile(String hrefVal, String courseId, String unZippedDirPath) {
+		try {
+			String filename = null;
+			String res_mime_type = null;
+			byte[] melContentData = null;
 
+			if (hrefVal.lastIndexOf('/') != -1)
+				filename = hrefVal.substring( hrefVal.lastIndexOf('/') + 1);
+			// filename read is PostcardStPatricksDay (1).jpg
+			if (filename != null && filename.trim().length() > 0){
+				try{
+					String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+Validator.escapeResourceName(filename);
+					getMeleteCHService().checkResource(checkResourceId);
+
+					// 	found it so return it
+					return getMeleteCHService().getResourceUrl(checkResourceId);
+				}catch (IdUnusedException ex)
+				{
+					melContentData = readData(unZippedDirPath, hrefVal);
+					return addResource(filename, melContentData, courseId);
+				}
+				catch(Exception e)
+				{
+					//logger.debug(e.toString());
+				}
+			}
+		} catch (Exception e) {
+			// do nothing
+		}
+		return "";
+	}
+	
+	/*
+	 * 
+	 */
 	private org.dom4j.Element checkModuleItem(org.dom4j.Element eleItem, org.dom4j.Element eleParentOrganization)throws Exception
 	{
 		org.dom4j.Attribute identifierref = eleItem.attribute("identifierref");
