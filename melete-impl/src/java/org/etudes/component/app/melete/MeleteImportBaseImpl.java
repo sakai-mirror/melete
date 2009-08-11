@@ -97,39 +97,7 @@ abstract public class MeleteImportBaseImpl {
 	/**
 	 * Process embed data found in HTML files
 	 */
-	protected String uploadSectionDependentFile(String hrefVal, String courseId, String unZippedDirPath) {
-		try {
-			String filename = null;
-			String res_mime_type = null;
-			byte[] melContentData = null;
-
-			if (hrefVal.lastIndexOf('/') != -1)
-				filename = hrefVal.substring( hrefVal.lastIndexOf('/') + 1);
-
-			if (filename != null && filename.trim().length() > 0){
-
-				try{
-					String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+filename;
-					getMeleteCHService().checkResource(checkResourceId);
-
-					// 	found it so return it
-					return getMeleteCHService().getResourceUrl(checkResourceId);
-				}catch (IdUnusedException ex)
-				{
-					melContentData = readData(unZippedDirPath, hrefVal);
-					return addResource(filename, melContentData, courseId);
-				}
-				catch(Exception e)
-				{
-					//logger.debug(e.toString());
-				}
-			}
-		} catch (Exception e) {
-			//			if (logger.isErrorEnabled())
-			//				logger.error("ImportMeleteModules : uploadSectionDependentFile() :"+ e.toString());
-		}
-		return "";
-	}
+	abstract protected String uploadSectionDependentFile(String hrefVal, String courseId, String unZippedDirPath);
 
    /**
 	* Abstract method to read data from exported package and read data from content resource for import from site

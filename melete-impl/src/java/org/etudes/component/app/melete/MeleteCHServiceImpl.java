@@ -1057,7 +1057,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		            //If the resource already exists, use it
 		            try
 	                {
-	                   	  String checkResourceId = UploadCollId + "/" + fileName;
+		            	  String checkResourceId = UploadCollId + fileName;
 	                   	  checkResource(checkResourceId);
 				 	      newEmbedResourceId = checkResourceId;
 	                }

@@ -100,7 +100,8 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
     protected String schemaVersion;
     protected String langString;
     static final String REFERENCE_ROOT = Entity.SEPARATOR+"meleteDocs";
-
+    static final String changeforXmlParser = "[ ] %";
+    
     abstract public void initValues();
     abstract public Element createMetadataCopyright(int licenseCode);
     abstract public void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath,String resource_id, String resourceDisplayName,int i) throws Exception;
@@ -545,7 +546,19 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 
 		//create the file
 		if(fileName.lastIndexOf("/") != -1) fileName = fileName.substring(fileName.lastIndexOf("/")+1);
-		fileName = URLDecoder.decode(fileName, "UTF-8");
+		try{
+			fileName = URLDecoder.decode(fileName, "UTF-8");
+		}
+		catch(Exception badcharEx)
+		{
+			// do nothing
+		}
+		//certain characters which are passed by ecode but xml parser doesn't like change them to _
+		String[] change = changeforXmlParser.split("\\s");
+		for (int x=0; x < change.length; x++)
+		{
+			fileName = fileName.replaceAll(change[x], "_");
+		}
 		// look for file element
 		org.dom4j.Node node = null;
 		boolean found = false;

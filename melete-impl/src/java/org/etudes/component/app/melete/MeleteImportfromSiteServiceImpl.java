@@ -347,6 +347,43 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 	}
 
 	/*
+	 * abstract implementation for processing embedded media
+	 */
+	protected String uploadSectionDependentFile(String imgActualPath, String courseId, String unZippedDirPath) 
+	{	
+		try
+		{
+			ContentResource embedResource = getMeleteCHService().getResource(imgActualPath);
+			if(embedResource != null && embedResource.getContentLength() > 0)
+			{			
+				String filename = embedResource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
+				String checkname = imgActualPath.substring( imgActualPath.lastIndexOf('/') + 1);
+				try
+				{
+					String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+checkname;
+					getMeleteCHService().checkResource(checkResourceId);
+					//			 	found it so return it
+					return getMeleteCHService().getResourceUrl(checkResourceId);
+				}catch (IdUnusedException ex)
+				{
+					try
+					{						
+						return addResource(filename, embedResource.getContent(), courseId);
+					}
+					catch (Exception ex1){}
+				}
+				catch(Exception e)
+				{
+					logger.debug("error adding a resource on import from site");
+				}
+			}
+		} catch(Exception getResourceEx)
+		{
+			// do nothing
+		}
+		return "";
+	}
+	/*
 	 * Call for import from site process
 	 */
 	public void copyModules(String fromContext, String toContext)
