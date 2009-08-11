@@ -1076,12 +1076,11 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		             String file_mime_type = fileName.substring(fileName.lastIndexOf(".")+1);
 		             file_mime_type = ContentTypeImageService.getContentType(file_mime_type);
 
-
 		            String newEmbedResourceId = null;
 		            //If the resource already exists, use it
 		            try
 	                {
-	                   	  String checkResourceId = UploadCollId + "/" + fileName;
+		             	  String checkResourceId = UploadCollId + fileName;
 	                   	  checkResource(checkResourceId);
 				 	      newEmbedResourceId = checkResourceId;
 	                }
