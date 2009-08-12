@@ -1232,6 +1232,56 @@ public class ModuleDB implements Serializable {
 			  }
 		}
 	 }
+	 
+	 public void updateModuleShdates(ModuleShdates modShdates) throws Exception
+	 {
+       //MAY NEED TO ADD NOT NULL CHECK HERE FOR ORACLE
+	 	Transaction tx = null;
+	 	try
+		{
+
+	      Session session = hibernateUtil.currentSession();
+
+		
+	      tx = session.beginTransaction();
+
+	      //Update module properties
+	      session.saveOrUpdate(modShdates);
+
+	      tx.commit();
+
+	      //session.flush();
+
+	    }
+	 	catch(StaleObjectStateException sose)
+	     {
+			if(tx !=null) tx.rollback();
+			logger.error("stale object exception" + sose.toString());
+			throw new MeleteException("edit_module_multiple_users");
+	     }
+	    catch (HibernateException he)
+	    {
+		  logger.error(he.toString());
+		  throw he;
+	    }
+	    catch (Exception e) {
+	      if (tx!=null) tx.rollback();
+	      logger.error(e.toString());
+	      throw e;
+	    }
+	    finally
+		{
+	    	try
+			  {
+		      	hibernateUtil.closeSession();
+			  }
+		      catch (HibernateException he)
+			  {
+				  logger.error(he.toString());
+				  throw he;
+			  }
+		}
+	 }	 
 
 	 public static boolean deleteDir(File dir) {
         if (dir.isDirectory()) {
@@ -1344,10 +1394,13 @@ public class ModuleDB implements Serializable {
 			if (allModuleIds.lastIndexOf(",") != -1) delModuleIds = allModuleIds.substring(0, allModuleIds.lastIndexOf(",")) + " )";
 
 			//if (allSectionIds.lastIndexOf(",") != -1) delSectionIds = allSectionIds.substring(0, allSectionIds.lastIndexOf(",")) + " )";
+			if (allSectionIds.lastIndexOf(",") != -1)
+			{	
 			 if (count % MAX_IN_CLAUSES != 0) {
 			 allSectionIds.replace(allSectionIds.lastIndexOf(","), allSectionIds.lastIndexOf(",")+1, ")");
 			 allSectionIdsArray.add(allSectionIds);
 			 }
+			}
 
 			Session session = hibernateUtil.currentSession();
 			tx = session.beginTransaction();

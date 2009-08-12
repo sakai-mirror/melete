@@ -107,12 +107,19 @@
          <groupId>sakaiproject</groupId>
          <artifactId>sakai-db-api</artifactId>
          <version>${sakai.version}</version>
-      </dependency>			
+      </dependency>		
+      
         <dependency>
 			<groupId>sakaiproject</groupId>
 			<artifactId>sakai-util</artifactId>
 			<version>${sakai.version}</version>    
+		</dependency>	
+		<dependency>
+			<groupId>sakaiproject</groupId>
+			<artifactId>sakai-calendar-api</artifactId>
+			<version>${sakai.version}</version>
 		</dependency>		
+		
 
 		<!-- for hibernate -->
 		<dependency>

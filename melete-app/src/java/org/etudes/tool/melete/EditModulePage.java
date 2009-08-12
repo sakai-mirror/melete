@@ -103,6 +103,8 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 
 	     FacesContext context = FacesContext.getCurrentInstance();
      	 ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+     	 Map sessionMap = context.getExternalContext().getSessionMap();
+		
 	    // rashmi added validations start
 //     	validation
       	module.setTitle(module.getTitle().trim());
@@ -149,10 +151,9 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 			mdbean.setDateFlag(false);
 			ArrayList mdbeanList = new ArrayList();
 			mdbeanList.add(mdbean);
-			moduleService.updateProperties(mdbeanList);
+			moduleService.updateProperties(mdbeanList, (String)sessionMap.get("courseId"));
 
 			// add module to session
-			Map sessionMap = context.getExternalContext().getSessionMap();
 			sessionMap.put("currModule",module);
 
 			//Track the event

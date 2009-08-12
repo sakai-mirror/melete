@@ -78,6 +78,15 @@ import org.sakaiproject.entity.api.Entity;
 
 import org.sakaiproject.util.Validator;
 
+import org.sakaiproject.site.cover.SiteService;
+
+import org.sakaiproject.calendar.api.CalendarEvent;
+import org.sakaiproject.calendar.api.CalendarEventEdit;
+import org.sakaiproject.calendar.api.CalendarService;
+import org.sakaiproject.time.cover.TimeService;
+import org.sakaiproject.entity.cover.EntityManager;
+import org.sakaiproject.exception.PermissionException;
+
 /**
  * @author Rashmi
  *
@@ -144,9 +153,146 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 
 	// insert new module
 		moduledb.addModule(module1, moduleshdates1, userId, courseId);
+		
+		updateCalendar(module1, moduleshdates1, courseId);	
 
 	}
 
+	private void updateCalendar(ModuleObjService module1, ModuleShdatesService moduleshdates1, String courseId) throws Exception
+	{
+		//The code below adds the start and stop dates to the Calendar
+		boolean addtoSchedule = moduleshdates1.getAddtoSchedule().booleanValue();
+		Date startDate = moduleshdates1.getStartDate();
+		Date endDate = moduleshdates1.getEndDate();
+		String startEventId = moduleshdates1.getStartEventId();
+		String endEventId = moduleshdates1.getEndEventId();
+			
+	    CalendarService cService = org.sakaiproject.calendar.cover.CalendarService.getInstance();
+		String calendarId = cService.calendarReference(courseId, SiteService.MAIN_CONTAINER);
+		try
+		{
+		  org.sakaiproject.calendar.api.Calendar c = cService.getCalendar(calendarId);
+		  try
+		  {
+			if (addtoSchedule == true)
+			{
+				if (startDate == null)
+				{
+					if (startEventId != null)
+					{
+						logger.debug("REMOVING start event for null start date");
+						deleteCalendarEvent(c, startEventId);
+						moduleshdates1.setStartEventId(null);
+					}
+				}
+				else
+				{
+				  if (startEventId == null)
+				  {	  
+				    logger.debug("ADDING start event for non-null start date");
+				    startEventId = createCalendarEvent(c, startDate, module1.getTitle(), "This module opens today");
+				  }
+				  else
+				  {
+					  logger.debug("UPDATING start event for non-nul start date");
+					  updateCalendarEvent(c, startEventId, startDate);
+				  }
+				  moduleshdates1.setStartEventId(startEventId);
+				}
+				if (endDate == null)
+				{
+					if (endEventId != null)
+					{
+						logger.debug("REMOVING end event for null end date");
+						deleteCalendarEvent(c, endEventId);
+						moduleshdates1.setEndEventId(null);
+					}
+				}
+				if (endDate != null)
+				{
+				  if (endEventId == null)
+				  {		
+					logger.debug("ADDING end event for non-null end date");
+					endEventId = createCalendarEvent(c, endDate, module1.getTitle(), "This module closes today");			   
+				  } 
+				  else
+				  {
+					  logger.debug("UPDATING end event for non-null end date");
+					  updateCalendarEvent(c, endEventId, endDate);
+				  }
+				  moduleshdates1.setEndEventId(endEventId);
+				}
+			  }
+			  else
+			  {
+			    if (startEventId != null)
+				{
+				  logger.debug("REMOVING start event for false flag");
+				  deleteCalendarEvent(c, startEventId);
+				  moduleshdates1.setStartEventId(null);
+				} 
+				if (endEventId != null)
+				{
+				  logger.debug("REMOVING end event for false flag");
+				  deleteCalendarEvent(c, endEventId);
+				  moduleshdates1.setEndEventId(null);
+				}
+			  }
+			}
+			catch (PermissionException ee)
+			{
+				logger.warn("PermissionException while adding to calendar");
+			}
+			catch (Exception ee)
+			{
+				logger.error("Some other exception while adding to calendar "+ee.getMessage());
+			}
+			// try-catch
+		  }
+		  catch (Exception ex)
+		  {
+		  logger.error("Exception thrown while getting Calendar");
+		  }
+		
+		 
+		moduledb.updateModuleShdates((ModuleShdates)moduleshdates1); 
+	}
+	
+	private String createCalendarEvent(org.sakaiproject.calendar.api.Calendar c, Date eventDate, String title, String description) throws Exception
+	{
+		String eventId = null;
+		CalendarEvent eEvent = c.addEvent(/* TimeRange */TimeService.newTimeRange(eventDate.getTime(), 0),
+				/* title */title,
+				/* description */description,
+				/* type */"Academic Calendar",
+				/* location */null,
+				/* attachments */EntityManager.newReferenceList());
+		       if (eEvent != null)
+			   {
+				 eventId = eEvent.getId();
+			   }
+		return eventId;       
+	}
+	
+	
+	private void updateCalendarEvent(org.sakaiproject.calendar.api.Calendar c,String eventId, Date eventDate) throws Exception
+	{
+		 CalendarEventEdit evEdit = c.getEditEvent(eventId, "Academic Calendar");
+		  if (evEdit != null)
+		  {
+			  evEdit.setRange(TimeService.newTimeRange(eventDate.getTime(),0));
+			  c.commitEvent(evEdit);
+		  }
+	}
+	
+	private void deleteCalendarEvent(org.sakaiproject.calendar.api.Calendar c,String eventId) throws Exception
+	{
+		CalendarEventEdit evEdit = c.getEditEvent(eventId, "Academic Calendar");
+		if (evEdit != null)
+		{
+		    c.removeEvent(evEdit);
+		}
+	}
 
 	public void createSubSection(ModuleObjService module, List secBeans) throws MeleteException
 	{
@@ -282,7 +428,7 @@ public List getViewModules(String userId, String courseId) {
    * @see org.foothillglobalaccess.melete.ModuleService#updateProperties(org.foothillglobalaccess.melete.ModuleDateBean)
    * updates the moduleDateBean object
    */
- public void updateProperties(List moduleDateBeans)  throws MeleteException
+ public void updateProperties(List moduleDateBeans, String courseId)  throws MeleteException
   {
     try{
     moduledb.updateModuleDateBeans(moduleDateBeans);
@@ -292,6 +438,18 @@ public List getViewModules(String userId, String courseId) {
 		logger.debug("multiple user exception in module business");
 	   throw new MeleteException("edit_module_multiple_users");
 	}
+    for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext(); )
+ 	{
+        ModuleDateBean mdbean = (ModuleDateBean) i.next();
+        try
+        {
+          updateCalendar(mdbean.getModule(), mdbean.getModuleShdate(), courseId);
+        }
+        catch (Exception ex)
+        {
+        	logger.debug("Exception thrown while updating calendar tool tables");
+        }
+ 	}    
   }
 
 
@@ -300,7 +458,8 @@ public List getViewModules(String userId, String courseId) {
  {
 	 List cmodList = null;
 	 List<Module> allModules = new ArrayList<Module>(0);
-	
+	  
+	 deleteCalendar(delModules, courseId);
 	 try{
 		 allModules = moduledb.getActivenArchiveModules(courseId);
 		 moduledb.deleteModules(delModules, allModules, courseId, userId);
@@ -309,7 +468,57 @@ public List getViewModules(String userId, String courseId) {
 	 {
 		 throw new MeleteException("delete_module_fail");
 	 }
+	  
 
+ }
+ 
+ private void deleteCalendar(List delModules, String courseId)
+ {
+	 //Delete all calendar associated events
+	 CalendarService cService = org.sakaiproject.calendar.cover.CalendarService.getInstance();
+	  String calendarId = cService.calendarReference(courseId, SiteService.MAIN_CONTAINER);
+	  try
+	  {
+		  org.sakaiproject.calendar.api.Calendar c = cService.getCalendar(calendarId);
+		  for (ListIterator i = delModules.listIterator(); i.hasNext(); )
+	 	  {
+	        Module mod = (Module) i.next();
+	        String startEventId = mod.getModuleshdate().getStartEventId();
+	        String endEventId = mod.getModuleshdate().getEndEventId();
+	        try
+	        {
+	        	if ( startEventId != null)
+				{
+					logger.debug("REMOVING start event for null start date");
+					deleteCalendarEvent(c, startEventId);
+					mod.getModuleshdate().setStartEventId(null);
+				}	
+	        	if (endEventId != null)
+	        	{
+					logger.debug("REMOVING end event for null start date");
+					deleteCalendarEvent(c, endEventId);
+					mod.getModuleshdate().setEndEventId(null);
+				}
+	        	if ((startEventId != null)||(endEventId != null))
+	        	{
+	        		moduledb.updateModuleShdates((ModuleShdates)mod.getModuleshdate()); 
+	        	}
+	        }	
+	        catch (PermissionException ee)
+			{
+				logger.warn("PermissionException while adding to calendar");
+			}
+			catch (Exception ee)
+			{
+				logger.error("Some other exception while adding to calendar "+ee.getMessage());
+			}
+	 	  }	
+		// try-catch
+	  }
+	  catch (Exception ex)
+	  {
+		  logger.error("Exception thrown while getting Calendar");
+	  }   	 
  }
 
  /*public void deleteModules(List moduleDateBeans, String courseId, String userId)

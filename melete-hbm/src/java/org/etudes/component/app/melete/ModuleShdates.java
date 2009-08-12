@@ -44,15 +44,27 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
 
     /** nullable persistent field */
     private int version;
+    
+    /** nullable persistent field */
+    private Boolean addtoSchedule;
+    
+    /** nullable persistent field */
+    private String startEventId;
+    
+    /** nullable persistent field */
+    private String endEventId;
 
     /** identifier field */
     private org.etudes.component.app.melete.Module module;
 
     /** full constructor */
-    public ModuleShdates(Date startDate, Date endDate, int version, org.etudes.component.app.melete.Module module) {
+    public ModuleShdates(Date startDate, Date endDate, int version, Boolean addtoSchedule, String startEventId, String endEventId, org.etudes.component.app.melete.Module module) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.version = version;
+        this.addtoSchedule = addtoSchedule;
+        this.startEventId = startEventId;
+        this.endEventId = endEventId;
         this.module = module;
     }
 
@@ -107,6 +119,39 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     public void setVersion(int version) {
         this.version = version;
     }
+    
+	
+
+	public void setAddtoSchedule(Boolean addtoSchedule)
+	{
+		this.addtoSchedule = addtoSchedule;
+	}
+	
+	public  Boolean getAddtoSchedule()
+	{
+		return this.addtoSchedule;
+	}
+	
+	public String getStartEventId()
+	{
+		return this.startEventId;
+	}
+
+	public void setStartEventId(String startEventId)
+	{
+		this.startEventId = startEventId;
+	}
+	
+	public String getEndEventId()
+	{
+		return this.endEventId;
+	}
+
+	public void setEndEventId(String endEventId)
+	{
+		this.endEventId = endEventId;
+	}
+    
 
     public org.etudes.api.app.melete.ModuleObjService getModule() {
         return this.module;

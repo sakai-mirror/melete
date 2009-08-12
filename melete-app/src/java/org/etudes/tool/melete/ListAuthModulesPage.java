@@ -967,7 +967,7 @@ public class ListAuthModulesPage implements Serializable
 					  errModuleIds.add(mdbean);
 				  }
 			}
-			  getModuleService().updateProperties(moduleDateBeans);
+			  getModuleService().updateProperties(moduleDateBeans, courseId);
 
 
 			if ((yearTooBigFlag == true)||(dateErrFlag == true))

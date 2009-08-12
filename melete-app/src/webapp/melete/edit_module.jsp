@@ -200,6 +200,14 @@ function showEdateCal()
            </h:outputLink>
 					 </td>
               </tr>
+              <tr>
+                <td width="233">&nbsp;</td>
+                <td width="472" valign="top">
+                 <h:selectBooleanCheckbox id="addtoschedule" title="addtoSchedule" value="#{editModulePage.moduleShdates.addtoSchedule}" >
+		         </h:selectBooleanCheckbox>
+		         <h:outputText id="addtoScheduleTxt" value="#{msgs.edit_module_schedule}" />
+                </td>
+              </tr>                
           		<tr bgcolor="#FFFFFF">
                   <td height="20" colspan="2">&nbsp;</td>
                 </tr>

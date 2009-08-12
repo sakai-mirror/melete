@@ -64,7 +64,7 @@ public interface ModuleService{
 
 	public void setModules(List modules) ;
 
-	public void updateProperties(List moduleDateBeans)  throws Exception;
+	public void updateProperties(List moduleDateBeans, String courseId)  throws Exception;
 
 	public void archiveModules(List selModBeans, List moduleDateBeans) throws Exception;
 
