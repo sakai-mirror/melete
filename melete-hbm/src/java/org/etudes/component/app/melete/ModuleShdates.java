@@ -69,9 +69,10 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     }
 
     /** Custom constructor */
-    public ModuleShdates(Date startDate, Date endDate) {
+    public ModuleShdates(Date startDate, Date endDate, Boolean addtoSchedule) {
         this.startDate = startDate;
         this.endDate = endDate;
+        this.addtoSchedule = addtoSchedule;
     }
 
     /** default constructor */

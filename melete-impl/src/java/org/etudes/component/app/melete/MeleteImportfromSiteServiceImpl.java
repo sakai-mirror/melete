@@ -425,11 +425,15 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 
 			//Copy module properties and insert, seqXml is null for now
 			Module toMod = new Module(fromMod.getTitle(), fromMod.getLearnObj(), fromMod.getDescription(), fromMod.getKeywords(), fromMod.getCreatedByFname(), fromMod.getCreatedByLname(), fromMod.getUserId(), fromMod.getModifiedByFname(), fromMod.getModifiedByLname(), fromMod.getInstitute(), fromMod.getWhatsNext(), fromMod.getCreationDate(), fromMod.getModificationDate(), null);
-			ModuleShdates toModshdate = new ModuleShdates(((ModuleShdates)fromMod.getModuleshdate()).getStartDate(), ((ModuleShdates)fromMod.getModuleshdate()).getEndDate());
+			ModuleShdates toModshdate = new ModuleShdates(((ModuleShdates)fromMod.getModuleshdate()).getStartDate(), ((ModuleShdates)fromMod.getModuleshdate()).getEndDate(), fromMod.getModuleshdate().getAddtoSchedule());
 			if (fromMod.getCoursemodule().isArchvFlag() == false)
 			{
 				try{
 					moduleDB.addModule(toMod, toModshdate, fromMod.getUserId(), toContext);
+					if ((toModshdate.getAddtoSchedule().booleanValue() == true)&&((toModshdate.getStartDate()!= null)||(toModshdate.getEndDate() != null)))
+					{
+					  moduleDB.updateCalendar(toMod, toModshdate, toContext);
+					}  
 				}catch(Exception ex3){
 					// logger.debug("error importing module");
 				}
