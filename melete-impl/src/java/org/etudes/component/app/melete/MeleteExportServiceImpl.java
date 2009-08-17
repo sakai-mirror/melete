@@ -364,7 +364,7 @@ public void createResourceElement(Section section, Element resource, byte[] cont
 
 		String fromUploadsColl = getMeleteCHService().getUploadCollectionId(courseId);
 		List fromContextList = meleteCHService.getMemberNamesCollection(fromUploadsColl);
-		if ((fromContextList == null)||(fromContextList.size() == 0)) return null;
+		if ((fromContextList == null)||(fromContextList.size() == 0)) return resources;
 
 		List meleteResourceList = null;
 		Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
