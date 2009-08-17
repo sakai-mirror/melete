@@ -447,7 +447,14 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		String actualFileLocation = null;
 		//NOTE:this decoder is reqd. It helps in reading the right file.ex:-href says student%24guide.pdf and the file is 
 		// under resources as student$guide.pdf
-		fileResourceName = URLDecoder.decode(fileResourceName, "UTF-8");
+		try
+		{
+			fileResourceName = URLDecoder.decode(fileResourceName, "UTF-8");
+		}
+		catch(Exception e)
+		{
+			fileResourceName = meleteUtil.escapeFileforExportPackage(fileResourceName);
+		}
 		// to look for exact filename ex:- menu.jpg and applemenu.jpg. menu.jpg search shouldnot pick applemenu.jpg
 		if(fileResourceName.indexOf("/") == -1)	fileResourceName = "/" + fileResourceName;
 
@@ -1295,7 +1302,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			//This is for typeEditor sections
 			section.setContentType("typeEditor");
 			String addCollId = getMeleteCHService().getCollectionId(section.getContentType(), module.getModuleId());
-			String sectionResourceName = "Section_" + section.getSectionId().toString();
+			String sectionResourceName = "Section_" + section.getSectionId().toString()+".html";
 			newResourceId = processEmbedDatafromHTML(hrefVal,sectionResourceName, courseId,addCollId, resElements, unZippedDirPath);
 			meleteResource.setResourceId(newResourceId);
 			sectionDB.insertMeleteResource((Section)section, (MeleteResource)meleteResource);

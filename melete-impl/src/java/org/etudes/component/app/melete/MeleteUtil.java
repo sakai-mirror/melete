@@ -37,7 +37,8 @@ import org.sakaiproject.entity.cover.EntityManager;
 public class MeleteUtil {
 	/** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(MeleteUtil.class);
-
+	static final String changeforXmlParser = "[ ] %";
+	
 	public MeleteUtil(){
 
 	}
@@ -261,6 +262,7 @@ public class MeleteUtil {
 			}
 			catch (Exception e)
 			{
+				logger.debug("melete util : check reference" + e.toString());
 				return null;
 			}
 		}
@@ -275,5 +277,15 @@ public class MeleteUtil {
 				else parentStr = null;
 			}
 			return parentStr;
+		}
+		
+		public String escapeFileforExportPackage(String filename)
+		{
+			String[] change = changeforXmlParser.split("\\s");
+			for (int x=0; x < change.length; x++)
+			{
+				filename = filename.replace(change[x], "_");
+			}
+			return filename;
 		}
 }
