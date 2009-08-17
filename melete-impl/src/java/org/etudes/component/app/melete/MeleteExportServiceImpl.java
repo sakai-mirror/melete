@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008,2009 Etudes, Inc.
@@ -117,21 +117,21 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 		if (section.getContentType().equals("typeLink"))
 		{
 			String linkData = new String(content_data1);
-			
+
 			Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
 			if (recordFiles != null) recordFiles.add(resourceDisplayName);
-			
-		// LINK POINTS TO SITE RESOURCES OR MELETEDOCS FILE	
+
+		// LINK POINTS TO SITE RESOURCES OR MELETEDOCS FILE
 			if(linkData.indexOf("/access/content/group")!= -1|| linkData.indexOf("/access/meleteDocs")!= -1)
 			{
 				ArrayList<String> r = meleteUtil.findResourceSource(linkData, null, null, false);
 				if (r == null) return;
 				String link_resource_id = r.get(0);
-				
+
 				// read resource and create a file
 				ArrayList link_content = new ArrayList();
 				byte[] linkdata =setContentResourceData(link_resource_id, link_content);
-				if(linkdata == null) {resource =null;return;}	
+				if(linkdata == null) {resource =null;return;}
 				//get referred resource
 				logger.debug("link resource id and first element " + link_resource_id + (String)link_content.get(0));
 				createFileElement(link_resource_id, linkdata,resource,imagespath, resoucesDir, "resources/", false, false);
@@ -144,15 +144,15 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 	        imsmdlangstring.setText(resourceDisplayName);
 	        urlTitle.add(imsmdlangstring);
 	        resource.add(urlTitle);
-	        
-		// COMPOSE SECTIONS	
+
+		// COMPOSE SECTIONS
 		}else if (section.getContentType().equals("typeEditor")){
 			createFileElement(resourceDisplayName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
-		
-		// LTI RESOURCE	
+
+		// LTI RESOURCE
 		} else if (section.getContentType().equals("typeLTI")){
-			resource.addAttribute("type ","SimpleLTI");			
-			String fileName = "simplelti-"+item_ref_num;			
+			resource.addAttribute("type ","SimpleLTI");
+			String fileName = "simplelti-"+item_ref_num;
 			createFileElement(fileName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
 
 			// add title
@@ -161,15 +161,15 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 			imsmdlangstring.setText(resourceDisplayName);
 			urlTitle.add(imsmdlangstring);
 			resource.add(urlTitle);
-			
+
 			Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
 			if (recordFiles != null) recordFiles.add(resourceDisplayName);
-			
-		// UPLOAD RESOURCE	
-		}else if(section.getContentType().equals("typeUpload")){ 
+
+		// UPLOAD RESOURCE
+		}else if(section.getContentType().equals("typeUpload")){
 			//NOTE: resourceDisplayName is not send as it might have unsafe characters. XMLParser fails to validate '%' characters in the name.
 			logger.debug("create resource element is processing for upload file:" + resourceDisplayName +", resource_id" + resource_id);
-			createFileElement(resource_id, content_data1, resource,imagespath, resoucesDir,"resources/", false,true);			
+			createFileElement(resource_id, content_data1, resource,imagespath, resoucesDir,"resources/", false,true);
 		}
 	}
 
@@ -262,7 +262,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 			Element resources = createResources();
 			Element organization = addOrganization(organizations);
 			organizations.addAttribute("default", organization.attributeValue("identifier"));
-			
+
 		// record all files being added in the package
 			exportThreadLocal.set("MeleteExportFiles", new HashSet<String>());
 			Iterator modIter = modList.iterator();
@@ -359,7 +359,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 		}
 
 	}
-	
+
 	public Element transferManageItems(Element resources, String courseId, File resoucesDir, int item_ref_num) throws Exception
 	{
 		logger.debug("recorded files so far: " + exportThreadLocal.get("MeleteExportFiles").toString());
@@ -367,7 +367,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 
 		String fromUploadsColl = getMeleteCHService().getUploadCollectionId(courseId);
 		List fromContextList = meleteCHService.getMemberNamesCollection(fromUploadsColl);
-		if ((fromContextList == null)||(fromContextList.size() == 0)) return null;
+		if ((fromContextList == null)||(fromContextList.size() == 0)) return resources;
 
 		List meleteResourceList = null;
 		Set recordFiles = (Set)exportThreadLocal.get("MeleteExportFiles");
@@ -407,5 +407,5 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 			}//End while repIt
 		}
 		return resources;
-	}	
+	}
 }
