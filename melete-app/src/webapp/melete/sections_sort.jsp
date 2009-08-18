@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -25,7 +25,6 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
-<%@ page import="org.etudes.tool.melete.ManageModulesPage"%>
 
 <html><head>
 <meta http-equiv="Content-Language" content="en-us">
@@ -83,7 +82,7 @@ function resetModuleSelection() {
 				                        <td class="style2"><h:outputText value="#{msgs.sort_modules_sort}" /> </td>
 										<td><div>
 										 <!-- Begin code to display images horizontally. -->
-										   <h:commandLink id="sortmod"  action="#{manageModulesPage.goToSortModules}" immediate="true" >	
+										   <h:commandLink id="sortmod"  action="#{sortModuleSectionPage.goToSortModules}" immediate="true" >	
 										 	<h:graphicImage id="sortModulesImg" value="#{msgs.im_sort_modules}" width="85" height="20" styleClass="BottomImgSpace" 
 													onmouseover="this.src = '#{msgs.im_sort_modules_over}'" 
 													onmouseout="this.src = '#{msgs.im_sort_modules}'" 
@@ -104,8 +103,8 @@ function resetModuleSelection() {
 							  </tr>
 							    <tr>
 										<td colspan="3" height="30"><h:outputText value="#{msgs.sort_sections_choose_module}"/> 
-							          <h:selectOneMenu id="currmodule" value="#{manageModulesPage.currModule}"  valueChangeListener="#{manageModulesPage.nextModuleSections}" onchange="this.form.submit();" style="width:420px">
-															 <f:selectItems value="#{manageModulesPage.allModulesList}" />							
+							          <h:selectOneMenu id="currmodule" value="#{sortModuleSectionPage.currModule}"  valueChangeListener="#{sortModuleSectionPage.nextModuleSections}" onchange="this.form.submit();" style="width:420px">
+															 <f:selectItems value="#{sortModuleSectionPage.allModulesList}" />							
 												 </h:selectOneMenu>													
 										</td>
 									  </tr>
@@ -122,8 +121,8 @@ function resetModuleSelection() {
 										<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" style="border-collapse: collapse">
 											<tr>
 											 <td align="left" >
-												 <h:selectOneListbox id="sectioncurrList" disabled="true" size="#{manageModulesPage.showSize}" style="width:300px">
-															 <f:selectItems value="#{manageModulesPage.currSecList}" />							
+												 <h:selectOneListbox id="sectioncurrList" disabled="true" size="#{sortModuleSectionPage.showSize}" style="width:300px">
+															 <f:selectItems value="#{sortModuleSectionPage.currSecList}" />							
 												 </h:selectOneListbox>
 											   </td>
 											</tr>
@@ -139,23 +138,23 @@ function resetModuleSelection() {
 											<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" style="border-collapse: collapse">
 											<tr>
                        						 <td align="left">
-                       						 	 <h:selectOneListbox id="sectionnewList" value="#{manageModulesPage.newSelectedSection}" size="#{manageModulesPage.showSize}" style="width:300px">
-															 <f:selectItems value="#{manageModulesPage.newSecList}" />							
+                       						 	 <h:selectOneListbox id="sectionnewList" value="#{sortModuleSectionPage.newSelectedSection}" size="#{sortModuleSectionPage.showSize}" style="width:300px">
+															 <f:selectItems value="#{sortModuleSectionPage.newSecList}" />							
 													 </h:selectOneListbox>
 											  </td>                        
 											 </tr>
 											</table></td> 
 				                        <td width="15" align="center">
-				                        <h:commandLink id="up_end"  action="#{manageModulesPage.MoveSectionItemAllUpAction}">	
+				                        <h:commandLink id="up_end"  action="#{sortModuleSectionPage.MoveSectionItemAllUpAction}">	
 										 <h:graphicImage id="upImg1" value="images/up_end.gif" alt="Move Up" width="20" height="20" styleClass="BottomImgSpace" />
 								   </h:commandLink>	
-				                    <h:commandLink id="up_one"  action="#{manageModulesPage.MoveSectionItemUpAction}">	
+				                    <h:commandLink id="up_one"  action="#{sortModuleSectionPage.MoveSectionItemUpAction}">	
 										 <h:graphicImage id="upImg" value="images/up.gif" alt="Move Up" width="20" height="20" styleClass="BottomImgSpace" />
 								   </h:commandLink>		 
- 									<h:commandLink id="down_one"  action="#{manageModulesPage.MoveSectionItemDownAction}">		 
+ 									<h:commandLink id="down_one"  action="#{sortModuleSectionPage.MoveSectionItemDownAction}">		 
 										 <h:graphicImage id="downImg" value="images/down.gif" alt="Move Down" width="20" height="20" styleClass="BottomImgSpace" />
  									   </h:commandLink>	  
- 									   <h:commandLink id="down_end"  action="#{manageModulesPage.MoveSectionItemAllDownAction}">		 
+ 									   <h:commandLink id="down_end"  action="#{sortModuleSectionPage.MoveSectionItemAllDownAction}">		 
 										 <h:graphicImage id="downImg_end" value="images/down_end.gif" alt="Move Down" width="20" height="20" styleClass="BottomImgSpace" />
  									   </h:commandLink>	 										 
 									  </td>

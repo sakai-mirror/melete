@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -71,7 +71,7 @@
 								   							url="#{msgs.im_sort_modules_down2}"
 								     						 width="85" height="20" styleClass="BottomImgSpace"/>	
 								     						 
-					     			<h:commandLink id="sortsec"  action="#{manageModulesPage.gotoSortSections}" immediate="true" >					 
+					     			<h:commandLink id="sortsec"  action="#{sortModuleSectionPage.gotoSortSections}" immediate="true" >					 
 										<h:graphicImage id="sortSectionsImg" value="#{msgs.im_sort_sections}" width="85" height="20" styleClass="BottomImgSpace" 
 													onmouseover="this.src = '#{msgs.im_sort_sections_over}'" 
 													onmouseout="this.src = '#{msgs.im_sort_sections}'" 
@@ -97,8 +97,8 @@
 										<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" style="border-collapse: collapse">
 											<tr>
 											 <td align="left" class="maintabledata3">
-												 <h:selectOneListbox id="modulecurrList" disabled="true" size="#{manageModulesPage.showSize}" style="width:300px">
-															 <f:selectItems value="#{manageModulesPage.currList}" />							
+												 <h:selectOneListbox id="modulecurrList" disabled="true" size="#{sortModuleSectionPage.showSize}" style="width:300px">
+															 <f:selectItems value="#{sortModuleSectionPage.currList}" />							
 												 </h:selectOneListbox>
 											   </td>
 											</tr>
@@ -114,23 +114,23 @@
 											<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" style="border-collapse: collapse">
 											<tr>
                        						 <td align="left">
-                       						 	 <h:selectOneListbox id="modulenewList" value="#{manageModulesPage.newSelectedModule}" size="#{manageModulesPage.showSize}" style="width:300px">
-															 <f:selectItems value="#{manageModulesPage.newList}" />							
+                       						 	 <h:selectOneListbox id="modulenewList" value="#{sortModuleSectionPage.newSelectedModule}" size="#{sortModuleSectionPage.showSize}" style="width:300px">
+															 <f:selectItems value="#{sortModuleSectionPage.newList}" />							
 													 </h:selectOneListbox>
 											  </td>                        
 											 </tr>
 											</table></td> 
 				                        <td width="15" align="center">			
-				                        <h:commandLink id="all_up"  action="#{manageModulesPage.MoveItemAllUpAction}">		
+				                        <h:commandLink id="all_up"  action="#{sortModuleSectionPage.MoveItemAllUpAction}">		
 										 <h:graphicImage id="allupImg" value="images/up_end.gif" alt="Move All Up" width="20" height="20" styleClass="BottomImgSpace" />
 								   </h:commandLink>	           
-									<h:commandLink id="up_one"  action="#{manageModulesPage.MoveItemUpAction}">		
+									<h:commandLink id="up_one"  action="#{sortModuleSectionPage.MoveItemUpAction}">		
 										 <h:graphicImage id="upImg" value="images/up.gif" alt="Move Up" width="20" height="20" styleClass="BottomImgSpace" />
 								   </h:commandLink>		 
- 									<h:commandLink id="down_one"  action="#{manageModulesPage.MoveItemDownAction}">	 
+ 									<h:commandLink id="down_one"  action="#{sortModuleSectionPage.MoveItemDownAction}">	 
 										 <h:graphicImage id="downImg" value="images/down.gif" alt="Move Down" width="20" height="20" styleClass="BottomImgSpace" />
  									   </h:commandLink>	
- 									   <h:commandLink id="all_down"  action="#{manageModulesPage.MoveItemAllDownAction}">		
+ 									   <h:commandLink id="all_down"  action="#{sortModuleSectionPage.MoveItemAllDownAction}">		
 										 <h:graphicImage id="downImg1" value="images/down_end.gif" alt="Move All Down" width="20" height="20" styleClass="BottomImgSpace" />
 								   </h:commandLink>	    					
 									  </td>

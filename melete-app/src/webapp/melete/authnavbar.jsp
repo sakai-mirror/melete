@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -24,7 +24,7 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 
-<h:panelGrid columns="8" columnClasses="menu MainTableClass" cellspacing="5" style=" border-width:medium; border-color: #E2E4E8" width="570">
+<h:panelGrid columns="9" columnClasses="menu MainTableClass" cellspacing="5" style=" border-width:medium; border-color: #E2E4E8" width="50%">
 	<h:column>
 		<h:graphicImage id="addModuleImg" value="images/document_add.gif" styleClass="AuthImgClass"/>
 		<h:commandLink id="addAction" action="#{listAuthModulesPage.AddModuleAction}" immediate="true">
@@ -55,15 +55,6 @@
 	  	<h:outputText  value="#{msgs.authnavbar_right}"/>
 	  </h:commandLink>
 	</h:column>
-<!--h:column-->
-   <!--h:commandLink id="MoveUpAction" action="#{listAuthModulesPage.MoveItemUpAction}"-->
-		<!--h:graphicImage id="MoveUpImg" value="images/sort_up.png" styleClass="AuthImgClass"/-->
-  <!--/h:commandLink-->
-   <!--h:commandLink id="MoveDownAction" action="#{listAuthModulesPage.MoveItemDownAction}"-->
-		<!--h:graphicImage id="MoveDownImg" value="images/sort_down.png" styleClass="AuthImgClass"/-->
-  <!--/h:commandLink-->
-    	<!--h:outputLabel value="#{msgs.authnavbar_sort}" /-->
-<!--/h:column-->
 	<h:column>
 		<h:graphicImage id="deleteImg" value="images/delete.gif" styleClass="AuthImgClass"/>
 		<h:commandLink id="delAction" action="#{listAuthModulesPage.deleteAction}">
@@ -82,5 +73,11 @@
 	  	<h:outputText  value="#{msgs.authnavbar_move_section}"/>
 	  </h:commandLink>
 	</h:column>
+	<h:column>
+	   <h:graphicImage id="MoveUpImg" value="images/document_exchange.gif" styleClass="AuthImgClass"/>
+   	  <h:commandLink id="sortgoto" action="#{sortModuleSectionPage.goToSortModules}">
+		   <h:outputText id="sort" value="#{msgs.modules_author_manage_sort}" />
+  	</h:commandLink>
+  	</h:column>
 </h:panelGrid>
 <!-- End code to display images horizontally. -->

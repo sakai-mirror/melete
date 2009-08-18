@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -91,19 +91,7 @@
 							                    	</td>
 							                    	<td  align="left"><h:outputText value="#{msgs.modules_author_manage_archive_delete_list}" /></td>
 							                  	</tr>
-							                   	<tr>
-													<td align="center" class="menu left">
-														<h:commandLink id="sortgoto" action="#{manageModulesPage.goToSortModules}">
-															<h:graphicImage id="image1"
-									   							alt="#{msgs.modules_author_manage_sort_alt}"
-									   							url="images/document_exchange.gif"
-									   							 styleClass="AuthImgClass"/>
-									   							 <h:outputText id="sort" value="#{msgs.modules_author_manage_sort}" />
-														</h:commandLink>
-													</td>
-													<td align="left"> <h:outputText id="sort1" value="#{msgs.modules_author_manage_sort_text}" /></td>
-											  </tr>
-					                           	<tr rowspan="5" valign="top">
+							                   	<tr rowspan="5" valign="top">
 							                    	<td align="center" class="menu left">
 								                    	<h:commandLink id="goto_impexp" action="#{manageModulesPage.importExportModules}">
 															<h:graphicImage id="image_impexp"
