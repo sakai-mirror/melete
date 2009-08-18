@@ -1820,28 +1820,33 @@ public class ModuleDB implements Serializable {
 	  }
 
 
-     public void archiveModules(List selModBeans, List moduleDateBeans) throws Exception {
+     public void archiveModules(List selModBeans, List moduleDateBeans, String courseId) throws Exception {
      	Transaction tx = null;
+     	StringBuffer moduleIds = new StringBuffer();
+		moduleIds.append("(");
+		ModuleDateBean mdbean = null;
+		for (ListIterator i = selModBeans.listIterator(); i.hasNext();)
+		{
+			mdbean = (ModuleDateBean) i.next();
+			moduleIds.append(mdbean.getModule().getModuleId().toString());
+			moduleIds.append(", ");
+		}
+		moduleIds.delete(moduleIds.toString().length() - 2, moduleIds.toString().length());
+		moduleIds.append(")");
+		
      	try
 		{
      		Session session = hibernateUtil.currentSession();
 			tx = session.beginTransaction();
-
+	
 			Date currentDate = Calendar.getInstance().getTime();
-			StringBuffer moduleIds = new StringBuffer();
-			moduleIds.append("(");
-			ModuleDateBean mdbean = null;
-			for (ListIterator i = selModBeans.listIterator(); i.hasNext();)
-			{
-				mdbean = (ModuleDateBean) i.next();
-				moduleIds.append(mdbean.getModule().getModuleId().toString());
-				moduleIds.append(", ");
-			}
-			moduleIds.delete(moduleIds.toString().length() - 2, moduleIds.toString().length());
-			moduleIds.append(")");
 			String updCourseModuleStr = "update CourseModule cm set cm.seqNo=-1, cm.archvFlag=1,cm.dateArchived=:currentDate where cm.moduleId in " + moduleIds.toString();
 			int updatedEntities = session.createQuery(updCourseModuleStr).setParameter("currentDate",currentDate).executeUpdate();
 			logger.debug("course module updated " +updatedEntities);
+			String updMshdatesStr = "update ModuleShdates mshdates set mshdates.addtoSchedule=0 where mshdates.moduleId in "+moduleIds.toString();
+			updatedEntities = session.createQuery(updMshdatesStr).executeUpdate();
+			logger.debug("ModuleShdates updated "+updatedEntities);
+		
 			moduleDateBeans.removeAll(selModBeans);
 			 List<CourseModule> courseModules = new ArrayList<CourseModule>(0);
 			 for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext(); )
@@ -1852,7 +1857,6 @@ public class ModuleDB implements Serializable {
 			logger.debug("Updating sequence for all other modules");
 			assignSeqs(session,courseModules);
             tx.commit();
-
 		}
 		catch (HibernateException he)
 		{
@@ -1879,6 +1883,35 @@ public class ModuleDB implements Serializable {
 				throw he;
 			}
 		}
+		List modList = new ArrayList();
+	  	try
+		{
+	     Session session = hibernateUtil.currentSession();
+	      String queryString =  "from Module as mod where mod.moduleId in "+moduleIds.toString();
+	      Query query = session.createQuery(queryString);
+	      modList = query.list();
+	    }
+	    catch (HibernateException he)
+	    {
+		  logger.error(he.toString());
+	    }
+	    finally
+		{
+	    	try
+			  {
+		      	hibernateUtil.closeSession();
+			  }
+		      catch (HibernateException he)
+			  {
+				  logger.error(he.toString());
+			  }
+		}		
+		for (ListIterator i = modList.listIterator(); i.hasNext();)
+		{
+			Module mod = (Module) i.next();
+		    updateCalendar(mod,(ModuleShdates)mod.getModuleshdate(),courseId);
+		}    
+        logger.debug("Calendar updated");			
 /*	 	try
 		{
 

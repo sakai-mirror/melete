@@ -733,7 +733,7 @@ public class ListAuthModulesPage implements Serializable
 			try
 			{
 				int origSeqNo = mdbean.getCmod().getSeqNo();
-				getModuleService().archiveModules(selModBeans,moduleDateBeans);
+				getModuleService().archiveModules(selModBeans,moduleDateBeans,courseId);
 				StringBuffer modTitles = new StringBuffer();
 				mdbean = null;
 				for (ListIterator i = selModBeans.listIterator(); i.hasNext();)

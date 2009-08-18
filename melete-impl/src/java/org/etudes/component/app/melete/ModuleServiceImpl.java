@@ -369,12 +369,12 @@ public List getViewModules(String userId, String courseId) {
       }
   }*/
 
- public void archiveModules(List selModBeans, List moduleDateBeans) throws Exception
+ public void archiveModules(List selModBeans, List moduleDateBeans, String courseId) throws Exception
  {
 	 List cmodList = null;
 	 try
 	 {
-		 moduledb.archiveModules(selModBeans, moduleDateBeans);
+		 moduledb.archiveModules(selModBeans, moduleDateBeans, courseId);
 	 }
 	 catch (HibernateException e)
 	 {
