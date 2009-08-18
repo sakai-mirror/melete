@@ -660,7 +660,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		 catch(Exception e)
 		 {
 			 // if decode fails then use name as is
-			 name = Validator.escapeResourceName(name);
+			 // comment line below otherwise on uploading bad file name again through Manage display name changes to cat_-1.gif instead of cat%-1.gif 
+			// name = Validator.escapeResourceName(name);
 		 }
 		 String courseId = getCourseId(addCollId);
 		 if (logger.isDebugEnabled()) logger.debug("IN addResourceItem "+name+" addCollId "+addCollId);
