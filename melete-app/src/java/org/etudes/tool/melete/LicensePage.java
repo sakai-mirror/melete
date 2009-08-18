@@ -355,7 +355,17 @@ public class LicensePage {
 
 			 public String getAllowCmrcl(){
 		        if(formName.equals("EditSectionForm"))
-		        	allowCmrcl = String.valueOf(melResource.isAllowCmrcl());
+		        {
+		        	if (melResource == null)
+		        	{
+		        		allowCmrcl = "false";
+		        	}
+		        	else
+		        	{
+		        		allowCmrcl = String.valueOf(melResource.isAllowCmrcl());
+		        	}
+		        }
+		        	
 				return allowCmrcl;
 				}
 
@@ -368,7 +378,16 @@ public class LicensePage {
 
 			 public String getAllowMod(){
 				 if(formName.equals("EditSectionForm"))
-					 allowMod = String.valueOf(melResource.getAllowMod());
+				 {
+					 if (melResource == null)
+					 {
+						 allowMod = "1";
+					 }
+					 else
+					 {
+						 allowMod = String.valueOf(melResource.getAllowMod()); 
+					 }
+				 } 
 			   return allowMod;
 				}
 
