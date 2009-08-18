@@ -85,7 +85,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		//html file
 		if (section.getContentType().equals("typeEditor")) {
 			String addCollId = getMeleteCHService().getCollectionId(courseId, section.getContentType(), module.getModuleId());
-			String sectionResourceName = "Section_" + section.getSectionId().toString();
+			String sectionResourceName = "Section_" + section.getSectionId().toString()+".html";
 			newResourceId = processEmbedDatafromHTML(hrefVal,sectionResourceName, courseId,addCollId);
 			meleteResource.setResourceId(newResourceId);
 			sectionDB.insertMeleteResource((Section)section, (MeleteResource)meleteResource);
