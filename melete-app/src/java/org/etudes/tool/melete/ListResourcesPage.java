@@ -325,29 +325,31 @@ public class ListResourcesPage {
 							return null;
 					}
 					Iterator<ContentResource> allmembers_iter = allmembers.iterator();
-					String serverUrl = serverConfigurationService.getServerUrl();
+					String serverUrl = ServerConfigurationService.getServerUrl();
 					while(allmembers_iter != null && allmembers_iter.hasNext())
 					{
 						ContentResource cr = allmembers_iter.next();
 						String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
-//									 duplicate listing
 						if (displayName.length() > 50) displayName = displayName.substring(0,50) + "...";
 						String rUrl = cr.getUrl().replaceAll(" ", "%20");
+						boolean rType = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LINK);
+						boolean rTypeLTI = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LTI);
 						String rgif=  serverUrl + "/library/image/sakai/url.gif";
-						if(this.fromPage.equals("ContentUploadServerView") || this.fromPage.equals("editContentUploadServerView"))
+						if(!rType && !rTypeLTI)
 						{
-						   String contentextension = cr.getContentType();
-				 		   rgif = ContentTypeImageService.getContentTypeImage(contentextension);
-				 		   if(rgif.startsWith("sakai"))
-				 			  rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
-				 		   else if (rgif.startsWith("/sakai"))
-				 			  rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));
+						String contentextension = cr.getContentType();
+				 		rgif = ContentTypeImageService.getContentTypeImage(contentextension);
+				 		logger.debug("image provided for" + displayName +" is " +rgif);
+				 		if(rgif.startsWith("sakai"))
+				 			rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
+				 		else if (rgif.startsWith("/sakai"))
+				 			rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));
 						}
-						if(this.fromPage.equals("ContentLTIServerView") || this.fromPage.equals("editContentLTIServerView"))
+						else if(rTypeLTI)
 						{
-							rgif=  "images/web_service.png";
+							rgif = "images/web_service.png";
 						}
-						currSiteResourcesList.add(new DisplaySecResources(displayName, cr.getId(),rUrl, rgif));
+						currSiteResourcesList.add(new DisplaySecResources(displayName, cr.getId(),rUrl,rType,rgif,rTypeLTI));
 					}
 					java.util.Collections.sort(currSiteResourcesList);
 					getListNav().setTotalSize(currSiteResourcesList.size()+1);
@@ -514,89 +516,116 @@ public class ListResourcesPage {
 		 * inner class to set required content resource values for display
 		 *
 		 */
-		public class DisplaySecResources implements Comparable<DisplaySecResources>
-		{
-			String resource_title;
-			String resource_id;
-			String resource_url;
-			String resource_gif;
+	    public class DisplaySecResources implements Comparable<DisplaySecResources>
+	    {
+	    	String resource_title;
+	    	String resource_id;
+	    	String resource_url;
+	    	boolean typeLink;
+	    	String resource_gif;
+	    	boolean typeLTI;
 
-			public DisplaySecResources(String resource_title,String resource_id, String resource_url)
-			{
-				this.resource_title = resource_title;
-				this.resource_id = resource_id;
-				this.resource_url = resource_url;
-				this.resource_gif = "";
-			}
+	    	public boolean isTypeLTI() {
+	    		return typeLTI;
+	    	}
+	    	public void setTypeLTI(boolean typeLTI) {
+	    		this.typeLTI = typeLTI;
+	    	}
+	    	public DisplaySecResources(String resource_title,String resource_id, String resource_url, boolean isTypeLink,String resource_gif,boolean typeLTI)
+	    	{
+	    		this.resource_title = resource_title;
+	    		this.resource_id = resource_id;
+	    		this.resource_url = resource_url;
+	    		this.typeLink = isTypeLink;
+	    		this.resource_gif = resource_gif;
+	    		this.typeLTI = typeLTI;
+	    	}
+	    	/**
+	    	 * @return Returns the resource_id.
+	    	 */
+	    	public String getResource_id() {
+	    		return resource_id;
+	    	}
+	    	/**
+	    	 * @param resource_id The resource_id to set.
+	    	 */
+	    	public void setResource_id(String resource_id) {
+	    		this.resource_id = resource_id;
+	    	}
+	    	/**
+	    	 * @return Returns the resource_title.
+	    	 */
+	    	public String getResource_title() {
+	    		return resource_title;
+	    	}
+	    	/**
+	    	 * @param resource_title The resource_title to set.
+	    	 */
+	    	public void setResource_title(String resource_title) {
+	    		this.resource_title = resource_title;
+	    	}
+	    	/**
+	    	 * @return Returns the resource_url.
+	    	 */
+	    	public String getResource_url() {
+	    		return resource_url;
+	    	}
+	    	/**
+	    	 * @param resource_url The resource_url to set.
+	    	 */
+	    	public void setResource_url(String resource_url) {
+	    		this.resource_url = resource_url;
+	    	}
+	    	/**
+	    	 * @return the isTypeLink
+	    	 */
+	    	public boolean isTypeLink()
+	    	{
+	    		return this.typeLink;
+	    	}
+	    	/**
+	    	 * @param isTypeLink the isTypeLink to set
+	    	 */
+	    	public void setTypeLink(boolean isTypeLink)
+	    	{
+	    		this.typeLink = isTypeLink;
+	    	}
 
-			public DisplaySecResources(String resource_title,String resource_id, String resource_url, String resource_gif)
-			{
-				this.resource_title = resource_title;
-				this.resource_id = resource_id;
-				this.resource_url = resource_url;
-				this.resource_gif = resource_gif;
-			}
-			/**
-			 * @return Returns the resource_id.
-			 */
-			public String getResource_id() {
-				return resource_id;
-			}
-			/**
-			 * @param resource_id The resource_id to set.
-			 */
-			public void setResource_id(String resource_id) {
-				this.resource_id = resource_id;
-			}
-			/**
-			 * @return Returns the resource_title.
-			 */
-			public String getResource_title() {
-				return resource_title;
-			}
-			/**
-			 * @param resource_title The resource_title to set.
-			 */
-			public void setResource_title(String resource_title) {
-				this.resource_title = resource_title;
-			}
-			/**
-			 * @return Returns the resource_url.
-			 */
-			public String getResource_url() {
-				return resource_url;
-			}
-			/**
-			 * @param resource_url The resource_url to set.
-			 */
-			public void setResource_url(String resource_url) {
-				this.resource_url = resource_url;
-			}
+	    	public String toString()
+	    	{
+	    		return resource_title;
+	    	}
+	    	public int compareTo(DisplaySecResources n) {
+	    		int res = 0;
+	    		if(this.typeLTI) res = 1;
+	    		// both are link or upload than equal
+	    		if(this.typeLink == n.isTypeLink() && this.typeLTI == n.isTypeLTI())
+	    			res= this.resource_title.compareToIgnoreCase(n.getResource_title());
+	    		
+	    		// this is link and n is upload
+	    		if(this.typeLink && (!n.isTypeLink() || n.isTypeLTI())) res = -1;
 
-			public int compareTo(DisplaySecResources n) {
-				int res = resource_title.compareToIgnoreCase(n.getResource_title());
-				return res;
-			}
-
-			public String toString() {
-				return resource_title;
-			}
-
-			/**
-			 * @return the resource_gif
-			 */
-			public String getResource_gif()
-			{
-				return this.resource_gif;
-			}
-
-			/**
-			 * @param resource_gif the resource_gif to set
-			 */
-			public void setResource_gif(String resource_gif)
-			{
-				this.resource_gif = resource_gif;
-			}
-		}
+	    		// this is upload and n is link
+	    		if(!this.typeLink && n.isTypeLink()) res = 1;
+	    		
+	    		if(!this.typeLink && n.isTypeLTI()) res = -1;
+	    				
+	    		return res;
+	    	}
+	    	/**
+	    	 * @return the resource_gif
+	    	 */
+	    	public String getResource_gif()
+	    	{
+	    		return this.resource_gif;
+	    	}
+	    	/**
+	    	 * @param resource_gif the resource_gif to set
+	    	 */
+	    	public void setResource_gif(String resource_gif)
+	    	{
+	    		this.resource_gif = resource_gif;
+	    	}
+	    }
 
 }

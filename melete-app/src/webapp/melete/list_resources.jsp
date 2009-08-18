@@ -89,10 +89,10 @@
 						 </f:facet>
 					 <h:outputText id="emp_space" value="     "  styleClass="ExtraPaddingClass" rendered="#{curr_resources.resource_id != listResourcesPage.selResourceIdFromList}"/>	
 					 <h:graphicImage id="check_gif" alt="#{msgs.list_resources_check}" value="images/checkon.gif" rendered="#{curr_resources.resource_id == listResourcesPage.selResourceIdFromList}"/>
-					 <h:graphicImage id="contenttype_gif" alt="#{msgs.list_resources_content_url}" title="#{msgs.list_resources_content_url}" value="images/url.gif" styleClass="ExpClass" rendered="#{listResourcesPage.shouldRenderLink}"/>
-					 <h:graphicImage id="contenttype_gifLTI" alt="#{msgs.edit_list_resources_content_url}" title="#{msgs.edit_list_resources_content_url}" value="images/web_service.png" styleClass="ExpClass" rendered="#{listResourcesPage.shouldRenderLTI}"/>
+					 <h:graphicImage id="contenttype_gif" alt="#{msgs.list_resources_content_url}" title="#{msgs.list_resources_content_url}" value="images/url.gif" styleClass="ExpClass" rendered="#{curr_resources.typeLink}"/>
+					 <h:graphicImage id="contenttype_gifLTI" alt="#{msgs.edit_list_resources_content_url}" title="#{msgs.edit_list_resources_content_url}" value="images/web_service.png" styleClass="ExpClass" rendered="#{curr_resources.typeLTI}"/>
 					<h:graphicImage id="contenttype_gif1" alt="#{msgs.edit_list_resources_content_upload}" 
-						title="#{msgs.edit_list_resources_content_upload}" value="#{curr_resources.resource_gif}" styleClass="ExpClass" rendered="#{editSectionPage.shouldRenderUpload}"/>
+						title="#{msgs.edit_list_resources_content_upload}" value="#{curr_resources.resource_gif}" styleClass="ExpClass" rendered="#{(!curr_resources.typeLink && !curr_resources.typeLTI)}"/>
 							<h:outputText id="emp_spacebefore" value="       "  styleClass="ExtraPaddingClass"/>
 							<h:outputLink id="showResourceLink" value="#{curr_resources.resource_url}" target="_blank" title="Section Resource" styleClass="a1">
 								  <h:outputText value="#{curr_resources.resource_title}" />
