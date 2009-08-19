@@ -453,8 +453,11 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		}
 		catch(Exception e)
 		{
-			fileResourceName = meleteUtil.escapeFileforExportPackage(fileResourceName);
+			// do nothing
 		}
+		//for chars like [] which decode passes but is converted for xml parser 
+		fileResourceName = meleteUtil.escapeFileforExportPackage(fileResourceName);
+	
 		// to look for exact filename ex:- menu.jpg and applemenu.jpg. menu.jpg search shouldnot pick applemenu.jpg
 		if(fileResourceName.indexOf("/") == -1)	fileResourceName = "/" + fileResourceName;
 
@@ -514,7 +517,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 						imgActualPath = getFileNamefromElement(resElements,imgSrcPath);
 
 						if(imgActualPath == null || imgActualPath.length() == 0)
-						{
+						{						
 							imgindex = -1;
 							startSrc=0; endSrc = 0;
 							continue;

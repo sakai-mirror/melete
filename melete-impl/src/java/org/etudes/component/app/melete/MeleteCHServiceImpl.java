@@ -143,10 +143,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				  inputStr = inputStr.replace(groupCollectionRef ,"/site");
 				  ref1 = org.sakaiproject.entity.cover.EntityManager.newReference(inputStr);
 				  courseId = ref1.getContainer();
-			  }			
+			  }
 		  }
 	  }
-	
+
 	  return courseId;
 
    }
@@ -346,7 +346,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		catch (IdUnusedException ex)
 		{
 	 		logger.debug("This collection does not exist "+collId);
-		}	
+		}
 		catch (Exception e)
 		{
 			logger.error(e.toString());
@@ -393,7 +393,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		catch (IdUnusedException ex)
 		{
 	 		logger.debug("This collection does not exist "+collId);
-		}	
+		}
 		catch(Exception e)
 		{
 			logger.error(e.toString());
@@ -442,7 +442,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 			catch (IdUnusedException ex)
 			{
 		 		logger.debug("This collection does not exist "+collId);
-			}	
+			}
 			catch(Exception e)
 			{
 				logger.error(e.toString());
@@ -490,7 +490,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		catch (IdUnusedException ex)
 		{
 	 		logger.debug("This collection does not exist "+collId);
-		}	
+		}
 		catch(Exception e)
 		{
 			logger.error(e.toString());
@@ -535,7 +535,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 			catch (IdUnusedException ex)
 			{
 		 		logger.debug("This collection does not exist "+collId);
-			}	
+			}
 			catch(Exception e)
 			{
 				logger.error(e.toString());
@@ -568,7 +568,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		 	catch (IdUnusedException ex)
 			{
 		 		logger.debug("This collection does not exist "+collId);
-			}	
+			}
 		 	catch(Exception e)
 			{
 				logger.error(e.toString());
@@ -677,17 +677,21 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	 public String addResourceItem(String name, String res_mime_type,String addCollId, byte[] secContentData, ResourcePropertiesEdit res ) throws Exception
 	{
 		 ContentResource resource = null;
+		// Variable displayName is to preserve the user provided name
+		 String displayName = name;
 		 try
 		 {
-			 name = URLDecoder.decode(name,"UTF-8");
+			 displayName = URLDecoder.decode(displayName,"UTF-8");
 		 }
 		 catch(Exception e)
 		 {
 			 // if decode fails then use name as is
-			 name = Validator.escapeResourceName(name);
+			 // comment line below otherwise on uploading bad file name again through Manage display name changes to cat_-1.gif instead of cat%-1.gif
+			 // and is moved out for name variable for creating resource url
+			// name = Validator.escapeResourceName(name);
 		 }
 		 String courseId = getCourseId(addCollId);
-		 if (logger.isDebugEnabled()) logger.debug("IN addResourceItem "+name+" addCollId "+addCollId);
+		 if (logger.isDebugEnabled()) logger.debug("IN addResourceItem "+displayName+" addCollId "+addCollId);
 		// need to add notify logic here and set the arg6 accordingly.
 		try
  	    {
@@ -700,6 +704,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
          meleteSecurityService.pushAdvisor();
          try
 			{
+        	    // name is escaped to create resource url
+        	    if(res_mime_type != MIME_TYPE_LINK)
+        	    	name = Validator.escapeResourceName(displayName);
 				String finalName = addCollId + name;
 				if (finalName.length() > getContentservice().MAXIMUM_RESOURCE_ID_LENGTH)
 				{
@@ -711,15 +718,15 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				// check if its duplicate file and edit the resource name if it is
 				String checkDup = resource.getUrl().substring(resource.getUrl().lastIndexOf("/") + 1);
 				String numberStr = null;
-				if ((addCollId.endsWith("uploads/")&&(!checkDup.equals(Validator.escapeResourceName(name)))))
-				{	
+				if (addCollId.endsWith("uploads/")&&(!checkDup.equals(Validator.escapeResourceName(name))))
+				{
 				   int lastDashIndex = checkDup.lastIndexOf("-");
-				   int lastDotIndex = checkDup.lastIndexOf(".");	
+				   int lastDotIndex = checkDup.lastIndexOf(".");
 				   if ((lastDashIndex != -1)&&(lastDotIndex != -1))
-				   {	  
+				   {
 				      numberStr = checkDup.substring(lastDashIndex, lastDotIndex);
 				      checkDup = checkDup.substring(0,lastDotIndex);
-				   }  
+				   }
 				}
 				ContentResourceEdit edit = null;
 				try
@@ -730,8 +737,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 						ResourcePropertiesEdit rp = edit.getPropertiesEdit();
 						String desc = rp.getProperty(ResourceProperties.PROP_DESCRIPTION);
 						rp.clear();
-						name = createDuplicateName(name,numberStr);
-						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, name);
+						displayName = createDuplicateName(displayName,numberStr);
+						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, displayName);
 						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
 						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 						getContentservice().commitResource(edit);
@@ -796,7 +803,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		}
 	     return resource.getId();
 	}
-		 
+
 	/*
 	 *  create a new display name with -1, -2 etc for duplicate resources
 	 */
@@ -811,10 +818,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 			base = name.substring(0, index);
 			ext = name.substring(index);
 		}
-		dupName = base+numberStr+ext;	 	
+		dupName = base+numberStr+ext;
 		return dupName;
-	}		 
-	 
+	}
+
 	 public String getDisplayName(String resourceId)
 		{
 			try
@@ -881,7 +888,14 @@ public class MeleteCHServiceImpl implements MeleteCHService {
    			//          setup a security advisor
         		meleteSecurityService.pushAdvisor();
         		// absolute reqd otherwise import from site creates desert Landscape.jpg and desert%20Landscape-1.jpg
-        		resourceId = URLDecoder.decode(resourceId,"UTF-8");
+
+        		try
+				{
+					resourceId = URLDecoder.decode(resourceId,"UTF-8");
+				} catch(Exception decodeEx)
+				{
+					logger.debug("get resource fails while decoding " + resourceId);
+        		}
         		return (getContentservice().getResource(resourceId));
 	    }
 		catch(Exception e)
