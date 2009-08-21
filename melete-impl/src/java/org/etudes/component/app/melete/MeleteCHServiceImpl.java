@@ -651,7 +651,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		}
    			//          setup a security advisor
         		meleteSecurityService.pushAdvisor();
-        		selResourceIdFromList = URLDecoder.decode(selResourceIdFromList,"UTF-8");
+        		try
+        		{
+        			selResourceIdFromList = URLDecoder.decode(selResourceIdFromList,"UTF-8");
+        		}catch(Exception decodex){}
         		edit = getContentservice().editResource(selResourceIdFromList);
 				ResourcePropertiesEdit rp = edit.getPropertiesEdit();
 				rp.clear();
@@ -969,7 +972,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		meleteSecurityService.pushAdvisor();
         		if (resourceId != null)
         		{
-        		  resourceId = URLDecoder.decode(resourceId,"UTF-8");
+        		  try
+        		  {
+        			  resourceId = URLDecoder.decode(resourceId,"UTF-8");
+        		  }catch(Exception decodex){}
         		  edit = getContentservice().editResource(resourceId);
         		  edit.setContent(contentEditor.getBytes());
         		  edit.setContentLength(contentEditor.length());
@@ -1224,7 +1230,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
     			if(fileName.startsWith("/access/meleteDocs/content"))
     			{
     			fileName = fileName.replace("/access/meleteDocs/content", "");
-    			fileName = URLDecoder.decode(fileName,"UTF-8");
+    			try
+    			{
+    				fileName = URLDecoder.decode(fileName,"UTF-8");
+    			}catch(Exception decodex){}
     			secEmbedData.add(fileName);
     			}
     			// iterate next
