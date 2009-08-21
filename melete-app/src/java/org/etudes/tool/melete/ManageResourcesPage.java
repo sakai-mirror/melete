@@ -194,7 +194,8 @@ public List<DisplayResources> getAllResourcesList()
 				ContentResource cr = allmembers_iter.next();
 				String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 				if (displayName.length() > 50) displayName = displayName.substring(0,50) + "...";
-				String rUrl = cr.getUrl().replaceAll(" ", "%20");
+			//	String rUrl = cr.getUrl().replaceAll(" ", "%20");
+				String rUrl = getMeleteCHService().getResourceUrl(cr.getId());
 				boolean rType = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LINK);			
 				boolean rTypeLTI = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LTI);	
 				String rgif=  serverUrl + "/library/image/sakai/url.gif";

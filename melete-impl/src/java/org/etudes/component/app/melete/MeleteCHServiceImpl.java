@@ -923,7 +923,13 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		}
    			//          setup a security advisor
         		meleteSecurityService.pushAdvisor();
-        		resourceId = URLDecoder.decode(resourceId,"UTF-8");
+        		try
+				{
+					resourceId = URLDecoder.decode(resourceId,"UTF-8");
+				} catch(Exception decodeEx)
+				{
+					logger.debug("get resource fails while decoding " + resourceId);
+        		}
         		getContentservice().checkResource(resourceId);
         	//  for manage items which are just in CH and NOT in Melete Resource then insert them
         		sectiondb.getMeleteResource(resourceId);
@@ -1242,7 +1248,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    	try
      	    {
      	      	meleteSecurityService.pushAdvisor();
-     	      	newResourceId = URLDecoder.decode(newResourceId,"UTF-8");
+     	      	try
+     	      	{
+     	      		newResourceId = URLDecoder.decode(newResourceId,"UTF-8");
+     	      	}catch(Exception decodex){}
      	      	return getContentservice().getUrl(newResourceId);
              }
        catch (Exception e)

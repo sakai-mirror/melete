@@ -1144,7 +1144,8 @@ public abstract class SectionPage implements Serializable {
 				String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 //							 duplicate listing
 				if (displayName.length() > 50) displayName = displayName.substring(0,50) + "...";
-				String rUrl = cr.getUrl().replaceAll(" ", "%20");
+			//	String rUrl = cr.getUrl().replaceAll(" ", "%20");
+				String rUrl = getMeleteCHService().getResourceUrl(cr.getId());
 				String rgif=  serverUrl + "/library/image/sakai/url.gif";
 				if(section.getContentType().equals("typeUpload"))
 				{
