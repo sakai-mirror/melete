@@ -352,8 +352,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 		try{
 			if(resourceId != null)
 	    	{
-			resourceId = URLDecoder.decode(resourceId,"UTF-8");
-	       	ContentResource cr = getMeleteCHService().getResource(resourceId);
+		   	ContentResource cr = getMeleteCHService().getResource(resourceId);
 	       	if(cr == null)return null;
 
 	       	data.add(cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));

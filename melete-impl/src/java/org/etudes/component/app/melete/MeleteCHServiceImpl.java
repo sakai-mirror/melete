@@ -627,7 +627,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		}
    			//          setup a security advisor
         		meleteSecurityService.pushAdvisor();
-        		selResourceIdFromList = URLDecoder.decode(selResourceIdFromList,"UTF-8");
+        		try
+        		{
+        			selResourceIdFromList = URLDecoder.decode(selResourceIdFromList,"UTF-8");
+        		}catch(Exception decodex){}
         		edit = getContentservice().editResource(selResourceIdFromList);
 				ResourcePropertiesEdit rp = edit.getPropertiesEdit();
 				rp.clear();
@@ -650,21 +653,27 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		return;
 	}
 
+	 /*
+	  * Inserts item using Content hosting apis.
+	  */
 	 public String addResourceItem(String name, String res_mime_type,String addCollId, byte[] secContentData, ResourcePropertiesEdit res ) throws Exception
 	{
 		 ContentResource resource = null;
+		// Variable displayName is to preserve the user provided name 
+		 String displayName = name;
 		 try
 		 {
-			 name = URLDecoder.decode(name,"UTF-8");
+			 displayName = URLDecoder.decode(displayName,"UTF-8");
 		 }
 		 catch(Exception e)
 		 {
 			 // if decode fails then use name as is
 			 // comment line below otherwise on uploading bad file name again through Manage display name changes to cat_-1.gif instead of cat%-1.gif 
+			 // and is moved out for name variable for creating resource url
 			// name = Validator.escapeResourceName(name);
 		 }
 		 String courseId = getCourseId(addCollId);
-		 if (logger.isDebugEnabled()) logger.debug("IN addResourceItem "+name+" addCollId "+addCollId);
+		 if (logger.isDebugEnabled()) logger.debug("IN addResourceItem "+displayName+" addCollId "+addCollId);
 		// need to add notify logic here and set the arg6 accordingly.
 		try
  	    {
@@ -677,6 +686,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
          meleteSecurityService.pushAdvisor();
          try
 			{
+        	    // name is escaped to create resource url
+        	    if(res_mime_type != MIME_TYPE_LINK)
+        	    	name = Validator.escapeResourceName(displayName);
 				String finalName = addCollId + name;
 				if (finalName.length() > getContentservice().MAXIMUM_RESOURCE_ID_LENGTH)
 				{
@@ -688,7 +700,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				// check if its duplicate file and edit the resource name if it is
 				String checkDup = resource.getUrl().substring(resource.getUrl().lastIndexOf("/") + 1);
 				String numberStr = null;
-				if ((addCollId.endsWith("uploads/")&&(!checkDup.equals(Validator.escapeResourceName(name)))))
+				if (addCollId.endsWith("uploads/")&&(!checkDup.equals(Validator.escapeResourceName(name))))
 				{	
 				   int lastDashIndex = checkDup.lastIndexOf("-");
 				   int lastDotIndex = checkDup.lastIndexOf(".");	
@@ -707,8 +719,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 						ResourcePropertiesEdit rp = edit.getPropertiesEdit();
 						String desc = rp.getProperty(ResourceProperties.PROP_DESCRIPTION);
 						rp.clear();
-						name = createDuplicateName(name,numberStr);
-						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, name);
+						displayName = createDuplicateName(displayName,numberStr);
+						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, displayName);
 						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
 						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 						getContentservice().commitResource(edit);
@@ -858,7 +870,14 @@ public class MeleteCHServiceImpl implements MeleteCHService {
    			//          setup a security advisor
         		meleteSecurityService.pushAdvisor();
         		// absolute reqd otherwise import from site creates desert Landscape.jpg and desert%20Landscape-1.jpg
+        		try
+        		{
         		resourceId = URLDecoder.decode(resourceId,"UTF-8");
+        		} catch(Exception decodeEx)
+        		{
+        			logger.debug("get resource fails while decoding " + resourceId);
+        		}
+        		
         		return (getContentservice().getResource(resourceId));
 	    }
 		catch(Exception e)
@@ -886,7 +905,13 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		}
    			//          setup a security advisor
         		meleteSecurityService.pushAdvisor();
-        		resourceId = URLDecoder.decode(resourceId,"UTF-8");
+        		try
+				{
+        			resourceId = URLDecoder.decode(resourceId,"UTF-8");
+				} catch(Exception decodeEx)
+				{
+					logger.debug("get resource fails while decoding " + resourceId);
+        		}
         		getContentservice().checkResource(resourceId);
         	//  for manage items which are just in CH and NOT in Melete Resource then insert them
         		sectiondb.getMeleteResource(resourceId);
@@ -926,7 +951,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		meleteSecurityService.pushAdvisor();
         		if (resourceId != null)
         		{
-        		  resourceId = URLDecoder.decode(resourceId,"UTF-8");
+    			  try
+        		  {
+        			 resourceId = URLDecoder.decode(resourceId,"UTF-8");
+        		  }catch(Exception decodex){}
         		  edit = getContentservice().editResource(resourceId);
         		  edit.setContent(contentEditor.getBytes());
         		  edit.setContentLength(contentEditor.length());
@@ -1182,7 +1210,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
     			if(fileName.startsWith("/access/meleteDocs/content"))
     			{
     			fileName = fileName.replace("/access/meleteDocs/content", "");
-    			fileName = URLDecoder.decode(fileName,"UTF-8");
+    			try
+    			{
+    				fileName = URLDecoder.decode(fileName,"UTF-8");
+    			}catch(Exception decodex){}
     			secEmbedData.add(fileName);
     			}
     			// iterate next
@@ -1206,7 +1237,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    	try
      	    {
      	      	meleteSecurityService.pushAdvisor();
-     	      	newResourceId = URLDecoder.decode(newResourceId,"UTF-8");
+     	      	try
+     	      	{
+     	      		newResourceId = URLDecoder.decode(newResourceId,"UTF-8");
+     	      	}catch(Exception decodex){}
      	      	return getContentservice().getUrl(newResourceId);
              }
        catch (Exception e)

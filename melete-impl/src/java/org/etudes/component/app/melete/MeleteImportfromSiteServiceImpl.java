@@ -121,7 +121,6 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			melResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 
 			// check if the item has already been imported to this site (in uploads collection)
-			addToThreadList(melResourceName, "MELETE_importResources");
 			String checkResourceId = null;
 			checkResourceId = "/private/meleteDocs/"+toSiteId+"/uploads/"+ Validator.escapeResourceName(melResourceName);
 			getMeleteCHService().checkResource(checkResourceId);
@@ -169,7 +168,6 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				return rdata.get(1);				
 			}
 
-			addToThreadList(melResourceName, "MELETE_addedNowResource");	
 			return newResourceId;
 		} // catch end
 	}
@@ -207,7 +205,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				String fileResourceName = cr1.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false,fileResourceName,cr1.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION));
 				firstReferId = getMeleteCHService().addResourceItem(fileResourceName, cr1.getContentType(),uploadCollId,cr1.getContent(),res );
-				addToThreadList(fileResourceName, "MELETE_addedNowResource");
+		
 				checkResource.add("new");
 				checkResource.add(firstReferId);
 			}
@@ -226,7 +224,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		String parentStr = meleteUtil.findParentReference(cr1.getId());
 		ArrayList content = createHTMLFile(contentEditor,toSiteId,new HashSet<String>() ,parentStr);
 		contentEditor = (String)content.get(0);
-		addToThreadList(fileResourceName, "MELETE_addedNowResource");
+	
 		ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true,fileResourceName,cr1.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION));
 		return getMeleteCHService().addResourceItem(fileResourceName, cr1.getContentType(),uploadCollId,contentEditor.getBytes(),res );
 	}
@@ -293,8 +291,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				imgActualPath = r.get(0);
 
 				String importResName = imgActualPath.substring(imgActualPath.lastIndexOf('/')+1);
-				addToThreadList(URLDecoder.decode(importResName,"UTF-8"), "MELETE_importResources");
-
+		
 				if(imgActualPath.endsWith(".htm") || imgActualPath.endsWith(".html"))
 				{
 					// if not processed yet then add to the set
@@ -327,7 +324,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 							addResource(filename, moreContentData.getBytes(), courseId);
 						}
 						catch(Exception e){
-							//logger.debug("error adding a resource on import from site");
+							logger.debug("error adding a resource on import from site" + e.toString());
 						}
 					}
 				}
@@ -370,11 +367,13 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 					{						
 						return addResource(filename, embedResource.getContent(), courseId);
 					}
-					catch (Exception ex1){}
+					catch (Exception ex1){
+						logger.debug("error adding embedded resource on import from site"+ ex1.toString());
+					}
 				}
 				catch(Exception e)
 				{
-					logger.debug("error adding a resource on import from site");
+					logger.debug("error adding a resource on import from site"+e.toString());
 				}
 			}
 		} catch(Exception getResourceEx)

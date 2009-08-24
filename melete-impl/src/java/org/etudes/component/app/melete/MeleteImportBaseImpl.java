@@ -109,7 +109,6 @@ abstract public class MeleteImportBaseImpl {
 	*/
 	protected String addResource(String filename, byte[] melContentData, String courseId) throws Exception
 	{
-		addToThreadList(URLDecoder.decode(filename,"UTF-8"), "MELETE_addedNowResource");
 		String uploadCollId = getMeleteCHService().getUploadCollectionId(courseId);
 		String res_mime_type = filename.substring(filename.lastIndexOf(".")+1);
 		res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
@@ -123,20 +122,6 @@ abstract public class MeleteImportBaseImpl {
 		meleteResource.setLicenseCode(0);
 		sectionDB.insertResource(meleteResource);
 		return getMeleteCHService().getResourceUrl(newResourceId);
-	}
-
-   /**
-	* Record files added and skipped during import from site process
-	*/
-	protected void addToThreadList(String name, String key)
-	{
-		if(name == null || key == null) return;
-		Set<String> updateList = (Set)threadLocalManager.get(key);
-		if(updateList != null)
-		{
-			updateList.add(name);
-			threadLocalManager.set(key,updateList);
-		}
 	}
 
    /**
