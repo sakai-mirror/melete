@@ -312,12 +312,14 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 						String moreContentData = new String(embedResource.getContent());
 						String parentStr = meleteUtil.findParentReference(imgActualPath);
 						String filename = imgActualPath.substring( imgActualPath.lastIndexOf('/') + 1);
+						String res_id = embedResource.getId();
+						res_id = res_id.substring(res_id.lastIndexOf('/')+1);
 						ArrayList contentData = createHTMLFile(moreContentData,courseId,checkEmbedHTMLResources,parentStr);
 						moreContentData = (String)contentData.get(0);
 						checkEmbedHTMLResources = (Set<String>)contentData.get(1);
 						try
 						{
-							String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+filename;
+							String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+Validator.escapeResourceName(res_id);
 							getMeleteCHService().checkResource(checkResourceId);
 						}catch (IdUnusedException ex)
 						{
@@ -354,10 +356,11 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			if(embedResource != null && embedResource.getContentLength() > 0)
 			{			
 				String filename = embedResource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
-				String checkname = imgActualPath.substring( imgActualPath.lastIndexOf('/') + 1);
+				String res_id = embedResource.getId();
+				res_id = res_id.substring(res_id.lastIndexOf('/')+1);				
 				try
-				{
-					String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+checkname;
+				{					
+					String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+Validator.escapeResourceName(res_id);
 					getMeleteCHService().checkResource(checkResourceId);
 					//			 	found it so return it
 					return getMeleteCHService().getResourceUrl(checkResourceId);
