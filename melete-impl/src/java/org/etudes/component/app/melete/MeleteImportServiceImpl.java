@@ -224,7 +224,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			Element element = (Element) iter.next();
 			// for next steps file don't bring in as unreferrrenced material
 			if (element.attributeValue("identifier").startsWith("NEXTSTEPS")) continue;
-		
+
 			Attribute resHrefAttr = element.attribute("href");
 
 			if (resHrefAttr != null)
@@ -445,7 +445,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	private String getFileNamefromElement(List resElements, String fileResourceName) throws Exception
 	{
 		String actualFileLocation = null;
-		//NOTE:this decoder is reqd. It helps in reading the right file.ex:-href says student%24guide.pdf and the file is 
+		//NOTE:this decoder is reqd. It helps in reading the right file.ex:-href says student%24guide.pdf and the file is
 		// under resources as student$guide.pdf
 		try
 		{
@@ -455,9 +455,9 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		{
 			// do nothing
 		}
-		//for chars like [] which decode passes but is converted for xml parser 
+		//for chars like [] which decode passes but is converted for xml parser
 		fileResourceName = meleteUtil.escapeFileforExportPackage(fileResourceName);
-	
+
 		// to look for exact filename ex:- menu.jpg and applemenu.jpg. menu.jpg search shouldnot pick applemenu.jpg
 		if(fileResourceName.indexOf("/") == -1)	fileResourceName = "/" + fileResourceName;
 
@@ -503,6 +503,11 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			if (endSrc <= 0) break;
 
 			imgSrcPath = checkforimgs.substring(startSrc, endSrc);
+			if (imgSrcPath == null || imgSrcPath.length() == 0)
+			{
+				checkforimgs = checkforimgs.substring(endSrc);
+				continue;
+		    }
 
 			// changed on 10/16/06 - add https condition too
 			if (resElements != null)
@@ -607,8 +612,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			// do nothing
 		}
 		return "";
-	}	
-	
+	}
+
    /*
 	* If item tag for module is missing then add it. used for moodle packages
 	*/
