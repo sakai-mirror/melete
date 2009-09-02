@@ -147,7 +147,10 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 	// insert new module
 		moduledb.addModule(module1, moduleshdates1, userId, courseId);
 		
-		moduledb.updateCalendar(module1, moduleshdates1, courseId);	
+		if (moduleshdates1.getAddtoSchedule().booleanValue() == true)
+		{	
+		  moduledb.updateCalendar(module1, moduleshdates1, courseId);
+		}  
 
 	}
 
