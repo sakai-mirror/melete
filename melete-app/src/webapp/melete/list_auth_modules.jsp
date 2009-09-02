@@ -276,11 +276,8 @@ if (msg != null)
             </h:inputText>
           
                            
-            <f:facet name="footer">
-              <h:commandLink id="saveChanges" action="#{listAuthModulesPage.saveChanges}"  rendered="#{listAuthModulesPage.nomodsFlag == false}">
-                 <h:graphicImage id="save" value="#{msgs.im_save_over}" styleClass="CmdImgClass"/>
-               
-              </h:commandLink>                 
+            <f:facet name="footer">              
+              <h:commandButton id="saveChanges" action="#{listAuthModulesPage.saveChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_save}" tabindex="" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSpace"/>            
             </f:facet>
          </h:column>
          <h:column>
@@ -302,10 +299,7 @@ if (msg != null)
                <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
             </h:inputText>
             <f:facet name="footer">
-            <h:commandLink id="cancelChanges" action="#{listAuthModulesPage.cancelChanges}" immediate="true" rendered="#{listAuthModulesPage.nomodsFlag == false}">
-                <h:graphicImage id="cancel" value="#{msgs.im_cancel_over}" styleClass="CmdImgClass"/>
-           
-              </h:commandLink>                      
+              <h:commandButton id="cancelChanges" immediate="true" action="#{listAuthModulesPage.cancelChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_cancel}" tabindex="10" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>                     
             </f:facet>           
          </h:column>
          <h:column>

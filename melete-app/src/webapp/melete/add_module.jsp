@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -196,7 +196,7 @@ function showEdateCal()
               <tr>
                 <td width="233">&nbsp;</td>
                 <td width="472" valign="top">
-                 <h:selectBooleanCheckbox id="addtoschedule" title="addtoSchedule" value="#{addModulePage.moduleShdates.addtoSchedule}" >
+                 <h:selectBooleanCheckbox id="addtoschedule" title="addtoSchedule" value="#{addModulePage.moduleShdates.addtoSchedule}" tabindex="8">
 		         </h:selectBooleanCheckbox>
 		         <h:outputText id="addtoScheduleTxt" value="#{msgs.add_module_schedule}" />
                 </td>
@@ -208,24 +208,10 @@ function showEdateCal()
   <tr>
           <td height="20" align="center" colspan="2">
           <div align="center">
-          		<h:commandLink id="submitsave"  action="#{addModulePage.save}"  tabindex="10">
-					<h:graphicImage id="addImg" value="#{msgs.im_add_button}" styleClass="BottomImgSpace" 
-						onmouseover="this.src = '#{msgs.im_add_button_over}'" 
-						onmouseout="this.src = '#{msgs.im_add_button}'" 
-						onmousedown="this.src = '#{msgs.im_add_button_down}'" 
-						onmouseup="this.src = '#{msgs.im_add_button_over}'"/>
+          	<h:commandButton action="#{addModulePage.save}" value="#{msgs.im_add_button}" tabindex="9" accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgSpace"/>
 						
-                </h:commandLink>
-				
-				
-				<h:commandLink id="cancelButton" immediate="true" action="#{addModulePage.cancel}"  tabindex="11">
-					<h:graphicImage id="cancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace"
-						onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-						onmouseout="this.src = '#{msgs.im_cancel}'" 
-						onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-                </h:commandLink>
-                </div>
+			<h:commandButton id="cancelButton" immediate="true" action="#{addModulePage.cancel}" value="#{msgs.im_cancel}" tabindex="10" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>
+	       </div>
         </td></tr>
 		
 </table>

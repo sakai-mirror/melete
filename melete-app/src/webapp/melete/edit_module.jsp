@@ -216,27 +216,9 @@ function showEdateCal()
   </tr>
      <tr>
           <td height="20" align="center" colspan="2">
-          		<h:commandLink id="submitsave"  action="#{editModulePage.save}">
-					<h:graphicImage id="saveImg" value="#{msgs.im_save}" styleClass="BottomImgSpace" 
-						onmouseover="this.src = '#{msgs.im_save_over}'" 
-						onmouseout="this.src = '#{msgs.im_save}'" 
-						onmousedown="this.src = '#{msgs.im_save_down}'" 
-						onmouseup="this.src = '#{msgs.im_save_over}'"/>
-                </h:commandLink>
-				<h:commandLink id="sectionButton"  action="#{editModulePage.addContentSections}">
-					<h:graphicImage id="sectionsImg" value="#{msgs.im_add_content_sections}" styleClass="BottomImgSpace"
-						onmouseover="this.src = '#{msgs.im_add_content_sections_over}'" 
-						onmouseout="this.src = '#{msgs.im_add_content_sections}'" 
-						onmousedown="this.src = '#{msgs.im_add_content_sections_down}'" 
-						onmouseup="this.src = '#{msgs.im_add_content_sections_over}'"/>
-                </h:commandLink>
-				<h:commandLink id="cancelButton" immediate="true" action="#{editModulePage.cancel}">
-					<h:graphicImage id="cancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace"
-						onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-						onmouseout="this.src = '#{msgs.im_cancel}'" 
-						onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-                </h:commandLink>
+          	  <h:commandButton id="submitsave" action="#{editModulePage.save}" value="#{msgs.im_save}" tabindex="" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSpace"/>
+          	  <h:commandButton id="sectionButton" action="#{editModulePage.addContentSections}" value="#{msgs.im_add_content_sections}" tabindex="" accesskey="#{msgs.add_access}" title="#{msgs.im_add_content_sections_text}" styleClass="BottomImgSpace"/>
+          	  <h:commandButton id="cancelButton" action="#{editModulePage.cancel}" immediate="true" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>	
         </td></tr>
     </table></td>
   </tr>

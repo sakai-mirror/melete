@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -76,22 +76,10 @@
 			  					              <tr>
                 <td height="30" >         
                 <div align="center">				
-				<h:commandLink id="sectionButton"  action="#{addModulePage.addContentSections}" rendered="#{addModulePage.success}">
-					<h:graphicImage id="sectionsImg" value="#{msgs.im_add_content_sections}" styleClass="BottomImgSpace"
-						onmouseover="this.src = '#{msgs.im_add_content_sections_over}'" 
-						onmouseout="this.src = '#{msgs.im_add_content_sections}'" 
-						onmousedown="this.src = '#{msgs.im_add_content_sections_down}'" 
-						onmouseup="this.src = '#{msgs.im_add_content_sections_over}'"/>
-                </h:commandLink>
-		
-			<h:commandLink id="returnButton"  action="#{addModulePage.backToModules}" >
-					<h:graphicImage id="returnModImg" value="#{msgs.im_return_to_modules}"  styleClass="BottomImgSpace"
-						onmouseover="this.src = '#{msgs.im_return_to_modules_over}'" 
-						onmouseout="this.src = '#{msgs.im_return_to_modules}'" 
-						onmousedown="this.src = '#{msgs.im_return_to_modules_down}'" 
-	   				  	onmouseup="this.src = '#{msgs.im_return_to_modules_over}'"
-					/>
-                </h:commandLink>
+				<h:commandButton id="sectionButton"  action="#{addModulePage.addContentSections}" rendered="#{addModulePage.success}" value="#{msgs.im_add_content_sections}" tabindex="" accesskey="#{msgs.add_access}" title="#{msgs.im_add_content_sections_text}" styleClass="BottomImgSpace" />
+				
+				<h:commandButton id="returnButton"  action="#{addModulePage.backToModules}" value="#{msgs.im_return_to_modules}" tabindex="" accesskey="#{msgs.return_access}" title="#{msgs.im_return_to_modules_text}" styleClass="BottomImgSpace" />
+			
 			</div></td>
               </tr>
 			 <tr><td  height="20" class="maintabledata5">&nbsp;</td></tr>
