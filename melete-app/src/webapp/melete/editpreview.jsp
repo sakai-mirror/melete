@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -74,23 +74,9 @@
 		      </td></tr>
 	       
 			<tr><td><div align="center">
-			
-					<h:commandLink id="submitsave"  action="#{editSectionPage.save}">
-					<h:graphicImage id="saveImg" value="#{msgs.im_save}" styleClass="BottomImgSpace" onclick="transferEditordata()"
-						onmouseover="this.src = '#{msgs.im_save_over}'" 
-						onmouseout="this.src = '#{msgs.im_save}'" 
-						onmousedown="this.src = '#{msgs.im_save_down}'" 
-						onmouseup="this.src = '#{msgs.im_save_over}'"/>
-                </h:commandLink>			
-		   				
-			<h:commandLink id="cancelButton"  action="#{editSectionPage.cancelFromPreview}"  immediate="true">
-					<h:graphicImage id="cancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
-						onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-						onmouseout="this.src = '#{msgs.im_cancel}'" 
-						onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-                </h:commandLink>
-                 </div></td>
+						<h:commandButton id="submitsave" action="#{editSectionPage.save}" onclick="transferEditordata()" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSpace"/>
+						<h:commandButton id="cancelButton" immediate="true" action="#{editSectionPage.cancelFromPreview}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>	
+		   	        </div></td>
               </tr>
               <tr>
                 <td height="20" bgcolor="#FFFFFF">&nbsp;
@@ -98,23 +84,11 @@
               </tr>
               <tr>
                 <td height="21" bgcolor="#FFFFFF"><div align="center"></div>
-                    <div align="center">   				
-   					<h:commandLink id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}">
-						<h:graphicImage id="saveAddAnotherImg" value="#{msgs.im_add_another_section}" height="19" styleClass="BottomImgSpace" 
-							onmouseover="this.src = '#{msgs.im_add_another_section_over}'" 
-							onmouseout="this.src = '#{msgs.im_add_another_section}'" 
-							onmousedown="this.src = '#{msgs.im_add_another_section_down}'" 
-							onmouseup="this.src = '#{msgs.im_add_another_section_over}'"/>
-	                </h:commandLink>				
-					
-				<h:commandLink id="FinishButton"  action="#{editSectionPage.Finish}">
-						<h:graphicImage id="finishImg" value="#{msgs.im_finish}" height="19" styleClass="BottomImgSpace"
-							onmouseover="this.src = '#{msgs.im_finish_over}'" 
-							onmouseout="this.src = '#{msgs.im_finish}'" 
-							onmousedown="this.src = '#{msgs.im_finish_down}'" 
-							onmouseup="this.src = '#{msgs.im_finish_over}'" />
-	                </h:commandLink>				
-			</td></tr>			
+                    <div align="center">   	
+                  	  <h:commandButton id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgSpace"/>
+					  <h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgSpace"/>
+					 </div>				
+  			</td></tr>			
          	 <tr><td>
          		 <table width="100%" border="0" cellpadding="3" cellspacing="0" >
    	         <tr>

@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -82,22 +82,9 @@
 					     <tr>
 					          	<td  colspan="2">
 					          	<div align="center">
-											<h:commandLink id="addButton_1"  action="#{editSectionPage.setServerUrl}" >
-												<h:graphicImage id="addImg2_1" value="#{msgs.im_continue}" styleClass="BottomImgSpace"
-												onmouseover="this.src = '#{msgs.im_continue_over}'" 
-												onmouseout="this.src = '#{msgs.im_continue}'" 
-												onmousedown="this.src = '#{msgs.im_continue_down}'" 
-												onmouseup="this.src = '#{msgs.im_continue_over}'"/>
-										</h:commandLink> 
-				
-									<h:commandLink id="cancelButton_1"  action="#{editSectionPage.cancelServerFile}"  immediate="true">
-										<h:graphicImage id="cancelImg_1" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
-											onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-											onmouseout="this.src = '#{msgs.im_cancel}'" 
-											onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-											onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-									</h:commandLink>				
-				 </div>					              	
+					          		<h:commandButton id="addButton_1" action="#{editSectionPage.setServerUrl}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgSpace"/>
+					         	 	<h:commandButton id="cancelButton_1" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>													
+								 </div>					              	
 					              	</td>
 					            </tr>
 	<!-- new link end -->				            		
@@ -116,23 +103,9 @@
 			            <tr>
 					          	<td  colspan="2">
 					          	<div align="center">
-											<h:commandLink id="addButton"  action="#{editSectionPage.setServerUrl}" >
-						<h:graphicImage id="addImg2" value="#{msgs.im_continue}" styleClass="BottomImgSpace"
-						onmouseover="this.src = '#{msgs.im_continue_over}'" 
-						onmouseout="this.src = '#{msgs.im_continue}'" 
-						onmousedown="this.src = '#{msgs.im_continue_down}'" 
-						onmouseup="this.src = '#{msgs.im_continue_over}'"
-				/>
-				</h:commandLink> 
-				
-				<h:commandLink id="cancelButton"  action="#{editSectionPage.cancelServerFile}"  immediate="true">
-					<h:graphicImage id="cancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
-						onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-						onmouseout="this.src = '#{msgs.im_cancel}'" 
-						onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-                </h:commandLink>				
-				 </div>					              	
+									<h:commandButton id="addButton" action="#{editSectionPage.setServerUrl}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgSpace"/>
+					         	 	<h:commandButton id="cancelButton" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>				
+								</div>					              	
 					              	</td>
 					            </tr>
 					     	</table>					

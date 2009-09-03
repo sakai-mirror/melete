@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -90,32 +90,10 @@ function changestatusmessage()
 			  					              <tr>
                 <td height="30" colspan="2">         
                 <div align="center">				
-									
-				<h:commandLink id="preview"  action="#{addSectionPage.previewFromAdd}">
-					<h:graphicImage id="editModImg" value="#{msgs.im_view_section}" height="19" styleClass="BottomImgSpace" 
-						onmouseover="this.src = '#{msgs.im_view_section_over}'" 
-						onmouseout="this.src = '#{msgs.im_view_section}'" 
-						onmousedown="this.src = '#{msgs.im_view_section_down}'" 
-						onmouseup="this.src = '#{msgs.im_view_section_over}'"/>
-    		 </h:commandLink>
-           
-		
-				<h:commandLink id="saveAddAnotherbutton"  action="#{addSectionPage.saveAndAddAnotherSection}">
-						<h:graphicImage id="saveAddAnotherImg" value="#{msgs.im_add_another_section}" height="19" styleClass="BottomImgSpace" 
-							onmouseover="this.src = '#{msgs.im_add_another_section_over}'" 
-							onmouseout="this.src = '#{msgs.im_add_another_section}'" 
-							onmousedown="this.src = '#{msgs.im_add_another_section_down}'" 
-							onmouseup="this.src = '#{msgs.im_add_another_section_over}'"/>
-	                </h:commandLink>				
-					
-				<h:commandLink id="FinishButton"  action="list_auth_modules">
-						<h:graphicImage id="finishImg" value="#{msgs.im_finish}" height="19" styleClass="BottomImgSpace"
-							onmouseover="this.src = '#{msgs.im_finish_over}'" 
-							onmouseout="this.src = '#{msgs.im_finish}'" 
-							onmousedown="this.src = '#{msgs.im_finish_down}'" 
-							onmouseup="this.src = '#{msgs.im_finish_over}'" />
-	                </h:commandLink>				
-</div></td>
+					<h:commandButton id="preview"  action="#{addSectionPage.previewFromAdd}" value="#{msgs.im_view_section}" accesskey="#{msgs.view_access}" title="#{msgs.im_view_section_text}" styleClass="BottomImgSpace"/>
+					<h:commandButton id="saveAddAnotherbutton"  action="#{addSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgSpace"/>
+					<h:commandButton id="FinishButton" action="list_auth_modules" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgSpace"/>
+				</div></td>
               </tr>
 			 <tr><td colspan="2" height="20" class="maintabledata5">&nbsp;</td></tr>
             </table>

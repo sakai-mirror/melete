@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -301,62 +301,13 @@ window.open('editpreviewEditor.jsf');
               </tr>
               <tr>
                 <td height="20" bgcolor="#FFFFFF"><div align="center">
-                
-				<h:commandLink id="submitsave"  action="#{editSectionPage.save}" rendered="#{editSectionPage.shouldRenderEditor}">
-					<h:graphicImage id="saveImg" value="#{msgs.im_save}" styleClass="BottomImgSpace" onclick="transferEditordata()"
-						onmouseover="this.src = '#{msgs.im_save_over}'" 
-						onmouseout="this.src = '#{msgs.im_save}'" 
-						onmousedown="this.src = '#{msgs.im_save_down}'" 
-						onmouseup="this.src = '#{msgs.im_save_over}'"
-				/>
-                </h:commandLink>
-		               
-		         	<h:commandLink id="submitsave1"  action="#{editSectionPage.save}"  rendered="#{editSectionPage.shouldRenderUpload}">
-						<h:graphicImage id="saveImg1" value="#{msgs.im_save}" styleClass="BottomImgSpace" onclick="showmessage()"
-						onmouseover="this.src = '#{msgs.im_save_over}'" 
-						onmouseout="this.src = '#{msgs.im_save}'" 
-						onmousedown="this.src = '#{msgs.im_save_down}'" 
-						onmouseup="this.src = '#{msgs.im_save_over}'"
-				/>
-				</h:commandLink> 
-								
-				<h:commandLink id="submitsave2"  action="#{editSectionPage.save}"   rendered="#{!editSectionPage.shouldRenderEditor && !editSectionPage.shouldRenderUpload}">
-						<h:graphicImage id="saveImg2" value="#{msgs.im_save}" styleClass="BottomImgSpace" 
-						onmouseover="this.src = '#{msgs.im_save_over}'" 
-						onmouseout="this.src = '#{msgs.im_save}'" 
-						onmousedown="this.src = '#{msgs.im_save_down}'" 
-						onmouseup="this.src = '#{msgs.im_save_over}'" />
-				</h:commandLink>        
-                 
-              	<h:commandLink  id="previewEditor"  action="#{editSectionPage.getPreviewPage}">
-					<h:graphicImage id="editModImg1_1" value="#{msgs.im_preview}" styleClass="BottomImgSpace" onclick="transferEditordata()"  rendered="#{editSectionPage.shouldRenderEditor}"
-						onmouseover="this.src = '#{msgs.im_preview_over}'" 
-						onmouseout="this.src = '#{msgs.im_preview}'" 
-						onmousedown="this.src = '#{msgs.im_preview_down}'" 
-						onmouseup="this.src = '#{msgs.im_preview_over}'"/>
-					<h:graphicImage id="editModImg1_2" value="#{msgs.im_preview}" styleClass="BottomImgSpace"  rendered="#{editSectionPage.shouldRenderEditor == false}"
-						onmouseover="this.src = '#{msgs.im_preview_over}'" 
-						onmouseout="this.src = '#{msgs.im_preview}'" 
-						onmousedown="this.src = '#{msgs.im_preview_down}'" 
-						onmouseup="this.src = '#{msgs.im_preview_over}'"/>	
-                 </h:commandLink>
-                 
-        
-
-					<!--h:graphicImage id="accessibilityImg" value="#{msgs.im_check_accessibility}" styleClass="BottomImgSpace"
-						onmouseover="this.src = '#{msgs.im_check_accessibility_over}'" 
-						onmouseout="this.src = '#{msgs.im_check_accessibility}'" 
-						onmousedown="this.src = '#{msgs.im_check_accessibility_down}'" 
-						onmouseup="this.src = '#{msgs.im_check_accessibility_over}'"/-->
-
-				<h:commandLink id="cancelButton"  action="#{editSectionPage.cancel}"  immediate="true">
-					<h:graphicImage id="cancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
-						onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-						onmouseout="this.src = '#{msgs.im_cancel}'" 
-						onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-                </h:commandLink>		
-				 </div></td>
+              		<h:commandButton id="submitsave" action="#{editSectionPage.save}" rendered="#{editSectionPage.shouldRenderEditor}" onclick="transferEditordata()" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSpace"/>
+					<h:commandButton id="submitsave1" action="#{editSectionPage.save}" rendered="#{editSectionPage.shouldRenderUpload}" onclick="showmessage()" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSpace"/>
+					<h:commandButton id="submitsave2" action="#{editSectionPage.save}" rendered="#{!editSectionPage.shouldRenderEditor && !editSectionPage.shouldRenderUpload}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSpace"/>
+					<h:commandButton id="previewEditor" action="#{editSectionPage.getPreviewPage}" onclick="transferEditordata()"  rendered="#{editSectionPage.shouldRenderEditor}" value="#{msgs.im_preview}" accesskey="#{msgs.view_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgSpace"/>
+					<h:commandButton id="preview" action="#{editSectionPage.getPreviewPage}" rendered="#{editSectionPage.shouldRenderEditor == false}" value="#{msgs.im_preview}" accesskey="#{msgs.view_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgSpace"/>
+					<h:commandButton id="cancelButton" immediate="true" action="#{editSectionPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>
+       			 </div></td>
               </tr>
               <tr>
                 <td height="20" bgcolor="#FFFFFF">&nbsp;
@@ -365,20 +316,8 @@ window.open('editpreviewEditor.jsf');
               <tr>
                 <td height="21" bgcolor="#FFFFFF"><div align="center"></div>
                     <div align="center">
-					<h:commandLink id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}">
-						<h:graphicImage id="saveAddAnotherImg" value="#{msgs.im_add_another_section}" styleClass="BottomImgSpace" onclick="transferEditordata()"
-							onmouseover="this.src = '#{msgs.im_add_another_section_over}'" 
-							onmouseout="this.src = '#{msgs.im_add_another_section}'" 
-							onmousedown="this.src = '#{msgs.im_add_another_section_down}'" 
-							onmouseup="this.src = '#{msgs.im_add_another_section_over}'"/>
-	                </h:commandLink>				
-					<h:commandLink id="FinishButton"  action="#{editSectionPage.Finish}">
-						<h:graphicImage id="finishImg" value="#{msgs.im_finish}" styleClass="BottomImgSpace" onclick="transferEditordata()"
-							onmouseover="this.src = '#{msgs.im_finish_over}'" 
-							onmouseout="this.src = '#{msgs.im_finish}'" 
-							onmousedown="this.src = '#{msgs.im_finish_down}'" 
-							onmouseup="this.src = '#{msgs.im_finish_over}'" />
-	                </h:commandLink>				
+                		<h:commandButton id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" onclick="transferEditordata()" styleClass="BottomImgSpace"/>
+						<h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" onclick="transferEditordata()" styleClass="BottomImgSpace"/>		
 					</div></td>
 		          </tr>
             </table>
