@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -437,20 +437,8 @@ function validateFileName(divID, sourceID)
 	     <tr>
 	       <td colspan="2">
 	       <div align="center">
-	       <h:commandLink id="continueButton"  action="#{addResourcesPage.addItems}"  immediate="true" tabindex="9">
-					<h:graphicImage id="continueImg" value="#{msgs.im_continue}" styleClass="BottomImgSpace" onclick="clearmessage()"
-						onmouseover="this.src = '#{msgs.im_continue_over}'" 
-						onmouseout="this.src = '#{msgs.im_continue}'" 
-						onmousedown="this.src = '#{msgs.im_continue_down}'" 
-						onmouseup="this.src = '#{msgs.im_continue_over}'"/>
-                </h:commandLink>				
-				<h:commandLink id="cancelButton"  action="#{addResourcesPage.cancel}"  immediate="true" tabindex="9">
-					<h:graphicImage id="cancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" onclick="clearmessage()"
-						onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-						onmouseout="this.src = '#{msgs.im_cancel}'" 
-						onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-                </h:commandLink>
+                <h:commandButton id="continueButton" immediate="true" action="#{addResourcesPage.addItems}" value="#{msgs.im_continue}" tabindex="9" onclick="clearmessage()" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgSpace"/>
+                <h:commandButton id="cancelButton" immediate="true" action="#{addResourcesPage.cancel}" value="#{msgs.im_cancel}" tabindex="9" onclick="clearmessage()" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>			                
             </div>    	
 	       </td>
 	     </tr>
