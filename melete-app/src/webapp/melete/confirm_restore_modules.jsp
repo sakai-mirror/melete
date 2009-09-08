@@ -65,7 +65,7 @@
                   <br>
                   <table width="85%"  border="1" align="center" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
                     <tr class="maintabledata3">
-                      <td valign="top"><img src="images/right_check.gif" width="24" height="24" align="absbottom" alt="#{msgs.confirm_restore_modules_confirmation signal}"></td>
+                      <td valign="top"><h:graphicImage id="right_check" value="images/right_check.gif" width="24" height="24"  alt="#{msgs.confirm_restore_modules_confirmation_signal}" title="#{msgs.confirm_restore_modules_confirmation_signal}"/></td>
                       <td align="left"><h:outputText value="#{msgs.confirm_restore_modules_message1}" /></br>
 					  		<br>
                        		<h:dataTable id="confirmrestoretable" value="#{manageModulesPage.restoreModulesList}" var="rml" width="140%" columnClasses="bold">
@@ -81,15 +81,9 @@
               </tr>
 			    <tr>
                 <td height="30" colspan="2">         
-                <div align="center">				
-				<h:commandLink id="ReturntoModules"  action="#{manageModulesPage.returnToModules}" >
-					<h:graphicImage id="returnToModulesImg" value="#{msgs.im_return_to_modules}" styleClass="BottomImgSpace" 
-						onmouseover="this.src = '#{msgs.im_return_to_modules_over}'" 
-						onmouseout="this.src = '#{msgs.im_return_to_modules}'" 
-						onmousedown="this.src = '#{msgs.im_return_to_modules_down}'" 
-	   				  	onmouseup="this.src = '#{msgs.im_return_to_modules_over}'"
-					/>
-                </h:commandLink>	
+                <div align="center">	
+               	<h:commandButton action="#{manageModulesPage.returnToModules}" value="#{msgs.im_return_to_modules}" accesskey="#{msgs.return_access}" title="#{msgs.im_return_to_modules_text}" styleClass="BottomImgSpace"/>
+			
 				</div>
 
 				</td>

@@ -213,7 +213,7 @@ function validateFileName(divID, sourceID)
 						<f:subview id="top">
 								<jsp:include page="topnavbar.jsp"/> 
 						</f:subview>
-		  <div class="meletePortletToolBarMessage"><img src="images/manage_content.png" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.file_upload_title}" /></div>				
+		  <div class="meletePortletToolBarMessage"><img src="images/manage_content.png" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.file_upload_title}" /></div>				
 		</td>
         </tr>
         <tr>
@@ -270,8 +270,8 @@ function validateFileName(divID, sourceID)
 			
 			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile1" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload1"><INPUT TYPE="FILE" id="file1" NAME="file1" onchange="validateFileName('errMsg1','file1')"/>
-			<img src="images/remove_item.png"/>
-			<a id="remove1" href="#" onClick="javascript:clearItem(1)"><h:outputText id="removeItem1" value="#{msgs.link_upload_remove_item}" /></a>
+			
+			<a id="remove1" href="#" onClick="javascript:clearItem(1)"><img src="images/remove_item.png" alt=""/><h:outputText id="removeItem1" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>

@@ -57,7 +57,7 @@
 				<f:subview id="top">
 					<jsp:include page="topnavbar.jsp"/> 
 				</f:subview>
-		  <div class="meletePortletToolBarMessage"><img src="images/Warning.gif" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.delete_module_module}" rendered="#{deleteModulePage.moduleSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion1}" rendered="#{deleteModulePage.sectionSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion2}" /></div>				
+		  <div class="meletePortletToolBarMessage"><img src="images/Warning.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.delete_module_module}" rendered="#{deleteModulePage.moduleSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion1}" rendered="#{deleteModulePage.sectionSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion2}" /></div>				
 				</td>
         </tr>
 
@@ -71,7 +71,7 @@
                 <td width="100%" valign="top">
                     <table width="85%"  border="1" align="center" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
                     <tr class="maintabledata3">
-                      <td valign="top"><img src="images/Warning.gif" width="24" height="24" align="absbottom" alt="#{msgs.delete_module_deletion_warning}" border="0"></td>
+                      <td valign="top"><h:graphicImage id="warngif" value="images/Warning.gif" width="24" height="24" alt="#{msgs.delete_module_deletion_warning}" title="#{msgs.delete_module_deletion_warning}"/></td>
                       <td align="left"><h:outputText value="#{msgs.delete_module_message1}" /><br>
                         <br><h:outputText value="#{msgs.delete_module_module2}" styleClass="bold"  rendered="#{deleteModulePage.moduleSelected}"/>  
 						<h:outputText value=": " styleClass="bold"   rendered="#{deleteModulePage.moduleSelected}"/>
