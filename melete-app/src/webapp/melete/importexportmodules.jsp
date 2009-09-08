@@ -100,20 +100,8 @@ function showprocessMsg()
                   			<tr>
                     			<td colspan="2" class="maintabledata7">
 	                    			<div align="center">
-										<h:commandLink id="importModule"  action="#{exportMeleteModules.importModules}" >
-											<h:graphicImage id="importModuleImg" value="#{msgs.im_import}" styleClass="BottomImgSpace" onclick="showprocessMsg()"
-											onmouseover="this.src = '#{msgs.im_import_over}'" 
-											onmouseout="this.src = '#{msgs.im_import}'" 
-											onmousedown="this.src = '#{msgs.im_import_down}'" 
-						   				  	onmouseup="this.src = '#{msgs.im_import_over}'"/>
-                						</h:commandLink>
-										<h:commandLink id="importcancel"  action="#{manageModulesPage.cancel}" immediate="true">
-											<h:graphicImage id="importcancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
-											onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-											onmouseout="this.src = '#{msgs.im_cancel}'" 
-											onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						   				  	onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-                						</h:commandLink>           
+                						 <h:commandButton id="importButton" action="#{exportMeleteModules.importModules}" value="#{msgs.im_import}" onclick="showprocessMsg()" accesskey="#{msgs.import_access}" title="#{msgs.im_import_text}" styleClass="BottomImgSpace"/>
+                                         <h:commandButton id="cancelButton" immediate="true" action="#{manageModulesPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>			                
                 					</div>	
                 					<h:outputLabel id="processmsg" value="Processing..." styleClass="orange" style="visibility:hidden" /> 	     						                					
 								</td>
@@ -159,20 +147,9 @@ function showprocessMsg()
                     		<tr>
                     			<td colspan="2" class="maintabledata7">
 									<div align="center">
-										<h:commandLink id="exportModule"  action="#{exportMeleteModules.exportModules}" >
-											<h:graphicImage id="exportModuleImg" value="#{msgs.im_export}" styleClass="BottomImgSpace" 
-											onmouseover="this.src = '#{msgs.im_export_over}'" 
-											onmouseout="this.src = '#{msgs.im_export}'" 
-											onmousedown="this.src = '#{msgs.im_export_down}'" 
-						   				  	onmouseup="this.src = '#{msgs.im_export_over}'"/>
-                						</h:commandLink>
-										<h:commandLink id="cancel"  action="#{manageModulesPage.cancel}" immediate="true">
-											<h:graphicImage id="cancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
-											onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-											onmouseout="this.src = '#{msgs.im_cancel}'" 
-											onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						   				  	onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-                						</h:commandLink>
+                						<h:commandButton id="exportButton" action="#{exportMeleteModules.exportModules}" value="#{msgs.im_export}" accesskey="#{msgs.export_access}" title="#{msgs.im_export_text}" styleClass="BottomImgSpace"/>
+                                        <h:commandButton id="cancelButton" immediate="true" action="#{manageModulesPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>			                
+      
 									</div>
 								</td>
 				    		</tr>

@@ -71,7 +71,7 @@
 							                    	<td align="center" class="menu left">
 								                    	<h:commandLink id="contentgoto" action="#{manageModulesPage.goToManageContent}">
 															<h:graphicImage id="image0"
-									   							alt="#{msgs.modules_author_manage_content}"
+									   							alt=""
 									   							url="images/manage_content.png"
 									   							 styleClass="AuthImgClass"/>
 									   							<h:outputText id="co" value="#{msgs.modules_author_manage_content}" />
@@ -83,7 +83,7 @@
 							                    	<td align="center" class="menu left">
 								                    	<h:commandLink id="restoregoto" action="#{manageModulesPage.goToRestoreModules}">
 															<h:graphicImage id="image"
-									   							alt="#{msgs.modules_author_manage_archive}"
+									   							alt=""
 									   							url="images/folder_into.gif"
 									   							 styleClass="AuthImgClass"/>
 									   							<h:outputText id="re" value="#{msgs.modules_author_manage_archive_title}" />
@@ -95,7 +95,7 @@
 							                    	<td align="center" class="menu left">
 								                    	<h:commandLink id="goto_impexp" action="#{manageModulesPage.importExportModules}">
 															<h:graphicImage id="image_impexp"
-									   							alt="#{msgs.modules_author_manage_import_export}"
+									   							alt=""
 									   							url="images/import1.gif"
 									   							styleClass="AuthImgClass"/>
 									   							<h:outputText id="import" value="#{msgs.modules_author_manage_import_export}" />
