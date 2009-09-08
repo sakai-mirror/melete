@@ -81,31 +81,11 @@
                     </td>
               </tr>
               <tr>
-                <td height="30"><div align="center">          
-                <h:commandLink id="addsteps"  action="#{moduleNextStepsPage.addPostSteps}" rendered="#{moduleNextStepsPage.mdBean.module.whatsNext == moduleNextStepsPage.isNull}">
-						<h:graphicImage id="addImg" value="#{msgs.im_add_button}" styleClass="BottomImgSpace" 
-							onmouseover="this.src = '#{msgs.im_add_button_over}'" 
-							onmouseout="this.src = '#{msgs.im_add_button}'" 
-							onmousedown="this.src = '#{msgs.im_add_button_down}'" 
-							onmouseup="this.src = '#{msgs.im_add_button_over}'"/>
-				</h:commandLink>       			
-							
-					 <h:commandLink id="savesteps"  action="#{moduleNextStepsPage.savePostSteps}" rendered="#{moduleNextStepsPage.mdBean.module.whatsNext != moduleNextStepsPage.isNull}">
-						<h:graphicImage id="saveImg" value="#{msgs.im_save}" styleClass="BottomImgSpace" 
-						onmouseover="this.src = '#{msgs.im_save_over}'" 
-						onmouseout="this.src = '#{msgs.im_save}'" 
-						onmousedown="this.src = '#{msgs.im_save_down}'" 
-						onmouseup="this.src = '#{msgs.im_save_over}'"/>
-				</h:commandLink>       	
-				
-						<h:commandLink id="cancel"  action="#{moduleNextStepsPage.cancelChanges}" immediate="true" >
-							<h:graphicImage id="cancelModImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
-											onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-											onmouseout="this.src = '#{msgs.im_cancel}'" 
-											onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						   				  	onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-						   </h:commandLink>				  	
-                                </div></td>
+                <td height="30"><div align="center">   
+                	<h:commandButton id="addsteps"  action="#{moduleNextStepsPage.addPostSteps}" rendered="#{moduleNextStepsPage.mdBean.module.whatsNext == moduleNextStepsPage.isNull}" value="#{msgs.im_add_button}" accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgSpace"/>
+					<h:commandButton id="savesteps" action="#{moduleNextStepsPage.savePostSteps}" rendered="#{moduleNextStepsPage.mdBean.module.whatsNext != moduleNextStepsPage.isNull}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSpace"/>	
+					<h:commandButton id="cancelButton" immediate="true" action="#{moduleNextStepsPage.cancelChanges}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>       
+       			 </div></td>
               </tr>
 			 <tr><td height="20" class="maintabledata5">&nbsp;</td></tr>
             </table>

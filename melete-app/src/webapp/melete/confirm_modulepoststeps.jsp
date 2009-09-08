@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -81,15 +81,8 @@
 			  					              <tr>
                 <td height="30" colspan="2">         
                 <div align="center">				
-									
-				<h:commandLink id="ReturntoModules"  action="#{moduleNextStepsPage.returnToModules}" >
-					<h:graphicImage id="returnToModulesImg" value="images/Return_to_Modules.gif" styleClass="BottomImgSpace" 
-						onmouseover="this.src = 'images/Return_to_Modules-over.gif'" 
-						onmouseout="this.src = 'images/Return_to_Modules.gif'" 
-						onmousedown="this.src = 'images/Return_to_Modules-down.gif'" 
-	   				  	onmouseup="this.src = 'images/Return_to_Modules-over.gif'"/>
-                </h:commandLink>			
-</div></td>
+					<h:commandButton id="ReturntoModules" action="#{moduleNextStepsPage.returnToModules}" value="#{msgs.im_return_to_modules}" accesskey="#{msgs.return_access}" title="#{msgs.im_return_to_modules_text}" styleClass="BottomImgSpace"/>					
+				</div></td>
               </tr>
 			 <tr><td colspan="2" height="20" class="maintabledata5">&nbsp;</td></tr>
             </table>

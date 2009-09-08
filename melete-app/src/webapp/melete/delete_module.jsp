@@ -104,32 +104,11 @@
               </tr>
 			  					              <tr>
                 <td height="30" >         
-                <div align="center">				
-				<h:commandLink id="delButton"  action="#{deleteModulePage.deleteAction}"  rendered="#{deleteModulePage.sameModuleSectionSelected == false}">
-					<h:graphicImage id="continueImg" value="#{msgs.im_continue}" styleClass="BottomImgSpace"
-						onmouseover="this.src = '#{msgs.im_continue_over}'" 
-						onmouseout="this.src = '#{msgs.im_continue}'" 
-						onmousedown="this.src = '#{msgs.im_continue_down}'" 
-						onmouseup="this.src = '#{msgs.im_continue_over}'"/>
-                </h:commandLink>
-                
-           		<h:commandLink id="delButton_1"  action="#{deleteModulePage.reConfirmedDeleteAction}" rendered="#{deleteModulePage.sameModuleSectionSelected}">
-					<h:graphicImage id="continueImg_1" value="#{msgs.im_continue}" styleClass="BottomImgSpace"
-						onmouseover="this.src = '#{msgs.im_continue_over}'" 
-						onmouseout="this.src = '#{msgs.im_continue}'" 
-						onmousedown="this.src = '#{msgs.im_continue_down}'" 
-						onmouseup="this.src = '#{msgs.im_continue_over}'"/>
-                </h:commandLink>
-                
-	<h:commandLink id="cancelButton" action="#{deleteModulePage.backToModules}">
-					<h:graphicImage id="cancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace"
-						onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-						onmouseout="this.src = '#{msgs.im_cancel}'" 
-						onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-                </h:commandLink>	
-	
-			</div></td>
+                <div align="center">
+                	<h:commandButton id="delButton" action="#{deleteModulePage.deleteAction}"  rendered="#{deleteModulePage.sameModuleSectionSelected == false}" value="#{msgs.im_continue}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgSpace"/>
+					<h:commandButton id="delButton_1" action="#{deleteModulePage.reConfirmedDeleteAction}"  rendered="#{deleteModulePage.sameModuleSectionSelected}" value="#{msgs.im_continue}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgSpace"/>	
+					<h:commandButton id="cancelButton" action="#{deleteModulePage.backToModules}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>       
+				</div></td>
               </tr>
 			 <tr><td  height="20" class="maintabledata5">&nbsp;</td></tr>
             </table>
