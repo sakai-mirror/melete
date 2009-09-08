@@ -128,34 +128,9 @@ function resetCheck()
             				<tr>
               					<td height="30" colspan="2">
 			    					<div align="center">
-										<h:commandLink id="restoreModule"  action="#{manageModulesPage.restoreModules}" rendered="#{(manageModulesPage.shouldRenderEmptyList == manageModulesPage.falseBool)}" >
-											<h:graphicImage id="restoreModImg" value="#{msgs.im_restore}" styleClass="BottomImgSpace" 
-											onmouseover="this.src = '#{msgs.im_restore_over}'" 
-											onmouseout="this.src = '#{msgs.im_restore}'" 
-											onmousedown="this.src = '#{msgs.im_restore_down}'" 
-						   				  	onmouseup="this.src = '#{msgs.im_restore_over}'"/>
-                						</h:commandLink>	
-                						
-                						<h:commandLink id="deleteModule"  action="#{manageModulesPage.deleteModules}" rendered="#{(manageModulesPage.shouldRenderEmptyList == manageModulesPage.falseBool)}" >
-											<h:graphicImage id="deleteModImg" value="#{msgs.im_delete}" styleClass="BottomImgSpace" 
-											onmouseover="this.src = '#{msgs.im_delete_over}'" 
-											onmouseout="this.src = '#{msgs.im_delete}'" 
-											onmousedown="this.src = '#{msgs.im_delete_down}'" 
-						   				  	onmouseup="this.src = '#{msgs.im_delete_over}'"/>
-                						</h:commandLink>
-
-									<h:graphicImage id="restoreModImg1" value="#{msgs.im_restore}" styleClass="BottomImgSpace"  rendered="#{manageModulesPage.shouldRenderEmptyList}" 	onmouseover="this.src = '#{msgs.im_restore_over}'" 
-											onmouseout="this.src = '#{msgs.im_restore}'" 
-											onmousedown="this.src = '#{msgs.im_restore_down}'" 
-						   				  	onmouseup="this.src = '#{msgs.im_restore_over}'"/>
-						   				  	
-										<h:commandLink id="cancel"  action="#{manageModulesPage.cancelRestoreModules}" >
-											<h:graphicImage id="cancelModImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" 
-											onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-											onmouseout="this.src = '#{msgs.im_cancel}'" 
-											onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						   				  	onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-                						</h:commandLink>		
+			    					<h:commandButton action="#{manageModulesPage.restoreModules}" value="#{msgs.im_restore}" accesskey="#{msgs.restore_access}" title="#{msgs.im_restore_text}" styleClass="BottomImgSpace" rendered="#{(manageModulesPage.shouldRenderEmptyList == manageModulesPage.falseBool)}"/>
+						            <h:commandButton action="#{manageModulesPage.deleteModules}" value="#{msgs.im_delete}" accesskey="#{msgs.delete_access}" title="#{msgs.im_delete_text}" styleClass="BottomImgSpace" rendered="#{(manageModulesPage.shouldRenderEmptyList == manageModulesPage.falseBool)}"/>
+			                        <h:commandButton id="cancelButton" action="#{manageModulesPage.cancelRestoreModules}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>
 				  					</div>
 				  				</td>
             				</tr>
