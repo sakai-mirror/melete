@@ -51,7 +51,7 @@
 						<f:subview id="top">
 								<jsp:include page="topnavbar.jsp"/> 
 						</f:subview>
-		  <div class="meletePortletToolBarMessage"><img src="images/user1_preferences.gif" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.author_preference_user_preference}" /></div>				
+		  <div class="meletePortletToolBarMessage"><img src="images/user1_preferences.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.author_preference_user_preference}" /></div>				
 				</td>
         </tr>
         <tr>
@@ -133,14 +133,8 @@
 					</td></tr>									
               <tr>
                 <td height="30" >         
-                <div align="center">				
-				<h:commandLink id="SetButton"  action="#{authorPreferences.setUserChoice}">
-					<h:graphicImage id="setImg" value="#{msgs.im_set}" styleClass="BottomImgSpace"
-						onmouseover="this.src = '#{msgs.im_set_over}'" 
-						onmouseout="this.src = '#{msgs.im_set}'" 
-						onmousedown="this.src = '#{msgs.im_set_down}'" 
-						onmouseup="this.src = '#{msgs.im_set_over}'"/>
-                </h:commandLink>	
+                <div align="center">	
+                <h:commandButton action="#{authorPreferences.setUserChoice}" value="#{msgs.im_set}" accesskey="#{msgs.im_set_access}" title="#{msgs.im_set_text}" styleClass="BottomImgSpace"/>
 			</div></td>
               </tr>
 			 <tr><td  height="20" class="maintabledata5">&nbsp;</td></tr>

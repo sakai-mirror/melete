@@ -94,11 +94,11 @@ return newWindow;
       <h:column>                                 
     
     <h:commandLink id="viewSections" action="#{listModulesPage.showSections}" immediate="true">
-        <h:graphicImage id="exp_gif" alt="#{msgs.list_modules_stud_expand}" value="images/expand.gif" rendered="#{((vmbean.moduleId != listModulesPage.showModuleId)&&(vmbean.vsBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}" styleClass="ExpClass"/>
+        <h:graphicImage id="exp_gif" alt="#{msgs.list_modules_stud_expand}" title="#{msgs.list_modules_stud_expand}" value="images/expand.gif" rendered="#{((vmbean.moduleId != listModulesPage.showModuleId)&&(vmbean.vsBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}" styleClass="ExpClass"/>
          <h:inputHidden id="moduleShowId" value="#{vmbean.moduleId}"/>
       </h:commandLink>
      <h:commandLink id="hideSections" action="#{listModulesPage.hideSections}" immediate="true">
-        <h:graphicImage id="col_gif" alt="#{msgs.list_modules_stud_collapse}" value="images/collapse.gif" rendered="#{(((vmbean.moduleId == listModulesPage.showModuleId)&&(vmbean.vsBeans != listModulesPage.nullList))||((listModulesPage.expandAllFlag == listModulesPage.trueFlag)&&(vmbean.vsBeans != listModulesPage.nullList)))}" styleClass="ExpClass"/>
+        <h:graphicImage id="col_gif" alt="#{msgs.list_modules_stud_collapse}" title="#{msgs.list_modules_stud_collapse}" value="images/collapse.gif" rendered="#{(((vmbean.moduleId == listModulesPage.showModuleId)&&(vmbean.vsBeans != listModulesPage.nullList))||((listModulesPage.expandAllFlag == listModulesPage.trueFlag)&&(vmbean.vsBeans != listModulesPage.nullList)))}" styleClass="ExpClass"/>
          <h:inputHidden id="moduleHideId" value="#{vmbean.moduleId}"/>
       </h:commandLink> 
       <h:outputText id="mod_seq" value="#{vmbean.seqNo}. " rendered="#{listModulesPage.autonumber}"/>

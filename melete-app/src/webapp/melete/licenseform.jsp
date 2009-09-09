@@ -43,7 +43,7 @@
  </f:subview>
  
 <h:outputText value="          " styleClass="ExtraPaddingClass" />
-<h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="images/help.gif" alt="#{msgs.license_help}" title="#{msgs.license_help}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
+<h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
 <h:panelGrid id="propertiesPanel3" columns="1" width="100%">
   <h:column>
   <f:subview id="CCLicenseForm" rendered="#{licensePage.shouldRenderCC || licensePage.shouldRenderCopyright || licensePage.shouldRenderPublicDomain || licensePage.shouldRenderFairUse}">	
