@@ -63,8 +63,8 @@
 		  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
 		  	<tr><td  height="20" class="maintabledata5">&nbsp;</td></tr>
               <tr>
-                <td width="100%" align="center">
-                    <table width="85%"  border="1" align="center" cellpadding="15" cellspacing="0" bordercolor="#CCCCCC">
+                <td width="100%">
+                    <table width="100%"  border="1" cellpadding="15" cellspacing="0" bordercolor="#CCCCCC">
                     <tr class="maintabledata3">
                       <td valign="top"><img src="images/right_check.gif" width="24" height="24" align="absbottom" alt="#{msgs.confirm_addmodule_confirmation_signal}" border="0"></td>
                       <td align="left"><h:outputText value="#{msgs.confirm_addmodule_you_have_succes}" /><br>
@@ -73,16 +73,13 @@
                     </tr>
                   </table><br></td>
               </tr>
-			  					              <tr>
-                <td height="30" >         
-                <div align="center">				
-				<h:commandButton id="sectionButton"  action="#{addModulePage.addContentSections}" rendered="#{addModulePage.success}" value="#{msgs.im_add_content_sections}" tabindex="" accesskey="#{msgs.add_access}" title="#{msgs.im_add_content_sections_text}" styleClass="BottomImgSpace" />
-				
-				<h:commandButton id="returnButton"  action="#{addModulePage.backToModules}" value="#{msgs.im_return_to_modules}" tabindex="" accesskey="#{msgs.return_access}" title="#{msgs.im_return_to_modules_text}" styleClass="BottomImgSpace" />
-			
-			</div></td>
-              </tr>
-			 <tr><td  height="20" class="maintabledata5">&nbsp;</td></tr>
+			  <tr>
+                <td>         
+                <div class="actionBar" align="left">				
+					<h:commandButton id="sectionButton"  action="#{addModulePage.addContentSections}" rendered="#{addModulePage.success}" value="#{msgs.im_add_content_sections}" tabindex="" accesskey="#{msgs.add_access}" title="#{msgs.im_add_content_sections_text}" styleClass="BottomImgAdd" />
+					<h:commandButton id="returnButton"  action="#{addModulePage.backToModules}" value="#{msgs.im_return_to_modules}" tabindex="" accesskey="#{msgs.return_access}" title="#{msgs.im_return_to_modules_text}" styleClass="BottomImgReturn" />
+				</div></td>
+              </tr>			 
             </table>
           </td>
         </tr>

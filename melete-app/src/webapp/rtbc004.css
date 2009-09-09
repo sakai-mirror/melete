@@ -11,6 +11,12 @@ body 				{background-color : #FFFFFF;
 					scrollbar-darkshadow-color: #000000;
 					scrollbar-track-color: #FFFFFF;}
 
+.actionBar   		{	background: #EEEEEE;
+						border: 0;
+						margin: 5px 0 0 0;
+						line-height: 2em;
+						padding-left: 1em;
+					}
 /* this group sets the font size for paragraphs */
 p, td 				{font-family : Verdana, Arial, sans-serif;
 					font-size : 10pt;}
@@ -422,8 +428,33 @@ border: 0; }
 .ImgSpace			{  hspace: 3;   
 border: 0;}
 
-.BottomImgSpace		{  hspace: 7;  
- border: 0; align:center;}
+.BottomImgSave		{  	padding-left:2em;
+						background: #eee url('images/save.png') .2em no-repeat;
+					}
+.BottomImgDelete	{  	padding-left:2em;
+						background: #eee url('images/delete.gif') .2em no-repeat;
+					}	
+.BottomImgAdd		{  	padding-left:2em;
+						background: #eee url('images/add.png') .2em no-repeat;
+					}	
+.BottomImgCancel,.BottomImgReturn	{  	padding-left:2em;
+						background: #eee url('images/return_sm.png') .2em no-repeat;
+					}	
+.BottomImgContinue	{  	padding-left:2em;
+						background: #eee url('images/delete.gif') .2em no-repeat;
+					}
+.BottomImgPreview	{  	padding-left:2em;
+						background: #eee url('images/preview.png') .2em no-repeat;
+					}	
+.BottomImgFinish	{  	padding-left:2em;
+						background: #eee url('images/delete.gif') .2em no-repeat;
+					}	
+.BottomImgExport	{  	padding-left:2em;
+						background: #eee url('images/export1.gif') .2em no-repeat;
+					}	
+.BottomImgImport	{  	padding-left:2em;
+						background: #eee url('images/import1.gif') .2em no-repeat;
+					}																																									
  .UpLink
  {
  width: 1px;

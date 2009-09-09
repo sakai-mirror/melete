@@ -65,14 +65,13 @@
 	       			<h:outputText id="no_modules_text" value="#{msgs.move_section_no_Modules}" rendered="#{moveSectionsPage.nomodsFlag}" />
          		    </td></tr>
          		    <tr>
-			          <td height="20" align="center" >
-			          <div align="center">
-			          	<h:commandButton id="moveSectionChanges" action="#{moveSectionsPage.move}"  rendered="#{moveSectionsPage.nomodsFlag == false}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSpace"/>
-			          	<h:commandButton id="cancelButton" immediate="true" action="#{moveSectionsPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>
+			          <td align="center" >
+			          <div class="actionBar" align="left">
+			          	<h:commandButton id="moveSectionChanges" action="#{moveSectionsPage.move}"  rendered="#{moveSectionsPage.nomodsFlag == false}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
+			          	<h:commandButton id="cancelButton" immediate="true" action="#{moveSectionsPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
 			          </div>
      				   </td></tr>
-         		    </table>
-         		    	<tr><td class="maintabledata5" height="20">&nbsp; </td></tr>        		    
+         		    </table>         		    	        		    
          		</td></tr>
          	</table>
       </td></tr></table>

@@ -176,7 +176,7 @@ function showEdateCal()
 		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
         		    </h:inputText>
 		            <h:outputLink id="viewsdateCal" onclick="showSdateCal()" value="#startCalender" tabindex="5">
-        	    		<h:graphicImage id="sdateCal"  value="images/date.png" styleClass="DatePickerClass"/>
+        	    		<h:graphicImage id="sdateCal"  value="images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            			</h:outputLink>
 					 </td>
               </tr>
@@ -189,7 +189,7 @@ function showEdateCal()
              			  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
           		 </h:inputText>
           <h:outputLink id="viewedateCal" onclick="showEdateCal()" value="#endCalender" tabindex="7">
-            <h:graphicImage id="edateCal"  value="images/date.png" styleClass="DatePickerClass"/>
+            <h:graphicImage id="edateCal"  value="images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            </h:outputLink>
 					 </td>
               </tr>			  
@@ -204,13 +204,11 @@ function showEdateCal()
 		 </table>
 	</td>
   </tr>
-  <tr><td colspan="2">&nbsp;</td></tr>
   <tr>
-          <td height="20" align="center" colspan="2">
-          <div align="center">
-          	<h:commandButton action="#{addModulePage.save}" value="#{msgs.im_add_button}" tabindex="9" accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgSpace"/>
-						
-			<h:commandButton id="cancelButton" immediate="true" action="#{addModulePage.cancel}" value="#{msgs.im_cancel}" tabindex="10" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>
+          <td colspan="2">
+          <div class="actionBar" align="left">
+          	<h:commandButton action="#{addModulePage.save}" value="#{msgs.im_add_button}" tabindex="9" accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
+			<h:commandButton id="cancelButton" immediate="true" action="#{addModulePage.cancel}" value="#{msgs.im_cancel}" tabindex="10" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
 	       </div>
         </td></tr>
 		
