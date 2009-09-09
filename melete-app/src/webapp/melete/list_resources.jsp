@@ -56,7 +56,7 @@
    	        <h:column>
    		  <h:graphicImage id="leftImg_disable" value="images/nav_left_disable.jpg" alt="#{msgs.list_resources_previous}" styleClass="ModCheckClass" style="border:0" rendered="#{!listResourcesPage.listNav.displayPrev}" />
 		  <h:commandLink id="prev_nav"  action="#{listResourcesPage.listNav.goPrev}" rendered="#{listResourcesPage.listNav.displayPrev}">		
-						 <h:graphicImage id="leftImg" value="images/nav_left.jpg" alt="#{msgs.list_resources_previous2}" styleClass="ModCheckClass" style="border:0" />
+						 <h:graphicImage id="leftImg" value="images/nav_left.jpg" alt="#{msgs.list_resources_previous2}" title="#{msgs.list_resources_previous2}" styleClass="ModCheckClass" style="border:0" />
 		   </h:commandLink>		 
 		   	 <h:outputText id="nav_spaces_left" value="" styleClass="ExtraPaddingClass" />
 		  <h:selectOneMenu id="chunkSize"  valueChangeListener="#{listResourcesPage.listNav.changeChunkSize}" onchange="this.form.submit();">
@@ -66,9 +66,9 @@
 		 </h:selectOneMenu>
 		 <h:outputText id="nav_spaces" value="" styleClass="ExtraPaddingClass" />
 				<h:commandLink id="next_nav" action="#{listResourcesPage.listNav.goNext}" rendered="#{listResourcesPage.listNav.displayNext}">
-							 <h:graphicImage id="rightImg" value="images/nav_right.jpg" alt="#{msgs.list_resources_next}" styleClass="ModCheckClass" style="border:0" />
+							 <h:graphicImage id="rightImg" value="images/nav_right.jpg" alt="#{msgs.list_resources_next}" title="#{msgs.list_resources_next}" styleClass="ModCheckClass" style="border:0" />
 			   </h:commandLink>	 
-			   <h:graphicImage id="rightImg_disable" value="images/nav_right_disable.jpg" alt="#{msgs.list_resources_next2}" styleClass="ModCheckClass" style="border:0" rendered="#{!listResourcesPage.listNav.displayNext}"/> 
+			   <h:graphicImage id="rightImg_disable" value="images/nav_right_disable.jpg" alt="#{msgs.list_resources_next2}" title="#{msgs.list_resources_next2}" styleClass="ModCheckClass" style="border:0" rendered="#{!listResourcesPage.listNav.displayNext}"/> 
    	      </h:column>											
               </h:panelGrid>
                <!-- navigation ends -->            		 
@@ -88,7 +88,7 @@
 							 </h:panelGroup> 
 						 </f:facet>
 					 <h:outputText id="emp_space" value="     "  styleClass="ExtraPaddingClass" rendered="#{curr_resources.resource_id != listResourcesPage.selResourceIdFromList}"/>	
-					 <h:graphicImage id="check_gif" alt="#{msgs.list_resources_check}" value="images/checkon.gif" rendered="#{curr_resources.resource_id == listResourcesPage.selResourceIdFromList}"/>
+					 <h:graphicImage id="check_gif" alt="#{msgs.list_resources_check}" title="#{msgs.list_resources_check}" value="images/checkon.gif" rendered="#{curr_resources.resource_id == listResourcesPage.selResourceIdFromList}"/>
 					 <h:graphicImage id="contenttype_gif" alt="#{msgs.list_resources_content_url}" title="#{msgs.list_resources_content_url}" value="images/url.gif" styleClass="ExpClass" rendered="#{curr_resources.typeLink}"/>
 					 <h:graphicImage id="contenttype_gifLTI" alt="#{msgs.edit_list_resources_content_url}" title="#{msgs.edit_list_resources_content_url}" value="images/web_service.png" styleClass="ExpClass" rendered="#{curr_resources.typeLTI}"/>
 					<h:graphicImage id="contenttype_gif1" alt="#{msgs.edit_list_resources_content_upload}" 
@@ -102,18 +102,19 @@
 				    <f:facet name="header">
 							 <h:outputText id="t2" value="#{msgs.list_resources_actions2}" />
 					 </f:facet>
-					  <h:graphicImage id="linkgif" alt="" value="images/link2me.png" styleClass="AuthImgClass" rendered="#{listResourcesPage.callFromSection}" />
-				      <h:outputText id="emp_space-3" value=" " rendered="#{listResourcesPage.callFromSection}" />
-				     <h:commandLink id="linkaction" actionListener="#{listResourcesPage.selectedResourceAction}"  action="#{listResourcesPage.redirectLink}" rendered="#{listResourcesPage.callFromSection}" immediate="true">
+					 <h:commandLink id="linkaction" actionListener="#{listResourcesPage.selectedResourceAction}"  action="#{listResourcesPage.redirectLink}" rendered="#{listResourcesPage.callFromSection}" immediate="true">
 				     <f:param name="linkactionParam" value="#{curr_resources.resource_id}" />
+						<h:graphicImage id="linkgif" alt="" value="images/link2me.png" styleClass="AuthImgClass" rendered="#{listResourcesPage.callFromSection}" />
+				     	<h:outputText id="emp_space-3" value=" " rendered="#{listResourcesPage.callFromSection}" />
 						<h:outputText value="#{msgs.list_resources_link}" />
 					 </h:commandLink>	
 					  <h:outputText id="emp_space-1" value="     "  styleClass="ExtraPaddingClass" rendered="#{listResourcesPage.callFromSection}" />
-					 <h:graphicImage id="delgif" alt="" value="images/delete.gif" styleClass="AuthImgClass" />
-					 <h:outputText id="emp_space-2" value=" " />
+					 
 					 <h:commandLink id="deleteaction" actionListener="#{listResourcesPage.selectedResourceDeleteAction}"  action="#{listResourcesPage.redirectDeleteLink}" immediate="true" >
 				    		<f:param name="linkactionParam1" value="#{curr_resources.resource_id}" />
 				    		<f:param name="linkactionParam2" value="#{curr_resources.resource_title}" />
+				    		<h:graphicImage id="delgif" alt="" value="images/delete.gif" styleClass="AuthImgClass" />
+							<h:outputText id="emp_space-2" value=" " />
 				    		<h:outputText id="deltext" value="#{msgs.list_resources_del}"  />
 					 </h:commandLink>	
 				    </h:column>
