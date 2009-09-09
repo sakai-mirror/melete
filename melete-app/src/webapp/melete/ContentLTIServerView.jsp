@@ -86,10 +86,10 @@ function contentChangeSubmit()
 					</table> 
 					</td></tr>       
 					     <tr><td  colspan="2">
-					     <div align="center">
-						     <h:commandButton id="addButton_1" action="#{addSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgSpace"/>
-						     <h:commandButton id="cancelButton_1" immediate="true" action="#{addSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>
-				 	    </div>
+					     	<div class="actionBar" align="left">
+					     	 <h:commandButton id="addButton_1" action="#{addSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
+						     <h:commandButton id="cancelButton_1" immediate="true" action="#{addSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+				 	    	</div>
 					    </td></tr>
 	<!-- new link end -->
 					<tr><td>
@@ -104,9 +104,9 @@ function contentChangeSubmit()
 			             	</table>
 				</td></tr>
 				<tr><td  colspan="2">
-				<div align="center">
-		     	     <h:commandButton id="addButton" action="#{addSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgSpace"/>
-			 	     <h:commandButton id="cancelButton" immediate="true" action="#{addSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>	
+				  <div class="actionBar" align="left">
+		     	     <h:commandButton id="addButton" action="#{addSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
+			 	     <h:commandButton id="cancelButton" immediate="true" action="#{addSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>	
 				 </div>					              	
 		              	</td></tr>
 		     	</table>					

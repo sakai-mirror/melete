@@ -77,7 +77,7 @@ function changestatusmessage()
               <tr>
                 <td width="100%" valign="top">
                   <br>
-                  <table width="85%"  border="1" align="center" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
+                  <table width="100%"  border="1" align="center" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
                     <tr class="maintabledata3">
                       <td valign="top"><img src="images/right_check.gif" width="24" height="24" align="absbottom" alt="Confirmation Signal" border="0"></td>
                       <td align="left"><h:outputText value="#{msgs.confirm_addmodulesection_you_have_succes}" /><br>
@@ -88,14 +88,13 @@ function changestatusmessage()
                   </table><br></td>
               </tr>
 			  					              <tr>
-                <td height="30" colspan="2">         
-                <div align="center">				
-					<h:commandButton id="preview"  action="#{addSectionPage.previewFromAdd}" value="#{msgs.im_view_section}" accesskey="#{msgs.view_access}" title="#{msgs.im_view_section_text}" styleClass="BottomImgSpace"/>
-					<h:commandButton id="saveAddAnotherbutton"  action="#{addSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgSpace"/>
-					<h:commandButton id="FinishButton" action="list_auth_modules" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgSpace"/>
+                <td colspan="2">         
+                 <div class="actionBar" align="left">				
+					<h:commandButton id="preview"  action="#{addSectionPage.previewFromAdd}" value="#{msgs.im_view_section}" accesskey="#{msgs.view_access}" title="#{msgs.im_view_section_text}" styleClass="BottomImgPreview"/>
+					<h:commandButton id="saveAddAnotherbutton"  action="#{addSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd"/>
+					<h:commandButton id="FinishButton" action="list_auth_modules" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgFinish"/>
 				</div></td>
-              </tr>
-			 <tr><td colspan="2" height="20" class="maintabledata5">&nbsp;</td></tr>
+             </tr>			 
             </table>
           </td>
         </tr>
