@@ -85,10 +85,11 @@ function contentChangeSubmit()
                                                 </f:subview>
 					 <tr><td colspan="2"> &nbsp; </td></tr>	
 					</table> </td></tr>       
-					<tr><td colspan="2"><div align="center">
-						 <h:commandButton id="addButton_1" action="#{editSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgSpace"/>
-					     <h:commandButton id="cancelButton_1" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>		
-					</div></td></tr>
+					<tr><td colspan="2">
+						<div class="actionBar" align="left">
+							 <h:commandButton id="addButton_1" action="#{editSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
+					     	<h:commandButton id="cancelButton_1" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>		
+						</div></td></tr>
 	<!-- new link end -->				            		
 					<tr><td>
 	<!-- start main -->
@@ -98,10 +99,11 @@ function contentChangeSubmit()
 										<jsp:include page="list_resources.jsp"/> 
 									</f:subview>		
 					     </td></tr>
-			                     <tr><td  colspan="2"><div align="center">
-						 	 <h:commandButton id="addButton" action="#{editSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgSpace"/>
-					    	 <h:commandButton id="cancelButton" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>
-					     </div></td></tr>
+			                     <tr><td  colspan="2">
+			                     <div class="actionBar" align="left">
+						 			 <h:commandButton id="addButton" action="#{editSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
+					    			 <h:commandButton id="cancelButton" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+					     		</div></td></tr>
 					    </table>					
 	<!--end  main -->	
 			</td>

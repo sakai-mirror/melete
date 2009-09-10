@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -41,7 +41,10 @@
 				String printMsg = msg.getString("print_module_msg");
 				String printNoteMsg = msg.getString("print_note_msg");
 %>			
-				<div class="meletePortletToolBarMessage"><img src="images/printer.png" alt="" width="16" height="16" align="absmiddle" onclick="javascript:window.print()"> <a href="#" onclick="javascript:window.print()"><%=printMsg%></a>
+				<div class="meletePortletToolBarMessage">
+				 <a href="#" onclick="javascript:window.print()">
+				 <img src="images/printer.png" alt="" width="16" height="16" align="absmiddle">
+				 <%=printMsg%></a>
 				<br><%=printNoteMsg%> </div>
 		</td></tr>
 

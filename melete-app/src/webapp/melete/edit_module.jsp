@@ -184,7 +184,7 @@ function showEdateCal()
 		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
         		    </h:inputText>
 		            <h:outputLink id="viewsdateCal" onclick="showSdateCal()" value="#startCalender">
-        	    		<h:graphicImage id="sdateCal"  value="images/date.png" styleClass="DatePickerClass"/>
+        	    		<h:graphicImage id="sdateCal"  value="images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            			</h:outputLink>
 					 </td>
               </tr>
@@ -196,7 +196,7 @@ function showEdateCal()
                <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
             </h:inputText>
           <h:outputLink id="viewedateCal" onclick="showEdateCal()" value="#endCalender">
-            <h:graphicImage id="edateCal"  value="images/date.png"  styleClass="DatePickerClass"/>
+            <h:graphicImage id="edateCal"  value="images/date.png"  alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            </h:outputLink>
 					 </td>
               </tr>
@@ -207,18 +207,18 @@ function showEdateCal()
 		         </h:selectBooleanCheckbox>
 		         <h:outputText id="addtoScheduleTxt" value="#{msgs.edit_module_schedule}" />
                 </td>
-              </tr>                
-          		<tr bgcolor="#FFFFFF">
-                  <td height="20" colspan="2">&nbsp;</td>
-                </tr>
+              </tr>     
+          		
      </table>
 	</td>
   </tr>
      <tr>
-          <td height="20" align="center" colspan="2">
-          	  <h:commandButton id="submitsave" action="#{editModulePage.save}" value="#{msgs.im_save}" tabindex="" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSpace"/>
-          	  <h:commandButton id="sectionButton" action="#{editModulePage.addContentSections}" value="#{msgs.im_add_content_sections}" tabindex="" accesskey="#{msgs.add_access}" title="#{msgs.im_add_content_sections_text}" styleClass="BottomImgSpace"/>
-          	  <h:commandButton id="cancelButton" action="#{editModulePage.cancel}" immediate="true" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>	
+          <td colspan="2">
+          	<div class="actionBar" align="left">
+          	  <h:commandButton id="submitsave" action="#{editModulePage.save}" value="#{msgs.im_save}" tabindex="" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
+          	  <h:commandButton id="sectionButton" action="#{editModulePage.addContentSections}" value="#{msgs.im_add_content_sections}" tabindex="" accesskey="#{msgs.add_access}" title="#{msgs.im_add_content_sections_text}" styleClass="BottomImgAdd"/>
+          	  <h:commandButton id="cancelButton" action="#{editModulePage.cancel}" immediate="true" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+          	</div>  	
         </td></tr>
     </table></td>
   </tr>

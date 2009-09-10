@@ -51,14 +51,8 @@ function changestatusmessage()
 <f:view>
 <body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onLoad="changestatusmessage();setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
    <h:form id="AddSectionConfirmForm">
-<table border="0" cellpadding="0" cellspacing="0" class ="table3">
-	<tr>
-		<td valign="top"> 
-
-		</td>
-      <!-- This Begins the Main Text Area -->
-      <td width="100%" valign="top" >
-       <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
+	  <!-- This Begins the Main Text Area -->
+      <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
         <tr>
           <td width="100%" height="20" class="maintabledata1">
 	          <!-- Begin code to display images horizontally. -->
@@ -66,18 +60,18 @@ function changestatusmessage()
 					<jsp:include page="topnavbar.jsp"/> 
 				</f:subview>	
 					<div class="meletePortletToolBarMessage"><img src="images/check.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.confirm_addmodulesection_confirming_section}" /></div>
-</td>
+			</td>
         </tr>
               
         <tr>
           <td class="maintabledata3">
 		
 		  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
-		  	<tr><td colspan="2" height="20" class="maintabledata5">&nbsp;</td></tr>
-              <tr>
-                <td width="100%" valign="top">
+		  	<tr><td height="20" class="maintabledata5">&nbsp;</td></tr>
+            <tr>
+                <td valign="top">
                   <br>
-                  <table width="100%"  border="1" align="center" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
+                  <table width="100%"  border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
                     <tr class="maintabledata3">
                       <td valign="top"><img src="images/right_check.gif" width="24" height="24" align="absbottom" alt="Confirmation Signal" border="0"></td>
                       <td align="left"><h:outputText value="#{msgs.confirm_addmodulesection_you_have_succes}" /><br>
@@ -85,10 +79,10 @@ function changestatusmessage()
 					  <p align="left"><h:outputText value="#{msgs.confirm_addmodulesection_you_may_continue}"/> <BR>
                       </p></td>
                     </tr>
-                  </table><br></td>
+                  </table></td>
               </tr>
-			  					              <tr>
-                <td colspan="2">         
+			  <tr>
+                <td>         
                  <div class="actionBar" align="left">				
 					<h:commandButton id="preview"  action="#{addSectionPage.previewFromAdd}" value="#{msgs.im_view_section}" accesskey="#{msgs.view_access}" title="#{msgs.im_view_section_text}" styleClass="BottomImgPreview"/>
 					<h:commandButton id="saveAddAnotherbutton"  action="#{addSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd"/>
@@ -101,10 +95,6 @@ function changestatusmessage()
       </table>   
 	   </h:form>      
       <p>&nbsp;</p>
-
-</td>
-  </tr>
-</table>
   <!-- This Ends the Main Text Area -->
  
 </body>

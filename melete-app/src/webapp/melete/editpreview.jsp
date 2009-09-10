@@ -73,9 +73,10 @@
                	    border=\"0\" frameborder= \"0\"></iframe>" rendered="#{(editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLink|| editSectionPage.shouldRenderLTI) && editSectionPage.section.openWindow == false}" escape="false" />			
 		      </td></tr>
 	       
-			<tr><td><div align="center">
-						<h:commandButton id="submitsave" action="#{editSectionPage.save}" onclick="transferEditordata()" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSpace"/>
-						<h:commandButton id="cancelButton" immediate="true" action="#{editSectionPage.cancelFromPreview}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>	
+			<tr><td>
+				<div class="actionBar" align="left">
+						<h:commandButton id="submitsave" action="#{editSectionPage.save}" onclick="transferEditordata()" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
+						<h:commandButton id="cancelButton" immediate="true" action="#{editSectionPage.cancelFromPreview}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>	
 		   	        </div></td>
               </tr>
               <tr>
@@ -83,10 +84,10 @@
 				</td>
               </tr>
               <tr>
-                <td height="21" bgcolor="#FFFFFF"><div align="center"></div>
-                    <div align="center">   	
-                  	  <h:commandButton id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgSpace"/>
-					  <h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgSpace"/>
+                <td>
+                    <div class="actionBar" align="left">  	
+                  	  <h:commandButton id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd"/>
+					  <h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgFinish"/>
 					 </div>				
   			</td></tr>			
          	 <tr><td>

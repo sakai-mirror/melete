@@ -71,7 +71,7 @@
                         <br><h:outputText value="#{addModulePage.module.title}" styleClass="bold"  />
                         <p align="left"><h:outputText value="#{msgs.confirm_addmodule_continue_adding}" /></p></td>
                     </tr>
-                  </table><br></td>
+                  </table></td>
               </tr>
 			  <tr>
                 <td>         

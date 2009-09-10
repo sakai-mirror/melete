@@ -46,21 +46,19 @@
         <tr>
           <td width="100%" class="maintabledata1">
 			  	<!-- top nav bar -->
-						<f:subview id="top">
-								<jsp:include page="topnavbar.jsp"/> 
-						</f:subview>
-						<div class="meletePortletToolBarMessage"><img src="images/view_next.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.module_post_steps_whats_next}" /> </div>
-					</td>
-				</tr>
-			    </tr>
-				<tr><td height="20" class="maintabledata3"><h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/></td></tr>
+				<f:subview id="top">
+						<jsp:include page="topnavbar.jsp"/> 
+				</f:subview>
+				<div class="meletePortletToolBarMessage"><img src="images/view_next.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.module_post_steps_whats_next}" /> </div>
+			</td>
+		</tr>
+			
+		<tr><td height="20" class="maintabledata3"><h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/></td></tr>
 			<tr>
 			  <td class="maintabledata3">
-				  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
-              <tr>
-                <td valign="top">
-				<table border="0" cellspacing="0" cellpadding="3">
-				  <tr><td height="20" class="maintabledata5">
+				<table width="100%" border="0" cellspacing="0" cellpadding="3">
+				  <tr>
+				  <td height="20" class="maintabledata5">
 							  <h:outputText id="text5" value="#{msgs.module_post_steps_message1}"/> 
 				  </td></tr>
 				  <tr><td>&nbsp;</td></tr>
@@ -81,23 +79,15 @@
                     </td>
               </tr>
               <tr>
-                <td height="30"><div align="center">   
-                	<h:commandButton id="addsteps"  action="#{moduleNextStepsPage.addPostSteps}" rendered="#{moduleNextStepsPage.mdBean.module.whatsNext == moduleNextStepsPage.isNull}" value="#{msgs.im_add_button}" accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgSpace"/>
-					<h:commandButton id="savesteps" action="#{moduleNextStepsPage.savePostSteps}" rendered="#{moduleNextStepsPage.mdBean.module.whatsNext != moduleNextStepsPage.isNull}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSpace"/>	
-					<h:commandButton id="cancelButton" immediate="true" action="#{moduleNextStepsPage.cancelChanges}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>       
-       			 </div></td>
-              </tr>
-			 <tr><td height="20" class="maintabledata5">&nbsp;</td></tr>
-            </table>
+                <td>
+                 <div class="actionBar" align="left">				
+					<h:commandButton id="addsteps"  action="#{moduleNextStepsPage.addPostSteps}" rendered="#{moduleNextStepsPage.mdBean.module.whatsNext == moduleNextStepsPage.isNull}" value="#{msgs.im_add_button}" accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
+					<h:commandButton id="savesteps" action="#{moduleNextStepsPage.savePostSteps}" rendered="#{moduleNextStepsPage.mdBean.module.whatsNext != moduleNextStepsPage.isNull}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>	
+					<h:commandButton id="cancelButton" immediate="true" action="#{moduleNextStepsPage.cancelChanges}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>       
+       			 </div>
           </td>
         </tr>
-      </table>      
-      <p>&nbsp;</p>
-
-       
-</td>
-  </tr>
-</table>
+      </table>    
 		</h:form>
 <!-- This Ends the Main Text Area -->
 

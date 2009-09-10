@@ -274,11 +274,6 @@ if (msg != null)
                            value="#{mdbean.moduleShdate.startDate}" >
             <f:convertDateTime type="both" dateStyle="medium" timeStyle="short"/>
             </h:inputText>
-          
-                           
-            <f:facet name="footer">              
-              <h:commandButton id="saveChanges" action="#{listAuthModulesPage.saveChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_save}" tabindex="" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSpace"/>            
-            </f:facet>
          </h:column>
          <h:column>
               <f:facet name="header">
@@ -298,9 +293,6 @@ if (msg != null)
                            value="#{mdbean.moduleShdate.endDate}" >
                <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
             </h:inputText>
-            <f:facet name="footer">
-              <h:commandButton id="cancelChanges" immediate="true" action="#{listAuthModulesPage.cancelChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_cancel}" tabindex="10" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>                     
-            </f:facet>           
          </h:column>
          <h:column>
               <f:facet name="header">
@@ -340,7 +332,12 @@ if (msg != null)
     </br>
 	<h:outputText id="nomodmsg" value="#{msgs.list_auth_modules_no_modules_available}" rendered="#{listAuthModulesPage.nomodsFlag == true}" style="text-align:left"/>
 	</td></tr>
-	  <tr > <td colspan="7" height="20" class="maintabledata5">&nbsp;  </td> </tr>
+	  <tr > <td colspan="7">
+	  <div class="actionBar" align="left">
+	   <h:commandButton id="saveChanges" action="#{listAuthModulesPage.saveChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_save}" tabindex="" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
+	   <h:commandButton id="cancelChanges" immediate="true" action="#{listAuthModulesPage.cancelChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_cancel}" tabindex="10" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+	  </div>
+	  </td> </tr>
                  </table>
 </td>
 </tr>

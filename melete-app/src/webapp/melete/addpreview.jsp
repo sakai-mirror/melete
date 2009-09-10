@@ -72,24 +72,11 @@
 	          
 				</td></tr>
 			
-			<tr><td> <div align="center">
-		   				
-				<h:commandLink id="saveAddAnotherbutton"  action="#{addSectionPage.saveAndAddAnotherSection}">
-						<h:graphicImage id="saveAddAnotherImg" value="#{msgs.im_add_another_section}" height="19" styleClass="BottomImgSpace" 
-							onmouseover="this.src = '#{msgs.im_add_another_section_over}'" 
-							onmouseout="this.src = '#{msgs.im_add_another_section}'" 
-							onmousedown="this.src = '#{msgs.im_add_another_section_down}'" 
-							onmouseup="this.src = '#{msgs.im_add_another_section_over}'"/>
-	                </h:commandLink>				
-					
-				<h:commandLink id="FinishButton"  action="list_auth_modules">
-						<h:graphicImage id="finishImg" value="#{msgs.im_finish}" height="19" styleClass="BottomImgSpace"
-							onmouseover="this.src = '#{msgs.im_finish_over}'" 
-							onmouseout="this.src = '#{msgs.im_finish}'" 
-							onmousedown="this.src = '#{msgs.im_finish_down}'" 
-							onmouseup="this.src = '#{msgs.im_finish_over}'" />
-	                </h:commandLink>				
-</div></td>
+			<tr><td> 
+				 <div class="actionBar" align="left">
+		   			<h:commandButton id="saveAddAnotherbutton"  action="#{addSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd"/>
+					<h:commandButton id="FinishButton" action="list_auth_modules" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgFinish"/>							
+				</div></td>
               </tr>
 			 <tr>
 			 <td>
