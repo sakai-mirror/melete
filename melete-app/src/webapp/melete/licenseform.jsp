@@ -27,7 +27,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 
 <f:subview id="SectionView" rendered="#{licensePage.callFromSection}">
- <h:outputText value="#{msgs.resources_proper_pan_cstatus}" />	 
+ <h:outputText value="#{msgs.licenseform_resources_proper_pan_cstatus}" />	 
  <h:outputText value="          " styleClass="MediumPaddingClass" />
  <h:selectOneMenu id="licenseCodes" value="#{licensePage.licenseCodes}" valueChangeListener="#{licensePage.hideLicense}" onchange="transferEditordata(); this.form.submit();" >
 	 <f:selectItems value="#{licensePage.licenseTypes}" />							
@@ -35,7 +35,7 @@
  </f:subview>
  
  <f:subview id="PreferenceView" rendered="#{!licensePage.callFromSection}">
- <h:outputText value="#{msgs.author_preference_select_license}" styleClass="bold"/>	 
+ <h:outputText value="#{msgs.licenseform_select_license}" styleClass="bold"/>	 
  <h:outputText value="          " styleClass="MediumPaddingClass" />
  <h:selectOneMenu id="licenseCodes2" value="#{licensePage.licenseCodes}" valueChangeListener="#{licensePage.hideLicense}" onchange="this.form.submit();">
 	 <f:selectItems value="#{licensePage.licenseTypes}" />							
@@ -48,43 +48,43 @@
   <h:column>
   <f:subview id="CCLicenseForm" rendered="#{licensePage.shouldRenderCC || licensePage.shouldRenderCopyright || licensePage.shouldRenderPublicDomain || licensePage.shouldRenderFairUse}">	
     <h:panelGrid id="cclicensetable1" columns="1" columnClasses="maintabledata8" width="100%"  rendered="#{licensePage.shouldRenderCC}">
-	<h:outputText value="#{msgs.add_section_cclicense}" />
+	<h:outputText value="#{msgs.licenseform_cclicense}" />
     </h:panelGrid>
     <h:panelGrid id="cclicensetable2" columns="1" width="100%" rendered="#{licensePage.shouldRenderCC}">
 	<h:column>
-		 <h:outputText value="#{msgs.add_section_cclicense_form_msg1}" />
+		 <h:outputText value="#{msgs.licenseform_cclicense_form_msg1}" />
 	 </h:column>
 	 <h:column><h:outputText value=""/></h:column>
 	 <h:column>
 	 	<h:panelGrid id="licenseoptions" columns="2" width="97%" cellpadding="5" cellspacing="5" border="0"> 
 		 <h:column>
-				  <h:outputText value="#{msgs.add_section_cclicense_form_allow_commercial}"/>
+				  <h:outputText value="#{msgs.licenseform_cclicense_form_allow_commercial}"/>
 		</h:column>			
 		<h:column>  
                  		  <h:selectOneRadio id="allowCmrcl" value="#{licensePage.allowCmrcl}">
-				  	<f:selectItem itemValue="true" itemLabel="#{msgs.add_section_cclicense_form_allowmod2}"/>
-					<f:selectItem  itemValue="false" itemLabel="#{msgs.add_section_cclicense_form_allowmod0}"/>
+				  	<f:selectItem itemValue="true" itemLabel="#{msgs.licenseform_cclicense_form_allowmod2}"/>
+					<f:selectItem  itemValue="false" itemLabel="#{msgs.licenseform_cclicense_form_allowmod0}"/>
 				  </h:selectOneRadio>
 		</h:column>			
 		<h:column>  
-				   <h:outputText value="#{msgs.add_section_cclicense_form_allow_modification}"/>
+				   <h:outputText value="#{msgs.licenseform_cclicense_form_allow_modification}"/>
     	 </h:column>
 		 <h:column>          
 				  	
 				    <h:selectOneRadio id="allowMod" value="#{licensePage.allowMod}">
-				  	<f:selectItem itemValue="2" itemLabel="#{msgs.add_section_cclicense_form_allowmod2}"/>
-					<f:selectItem itemValue="1" itemLabel="#{msgs.add_section_cclicense_form_allowmod1}"/>
-					<f:selectItem itemValue="0" itemLabel="#{msgs.add_section_cclicense_form_allowmod0}"/>
+				  	<f:selectItem itemValue="2" itemLabel="#{msgs.licenseform_cclicense_form_allowmod2}"/>
+					<f:selectItem itemValue="1" itemLabel="#{msgs.licenseform_cclicense_form_allowmod1}"/>
+					<f:selectItem itemValue="0" itemLabel="#{msgs.licenseform_cclicense_form_allowmod0}"/>
 				  </h:selectOneRadio>
     	</h:column>
     	<h:column>
-		 <h:outputText value="#{msgs.add_section_cclicense_form_lic_holder}"/> 
+		 <h:outputText value="#{msgs.licenseform_cclicense_form_lic_holder}"/> 
 	    </h:column>
 	    <h:column>
 			<h:inputText id="copy_owner" value="#{licensePage.copyright_owner}" size="45" styleClass="formtext" />
 	    </h:column>
 	    <h:column>
-		 <h:outputText value="#{msgs.add_section_cclicense_form_lic_year}"/> 
+		 <h:outputText value="#{msgs.licenseform_cclicense_form_lic_year}"/> 
 	    </h:column>
 	 	 <h:column>
 			<h:inputText id="copy_year" value="#{licensePage.copyright_year}" size="45" styleClass="formtext" />
@@ -94,26 +94,26 @@
 	</h:panelGrid>
 		
 	<h:panelGrid id="copyrighttable1" columns="1" columnClasses="maintabledata8" width="100%" >
-			 <h:outputText value="#{msgs.add_section_cclicense_form_copy_of_aut}" rendered="#{licensePage.shouldRenderCopyright}"/> 
-			 <h:outputText value="#{msgs.add_section_cclicense_form_public}" rendered="#{licensePage.shouldRenderPublicDomain}"/> 
-			  <h:outputText value="#{msgs.add_section_cclicense_form_fair}" rendered="#{licensePage.shouldRenderFairUse}"/> 
+			 <h:outputText value="#{msgs.licenseform_cclicense_form_copy_of_aut}" rendered="#{licensePage.shouldRenderCopyright}"/> 
+			 <h:outputText value="#{msgs.licenseform_cclicense_form_public}" rendered="#{licensePage.shouldRenderPublicDomain}"/> 
+			  <h:outputText value="#{msgs.licenseform_cclicense_form_fair}" rendered="#{licensePage.shouldRenderFairUse}"/> 
     </h:panelGrid>			 
     <h:panelGrid id="copyrighttable2" columns="1"  width="100%">
 	<h:column>	  
-           <h:outputText value="#{msgs.add_section_cclicense_form_msg2}"  rendered="#{licensePage.shouldRenderCopyright}"/>		 
-            <h:outputText value="#{msgs.add_section_cclicense_form_msg3}" rendered="#{licensePage.shouldRenderPublicDomain}"/> 	
-            <h:outputText value="#{msgs.add_section_cclicense_form_msg4}" rendered="#{licensePage.shouldRenderFairUse}"/> 	 
+           <h:outputText value="#{msgs.licenseform_cclicense_form_msg2}"  rendered="#{licensePage.shouldRenderCopyright}"/>		 
+            <h:outputText value="#{msgs.licenseform_cclicense_form_msg3}" rendered="#{licensePage.shouldRenderPublicDomain}"/> 	
+            <h:outputText value="#{msgs.licenseform_cclicense_form_msg4}" rendered="#{licensePage.shouldRenderFairUse}"/> 	 
     </h:column>
     <h:column>	  
       <h:panelGrid id="copyrightoptions" columns="2"  width="82%"  cellpadding="5" cellspacing="5" columnClasses="copyrightColumn1, copyrightColumn2" border="0" rendered="#{!licensePage.shouldRenderCC}">
 	   <h:column>
-		 <h:outputText value="#{msgs.add_section_cclicense_form_lic_holder2}"/>  <h:outputText value="*" styleClass="required" rendered="#{licensePage.shouldRenderCopyright}"/>
+		 <h:outputText value="#{msgs.licenseform_cclicense_form_lic_holder2}"/>  <h:outputText value="*" styleClass="required" rendered="#{licensePage.shouldRenderCopyright}"/>
 	   </h:column>	  
 	   <h:column>
 			<h:inputText id="copy_owner1" value="#{licensePage.copyright_owner}" size="45" styleClass="formtext" />
 	   </h:column>
 	   <h:column>
-		 <h:outputText value="#{msgs.add_section_cclicense_form_lic_year2}"/>  <h:outputText value="*" styleClass="required" rendered="#{licensePage.shouldRenderCopyright}"/>
+		 <h:outputText value="#{msgs.licenseform_cclicense_form_lic_year2}"/>  <h:outputText value="*" styleClass="required" rendered="#{licensePage.shouldRenderCopyright}"/>
 	   </h:column>
 	   <h:column>
 			<h:inputText id="copy_year1" value="#{licensePage.copyright_year}" size="45" styleClass="formtext" />
