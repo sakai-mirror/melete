@@ -1103,18 +1103,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		             file_mime_type = ContentTypeImageService.getContentType(file_mime_type);
 
 		            String newEmbedResourceId = null;
-		            //If the resource already exists, use it
-		            try
-	                {
-		             	  String checkResourceId = UploadCollId + fileName;
-	                   	  checkResource(checkResourceId);
-				 	      newEmbedResourceId = checkResourceId;
-	                }
-	                catch (IdUnusedException ex2)
-			        {
-	                	ResourcePropertiesEdit res =fillEmbeddedImagesResourceProperties(fileName);
-	                	newEmbedResourceId = addResourceItem(fileName,file_mime_type,UploadCollId,data,res );
-			        }
+	               	ResourcePropertiesEdit res =fillEmbeddedImagesResourceProperties(fileName);
+                	newEmbedResourceId = addResourceItem(fileName,file_mime_type,UploadCollId,data,res );
+                	logger.debug("new embed res id:" + newEmbedResourceId);	                	
 
 		            //add in melete resource database table also
 		             MeleteResource meleteResource = new MeleteResource();
@@ -1122,7 +1113,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	            	 //set default license info to "I have not determined copyright yet" option
 	            	 meleteResource.setLicenseCode(0);
 	            	 sectiondb.insertResource(meleteResource);
-
+			        
 		         	// in content editor replace the file found with resource reference url
 		         	 String replaceStr = getResourceUrl(newEmbedResourceId);
 		         	 replaceStr = meleteUtil.replace(replaceStr,ServerConfigurationService.getServerUrl(),"");

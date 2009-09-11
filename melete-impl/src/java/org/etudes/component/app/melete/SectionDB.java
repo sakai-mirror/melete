@@ -651,6 +651,12 @@ public class SectionDB implements Serializable {
 	         Transaction tx = null;
 			try
 			{
+				String queryString = "from MeleteResource meleteresource where meleteresource.resourceId=:resourceId";
+			     Query query = session.createQuery(queryString);
+			     query.setParameter("resourceId",melResource.getResourceId());
+			     List result_list = query.list();
+			     if(result_list != null && result_list.size() != 0) return;
+			     
 				tx = session.beginTransaction();
 			//save resource
 				session.save(melResource);
