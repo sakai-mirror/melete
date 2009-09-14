@@ -207,26 +207,27 @@ if (msg != null)
     <h:column>
     <f:facet name="header">
     <h:panelGroup>
-      <h:commandLink id="expandAllAction" action="#{listAuthModulesPage.expandAllAction}" immediate="true">
-     	<h:graphicImage id="exp_all_gif" alt="#{msgs.list_auth_modules_authoring_expand_all}" title="#{msgs.list_auth_modules_authoring_expand}" value="images/expand-collapse.gif"   rendered="#{listAuthModulesPage.expandAllFlag != listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
-      </h:commandLink>
-      <h:commandLink id="collapseAllAction" action="#{listAuthModulesPage.collapseAllAction}" immediate="true">
-        <h:graphicImage id="col_all_gif" alt="#{msgs.list_auth_modules_authoring_collapse_all}" title="#{msgs.list_auth_modules_authoring_collapse}" value="images/collapse-expand.gif"   rendered="#{listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
-      </h:commandLink>   
        <h:selectBooleanCheckbox id="allmodcheck" value="#{listAuthModulesPage.selectAllFlag}" onclick="selectAll()" valueChangeListener="#{listAuthModulesPage.selectAllModules}"  rendered="#{listAuthModulesPage.nomodsFlag == false}"/>   
     </h:panelGroup> 
      </f:facet>
-       <h:outputText id="modempspace" value="  " styleClass="ExtraPaddingClass" />
-                
+                      
       <h:selectBooleanCheckbox id="modCheck" value="#{mdbean.selected}" onclick="resetCheck()" valueChangeListener="#{listAuthModulesPage.selectedModuleSection}" />
          <h:graphicImage id="err_gif" value="images/pin_red.gif" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
     </h:column>
   
                
-        <h:column>
- <f:facet name="header">
-             <h:outputText id="t2" value="#{msgs.list_auth_modules_title}" />
-             </f:facet>
+   <h:column>
+ 	<f:facet name="header">
+ 	 <h:panelGroup>
+      <h:commandLink id="expandAllAction" action="#{listAuthModulesPage.expandAllAction}" immediate="true">
+     	<h:graphicImage id="exp_all_gif" alt="#{msgs.list_auth_modules_authoring_expand_all}" title="#{msgs.list_auth_modules_authoring_expand}" value="images/expand-collapse.gif"   rendered="#{listAuthModulesPage.expandAllFlag != listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
+      </h:commandLink>
+      <h:commandLink id="collapseAllAction" action="#{listAuthModulesPage.collapseAllAction}" immediate="true">
+        <h:graphicImage id="col_all_gif" alt="#{msgs.list_auth_modules_authoring_collapse_all}" title="#{msgs.list_auth_modules_authoring_collapse}" value="images/collapse-expand.gif"   rendered="#{listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
+      </h:commandLink>  
+      <h:outputText id="t2" value="#{msgs.list_auth_modules_title}" />
+     </h:panelGroup>        
+    </f:facet>
 					
      <h:commandLink id="viewSections" action="#{listAuthModulesPage.showAuthSections}" immediate="true">
         <h:graphicImage id="exp_gif" alt="#{msgs.list_auth_modules_authoring_expand}" value="images/expand.gif" rendered="#{((mdbean.moduleId != listAuthModulesPage.showModuleId)&&(mdbean.sectionBeans != listAuthModulesPage.nullList)&&(listAuthModulesPage.expandAllFlag != listAuthModulesPage.trueFlag))}" styleClass="ExpClass"/>
@@ -326,10 +327,7 @@ if (msg != null)
 	    
           
     </h:dataTable>   
-    <h:inputHidden id="listSize" value="#{listAuthModulesPage.listSize}"/>
-				   
- 
-    </br>
+    <h:inputHidden id="listSize" value="#{listAuthModulesPage.listSize}"/>   
 	<h:outputText id="nomodmsg" value="#{msgs.list_auth_modules_no_modules_available}" rendered="#{listAuthModulesPage.nomodsFlag == true}" style="text-align:left"/>
 	</td></tr>
 	  <tr > <td colspan="7">
