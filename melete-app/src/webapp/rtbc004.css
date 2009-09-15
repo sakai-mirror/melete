@@ -454,7 +454,14 @@ border: 0;}
 					}	
 .BottomImgImport	{  	padding-left:2em;
 						background: #eee url('images/import1.gif') .2em no-repeat;
-					}																																									
+					}
+.BottomImgSort		{  	padding-left:2em;
+						background: #eee url('images/document_exchange.gif') .2em no-repeat;
+					}
+							
+.BottomImgRestore	{  	padding-left:2em;
+						background: #eee url('images/restore.png') .2em no-repeat;
+					}																																												
  .UpLink
  {
  width: 1px;

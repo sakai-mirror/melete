@@ -126,22 +126,19 @@ function resetCheck()
 			  					</td>
             				</tr>
             				<tr>
-              					<td height="30" colspan="2">
-			    					<div align="center">
-			    					<h:commandButton action="#{manageModulesPage.restoreModules}" value="#{msgs.im_restore}" accesskey="#{msgs.restore_access}" title="#{msgs.im_restore_text}" styleClass="BottomImgSpace" rendered="#{(manageModulesPage.shouldRenderEmptyList == manageModulesPage.falseBool)}"/>
-						            <h:commandButton action="#{manageModulesPage.deleteModules}" value="#{msgs.im_delete}" accesskey="#{msgs.delete_access}" title="#{msgs.im_delete_text}" styleClass="BottomImgSpace" rendered="#{(manageModulesPage.shouldRenderEmptyList == manageModulesPage.falseBool)}"/>
-			                        <h:commandButton id="cancelButton" action="#{manageModulesPage.cancelRestoreModules}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>
+              					<td colspan="2">
+			    					<div class="actionBar" align="left">
+			    					<h:commandButton action="#{manageModulesPage.restoreModules}" value="#{msgs.im_restore}" accesskey="#{msgs.restore_access}" title="#{msgs.im_restore_text}" styleClass="BottomImgRestore" rendered="#{(manageModulesPage.shouldRenderEmptyList == manageModulesPage.falseBool)}"/>
+						            <h:commandButton action="#{manageModulesPage.deleteModules}" value="#{msgs.im_delete}" accesskey="#{msgs.delete_access}" title="#{msgs.im_delete_text}" styleClass="BottomImgDelete" rendered="#{(manageModulesPage.shouldRenderEmptyList == manageModulesPage.falseBool)}"/>
+			                        <h:commandButton id="cancelButton" action="#{manageModulesPage.cancelRestoreModules}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
 				  					</div>
 				  				</td>
-            				</tr>
-							<tr><td height="20" class="maintabledata5" colspan="2">&nbsp;</td> </tr>
+            				</tr>							
           				</table>
 		  			</td>
 		  		</tr>
 		  	</table> 
-		  	<p>&nbsp;</p>
-
-		</td>
+		 </td>
   	</tr>
 </table>
 </h:form>

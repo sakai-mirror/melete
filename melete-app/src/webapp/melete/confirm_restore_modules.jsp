@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -42,9 +42,6 @@
 <!-- This Begins the Main Text Area -->
  <table >
 	<tr>
-		<td valign="top"> 
-			&nbsp;
-		</td>
     <td width="1962" valign="top" >
         <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
           <tr>
@@ -63,7 +60,7 @@
               <tr>
                 <td width="100%" valign="top">
                   <br>
-                  <table width="85%"  border="1" align="center" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
+                  <table width="100%"  border="1" align="center" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
                     <tr class="maintabledata3">
                       <td valign="top"><h:graphicImage id="right_check" value="images/right_check.gif" width="24" height="24"  alt="#{msgs.confirm_restore_modules_confirmation_signal}" title="#{msgs.confirm_restore_modules_confirmation_signal}"/></td>
                       <td align="left"><h:outputText value="#{msgs.confirm_restore_modules_message1}" /></br>
@@ -80,15 +77,14 @@
                   </table><br></td>
               </tr>
 			    <tr>
-                <td height="30" colspan="2">         
-                <div align="center">	
-               	<h:commandButton action="#{manageModulesPage.returnToModules}" value="#{msgs.im_return_to_modules}" accesskey="#{msgs.return_access}" title="#{msgs.im_return_to_modules_text}" styleClass="BottomImgSpace"/>
+                <td colspan="2">         
+                <div class="actionBar" align="left">	
+               	<h:commandButton action="#{manageModulesPage.returnToModules}" value="#{msgs.im_return_to_modules}" accesskey="#{msgs.return_access}" title="#{msgs.im_return_to_modules_text}" styleClass="BottomImgReturn"/>
 			
 				</div>
 
 				</td>
-              </tr>
-			 <tr><td colspan="2" height="20" class="maintabledata5">&nbsp;</td></tr>
+              </tr>			
             </table>
 		<!--end  main -->
 			  </td></tr></table> 

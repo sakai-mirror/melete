@@ -142,9 +142,9 @@
 	     </tr>	     
 	     <tr>
 	       <td colspan="2">
-	       <div align="center">
-                <h:commandButton id="continueButton" action="#{addResourcesPage.addItems}" value="#{msgs.im_continue}" tabindex="9" onclick="clearmessage()" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgSpace"/>
-                <h:commandButton id="cancelButton" immediate="true" action="#{addResourcesPage.cancel}" value="#{msgs.im_cancel}" tabindex="9" onclick="clearmessage()" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>			                          
+	       <div class="actionBar" align="left">
+                <h:commandButton id="continueButton" action="#{addResourcesPage.addItems}" value="#{msgs.im_continue}" tabindex="9" onclick="clearmessage()" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
+                <h:commandButton id="cancelButton" immediate="true" action="#{addResourcesPage.cancel}" value="#{msgs.im_cancel}" tabindex="9" onclick="clearmessage()" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>			                          
             </div>    	
 	       </td>
 	     </tr>

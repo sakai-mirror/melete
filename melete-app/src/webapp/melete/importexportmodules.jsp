@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -99,9 +99,9 @@ function showprocessMsg()
                   			</tr>
                   			<tr>
                     			<td colspan="2" class="maintabledata7">
-	                    			<div align="center">
-                						 <h:commandButton id="importButton" action="#{exportMeleteModules.importModules}" value="#{msgs.im_import}" onclick="showprocessMsg()" accesskey="#{msgs.import_access}" title="#{msgs.im_import_text}" styleClass="BottomImgSpace"/>
-                                         <h:commandButton id="cancelButton" immediate="true" action="#{manageModulesPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>			                
+	                    			<div class="actionBar" align="left">
+                						 <h:commandButton id="importButton" action="#{exportMeleteModules.importModules}" value="#{msgs.im_import}" onclick="showprocessMsg()" accesskey="#{msgs.import_access}" title="#{msgs.im_import_text}" styleClass="BottomImgImport"/>
+                                         <h:commandButton id="cancelButton" immediate="true" action="#{manageModulesPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>			                
                 					</div>	
                 					<h:outputLabel id="processmsg" value="Processing..." styleClass="orange" style="visibility:hidden" /> 	     						                					
 								</td>
@@ -145,18 +145,14 @@ function showprocessMsg()
                     		</tr>
                     		
                     		<tr>
-                    			<td colspan="2" class="maintabledata7">
-									<div align="center">
-                						<h:commandButton id="exportButton" action="#{exportMeleteModules.exportModules}" value="#{msgs.im_export}" accesskey="#{msgs.export_access}" title="#{msgs.im_export_text}" styleClass="BottomImgSpace"/>
-                                        <h:commandButton id="cancelButton" immediate="true" action="#{manageModulesPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgSpace"/>			                
+                    			<td colspan="2">
+									<div class="actionBar" align="left">
+                						<h:commandButton id="exportButton" action="#{exportMeleteModules.exportModules}" value="#{msgs.im_export}" accesskey="#{msgs.export_access}" title="#{msgs.im_export_text}" styleClass="BottomImgExport"/>
+                                        <h:commandButton id="cancelButton" immediate="true" action="#{manageModulesPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>			                
       
 									</div>
 								</td>
-				    		</tr>
-				    
-				            <tr>
-			  					<td class="maintabledata5" colspan="2">&nbsp;</td>
-			  				</tr>		
+				    		</tr>      	
 				    	
            				</table>
    
