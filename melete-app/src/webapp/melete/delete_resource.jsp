@@ -64,7 +64,7 @@
         <tr> 
         <td width="100%" valign="top">
            <h:messages id="deleteResourceError" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-           <table width="85%"  border="1" align="center" cellpadding="10" cellspacing="5" bordercolor="#CCCCCC" style="border-collapse: collapse">
+           <table width="100%"  border="1" align="center" cellpadding="10" cellspacing="5" bordercolor="#CCCCCC" style="border-collapse: collapse">
         	<tr>
         		<td> <img src="images/Warning.gif" border="0">
         		</td>
@@ -92,27 +92,12 @@
            </table>
         </td></tr>
           <tr>
-                <td height="30" >         
-                <div align="center">				
-				<h:commandLink id="delButton" action="#{deleteResourcePage.deleteResource}">
-					<h:graphicImage id="continueImg" value="#{msgs.im_continue}" styleClass="BottomImgSpace"
-						onmouseover="this.src = '#{msgs.im_continue_over}'" 
-						onmouseout="this.src = '#{msgs.im_continue}'" 
-						onmousedown="this.src = '#{msgs.im_continue_down}'" 
-						onmouseup="this.src = '#{msgs.im_continue_over}'"/>
-                </h:commandLink>                
-                          
-				<h:commandLink id="cancelButton" action="#{deleteResourcePage.cancelDeleteResource}">
-					<h:graphicImage id="cancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace"
-						onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-						onmouseout="this.src = '#{msgs.im_cancel}'" 
-						onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-                </h:commandLink>	
-	
-			</div></td>
-              </tr>
-			 <tr><td  height="20" class="maintabledata5">&nbsp;</td></tr>
+                <td>         
+               <div class="actionBar" align="left">	
+                	<h:commandButton id="delButton" action="#{deleteResourcePage.deleteResource}" value="#{msgs.im_continue}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgDelete"/>			
+                    <h:commandButton id="cancelButton" action="#{deleteResourcePage.cancelDeleteResource}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+              	</div></td>
+              </tr>			 
             </table>
       </td></tr></table>
 

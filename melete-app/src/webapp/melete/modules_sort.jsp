@@ -67,17 +67,8 @@
 				                        <td class="style2"><h:outputText value="#{msgs.sort_modules_sort}" /></td>
 										<td><div>
 										 <!-- Begin code to display images horizontally. -->
-										<h:graphicImage id="Sort_Modules-horz"	alt="#{msgs.sort_modules_sort_modules}"
-								   							url="#{msgs.im_sort_modules_down2}"
-								     						 width="85" height="20" styleClass="BottomImgSpace"/>	
-								     						 
-					     			<h:commandLink id="sortsec"  action="#{sortModuleSectionPage.gotoSortSections}" immediate="true" >					 
-										<h:graphicImage id="sortSectionsImg" value="#{msgs.im_sort_sections}" width="85" height="20" styleClass="BottomImgSpace" 
-													onmouseover="this.src = '#{msgs.im_sort_sections_over}'" 
-													onmouseout="this.src = '#{msgs.im_sort_sections}'" 
-													onmousedown="this.src = '#{msgs.im_sort_sections_down}'" 
-													onmouseup="this.src = '#{msgs.im_sort_sections}'"/>
-										</h:commandLink>			
+									   	<h:commandButton id="Sort_Modules-horz" disabled="true" value="#{msgs.im_sort_modules}" title="#{msgs.im_sort_modules_text}" styleClass="BottomImgSort"/>
+									   	<h:commandButton id="sortsec" immediate="true" action="#{sortModuleSectionPage.gotoSortSections}" value="#{msgs.im_sort_sections}" accesskey="#{msgs.sort_access}" title="#{msgs.im_sort_sections_text}" styleClass="BottomImgSort"/> 						 
 										<!-- End code to display images horizontally. -->
 										</div></td>
 									  </tr>
@@ -114,24 +105,24 @@
 											<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" style="border-collapse: collapse">
 											<tr>
                        						 <td align="left">
-                       						 	 <h:selectOneListbox id="modulenewList" value="#{sortModuleSectionPage.newSelectedModule}" size="#{sortModuleSectionPage.showSize}" style="width:300px">
+                       						 	 <h:selectManyListbox id="modulenewList" value="#{sortModuleSectionPage.newSelectedModulesList}" size="#{sortModuleSectionPage.showSize}" style="width:300px">
 															 <f:selectItems value="#{sortModuleSectionPage.newList}" />							
-													 </h:selectOneListbox>
+													 </h:selectManyListbox>
 											  </td>                        
 											 </tr>
 											</table></td> 
 				                        <td width="15" align="center">			
 				                        <h:commandLink id="all_up"  action="#{sortModuleSectionPage.MoveItemAllUpAction}">		
-										 <h:graphicImage id="allupImg" value="images/up_end.gif" alt="Move All Up" width="20" height="20" styleClass="BottomImgSpace" />
+										 <h:graphicImage id="allupImg" value="images/up_end.gif" alt="#{msgs.sort_all_Up}" title="#{msgs.sort_all_Up}" width="20" height="20" styleClass="BottomImgSpace" />
 								   </h:commandLink>	           
 									<h:commandLink id="up_one"  action="#{sortModuleSectionPage.MoveItemUpAction}">		
-										 <h:graphicImage id="upImg" value="images/up.gif" alt="Move Up" width="20" height="20" styleClass="BottomImgSpace" />
+										 <h:graphicImage id="upImg" value="images/up.gif" alt="#{msgs.sort_Up}" title="#{msgs.sort_Up}" width="20" height="20" styleClass="BottomImgSpace" />
 								   </h:commandLink>		 
  									<h:commandLink id="down_one"  action="#{sortModuleSectionPage.MoveItemDownAction}">	 
-										 <h:graphicImage id="downImg" value="images/down.gif" alt="Move Down" width="20" height="20" styleClass="BottomImgSpace" />
+										 <h:graphicImage id="downImg" value="images/down.gif" alt="#{msgs.sort_Down}" title="#{msgs.sort_Down}" width="20" height="20" styleClass="BottomImgSpace" />
  									   </h:commandLink>	
  									   <h:commandLink id="all_down"  action="#{sortModuleSectionPage.MoveItemAllDownAction}">		
-										 <h:graphicImage id="downImg1" value="images/down_end.gif" alt="Move All Down" width="20" height="20" styleClass="BottomImgSpace" />
+										 <h:graphicImage id="downImg1" value="images/down_end.gif" alt="#{msgs.sort_all_Down}" title="#{msgs.sort_all_Down}" width="20" height="20" styleClass="BottomImgSpace" />
 								   </h:commandLink>	    					
 									  </td>
 				                      </tr>

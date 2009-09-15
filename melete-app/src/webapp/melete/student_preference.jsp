@@ -72,12 +72,11 @@
 					</tr>		
 					</table></td></tr>								
               <tr>
-                <td height="30" >         
-                <div align="center">	
-                <h:commandButton action="#{studentPreferences.setUserChoice}" value="#{msgs.im_set}" accesskey="#{msgs.im_set_access}" title="#{msgs.im_set_text}" styleClass="BottomImgSpace"/>
+                <td>         
+                <div class="actionBar" align="left">	
+                <h:commandButton action="#{studentPreferences.setUserChoice}" value="#{msgs.im_set}" accesskey="#{msgs.im_set_access}" title="#{msgs.im_set_text}" styleClass="BottomImgSet"/>
 			</div></td>
-              </tr>
-			 <tr><td  height="20" class="maintabledata5">&nbsp;</td></tr>
+              </tr>			 
             </table>
           </td>
         </tr>

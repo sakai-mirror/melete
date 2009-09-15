@@ -82,19 +82,8 @@ function resetModuleSelection() {
 				                        <td class="style2"><h:outputText value="#{msgs.sort_modules_sort}" /> </td>
 										<td><div>
 										 <!-- Begin code to display images horizontally. -->
-										   <h:commandLink id="sortmod"  action="#{sortModuleSectionPage.goToSortModules}" immediate="true" >	
-										 	<h:graphicImage id="sortModulesImg" value="#{msgs.im_sort_modules}" width="85" height="20" styleClass="BottomImgSpace" 
-													onmouseover="this.src = '#{msgs.im_sort_modules_over}'" 
-													onmouseout="this.src = '#{msgs.im_sort_modules}'" 
-													onmousedown="this.src = '#{msgs.im_sort_modules_down}'" 
-													onmouseup="this.src = '#{msgs.im_sort_modules_over}'"/>
-											</h:commandLink>				
-											<h:graphicImage id="Sort_Sections-horz" 
-								   							alt="#{msgs.sort_sections_sort_sections}"
-								   							url="#{msgs.im_sort_sections_down2}"
-								     						 width="85" height="20" styleClass="BottomImgSpace"/>
-								     						 
-									
+										  <h:commandButton id="sortmod" immediate="true" action="#{sortModuleSectionPage.goToSortModules}" value="#{msgs.im_sort_modules}" accesskey="#{msgs.sort_access}" title="#{msgs.im_sort_modules_text}" styleClass="BottomImgSort"/>
+										  <h:commandButton id="Sort_Sections-horz" disabled="true" value="#{msgs.im_sort_sections}" title="#{msgs.im_sort_sections_text}" styleClass="BottomImgSort"/> 			
 										<!-- End code to display images horizontally. -->
 										</div></td>
 									  </tr>
@@ -146,16 +135,16 @@ function resetModuleSelection() {
 											</table></td> 
 				                        <td width="15" align="center">
 				                        <h:commandLink id="up_end"  action="#{sortModuleSectionPage.MoveSectionItemAllUpAction}">	
-										 <h:graphicImage id="upImg1" value="images/up_end.gif" alt="Move Up" width="20" height="20" styleClass="BottomImgSpace" />
+										 <h:graphicImage id="upImg1" value="images/up_end.gif" alt="#{msgs.sort_all_Up}" title="#{msgs.sort_all_Up}" width="20" height="20" styleClass="BottomImgSpace" />
 								   </h:commandLink>	
 				                    <h:commandLink id="up_one"  action="#{sortModuleSectionPage.MoveSectionItemUpAction}">	
-										 <h:graphicImage id="upImg" value="images/up.gif" alt="Move Up" width="20" height="20" styleClass="BottomImgSpace" />
+										 <h:graphicImage id="upImg" value="images/up.gif" alt="#{msgs.sort_Up}" title="#{msgs.sort_Up}" width="20" height="20" styleClass="BottomImgSpace" />
 								   </h:commandLink>		 
  									<h:commandLink id="down_one"  action="#{sortModuleSectionPage.MoveSectionItemDownAction}">		 
-										 <h:graphicImage id="downImg" value="images/down.gif" alt="Move Down" width="20" height="20" styleClass="BottomImgSpace" />
+										 <h:graphicImage id="downImg" value="images/down.gif" alt="#{msgs.sort_Down}" title="#{msgs.sort_Down}" width="20" height="20" styleClass="BottomImgSpace" />
  									   </h:commandLink>	  
  									   <h:commandLink id="down_end"  action="#{sortModuleSectionPage.MoveSectionItemAllDownAction}">		 
-										 <h:graphicImage id="downImg_end" value="images/down_end.gif" alt="Move Down" width="20" height="20" styleClass="BottomImgSpace" />
+										 <h:graphicImage id="downImg_end" value="images/down_end.gif" alt="#{msgs.sort_all_Down}" title="#{msgs.sort_all_Down}" width="20" height="20" styleClass="BottomImgSpace" />
  									   </h:commandLink>	 										 
 									  </td>
 				                      </tr>
