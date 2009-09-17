@@ -137,6 +137,7 @@ public class MeleteExportServiceImpl  extends MeleteAbstractExportServiceImpl im
 				createFileElement(link_resource_id, linkdata,resource,imagespath, resoucesDir, "resources/", false, false);
 			}
 //			 resource will always point to link location otherwise it changes type to upload on import
+			if(linkData.startsWith("/access/"))linkData = ServerConfigurationService.getServerUrl()+linkData;
 			resource.addAttribute("href", linkData);
 			// preserve url title
 			Element urlTitle = createLOMElement("imsmd:title", "title");
