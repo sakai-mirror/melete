@@ -363,7 +363,11 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 				else
 				{
 					// for external url
+					// DNS name for workspace files
+					if(hrefVal.indexOf("/access/") != -1 )
+						hrefVal = ServerConfigurationService.getServerUrl()+ hrefVal.substring(hrefVal.indexOf("/access/"));
 					melContentData = hrefVal.getBytes();
+					
 					res_mime_type=getMeleteCHService().MIME_TYPE_LINK;
 				}
 			}
