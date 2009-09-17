@@ -661,6 +661,14 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME,secResourceName);
 				rp.addProperty(ResourceProperties.PROP_DESCRIPTION,secResourceDescription);
 				rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
+				// to ensure link data doesn't have full URL with DNS name
+				if(edit.getContentType().equals(MIME_TYPE_LINK) && edit.getContent() != null)
+				{
+					String check = new String(edit.getContent());
+					if(check.indexOf("/access/") != -1)
+						check = check.substring(check.indexOf("/access/"));
+					edit.setContent(check.getBytes());
+				}
 				getContentservice().commitResource(edit);
 				edit = null;
 	    }
@@ -707,6 +715,13 @@ public class MeleteCHServiceImpl implements MeleteCHService {
          meleteSecurityService.pushAdvisor();
          try
 			{
+        	    if(res_mime_type == MIME_TYPE_LINK)
+        	    {
+        	    	String checkURL = new String(secContentData);
+        	    	if(checkURL.indexOf("/access/") != -1)
+        	    		checkURL = checkURL.substring(checkURL.indexOf("/access/"));
+        	    	secContentData = checkURL.getBytes();
+        	    }
         	    // name is escaped to create resource url
         	    if(res_mime_type != MIME_TYPE_LINK)
         	    	name = Validator.escapeResourceName(displayName);
@@ -825,6 +840,27 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		return dupName;
 	}
 
+	public String getLinkContent(String resourceId)
+		{
+			try
+			{
+			 //	       setup a security advisor
+				meleteSecurityService.pushAdvisor();
+				ContentResourceEdit cr = getContentservice().editResource(resourceId);
+				String linkData = new String(cr.getContent());
+				getContentservice().cancelResource(cr);
+				return linkData;
+			}
+			catch (Exception e)
+			{
+				logger.debug("error in reading link content in edit section" + e);
+			}
+			 finally{
+					meleteSecurityService.popAdvisor();
+				}
+			return null;
+		}
+	 
 	 public String getDisplayName(String resourceId)
 		{
 			try
@@ -1390,7 +1426,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		    try
 	   	    {
 		    	edit = getContentservice().editResource(delRes_id);
-		    	getContentservice().removeResource(edit);
+		    	if(edit != null) getContentservice().removeResource(edit);
 		    	edit = null;
 	   		}
 	   	    catch(IdUnusedException e1)

@@ -1590,6 +1590,11 @@ public abstract class SectionPage implements Serializable {
 		{
 		 return getMeleteCHService().getDisplayName(resourceId);
 		}
+	 
+	 protected String getLinkContent(String resourceId)
+	 {
+		 return getMeleteCHService().getLinkContent(resourceId);
+	 }
 	/*
 	 *
 	 * inner class to set required content resource values for display
