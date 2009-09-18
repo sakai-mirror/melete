@@ -226,7 +226,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				{
 					this.selectedResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 					this.selectedResourceDescription = cr.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION);
-					renderSelectedResource = true;
+					renderSelectedResource = true;					
 					getM_selected_license().setInitialValues(formName, sectionService, selectedResource);
 				}
 				else
@@ -787,9 +787,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				secResourceName = selectedResourceName;
 				secResourceDescription = selectedResourceDescription;
 				setM_license(m_selected_license);
-				ContentResource cr = getMeleteCHService().getResource(selResourceIdFromList);
-				if(cr.getContentLength() > 0)
-					currLinkUrl = new String(cr.getContent());
+				currLinkUrl = getLinkContent(selResourceIdFromList);	
 			}
 			setLinkUrl(currLinkUrl);
 			meleteResource = selectedResource;

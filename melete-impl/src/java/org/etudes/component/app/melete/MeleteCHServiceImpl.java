@@ -661,14 +661,6 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME,secResourceName);
 				rp.addProperty(ResourceProperties.PROP_DESCRIPTION,secResourceDescription);
 				rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
-				// to ensure link data doesn't have full URL with DNS name
-				if(edit.getContentType().equals(MIME_TYPE_LINK) && edit.getContent() != null)
-				{
-					String check = new String(edit.getContent());
-					if(check.indexOf("/access/") != -1)
-						check = check.substring(check.indexOf("/access/"));
-					edit.setContent(check.getBytes());
-				}
 				getContentservice().commitResource(edit);
 				edit = null;
 	    }
@@ -839,23 +831,36 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		dupName = base+numberStr+ext;
 		return dupName;
 	}
-
+	
 	public String getLinkContent(String resourceId)
 		{
+		ContentResourceEdit cr = null;
 			try
 			{
 			 //	       setup a security advisor
 				meleteSecurityService.pushAdvisor();
-				ContentResourceEdit cr = getContentservice().editResource(resourceId);
+				cr = getContentservice().editResource(resourceId);
 				String linkData = new String(cr.getContent());
-				getContentservice().cancelResource(cr);
+				if(cr.getContentType().equals(MIME_TYPE_LINK) && cr.getContent() != null)
+				{
+					String check = new String(cr.getContent());
+					if((!check.startsWith("/access/")) && check.indexOf("/access/") != -1)
+					{
+						check = check.substring(check.indexOf("/access/"));
+						cr.setContent(check.getBytes());
+						linkData = check;
+						getContentservice().commitResource(cr);
+						cr= null;
+					}
+				}
+				if(cr != null)getContentservice().cancelResource(cr);
 				return linkData;
 			}
 			catch (Exception e)
 			{
 				logger.debug("error in reading link content in edit section" + e);
 			}
-			 finally{
+			 finally{				
 					meleteSecurityService.popAdvisor();
 				}
 			return null;
