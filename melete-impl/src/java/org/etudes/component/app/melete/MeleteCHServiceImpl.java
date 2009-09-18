@@ -1170,7 +1170,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				}
 				// for internal links to make it relative
 				else
-				{
+				{					
 					// add target if not provided
 	    			if(foundLink != null && foundLink.equals("link") && endSrc > 0 && checkforimgs.indexOf(">") > endSrc)
 	    			{
@@ -1213,7 +1213,14 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 						contentEditor = meleteUtil.replace(contentEditor, fileName, replaceLinkStr);
 						checkforimgs = meleteUtil.replace(checkforimgs, fileName, replaceLinkStr);
 					}
-
+					// FCK editor word paste puts bad ../../..'s in the src so remove them
+					else if(fileName.startsWith("../") && fileName.indexOf("/access/") != -1)
+					{
+						logger.debug("paste in FCK puts extra ../..");
+						String replaceStr = fileName.substring(fileName.indexOf("/access/"));
+						contentEditor = meleteUtil.replace(contentEditor, fileName, replaceStr);
+						checkforimgs = meleteUtil.replace(checkforimgs, fileName, replaceStr);
+					}
 				}
 
 
