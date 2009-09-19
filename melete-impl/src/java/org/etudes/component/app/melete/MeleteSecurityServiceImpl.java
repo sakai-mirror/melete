@@ -67,6 +67,7 @@ import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.sakaiproject.util.ResourceLoader;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -97,6 +98,8 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 
 	public static final String MIME_TYPE_LTI="ims/simplelti";
 	public static final String MIME_TYPE_BLTI="ims/basiclti";
+
+        private static ResourceLoader rb = new ResourceLoader("security_svc");
 
 	// Note: security needs a proper Resource reference
 
@@ -343,7 +346,7 @@ System.out.println("BasicLTI");
                                                                 	{
                                                                         	popAdvisor();
 										// Leave ResourceBundle off for now
-										String [] retval = SakaiBLTIUtil.postLaunchHTML(str, contextId, ref.getId(), resprops, null);
+										String [] retval = SakaiBLTIUtil.postLaunchHTML(str, contextId, ref.getId(), resprops, rb);
 										if ( retval != null ) postData = retval[0];
 System.out.println("retval = "+retval);
 System.out.println("postData = "+postData);
@@ -383,9 +386,9 @@ System.out.println("SimpleLTI");
 									}
 								}
 
-								// TODO: Internationalize
 								if ( postData == null ) {
-									postData = "<p>Not configured.</p>\n<!--\n"+str+"-->\n";
+									String msg = rb.getString("not.configured", "Not configured.");
+									postData = "<p>"+msg+"</p>\n<!--\n"+str+"-->\n";
 								} 
 
 								if ( postData != null )
