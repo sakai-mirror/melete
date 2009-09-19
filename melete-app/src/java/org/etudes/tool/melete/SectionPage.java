@@ -586,6 +586,7 @@ public abstract class SectionPage implements Serializable {
     {
          if ( currLTIUrl == null ) return;
          String desc =
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
 		"<basic_lti_link\n" + 
 		"     xmlns=\"http://www.imsglobal.org/xsd/imsbasiclti_v1p0\"\n" + 
 		"     xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" + 
@@ -593,10 +594,10 @@ public abstract class SectionPage implements Serializable {
 		"  <launch_url>"+currLTIUrl+"</launch_url> \n" +
 		"  <x-secure>\n" ;
          if ( currLTIKey != null && currLTIKey.trim().length() > 0 ) {
-		desc = desc + "  <launch_key>"+currLTIKey+"</launch_key> \n" ;
+		desc = desc + "    <launch_key>"+currLTIKey+"</launch_key> \n" ;
          }
          if ( currLTIPassword != null && currLTIPassword.trim().length() > 0 ) {
-		desc = desc + "  <launch_secret>"+currLTIPassword+"</launch_secret> \n" ;
+		desc = desc + "    <launch_secret>"+currLTIPassword+"</launch_secret> \n" ;
          }
 	desc = desc + "  </x-secure>\n";
 	desc = desc + "</basic_lti_link>\n";
