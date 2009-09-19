@@ -130,8 +130,11 @@ abstract public class MeleteImportBaseImpl {
 	*/
 	protected boolean isLTIDocument(String content)
 	{
-		return ( content != null && content.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
-                         && content.indexOf("<toolInstance") > 0 && content.indexOf("</toolInstance>") > 0 ) ;
+		if ( content == null ) return false;
+		if ( ! content.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>") ) return false;
+                if ( content.indexOf("<toolInstance") > 0 && content.indexOf("</toolInstance>") > 0 ) return true;
+                if ( content.indexOf("<basic_lti_link") > 0 && content.indexOf("</basic_lti_link>") > 0 ) return true;
+		return false;
 	}
 
    /**

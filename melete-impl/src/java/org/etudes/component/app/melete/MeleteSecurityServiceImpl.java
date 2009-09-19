@@ -337,19 +337,15 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 								byte [] bytes = content.getContent();
 								ResourceProperties resprops = content.getProperties();
 								String str = new String(bytes);
-System.out.println("Str="+str);
 								String postData = null;
 								if ( BasicLTIUtil.validateDescriptor(str) != null ) 
 								{
-System.out.println("BasicLTI");
 									try
                                                                 	{
                                                                         	popAdvisor();
 										// Leave ResourceBundle off for now
 										String [] retval = SakaiBLTIUtil.postLaunchHTML(str, contextId, ref.getId(), resprops, rb);
 										if ( retval != null ) postData = retval[0];
-System.out.println("retval = "+retval);
-System.out.println("postData = "+postData);
                                                                 	}
                                                                 	catch (Exception e)
                                                                 	{
@@ -363,7 +359,6 @@ System.out.println("postData = "+postData);
 								}
 								else // Attempt SimpleLTI
 								{
-System.out.println("SimpleLTI");
 									Properties props = null;
 									// We must remove our advisor while we do the launch and then put it back
 									// Otherwise the launch will give the user too much power

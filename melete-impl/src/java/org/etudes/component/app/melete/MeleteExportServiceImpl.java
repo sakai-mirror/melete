@@ -149,7 +149,7 @@ public void createResourceElement(Section section, Element resource, byte[] cont
 		// LTI RESOURCE
 		} else if (section.getContentType().equals("typeLTI")){
 			resource.addAttribute("type ","SimpleLTI");
-			String fileName = "simplelti-"+item_ref_num;
+			String fileName = "basiclti-"+item_ref_num;
 			createFileElement(fileName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
 
 			// add title
