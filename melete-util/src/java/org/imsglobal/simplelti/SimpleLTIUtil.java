@@ -215,8 +215,10 @@ public class SimpleLTIUtil {
 
     public static boolean validateDescriptor(String descriptor)
     {
-        Map<String,Object> tm = XMLMap.getFullMap(descriptor);
+        if ( descriptor == null ) return false;
+        if ( descriptor.indexOf("<toolInstance") < 0 ) return false;
 
+        Map<String,Object> tm = XMLMap.getFullMap(descriptor);
         if ( tm == null )
         {
                 return false;

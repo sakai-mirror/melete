@@ -35,6 +35,7 @@
 <script language="javascript1.2">
 function contentChangeSubmit()
 {
+    if ( document.getElementById("ServerViewForm:contentChange") )
            document.getElementById("ServerViewForm:contentChange").value = "true";
 }
 </script>
