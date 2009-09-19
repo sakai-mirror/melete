@@ -75,7 +75,9 @@ import org.w3c.dom.Node;
 import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.util.Xml;
+import org.imsglobal.basiclti.BasicLTIUtil;
 import org.etudes.simpleti.SakaiSimpleLTI;
+import org.sakaiproject.basiclti.SakaiBLTIUtil;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
 
 /*
@@ -94,6 +96,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	private MeleteExportService meleteExportService;
 
 	public static final String MIME_TYPE_LTI="ims/simplelti";
+	public static final String MIME_TYPE_BLTI="ims/basiclti";
 
 	// Note: security needs a proper Resource reference
 
@@ -325,37 +328,74 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 						try
 						{
 							ContentResource content = chService.getResource(contentHostingRef.getId());
-							if ( MIME_TYPE_LTI.equals(content.getContentType()) )
+							if ( MIME_TYPE_LTI.equals(content.getContentType()) || 
+							     MIME_TYPE_BLTI.equals(content.getContentType()) )
 							{
 								byte [] bytes = content.getContent();
+								ResourceProperties resprops = content.getProperties();
 								String str = new String(bytes);
-								Properties props = null;
-								// We must remove our advisor while we do the launch and then put it back
-								// Otherwise the launch will give the user too much power
-								try
+System.out.println("Str="+str);
+								String postData = null;
+								if ( BasicLTIUtil.validateDescriptor(str) != null ) 
 								{
-									popAdvisor();
-									props = SakaiSimpleLTI.doLaunch(str, ref.getContext(), ref.getId());
+System.out.println("BasicLTI");
+									try
+                                                                	{
+                                                                        	popAdvisor();
+										// Leave ResourceBundle off for now
+										String [] retval = SakaiBLTIUtil.postLaunchHTML(str, contextId, ref.getId(), resprops, null);
+										if ( retval != null ) postData = retval[0];
+System.out.println("retval = "+retval);
+System.out.println("postData = "+postData);
+                                                                	}
+                                                                	catch (Exception e)
+                                                                	{
+                                                                        	logger.info("Exception e "+e.getMessage());
+                                                                        	e.printStackTrace();
+                                                                	}
+                                                                	finally
+                                                                	{
+                                                                        	pushAdvisor();
+                                                                	}
 								}
-								catch (Exception e)
+								else // Attempt SimpleLTI
 								{
-									logger.info("Exception e "+e.getMessage());
-									e.printStackTrace();
-								}
-								finally
-								{
-									pushAdvisor();
-								}
-								if ( props != null ) {
-									String htmltext = props.getProperty("htmltext");
-									if ( htmltext != null )
+System.out.println("SimpleLTI");
+									Properties props = null;
+									// We must remove our advisor while we do the launch and then put it back
+									// Otherwise the launch will give the user too much power
+									try
 									{
-										res.setContentType("text/html");
-										ServletOutputStream out = res.getOutputStream();
-										out.println(htmltext);
-										handled = true;
+										popAdvisor();
+										props = SakaiSimpleLTI.doLaunch(str, ref.getContext(), ref.getId());
+									}
+									catch (Exception e)
+									{
+										logger.info("Exception e "+e.getMessage());
+										e.printStackTrace();
+									}
+									finally
+									{
+										pushAdvisor();
+									}
+									if ( props != null ) {
+										postData = props.getProperty("htmltext");
 									}
 								}
+
+								// TODO: Internationalize
+								if ( postData == null ) {
+									postData = "<p>Not configured.</p>\n<!--\n"+str+"-->\n";
+								} 
+
+								if ( postData != null )
+								{
+									res.setContentType("text/html");
+									ServletOutputStream out = res.getOutputStream();
+									out.println(postData);
+									handled = true;
+								}
+
 							}
 						}
 						catch (Exception e)

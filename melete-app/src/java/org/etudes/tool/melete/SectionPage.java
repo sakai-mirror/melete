@@ -59,6 +59,7 @@ import org.etudes.component.app.melete.Section;
 import org.etudes.component.app.melete.SectionResource;
 import org.etudes.component.app.melete.MeleteUserPreference;
 import org.imsglobal.simplelti.SimpleLTIUtil;
+import org.imsglobal.basiclti.BasicLTIUtil;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -641,7 +642,8 @@ public abstract class SectionPage implements Serializable {
     			if (ltiDescriptor == null || ltiDescriptor.trim().length() == 0) {
     				throw new MeleteException("add_section_empty_lti");
     			}
-    			if (!SimpleLTIUtil.validateDescriptor(ltiDescriptor)) {
+    			if (! ( SimpleLTIUtil.validateDescriptor(ltiDescriptor) 
+			      || BasicLTIUtil.validateDescriptor(ltiDescriptor) != null ) ) {
     				throw new MeleteException("add_section_bad_lti");
     			}
     			res_mime_type = getMeleteCHService().MIME_TYPE_LTI;
