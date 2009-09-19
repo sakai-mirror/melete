@@ -49,10 +49,19 @@
 					</td></tr>	
 					<tr><td height="20" colspan="2"> 
 					</f:verbatim>
-						<h:outputText id="addLTIBasic3" value="#{msgs.addmodulesections_lti_pasword}" />
+						<h:outputText id="addLTIBasic3" value="#{msgs.addmodulesections_lti_key}" />
 						<h:outputText id="addLTIBasic4" value=" " styleClass="ExtraPaddingClass"/>
 						<h:outputText id="addLTIBasic5" value=" " styleClass="ExtraPaddingClass"/>
 						<h:outputText id="addLTIBasic6" value=" " styleClass="ExtraPaddingClass"/>
+						<h:inputText id="LTIKey" value="#{addSectionPage.LTIKey}" size="40" /> 	
+					<f:verbatim>
+					</td></tr>	
+					<tr><td height="20" colspan="2"> 
+					</f:verbatim>
+						<h:outputText id="addLTIBasic7" value="#{msgs.addmodulesections_lti_pasword}" />
+						<h:outputText id="addLTIBasic8" value=" " styleClass="ExtraPaddingClass"/>
+						<h:outputText id="addLTIBasic9" value=" " styleClass="ExtraPaddingClass"/>
+						<h:outputText id="addLTIBasic10" value=" " styleClass="ExtraPaddingClass"/>
 						<h:inputText id="LTIPassword" value="#{addSectionPage.LTIPassword}" size="40" /> 	
 					<f:verbatim>
 					</td></tr>	

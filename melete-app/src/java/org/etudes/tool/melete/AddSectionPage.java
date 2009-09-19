@@ -402,6 +402,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 
 			setLTIUrl(null);
 			setLTIPassword(null);
+			setLTIKey(null);
 			setLTIDisplay("Basic");
 			// Do this after the first two
 			setLTIDescriptor(null);

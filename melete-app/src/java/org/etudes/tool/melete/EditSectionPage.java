@@ -735,6 +735,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		gotoServerLinkView();
 		setLTIUrl(null);
 		setLTIPassword(null);
+		setLTIKey(null);
 		setLTIDisplay("Basic");
 		setLTIDescriptor(null);
 		newURLTitle ="";

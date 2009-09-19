@@ -145,6 +145,7 @@ public abstract class SectionPage implements Serializable {
 
 	 protected String currLinkUrl;
 	 protected String currLTIDescriptor;
+	 protected String currLTIKey;
 	 protected String currLTIPassword;
 	 protected String currLTIUrl;
      protected String displayCurrLink;
@@ -560,6 +561,16 @@ public abstract class SectionPage implements Serializable {
 	fixDescriptor();
     }
 
+    public String getLTIKey()
+    {
+	return currLTIKey;
+    }
+    public void setLTIKey(String LTIKey)
+    {
+	currLTIKey = LTIKey;
+	fixDescriptor();
+    }
+
     public String getLTIPassword()
     {
 	return currLTIPassword;
@@ -575,15 +586,20 @@ public abstract class SectionPage implements Serializable {
     {
          if ( currLTIUrl == null ) return;
          String desc =
-		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-		"<toolInstance xmlns=\"http://www.imsglobal.org/services/cc/imsti_ptdd_v1p0\" \n" +
-		"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> \n" +
+		"<basic_lti_link\n" + 
+		"     xmlns=\"http://www.imsglobal.org/xsd/imsbasiclti_v1p0\"\n" + 
+		"     xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" + 
 		"  <melete-basic>true</melete-basic> \n" +
-		"  <launchurl>"+currLTIUrl+"</launchurl> \n" ;
-         if ( currLTIPassword != null && currLTIPassword.trim().length() > 0 ) {
-		desc = desc + "  <lti_secret>"+currLTIPassword+"</lti_secret> \n" ;
+		"  <launch_url>"+currLTIUrl+"</launch_url> \n" +
+		"  <x-secure>\n" ;
+         if ( currLTIKey != null && currLTIKey.trim().length() > 0 ) {
+		desc = desc + "  <launch_key>"+currLTIKey+"</launch_key> \n" ;
          }
-	desc = desc + "</toolInstance>\n";
+         if ( currLTIPassword != null && currLTIPassword.trim().length() > 0 ) {
+		desc = desc + "  <launch_secret>"+currLTIPassword+"</launch_secret> \n" ;
+         }
+	desc = desc + "  </x-secure>\n";
+	desc = desc + "</basic_lti_link>\n";
 	setLTIDescriptor(desc);
     }
 
@@ -773,6 +789,7 @@ public abstract class SectionPage implements Serializable {
    currLinkUrl = null;
     currLTIDescriptor = null;
     currLTIUrl = null;
+    currLTIKey = null;
     currLTIPassword = null;
     displayCurrLink = null;
     FacesContext ctx = FacesContext.getCurrentInstance();
@@ -802,6 +819,7 @@ public abstract class SectionPage implements Serializable {
 		currLinkUrl = null;
 		currLTIDescriptor = null;
 		currLTIUrl = null;
+		currLTIKey = null;
 		currLTIPassword = null;
 		displayCurrLink = null;
 		secResourceName = null;
