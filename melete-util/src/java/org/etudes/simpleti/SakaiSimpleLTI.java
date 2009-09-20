@@ -82,7 +82,7 @@ public class SakaiSimpleLTI {
         String lti2FrameHeight = newMap.getProperty("frameheight");
 
 	// When in doubt be very secretive...
-	if ( lti2Password == null ) lti2Password = "secret";
+	// if ( lti2Password == null ) lti2Password = "secret";
 
 	User user = UserDirectoryService.getCurrentUser();
 	dPrint("User="+user);
