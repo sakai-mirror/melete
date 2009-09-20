@@ -63,6 +63,7 @@ import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.content.cover.ContentHostingService;
 import org.sakaiproject.entity.api.Entity;
+import org.imsglobal.basiclti.BasicLTIUtil;
 
 /**
  * @author Faculty
@@ -148,7 +149,16 @@ public void createResourceElement(Section section, Element resource, byte[] cont
 
 		// LTI RESOURCE
 		} else if (section.getContentType().equals("typeLTI")){
-			resource.addAttribute("type ","SimpleLTI");
+			resource.addAttribute("type ","BasicLTI");
+			// Remove the x-secure sections of the descriptor before export
+			try {
+				String content_str = new String(content_data1);
+				String export_str = BasicLTIUtil.prepareForExport(content_str);
+				byte[] export_byte = export_str.getBytes();
+				content_data1 = export_byte;
+			} catch (Exception e) {
+				// Simply export the unconverted content
+			}
 			String fileName = "basiclti-"+item_ref_num;
 			createFileElement(fileName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
 
