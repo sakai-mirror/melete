@@ -804,6 +804,40 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		return dupName;
 	}		 
 	 
+	public String getLinkContent(String resourceId)
+	{
+		ContentResourceEdit cr = null;
+		try
+		{
+			//	       setup a security advisor
+			meleteSecurityService.pushAdvisor();
+			cr = getContentservice().editResource(resourceId);
+			String linkData = new String(cr.getContent());
+			if(cr.getContentType().equals(MIME_TYPE_LINK) && cr.getContent() != null)
+			{
+				String check = new String(cr.getContent());
+				if((!check.startsWith("/access/")) && check.indexOf("/access/") != -1)
+				{
+					check = check.substring(check.indexOf("/access/"));
+					cr.setContent(check.getBytes());
+					linkData = check;
+					getContentservice().commitResource(cr);
+					cr= null;
+				}
+			}
+			if(cr != null)getContentservice().cancelResource(cr);
+			return linkData;
+		}
+		catch (Exception e)
+		{
+			logger.debug("error in reading link content in edit section" + e);
+		}
+		finally{
+			meleteSecurityService.popAdvisor();
+		}
+		return null;
+	}
+
 	 public String getDisplayName(String resourceId)
 		{
 			try
@@ -1081,20 +1115,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		             String file_mime_type = fileName.substring(fileName.lastIndexOf(".")+1);
 		             file_mime_type = ContentTypeImageService.getContentType(file_mime_type);
 
-
 		            String newEmbedResourceId = null;
-		            //If the resource already exists, use it
-		            try
-	                {
-		            	  String checkResourceId = UploadCollId + fileName;
-	                   	  checkResource(checkResourceId);
-				 	      newEmbedResourceId = checkResourceId;
-	                }
-	                catch (IdUnusedException ex2)
-			        {
-	                	ResourcePropertiesEdit res =fillEmbeddedImagesResourceProperties(fileName);
-	                	newEmbedResourceId = addResourceItem(fileName,file_mime_type,UploadCollId,data,res );
-			        }
+		            ResourcePropertiesEdit res =fillEmbeddedImagesResourceProperties(fileName);
+                	newEmbedResourceId = addResourceItem(fileName,file_mime_type,UploadCollId,data,res );
 
 		            //add in melete resource database table also
 		             MeleteResource meleteResource = new MeleteResource();
@@ -1166,10 +1189,15 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 						contentEditor = meleteUtil.replace(contentEditor, fileName, replaceLinkStr);
 						checkforimgs = meleteUtil.replace(checkforimgs, fileName, replaceLinkStr);
 					}
-
+					// FCK editor word paste puts bad ../../..'s in the src so remove them
+					else if(fileName.startsWith("../") && fileName.indexOf("/access/") != -1)
+					{
+						logger.debug("paste in FCK puts extra ../..");
+						String replaceStr = fileName.substring(fileName.indexOf("/access/"));
+						contentEditor = meleteUtil.replace(contentEditor, fileName, replaceStr);
+						checkforimgs = meleteUtil.replace(checkforimgs, fileName, replaceStr);
+					}
 				}
-
-
 		            // iterate next
     				if(endSrc > 0 && endSrc <= checkforimgs.length())
     					checkforimgs =checkforimgs.substring(endSrc);

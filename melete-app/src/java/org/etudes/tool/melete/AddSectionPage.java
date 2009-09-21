@@ -440,7 +440,8 @@ public class AddSectionPage extends SectionPage implements Serializable{
 				String addCollectionId = getMeleteCHService().getUploadCollectionId();
 				String newResourceId = addResourceToMeleteCollection(null, addCollectionId);
 				getMeleteResource().setResourceId(newResourceId);
-				currLinkUrl = getLinkUrl();
+				//currLinkUrl = getLinkUrl();
+				currLinkUrl = getLinkContent(newResourceId);				
 				secResourceName = getDisplayName(newResourceId);
 			}
 			else
@@ -448,6 +449,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		  		 processSelectedResource(selResourceIdFromList);
 		  	}
 			logger.debug("currlink value in setServer is" + currLinkUrl);
+			setLinkUrl(currLinkUrl);
 			createLinkUrl();
 			ctx.renderResponse();
 		}

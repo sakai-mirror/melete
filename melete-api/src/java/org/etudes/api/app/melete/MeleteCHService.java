@@ -80,5 +80,6 @@ public interface MeleteCHService{
 	 public void removeCourseCollection(String delColl_id) throws Exception;
 	  public String moveResource(String resourceId, String destinationColl) throws Exception;
 	  public String getDisplayName(String resourceId);
+	  public String getLinkContent(String resourceId);
 }
 

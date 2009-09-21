@@ -790,7 +790,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				selectedResource.setResourceId(newResourceId);
 				sectionService.insertResource(selectedResource);
 				secResourceName = getDisplayName(newResourceId);
-				currLinkUrl = secResourceName;
+				currLinkUrl = getLinkContent(newResourceId);				
 			}
 			else
 			{
@@ -803,6 +803,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				if(cr.getContentLength() > 0)
 					currLinkUrl = new String(cr.getContent());*/
 			}
+			setLinkUrl(currLinkUrl);
 			meleteResource = selectedResource;
 			ctx.renderResponse();
 		}

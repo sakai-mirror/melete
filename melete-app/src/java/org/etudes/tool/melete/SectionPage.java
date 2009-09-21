@@ -811,11 +811,11 @@ public abstract class SectionPage implements Serializable {
 	  {
 		  FacesContext ctx = FacesContext.getCurrentInstance();
 		  try{
-  			ContentResource cr= getMeleteCHService().getResource(selResourceIdFromList);
+			    currLinkUrl = getLinkContent(selResourceIdFromList);
+  				ContentResource cr= getMeleteCHService().getResource(selResourceIdFromList);
 		    	this.secResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 		    	this.secResourceDescription = cr.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION);
-		    	if(cr.getContentLength() > 0)
-					currLinkUrl = new String(cr.getContent());
+		    	
   		   //get resource object
 		    	selectedResource = (MeleteResource)sectionService.getMeleteResource(selResourceIdFromList);
 		    	//just take resource properties from this object as its assoc with another section
@@ -1483,6 +1483,10 @@ public abstract class SectionPage implements Serializable {
 		{
 		 return getMeleteCHService().getDisplayName(resourceId);
 		}
-
+	 
+	 protected String getLinkContent(String resourceId)
+	 	 {
+	 		 return getMeleteCHService().getLinkContent(resourceId);
+	 	 }
 
 }
