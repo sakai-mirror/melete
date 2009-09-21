@@ -686,6 +686,13 @@ public class MeleteCHServiceImpl implements MeleteCHService {
          meleteSecurityService.pushAdvisor();
          try
 			{
+        	    if(res_mime_type == MIME_TYPE_LINK)
+        	    {
+        	    	String checkURL = new String(secContentData);
+        	    	if(checkURL.indexOf("/access/") != -1)
+        	    		checkURL = checkURL.substring(checkURL.indexOf("/access/"));
+        	    	secContentData = checkURL.getBytes();
+        	    }
         	    // name is escaped to create resource url
         	    if(res_mime_type != MIME_TYPE_LINK)
         	    	name = Validator.escapeResourceName(displayName);
@@ -1407,7 +1414,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		    try
 	   	    {
 		    	edit = getContentservice().editResource(delRes_id);
-		    	getContentservice().removeResource(edit);
+		    	if(edit != null) getContentservice().removeResource(edit);
 		    	edit = null;
 	   		}
 	   	    catch(IdUnusedException e1)
