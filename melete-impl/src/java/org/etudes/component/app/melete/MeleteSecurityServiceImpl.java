@@ -96,7 +96,8 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	private MeleteImportService meleteImportService;
 	private MeleteExportService meleteExportService;
 
-	public static final String MIME_TYPE_LTI="ims/simplelti";
+        // Keep both of these here for upwards compatibility - Chuck
+	public static final String MIME_TYPE_SLTI="ims/simplelti";
 	public static final String MIME_TYPE_BLTI="ims/basiclti";
 
         private static ResourceLoader rb = new ResourceLoader("security_svc");
@@ -331,7 +332,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 						try
 						{
 							ContentResource content = chService.getResource(contentHostingRef.getId());
-							if ( MIME_TYPE_LTI.equals(content.getContentType()) || 
+							if ( MIME_TYPE_SLTI.equals(content.getContentType()) || 
 							     MIME_TYPE_BLTI.equals(content.getContentType()) )
 							{
 								byte [] bytes = content.getContent();

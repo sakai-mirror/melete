@@ -20,6 +20,15 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 					<f:verbatim>
+					<tr><td height="20" colspan="2"> 
+					</f:verbatim>
+						<h:outputText id="addLTIBasic1" value="#{msgs.addmodulesections_lti_url}" />
+                                                <f:verbatim>
+                                                        <span class="required">*</span>
+                                                </f:verbatim>
+						<h:outputText id="addLTIBasic2" value=" " styleClass="ExtraPaddingClass"/>						
+						<h:inputText id="LTIUrl" value="#{addSectionPage.LTIUrl}" size="40" /> 	
+					<f:verbatim>
 					</td></tr>
 					<tr><td height="20" colspan="2"> 
 					</f:verbatim>
@@ -30,15 +39,6 @@
 						<h:outputText id="addLTItitle2" value=" " styleClass="ExtraPaddingClass"/>
 						<h:outputText id="addLTItitle3" value=" " styleClass="ExtraPaddingClass"/>
 						<h:inputText id="LTI_title" value="#{addSectionPage.newURLTitle}" size="40" /> 
-					<f:verbatim>
-					<tr><td height="20" colspan="2"> 
-					</f:verbatim>
-						<h:outputText id="addLTIBasic1" value="#{msgs.addmodulesections_lti_url}" />
-                                                <f:verbatim>
-                                                        <span class="required">*</span>
-                                                </f:verbatim>
-						<h:outputText id="addLTIBasic2" value=" " styleClass="ExtraPaddingClass"/>						
-						<h:inputText id="LTIUrl" value="#{addSectionPage.LTIUrl}" size="40" /> 	
 					<f:verbatim>
 					</td></tr>
 					<tr><td height="20" colspan="2"> 
