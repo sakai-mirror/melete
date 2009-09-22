@@ -715,7 +715,7 @@ public class ModuleDB implements Serializable {
 				dbConnection = SqlService.borrowConnection();
 		    	ResultSet rs = null;
 
-	            String sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and s.delete_flag=0 order by c.seq_no";
+	            String sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
 	            PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 	            pstmt.setString(1,courseId);
 		    	rs = pstmt.executeQuery();
@@ -737,7 +737,7 @@ public class ModuleDB implements Serializable {
 		    			moduleId = rs.getInt("module_id");
 		    			seqNo = rs.getInt("seq_no");
 		    			seqXml = rs.getString("seq_xml");
-
+		    		
 //		    			Associate vsBeans to vmBean
 		    			//This means its a new module
 		    			if ((prevModId != 0)&&(moduleId != prevModId))
