@@ -254,7 +254,7 @@ window.open('editpreviewEditor.jsf');
 								  	  <td  align="left" valign="middle"><h:outputText id="text15" value="#{msgs.editmodulesections_content_type}" rendered="#{editSectionPage.shouldRenderContentTypeSelect}" /></td>
                                  	  <td> 
 										<h:inputHidden id="contentType"  value="#{editSectionPage.section.contentType}"  />	  								  	
-										  <h:selectOneMenu id="contentType1" value="#{editSectionPage.section.contentType}" valueChangeListener="#{editSectionPage.showHideContent}" onchange="this.form.submit();"  tabindex="6" rendered="#{editSectionPage.shouldRenderContentTypeSelect}">
+										  <h:selectOneMenu id="contentType1" value="#{editSectionPage.section.contentType}" valueChangeListener="#{editSectionPage.showHideContent}" onchange="this.form.submit();"  rendered="#{editSectionPage.shouldRenderContentTypeSelect}">
 											<f:selectItems value="#{editSectionPage.allContentTypes}" />											
 										 </h:selectOneMenu>
 											 </td>

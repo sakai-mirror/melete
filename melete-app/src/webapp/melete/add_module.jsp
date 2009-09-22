@@ -126,7 +126,7 @@ function showEdateCal()
 			   <tr>
                 <td  align="left" valign="top"> <h:outputText value="#{msgs.add_module_module_title}" /> <span class="required">*</span></td>
                 <td  align="left" valign="top">
-					<h:inputText id="title" size="45" value="#{addModulePage.module.title}" required="true" styleClass="formtext" tabindex="1" />
+					<h:inputText id="title" size="45" value="#{addModulePage.module.title}" required="true" styleClass="formtext" />
 					
 				</td>
               </tr>
@@ -134,7 +134,7 @@ function showEdateCal()
               <tr>
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.add_module_descr_over_object}" /> </td>
                 <td width="472" align="left" valign="top">
-				<h:inputTextarea id="description" cols="45" rows="5" value="#{addModulePage.module.description}" styleClass="formtext" tabindex="2">
+				<h:inputTextarea id="description" cols="45" rows="5" value="#{addModulePage.module.description}" styleClass="formtext" >
 					<f:validateLength maximum="500" minimum="1"/>
 				</h:inputTextarea>	
 				</td>
@@ -144,8 +144,8 @@ function showEdateCal()
                 <td align="left" valign="top"><h:outputText value="#{msgs.add_module_keywords}" />				
                  </td>
                 <td align="left" valign="top">
-				<h:inputTextarea id="keywords" cols="45" rows="3" value="#{addModulePage.module.keywords}"  styleClass="formtext" tabindex="3">
-						<f:validateLength maximum="250" minimum="3" />
+				<h:inputTextarea id="keywords" cols="45" rows="3" value="#{addModulePage.module.keywords}"  styleClass="formtext" >
+						<f:validateLength maximum="250" minimum="1" />
 				</h:inputTextarea>		
 				</td>
               </tr>
@@ -172,10 +172,10 @@ function showEdateCal()
 				</td>
                 <td width="472" align="left" valign="top">
 					  <a name="startCalender"></a> <h:inputText id="startDate" 
-                           value="#{addModulePage.moduleShdates.startDate}" size="22" styleClass="formtext" tabindex="4">
+                           value="#{addModulePage.moduleShdates.startDate}" size="22" styleClass="formtext">
 		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
         		    </h:inputText>
-		            <h:outputLink id="viewsdateCal" onclick="showSdateCal()" value="#startCalender" tabindex="5">
+		            <h:outputLink id="viewsdateCal" onclick="showSdateCal()" value="#startCalender" >
         	    		<h:graphicImage id="sdateCal"  value="images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            			</h:outputLink>
 					 </td>
@@ -185,10 +185,10 @@ function showEdateCal()
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.add_module_end_date}" /></td>
                 <td width="472" align="left" valign="top">
 				<a name="endCalender"></a><h:inputText id="endDate" 
-                           value="#{addModulePage.moduleShdates.endDate}" size="22" styleClass="formtext" tabindex="6">
+                           value="#{addModulePage.moduleShdates.endDate}" size="22" styleClass="formtext">
              			  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
           		 </h:inputText>
-          <h:outputLink id="viewedateCal" onclick="showEdateCal()" value="#endCalender" tabindex="7">
+          <h:outputLink id="viewedateCal" onclick="showEdateCal()" value="#endCalender">
             <h:graphicImage id="edateCal"  value="images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            </h:outputLink>
 					 </td>
@@ -196,7 +196,7 @@ function showEdateCal()
               <tr>
                 <td width="233">&nbsp;</td>
                 <td width="472" valign="top">
-                 <h:selectBooleanCheckbox id="addtoschedule" title="addtoSchedule" value="#{addModulePage.moduleShdates.addtoSchedule}" tabindex="8">
+                 <h:selectBooleanCheckbox id="addtoschedule" title="addtoSchedule" value="#{addModulePage.moduleShdates.addtoSchedule}">
 		         </h:selectBooleanCheckbox>
 		         <h:outputText id="addtoScheduleTxt" value="#{msgs.add_module_schedule}" />
                 </td>
@@ -207,8 +207,8 @@ function showEdateCal()
   <tr>
           <td colspan="2">
           <div class="actionBar" align="left">
-          	<h:commandButton action="#{addModulePage.save}" value="#{msgs.im_add_button}" tabindex="9" accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
-			<h:commandButton id="cancelButton" immediate="true" action="#{addModulePage.cancel}" value="#{msgs.im_cancel}" tabindex="10" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+          	<h:commandButton action="#{addModulePage.save}" value="#{msgs.im_add_button}" accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
+			<h:commandButton id="cancelButton" immediate="true" action="#{addModulePage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
 	       </div>
         </td></tr>
 		
