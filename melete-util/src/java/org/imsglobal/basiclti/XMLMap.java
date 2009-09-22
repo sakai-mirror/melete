@@ -183,6 +183,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -202,6 +203,9 @@ import org.w3c.dom.NamedNodeMap;
 public class XMLMap {
 
 	private static boolean debugFlag = false;
+
+	// We use the built-in Java logger because this code needs to be very generic
+	private static Logger M_log = Logger.getLogger(XMLMap.class.toString());
 	
 	public static Map<String,String> getMap(String str)
 	{
@@ -553,7 +557,7 @@ public class XMLMap {
 						doDebug(d,"back from descent List-Map path="+key+"@"+newPos+" startNode="+ nodeToString(startNode));
 						newPos++;
 					} else {
-						System.out.println("XMLMap Encountered an object of type "+obj.getClass().getName()+" in a List which should contain only Map objects");
+						M_log.warning("XMLMap Encountered an object of type "+obj.getClass().getName()+" in a List which should contain only Map objects");
 					}
 				}
  			} else {
@@ -861,8 +865,9 @@ public class XMLMap {
 
 	private static void doDebug(int d, String str) {
 		if ( ! debugFlag ) return;
- 		for(int i=0; i<d;i++) System.out.print(" ");
-		System.out.println(str);
+ 		// for(int i=0; i<d;i++) System.out.print(" ");
+		// System.out.println(str);
+		M_log.fine(str);
 	}
 	
 	//  Assume the Object is a String - get it or return null if it is anything but a String
@@ -969,7 +974,7 @@ public class XMLMap {
 			String pretty1 = XMLMap.prettyPrint(xmlString);
 			String pretty2 = XMLMap.prettyPrint(pretty1);
 			if ( pretty1.equals(pretty2) ) return true;
-			System.out.println("XMLMap - unit test failed");
+			tMsg("XMLMap - unit test failed");
 			return false;
 		}
 		
@@ -986,13 +991,13 @@ public class XMLMap {
 		}
 
 		// If we failed - re-do it with verbose mode on
-		System.out.println("XMLMap - unit test failed");
-		System.out.println(xmlString);
+		tMsg("XMLMap - unit test failed");
+		tMsg(xmlString);
 		debugFlag = true;
 		String pretty1 = XMLMap.prettyPrint(xmlString);
-		System.out.println("Pretty Print Version pass 1\n"+pretty1);
+		tMsg("Pretty Print Version pass 1\n"+pretty1);
 		String pretty2 = XMLMap.prettyPrint(pretty1);
-		System.out.println("Pretty Print Version pass 2\n"+pretty2);
+		tMsg("Pretty Print Version pass 2\n"+pretty2);
 		debugFlag = false;  // Always reset class-wide variable
 		return false;
 	}
@@ -1009,49 +1014,54 @@ public class XMLMap {
 		return true;
 	}
 	
+	public static void tMsg(String str) {
+		M_log.fine(str);
+		// System.out.println(str);
+	}
+
 	public static void main(String[] args) {
-		System.out.println("Running XMLMap (www.mdom.org) unit tests..");
+		tMsg("Running XMLMap (www.mdom.org) unit tests..");
 		if ( !allUnitTests() ) return;
-		System.out.println("Unit tests passed...");
+		tMsg("Unit tests passed...");
 		runSamples();
 	}
 	
 	public static void runSamples() {
-		System.out.println("Running XMLMap (www.mdom.org) Samples...");
+		tMsg("Running XMLMap (www.mdom.org) Samples...");
 		debugFlag = false;
 
 		// Test the parsing of a Basic string Map
 		Map<String, String> tm = XMLMap.getMap(simpleText);
-		// System.out.println("tm="+tm);
+		// tMsg("tm="+tm);
 		
 		// Test the production of a basic map
 		Map<String,String> simpleMap = new TreeMap<String,String>();
 		simpleMap.put("/a/b!x", "X");
 		simpleMap.put("/a/b", "B");
 		simpleMap.put("/a/c/d", "D");
-		System.out.println("simpleMap\n"+simpleMap);
+		tMsg("simpleMap\n"+simpleMap);
 		String simpleXml = XMLMap.getXML(simpleMap, true);
-		System.out.println("simpleXml\n"+simpleXml);
+		tMsg("simpleXml\n"+simpleXml);
 		unitTest(simpleXml,false);
 				
 		// Do a select of a subMap
 		Map<String,String> subMap = XMLMap.selectSubMap(tm, "/a/c");
 		Map<String,Object> joinedMap = new TreeMap<String,Object>();
-		System.out.println("subMap="+subMap);
+		tMsg("subMap="+subMap);
 		joinedMap.put("/top/id", "1234");
 		joinedMap.put("/top/fun", subMap); // Graft the map onto this node
-		System.out.println("joinedMap\n"+joinedMap);
+		tMsg("joinedMap\n"+joinedMap);
 		String joinedXml = XMLMap.getXML(joinedMap, true);
-		System.out.println("joinedXML\n"+joinedXml);
+		tMsg("joinedXML\n"+joinedXml);
 		unitTest(joinedXml,false);
 		
 		// Do an Array
 		Map<String,Object> arrayMap = new TreeMap<String,Object>();
 		String [] arrayStr = { "first", "second", "third" };
         arrayMap.put("/root/stuff", arrayStr);
-		System.out.println("arrayMap\n"+arrayMap);
+		tMsg("arrayMap\n"+arrayMap);
 		String arrayXml = XMLMap.getXML(arrayMap, true);
-		System.out.println("arrayXml\n"+arrayXml);
+		tMsg("arrayXml\n"+arrayXml);
 		unitTest(arrayXml,false);
 
 		// Make a Map that is a combination of Maps, String, and Arrays
@@ -1159,8 +1169,8 @@ public class XMLMap {
         	unitTest(complexXml,false);
         } else {
         	debugFlag = true;
-        	System.out.println("\n MISMATCH AND/OR SOME ERROR HAS OCCURED - REDO in VERBODE MODE");
-            System.out.println("Starting out newMap="+newMap); 
+        	tMsg("\n MISMATCH AND/OR SOME ERROR HAS OCCURED - REDO in VERBODE MODE");
+            tMsg("Starting out newMap="+newMap); 
             complexXml = XMLMap.getXML(newMap, true);
         	unitTest(complexXml,false);
         	debugFlag = false;
@@ -1174,41 +1184,41 @@ public class XMLMap {
         // for ( Map<String,Object> siteMap : theList) {
         
         // The short form using convenience method if you don't need the map for anything else
-        System.out.println("\nParsing Sites Structure");
+        tMsg("\nParsing Sites Structure");
         for ( Map<String,Object> siteMap : XMLMap.getList(sitesText,"/sites/site")) {
-        	System.out.println("Site="+siteMap);
-        	System.out.println("Id="+XMLMap.getString(siteMap,"/id"));
+        	tMsg("Site="+siteMap);
+        	tMsg("Id="+XMLMap.getString(siteMap,"/id"));
             for ( Map<String,Object> toolMap : XMLMap.getList(siteMap,"/tools/tool")) {
-        		System.out.println("Tool="+toolMap);
-        		System.out.println("ToolId="+XMLMap.getString(toolMap,"/toolid"));
+        		tMsg("Tool="+toolMap);
+        		tMsg("ToolId="+XMLMap.getString(toolMap,"/toolid"));
                 for ( Map<String,Object> property : XMLMap.getList(toolMap, "/properties/property")) {
-        			System.out.println("key="+XMLMap.getString(property, "/key"));
-        			System.out.println("val="+XMLMap.getString(property, "/val"));
+        			tMsg("key="+XMLMap.getString(property, "/key"));
+        			tMsg("val="+XMLMap.getString(property, "/val"));
         		}
         	}
 	    }
         
         // Lets parse some RSS as a final kind of easy but quite practical test
         debugFlag = false;
-        System.out.println("\nParsing RSS Feed");
-        // System.out.println(XMLMap.prettyPrint(rssText));
+        tMsg("\nParsing RSS Feed");
+        // tMsg(XMLMap.prettyPrint(rssText));
         Map<String,Object> rssFullMap = XMLMap.getFullMap(rssText);
-        System.out.println("RSS Full Map\n"+rssFullMap);
-        System.out.println("Rss Version="+XMLMap.getString(rssFullMap,"/rss!version"));
-        System.out.println("Chan-desc="+XMLMap.getString(rssFullMap,"/rss/channel/description"));
-        System.out.println("Chan-title="+XMLMap.getString(rssFullMap,"/rss/channel/title"));
+        tMsg("RSS Full Map\n"+rssFullMap);
+        tMsg("Rss Version="+XMLMap.getString(rssFullMap,"/rss!version"));
+        tMsg("Chan-desc="+XMLMap.getString(rssFullMap,"/rss/channel/description"));
+        tMsg("Chan-title="+XMLMap.getString(rssFullMap,"/rss/channel/title"));
         
         Map<String,String> rssStringMap = XMLMap.flattenMap(rssFullMap);
-        System.out.println("RSS Flat String Only Map\n"+rssStringMap);
-        System.out.println("Rss Version="+rssStringMap.get("/rss!version"));
-        System.out.println("Chan-desc="+rssStringMap.get("/rss/channel/description"));
-        System.out.println("Chan-title="+rssStringMap.get("/rss/channel/title"));
+        tMsg("RSS Flat String Only Map\n"+rssStringMap);
+        tMsg("Rss Version="+rssStringMap.get("/rss!version"));
+        tMsg("Chan-desc="+rssStringMap.get("/rss/channel/description"));
+        tMsg("Chan-title="+rssStringMap.get("/rss/channel/title"));
 
         for ( Map<String,Object> rssItem : XMLMap.getList(rssFullMap,"/rss/channel/item")) {
-        	System.out.println("=== Item ===");
-        	System.out.println(" Item-title="+XMLMap.getString(rssItem, "/title"));
-        	System.out.println(" Item-description="+XMLMap.getString(rssItem, "/description"));
-        	System.out.println(" Item-link="+XMLMap.getString(rssItem, "/link"));
+        	tMsg("=== Item ===");
+        	tMsg(" Item-title="+XMLMap.getString(rssItem, "/title"));
+        	tMsg(" Item-description="+XMLMap.getString(rssItem, "/description"));
+        	tMsg(" Item-link="+XMLMap.getString(rssItem, "/link"));
         }	
 	}
 }

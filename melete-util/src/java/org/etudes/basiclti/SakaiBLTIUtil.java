@@ -1,3 +1,24 @@
+/**********************************************************************************
+ * $URL$
+ * $Id$
+ **********************************************************************************
+ *
+ * Copyright (c) 2008, 2009 Etudes, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License. 
+ *
+ **********************************************************************************/
+
 package org.sakaiproject.basiclti;
 
 import java.util.Map;
@@ -10,6 +31,8 @@ import org.imsglobal.basiclti.BasicLTIUtil;
 import org.sakaiproject.linktool.LinkToolUtil;
 
 // Sakai APIs
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.cover.SessionManager;
@@ -40,11 +63,11 @@ import org.sakaiproject.util.ResourceLoader;
  */
 public class SakaiBLTIUtil {
 
-    public static final boolean verbosePrint = false;
+    private static Log M_log = LogFactory.getLog(SakaiBLTIUtil.class);
 
     public static void dPrint(String str)
     {
-        if ( verbosePrint ) System.out.println(str);
+        // M_log.warn(str)
     }
 
     // Look at a Placement and come up with the launch urls, and

@@ -30,7 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import org.imsglobal.simplelti.XMLMap;
+import org.imsglobal.basiclti.XMLMap;
 import org.imsglobal.simplelti.SimpleLTIUtil;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.cover.UserDirectoryService;

@@ -74,15 +74,12 @@ public class BasicLTIUtil {
     // We use the built-in Java logger because this code needs to be very generic
     private static Logger M_log = Logger.getLogger(BasicLTIUtil.class.toString());
 
-    /** To turn on really verbose debugging */
-    private static boolean verbosePrint = false;
-
     public static final String BASICLTI_SUBMIT = "basiclti_submit";
 
     // Simple Debug Print Mechanism
     public static void dPrint(String str)
     {
-        if ( verbosePrint ) System.out.println(str);
+        // System.out.println(str);
         M_log.fine(str);
     }
 

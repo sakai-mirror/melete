@@ -42,7 +42,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.imsglobal.simplelti.XMLMap;
+import org.imsglobal.basiclti.XMLMap;
 
 import java.io.PrintWriter;
 import java.io.InputStream;
@@ -66,17 +66,11 @@ public class SimpleLTIUtil {
     // We use the built-in Java logger because this code needs to be very generic
     private static Logger M_log = Logger.getLogger(SimpleLTIUtil.class.toString());
 
-    /** To turn on really verbose debugging */
-    private static boolean verbosePrint = false;
-
-    public static void setVerbosePrint(boolean value) 
-    {
-	verbosePrint = value;
-    }
     // Simple Debug Print Mechanism
     public static void dPrint(String str)
     {
-        if ( verbosePrint ) System.out.println(str);
+        // System.out.println(str);
+        M_log.fine(str);
     }
 
 	public static String BASE64SHA1(String text) 
@@ -267,7 +261,8 @@ public class SimpleLTIUtil {
 
         Properties newMap = getLaunchProperties(descriptor, siteId, resourceId);
         if ( newMap == null ) {
-            System.out.println("Invalid descriptor");
+            M_log.warning("Invalid descriptor");
+
             return null;
         }
         Properties pro = new Properties();
