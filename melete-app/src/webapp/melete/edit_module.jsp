@@ -165,7 +165,7 @@ function showEdateCal()
                 </td>
                 <td align="left" valign="top">
 				<h:inputTextarea id="keywords" cols="45" rows="3" value="#{editModulePage.module.keywords}" styleClass="formtext">
-						<f:validateLength maximum="250" minimum="3" />
+						<f:validateLength maximum="250" minimum="1" />
 				</h:inputTextarea>		
 				</td>
               </tr>
