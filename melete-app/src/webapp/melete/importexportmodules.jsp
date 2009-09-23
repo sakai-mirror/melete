@@ -103,7 +103,7 @@ function showprocessMsg()
                 						 <h:commandButton id="importButton" action="#{exportMeleteModules.importModules}" value="#{msgs.im_import}" onclick="showprocessMsg()" accesskey="#{msgs.import_access}" title="#{msgs.im_import_text}" styleClass="BottomImgImport"/>
                                          <h:commandButton id="cancelButton" immediate="true" action="#{manageModulesPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>			                
                 					</div>	
-                					<h:outputLabel id="processmsg" value="Processing..." styleClass="orange" style="visibility:hidden" /> 	     						                					
+                					<h:outputLabel id="processmsg" value="#{msgs.processMsg}" styleClass="orange" style="visibility:hidden" /> 	     						                					
 								</td>
               				</tr>
 			  				
