@@ -178,8 +178,8 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 
 		if(count <=0)
 		{
-			String errMsg = bundle.getString("no_module_selected");
-			context.addMessage (null, new FacesMessage(errMsg));
+			String msg = bundle.getString("no_module_selected");
+			addMessage(context, "Select  One", msg, FacesMessage.SEVERITY_ERROR);
 			return "restore_modules";
 		}
 		// 1. restore modules
@@ -212,8 +212,8 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 
 		if(count <=0)
 		{
-			String errMsg = bundle.getString("no_module_selected");
-			context.addMessage (null, new FacesMessage(errMsg));
+			String msg = bundle.getString("no_module_delete_selected");
+			addMessage(context, "Select  One", msg, FacesMessage.SEVERITY_ERROR);
 			return "restore_modules";
 		}
 
@@ -317,6 +317,13 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		count=0;		
 		selectAllFlag = false;
 	}
+	
+	private void addMessage(FacesContext ctx, String msgName, String msgDetail, FacesMessage.Severity severity)
+	{
+		FacesMessage msg = new FacesMessage(msgName, msgDetail);
+		msg.setSeverity(severity);
+		ctx.addMessage(null, msg);
+	}	
 
   public boolean getSelectAllFlag()
 	{
