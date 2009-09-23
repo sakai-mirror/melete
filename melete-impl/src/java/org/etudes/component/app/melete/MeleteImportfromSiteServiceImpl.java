@@ -113,7 +113,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		ContentResource cr = null;
 		String melResourceName = null;
 		String melResourceDescription = null;
-	
+		logger.debug("check and add resource for "+hrefVal);
 		try{
 			cr = getMeleteCHService().getResource(hrefVal);
 			if (cr == null) return null;
@@ -307,6 +307,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 					checkEmbedHTMLResources.add(imgActualPath);
 					// look for its embedded data
 					ContentResource embedResource = getMeleteCHService().getResource(imgActualPath);
+					logger.debug("embed data found at createHTML:" + embedResource.getId());
 					if(embedResource.getContentLength() > 0)
 					{
 						String moreContentData = new String(embedResource.getContent());
@@ -323,7 +324,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 							getMeleteCHService().checkResource(checkResourceId);
 						}catch (IdUnusedException ex)
 						{
-							addResource(filename, moreContentData.getBytes(), courseId);
+							addResource(filename, embedResource.getContentType(),moreContentData.getBytes(), courseId);
 						}
 						catch(Exception e){
 							logger.debug("error adding a resource on import from site" + e.toString());
@@ -368,7 +369,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				{
 					try
 					{						
-						return addResource(filename, embedResource.getContent(), courseId);
+						return addResource(filename, embedResource.getContentType(), embedResource.getContent(), courseId);
 					}
 					catch (Exception ex1){
 						logger.debug("error adding embedded resource on import from site"+ ex1.toString());

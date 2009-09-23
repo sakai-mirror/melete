@@ -411,17 +411,17 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 					startSrc = ((Integer)embedData.get(1)).intValue();
 					endSrc = ((Integer)embedData.get(2)).intValue();
 				}
-
+				
 				if (endSrc <= 0) break;
 				imgSrcPath = checkforimgs.substring(startSrc, endSrc);
-
+				
 				// make it full url
 				if(imgSrcPath.indexOf("://") == -1 && imgSrcPath.indexOf("/") == -1)
 				{
 					logger.debug("found relative path with no /access, parent ref is " + parentRef);
 					if(parentRef != null)
 					{
-						modifiedSecContent = meleteUtil.replace(modifiedSecContent,imgSrcPath, parentRef + imgSrcPath);
+						modifiedSecContent = meleteUtil.replacePath(modifiedSecContent,imgSrcPath, parentRef + imgSrcPath);
 						imgSrcPath = parentRef + imgSrcPath;
 					}
 				}
@@ -490,15 +490,13 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 					}
 					logger.debug("create file element for " + imgName);
 					createFileElement(imgName, img_data, resource, imagespath, imagesDir, "resources/images/", true, false);
-
+					
 					String patternStr = imgSrcPath;
 					String replacementStr = "";
 					replacementStr = (nested)? imgName : "images/"+ imgName;
-
-					Pattern pattern = Pattern.compile(Pattern.quote(patternStr));
-
+								
 					// Replace all occurrences of pattern in input
-					modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
+					modifiedSecContent = meleteUtil.replacePath(modifiedSecContent,patternStr, replacementStr);					
 				} // /access check end
 				// no need to make full url for internal links - 8/7/09
 				/*else if(imgSrcPath.startsWith("/")){

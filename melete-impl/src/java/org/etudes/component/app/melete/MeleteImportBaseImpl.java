@@ -107,12 +107,14 @@ abstract public class MeleteImportBaseImpl {
    /**
     * Adds resource item to Content Hosting and also records in MELETE_RESOURCE table.
 	*/
-	protected String addResource(String filename, byte[] melContentData, String courseId) throws Exception
+	protected String addResource(String filename, String res_mime_type, byte[] melContentData, String courseId) throws Exception
 	{
 		String uploadCollId = getMeleteCHService().getUploadCollectionId(courseId);
-		String res_mime_type = filename.substring(filename.lastIndexOf(".")+1);
+		if(res_mime_type== null)
+		{
+		filename.substring(filename.lastIndexOf(".")+1);
 		res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
-
+		}
 		ResourcePropertiesEdit res = getMeleteCHService().fillEmbeddedImagesResourceProperties(filename);
 		String newResourceId = getMeleteCHService().addResourceItem(filename, res_mime_type,uploadCollId,melContentData,res);
 		// create melete resource object
@@ -140,16 +142,15 @@ abstract public class MeleteImportBaseImpl {
 	protected String ReplaceEmbedMediaWithResourceURL(String contentEditor, String imgSrcPath, String imgActualPath, String courseId, String unZippedDirPath)
 	{
 		String replacementStr = uploadSectionDependentFile(imgActualPath, courseId, unZippedDirPath);
-
+				
 		//Upon import, embedded media was getting full url without code below
 		if (replacementStr.startsWith(ServerConfigurationService.getServerUrl()))
 		{
 			replacementStr = replacementStr.replace(ServerConfigurationService.getServerUrl(), "");
 		}
-		imgSrcPath = "=\""+imgSrcPath+"\"";
-		replacementStr = "=\""+replacementStr+"\"";
+		
 		// Replace all occurrences of pattern in input
-		contentEditor = meleteUtil.replace(contentEditor,imgSrcPath, replacementStr);
+		contentEditor = meleteUtil.replacePath(contentEditor,imgSrcPath, replacementStr);
 
 		return contentEditor;
 	}
