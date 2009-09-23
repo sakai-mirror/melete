@@ -37,7 +37,13 @@
 
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <!-- End code to put in head section for image pre-loading. -->
-
+<script language="javascript1.2">
+function showProcessMessage()
+{
+ document.getElementById("DeleteModuleForm:processmsg").style.visibility="visible";
+ document.getElementById("DeleteModuleForm:delButton").style.visibility="hidden"; 
+}
+</script>
 <title>Melete - Delete Module</title>
 </head>
 <f:view>
@@ -85,10 +91,14 @@
                   </table>
                   </td>
               </tr>
+              <tr>
+              	<td> <h:outputLabel id="processmsg" value="#{msgs.processMsg}" styleClass="orange" style="visibility:hidden" />
+              	</td>
+              </tr>
 			  <tr>
-                <td>         
-                <div class="actionBar" align="left">
-                	<h:commandButton id="delButton" action="#{deleteModulePage.deleteAction}"  rendered="#{deleteModulePage.sameModuleSectionSelected == false}" value="#{msgs.im_continue}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgDelete"/>
+                <td>
+                <div class="actionBar" align="left" id="deleteActionPanel">
+                	<h:commandButton id="delButton" action="#{deleteModulePage.deleteAction}"  rendered="#{deleteModulePage.sameModuleSectionSelected == false}" value="#{msgs.im_continue}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgDelete" onclick="showProcessMessage()"/>
 					<h:commandButton id="delButton_1" action="#{deleteModulePage.reConfirmedDeleteAction}"  rendered="#{deleteModulePage.sameModuleSectionSelected}" value="#{msgs.im_continue}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgDelete"/>	
 					<h:commandButton id="cancelButton" action="#{deleteModulePage.backToModules}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>       
 				</div></td>          
