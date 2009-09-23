@@ -134,7 +134,7 @@
               <tr>
                 <td>         
                 <div class="actionBar" align="left">	
-                <h:commandButton action="#{authorPreferences.setUserChoice}" value="#{msgs.im_set}" accesskey="#{msgs.im_set_access}" title="#{msgs.im_set_text}" styleClass="BottomImgSet"/>
+                <h:commandButton action="#{authorPreferences.setUserChoice}" value="#{msgs.im_set}" accesskey="#{msgs.set_access}" title="#{msgs.im_set_text}" styleClass="BottomImgSet"/>
 			</div></td>
               </tr>			
             </table>
