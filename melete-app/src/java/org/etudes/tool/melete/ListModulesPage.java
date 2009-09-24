@@ -69,9 +69,8 @@ public class ListModulesPage implements Serializable{
       private int showModuleId;
 
       private String formName;
-      private boolean instFlag;
-      private boolean studFlag;
       private String role;
+      private boolean instRole;
       private String typeEditor;
       private String typeLink;
       private String typeUpload;
@@ -114,8 +113,6 @@ public class ListModulesPage implements Serializable{
 
 	public ListModulesPage(){
 
-	  	instFlag = true;
-	  	studFlag = false;
 	  	FacesContext context = FacesContext.getCurrentInstance();
 //	  	context.getViewRoot().setTransient(true);
 	  	Map sessionMap = context.getExternalContext().getSessionMap();
@@ -148,8 +145,6 @@ public class ListModulesPage implements Serializable{
 
 	  public void resetValues()
 	  {
-	  	instFlag = true;
-	  	studFlag = false;
 	  	nomodsFlag = false;
 	  	closedModulesFlag = false;
 	  	printMaterial = null;
@@ -178,6 +173,20 @@ public class ListModulesPage implements Serializable{
 	  	setShowModuleId(-1);
 	  }
 
+	  public boolean getInstRole()
+	    {
+	    	FacesContext context = FacesContext.getCurrentInstance();
+		  	Map sessionMap = context.getExternalContext().getSessionMap();
+		  	if ((String)sessionMap.get("role") !=null)
+		  		this.instRole = ((String)sessionMap.get("role")).equals("INSTRUCTOR");
+		  	else this.instRole = false;
+	    	return instRole;
+	    }
+
+	    public void setInstRole(boolean instRole)
+	    {
+	    	this.instRole = instRole;
+	    }
 
  /**
 	   * @return Returns the ModuleService.
@@ -202,21 +211,7 @@ public class ListModulesPage implements Serializable{
 	  	this.role = role;
 	  }
 
-	  public boolean getInstFlag() {
-	  	return instFlag;
-	  }
-
-	  public void setInstFlag(boolean instFlag) {
-	  	this.instFlag = instFlag;
-	  }
-
-	  public boolean getStudFlag() {
-	  	return studFlag;
-	  }
-
-	  public void setStudFlag(boolean studFlag) {
-	  	this.studFlag = studFlag;
-	  }
+	 
 	  public List  getNullList() {
 	  	return nullList;
 	  }
@@ -614,7 +609,7 @@ public class ListModulesPage implements Serializable{
   		    	vmBean = (ViewModBean) viewModuleBeans.get(selModIndex);
   			}
   		}    	  
-      	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNo));
+      	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNo),getInstRole());
       	vnPage.setNextSeqNo(nextSeqNo);
       	vnPage.setModule(getModuleService().getModule(vmBean.getModuleId()));
       	if ((vmBean.getVsBeans() == null)||(vmBean.getVsBeans().size() == 0))

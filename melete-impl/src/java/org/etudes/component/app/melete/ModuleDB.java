@@ -165,17 +165,25 @@ public class ModuleDB implements Serializable {
 
 
 
-	public int getNextSeqNo(String courseId, int currSeqNo)
+	public int getNextSeqNo(String courseId, int currSeqNo, boolean instRole)
 		{
 		 int nextSeqNo = -1;
 		 try
 			{
 			 Session session = hibernateUtil.currentSession();
-
-			   Query q=session.createQuery("select min(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId=ms.moduleId and ((ms.startDate < :currDate and ms.endDate > :currDate) or (ms.startDate is null and ms.endDate is null) or (ms.startDate is null and ms.endDate > :currDate) or (ms.startDate < :currDate and ms.endDate is null))");
+             String queryStr = null;
+             if (instRole)
+             {
+            	 queryStr = "select min(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId=ms.moduleId";
+             }
+             else
+             {
+              	 queryStr = "select min(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId=ms.moduleId and ((ms.startDate < :currDate and ms.endDate > :currDate) or (ms.startDate is null and ms.endDate is null) or (ms.startDate is null and ms.endDate > :currDate) or (ms.startDate < :currDate and ms.endDate is null))";
+             }
+			   Query q=session.createQuery(queryStr);
 			   q.setParameter("courseId",courseId);
 			   q.setParameter("currSeqNo", currSeqNo);
-			   q.setParameter("currDate", new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
+			   if (!instRole)q.setParameter("currDate", new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
 			   Integer minsequence = (Integer)q.uniqueResult();
 
 
@@ -200,17 +208,25 @@ public class ModuleDB implements Serializable {
 
 	}
 
-	public int getPrevSeqNo(String courseId, int currSeqNo)
+	public int getPrevSeqNo(String courseId, int currSeqNo, boolean instRole)
 	{
 	 int prevSeqNo = -1;
 	 try
 		{
 		 Session session = hibernateUtil.currentSession();
-
-		   Query q=session.createQuery("select max(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId=ms.moduleId and ((ms.startDate < :currDate and ms.endDate > :currDate) or (ms.startDate is null and ms.endDate is null) or (ms.startDate is null and ms.endDate > :currDate) or (ms.startDate < :currDate and ms.endDate is null))");
+           String queryStr = null;
+           if (instRole)
+           {
+        	   queryStr = "select max(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId=ms.moduleId";
+           }
+           else
+           {
+        	   queryStr = "select max(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId=ms.moduleId and ((ms.startDate < :currDate and ms.endDate > :currDate) or (ms.startDate is null and ms.endDate is null) or (ms.startDate is null and ms.endDate > :currDate) or (ms.startDate < :currDate and ms.endDate is null))";
+           }
+		   Query q=session.createQuery(queryStr);
 		   q.setParameter("courseId",courseId);
 		   q.setParameter("currSeqNo", currSeqNo);
-		   q.setParameter("currDate", new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
+		   if (!instRole) q.setParameter("currDate", new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
 		   Integer maxsequence = (Integer)q.uniqueResult();
 
 

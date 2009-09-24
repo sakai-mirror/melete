@@ -173,8 +173,8 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     	  if (this.mdbean != null)
     	  {
     	  this.moduleSeqNo = this.mdbean.getModule().getCoursemodule().getSeqNo();
-  	  	  this.prevSeqNo = getModuleService().getPrevSeqNo(courseId,this.moduleSeqNo);
-  	  	  this.nextSeqNo = getModuleService().getNextSeqNo(courseId,this.moduleSeqNo);
+  	  	  this.prevSeqNo = getModuleService().getPrevSeqNo(courseId,this.moduleSeqNo,getInstRole());
+  	  	  this.nextSeqNo = getModuleService().getNextSeqNo(courseId,this.moduleSeqNo,getInstRole());
     	  }
   	  	  this.prevSectionSize = 0;
   	  	  if ((this.prevSeqNo > 0)&&(this.prevSeqNo != this.moduleSeqNo))
@@ -428,7 +428,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     public String goWhatsNext()
     {
     	FacesContext context = FacesContext.getCurrentInstance();
-    	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(((String)context.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue());
+    	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(((String)context.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue(),getInstRole());
 
     	ValueBinding binding =
             Util.getBinding("#{viewNextStepsPage}");

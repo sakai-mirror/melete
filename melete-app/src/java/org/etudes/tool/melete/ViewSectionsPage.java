@@ -456,7 +456,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     	{
     	try {
   	  	  this.module = (ModuleObjService) getModuleService().getModule(this.moduleId);
-  	  	  this.nextSeqNo = getModuleService().getNextSeqNo(getCourseId(), this.moduleSeqNo);
+  	  	  this.nextSeqNo = getModuleService().getNextSeqNo(getCourseId(), this.moduleSeqNo, getInstRole());
   	  	  this.subSectionW3CDom = getModuleService().getSubSectionW3CDOM(this.module.getSeqXml());
   	  	  secElement = subSectionW3CDom.getElementById(String.valueOf(this.sectionId));
   	  	  prevNode = getPreviousNode(secElement);
@@ -740,7 +740,7 @@ public String goNextModule()
 	//this.module = null;
 	String modSeqNoStr = (String)context.getExternalContext().getRequestParameterMap().get("modseqno");
 	if ((modSeqNoStr == null)||(modSeqNoStr.length() == 0)) modSeqNoStr = "0";
-	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNoStr).intValue());
+	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNoStr).intValue(),getInstRole());
 	//ModuleDateBean nextMdBean = (ModuleDateBean) getModuleService().getModuleDateBeanBySeq(getUserId(),getCourseId(),nextSeqNo);
 	this.module = null;
 	ValueBinding binding =

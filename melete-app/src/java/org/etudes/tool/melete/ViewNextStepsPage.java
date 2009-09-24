@@ -131,7 +131,7 @@ public String goPrevItem()
 {
 	FacesContext context = FacesContext.getCurrentInstance();
 	courseId = getCourseId();
-	int prevSeqNo = getModuleService().getPrevSeqNo(courseId,this.nextSeqNo);
+	int prevSeqNo = getModuleService().getPrevSeqNo(courseId,this.nextSeqNo,getInstRole());
 	if (this.prevSecId == 0)
 	{
 	  ValueBinding binding =

@@ -455,20 +455,20 @@ public void restoreModules(List modules, String courseId) throws Exception
 
 
 
-	 public int getNextSeqNo(String courseId, int currSeqNo)
+	 public int getNextSeqNo(String courseId, int currSeqNo, boolean instRole)
 	  {
 	  	int nextseq=0;
 
-	  	nextseq=moduledb.getNextSeqNo(courseId, currSeqNo);
+	  	nextseq=moduledb.getNextSeqNo(courseId, currSeqNo, instRole);
 
 	  	return nextseq;
 	  }
 
-	 public int getPrevSeqNo(String courseId, int currSeqNo)
+	 public int getPrevSeqNo(String courseId, int currSeqNo, boolean instRole)
 	  {
 	  	int prevseq=0;
 
-	  	prevseq=moduledb.getPrevSeqNo(courseId, currSeqNo);
+	  	prevseq=moduledb.getPrevSeqNo(courseId, currSeqNo, instRole);
 
 	  	return prevseq;
 	  }
