@@ -140,7 +140,7 @@ public class AuthorPreferencePage {
   public String getMeleteDefaultEditor()
 	{
 		String defaultEditor = ServerConfigurationService.getString("melete.wysiwyg.editor", "");
-		if (logger.isDebugEnabled()) logger.debug("getMeleteDefaultEditor:"+defaultEditor+"...");
+		logger.debug("getMeleteDefaultEditor:"+defaultEditor+"...");
 
 		if(defaultEditor == null || defaultEditor.length() == 0)
 		{
@@ -176,7 +176,7 @@ public class AuthorPreferencePage {
   public boolean isShouldRenderEditorPanel()
   {
 	  int count = ServerConfigurationService.getInt("melete.wysiwyg.editor.count", 0);
-	  if (count > 1) shouldRenderEditorPanel = true;
+	  if (count > 0) shouldRenderEditorPanel = true;
 	  return shouldRenderEditorPanel;
   }
 /**
