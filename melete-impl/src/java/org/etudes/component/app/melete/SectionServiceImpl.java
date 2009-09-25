@@ -132,11 +132,14 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			// edit Section
 					sectiondb.editSection((Section)section);
 		   }
+		catch(MeleteException mex)
+		{
+			throw mex;
+		}
 		catch(Exception ex)
-			{
-				logger.debug("multiple user exception in section business");
-			   throw new MeleteException("edit_section_multiple_users");
-			}
+		{
+			throw new MeleteException("add_section_fail");
+		}
 	}
 	public void editSection(SectionObjService section, MeleteResourceService melResource ) throws MeleteException
 	{
@@ -144,11 +147,14 @@ public class SectionServiceImpl implements Serializable, SectionService{
 			// edit Section
 					sectiondb.editSection((Section)section, (MeleteResource) melResource);
 		   }
+		catch(MeleteException mex)
+		{
+			throw mex;
+		}
 		catch(Exception ex)
-			{
-				logger.debug("multiple user exception in section business");
-			   throw new MeleteException("edit_section_multiple_users");
-			}
+		{
+			throw new MeleteException("add_section_fail");
+		}
 	}
 
 	public void deleteSection(SectionObjService sec, String courseId, String userId) throws MeleteException

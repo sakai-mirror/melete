@@ -161,7 +161,7 @@ public class SectionDB implements Serializable {
 
 	}
 
-	public Integer editSection( Section section) throws MeleteException
+	public Integer editSection( Section section) throws Exception
 	{
 		try{
 		     Session session = hibernateUtil.currentSession();
@@ -188,21 +188,28 @@ public class SectionDB implements Serializable {
 	        }
 			catch(StaleObjectStateException sose)
 		     {
+				if(tx !=null) tx.rollback();
 				logger.error("edit section stale object exception" + sose.toString());
-				throw sose;
+				throw new MeleteException("edit_section_multiple_users");				
 		     }
+			catch(ConstraintViolationException cve)
+			{
+				if(tx !=null) tx.rollback();
+				logger.error("constraint voilation exception" + cve.getConstraintName());
+				throw new MeleteException("add_section_fail");
+			}
 			catch(HibernateException he)
 				     {
 						if(tx !=null) tx.rollback();
 						logger.error("edit section stale object exception" + he.toString());
-						throw he;
+						throw new MeleteException("add_section_fail");
 				     }
 	        	finally{
 				hibernateUtil.closeSession();
 				 }
 		}catch(Exception ex){
 				// Throw application specific error
-			throw new MeleteException("add_section_fail");
+			throw ex;
 			}
 
 	}
@@ -210,7 +217,7 @@ public class SectionDB implements Serializable {
 	 * edit section....
 	 */
 
-	public void editSection(Section section, MeleteResource melResource) throws MeleteException
+	public void editSection(Section section, MeleteResource melResource) throws Exception
 	{
 		try{
 		     Session session = hibernateUtil.currentSession();
@@ -267,14 +274,20 @@ public class SectionDB implements Serializable {
 		     {
 				if(tx !=null) tx.rollback();
 				logger.error("edit section stale object exception" + sose.toString());
-				throw sose;
+				throw new MeleteException("edit_section_multiple_users");
 		     }
+			catch(ConstraintViolationException cve)
+			 {
+				if(tx !=null) tx.rollback();
+				logger.error("constraint voilation exception" + cve.getConstraintName());
+				throw new MeleteException("add_section_fail");
+			 }
 			catch (HibernateException he)
 				     {
 						if(tx !=null) tx.rollback();
 						logger.error("edit section HE exception" + he.toString());
 						he.printStackTrace();
-						throw he;
+						throw new MeleteException("add_section_fail");
 				     }
 	       	finally{
 	       			hibernateUtil.closeSession();
@@ -282,7 +295,7 @@ public class SectionDB implements Serializable {
 		}
 		catch(Exception ex){
 				// Throw application specific error
-			throw new MeleteException("add_section_fail");
+			throw ex;
 			}
 	}
 
