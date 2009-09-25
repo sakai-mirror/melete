@@ -1742,7 +1742,14 @@ public class ModuleDB implements Serializable {
 				if (allModuleIds.lastIndexOf(",") != -1) delModuleIds = allModuleIds.substring(0, allModuleIds.lastIndexOf(",")) + " )";
 			    deleteEverything(courseId, session, delModuleIds);
                 //remove entire collection
-				meleteCHService.removeCollection(courseId,null);
+			    try
+			    {
+			    	meleteCHService.removeCollection(courseId,null);
+			    } 
+			    catch(Exception removeColl)
+			    {
+			    	//do nothing
+			    }
 			    tx.commit();
 			}
 			catch (HibernateException he)
