@@ -374,6 +374,11 @@ public class SectionDB implements Serializable {
 		    	     //Delete section
 		    	     if (sectionId != null)
 		    	     {
+		    	    	 if (secRes != null)
+		    			 {
+		    	    	   affectedEntities = session.createQuery(delSectionResourceStr).setInteger("sectionId", secRes.getSectionId()).executeUpdate();
+//		    			   logger.debug(affectedEntities+" row was deleted from SECTION_RESOURCE");
+		    			 }	 
 		    	       affectedEntities = session.createQuery(delSectionStr).setInteger("sectionId",sectionId).executeUpdate();
 		//    	       logger.debug(affectedEntities+" row was deleted from MELETE_SECTION");
 		    	     }
@@ -497,7 +502,7 @@ public class SectionDB implements Serializable {
 		if (sec.getContentType().equals("typeEditor"))
 		{
 		  List<String> secEmbed = null;
-		  if(sec.getSectionResource() == null)
+		  if((sec.getSectionResource() == null)||(sec.getSectionResource().getResource() == null))
 		  {
 			  deleteFromMeleteTables(sec, userId, NONE_TO_DELETE, null);
 			    long endtime = System.currentTimeMillis();
