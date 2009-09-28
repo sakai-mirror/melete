@@ -202,7 +202,7 @@ if (msg != null)
                   value="#{listAuthModulesPage.moduleDateBeans}"
                   var="mdbean"   border="0"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ModCheckClass,TitleWid,ModCheckClass,ModCheckClass,ModCheckClass,ModCheckClass,ModCheckClass" 
                   styleClass="maintabledata1"
-				  width="100%" binding="#{listAuthModulesPage.table}">
+				  width="100%" binding="#{listAuthModulesPage.table}" summary="#{msgs.list_auth_modules_summary}">
                       
     <h:column>
     <f:facet name="header">
@@ -248,7 +248,7 @@ if (msg != null)
       </h:commandLink>
       <h:dataTable id="tablesec" rendered="#{((mdbean.moduleId == listAuthModulesPage.showModuleId)||(listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag))}"
                   value="#{mdbean.sectionBeans}"
-                  var="sectionBean" columnClasses="SectionClass" rowClasses="#{mdbean.rowClasses}" width="95%" binding="#{listAuthModulesPage.secTable}">
+                  var="sectionBean" columnClasses="SectionClass" rowClasses="#{mdbean.rowClasses}" width="95%" binding="#{listAuthModulesPage.secTable}" summary="#{msgs.list_auth_modules_sections_summary}">
                <h:column>
               <h:selectBooleanCheckbox value="#{sectionBean.selected}"  valueChangeListener="#{listAuthModulesPage.selectedSection}"/> 
                <h:outputText id="emp_space" value=" "/>

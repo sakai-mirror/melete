@@ -45,7 +45,7 @@
                 </h:panelGrid>
 
                  <!-- navigation with showing 15 recs --> 
-                <h:panelGrid id="selresNavigationPanel" columns="2"  width="100%" border="0" columnClasses="TitleWid4,ActionWid2" rendered="#{listResourcesPage.listNav.displayNav}" >
+                <h:panelGrid id="selresNavigationPanel" columns="2"  width="100%" border="0" columnClasses="TitleWid4,ActionWid2" rendered="#{listResourcesPage.listNav.displayNav}" summary="#{msgs.list_resources_nav_summary}">
                 <h:column/>
                 <h:column>
                   <h:outputText id="nav_spaces_left1" value="" styleClass="ExtraPaddingClass" />
@@ -73,7 +73,7 @@
               </h:panelGrid>
                <!-- navigation ends -->            		 
    
-			 <h:dataTable id="table"  value="#{listResourcesPage.displayResourcesList}"  var="curr_resources"  border="0" headerClass="tableheader2" columnClasses="TitleWid3,ActionWid" rowClasses="row1,row2"  width="100%">
+			 <h:dataTable id="table"  value="#{listResourcesPage.displayResourcesList}"  var="curr_resources"  border="0" headerClass="tableheader2" columnClasses="TitleWid3,ActionWid" rowClasses="row1,row2"  width="100%" summary="#{msgs.list_resources_summary}">
 				  <h:column>
 					   <f:facet name="header">
 							<h:panelGroup>

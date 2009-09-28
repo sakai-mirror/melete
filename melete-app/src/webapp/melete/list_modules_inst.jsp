@@ -96,7 +96,7 @@ return newWindow;
  <h:dataTable id="table"  
                   value="#{listModulesPage.viewModuleBeans}" 
                   var="vmbean"  rowClasses="row1,row2" columnClasses="titleWid,ModCheckClass,dateWid1,dateWid2,ModCheckClass"
-                  border="0" width="100%" binding="#{listModulesPage.modTable}">
+                  border="0" width="100%" binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_inst_summary}">
         <h:column>       
       
             <h:commandLink id="viewSections" action="#{listModulesPage.showSections}" immediate="true">
@@ -126,7 +126,7 @@ return newWindow;
           
            <h:dataTable id="tablesec" rendered="#{(((vmbean.moduleId == listModulesPage.showModuleId)||(listModulesPage.expandAllFlag == listModulesPage.trueFlag)))}"
                   value="#{vmbean.vsBeans}"
-                  var="vsbean" columnClasses="SectionClass" rowClasses="#{vmbean.rowClasses}"  width="95%" binding="#{listModulesPage.secTable}">
+                  var="vsbean" columnClasses="SectionClass" rowClasses="#{vmbean.rowClasses}"  width="95%" binding="#{listModulesPage.secTable}" summary="#{msgs.list_modules_inst_sections_summary}">
                    <h:column>                         
                <h:graphicImage id="bul_gif" value="images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}"/>
 	       <h:outputText id="sec_seq" value="#{vsbean.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>

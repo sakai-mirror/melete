@@ -90,7 +90,7 @@ return newWindow;
                   var="vmbean"   rowClasses="row1,row2" 
               columnClasses="titleWid,dateWid1,dateWid2,ModCheckClass"
                    border="0" width="100%" 
-                   binding="#{listModulesPage.modTable}">
+                   binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_stud_summary}">
       <h:column>                                 
     
     <h:commandLink id="viewSections" action="#{listModulesPage.showSections}" immediate="true">
@@ -112,7 +112,7 @@ return newWindow;
         
         <h:dataTable id="tablesec" rendered="#{((vmbean.moduleId == listModulesPage.showModuleId)||(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}"
                   value="#{vmbean.vsBeans}"
-                  var="vsbean" rowClasses="#{vmbean.rowClasses}" columnClasses="SectionClass" width="95%" binding="#{listModulesPage.secTable}">
+                  var="vsbean" rowClasses="#{vmbean.rowClasses}" columnClasses="SectionClass" width="95%" binding="#{listModulesPage.secTable}" summary="#{msgs.list_modules_stud_sections_summary}">
                     <h:column> 
               <h:graphicImage id="bul_gif" value="images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}"/>
              

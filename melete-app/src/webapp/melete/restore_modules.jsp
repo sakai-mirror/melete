@@ -103,7 +103,7 @@ function resetCheck()
 			            <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
 						<tr>
               					<td colspan="2" width="100%" valign="top">
-			  						<h:dataTable id="table1"  value="#{manageModulesPage.archiveModulesList}" var="aml" width="110%"  headerClass="tableheader2" columnClasses="style3" >
+			  						<h:dataTable id="table1"  value="#{manageModulesPage.archiveModulesList}" var="aml" width="110%"  headerClass="tableheader2" columnClasses="style3" summary="#{msgs.restore_modules_summary}">
 			  							<h:column>
 			  							<f:facet name="header">
 			  							<h:panelGroup>
