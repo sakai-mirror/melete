@@ -399,7 +399,8 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 
 			int startSrc =0;
 			int endSrc = 0;
-
+			String checkLink = null;
+			
 			while(checkforimgs !=null)
 			{
 				ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
@@ -409,6 +410,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 				{
 					startSrc = ((Integer)embedData.get(1)).intValue();
 					endSrc = ((Integer)embedData.get(2)).intValue();
+					checkLink = (String)embedData.get(3);
 				}
 
 				if (endSrc <= 0) break;
@@ -428,7 +430,12 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 				logger.debug("imgsrcpath :" + imgSrcPath);
 				if(imgSrcPath.indexOf("/access") !=-1)
 				{
-					ArrayList r = meleteUtil.findResourceSource(imgSrcPath, null, null, false);
+					String findResourcePath = imgSrcPath;
+					// harvest links with anchors
+					if(checkLink != null && checkLink.equals("link") && findResourcePath.indexOf("#")!= -1)
+						findResourcePath = findResourcePath.substring(0,findResourcePath.indexOf("#"));
+						
+					ArrayList r = meleteUtil.findResourceSource(findResourcePath, null, null, false);
 					if(r == null || r.size() == 0)
 					{
 						/*// not a site resource item so make it a full URL
@@ -436,7 +443,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 						String replacementStr =ServerConfigurationService.getServerUrl() + imgSrcPath;
 						modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);*/
 						checkforimgs =checkforimgs.substring(endSrc);
-						startSrc=0; endSrc = 0;
+						startSrc=0; endSrc = 0; checkLink = null;
 						continue;
 					}
 					String img_resource_id = (String)r.get(0);
@@ -459,7 +466,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 							if(img_data == null)
 							{
 								checkforimgs =checkforimgs.substring(endSrc);
-								startSrc=0; endSrc = 0;
+								startSrc=0; endSrc = 0; checkLink = null;
 								continue;
 							}
 							String parentStr = meleteUtil.findParentReference(img_resource_id);
@@ -477,7 +484,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 						if(img_data == null)
 						{
 							checkforimgs =checkforimgs.substring(endSrc);
-							startSrc=0; endSrc = 0;
+							startSrc=0; endSrc = 0; checkLink = null;
 							continue;
 						}
 					}
@@ -492,7 +499,12 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 					String patternStr = imgSrcPath;
 					String replacementStr = "";
 					replacementStr = (nested)? imgName : "images/"+ imgName;
-
+					
+					if(checkLink != null && checkLink.equals("link") && imgSrcPath.indexOf("#")!= -1)
+					{
+						String anchorString=imgSrcPath.substring(imgSrcPath.indexOf("#"));
+						replacementStr = replacementStr.concat(anchorString);
+					}
 					Pattern pattern = Pattern.compile(Pattern.quote(patternStr));
 
 					// Replace all occurrences of pattern in input
@@ -508,7 +520,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 					//return modifiedSecContent;
 				}*/
 				checkforimgs =checkforimgs.substring(endSrc);
-				startSrc=0; endSrc = 0;
+				startSrc=0; endSrc = 0; checkLink = null;
 			}
 		}catch (Exception e) {
 			e.printStackTrace();

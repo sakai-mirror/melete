@@ -495,6 +495,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 
 		int startSrc =0;
 		int endSrc = 0;
+		String checkLink=null;
 
 		while (checkforimgs != null) {
 			ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
@@ -503,11 +504,14 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			{
 				startSrc = ((Integer)embedData.get(1)).intValue();
 				endSrc = ((Integer)embedData.get(2)).intValue();
+				checkLink = (String)embedData.get(3);
 			}
 			if (endSrc <= 0) break;
 
 			imgSrcPath = checkforimgs.substring(startSrc, endSrc);
 			logger.debug("processing img src during import in CreateHTML:" + imgSrcPath);
+			String patternStr = imgSrcPath;
+			String anchorString = null;
 			// changed on 10/16/06 - add https condition too
 			if (resElements != null)
 			{
@@ -517,13 +521,18 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 					if(!imgSrcPath.startsWith("/"))
 					{
 						checkforimgs = checkforimgs.substring(endSrc);
+						if(checkLink != null && checkLink.equals("link") && imgSrcPath.indexOf("#")!= -1)
+						{
+							anchorString=imgSrcPath.substring(imgSrcPath.indexOf("#"));
+							imgSrcPath = imgSrcPath.substring(0, imgSrcPath.indexOf("#"));
+						}
 						String imgActualPath="";
 						imgActualPath = getFileNamefromElement(resElements,imgSrcPath);
 
 						if(imgActualPath == null || imgActualPath.length() == 0)
 						{						
 							imgindex = -1;
-							startSrc=0; endSrc = 0;
+							startSrc=0; endSrc = 0; checkLink = null;
 							continue;
 						}
 
@@ -557,20 +566,19 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 							{
 								// logger.debug("already processed file" + imgActualPath);
 								imgindex = -1;
-								startSrc=0; endSrc = 0;
+								startSrc=0; endSrc = 0; checkLink = null;
 								String replacementStr = "/access/meleteDocs/content/private/meleteDocs/" + courseId + "/uploads/" + imgSrcPath.substring(imgSrcPath.lastIndexOf('/') + 1);
-								String patternStr = imgSrcPath;
 								contentEditor = meleteUtil.replace(contentEditor,patternStr, replacementStr);
 								continue;
 							}
 						}
-						contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, unZippedDirPath);
+						contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, patternStr, imgActualPath, courseId, unZippedDirPath,anchorString);
 					} // if check for images				
 				} //if http check end
 			}//IMS import (original code) ends here
 
 			imgindex = -1;
-			startSrc=0; endSrc = 0;
+			startSrc=0; endSrc = 0; checkLink = null;
 		}
 		ArrayList returnData = new ArrayList();
 		returnData.add(contentEditor);

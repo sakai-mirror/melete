@@ -139,10 +139,11 @@ abstract public class MeleteImportBaseImpl {
    /**
 	* Gets new url for the Embedded media and replaces it in the new HTML content
 	*/
-	protected String ReplaceEmbedMediaWithResourceURL(String contentEditor, String imgSrcPath, String imgActualPath, String courseId, String unZippedDirPath)
+	protected String ReplaceEmbedMediaWithResourceURL(String contentEditor, String imgSrcPath, String imgActualPath, String courseId, String unZippedDirPath, String anchorStr)
 	{
 		String replacementStr = uploadSectionDependentFile(imgActualPath, courseId, unZippedDirPath);
-
+		if(anchorStr != null)replacementStr = replacementStr.concat(anchorStr);	
+		
 		//Upon import, embedded media was getting full url without code below
 		if (replacementStr.startsWith(ServerConfigurationService.getServerUrl()))
 		{
