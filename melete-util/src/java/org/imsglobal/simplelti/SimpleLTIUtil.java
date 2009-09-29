@@ -625,10 +625,12 @@ public class SimpleLTIUtil {
 
         String lti2ToolId = XMLMap.getString(tm,"/toolInstance/tool_id");
         String lti2LaunchTypes = XMLMap.getString(tm,"/toolInstance/accept_targets");
+        String lti2LaunchSecret = XMLMap.getString(tm,"/toolInstance/lti_secret");
 
         if ( lti2EndPoint != null ) retval.setProperty("launchurl", lti2EndPoint);
         if ( lti2ToolId != null ) retval.setProperty("tool_id", lti2ToolId);
         if ( lti2LaunchTypes != null ) retval.setProperty("accept_targets", lti2LaunchTypes);
+        if ( lti2LaunchSecret != null ) retval.setProperty("_secret", lti2LaunchSecret);
         return retval;
     }
 
