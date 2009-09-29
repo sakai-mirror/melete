@@ -332,7 +332,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 							getMeleteCHService().checkResource(checkResourceId);
 						}catch (IdUnusedException ex)
 						{							
-							addResource(filename, moreContentData.getBytes(), courseId);
+							addResource(filename, embedResource.getContentType(),moreContentData.getBytes(), courseId);
 						}
 						catch(Exception e){
 							logger.debug("error adding a resource on import from site" + e.toString());
@@ -381,7 +381,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				{
 					try
 					{						
-						return addResource(filename, embedResource.getContent(), courseId);
+						return addResource(filename, embedResource.getContentType(), embedResource.getContent(), courseId);						
 					}
 					catch (Exception ex1){
 						logger.debug("error adding embedded resource on import from site"+ ex1.toString());

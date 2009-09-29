@@ -287,5 +287,38 @@ public class MeleteUtil {
 				filename = filename.replace(change[x], "_");
 			}
 			return filename;
+		}		
+		
+		/*
+		 *  translating the src and a href paths to the new ones.
+		 *  The format can be anything src="" or src='' or src=
+		 *  Didn't use regex patterns, as we would have to escape regex meta-characters like $ [ ^ etc which can be our filenames 
+		 */
+		public String replacePath(String s, String one, String another)
+		{
+			if (s.equals("")) return "";
+			if ((one == null)||(one.length() == 0)) return s;
+			String checkOne = "=\""+one+"\"";
+			another = "=\""+another+"\"";
+
+			if(s.indexOf(checkOne) != -1)
+			{
+				s=s.replace(checkOne, another);
+				return s;
+			}
+			checkOne = "='"+one+"'";
+			if(s.indexOf(checkOne) != -1)
+			{
+				s=s.replace(checkOne, another);
+				return s;
+			}
+			checkOne = "="+one;
+			if(s.indexOf(checkOne) != -1)
+			{
+				s=s.replace(checkOne, another);
+				return s;
+			}
+
+			return s;	
 		}
 }

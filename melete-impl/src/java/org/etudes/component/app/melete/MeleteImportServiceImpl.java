@@ -556,7 +556,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 									}catch (IdUnusedException ex)
 									{
 										logger.debug("importing embedded file:" + filename);
-										addResource(filename, embedContentData.getBytes(), courseId);
+										addResource(filename, null,embedContentData.getBytes(), courseId);
 									}
 									catch(Exception e){
 										logger.debug("error adding a secondary html resource on ims import");
@@ -608,7 +608,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 				}catch (IdUnusedException ex)
 				{
 					melContentData = readData(unZippedDirPath, hrefVal);
-					return addResource(filename, melContentData, courseId);
+					return addResource(filename, null,melContentData, courseId);
 				}
 				catch(Exception e)
 				{

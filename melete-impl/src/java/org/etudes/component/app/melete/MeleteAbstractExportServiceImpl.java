@@ -422,7 +422,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 					logger.debug("found relative path with no /access, parent ref is " + parentRef);
 					if(parentRef != null)
 					{
-						modifiedSecContent = meleteUtil.replace(modifiedSecContent,imgSrcPath, parentRef + imgSrcPath);
+						modifiedSecContent = meleteUtil.replacePath(modifiedSecContent,imgSrcPath, parentRef + imgSrcPath);
 						imgSrcPath = parentRef + imgSrcPath;
 					}
 				}
@@ -505,10 +505,8 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 						String anchorString=imgSrcPath.substring(imgSrcPath.indexOf("#"));
 						replacementStr = replacementStr.concat(anchorString);
 					}
-					Pattern pattern = Pattern.compile(Pattern.quote(patternStr));
-
 					// Replace all occurrences of pattern in input
-					modifiedSecContent = meleteUtil.replace(modifiedSecContent,patternStr, replacementStr);
+					modifiedSecContent = meleteUtil.replacePath(modifiedSecContent,patternStr, replacementStr);					
 				} // /access check end
 				// no need to make full url for internal links - 8/7/09
 				/*else if(imgSrcPath.startsWith("/")){
