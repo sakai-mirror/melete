@@ -24,6 +24,7 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@include file="accesscheck.jsp" %>
 
 <link rel="stylesheet" type="text/css" href="rtbc004.css"> 
 	   <h:panelGrid id="propertiesPanel" columns="1" width="100%" styleClass="maintabledata2">

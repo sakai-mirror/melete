@@ -31,6 +31,7 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@include file="accesscheck.jsp" %>
 
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <!-- End code to put in head section for image pre-loading. -->

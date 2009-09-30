@@ -23,6 +23,7 @@
  **********************************************************************************
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
+<%@include file="accesscheck.jsp" %>
 
 <h:panelGrid columns="9" columnClasses="menu MainTableClass" cellspacing="5" style=" border-width:medium; border-color: #E2E4E8" width="50%">
 	<h:column>

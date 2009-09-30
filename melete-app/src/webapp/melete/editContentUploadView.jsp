@@ -24,6 +24,7 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@include file="accesscheck.jsp" %>
 
 
 <h:panelGrid id="uploadView" columns="2" columnClasses="col30,col50" width="80%" border="0">

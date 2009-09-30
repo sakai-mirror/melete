@@ -23,6 +23,7 @@
  **********************************************************************************
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
+<%@include file="accesscheck.jsp" %>
 
 <h:panelGrid id="LinkPanel" columns="2" columnClasses="col30,col50" width="80%" border="0">
   <h:column>

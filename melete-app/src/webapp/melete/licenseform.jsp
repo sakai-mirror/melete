@@ -25,6 +25,7 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@include file="accesscheck.jsp" %>
 
 <f:subview id="SectionView" rendered="#{licensePage.callFromSection}">
  <h:outputText value="#{msgs.licenseform_resources_proper_pan_cstatus}" />	 

@@ -192,6 +192,25 @@ public class MeleteSiteAndUserInfo {
 
 		return element;
 	}
+	
+	public boolean checkAuthorization()
+	{
+		try
+	    {
+		  if (isUserStudent())
+		  {
+			return false;
+		  }
+		  else
+		  {
+			return true;
+		  }
+	    }
+	    catch (Exception e) {
+			logger.error(e.toString());
+	    }
+	    return false;
+	}
 
 	public void populateMeleteSession()
 	{

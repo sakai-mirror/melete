@@ -30,6 +30,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@include file="accesscheck.jsp" %>
 
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <script type="text/javascript" language="javascript">

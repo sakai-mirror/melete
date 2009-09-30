@@ -36,6 +36,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@include file="accesscheck.jsp" %>
 
 <link rel="stylesheet" type="text/css" href="rtbc004.css">
 <%@ page import="org.sakaiproject.util.ResourceLoader"%>

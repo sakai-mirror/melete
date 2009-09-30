@@ -28,6 +28,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@include file="accesscheck.jsp" %>
 
 
 <%@ page import="org.sakaiproject.util.ResourceLoader"%>

@@ -33,6 +33,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@include file="accesscheck.jsp" %>
 
 
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>

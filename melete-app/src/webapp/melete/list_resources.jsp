@@ -24,6 +24,7 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@include file="accesscheck.jsp" %>
 <h:panelGrid width="100%" border="0" cellpadding="4" cellspacing="0"  style="border-collapse: collapse border-color: #F5F5F5" >											
 <h:column>	
     		<h:outputText value="#{msgs.edit_list_resources_selected_res} "  rendered="#{listResourcesPage.renderSelectedResource}" styleClass="blue" />

@@ -32,6 +32,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@include file="accesscheck.jsp" %>
 <%
 /*The following piece of java code needs to stay above the loadBundle tag, otherwise the request attribute gets replaced by msg*/
 

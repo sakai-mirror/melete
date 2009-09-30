@@ -24,6 +24,7 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@include file="accesscheck.jsp" %>
 <%@ page import="org.etudes.tool.melete.MeleteSiteAndUserInfo,org.etudes.tool.melete.AuthorPreferencePage"%>
 <%
 final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();

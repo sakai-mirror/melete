@@ -19,6 +19,7 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@include file="accesscheck.jsp" %>
 <f:verbatim>
 					<tr><td height="20" colspan="2"> 
 					</f:verbatim>

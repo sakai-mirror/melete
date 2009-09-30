@@ -24,6 +24,8 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@include file="accesscheck.jsp" %>
+
   <h:panelGrid id="LinkPanel2" columns="2" width="80%" columnClasses="col30,col50" border="0">
    	<h:column><h:outputText id="linkText1" value="#{msgs.contentlinkview_link}"/>
    	<h:outputText id="extraspacesUpload0" value="" styleClass="ExtraPaddingClass" />
