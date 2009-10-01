@@ -28,7 +28,7 @@ import java.util.UUID;
 import java.net.URL;
 
 import org.imsglobal.basiclti.BasicLTIUtil;
-import org.sakaiproject.linktool.LinkToolUtil;
+import org.etudes.linktool.LinkToolUtil;
 
 // Sakai APIs
 import org.apache.commons.logging.Log;
