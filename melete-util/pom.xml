@@ -67,6 +67,15 @@
       <groupId>org.sakaiproject</groupId>
       <artifactId>sakai-util-api</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-util</artifactId>
+      <version>${sakai.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-tool-api</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>dom4j</groupId>
@@ -84,6 +93,11 @@
       <artifactId>xmlParserAPIs</artifactId>
       <version>2.6.2</version>
       <scope>compile</scope>
+    </dependency>
+   <dependency>
+      <groupId>servletapi</groupId>
+      <artifactId>servletapi</artifactId>
+      <version>2.4</version>
     </dependency>
   </dependencies>
   <build>

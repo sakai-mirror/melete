@@ -37,6 +37,7 @@
 <script language="javascript1.2">
 function contentChangeSubmit()
 {
+    if ( document.getElementById("ServerViewForm:contentChange") )
            document.getElementById("ServerViewForm:contentChange").value = "true";
 }
 </script>
@@ -84,7 +85,9 @@ function contentChangeSubmit()
 						<f:subview id="LTIAdvanced" rendered="#{addSectionPage.shouldLTIDisplayAdvanced}">
 							<jsp:include page="lti_advanced.jsp"/>
 						</f:subview>
-					 <tr><td colspan="2"> &nbsp; </td></tr>	
+										
+					 <tr><td colspan="2"> <h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{addSectionPage.section.openWindow}" />												
+						<h:outputText id="editLTIText_8" value="#{msgs.editcontentlinkserverview_openwindow}" /> </td></tr>	
 					</table> 
 					</td></tr>       
 					     <tr><td  colspan="2">

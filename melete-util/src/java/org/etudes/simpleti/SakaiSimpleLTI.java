@@ -30,7 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import org.imsglobal.simplelti.XMLMap;
+import org.imsglobal.basiclti.XMLMap;
 import org.imsglobal.simplelti.SimpleLTIUtil;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.cover.UserDirectoryService;
@@ -82,7 +82,7 @@ public class SakaiSimpleLTI {
         String lti2FrameHeight = newMap.getProperty("frameheight");
 
 	// When in doubt be very secretive...
-	if ( lti2Password == null ) lti2Password = "secret";
+	// if ( lti2Password == null ) lti2Password = "secret";
 
 	User user = UserDirectoryService.getCurrentUser();
 	dPrint("User="+user);

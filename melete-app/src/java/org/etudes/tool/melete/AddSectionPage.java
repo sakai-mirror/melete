@@ -389,7 +389,6 @@ public class AddSectionPage extends SectionPage implements Serializable{
 
 	  public String gotoServerLTIView()
 	  {
-			gotoServerLinkView();
 			FacesContext ctx = FacesContext.getCurrentInstance();
 			ValueBinding binding =Util.getBinding("#{listResourcesPage}");
 			ListResourcesPage listResPage = (ListResourcesPage) binding.getValue(ctx);
@@ -402,6 +401,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 
 			setLTIUrl(null);
 			setLTIPassword(null);
+			setLTIKey(null);
 			setLTIDisplay("Basic");
 			// Do this after the first two
 			setLTIDescriptor(null);

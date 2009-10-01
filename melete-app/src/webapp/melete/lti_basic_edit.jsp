@@ -50,8 +50,16 @@
 					</td></tr>	
 					<tr><td height="20" colspan="2"> 
 					</f:verbatim>
-						<h:outputText id="editLTIBasic3" value="#{msgs.addmodulesections_lti_pasword}" />
+						<h:outputText id="editLTIBasic3" value="#{msgs.addmodulesections_lti_key}" />
 						<h:outputText id="editLTIBasic4" value=" " styleClass="ExtraPaddingClass"/>
+						<h:inputText id="LTIKey" value="#{editSectionPage.LTIKey}" size="40" /> 	
+
+					<f:verbatim>
+					</td></tr>	
+					<tr><td height="20" colspan="2"> 
+					</f:verbatim>
+						<h:outputText id="editLTIBasic5" value="#{msgs.addmodulesections_lti_pasword}" />
+						<h:outputText id="editLTIBasic6" value=" " styleClass="ExtraPaddingClass"/>
 						<h:inputText id="LTIPassword" value="#{editSectionPage.LTIPassword}" size="40" /> 	
 					<f:verbatim>
 					</td></tr>	

@@ -75,8 +75,11 @@ import org.w3c.dom.Node;
 import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.util.Xml;
+import org.imsglobal.basiclti.BasicLTIUtil;
 import org.etudes.simpleti.SakaiSimpleLTI;
+import org.etudes.basiclti.SakaiBLTIUtil;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
+import org.sakaiproject.util.ResourceLoader;
 
 /*
  * MeleteSecurityService is the implementation of MeleteSecurityService
@@ -93,7 +96,11 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	private MeleteImportService meleteImportService;
 	private MeleteExportService meleteExportService;
 
-	public static final String MIME_TYPE_LTI="ims/simplelti";
+        // Keep both of these here for upwards compatibility - Chuck
+	public static final String MIME_TYPE_SLTI="ims/simplelti";
+	public static final String MIME_TYPE_BLTI="ims/basiclti";
+
+        private static ResourceLoader rb = new ResourceLoader("security_svc");
 
 	// Note: security needs a proper Resource reference
 
@@ -325,37 +332,69 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 						try
 						{
 							ContentResource content = chService.getResource(contentHostingRef.getId());
-							if ( MIME_TYPE_LTI.equals(content.getContentType()) )
+							if ( MIME_TYPE_SLTI.equals(content.getContentType()) || 
+							     MIME_TYPE_BLTI.equals(content.getContentType()) )
 							{
 								byte [] bytes = content.getContent();
+								ResourceProperties resprops = content.getProperties();
 								String str = new String(bytes);
-								Properties props = null;
-								// We must remove our advisor while we do the launch and then put it back
-								// Otherwise the launch will give the user too much power
-								try
+								String postData = null;
+								if ( BasicLTIUtil.validateDescriptor(str) != null ) 
 								{
-									popAdvisor();
-									props = SakaiSimpleLTI.doLaunch(str, ref.getContext(), ref.getId());
+									try
+                                                                	{
+                                                                        	popAdvisor();
+										// Leave ResourceBundle off for now
+										String [] retval = SakaiBLTIUtil.postLaunchHTML(str, contextId, ref.getId(), resprops, rb);
+										if ( retval != null ) postData = retval[0];
+                                                                	}
+                                                                	catch (Exception e)
+                                                                	{
+                                                                        	logger.info("Exception e "+e.getMessage());
+                                                                        	e.printStackTrace();
+                                                                	}
+                                                                	finally
+                                                                	{
+                                                                        	pushAdvisor();
+                                                                	}
 								}
-								catch (Exception e)
+								else // Attempt SimpleLTI
 								{
-									logger.info("Exception e "+e.getMessage());
-									e.printStackTrace();
-								}
-								finally
-								{
-									pushAdvisor();
-								}
-								if ( props != null ) {
-									String htmltext = props.getProperty("htmltext");
-									if ( htmltext != null )
+									Properties props = null;
+									// We must remove our advisor while we do the launch and then put it back
+									// Otherwise the launch will give the user too much power
+									try
 									{
-										res.setContentType("text/html");
-										ServletOutputStream out = res.getOutputStream();
-										out.println(htmltext);
-										handled = true;
+										popAdvisor();
+										props = SakaiSimpleLTI.doLaunch(str, ref.getContext(), ref.getId());
+									}
+									catch (Exception e)
+									{
+										logger.info("Exception e "+e.getMessage());
+										e.printStackTrace();
+									}
+									finally
+									{
+										pushAdvisor();
+									}
+									if ( props != null ) {
+										postData = props.getProperty("htmltext");
 									}
 								}
+
+								if ( postData == null ) {
+									String msg = rb.getString("not.configured", "Not configured.");
+									postData = "<p>"+msg+"</p>\n<!--\n"+str+"-->\n";
+								} 
+
+								if ( postData != null )
+								{
+									res.setContentType("text/html");
+									ServletOutputStream out = res.getOutputStream();
+									out.println(postData);
+									handled = true;
+								}
+
 							}
 						}
 						catch (Exception e)
