@@ -159,7 +159,7 @@ public void createResourceElement(Section section, Element resource, byte[] cont
 			} catch (Exception e) {
 				// Simply export the unconverted content
 			}
-			String fileName = "basiclti-"+item_ref_num;
+			String fileName = "basiclti-"+item_ref_num+".xml";
 			createFileElement(fileName, content_data1,resource,imagespath, resoucesDir,"resources/", false, true);
 
 			// add title
