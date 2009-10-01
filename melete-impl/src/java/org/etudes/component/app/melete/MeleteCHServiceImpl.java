@@ -923,7 +923,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    }
 		catch(Exception e)
 		{
-			logger.error(e.toString());
+			logger.error("getResource error:" + e.toString());
 			throw e;
 		}
 		finally

@@ -251,6 +251,8 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 
 		int startSrc =0;
 		int endSrc = 0;
+		String checkLink = null;
+	
 		logger.debug("parentStr inside createHTML" + parentRef);
 		while (checkforimgs != null) {
 			ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
@@ -259,6 +261,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			{
 				startSrc = ((Integer)embedData.get(1)).intValue();
 				endSrc = ((Integer)embedData.get(2)).intValue();
+				checkLink = (String)embedData.get(3);
 			}
 			if (endSrc <= 0) break;
 
@@ -277,17 +280,24 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 					imgSrcPath = parentRef + imgSrcPath;
 				}
 			}
+			logger.debug("imgSrcpath in createHTML of import from site:" + imgSrcPath);
 			// if img src is in library or any other inside sakai path then don't process
 			if(imgSrcPath.indexOf("/access") !=-1)
 			{
 				checkforimgs = checkforimgs.substring(endSrc);
-				ArrayList<String> r = meleteUtil.findResourceSource(imgSrcPath, null, courseId, false);
+				String findResourcePath = imgSrcPath;
+				// harvest links with anchors
+				if(checkLink != null && checkLink.equals("link") && findResourcePath.indexOf("#")!= -1)
+					findResourcePath = findResourcePath.substring(0,findResourcePath.indexOf("#"));
+				
+				ArrayList<String> r = meleteUtil.findResourceSource(findResourcePath, null, courseId, false);
 				if(r == null || r.size() == 0)
 				{
 					imgindex = -1;
-					startSrc=0; endSrc = 0;
+					startSrc=0; endSrc = 0; checkLink = null;
 					continue;
 				}
+				logger.debug("survived find resource test:" + r.toString());
 				imgActualPath = r.get(0);
 
 				String importResName = imgActualPath.substring(imgActualPath.lastIndexOf('/')+1);
@@ -298,7 +308,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 					if(checkEmbedHTMLResources.contains(imgActualPath))
 					{
 						imgindex = -1;
-						startSrc=0; endSrc = 0;
+						startSrc=0; endSrc = 0; checkLink = null;
 						String replacementStr = "/access/meleteDocs/content/private/meleteDocs/" + courseId + "/uploads/" + imgSrcPath.substring( imgSrcPath.lastIndexOf('/') + 1);
 						String patternStr = imgSrcPath;
 						contentEditor = meleteUtil.replace(contentEditor,patternStr, replacementStr);
@@ -331,14 +341,18 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 						}
 					}
 				}
-				contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, null);
+				String anchorString=null;
+				if(checkLink != null && checkLink.equals("link") && imgSrcPath.indexOf("#")!= -1)
+					anchorString=imgSrcPath.substring(imgSrcPath.indexOf("#"));
+				
+				contentEditor = ReplaceEmbedMediaWithResourceURL(contentEditor, imgSrcPath, imgActualPath, courseId, null,anchorString);
 
 			} //if access check end
 			// for other inside sakai paths
 			else checkforimgs = checkforimgs.substring(endSrc);
 
 			imgindex = -1;
-			startSrc=0; endSrc = 0;
+			startSrc=0; endSrc = 0; checkLink = null;
 		}//End while
 		ArrayList returnData = new ArrayList();
 		returnData.add(contentEditor);

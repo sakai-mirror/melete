@@ -112,8 +112,8 @@ abstract public class MeleteImportBaseImpl {
 		String uploadCollId = getMeleteCHService().getUploadCollectionId(courseId);
 		if(res_mime_type== null)
 		{
-		filename.substring(filename.lastIndexOf(".")+1);
-		res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
+			res_mime_type = filename.substring(filename.lastIndexOf(".")+1);
+			res_mime_type = ContentTypeImageService.getContentType(res_mime_type);
 		}
 		ResourcePropertiesEdit res = getMeleteCHService().fillEmbeddedImagesResourceProperties(filename);
 		String newResourceId = getMeleteCHService().addResourceItem(filename, res_mime_type,uploadCollId,melContentData,res);
@@ -139,10 +139,10 @@ abstract public class MeleteImportBaseImpl {
    /**
 	* Gets new url for the Embedded media and replaces it in the new HTML content
 	*/
-	protected String ReplaceEmbedMediaWithResourceURL(String contentEditor, String imgSrcPath, String imgActualPath, String courseId, String unZippedDirPath)
+	protected String ReplaceEmbedMediaWithResourceURL(String contentEditor, String imgSrcPath, String imgActualPath, String courseId, String unZippedDirPath, String anchorStr)
 	{
 		String replacementStr = uploadSectionDependentFile(imgActualPath, courseId, unZippedDirPath);
-				
+		if(anchorStr != null)replacementStr = replacementStr.concat(anchorStr);	
 		//Upon import, embedded media was getting full url without code below
 		if (replacementStr.startsWith(ServerConfigurationService.getServerUrl()))
 		{
