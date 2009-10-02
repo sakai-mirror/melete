@@ -197,13 +197,13 @@ public class MeleteSiteAndUserInfo {
 	{
 		try
 	    {
-		  if (isUserStudent())
+		  if (isSuperUser() || isUserAuthor())
 		  {
-			return false;
+			return true;
 		  }
 		  else
 		  {
-			return true;
+			return false;
 		  }
 	    }
 	    catch (Exception e) {
