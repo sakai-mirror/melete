@@ -27,7 +27,7 @@
     <version>2.5.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <name>Etudes Melete Service</name>
+  <name>Etudes Melete Utilities</name>
   <groupId>org.etudes</groupId>
   <artifactId>etudes-melete-util</artifactId>
  <version>2.6</version>
