@@ -64,18 +64,17 @@ function contentChangeSubmit()
 					<tr><td colspan="2"> &nbsp; </td></tr>						
 					<tr><td height="20" colspan="2" class="maintabledata8"> <h:outputText id="Stext_add" value="#{msgs.editcontentltiserverview_replace}" styleClass="bold"/> 									 
 					
-					<tr> <td height="20" colspan="2"><h:outputText id="format_text" value="#{msgs.editcontentltiserverview_format}"/>
-						<h:outputText id="addLTIformat2" value=" " styleClass="ExtraPaddingClass"/>
-						<h:outputText id="addLTIformat3" value=" " styleClass="ExtraPaddingClass"/>
-					 	<h:outputText id="addLTIformat4" value="   " styleClass="ExtraPaddingClass"/>
-                                                <h:inputHidden id="contentChange" value=""/>
-                                                <h:selectOneMenu id="LTIDisplay" value="#{editSectionPage.LTIDisplay}" 
-                                                        valueChangeListener="#{editSectionPage.toggleLTIDisplay}" 
-                                                        onchange="contentChangeSubmit();this.form.submit();"
-                                                        immediate="true" >
-                                                <f:selectItem itemValue="Basic" itemLabel="#{msgs.addmodulesections_basic_lti}"/>
-                                                <f:selectItem itemValue="Advanced" itemLabel="#{msgs.addmodulesections_advanced_lti}"/>
-                                                </h:selectOneMenu>
+					<tr> <td><h:outputText id="format_text" value="#{msgs.editcontentltiserverview_format}"/>
+					</td>
+                    <td align="left">
+                            <h:inputHidden id="contentChange" value=""/>
+                            <h:selectOneMenu id="LTIDisplay" value="#{editSectionPage.LTIDisplay}" 
+                                    valueChangeListener="#{editSectionPage.toggleLTIDisplay}" 
+                                    onchange="contentChangeSubmit();this.form.submit();"
+                                    immediate="true" >
+                            <f:selectItem itemValue="Basic" itemLabel="#{msgs.addmodulesections_basic_lti}"/>
+                            <f:selectItem itemValue="Advanced" itemLabel="#{msgs.addmodulesections_advanced_lti}"/>
+                            </h:selectOneMenu>
 					</td></tr> 
 					
                                                 <f:subview id="LTIBasic" rendered="#{editSectionPage.shouldLTIDisplayBasic}">
@@ -84,7 +83,10 @@ function contentChangeSubmit()
                                                 <f:subview id="LTIAdvanced" rendered="#{editSectionPage.shouldLTIDisplayAdvanced}">
                                                         <jsp:include page="lti_advanced_edit.jsp"/>
                                                 </f:subview>
-					 <tr><td colspan="2"> &nbsp; </td></tr>	
+					 	<tr><td colspan="2"> 
+							<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{editSectionPage.section.openWindow}" />												
+							<h:outputText id="editLTIText_8" value="#{msgs.editcontentlinkserverview_openwindow}" />	
+					</td></tr>	
 					</table> </td></tr>       
 					<tr><td colspan="2">
 						<div class="actionBar" align="left">

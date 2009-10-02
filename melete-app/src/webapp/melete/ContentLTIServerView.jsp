@@ -66,9 +66,8 @@ function contentChangeSubmit()
 					<tr><td colspan="2"> &nbsp; </td></tr>						
 					<tr><td height="20" colspan="2" class="maintabledata8"> <h:outputText id="Stext_add" value="#{msgs.editcontentltiserverview_replace}" styleClass="bold"/> 									 
 					 <tr> <td><h:outputText id="format_text" value="#{msgs.editcontentltiserverview_format}"/>
-					 	<h:outputText id="addLTIformat2" value=" " styleClass="ExtraPaddingClass"/>
-					 	<h:outputText id="addLTIformat3" value=" " styleClass="ExtraPaddingClass"/>
-					 	<h:outputText id="addLTIformat4" value="   " styleClass="ExtraPaddingClass"/>
+					 	</td>
+					 	<td align="left">
 						<h:inputHidden id="contentChange" value=""/>  
 						<h:selectOneMenu id="LTIDisplay" value="#{addSectionPage.LTIDisplay}" 
 							valueChangeListener="#{addSectionPage.toggleLTIDisplay}" 
