@@ -190,7 +190,7 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 				while (allmembers_iter != null && allmembers_iter.hasNext())
 				{
 					ContentResource cr = (ContentResource) allmembers_iter.next();
-					String displayName = cr.getUrl().replaceFirst(serverConfigurationService.getServerUrl(), "");
+					String displayName = getMeleteCHService().getResourceUrl(cr.getId()).replaceFirst(serverConfigurationService.getServerUrl(), "");
 					RemoteBrowserFile ob = new RemoteBrowserFile(displayName, cr.getContentLength());
 					remoteFiles.add(ob);
 				}
@@ -225,7 +225,7 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 				while (allmembers_iter != null && allmembers_iter.hasNext())
 				{
 					ContentResource cr = (ContentResource) allmembers_iter.next();
-					String displayName = cr.getUrl().replaceFirst(serverConfigurationService.getServerUrl(), "");
+					String displayName = getMeleteCHService().getResourceUrl(cr.getId()).replaceFirst(serverConfigurationService.getServerUrl(), "");
 					RemoteBrowserFile ob = new RemoteBrowserFile(displayName, cr.getContentLength());
 					remoteLinkFiles.add(ob);
 				}

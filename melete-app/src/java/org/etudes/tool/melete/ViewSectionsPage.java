@@ -325,10 +325,9 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     	    {
               resource = getMeleteCHService().getResource(resourceId);
               setLinkName(resource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
-
-              if (logger.isDebugEnabled()) logger.debug("Resource url is "+resource.getUrl());
-              url = resource.getUrl();
-      	      url = url.replaceAll(" ", "%20");
+             
+              url = getMeleteCHService().getResourceUrl(resourceId);
+              if (logger.isDebugEnabled()) logger.debug("Resource url is "+url);
       	      contentLinkUrl = url;
               }
               catch (Exception e)

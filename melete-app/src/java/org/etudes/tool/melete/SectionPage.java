@@ -2,7 +2,8 @@
  *
  * $URL$
  * $$
- * $Id$  ***********************************************************************************
+ * $Id$
+ ************************************************************************************
  *
  * Copyright (c) 2008, 2009 Etudes, Inc.
  *
@@ -1347,8 +1348,7 @@ public abstract class SectionPage implements Serializable {
 		{
 			try
 			{
-                		ContentResource cr = getMeleteCHService().getResource(meleteResource.getResourceId());
-                                String rUrl = cr.getUrl().replaceAll(" ", "%20");
+				String rUrl = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());                
 				return rUrl;
 			}
 			catch (Exception e)
