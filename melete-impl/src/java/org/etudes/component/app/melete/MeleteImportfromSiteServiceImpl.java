@@ -276,8 +276,8 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				logger.debug("parentRef on checking rel path " + parentRef);
 				if(parentRef != null && parentRef.length() > 0)
 				{
-					contentEditor = meleteUtil.replace(contentEditor,imgSrcPath, parentRef + imgSrcPath);
-					imgSrcPath = parentRef + imgSrcPath;
+					contentEditor = meleteUtil.replace(contentEditor,imgSrcPath, parentRef + imgSrcPath.trim());
+					imgSrcPath = parentRef + imgSrcPath.trim();
 				}
 			}
 			logger.debug("imgSrcpath in createHTML of import from site:" + imgSrcPath);
@@ -285,7 +285,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			if(imgSrcPath.indexOf("/access") !=-1)
 			{
 				checkforimgs = checkforimgs.substring(endSrc);
-				String findResourcePath = imgSrcPath;
+				String findResourcePath = imgSrcPath.trim();
 				// harvest links with anchors
 				if(checkLink != null && checkLink.equals("link") && findResourcePath.indexOf("#")!= -1)
 					findResourcePath = findResourcePath.substring(0,findResourcePath.indexOf("#"));
@@ -309,7 +309,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 					{
 						imgindex = -1;
 						startSrc=0; endSrc = 0; checkLink = null;
-						String replacementStr = "/access/meleteDocs/content/private/meleteDocs/" + courseId + "/uploads/" + imgSrcPath.substring( imgSrcPath.lastIndexOf('/') + 1);
+						String replacementStr = "/access/meleteDocs/content/private/meleteDocs/" + courseId + "/uploads/" + imgSrcPath.substring( imgSrcPath.lastIndexOf('/') + 1).trim();
 						String patternStr = imgSrcPath;
 						contentEditor = meleteUtil.replace(contentEditor,patternStr, replacementStr);
 						continue;
