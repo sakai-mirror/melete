@@ -36,7 +36,7 @@
 <script language="javascript1.2">
 function contentChangeSubmit()
 {
-           document.getElementById("ServerViewForm:contentChange").value = "true";
+           document.getElementById("EditLtiServerViewForm:contentChange").value = "true";
 }
 </script>
 </head>
