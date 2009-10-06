@@ -297,7 +297,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 					startSrc=0; endSrc = 0; checkLink = null;
 					continue;
 				}
-				logger.debug("survived find resource test:" + r.toString());
+				
 				imgActualPath = r.get(0);
 
 				String importResName = imgActualPath.substring(imgActualPath.lastIndexOf('/')+1);
@@ -317,6 +317,13 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 					checkEmbedHTMLResources.add(imgActualPath);
 					// look for its embedded data
 					ContentResource embedResource = getMeleteCHService().getResource(imgActualPath);
+					if(embedResource == null)
+					{
+						checkforimgs = checkforimgs.substring(endSrc);
+						imgindex = -1;
+						startSrc=0; endSrc = 0; checkLink = null;
+						continue;
+					}
 					logger.debug("embed data found at createHTML:" + embedResource.getId());
 					if(embedResource.getContentLength() > 0)
 					{

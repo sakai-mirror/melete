@@ -145,7 +145,12 @@ abstract public class MeleteImportBaseImpl {
 	protected String ReplaceEmbedMediaWithResourceURL(String contentEditor, String imgSrcPath, String imgActualPath, String courseId, String unZippedDirPath, String anchorStr)
 	{
 		String replacementStr = uploadSectionDependentFile(imgActualPath, courseId, unZippedDirPath);
+		// if unable to harvest then leave it as is
+		if (replacementStr == null || replacementStr.equals("")) return contentEditor;
+		
+		// if link has cross-ref and anchors then append anchor to harvested file
 		if(anchorStr != null)replacementStr = replacementStr.concat(anchorStr);	
+		
 		//Upon import, embedded media was getting full url without code below
 		if (replacementStr.startsWith(ServerConfigurationService.getServerUrl()))
 		{
