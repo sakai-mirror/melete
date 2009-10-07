@@ -106,9 +106,9 @@
 											<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" style="border-collapse: collapse">
 											<tr>
                        						 <td align="left">
-                       						 	 <h:selectManyListbox id="modulenewList" value="#{sortModuleSectionPage.newSelectedModulesList}" size="#{sortModuleSectionPage.showSize}" style="width:300px">
-															 <f:selectItems value="#{sortModuleSectionPage.newList}" />							
-													 </h:selectManyListbox>
+												 <h:selectOneListbox id="modulenewList" value="#{sortModuleSectionPage.newSelectedModule}" size="#{sortModuleSectionPage.showSize}" style="width:300px">
+														 <f:selectItems value="#{sortModuleSectionPage.newList}" />							
+												 </h:selectOneListbox>	 
 											  </td>                        
 											 </tr>
 											</table></td> 
