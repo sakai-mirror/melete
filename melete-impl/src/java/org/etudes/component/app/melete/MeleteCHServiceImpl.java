@@ -653,6 +653,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		meleteSecurityService.pushAdvisor();
         		try
         		{
+        			selResourceIdFromList = beforeDecode(selResourceIdFromList);
         			selResourceIdFromList = URLDecoder.decode(selResourceIdFromList,"UTF-8");
         		}catch(Exception decodex){}
         		edit = getContentservice().editResource(selResourceIdFromList);
@@ -666,7 +667,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    }
 		catch(Exception e)
 		{
-			logger.error(e.toString());
+			logger.error("edit res properties:" + e.toString());
 		}
 		finally
 		  {
@@ -915,6 +916,18 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		  }
 		return null;
 	 }
+	 private String beforeDecode(String id)
+	 {
+		 // these the browser will convert when it's making the URL to send
+		 String processed = id.replaceAll("&amp;", "&");
+		 processed = processed.replaceAll("&lt;", "<");
+		 processed = processed.replaceAll("&gt;", ">");
+		 processed = processed.replaceAll("&quot;", "\"");
+		
+		 // if a browser sees a plus, it sends a plus (URLDecoder will change it to a space)
+		 processed = processed.replaceAll("\\+", "%2b");
+		 return processed;
+	 }
 	 /*
 	  *
 	  */
@@ -934,11 +947,12 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		// absolute reqd otherwise import from site creates desert Landscape.jpg and desert%20Landscape-1.jpg
 
         		try
-				{
-					resourceId = URLDecoder.decode(resourceId,"UTF-8");
-				} catch(Exception decodeEx)
-				{
-					logger.debug("get resource fails while decoding " + resourceId);
+        		{
+        			resourceId = beforeDecode(resourceId);
+        			resourceId = URLDecoder.decode(resourceId,"UTF-8");
+        		} catch(Exception decodeEx)
+        		{
+        			logger.debug("get resource fails while decoding " + resourceId);
         		}
         		return (getContentservice().getResource(resourceId));
 	    }
@@ -969,7 +983,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		meleteSecurityService.pushAdvisor();
         		try
 				{
-					resourceId = URLDecoder.decode(resourceId,"UTF-8");
+        			// edit save for + sign files on upload type 
+        			resourceId = beforeDecode(resourceId);
+        			resourceId = URLDecoder.decode(resourceId,"UTF-8");
 				} catch(Exception decodeEx)
 				{
 					logger.debug("get resource fails while decoding " + resourceId);
@@ -986,7 +1002,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		}
 		catch(Exception e)
 		{
-			logger.error("checkResource error " + e.toString());
+			logger.debug("checkResource error " + e.toString());
 		}
 		finally
 		  {
@@ -1015,7 +1031,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		{
         		  try
         		  {
-        			  resourceId = URLDecoder.decode(resourceId,"UTF-8");
+    				 resourceId = beforeDecode(resourceId);
+        			 resourceId = URLDecoder.decode(resourceId,"UTF-8");
         		  }catch(Exception decodex){}
         		  edit = getContentservice().editResource(resourceId);
         		  edit.setContent(contentEditor.getBytes());
@@ -1296,10 +1313,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    	try
      	    {
      	      	meleteSecurityService.pushAdvisor();
-     	      	try
+     	      	/*try
      	      	{
      	      		newResourceId = URLDecoder.decode(newResourceId,"UTF-8");
-     	      	}catch(Exception decodex){}
+     	      	}catch(Exception decodex){}*/
      	      	return getContentservice().getUrl(newResourceId);
              }
        catch (Exception e)
