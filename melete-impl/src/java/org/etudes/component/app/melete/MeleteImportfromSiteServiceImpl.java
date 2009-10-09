@@ -590,7 +590,13 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 							try
 							{
 								// check if the item has already been imported to this site (in uploads collection)
-								String checkResourceId = toUploadsColl+Validator.escapeResourceName(melResourceName);
+								String find = Validator.escapeResourceName(melResourceName);
+								// for + sign characters
+								try{
+									find = URLDecoder.decode(find,"UTF-8");
+								}
+								catch(Exception decodex){} 
+								String checkResourceId = toUploadsColl+find;								
 								getMeleteCHService().checkResource(checkResourceId);
 							}
 							catch (IdUnusedException ex)
@@ -602,8 +608,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 								}
 								catch(Exception e)
 								{
-									logger.debug("Error thrown in exporting of manage resources");
-									logger.debug(e.toString());
+									logger.debug("Error thrown in exporting of manage resources" + e.toString());									
 								}
 							}
 						}
