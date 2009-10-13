@@ -172,6 +172,7 @@ public class MeleteUtil {
 		 if(foundPattern != null && foundPattern.equals("link"))
 		 {
 			 String anchorStr = checkforimgs.substring(startSrc,endSrc);
+			 anchorStr = anchorStr.trim();
 			 if (anchorStr != null && (anchorStr.startsWith("#")|| anchorStr.startsWith("mailto:"))) 
 			 {
 				 checkforimgs = checkforimgs.substring(endSrc);

@@ -422,15 +422,15 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 					logger.debug("found relative path with no /access, parent ref is " + parentRef);
 					if(parentRef != null)
 					{
-						modifiedSecContent = meleteUtil.replacePath(modifiedSecContent,imgSrcPath, parentRef + imgSrcPath);
-						imgSrcPath = parentRef + imgSrcPath;
+						modifiedSecContent = meleteUtil.replacePath(modifiedSecContent,imgSrcPath, parentRef + imgSrcPath.trim());
+						imgSrcPath = parentRef + imgSrcPath.trim();
 					}
 				}
 
 				logger.debug("imgsrcpath :" + imgSrcPath);
 				if(imgSrcPath.indexOf("/access") !=-1)
 				{
-					String findResourcePath = imgSrcPath;
+					String findResourcePath = imgSrcPath.trim();
 					// harvest links with anchors
 					if(checkLink != null && checkLink.equals("link") && findResourcePath.indexOf("#")!= -1)
 						findResourcePath = findResourcePath.substring(0,findResourcePath.indexOf("#"));
