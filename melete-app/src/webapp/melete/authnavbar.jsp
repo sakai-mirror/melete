@@ -25,7 +25,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@include file="accesscheck.jsp" %>
 
-<h:panelGrid columns="9" columnClasses="menu MainTableClass" cellspacing="5" style=" border-width:medium; border-color: #E2E4E8" width="50%">
+<h:panelGrid columns="9" columnClasses="menu MainTableClass" cellspacing="5" style=" border-width:medium; border-color: #E2E4E8" width="65%">
 	<h:column>
 		<h:commandLink id="addAction" action="#{listAuthModulesPage.AddModuleAction}" immediate="true">
 		    <h:graphicImage id="addModuleImg" value="images/document_add.gif" styleClass="AuthImgClass"/>
@@ -57,6 +57,18 @@
 	  </h:commandLink>
 	</h:column>
 	<h:column>
+	  <h:commandLink id="sortgoto" action="#{sortModuleSectionPage.goToSortModules}">
+	    <h:graphicImage id="MoveUpImg" value="images/document_exchange.gif" styleClass="AuthImgClass"/>   
+	   <h:outputText id="sort" value="#{msgs.modules_author_manage_sort}" />
+  	</h:commandLink>
+  	</h:column>
+  	<h:column>
+	<h:commandLink id="moveAction" action="#{listAuthModulesPage.MoveSectionAction}">
+	    <h:graphicImage id="moveImg" value="images/page_go.png" styleClass="AuthImgClass"/>
+	  	<h:outputText  value="#{msgs.authnavbar_move_section}"/>
+	  </h:commandLink>
+	</h:column>
+	<h:column>
 		<h:commandLink id="delAction" action="#{listAuthModulesPage.deleteAction}">
 	        <h:graphicImage id="deleteImg" value="images/delete.gif" styleClass="AuthImgClass"/>
 	        <h:outputText  id="del" value="#{msgs.authnavbar_delete}"></h:outputText>
@@ -68,17 +80,7 @@
 	  	<h:outputText  value="#{msgs.authnavbar_make_inactive}"/>
 	  </h:commandLink>
 	</h:column>
-	<h:column>
-	<h:commandLink id="moveAction" action="#{listAuthModulesPage.MoveSectionAction}">
-	    <h:graphicImage id="moveImg" value="images/page_go.png" styleClass="AuthImgClass"/>
-	  	<h:outputText  value="#{msgs.authnavbar_move_section}"/>
-	  </h:commandLink>
-	</h:column>
-	<h:column>
-	  <h:commandLink id="sortgoto" action="#{sortModuleSectionPage.goToSortModules}">
-	    <h:graphicImage id="MoveUpImg" value="images/document_exchange.gif" styleClass="AuthImgClass"/>   
-	   <h:outputText id="sort" value="#{msgs.modules_author_manage_sort}" />
-  	</h:commandLink>
-  	</h:column>
+	
+	
 </h:panelGrid>
 <!-- End code to display images horizontally. -->
