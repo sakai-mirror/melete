@@ -413,6 +413,7 @@ width: 16;   border: 0;  hspace:10; }
      }
      
 .MainTableClass		{ border-color: #E2E4E8;border:1}
+td.MainTableClass     { white-space: nowrap;}
 
 .CmdImgClass		{ hspace: 7; 
 border: 0; }
