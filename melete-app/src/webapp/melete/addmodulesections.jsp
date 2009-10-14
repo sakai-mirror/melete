@@ -118,7 +118,7 @@ function transferEditordata()
 	if(document.htmleditor!= undefined && document.htmleditor!= null)
 	{
 	  window.defaultStatus="Adding content....";
-	  	var k =document.htmleditor.getBodyContent();
+	  	var k =document.htmleditor.getPlainText();
 	  		 if(document.getElementById("AddSectionForm:contentEditorView:contentTextArea") !=undefined &&
 	  		   document.getElementById("AddSectionForm:contentEditorView:contentTextArea") != null)
 			 {
@@ -165,14 +165,14 @@ function contentChangeSubmit()
 			 <h:messages id="addsectionerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
   		  </td></tr>
           <tr>
-            <td height="20" class="maintabledata8">
+            <td height="20" class="maintabledata5">
 					<h:commandLink id="TOCButton"  action="#{addSectionPage.cancel}"  immediate="true">
 						<h:outputText id="toc" value="#{msgs.addmodulesections_TOC}" />
 					</h:commandLink> &raquo; <h:outputText id="text11" value="#{addSectionPage.module.title}" />  &raquo; <h:outputText id="add_new_section" value="#{msgs.addmodulesections_add_new_section}" />
 			</td>
           </tr>
           <tr>
-            <td class="maintabledata3">
+            <td class="maintabledata5">
 			<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" height="98">
               <tr bgcolor="#FFFFFF">
                 <td width="100%" height="35" valign="top"><table style="BORDER-COLLAPSE: collapse" bordercolor=#111111 cellspacing=0 
@@ -262,6 +262,7 @@ function contentChangeSubmit()
 											<f:subview id="contentEditorView" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
 														<jsp:include page="contentSferyxEditor.jsp"/> 
 													<h:inputHidden id="contentTextArea" value="#{addSectionPage.contentEditor}" />
+													
 													 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>																																
 											<div id="othereditor" style="visibility:visible"><sakai:inputRichText  id="otherMeletecontentEditor" value="#{addSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{addSectionPage.FCK_CollId}" /></div>
