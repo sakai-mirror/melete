@@ -37,7 +37,7 @@
  
  <f:subview id="PreferenceView" rendered="#{!licensePage.callFromSection}">
  <h:outputText value="#{msgs.licenseform_select_license}" styleClass="bold"/>	 
- <h:outputText value="          " styleClass="MediumPaddingClass" />
+ <h:outputText value="<br><br>" escape="false"/>
  <h:selectOneMenu id="licenseCodes2" value="#{licensePage.licenseCodes}" valueChangeListener="#{licensePage.hideLicense}" onchange="this.form.submit();">
 	 <f:selectItems value="#{licensePage.licenseTypes}" />							
  </h:selectOneMenu>
