@@ -44,7 +44,7 @@
 	<tr>
 		<td valign="top"></td>
     	<td width="1962" valign="top">
-        	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+        	<table width="100%"  border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
           		<tr>
             		<td width="100%" height="20" bordercolor="#E2E4E8">
 					<!-- top nav bar -->
@@ -54,6 +54,9 @@
 		  <div class="meletePortletToolBarMessage"><img src="images/user1_preferences.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.student_preference_user_preference}" /></div>				
 				</td>
         </tr>
+        </table>
+        <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+          	
         <tr>
           <td class="maintabledata3" valign="top">
           	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
