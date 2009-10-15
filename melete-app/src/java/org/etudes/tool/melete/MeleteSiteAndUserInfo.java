@@ -439,8 +439,8 @@ public class MeleteSiteAndUserInfo {
 
 	public String getMeleteDocsLocation()
 	{
-		String remoteurl = "/access/meleteDocs/content/private/meleteDocs/"+getCurrentSiteId()+"/uploads/";
-	//	String remoteurl = ServerConfigurationService.getServerUrl() + "/access/meleteDocs/content/private/meleteDocs/"+getCurrentSiteId()+"/uploads/";
+	//	String remoteurl = "/access/meleteDocs/content/private/meleteDocs/"+getCurrentSiteId()+"/uploads/";
+		String remoteurl = ServerConfigurationService.getServerUrl() + "/access/meleteDocs/content/private/meleteDocs/"+getCurrentSiteId()+"/uploads/";
 
 		return remoteurl;
 	}

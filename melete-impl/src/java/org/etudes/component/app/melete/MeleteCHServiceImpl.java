@@ -1223,6 +1223,13 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 						contentEditor = meleteUtil.replace(contentEditor, fileName, replaceStr);
 						checkforimgs = meleteUtil.replace(checkforimgs, fileName, replaceStr);
 					}
+					// convert relative paths to full urls
+					else if(fileName.indexOf("://") == -1 && fileName.indexOf("/") == -1)
+					{
+						String replaceStr = "/access/meleteDocs/content" +UploadCollId + fileName;
+						contentEditor = meleteUtil.replace(contentEditor, fileName, replaceStr);
+						checkforimgs = meleteUtil.replace(checkforimgs, fileName, replaceStr);
+					}
 				}
 		            // iterate next
     				if(endSrc > 0 && endSrc <= checkforimgs.length())
