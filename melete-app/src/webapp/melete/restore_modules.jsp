@@ -98,7 +98,7 @@ function resetCheck()
 					</td>
 				</tr>
 				<tr>
-					<td class="maintabledata3" valign="top">
+					<td class="maintabledata6" valign="top">
 						<!-- main page contents -->
 						<h:messages id="restorerror" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 			            <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">

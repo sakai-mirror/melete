@@ -54,9 +54,9 @@
 			</td>
 		</tr>
 			
-		<tr><td height="20" class="maintabledata3"><h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/></td></tr>
+		<tr><td height="20"><h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/></td></tr>
 			<tr>
-			  <td class="maintabledata3">
+			  <td class="maintabledata6">
 				<table width="100%" border="0" cellspacing="0" cellpadding="3">
 				  <tr>
 				  <td height="20" class="maintabledata5">

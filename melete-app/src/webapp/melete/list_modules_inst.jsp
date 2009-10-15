@@ -75,30 +75,26 @@ return newWindow;
 </td>
 </tr>
 <tr>
-<td colspan="2" class="maintabledata3">
+<td colspan="2">
 <h:messages showDetail="true" showSummary="false"/>
 <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" >
-        <tr class="maintabledata5">
-          <th  height="20" width="40%" class="tableheader2">
-       <h:commandLink id="expandAllAction" action="#{listModulesPage.expandAllAction}" immediate="true">
-     	<h:graphicImage id="exp_all_gif" alt="#{msgs.list_modules_inst_expand_all}" title="#{msgs.list_modules_inst_expand_all}" value="images/expand-collapse.gif"   rendered="#{listModulesPage.expandAllFlag != listModulesPage.trueFlag}" styleClass="ExpClass"/>
-      </h:commandLink>
-      <h:commandLink id="collapseAllAction" action="#{listModulesPage.collapseAllAction}" immediate="true">
-        <h:graphicImage id="col_all_gif" alt="#{msgs.list_modules_inst_collapse_all}" title="#{msgs.list_modules_inst_collapse_all}" value="images/collapse-expand.gif"   rendered="#{listModulesPage.expandAllFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
-      </h:commandLink>           
-          
-          </th>
-          <th  height="20"  width="5%"  class="leftheader"></th>  
-          <th  height="20"  width="25%"  class="leftheader"><h:outputText value="#{msgs.list_modules_inst_start_date}" /></th>
-          <th  height="20"   width="25%"  class="leftheader"><h:outputText value="#{msgs.list_modules_inst_end_date}" /></th>
-          <th  height="20"  width="5%"  class="leftheader"></th>           
-        </tr>
-	<tr> <td colspan="5" valign="top">
+  
+	<tr class="maintabledata3"> <td colspan="5" valign="top">
  <h:dataTable id="table"  
                   value="#{listModulesPage.viewModuleBeans}" 
-                  var="vmbean"  rowClasses="row1,row2" columnClasses="titleWid,ModCheckClass,dateWid1,dateWid2,ModCheckClass"
+                  var="vmbean"  rowClasses="row1,row2" columnClasses="titleWid,ModCheckClass,dateWid1,dateWid2,ModCheckClass" headerClass="tableheader"
                   border="0" width="100%" binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_inst_summary}">
-        <h:column>       
+        <h:column>      
+        <f:facet name="header">
+        <h:panelGroup>
+         <h:commandLink id="expandAllAction" action="#{listModulesPage.expandAllAction}" immediate="true">
+     	   <h:graphicImage id="exp_all_gif" alt="#{msgs.list_modules_inst_expand_all}" title="#{msgs.list_modules_inst_expand_all}" value="images/expand-collapse.gif"   rendered="#{listModulesPage.expandAllFlag != listModulesPage.trueFlag}" styleClass="ExpClass"/>
+         </h:commandLink>
+         <h:commandLink id="collapseAllAction" action="#{listModulesPage.collapseAllAction}" immediate="true">
+           <h:graphicImage id="col_all_gif" alt="#{msgs.list_modules_inst_collapse_all}" title="#{msgs.list_modules_inst_collapse_all}" value="images/collapse-expand.gif"   rendered="#{listModulesPage.expandAllFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
+         </h:commandLink>
+        </h:panelGroup>
+        </f:facet>    
       
             <h:commandLink id="viewSections" action="#{listModulesPage.showSections}" immediate="true">
         <h:graphicImage id="exp_gif" alt="#{msgs.list_modules_inst_expand}" title="#{msgs.list_modules_inst_expand}" value="images/expand.gif" rendered="#{((vmbean.moduleId != listModulesPage.showModuleId)&&(vmbean.vsBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}" styleClass="ExpClass"/>
@@ -181,6 +177,9 @@ return newWindow;
                <h:graphicImage id="closed_gif" value="images/closed.gif" alt="#{msgs.list_modules_inst_closed}" title="#{msgs.list_modules_inst_closed}" rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag}" styleClass="ExpClass"/>
            </h:column>
            <h:column>
+             <f:facet name="header">
+               <h:outputText value="#{msgs.list_modules_inst_start_date}" />
+             </f:facet>
               <h:outputText id="startDate0" 
                            value="-"    rendered="#{((vmbean.startDate == listModulesPage.nullDate))}">
             </h:outputText>
@@ -194,6 +193,9 @@ return newWindow;
             </h:outputText>            
            </h:column>
             <h:column>
+              <f:facet name="header">
+                <h:outputText value="#{msgs.list_modules_inst_end_date}" />
+              </f:facet>  
                <h:outputText id="endDate0" 
                            value="-"    rendered="#{((vmbean.endDate == listModulesPage.nullDate))}">
               <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
@@ -226,8 +228,9 @@ return newWindow;
         <td colspan="4">
          <h:graphicImage id="closed_gif" value="images/closed.gif" alt="" styleClass="ExpClass" rendered="#{listModulesPage.closedModulesFlag == listModulesPage.trueFlag}"/>
          <h:outputText styleClass="style5" value="#{msgs.list_modules_inst_module_not_open}" rendered="#{listModulesPage.closedModulesFlag == listModulesPage.trueFlag}"/>
+         </td>
+         </tr>
         </table>
-
  </td>
  </tr>
 </table>	
