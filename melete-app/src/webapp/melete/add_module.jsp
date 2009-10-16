@@ -109,6 +109,8 @@ function showEdateCal()
 				</td>
 			</tr>
 		<!--Page Content-->
+	 </table>	
+	 <table width="100%"  border="0" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA">
 	  <tr>
    		 <td height="20" class="maintabledata2"> <h:outputText value="#{msgs.add_module_define_properties}" /> 		 
 		 </td>
