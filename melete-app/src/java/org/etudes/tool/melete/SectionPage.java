@@ -589,7 +589,7 @@ public abstract class SectionPage implements Serializable {
          String desc =
 		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
 		"<basic_lti_link\n" + 
-		"     xmlns=\"http://www.imsglobal.org/xsd/imsbasiclti_xmlv1p0\"\n" + 
+		"     xmlns=\"http://www.imsglobal.org/xsd/imsbasiclti_v1p0\"\n" + 
 		"     xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" + 
 		"  <melete-basic>true</melete-basic> \n" +
 		"  <launch_url>"+currLTIUrl+"</launch_url> \n" +
