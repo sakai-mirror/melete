@@ -132,7 +132,7 @@ public class SakaiBLTIUtil {
 		setProperty(props,"lis_person_name_family",user.getLastName());
 		setProperty(props,"lis_person_name_full",user.getDisplayName());
 		setProperty(props,"lis_person_contact_emailprimary",user.getEmail());
-		setProperty(props,"lis_person_sourced_id",user.getEid());
+		setProperty(props,"lis_person_sourcedid",user.getEid());
 	}
 
 	String theRole = "Learner";
