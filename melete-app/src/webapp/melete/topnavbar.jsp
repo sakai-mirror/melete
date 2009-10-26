@@ -35,7 +35,6 @@ final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)faces
 %>
 <link href="rtbc004.css" type="text/css" rel="stylesheet" media="all" />
 
-<sakai:view_container>
 <sakai:view_content>
 
 <sakai:tool_bar id="topbar">
@@ -47,5 +46,5 @@ final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)faces
 <!-- End code to display images horizontally. -->
 
 </sakai:view_content>
-</sakai:view_container>
+
 

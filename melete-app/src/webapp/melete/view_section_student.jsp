@@ -24,12 +24,7 @@
 -->
 <html>
 <head>
-
-<link href="rtbc004.css" type="text/css" rel="stylesheet" />
-
-
 <title>Melete - Modules: Student View</title>
-<head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
