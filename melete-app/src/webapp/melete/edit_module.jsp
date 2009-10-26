@@ -101,7 +101,7 @@ function showEdateCal()
 	<tr>
 		<td valign="top"> &nbsp;</td>
 	<td width="1962" valign="top"> 
-    <table width="100%"  border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA">
+    <table width="100%"  border="0" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA">
           <tr>
 			<td width="100%" height="20" class="maintabledata1"> 
 				<f:subview id="top">
