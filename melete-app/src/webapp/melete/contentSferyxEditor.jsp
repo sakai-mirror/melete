@@ -79,7 +79,7 @@ document.writeln('<PARAM NAME="scriptable" VALUE="true">');
 				document.writeln('<PARAM NAME ="supressLocalFileDialog" VALUE="false">');
 				document.writeln('<PARAM NAME ="remoteBrowseLocation" VALUE="<%=browseloca%>">');
 				document.writeln('<PARAM NAME ="remoteLinksBrowseLocation" VALUE="<%=browselinkloca%>">');
-				document.writeln('<PARAM NAME ="absoluteDocumentTranslationURL" VALUE="<%=absloca%>">');
+				document.writeln('<PARAM NAME ="absoluteDocumentTranslationURL" VALUE="<%=docloca%>">');
 				document.writeln('<PARAM NAME ="uploadedObjectsTranslationPath" VALUE="<%=docloca%>">');
 				document.writeln('<PARAM NAME ="variableName" VALUE="html_content">');
 				document.writeln('<PARAM NAME ="menusToRemove" VALUE="menuFile,menuForm">');
