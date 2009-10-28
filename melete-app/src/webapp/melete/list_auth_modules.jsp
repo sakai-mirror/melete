@@ -197,12 +197,12 @@ if (msg != null)
 		<tr>
 		<td align="left">
 			<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-			 <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" height="100%" id="AutoNumber1" > 
-                   <tr class="maintabledata3">
-				   <td colspan="7" white-space="nowrap">
+			 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" height="100%" id="AutoNumber1" > 
+                   <tr>
+				   <td colspan="5" white-space="nowrap">
 				     <h:dataTable id="table" 
                   value="#{listAuthModulesPage.moduleDateBeans}"
-                  var="mdbean"   border="0"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ModCheckClass,TitleWid,ModCheckClass,ModCheckClass,ModCheckClass,ModCheckClass,ModCheckClass" 
+                  var="mdbean"   border="0"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListTitleClass,ListDateClass,ListDateClass,ListActionClass" 
                   styleClass="maintabledata1"
 				  width="100%" binding="#{listAuthModulesPage.table}" summary="#{msgs.list_auth_modules_summary}">
                       
@@ -274,39 +274,30 @@ if (msg != null)
              </f:facet>
              
                 <h:inputText id="startDate"
-                           value="#{mdbean.moduleShdate.startDate}" >
+                           value="#{mdbean.moduleShdate.startDate}" styleClass="ListDateInput">
             <f:convertDateTime type="both" dateStyle="medium" timeStyle="short"/>
             </h:inputText>
+            <h:outputLink id="viewsdateCal" onclick="showSdateCal(#{listAuthModulesPage.table.rowIndex})" value="#">
+            <h:graphicImage id="sdateCal" value="images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="ListDatePickerClass"/>
+           </h:outputLink> 
+           <h:outputText id="emp_space_startCal" value=" "/>
          </h:column>
-         <h:column>
-              <f:facet name="header">
-             <h:outputText id="t5" value="" />
-             </f:facet>
-          
-           <h:outputLink id="viewsdateCal" onclick="showSdateCal(#{listAuthModulesPage.table.rowIndex})" value="#">
-            <h:graphicImage id="sdateCal" value="images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
-           </h:outputLink>            
-        </h:column>
+         
         <h:column>
                <f:facet name="header">
 				 <h:outputText id="t6" value="#{msgs.list_auth_modules_end_date}" />
              </f:facet>
              
             <h:inputText id="endDate" 
-                           value="#{mdbean.moduleShdate.endDate}" >
+                           value="#{mdbean.moduleShdate.endDate}" styleClass="ListDateInput">
                <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
             </h:inputText>
+             <h:outputLink id="viewedateCal" onclick="showEdateCal(#{listAuthModulesPage.table.rowIndex})" value="#">
+            <h:graphicImage id="edateCal" value="images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="ListDatePickerClass"/>
+           </h:outputLink>
+           <h:outputText id="emp_spaceEndCal" value=" "/>
          </h:column>
          <h:column>
-              <f:facet name="header">
-             <h:outputText id="t7" value="" />
-             </f:facet>
-          <h:outputLink id="viewedateCal" onclick="showEdateCal(#{listAuthModulesPage.table.rowIndex})" value="#">
-            <h:graphicImage id="edateCal" value="images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
-           </h:outputLink>                
-            
-        </h:column>
-	   	<h:column>
           <f:facet name="header">
         	 <h:outputText id="t8" value="#{msgs.list_auth_modules_actions}" />
           </f:facet>
@@ -332,7 +323,7 @@ if (msg != null)
     <h:inputHidden id="listSize" value="#{listAuthModulesPage.listSize}"/>   
 	<h:outputText id="nomodmsg" value="#{msgs.list_auth_modules_no_modules_available}" rendered="#{listAuthModulesPage.nomodsFlag == true}" style="text-align:left"/>
 	</td></tr>
-	  <tr > <td colspan="7">
+	  <tr > <td colspan="5">
 	  <div class="actionBar" align="left">
 	   <h:commandButton id="saveChanges" action="#{listAuthModulesPage.saveChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
 	   <h:commandButton id="cancelChanges" immediate="true" action="#{listAuthModulesPage.cancelChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_cancel}"  accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
