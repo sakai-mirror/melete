@@ -199,9 +199,9 @@ function showEdateCal()
               <tr>
                 <td width="233">&nbsp;</td>
                 <td width="472" valign="top">
-                 <h:selectBooleanCheckbox id="addtoschedule" title="addtoSchedule" value="#{addModulePage.moduleShdates.addtoSchedule}">
+                 <h:selectBooleanCheckbox id="addtoschedule" title="addtoSchedule" value="#{addModulePage.moduleShdates.addtoSchedule}" rendered="#{addModulePage.calendarFlag}">
 		         </h:selectBooleanCheckbox>
-		         <h:outputText id="addtoScheduleTxt" value="#{msgs.add_module_schedule}" />
+		         <h:outputText id="addtoScheduleTxt" value="#{msgs.add_module_schedule}" rendered="#{addModulePage.calendarFlag}"/>
                 </td>
               </tr>  
 		 </table>

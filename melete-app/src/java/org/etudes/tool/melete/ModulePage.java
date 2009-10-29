@@ -40,6 +40,9 @@ import javax.faces.event.*;
 import org.sakaiproject.util.ResourceLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.site.cover.SiteService;
+import org.sakaiproject.site.api.Site;
+import org.sakaiproject.tool.cover.ToolManager;
 import org.etudes.component.app.melete.CourseModule;
 import org.etudes.component.app.melete.Module;
 import org.etudes.component.app.melete.ModuleShdates;
@@ -90,6 +93,7 @@ public abstract class ModulePage implements Serializable{
 
     private String formName;
     protected int moduleNumber;
+    private boolean calendarFlag;
 
     public ModulePage(){}
 
@@ -400,6 +404,26 @@ public ModuleDateBean getModuleDateBean() {
   */
   public void setFormName(String formName){
   	this.formName = formName;
+  }
+  
+  public boolean getCalendarFlag()
+  {
+	  Site site = null;
+	  try
+	  {
+	    site = SiteService.getSite(ToolManager.getCurrentPlacement().getContext());
+      }
+	  catch (Exception e) {
+		logger.debug("Exception thrown while getting site"+e.toString());
+	  }
+	  if (site.getToolForCommonId("sakai.schedule") != null)
+      {
+    	  return true;
+      }    
+      else
+      {
+    	  return false;
+      }
   }
 
    //Mallika - 10/18/06 - new method to check if uploads directory exists
