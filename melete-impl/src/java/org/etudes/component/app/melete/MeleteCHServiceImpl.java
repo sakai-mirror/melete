@@ -1298,10 +1298,11 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    	try
      	    {
      	      	meleteSecurityService.pushAdvisor();
-     	      	/*try
+     	      	try
      	      	{
+     	      		newResourceId = beforeDecode(newResourceId);
      	      		newResourceId = URLDecoder.decode(newResourceId,"UTF-8");
-     	      	}catch(Exception decodex){}*/
+     	      	}catch(Exception decodex){}
      	      	return getContentservice().getUrl(newResourceId);
              }
        catch (Exception e)
