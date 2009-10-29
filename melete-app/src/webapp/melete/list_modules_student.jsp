@@ -71,11 +71,11 @@ return newWindow;
 
 <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" >
   
-	<tr  class="maintabledata3"> <td colspan="4" valign="top">
+	<tr> <td colspan="4" valign="top">
  <h:dataTable id="table" 
                   value="#{listModulesPage.modDataModel}"
                   var="vmbean"   rowClasses="row1,row2" 
-              columnClasses="titleWid,dateWid1,dateWid2,ModCheckClass" headerClass="tableheader"
+              columnClasses="ListTitleClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
                    border="0" width="100%" 
                    binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_stud_summary}">
       <h:column>   

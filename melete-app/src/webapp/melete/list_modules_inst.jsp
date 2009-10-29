@@ -79,10 +79,10 @@ return newWindow;
 <h:messages showDetail="true" showSummary="false"/>
 <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" >
   
-	<tr class="maintabledata3"> <td colspan="5" valign="top">
+	<tr> <td colspan="5" valign="top">
  <h:dataTable id="table"  
                   value="#{listModulesPage.viewModuleBeans}" 
-                  var="vmbean"  rowClasses="row1,row2" columnClasses="titleWid,ModCheckClass,dateWid1,dateWid2,ModCheckClass" headerClass="tableheader"
+                  var="vmbean"  rowClasses="row1,row2" columnClasses="ListTitleClass,ListPrintClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
                   border="0" width="100%" binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_inst_summary}">
         <h:column>      
         <f:facet name="header">
