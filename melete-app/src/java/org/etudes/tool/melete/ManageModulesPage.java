@@ -316,6 +316,15 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		restoreModulesList= null;
 		count=0;		
 		selectAllFlag = false;
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{deleteModulePage}");
+		DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
+		dmPage.setMdbean(null);
+		dmPage.setModuleSelected(false);
+		dmPage.setSection(null);
+		dmPage.setSectionSelected(false);
+		dmPage.setModules(null);
+		dmPage.setSectionBeans(null);
 	}
 	
 	private void addMessage(FacesContext ctx, String msgName, String msgDetail, FacesMessage.Severity severity)
