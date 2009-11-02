@@ -31,7 +31,6 @@ import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.context.FacesContext;
 import javax.faces.application.FacesMessage;
-import javax.faces.el.ValueBinding;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -241,24 +240,6 @@ public class MeleteSiteAndUserInfo {
 		}
 	}
 
-	private void setListPage() throws Exception
-	{
-		FacesContext context = FacesContext.getCurrentInstance();
-		if (isUserAuthor())
-		{
-			ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
-			ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
-			listPage.getModuleDateBeans();
-			return;
-		}
-		if(isUserStudent())
-		{
-			ValueBinding binding = Util.getBinding("#{listModulesPage}");
-			ListModulesPage listPage = (ListModulesPage) binding.getValue(context);
-			listPage.getViewModuleBeans();
-			return;
-		}
-	}
 
 	/**
 	 * Navigates to related landing page based on user is either student or author
@@ -283,7 +264,6 @@ public class MeleteSiteAndUserInfo {
 				{
 				  if (migrateResult == moduleService.MIGRATE_COMPLETE)
 				  {
-					  setListPage();
 					if (isUserAuthor()) return "list_auth_modules";
 					if (isUserStudent()) return "list_modules_student";
 				  }
@@ -343,10 +323,7 @@ public class MeleteSiteAndUserInfo {
 //				  return "list_auth_modules";
 //			  }
 		      if (migrateResult == moduleService.MIGRATE_COMPLETE)
-		      {
-		    	  setListPage();
 		    	  return "list_auth_modules";
-		      }
 		    }
 		    catch (Exception ex)
 		    {
@@ -496,8 +473,7 @@ public class MeleteSiteAndUserInfo {
 
 	public String getEditorArchiveLocation()
 	{
-		//String remoteurl = ServerConfigurationService.getServerUrl() + "/etudes-melete-tool/HTMLEditorAppletEnterprise.jar";
-		String remoteurl = ServerConfigurationService.getServerUrl() + "/sferyx/HTMLEditorAppletEnterprise.jar";
+		String remoteurl = ServerConfigurationService.getServerUrl() + "/etudes-melete-tool/HTMLEditorAppletEnterprise.jar";
 		return remoteurl;
 	}
 
