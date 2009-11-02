@@ -385,7 +385,7 @@ public class ModuleDB implements Serializable {
 				  if (startEventId == null)
 				  {	  
 				    logger.debug("ADDING start event for non-null start date");
-				    startEventId = createCalendarEvent(c, startDate, module1.getTitle(), "This module opens today");
+				    startEventId = createCalendarEvent(c, startDate, "Opens: "+module1.getTitle(), "This module opens today and closes "+endDate.toString());
 				  }
 				  else
 				  {
@@ -408,7 +408,7 @@ public class ModuleDB implements Serializable {
 				  if (endEventId == null)
 				  {		
 					logger.debug("ADDING end event for non-null end date");
-					endEventId = createCalendarEvent(c, endDate, module1.getTitle(), "This module closes today");			   
+					endEventId = createCalendarEvent(c, endDate, "Closes: "+module1.getTitle(), "This module closes today");			   
 				  } 
 				  else
 				  {
@@ -459,8 +459,8 @@ public class ModuleDB implements Serializable {
 		CalendarEvent eEvent = c.addEvent(/* TimeRange */TimeService.newTimeRange(eventDate.getTime(), 0),
 				/* title */title,
 				/* description */description,
-				/* type */"Academic Calendar",
-				/* location */null,
+				/* type */"Deadline",
+				/* location */"",
 				/* attachments */EntityManager.newReferenceList());
 		       if (eEvent != null)
 			   {
@@ -472,7 +472,7 @@ public class ModuleDB implements Serializable {
 	
 	private void updateCalendarEvent(org.sakaiproject.calendar.api.Calendar c,String eventId, Date eventDate) throws Exception
 	{
-		 CalendarEventEdit evEdit = c.getEditEvent(eventId, "Academic Calendar");
+		 CalendarEventEdit evEdit = c.getEditEvent(eventId, "Deadline");
 		  if (evEdit != null)
 		  {
 			  evEdit.setRange(TimeService.newTimeRange(eventDate.getTime(),0));
@@ -482,7 +482,7 @@ public class ModuleDB implements Serializable {
 	
 	private void deleteCalendarEvent(org.sakaiproject.calendar.api.Calendar c,String eventId) throws Exception
 	{
-		CalendarEventEdit evEdit = c.getEditEvent(eventId, "Academic Calendar");
+		CalendarEventEdit evEdit = c.getEditEvent(eventId, "Deadline");
 		if (evEdit != null)
 		{
 		    c.removeEvent(evEdit);
