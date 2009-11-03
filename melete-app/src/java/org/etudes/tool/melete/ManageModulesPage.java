@@ -199,7 +199,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		// 2. clear archivelist
 			archiveModulesList = null;
 
-	  	return "confirm_restore_modules";
+		return "list_auth_modules";
 	  }
 
 	public String deleteModules()
@@ -288,12 +288,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		return "manage_content";
 	}
 
-	/*
-	 * navigation rule for Return
-	 */
-	public String returnToModules(){
-		return "list_auth_modules";
-	}
+	
 
 	/**
 	 * gets navigation page to import export modules
