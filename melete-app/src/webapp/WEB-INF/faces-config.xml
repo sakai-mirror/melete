@@ -1710,7 +1710,6 @@
       </navigation-case>    	
  </navigation-rule>  
  
- <!--Rule for confirm_delete_module -->
 <navigation-rule>
     <from-view-id>/melete/move_section.jsp</from-view-id>   
      <navigation-case>

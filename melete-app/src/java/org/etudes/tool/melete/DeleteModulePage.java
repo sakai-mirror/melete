@@ -277,7 +277,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			return "delete_module";
 		}
 		setSuccess(true);
-       return "confirm_delete_module";
+		return "list_auth_modules";
     }
 
 	public String backToModules()
