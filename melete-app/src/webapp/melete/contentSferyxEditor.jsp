@@ -61,7 +61,7 @@ else
 {
 document.writeln('<OBJECT classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93" id="editor" WIDTH = "740" HEIGHT = "600" NAME = "htmleditor" style="visibility:visible" codebase="http://java.sun.com/products/plugin/autodl/jinstall-1_4-win.cab#Version=1,4,0,0">');
 document.writeln('<PARAM NAME = "CODE" VALUE = "sferyx.administration.editors.HTMLEditor">');
-document.writeln('<PARAM NAME = "ARCHIVE" VALUE = "HTMLEditorAppletEnterprise.jar">');
+document.writeln('<PARAM NAME = "ARCHIVE" VALUE ="<%=editorloca%>">');
 document.writeln('<PARAM NAME="type" VALUE="application/x-java-applet;version=1.4">');
 document.writeln('<PARAM NAME="scriptable" VALUE="true">');
 }

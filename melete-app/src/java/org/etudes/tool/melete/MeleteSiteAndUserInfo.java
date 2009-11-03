@@ -473,7 +473,7 @@ public class MeleteSiteAndUserInfo {
 
 	public String getEditorArchiveLocation()
 	{
-		String remoteurl = ServerConfigurationService.getServerUrl() + "/etudes-melete-tool/HTMLEditorAppletEnterprise.jar";
+		String remoteurl = ServerConfigurationService.getServerUrl() + "/sferyx/HTMLEditorAppletEnterprise.jar";
 		return remoteurl;
 	}
 

@@ -1,3 +1,8 @@
+<%@ page import="org.apache.commons.fileupload.DiskFileUpload"%>
+<%@ page import="org.apache.commons.fileupload.FileItem"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.io.*"%>
+<%@page import="org.sakaiproject.component.cover.ServerConfigurationService"%>
 <!--
  ***********************************************************************************
  * $URL$
@@ -23,5 +28,35 @@
  **********************************************************************************
 -->
 <%
-
+			String uploadTempDir = ServerConfigurationService.getString("melete.uploadDir", "");
+			for (Enumeration e = request.getAttributeNames(); e.hasMoreElements();)
+				{
+					String oneKey = (String) e.nextElement();
+					if(oneKey.startsWith("sferyx"))
+					{
+							// store the image at uploads directory
+						try {
+							org.apache.commons.fileupload.FileItem item = (org.apache.commons.fileupload.FileItem)request.getAttribute(oneKey);
+							int lastSlash = item.getName().lastIndexOf("/");
+							String fileName = item.getName().substring(lastSlash);
+							lastSlash = fileName.lastIndexOf("\\");
+							if (lastSlash > -1 ) {
+								fileName = fileName.substring(lastSlash).replace('\\', '/');
+							}
+		
+							InputStream in = item.getInputStream();
+							FileOutputStream fout = new FileOutputStream(uploadTempDir + fileName);
+							// Transfer bytes from in to out
+							byte[] buf = new byte[1024];
+							int len;
+							while ((len = in.read(buf)) > 0) {
+							    fout.write(buf, 0, len);
+							}
+							in.close();
+							fout.close();
+						}  catch (Exception ex) {
+							// do nothing
+						}
+					} // if end
+				} // for end
 %>
