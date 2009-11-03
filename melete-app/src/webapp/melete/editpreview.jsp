@@ -105,13 +105,11 @@ rendered="#{editSectionPage.meleteResource.licenseCode == 1}"/>
    <h:outputText id="lic1_val2" escape="false" value="<BR>#{editSectionPage.meleteResource.copyrightOwner}" rendered="#{editSectionPage.meleteResource.licenseCode == 1}"/> 
       <!--End license code Copyright-->
  <!--License code Public domain-->
-   <h:outputText id="lic2_val1" value="#{msgs.edit_preview_dedicated_to}" 
-
-rendered="#{editSectionPage.meleteResource.licenseCode == 2}"/> 
-   
+   <h:outputText id="lic2_val1" value="#{msgs.edit_preview_dedicated_to}" rendered="#{editSectionPage.meleteResource.licenseCode == 2}"/> 
+<h:outputLink value="#{editSectionPage.section.sectionResource.resource.ccLicenseUrl}" target="_blank" rendered="#{editSectionPage.section.sectionResource.resource.licenseCode == 2}">
    <h:outputText id="lic2_val2" value="#{msgs.edit_preview_public_domain}" 
-
-rendered="#{editSectionPage.meleteResource.licenseCode == 2}"/>  
+rendered="#{editSectionPage.meleteResource.licenseCode == 2}"/> 
+</h:outputLink> 
    
   <h:outputText id="lic2_val5" value="#{editSectionPage.meleteResource.copyrightYear}" rendered="#{((editSectionPage.meleteResource.licenseCode == 2)&&(editSectionPage.meleteResource.copyrightYear != editSectionPage.nullString))}"/> 
  <h:outputText id="lic2_val3" escape="false" value="<BR>#{editSectionPage.meleteResource.copyrightOwner} "  
@@ -123,11 +121,11 @@ rendered="#{((editSectionPage.meleteResource.licenseCode == 2)&&(editSectionPage
    <h:outputText id="lic3_val1" value="#{msgs.edit_preview_licensed_under}" 
 
 rendered="#{editSectionPage.meleteResource.licenseCode == 3}"/> 
-   
+ <h:outputLink value="#{editSectionPage.section.sectionResource.resource.ccLicenseUrl}" target="_blank" rendered="#{editSectionPage.section.sectionResource.resource.licenseCode == 3}">   
    <h:outputText id="lic3_val2" value="#{msgs.edit_preview_creative_commons}" 
 
 rendered="#{editSectionPage.meleteResource.licenseCode == 3}"/>
-
+</h:outputLink>
    <h:outputText id="lic3_val5" value="#{editSectionPage.meleteResource.copyrightYear}" rendered="#{((editSectionPage.meleteResource.licenseCode == 3)&&(editSectionPage.meleteResource.copyrightYear != editSectionPage.nullString))}"/> 
 	  <h:outputText id="lic3_val3" escape="false" value="<BR>#{editSectionPage.meleteResource.copyrightOwner} "  
 
