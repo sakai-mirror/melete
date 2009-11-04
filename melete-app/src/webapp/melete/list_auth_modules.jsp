@@ -135,24 +135,27 @@ function selectAll()
   } 
   else
   {	  
-	    for (i=0;i<parseInt(listSizeVal);i++)
-	    {
-		  var modchStr = "listauthmodulesform:table:"+i+":modCheck";
-		  if (document.getElementById(modchStr).checked == true)
-		  {	  
-		    document.getElementById(modchStr).checked=false;
-		  }  	  
-	    }
-	  } 	   	  
+	  resetCheck();
+   } 	   	  
   }
 }
 
 function resetCheck()
 {
+	 var inputs = document.getElementsByTagName("input");
+	  for (var i = 0; i < inputs.length; i++) {   
+		  if (inputs[i].type == "checkbox") {   
+		  inputs[i].checked = false;
+		  }
+	  }	  
+}
+
+function resetAllMod()
+{
 	if (document.getElementById("listauthmodulesform:table:allmodcheck") != null)
 	{	
 	  document.getElementById("listauthmodulesform:table:allmodcheck").checked=false;
-	}  
+	}
 }
 
 </script>
@@ -213,7 +216,7 @@ if (msg != null)
     </h:panelGroup> 
      </f:facet>
                       
-      <h:selectBooleanCheckbox id="modCheck" value="#{mdbean.selected}" onclick="resetCheck()" valueChangeListener="#{listAuthModulesPage.selectedModuleSection}" />
+      <h:selectBooleanCheckbox id="modCheck" value="#{mdbean.selected}" onclick="resetAllMod()" valueChangeListener="#{listAuthModulesPage.selectedModuleSection}" />
          <h:graphicImage id="err_gif" value="images/pin_red.gif" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
     </h:column>
   
