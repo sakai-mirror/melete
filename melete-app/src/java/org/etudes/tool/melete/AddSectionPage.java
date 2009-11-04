@@ -45,6 +45,7 @@ import org.sakaiproject.util.ResourceLoader;
 
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.etudes.api.app.melete.exception.UserErrorException;
+import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
@@ -211,6 +212,11 @@ public class AddSectionPage extends SectionPage implements Serializable{
 					sectionService.deleteSection(section,(String)sessionMap.get("courseId"), null);
 				} catch (Exception e){}
 			String errMsg = bundle.getString(mex.getMessage());
+			if(mex.getMessage().equals("embed_image_size_exceed"))
+			{				
+				errMsg = errMsg.concat(ServerConfigurationService.getString("content.upload.max", "0"));
+				errMsg = errMsg.concat(bundle.getString("embed_image_size_exceed1"));
+			}
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
 			return "failure";
 			}
