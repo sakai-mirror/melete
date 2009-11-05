@@ -118,7 +118,7 @@ function transferEditordata()
 	if(document.htmleditor!= undefined && document.htmleditor!= null)
 	{
 	  window.defaultStatus="Adding content....";
-	  	var k =document.htmleditor.getPlainText();
+	  	var k =document.htmleditor.getBodyContent();
 	  		 if(document.getElementById("AddSectionForm:contentEditorView:contentTextArea") !=undefined &&
 	  		   document.getElementById("AddSectionForm:contentEditorView:contentTextArea") != null)
 			 {
