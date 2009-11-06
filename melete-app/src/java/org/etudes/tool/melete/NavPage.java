@@ -114,6 +114,7 @@ public class NavPage implements Serializable {
 		      AuthorPreferencePage aPage = (AuthorPreferencePage)
 		      authBinding.getValue(ctx);
 		      aPage.setFormName("UserPreferenceForm");
+		      aPage.resetValues();
 			return "author_preference";
 		}
 		else return "student_preference";

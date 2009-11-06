@@ -359,7 +359,7 @@ public class LicensePage {
 					allowCmrcl = "false";
 				}
 				else
-				{	
+				{
 		          if(formName.equals("EditSectionForm"))
 		          {
 		        	if (melResource == null)
@@ -372,7 +372,7 @@ public class LicensePage {
 		        	}
 		          }
 				}
-				
+
 				return allowCmrcl;
 				}
 
@@ -389,7 +389,7 @@ public class LicensePage {
 					 allowMod = "1";
 				 }
 				 else
-				 {	 
+				 {
 				   if(formName.equals("EditSectionForm"))
 				   {
 					 if (melResource == null)
@@ -398,7 +398,7 @@ public class LicensePage {
 					 }
 					 else
 					 {
-						 allowMod = String.valueOf(melResource.getAllowMod()); 
+						 allowMod = String.valueOf(melResource.getAllowMod());
 					 }
 				   }
 				 }
@@ -423,12 +423,12 @@ public class LicensePage {
 				  	this.reqAttr = reqAttr;
 			   }
 
-			public boolean getShouldRenderCC()
+			public boolean isShouldRenderCC()
 			{
 				return this.shouldRenderCC;
 			}
 
-			public boolean getShouldRenderCopyright()
+			public boolean isShouldRenderCopyright()
 			{
 				return this.shouldRenderCopyright;
 			}

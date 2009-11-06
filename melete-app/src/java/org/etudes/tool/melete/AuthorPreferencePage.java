@@ -70,7 +70,21 @@ public class AuthorPreferencePage {
   {
   }
 
+  public void resetValues()
+  {
+	FacesContext context = FacesContext.getCurrentInstance();
+	Map sessionMap = context.getExternalContext().getSessionMap();
 
+	  mup = getMup((String)sessionMap.get("userId"));
+	  	
+      ValueBinding binding =
+	        Util.getBinding("#{licensePage}");
+	  LicensePage lPage = (LicensePage)binding.getValue(context);
+	  if (lPage.getLicenseCodes() == null)
+	  {
+	    lPage.setInitialValues(this.formName, mup);
+	  }	  
+  }
 
   private void getUserChoice()
   {
@@ -118,13 +132,6 @@ public class AuthorPreferencePage {
   		if(msp != null && msp.isAutonumber())
   			materialAutonumber = "true";
 
-  		ValueBinding binding =
-  	        Util.getBinding("#{licensePage}");
-  		LicensePage lPage = (LicensePage)binding.getValue(context);
-  		if (lPage.getLicenseCodes() == null)
-  		{
-  	    lPage.setInitialValues(this.formName, mup);
-  		}
 
   	return;
   	}

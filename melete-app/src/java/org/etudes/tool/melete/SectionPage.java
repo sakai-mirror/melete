@@ -45,6 +45,7 @@ import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UICommand;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.component.UIParameter;
 import javax.faces.component.UIViewRoot;
@@ -465,6 +466,7 @@ public abstract class SectionPage implements Serializable {
             selResourceIdFromList = null;
             secResourceName = null;
             secResourceDescription = null;
+            setMeleteResource(null);
             oldType = section.getContentType();
 
             if(contentTypeRadio.findComponent(getFormName()).findComponent("uploadPath") != null)
@@ -508,27 +510,48 @@ public abstract class SectionPage implements Serializable {
             	section.setContentType((String)contentTypeRadio.getValue());
               contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm").setRendered(false);
             }
+            
+            //Upon changing content type, license is set by the selected resource, if there is one,
+            //or via User preferences
             ValueBinding binding = Util.getBinding("#{licensePage}");
-
             LicensePage lPage = (LicensePage)binding.getValue(context);
             lPage.setFormName(this.formName);
-
-            if(lPage.getLicenseCodes() == null)
+            lPage.resetValues();
+            /*if (getMeleteResource().getResourceId() != null)
             {
-                    if (getMeleteResource().getResourceId() != null)
-                    {
-                    	lPage.setInitialValues(this.formName, getMeleteResource());
-                    }
-                    else
-                    {
-                    	ValueBinding binding2 = Util.getBinding("#{authorPreferences}");
-         	    		AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding2.getValue(context);
-         	    		MeleteUserPreference mup = preferencePage.getMup();
-         	    		lPage.setInitialValues(this.formName, mup);
-                    }
-
+               	lPage.setInitialValues(this.formName, getMeleteResource());
             }
-
+            else
+            {*/
+                ValueBinding binding2 = Util.getBinding("#{authorPreferences}");
+         	    AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding2.getValue(context);
+         	    MeleteUserPreference mup = preferencePage.getMup();
+         	    lPage.setInitialValues(this.formName, mup);
+            //}
+            //The code below is required because the setter for the license code kicks in by default
+            //and we need to actually set the component with the values determined above.(ME-1071)
+            UIComponent licComp = (UIComponent)contentTypeRadio.findComponent(getFormName()).findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView");
+            UIInput uiInp = (UIInput)licComp.findComponent("licenseCodes");
+            uiInp.setValue(lPage.getLicenseCodes());
+            licComp = (UIComponent)contentTypeRadio.findComponent(getFormName()).findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("CCLicenseForm");
+            uiInp = (UIInput)licComp.findComponent("allowCmrcl");
+            uiInp.setValue(lPage.getAllowCmrcl());
+            uiInp = (UIInput)licComp.findComponent("allowMod");
+            uiInp.setValue(lPage.getAllowMod());
+            if (lPage.isShouldRenderCC())
+            { 	
+              uiInp = (UIInput)licComp.findComponent("copy_owner");
+              uiInp.setValue(lPage.getCopyright_owner());
+              uiInp = (UIInput)licComp.findComponent("copy_year");
+              uiInp.setValue(lPage.getCopyright_year());
+            }  
+            if (lPage.isShouldRenderCopyright()||lPage.isShouldRenderPublicDomain()||lPage.isShouldRenderFairUse())
+            {
+              uiInp = (UIInput)licComp.findComponent("copy_owner1");
+              uiInp.setValue(lPage.getCopyright_owner());
+              uiInp = (UIInput)licComp.findComponent("copy_year1");
+              uiInp.setValue(lPage.getCopyright_year());
+            }          
     }
 
     /**
@@ -587,10 +610,10 @@ public abstract class SectionPage implements Serializable {
     {
          if ( currLTIUrl == null ) return;
          String desc =
-		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
-		"<basic_lti_link\n" + 
-		"     xmlns=\"http://www.imsglobal.org/xsd/imsbasiclti_v1p0\"\n" + 
-		"     xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" + 
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+		"<basic_lti_link\n" +
+		"     xmlns=\"http://www.imsglobal.org/xsd/imsbasiclti_v1p0\"\n" +
+		"     xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
 		"  <melete-basic>true</melete-basic> \n" +
 		"  <launch_url>"+currLTIUrl+"</launch_url> \n" +
 		"  <x-secure>\n" ;
@@ -660,7 +683,7 @@ public abstract class SectionPage implements Serializable {
     			if (ltiDescriptor == null || ltiDescriptor.trim().length() == 0) {
     				throw new MeleteException("add_section_empty_lti");
     			}
-    			if (! ( SimpleLTIUtil.validateDescriptor(ltiDescriptor) 
+    			if (! ( SimpleLTIUtil.validateDescriptor(ltiDescriptor)
 			      || BasicLTIUtil.validateDescriptor(ltiDescriptor) != null ) ) {
     				throw new MeleteException("add_section_bad_lti");
     			}
@@ -837,7 +860,7 @@ public abstract class SectionPage implements Serializable {
   				ContentResource cr= getMeleteCHService().getResource(selResourceIdFromList);
 		    	this.secResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 		    	this.secResourceDescription = cr.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION);
-		    	
+
   		   //get resource object
 		    	selectedResource = (MeleteResource)sectionService.getMeleteResource(selResourceIdFromList);
 		    	//just take resource properties from this object as its assoc with another section
@@ -953,6 +976,7 @@ public abstract class SectionPage implements Serializable {
 
     public void setLicenseCodes(String licenseCodes)
     {
+		System.out.println("SETTING LICENSE CODES FROM HERE");
     	FacesContext context = FacesContext.getCurrentInstance();
     	ValueBinding binding = Util.getBinding("#{licensePage}");
   		LicensePage lPage = (LicensePage)binding.getValue(context);
@@ -1348,7 +1372,7 @@ public abstract class SectionPage implements Serializable {
 		{
 			try
 			{
-				String rUrl = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());                
+				String rUrl = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
 				return rUrl;
 			}
 			catch (Exception e)
@@ -1504,7 +1528,7 @@ public abstract class SectionPage implements Serializable {
 		{
 		 return getMeleteCHService().getDisplayName(resourceId);
 		}
-	 
+
 	 protected String getLinkContent(String resourceId)
 	 	 {
 	 		 return getMeleteCHService().getLinkContent(resourceId);
