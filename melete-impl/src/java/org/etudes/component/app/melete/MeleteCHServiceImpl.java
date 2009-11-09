@@ -1129,8 +1129,14 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		             // add the file to collection and move from uploads directory
 		             // read data
 		             try{
-		             File re = new File(uploadHomeDir+File.separator+fileName);
-
+		            	 File re = null;
+		            	 if (uploadHomeDir != null && uploadHomeDir.length() > 0) 
+		            		 re = new File(uploadHomeDir+File.separator+fileName);
+		            	 else 
+		            	 {
+		            		 logger.warn("Melete Upload directory property is not set. Please check.");
+		            		 break;
+		            	 }
 		             byte[] data = new byte[(int)re.length()];
 		             FileInputStream fis = new FileInputStream(re);
 		             fis.read(data);

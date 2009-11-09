@@ -43,20 +43,7 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/local.xml</param-value>
 	</context-param>
-	<context-param>
-		<param-name>uploadDir</param-name>
-		<param-value>/var/uploads</param-value>
-	</context-param>
-	<context-param>
-		<param-name>packagingdir</param-name>
-		<param-value>/var/melete/packagefiles</param-value>
-	</context-param>
-
-	<!--Need to keep this for the migrate program-->
-	<context-param>
-		<param-name>meleteDocsDir</param-name>
-		<param-value>/var/meleteDocs</param-value>
-	</context-param>
+	
 	<!-- Sakai request filter -->
 	<filter>
 		<filter-name>sakai.request</filter-name>

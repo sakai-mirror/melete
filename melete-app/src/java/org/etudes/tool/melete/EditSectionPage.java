@@ -87,7 +87,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 		FacesContext context = FacesContext.getCurrentInstance();
 
 		resetSectionValues();
-		checkUploadExists();
 		setModule(section.getModule());
 		setSection(section);
 		setSecResource(section.getSectionResource());
@@ -281,7 +280,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 	public String saveHere()
 	{
-		checkUploadExists();
 		String dataPath = new String();
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
@@ -313,8 +311,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 			// save section
 			if (logger.isDebugEnabled()) logger.debug("EditSectionpage:save section" + section.getContentType());
-			String uploadHomeDir = context.getExternalContext().getInitParameter("uploadDir");
-
+			String uploadHomeDir = ServerConfigurationService.getString("melete.uploadDir", "");
 
 			if (section.getContentType().equals("notype"))
 			{
@@ -385,7 +382,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			logger.debug("error in updating section " + mex.toString());
 			String errMsg = bundle.getString(mex.getMessage());
 			if(mex.getMessage().equals("embed_image_size_exceed"))
-			{				
+			{
 				errMsg = errMsg.concat(ServerConfigurationService.getString("content.upload.max", "0"));
 				errMsg = errMsg.concat(bundle.getString("embed_image_size_exceed1"));
 			}
@@ -496,7 +493,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			{
 				if (this.section.getContentType().equals("typeEditor"))
 				{
-					String uploadHomeDir = context.getExternalContext().getInitParameter("uploadDir");
+					String uploadHomeDir = ServerConfigurationService.getString("melete.uploadDir", "");
 					try
 					{
 					  this.previewContentData = getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir, contentEditor);
@@ -795,7 +792,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				selectedResource.setResourceId(newResourceId);
 				sectionService.insertResource(selectedResource);
 				secResourceName = getDisplayName(newResourceId);
-				currLinkUrl = getLinkContent(newResourceId);				
+				currLinkUrl = getLinkContent(newResourceId);
 			}
 			else
 			{

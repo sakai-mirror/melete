@@ -1138,46 +1138,6 @@ public abstract class SectionPage implements Serializable {
 		return nullString;
 	}
 
-
-
-	 //Mallika - 10/13/06 - new method to check if uploads directory exists
-    public void checkUploadExists()
-    {
-	  FacesContext context = FacesContext.getCurrentInstance();
-	  String uploadDir = context.getExternalContext().getInitParameter("uploadDir");
-	  if (logger.isDebugEnabled()) logger.debug("In checkUploadExists "+uploadDir);
-      File uploadsDir = new File(uploadDir);
-      if (uploadsDir.exists()) return;
-      if (!(uploadsDir.exists()))
-      {
-		  boolean res = uploadsDir.mkdirs();
-		  if (logger.isDebugEnabled()) logger.debug("Uploads directory was created "+res);
-
-
-		  Map sessionMap = context.getExternalContext().getSessionMap();
-          String str = "User ID: "+sessionMap.get("userId")+"| Course ID: "+sessionMap.get("courseId");
-          try { // Longsight edit
-                str = "User ID: "+sessionMap.get("userId")+"| Course ID: "+sessionMap.get("courseId")+"| Module ID: "+getModule().getModuleId().intValue()+"\n";
-          } catch(Exception ee) {
-                logger.error("Longsight: null getModule: " + ee.toString());
-          }
-
-		  File logFile = new File(uploadDir+File.separator+"uploads_missing_log.txt");
-
-          try
-          {
-		    FileOutputStream fos = new FileOutputStream(logFile, true);
-		    fos.write(str.getBytes());
-		    fos.close();
-	      }
-	      catch (Exception e)
-	      {
-		    logger.error("Could not create log file "+e.toString());
-	      }
-      }
-
-    }
-
     /**
      * @return Returns the secResourceDescription.
      */

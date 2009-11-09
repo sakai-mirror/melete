@@ -303,7 +303,7 @@ public class MeleteSiteAndUserInfo {
 
 		    try
 		    {
-		      migrateResult = moduleService.migrateMeleteDocs(context.getExternalContext().getInitParameter("meleteDocsDir"));
+		      migrateResult = moduleService.migrateMeleteDocs(ServerConfigurationService.getString("melete.docsDir", ""));
 		      if (migrateResult == moduleService.MIGRATE_IN_PROCESS)
 		      {
 		    	  String errMsg = bundle.getString("migration_in_process");

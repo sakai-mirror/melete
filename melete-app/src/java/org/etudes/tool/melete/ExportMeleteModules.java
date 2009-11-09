@@ -232,8 +232,7 @@ public class ExportMeleteModules {
 
 		FacesContext context = FacesContext.getCurrentInstance();
 
-		String packagingdirpath = context.getExternalContext()
-		.getInitParameter("packagingdir");
+		String packagingdirpath = ServerConfigurationService.getString("melete.packagingDir", "");
 		String instr_id = getMeleteSiteAndUserInfo().getCurrentUser().getId();
 		instr_id = instr_id.trim();
 		String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
@@ -241,6 +240,11 @@ public class ExportMeleteModules {
 
 		File packagedir = null;
 		try {
+			if(packagingdirpath == null || packagingdirpath.length() <=0 )
+			{
+				logger.warn("Melete Packaging Dir property is not set. Please check melete's readme file. ");
+				return;
+			}
 			File basePackDir = new File(packagingdirpath);
 			if (!basePackDir.exists())
 				basePackDir.mkdirs();
@@ -359,7 +363,13 @@ public class ExportMeleteModules {
 		String instr_id = getMeleteSiteAndUserInfo().getCurrentUser().getId();
 		String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
 
-		String packagingdirpath = context.getExternalContext().getInitParameter("packagingdir") + File.separator + "packagefilesscorm";
+		String packagingdirpath =ServerConfigurationService.getString("melete.packagingDir", "");
+		if(packagingdirpath == null || packagingdirpath.length() <=0 )
+		{
+			logger.warn("Melete Packaging Dir property is not set. Please check melete's readme file. ");
+			return;
+		}
+		packagingdirpath = packagingdirpath.concat(File.separator + "packagefilesscorm");
 		File packagedir = null;
 		try
 		{
@@ -475,8 +485,16 @@ public class ExportMeleteModules {
 								.equalsIgnoreCase("zip")) {
 					File unpackagedir = null;
 					try {
-						String packagingdirpath = context.getExternalContext()
-								.getInitParameter("packagingdir");
+						String packagingdirpath = ServerConfigurationService.getString("melete.packagingDir", "");
+						if(packagingdirpath == null || packagingdirpath.length() <=0 )
+						{
+							logger.warn("Melete Packaging Dir property is not set. Please check melete's readme file. ");
+							String infoMsg = bundle.getString("error_importing");
+							FacesMessage msg = new FacesMessage(null, infoMsg);
+							msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+							context.addMessage(null, msg);
+							return "importexportmodules";
+						}
 						String instr_id = getMeleteSiteAndUserInfo()
 								.getCurrentUser().getId();
 						String courseId = getMeleteSiteAndUserInfo()

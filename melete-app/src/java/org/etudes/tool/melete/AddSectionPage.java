@@ -113,7 +113,6 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	 **/
 	public String saveHere()
 	{
-		checkUploadExists();
 		setSuccess(false);
 		FacesContext context = FacesContext.getCurrentInstance();
 		Map sessionMap = context.getExternalContext().getSessionMap();
@@ -156,7 +155,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	 		}
 	   //   save section
 		    if (logger.isDebugEnabled()) logger.debug("AddSectionpage:inserting section");
-		     String uploadHomeDir = context.getExternalContext().getInitParameter("uploadDir");
+		     String uploadHomeDir = ServerConfigurationService.getString("melete.uploadDir", "");
 		    String addCollId = getMeleteCHService().getCollectionId( section.getContentType(), module.getModuleId());
 
 			// step 1: insert section
@@ -339,7 +338,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	  	  if(selResourceIdFromList == null)
 	  		{
             	   String addCollectionId = getMeleteCHService().getUploadCollectionId();
-            	   String uploadHomeDir = ctx.getExternalContext().getInitParameter("uploadDir");
+            	   String uploadHomeDir = ServerConfigurationService.getString("melete.uploadDir", "");
             	   String newResourceId = addResourceToMeleteCollection(uploadHomeDir,addCollectionId);
 				   getMeleteResource().setResourceId(newResourceId);
             	   secResourceName = getDisplayName(newResourceId);
