@@ -199,6 +199,8 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		// 2. clear archivelist
 			archiveModulesList = null;
 
+		String confMsg = bundle.getString("restore_modules_msg");
+		addMessage(context, "Info", confMsg, FacesMessage.SEVERITY_INFO);
 		return "list_auth_modules";
 	  }
 
