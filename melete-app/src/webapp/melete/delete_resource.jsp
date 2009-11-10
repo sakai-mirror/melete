@@ -77,7 +77,7 @@
         			<br/> <br/>    
         			<!--datatable or panelgrid to display warning message in red -->
         			
-        			 <h:panelGrid id="WarningPanel" columns="1" width="85%" border="1" styleClass="RedBorderClass" rendered="#{deleteResourcePage.warningFlag}">
+        			 <h:panelGrid id="WarningPanel" columns="1" width="85%" border="0" styleClass="RedBorderClass" rendered="#{deleteResourcePage.warningFlag}">
         			 <h:column>
         			 	<h:outputText value="#{msgs.delete_resource_in_use_warning}" styleClass="red" />
         			 </h:column>        			 
