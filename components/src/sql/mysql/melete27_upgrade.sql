@@ -12,4 +12,6 @@ alter table melete_module_shdates add column ADDTO_SCHEDULE tinyint(1);
 
 alter table melete_resource modify column CC_LICENSE_URL varchar(275);
 alter table melete_resource modify column COPYRIGHT_OWNER varchar(255);
+
+drop table melete_migrate_status;
  

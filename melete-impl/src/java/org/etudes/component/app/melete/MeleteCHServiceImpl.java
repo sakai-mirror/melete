@@ -274,7 +274,6 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		}
     }
 
-	//Methods used by Migrate program  - beginning
 	 public String getCollectionId(String courseId, String contentType,Integer modId )
 	    {
 	        String addToCollection ="";
@@ -306,7 +305,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				return null;
 			}
 	    }
-//	Methods used by Migrate program  - End
+
 
 	/*
 	 * for remote browser listing for sferyx editor just get the image files

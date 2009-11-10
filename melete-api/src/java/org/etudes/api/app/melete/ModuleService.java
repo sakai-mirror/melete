@@ -40,12 +40,6 @@ import org.etudes.api.app.melete.exception.MeleteException;
 
 public interface ModuleService{
 
-	public static final int MIGRATE_IN_PROCESS=0;
-	public static final int MIGRATE_FAILED=1;
-	public static final int MIGRATE_COMPLETE=2;
-	public static final int MIGRATE_INCOMPLETE=3;
-
-
 	public void insertProperties(ModuleObjService module, ModuleShdatesService moduleshdates,String userId, String courseId) throws Exception;
 
 	public List getViewModules(String userId, String courseId);
@@ -84,11 +78,7 @@ public interface ModuleService{
 
 	public org.w3c.dom.Document getSubSectionW3CDOM(String sectionsSeqXML);
 
-	public int getMigrateStatus() throws Exception;
-    public int migrateMeleteDocs(String meleteDocsDir) throws Exception;
 	public boolean updateSeqXml(String courseId) throws Exception;
-	public void checkInstallation() throws Exception;
-
 
 	public void createSubSection(ModuleObjService module, List secBeans) throws MeleteException;
 

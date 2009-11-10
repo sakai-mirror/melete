@@ -143,8 +143,6 @@ CREATE TABLE `melete_user_preference` (
 );
 CREATE INDEX USER_ID_IDX ON melete_user_preference(USER_ID);
 
-CREATE TABLE `melete_migrate_status` (START_FLAG tinyint(1),COMPLETE_FLAG tinyint(1));
-
 CREATE TABLE `melete_site_preference` (
   `PREF_SITE_ID` varchar(99) NOT NULL default '',
   `PRINTABLE` tinyint(1) default NULL,

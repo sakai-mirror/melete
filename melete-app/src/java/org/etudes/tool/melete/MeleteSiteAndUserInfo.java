@@ -246,100 +246,22 @@ public class MeleteSiteAndUserInfo {
 	 * @return the name the page to naviagate
 	 */
 	public String processNavigate(){
-		if (logger.isDebugEnabled()) logger.debug("process navigate is called");
+		if (logger.isDebugEnabled()) logger.debug("new process navigate is called");
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		try{
 		populateMeleteSession();
 
-		int migrateResult=-1;
-		String beginMigrate = ServerConfigurationService.getString("melete.migrate","false");
-
-	    moduleService.checkInstallation();
-
-		if ((isSuperUser()&& beginMigrate.equals("false")) || ((!isSuperUser()) && isUserAuthor()) || ((!isSuperUser()) && isUserStudent()))
-		{
-				migrateResult = moduleService.getMigrateStatus();
-				try
-				{
-				  if (migrateResult == moduleService.MIGRATE_COMPLETE)
-				  {
-					if (isUserAuthor()) return "list_auth_modules";
-					if (isUserStudent()) return "list_modules_student";
-				  }
-				  if (migrateResult == moduleService.MIGRATE_INCOMPLETE)
-				  {
-					String errMsg = bundle.getString("migration_process_incomplete");
-					context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_incomplete",errMsg));
-					return "error_migration";
-				  }
-				}
-				catch (Exception ex)
-				{
-				   logger.error("Some other error in getMigrateStatus");
-				   String errMsg = bundle.getString("migration_process_incomplete");
-				   context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_incomplete",errMsg));
-				   return "error_migration";
-				}
-		}
-		else
-		{
-			if (!isSuperUser() && !isUserAuthor() && !isUserStudent())
-			{
-				String errMsg = bundle.getString("access_denied");
-				context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"access_denied",errMsg));
-				return "error_migration";
-			}
-		}
-
-		migrateResult=-1;
-		//Only invoke program for admins
-		if (isSuperUser())
-		{
-
-		  if (beginMigrate.equals("true"))
-		  {
-			logger.info("User is admin, invoking migrateMeleteDocs");
-
-		    try
-		    {
-		      migrateResult = moduleService.migrateMeleteDocs(ServerConfigurationService.getString("melete.docsDir", ""));
-		      if (migrateResult == moduleService.MIGRATE_IN_PROCESS)
-		      {
-		    	  String errMsg = bundle.getString("migration_in_process");
-		    	  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_in_process",errMsg));
-		    	  return "error_migration";
-		      }
-		      if (migrateResult == moduleService.MIGRATE_FAILED)
-		      {
-		    	  String errMsg = bundle.getString("migration_process_fail");
-		    	  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_fail",errMsg));
-		    	  return "error_migration";
-		      }
-//		      if (migrateResult == moduleService.MIGRATE_COMPLETE)
-//			  {
-//				  String successMsg = bundle.getString("migration_process_success");
-//				  context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_INFO,"migration_process_success",successMsg));
-//				  return "list_auth_modules";
-//			  }
-		      if (migrateResult == moduleService.MIGRATE_COMPLETE)
-		    	  return "list_auth_modules";
-		    }
-		    catch (Exception ex)
-		    {
-				String errMsg = bundle.getString("migration_process_fail");
-				context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_fail",errMsg));
-				return "error_migration";
-		    }
-		  }
-		}
+		if (isSuperUser()) return "list_auth_modules";
+		if (isUserAuthor()) return "list_auth_modules";
+		if (isUserStudent()) return "list_modules_student";
 
 		} catch (Exception e) {
-			String errMsg = bundle.getString("migration_process_fail");
-			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_fail",errMsg));
+			String errMsg = bundle.getString("auth_failed");
+			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"auth_failed",errMsg));
 			logger.warn(e.toString());
 		}
-		return "error_migration";
+		return "list_modules_student";
 	}
 
 

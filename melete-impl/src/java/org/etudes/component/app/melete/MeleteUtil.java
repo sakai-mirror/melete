@@ -38,7 +38,7 @@ public class MeleteUtil {
 	/** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(MeleteUtil.class);
 	static final String changeforXmlParser = "[ ] %";
-	
+
 	public MeleteUtil(){
 
 	}
@@ -61,9 +61,7 @@ public class MeleteUtil {
 		res += s.substring(lastpos); // the rest
 		return res;
 }
-	/*
-	 * REMOVE WITH MELTEDOCS MIGRATION PROGRAMME
-	 */
+	
 	public byte[] readFromFile(File contentfile) throws Exception{
 
 		FileInputStream fis = null;
@@ -278,7 +276,7 @@ public class MeleteUtil {
 			}
 			return parentStr;
 		}
-		
+
 		public String escapeFileforExportPackage(String filename)
 		{
 			String[] change = changeforXmlParser.split("\\s");
@@ -288,11 +286,11 @@ public class MeleteUtil {
 			}
 			return filename;
 		}
-		
+
 		/*
 		 *  translating the src and a href paths to the new ones.
 		 *  The format can be anything src="" or src='' or src=
-		 *  Didn't use regex patterns, as we would have to escape regex meta-characters like $ [ ^ etc which can be our filenames 
+		 *  Didn't use regex patterns, as we would have to escape regex meta-characters like $ [ ^ etc which can be our filenames
 		 */
 		public String replacePath(String s, String one, String another)
 		{
@@ -300,7 +298,7 @@ public class MeleteUtil {
 			if ((one == null)||(one.length() == 0)) return s;
 			String checkOne = "=\""+one+"\"";
 			another = "=\""+another+"\"";
-			
+
 			if(s.indexOf(checkOne) != -1)
 			{
 				s=s.replace(checkOne, another);
@@ -318,7 +316,7 @@ public class MeleteUtil {
 				s=s.replace(checkOne, another);
 				return s;
 			}
-			
-			return s;	
+
+			return s;
 		}
 }
