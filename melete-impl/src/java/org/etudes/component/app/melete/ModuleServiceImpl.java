@@ -146,15 +146,18 @@ public class ModuleServiceImpl implements ModuleService,Serializable {
 
 	// insert new module
 		moduledb.addModule(module1, moduleshdates1, userId, courseId);
-		
-		if (moduleshdates1.getAddtoSchedule().booleanValue() == true)
-		{	
-		  moduledb.updateCalendar(module1, moduleshdates1, courseId);
-		}  
+
+		if (moduleshdates1.getAddtoSchedule() != null)
+		{
+		  if (moduleshdates1.getAddtoSchedule().booleanValue() == true)
+		  {
+		    moduledb.updateCalendar(module1, moduleshdates1, courseId);
+		  }
+	    }
 
 	}
 
-	
+
 	public void createSubSection(ModuleObjService module, List secBeans) throws MeleteException
 	{
 		moduledb.createSubSection((Module)module, secBeans);
@@ -304,13 +307,16 @@ public List getViewModules(String userId, String courseId) {
         ModuleDateBean mdbean = (ModuleDateBean) i.next();
         try
         {
-          moduledb.updateCalendar((Module)mdbean.getModule(),(ModuleShdates)mdbean.getModuleShdate(), courseId);
+          if (((ModuleShdates)mdbean.getModuleShdate()).getAddtoSchedule() != null)
+          {	  
+            moduledb.updateCalendar((Module)mdbean.getModule(),(ModuleShdates)mdbean.getModuleShdate(), courseId);
+          }  
         }
         catch (Exception ex)
         {
         	logger.debug("Exception thrown while updating calendar tool tables");
         }
- 	}    
+ 	}
   }
 
 
@@ -319,7 +325,7 @@ public List getViewModules(String userId, String courseId) {
  {
 	 List cmodList = null;
 	 List<Module> allModules = new ArrayList<Module>(0);
-	  
+
 	 moduledb.deleteCalendar(delModules, courseId);
 	 try{
 		 allModules = moduledb.getActivenArchiveModules(courseId);
@@ -329,11 +335,11 @@ public List getViewModules(String userId, String courseId) {
 	 {
 		 throw new MeleteException("delete_module_fail");
 	 }
-	  
+
 
  }
- 
- 
+
+
 
  /*public void deleteModules(List moduleDateBeans, String courseId, String userId)
   {
