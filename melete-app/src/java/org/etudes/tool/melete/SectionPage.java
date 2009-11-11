@@ -510,7 +510,7 @@ public abstract class SectionPage implements Serializable {
             	section.setContentType((String)contentTypeRadio.getValue());
               contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm").setRendered(false);
             }
-            
+
             //Upon changing content type, license is set by the selected resource, if there is one,
             //or via User preferences
             ValueBinding binding = Util.getBinding("#{licensePage}");
@@ -539,19 +539,19 @@ public abstract class SectionPage implements Serializable {
             uiInp = (UIInput)licComp.findComponent("allowMod");
             uiInp.setValue(lPage.getAllowMod());
             if (lPage.isShouldRenderCC())
-            { 	
+            {
               uiInp = (UIInput)licComp.findComponent("copy_owner");
               uiInp.setValue(lPage.getCopyright_owner());
               uiInp = (UIInput)licComp.findComponent("copy_year");
               uiInp.setValue(lPage.getCopyright_year());
-            }  
+            }
             if (lPage.isShouldRenderCopyright()||lPage.isShouldRenderPublicDomain()||lPage.isShouldRenderFairUse())
             {
               uiInp = (UIInput)licComp.findComponent("copy_owner1");
               uiInp.setValue(lPage.getCopyright_owner());
               uiInp = (UIInput)licComp.findComponent("copy_year1");
               uiInp.setValue(lPage.getCopyright_year());
-            }          
+            }
     }
 
     /**
@@ -976,8 +976,7 @@ public abstract class SectionPage implements Serializable {
 
     public void setLicenseCodes(String licenseCodes)
     {
-		System.out.println("SETTING LICENSE CODES FROM HERE");
-    	FacesContext context = FacesContext.getCurrentInstance();
+		FacesContext context = FacesContext.getCurrentInstance();
     	ValueBinding binding = Util.getBinding("#{licensePage}");
   		LicensePage lPage = (LicensePage)binding.getValue(context);
   		lPage.setFormName(formName);
