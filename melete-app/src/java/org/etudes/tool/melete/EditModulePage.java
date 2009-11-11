@@ -233,9 +233,6 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
         addPage.resetSectionValues();
         addPage.setModule(module);
 
-        //Mallika - 10/18/06 - adding reference to checkUploadExists
-        checkUploadExists();
-
        return "addmodulesections";
     }
 
