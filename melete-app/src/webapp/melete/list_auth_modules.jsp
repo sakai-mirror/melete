@@ -248,7 +248,7 @@ if (msg != null)
       
       <h:commandLink id="editMod" actionListener="#{listAuthModulesPage.editModule}"  action="#{listAuthModulesPage.redirectToEditModule}">     
              <f:param name="modidx" value="#{listAuthModulesPage.table.rowIndex}" />
-                   <h:outputText id="title2" value="#{mdbean.module.title}">
+                   <h:outputText id="title2" value="#{mdbean.module.title}" styleClass="TitleClass">
                </h:outputText>
       </h:commandLink>
       <h:dataTable id="tablesec" rendered="#{((mdbean.moduleId == listAuthModulesPage.showModuleId)||(listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag))}"

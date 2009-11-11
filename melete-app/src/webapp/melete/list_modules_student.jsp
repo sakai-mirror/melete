@@ -102,7 +102,7 @@ return newWindow;
          <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}" immediate="true">
               <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
                   <h:outputText id="title"
-                           value="#{vmbean.title}">
+                           value="#{vmbean.title}" styleClass="TitleClass">
               </h:outputText>             
           </h:commandLink>
           <h:outputText id="titleTxt2" value="#{vmbean.title}" rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag}"/>         
@@ -136,11 +136,11 @@ return newWindow;
          <h:outputText id="emp_space6_num" value="  " styleClass="MorePaddingClass" rendered="#{listModulesPage.autonumber}"/>
          <h:outputText id="emp_space6_bul" value="  " styleClass="TwiceExtraPaddingClass" rendered="#{!listModulesPage.autonumber}"/>
          <h:commandLink id="whatsNext" action="#{listModulesPage.goWhatsNext}" immediate="true" rendered="#{((vmbean.visibleFlag == listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}">
-		  <h:outputText  id="whatsNextMsg" value="#{msgs.list_modules_stud_next_steps}"></h:outputText>
+		  <h:outputText  id="whatsNextMsg" value="#{msgs.list_modules_stud_next_steps}" styleClass="TitleClass"></h:outputText>
 		    <f:param name="modidx2" value="#{listModulesPage.modTable.rowIndex}" />
 		    <f:param name="modseqno" value="#{vmbean.seqNo}" />
           </h:commandLink>  
-          <h:outputText  id="whatsNextMsg2" value="#{msgs.list_modules_stud_next_steps}" rendered="#{((vmbean.visibleFlag != listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}"></h:outputText>
+          <h:outputText  id="whatsNextMsg2" value="#{msgs.list_modules_stud_next_steps}" rendered="#{((vmbean.visibleFlag != listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}" styleClass="TitleClass"></h:outputText>
 		 
           </h:column>
            <h:column>

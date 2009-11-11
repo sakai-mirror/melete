@@ -322,7 +322,9 @@ a1:active 			{color : #000080;}
 .style4 			{font-size: 12px; }	  /*  */
 .style5 			{font-size: 8.5pt; }    /* Small Table data text */
 .orange 			{color: #C48C68; }    /* Highlighting text in Orange color */
-.italics			{font-style: italic; } /* For italicizing text */
+.italics			{font-style: italic;
+					font-size: 10pt;
+  					} /* For italicizing text */
 .bold				{font-weight: bold; }  /* For making text bold */
 .center				{text-align: center; } /* For center alignment */
 .left				{text-align: left; } /* For left alignment*/
@@ -389,10 +391,8 @@ vertical-align: top;  align:center;  }
    }
    
 .TitleClass {
-font-size: 12px;
-  vertical-align: top;
-  align: center;
-  width: 350px;
+	font-size: 10pt;
+    white-space: nowrap;
   }
 .IdClass {
   font-size: 12px;
@@ -410,8 +410,8 @@ font-size: 12px;
 vertical-align: top;
 width: 200px}
 
-.SectionClass 	{font-size: 12px; 
-align: center;
+.SectionClass 	{font-size: 10pt; 
+align: left;
 width :85%;} 
 
 .SectionTableClass {vertical-align: top;}
