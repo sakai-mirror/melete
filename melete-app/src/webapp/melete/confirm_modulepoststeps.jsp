@@ -81,7 +81,7 @@
 			  					              <tr>
                 <td height="30" colspan="2">         
                 <div align="center">				
-					<h:commandButton id="ReturntoModules" action="#{moduleNextStepsPage.returnToModules}" value="#{msgs.im_return_to_modules}" accesskey="#{msgs.return_access}" title="#{msgs.im_return_to_modules_text}" styleClass="BottomImgSpace"/>					
+					<h:commandButton id="ReturntoModules" action="#{moduleNextStepsPage.returnToModules}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgSpace"/>					
 				</div></td>
               </tr>
 			 <tr><td colspan="2" height="20" class="maintabledata5">&nbsp;</td></tr>

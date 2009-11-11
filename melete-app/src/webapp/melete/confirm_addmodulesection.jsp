@@ -86,7 +86,7 @@ function changestatusmessage()
 			  <tr>
                 <td>         
                  <div class="actionBar" align="left">				
-					<h:commandButton id="preview"  action="#{addSectionPage.previewFromAdd}" value="#{msgs.im_view_section}" accesskey="#{msgs.view_access}" title="#{msgs.im_view_section_text}" styleClass="BottomImgPreview"/>
+					<h:commandButton id="preview"  action="#{addSectionPage.previewFromAdd}" value="#{msgs.im_preview_section}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_section_text}" styleClass="BottomImgPreview"/>
 					<h:commandButton id="saveAddAnotherbutton"  action="#{addSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd"/>
 					<h:commandButton id="FinishButton" action="list_auth_modules" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgFinish"/>
 				</div></td>
