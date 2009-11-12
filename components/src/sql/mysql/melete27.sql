@@ -133,11 +133,11 @@ CREATE TABLE `melete_user_preference` (
   `EXP_CHOICE` tinyint(1) default NULL,
   `LTI_CHOICE` tinyint(1) default NULL,
   `LICENSE_CODE` int(11) default NULL,
-  `CC_LICENSE_URL` varchar(70) default NULL,
+  `CC_LICENSE_URL` varchar(275) default NULL,
   `REQ_ATTR` tinyint(1) default NULL,
   `ALLOW_CMRCL` tinyint(1) default NULL,
   `ALLOW_MOD` int(11) default NULL,
-  `COPYRIGHT_OWNER` varchar(55) default NULL,
+  `COPYRIGHT_OWNER` varchar(255) default NULL,
   `COPYRIGHT_YEAR` varchar(25) default NULL,
   PRIMARY KEY  (`PREF_ID`)
 );
