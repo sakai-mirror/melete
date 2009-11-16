@@ -34,7 +34,8 @@ a:link 				{color : #000080;
 a:visited 			{color : #999999;
 					text-decoration : underline;}
 a:hover 			{color : #666666;
-					text-decoration : underline;}
+					text-decoration : underline;
+					cursor:pointer;}
 a:active 			{color : #000080;
 					text-decoration : underline;}
 
@@ -345,18 +346,17 @@ a1:active 			{color : #000080;}
 }
 
 .ListTitleClass {
-font-size: 10pt;
-  vertical-align: top;
-  align: left;
-  width: 55%;
-  white-space: nowrap;
+	font-size: 10pt;
+  	vertical-align: top;
+  	align: left;
   }
 
 .ListDateClass {
+	font-size: 9pt;
 	vertical-align: top;
     align: left;
-    width: 17%;
-  	white-space: nowrap;
+    width: 17%;  
+    white-space: nowrap;	
   }
 
 .ListActionClass {
@@ -374,7 +374,7 @@ font-size: 10pt;
    }
    
  .ListDateInput{
- 	font-size: 8pt;
+ 	font-size: 9pt;
  	width:85%;
  }
   
@@ -382,33 +382,20 @@ font-size: 10pt;
 width: 16;  
 height: 16;  border: 0;  
 vertical-align: top;  align:center;  }
- 
-.ListPrintClass {
+
+.ListClosedClass {
    vertical-align: top;
 	align:center;
 	width: 2%;
 	white-space:nowrap;
    }
-   
-.TitleClass {
-	font-size: 10pt;
-    white-space: nowrap;
-  }
-.IdClass {
-  font-size: 12px;
-    color: #000000;
-    vertical-align: top;
-    align: center;
     
-}	    
-.DateClass 			
-{background: #FFFFFF;
-					font-family: Verdana, Arial, sans-serif;
-					font-size: 9px;
-					color : #000000;
-					text-align: left; 
-vertical-align: top;
-width: 200px}
+.ListPrintClass {
+   vertical-align: top;
+	align:center;
+	width: 7%;
+	white-space:nowrap;
+   }
 
 .SectionClass 	{font-size: 10pt; 
 align: left;
@@ -451,14 +438,6 @@ valign:top}
 
 .AddImgClass		{   height: 16;   
 width: 16;   border: 0;  hspace:10; }
-.PrereqClass {
-     vertical-align: top;
-     text-align: center;
-     }
- .NextstepsClass {
-          vertical-align: top;
-          text-align: center;
-     }
      
 .MainTableClass		{ border-color: #E2E4E8;border:1}
 td.MainTableClass     { white-space: nowrap;}
@@ -513,15 +492,8 @@ border: 0;}
 .BottomImgRestore	{  	padding-left:2em;
 						background: #eee url('images/restore.png') .2em no-repeat;
 					}																																												
- .UpLink
- {
- width: 1px;
- hspace: 0;
- }
- .SecLink
- {
- width:85px;
- }
+
+ /* list resources page styles */
  .TitleWid
   {
   hspace:5;
@@ -530,45 +502,15 @@ border: 0;}
   align:center;
  vertical-align: top;
  }
- .TitleWid2
-   {
-   width:45%;
- }
 .TitleWid3 {   width:75%; }
 .ActionWid {width:40%;
-white-space:nowrap;}
-
-.listActionWid {width:15%;
 white-space:nowrap;}
 
 .TitleWid4 {   width:65%; }
 .ActionWid2 {width:45%;
 white-space:nowrap;}
+/* list resources end */
 
- .DateWid1
-    {
-    width:25%;
-    vertical-align: top;
- }
- .DateWid2
-    {
-    width:25%;
-    vertical-align: top;
- }
- .PrWid
-   {
-   width:35px;
-   align: absmiddle;
-	valign:top;
- }
- .StWid
-    {
-    width:234px;
- }
- .EndWid
-     {
-     width:185px;
- }
  .row1 			{ background-color:#FFFFFF}
  .row2			{background-color:#F7F7F7}
  .secrow0       {text-indent:20px}
@@ -582,11 +524,7 @@ white-space:nowrap;}
  .secrow8       {text-indent:180px}
  .secrow9       {text-indent:200px}
 .justHeight 	{height:20;}
-.TitleClass {
-font-size: 12px;
-  vertical-align: top;
-  width: 300px
-  }
+
 .IdClass {
   font-size: 12px;
     color: #000000;
