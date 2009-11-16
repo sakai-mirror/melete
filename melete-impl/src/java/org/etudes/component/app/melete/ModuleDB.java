@@ -2486,7 +2486,7 @@ public class ModuleDB implements Serializable {
 							byte[] secContentData = cr.getContent();
 
 							boolean encodingFlag = true;
-							String secResourceName = "Section_" + copySectionId;
+							String secResourceName = "Section_" + copySectionId + ".html";
 							String secResourceDescription = "compose content";
 
 							ResourcePropertiesEdit res = meleteCHService.fillInSectionResourceProperties(encodingFlag, secResourceName,
