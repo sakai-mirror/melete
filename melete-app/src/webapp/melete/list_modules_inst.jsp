@@ -82,7 +82,7 @@ return newWindow;
 	<tr> <td colspan="5" valign="top">
  <h:dataTable id="table"  
                   value="#{listModulesPage.viewModuleBeans}" 
-                  var="vmbean"  rowClasses="row1,row2" columnClasses="ListTitleClass,ListPrintClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
+                  var="vmbean"  rowClasses="row1,row2" columnClasses="ListTitleClass,ListClosedClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
                   border="0" width="100%" binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_inst_summary}">
         <h:column>      
         <f:facet name="header">
@@ -109,7 +109,7 @@ return newWindow;
           rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}">
           <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
               <h:outputText id="title"
-                           value="#{vmbean.title}" styleClass="TitleClass">
+                           value="#{vmbean.title}">
          </h:outputText>             
        </h:commandLink>
       <h:commandLink id="viewModule2"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}"  immediate="true" 
@@ -155,9 +155,7 @@ return newWindow;
                <h:outputText id="sectitleLink2" 
                            value="#{vsbean.title}" styleClass="italics">
                </h:outputText>
-             </h:commandLink>                           
-            
-             
+             </h:commandLink>  
             </h:column>
           </h:dataTable>
            <h:outputText id="emp_space6_num" value="  " styleClass="MorePaddingClass" rendered="#{listModulesPage.autonumber}"/>
@@ -213,8 +211,7 @@ return newWindow;
             </h:outputText>            
    	 </h:column>   
       <h:column rendered="#{listModulesPage.printable}"> 
-         <h:outputText id="emp_space5" value="  " styleClass="ExtraPaddingClass" />
-           <h:outputLink id="printModuleLink" value="list_modules_inst" onclick="OpenPrintWindow(#{listModulesPage.printModuleId},'Melete Print Window');" rendered="#{vmbean.visibleFlag}">
+         <h:outputLink id="printModuleLink" value="list_modules_inst" onclick="OpenPrintWindow(#{listModulesPage.printModuleId},'Melete Print Window');" rendered="#{vmbean.visibleFlag}">
 	  	    	<h:graphicImage id="printImgLink" value="images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 	 	 </h:outputLink>
   	  	

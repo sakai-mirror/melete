@@ -102,7 +102,7 @@ return newWindow;
          <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}" immediate="true">
               <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
                   <h:outputText id="title"
-                           value="#{vmbean.title}" styleClass="TitleClass">
+                           value="#{vmbean.title}" >
               </h:outputText>             
           </h:commandLink>
           <h:outputText id="titleTxt2" value="#{vmbean.title}" rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag}"/>         
@@ -173,8 +173,7 @@ return newWindow;
             </h:outputText>
          </h:column>
 		 <h:column rendered="#{listModulesPage.printable}">  
-         <h:outputText id="emp_space5" value="  " styleClass="ExtraPaddingClass" />
-           <h:outputLink id="printModuleLink" value="list_modules_student" onclick="OpenPrintWindow(#{listModulesPage.printModuleId},'Melete Print Window');" rendered="#{vmbean.visibleFlag}">
+         <h:outputLink id="printModuleLink" value="list_modules_student" onclick="OpenPrintWindow(#{listModulesPage.printModuleId},'Melete Print Window');" rendered="#{vmbean.visibleFlag}">
 	 	    <h:graphicImage id="printImgLink" value="images/printer.png"  alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 	 	 </h:outputLink>
 	    

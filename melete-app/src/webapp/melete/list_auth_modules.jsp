@@ -202,7 +202,7 @@ if (msg != null)
 			<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 			 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" height="100%" id="AutoNumber1" > 
                    <tr>
-				   <td colspan="5" white-space="nowrap">
+				   <td colspan="5">
 				     <h:dataTable id="table" 
                   value="#{listAuthModulesPage.moduleDateBeans}"
                   var="mdbean"   border="0"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListTitleClass,ListDateClass,ListDateClass,ListActionClass" 
@@ -248,7 +248,7 @@ if (msg != null)
       
       <h:commandLink id="editMod" actionListener="#{listAuthModulesPage.editModule}"  action="#{listAuthModulesPage.redirectToEditModule}">     
              <f:param name="modidx" value="#{listAuthModulesPage.table.rowIndex}" />
-                   <h:outputText id="title2" value="#{mdbean.module.title}" styleClass="TitleClass">
+                   <h:outputText id="title2" value="#{mdbean.module.title}">
                </h:outputText>
       </h:commandLink>
       <h:dataTable id="tablesec" rendered="#{((mdbean.moduleId == listAuthModulesPage.showModuleId)||(listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag))}"
