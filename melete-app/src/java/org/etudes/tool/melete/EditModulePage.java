@@ -235,6 +235,33 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 
        return "addmodulesections";
     }
+    
+    public String gotoTOC()
+	{
+    	String errMsg = "";
+
+        if(!getSuccess())
+        {
+        	callFromAddContent = true;
+        	if(!savehere().equals("failure"))
+    		{
+        		System.out.println("NO problems saving");
+        		callFromAddContent = false;
+    		    setSuccess(true);
+    		}
+        	else
+        	{
+        		callFromAddContent = false;
+        		return "edit_module";
+        	}
+        }
+		FacesContext context = FacesContext.getCurrentInstance();
+        ValueBinding binding =Util.getBinding("#{listAuthModulesPage}");
+        ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
+        listPage.resetValues();
+        listPage.setModuleDateBeans(null);
+		return "list_auth_modules";
+	}
 
     /*
      * Revised by Rashmi -- 12/21 to fix bug#189

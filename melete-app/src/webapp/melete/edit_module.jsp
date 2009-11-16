@@ -112,7 +112,7 @@ function showEdateCal()
 		<!--Page Content-->		
 			  <tr>
 	 		<td height="20" class="maintabledata2"> 
-				<h:commandLink id="TOCButton"  action="#{editModulePage.cancel}"  immediate="true">
+				<h:commandLink id="TOCButton"  action="#{editModulePage.gotoTOC}">
 						<h:outputText id="toc" value="#{msgs.edit_module_TOC}" />
 					</h:commandLink> &raquo;  <h:outputText value="#{editModulePage.module.title}" /> &raquo;
 				 <h:commandLink id="editFirstSection" action="#{editModulePage.editSection}" rendered="#{editModulePage.hasSections}">
