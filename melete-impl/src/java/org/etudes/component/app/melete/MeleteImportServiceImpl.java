@@ -223,8 +223,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		{
 			Element element = (Element) iter.next();
 			// for next steps file don't bring in as unreferrrenced material
-			if (element.attributeValue("identifier").startsWith("NEXTSTEPS"))
-			  continue;
+			if (element.attributeValue("identifier").startsWith("NEXTSTEPS")) continue;
 
 			Attribute resHrefAttr = element.attribute("href");
 
@@ -496,7 +495,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		int startSrc =0;
 		int endSrc = 0;
 		String checkLink=null;
-
+		
 		while (checkforimgs != null) {
 			ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
 			checkforimgs = (String)embedData.get(0);
@@ -801,9 +800,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 				Element element = (Element) iter.next();
 
 				if (element.attributeValue("identifier").startsWith("NEXTSTEPS"))
-				{
 					buildWhatsNext(element, document, module, unZippedDirPath);
-			 }
 				else buildSection(element, document, module, addBlankSection(null, seqDocument), unZippedDirPath, seqDocument, courseId);
 			}
 
