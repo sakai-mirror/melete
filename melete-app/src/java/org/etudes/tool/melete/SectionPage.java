@@ -664,7 +664,7 @@ public abstract class SectionPage implements Serializable {
     			secContentData = new byte[contentEditor.length()];
     			secContentData = contentEditor.getBytes();
     			encodingFlag = true;
-    			secResourceName = "Section_" + section.getSectionId().toString()+".html";
+    			secResourceName = getMeleteCHService().getTypeEditorSectionName(section.getSectionId());
     			secResourceDescription="compose content";
     		}
 

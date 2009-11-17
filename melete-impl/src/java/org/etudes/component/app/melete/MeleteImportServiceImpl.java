@@ -223,7 +223,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		{
 			Element element = (Element) iter.next();
 			// for next steps file don't bring in as unreferrrenced material
-			if (element.attributeValue("identifier").startsWith("NEXTSTEPS")) continue;
+			if (element.attributeValue("identifier").startsWith("NEXTSTEPS"))
+			  continue;
 
 			Attribute resHrefAttr = element.attribute("href");
 
@@ -495,7 +496,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		int startSrc =0;
 		int endSrc = 0;
 		String checkLink=null;
-		
+
 		while (checkforimgs != null) {
 			ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
 			checkforimgs = (String)embedData.get(0);
@@ -800,7 +801,9 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 				Element element = (Element) iter.next();
 
 				if (element.attributeValue("identifier").startsWith("NEXTSTEPS"))
+				{
 					buildWhatsNext(element, document, module, unZippedDirPath);
+			 }
 				else buildSection(element, document, module, addBlankSection(null, seqDocument), unZippedDirPath, seqDocument, courseId);
 			}
 
@@ -1208,7 +1211,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			//This is for typeEditor sections
 			section.setContentType("typeEditor");
 			String addCollId = getMeleteCHService().getCollectionId(section.getContentType(), module.getModuleId());
-			String sectionResourceName = "Section_" + section.getSectionId().toString()+".html";;
+			String sectionResourceName = getMeleteCHService().getTypeEditorSectionName(section.getSectionId());
 			newResourceId = processEmbedDatafromHTML(hrefVal,sectionResourceName, courseId,addCollId, resElements, unZippedDirPath);
 			meleteResource.setResourceId(newResourceId);
 			sectionDB.insertMeleteResource((Section)section, (MeleteResource)meleteResource);

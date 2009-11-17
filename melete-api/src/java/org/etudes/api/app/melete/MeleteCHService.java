@@ -79,5 +79,6 @@ public interface MeleteCHService{
 	  public String moveResource(String resourceId, String destinationColl) throws Exception;
 	  public String getDisplayName(String resourceId);
 	  public String getLinkContent(String resourceId);
+	  public String getTypeEditorSectionName(Integer sectionId);
 }
 
