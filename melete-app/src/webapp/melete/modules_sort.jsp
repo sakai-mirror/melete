@@ -46,7 +46,7 @@
 	<tr>
 		<td valign="top"></td>
     	<td width="1962" valign="top">
-        	<table width="100%"  border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+        	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
           		<tr>
             		<td width="100%" height="20" bordercolor="#E2E4E8">
 					<!-- top nav bar -->
@@ -57,89 +57,69 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="maintabledata3" valign="top">
+					<td valign="top">
 						<!-- main page contents -->
 			 			<h:messages id="sorterror" layout="table" style="color : red" />
 						<table width="100%"  border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
 			   				    <tr>
-                    			<td colspan="3">
+                    			<td>
 									<table width="25%"  border="0" cellspacing="0" cellpadding="0">
                 				      <tr>
 				                        <td class="style2"><h:outputText value="#{msgs.sort_modules_sort}" /></td>
 										<td>
-									   	<h:commandButton id="Sort_Modules-horz" disabled="true" value="#{msgs.im_sort_modules}" title="#{msgs.im_sort_modules_text}" styleClass="BottomImgSort"/>
+									   	<h:commandButton id="Sort_Modules-horz" disabled="true" value="#{msgs.im_sort_modules}" title="#{msgs.im_sort_modules}" styleClass="BottomImgSort"/>
 									   	</td>
 									   	<td>
-									   	<h:commandButton id="sortsec" immediate="true" action="#{sortModuleSectionPage.gotoSortSections}" value="#{msgs.im_sort_sections}" accesskey="#{msgs.sort_access}" title="#{msgs.im_sort_sections_text}" styleClass="BottomImgSort"/> 						 
+									   	<h:commandButton id="sortsec" immediate="true" action="#{sortModuleSectionPage.gotoSortSections}" value="#{msgs.im_sort_sections}" title="#{msgs.im_sort_sections}" styleClass="BottomImgSort"/> 						 
 										</td>
 									  </tr>
 									</table>
 								</td>
 							  </tr>
 							   <tr>
-								<th class="tableheader style4 " height="20"><h:outputText value="#{msgs.sort_modules_curr_seq}" /> </th>
-								<th class="tableheader">&nbsp;</th>
-								<th class="tableheader style4" height="20"><h:outputText value="#{msgs.sort_modules_new_seq}" /></th>
-							  </tr>
-							  <tr>
-								<td width="45%" valign="top" class="maintabledata3">
-									<table align="center" width="100%"  border="1" cellpadding="3" cellspacing="0"  bordercolor="#EAEAEA" style="border-collapse: collapse" id="current">
-									  <tr>
-										<td>
-										<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" style="border-collapse: collapse">
-											<tr>
-											 <td align="left" class="maintabledata3">
-												 <h:selectOneListbox id="modulecurrList" disabled="true" size="#{sortModuleSectionPage.showSize}" style="width:300px">
-															 <f:selectItems value="#{sortModuleSectionPage.currList}" />							
-												 </h:selectOneListbox>
-											   </td>
-											</tr>
-										</table></td> 
-									</tr>
-            		    		   </table>                      
-		                    	  </td>
-        			            <td width="6%" class="maintabledata3" ></td>
-                    			<td width="49%" valign="top" class="maintabledata3">
-									<table align="center" width="100%"  border="1" cellpadding="1" cellspacing="0" bordercolor="#CCCCCC" bgcolor="#EEEEEE" style="border-collapse: collapse" id="new">
-									  <tr>
-										 <td width="100%">
-											<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" style="border-collapse: collapse">
-											<tr>
-                       						 <td align="left">
-												 <h:selectOneListbox id="modulenewList" value="#{sortModuleSectionPage.newSelectedModule}" size="#{sortModuleSectionPage.showSize}" style="width:300px">
-														 <f:selectItems value="#{sortModuleSectionPage.newList}" />							
-												 </h:selectOneListbox>	 
-											  </td>                        
-											 </tr>
-											</table></td> 
-				                        <td width="15" align="center">			
+							   	<td  bgcolor="#EEEEEE">
+							   	  <table width="100%"  border="0" cellspacing="0" cellpadding="0" bgcolor="#EEEEEE">
+									<th class="tableheader style4 " height="20"><h:outputText value="#{msgs.sort_modules_curr_seq}" /> </th>
+									<th class="tableheader">&nbsp;</th>
+									<th class="tableheader style4" height="20"><h:outputText value="#{msgs.sort_modules_new_seq}" /></th>
+									<th class="tableheader">&nbsp;</th>
+							  		<tr>
+									 <td width="47%" align="left">
+										 <h:selectOneListbox id="modulecurrList" disabled="true" size="#{sortModuleSectionPage.showSize}" style="width:100%">
+													 <f:selectItems value="#{sortModuleSectionPage.currList}" />							
+										 </h:selectOneListbox>
+									   </td>
+							        <td width="3%"></td>
+	                    			<td width="47%" valign="top">
+										 <h:selectOneListbox id="modulenewList" value="#{sortModuleSectionPage.newSelectedModule}" size="#{sortModuleSectionPage.showSize}" style="width:100%">
+												 <f:selectItems value="#{sortModuleSectionPage.newList}" />							
+										 </h:selectOneListbox>	 
+								 	 </td>                       
+									
+			                        <td width="3%" align="center">			
 				                        <h:commandLink id="all_up"  action="#{sortModuleSectionPage.MoveItemAllUpAction}">		
 										 <h:graphicImage id="allupImg" value="images/up_end.gif" alt="#{msgs.sort_all_Up}" title="#{msgs.sort_all_Up}" width="20" height="20" style="border:0" />
-								   </h:commandLink>	           
-									<h:commandLink id="up_one"  action="#{sortModuleSectionPage.MoveItemUpAction}">		
-										 <h:graphicImage id="upImg" value="images/up.gif" alt="#{msgs.sort_Up}" title="#{msgs.sort_Up}" width="20" height="20" style="border:0" />
-								   </h:commandLink>		 
- 									<h:commandLink id="down_one"  action="#{sortModuleSectionPage.MoveItemDownAction}">	 
-										 <h:graphicImage id="downImg" value="images/down.gif" alt="#{msgs.sort_Down}" title="#{msgs.sort_Down}" width="20" height="20" style="border:0" />
- 									   </h:commandLink>	
- 									   <h:commandLink id="all_down"  action="#{sortModuleSectionPage.MoveItemAllDownAction}">		
+								   		</h:commandLink>	           
+										<h:commandLink id="up_one"  action="#{sortModuleSectionPage.MoveItemUpAction}">		
+											 <h:graphicImage id="upImg" value="images/up.gif" alt="#{msgs.sort_Up}" title="#{msgs.sort_Up}" width="20" height="20" style="border:0" />
+									   </h:commandLink>		 
+										<h:commandLink id="down_one"  action="#{sortModuleSectionPage.MoveItemDownAction}">	 
+											 <h:graphicImage id="downImg" value="images/down.gif" alt="#{msgs.sort_Down}" title="#{msgs.sort_Down}" width="20" height="20" style="border:0" />
+										</h:commandLink>	
+									   <h:commandLink id="all_down"  action="#{sortModuleSectionPage.MoveItemAllDownAction}">		
 										 <h:graphicImage id="downImg1" value="images/down_end.gif" alt="#{msgs.sort_all_Down}" title="#{msgs.sort_all_Down}" width="20" height="20" style="border:0" />
-								   </h:commandLink>	    					
-									  </td>
-				                      </tr>
-                				    </table></td>
-				                  </tr>
-                				 <tr><td colspan="3" class="maintabledata5">&nbsp;</td>
-				 				</tr>
-							</table>
-							</td>
-						</tr>
-						</table> 
-		  	<p>&nbsp;</p>
-
-		</td>
-  	</tr>
-</table>
+								   		</h:commandLink>	    					
+								  </td>
+		                      </tr>
+        				    </table>
+        				    </td>
+		                  </tr>
+        				 <tr><td class="maintabledata5">&nbsp;</td>
+		 				</tr>
+					</table>
+				</td>
+		  	</tr>
+		</table>
 </h:form>
 <!-- This Ends the Main Text Area -->
 </body>
