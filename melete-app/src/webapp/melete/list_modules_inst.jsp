@@ -83,7 +83,7 @@ return newWindow;
  <h:dataTable id="table"  
                   value="#{listModulesPage.viewModuleBeans}" 
                   var="vmbean"  rowClasses="row1,row2" columnClasses="ListTitleClass,ListClosedClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
-                  border="0" width="100%" binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_inst_summary}">
+                  border="0" cellpadding="3" width="100%" binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_inst_summary}">
         <h:column>      
         <f:facet name="header">
         <h:panelGroup>
@@ -158,16 +158,18 @@ return newWindow;
              </h:commandLink>  
             </h:column>
           </h:dataTable>
-           <h:outputText id="emp_space6_num" value="  " styleClass="MorePaddingClass" rendered="#{listModulesPage.autonumber}"/>
-          <h:outputText id="emp_space6_bul" value="  " styleClass="TwiceExtraPaddingClass" rendered="#{!listModulesPage.autonumber}"/>
-         <h:commandLink id="whatsNext" action="#{listModulesPage.goWhatsNext}" immediate="true" rendered="#{((vmbean.visibleFlag == listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}">
-		  <h:outputText  id="whatsNextMsg" value="#{msgs.list_modules_stud_next_steps}" styleClass="TitleClass"></h:outputText>
+          <h:outputText id="emp_space6_bul" value="  " styleClass="NextStepsPaddingClass"/>
+          <h:outputText id="next_seq" value="#{vmbean.nextStepsNumber}. " rendered="#{listModulesPage.autonumber}"/>
+          <h:graphicImage id="bul_gif1" value="images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}" style="border:0"/>
+          
+          <h:commandLink id="whatsNext" action="#{listModulesPage.goWhatsNext}" immediate="true" rendered="#{((vmbean.visibleFlag == listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}">
+		    <h:outputText  id="whatsNextMsg" value="#{msgs.list_modules_stud_next_steps}" />
 		    <f:param name="modidx2" value="#{listModulesPage.modTable.rowIndex}" />
 		    <f:param name="modseqno" value="#{vmbean.seqNo}" />
           </h:commandLink>  
           
          <h:commandLink id="whatsNext2" action="#{listModulesPage.goWhatsNext}" immediate="true" rendered="#{((vmbean.visibleFlag != listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}">
-		  <h:outputText  id="whatsNextMsg2" value="#{msgs.list_modules_stud_next_steps}" styleClass="italics"></h:outputText>
+ 	        <h:outputText  id="whatsNextMsg2" value="#{msgs.list_modules_stud_next_steps}" styleClass="italics"/>
 		    <f:param name="modidx2" value="#{listModulesPage.modTable.rowIndex}" />
 		    <f:param name="modseqno" value="#{vmbean.seqNo}" />
           </h:commandLink>  
@@ -225,7 +227,7 @@ return newWindow;
         <tr>
         <td colspan="4">
          <h:graphicImage id="closed_gif" value="images/closed.gif" alt="" styleClass="ExpClass" rendered="#{listModulesPage.closedModulesFlag == listModulesPage.trueFlag}"/>
-         <h:outputText styleClass="style5" value="#{msgs.list_modules_inst_module_not_open}" rendered="#{listModulesPage.closedModulesFlag == listModulesPage.trueFlag}"/>
+         <h:outputText styleClass="style3" value="#{msgs.list_modules_inst_module_not_open}" rendered="#{listModulesPage.closedModulesFlag == listModulesPage.trueFlag}"/>
          </td>
          </tr>
         </table>

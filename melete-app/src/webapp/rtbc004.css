@@ -416,7 +416,7 @@ height: 16;  border: 0;
 vertical-align: middle;  align:center;  }
 
 .ExpClass			{ border: 0;}
-
+.NextStepsPaddingClass {padding:11.3px;}
 .ExtraPaddingClass {padding:8px;}
 .TwiceExtraPaddingClass {padding:18px;}
 .MorePaddingClass {padding:25px;}
