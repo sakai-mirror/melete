@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -104,7 +104,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 	     FacesContext context = FacesContext.getCurrentInstance();
      	 ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
      	 Map sessionMap = context.getExternalContext().getSessionMap();
-		
+
 	    // rashmi added validations start
 //     	validation
       	module.setTitle(module.getTitle().trim());
@@ -235,7 +235,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 
        return "addmodulesections";
     }
-    
+
     public String gotoTOC()
 	{
     	String errMsg = "";
@@ -245,7 +245,6 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
         	callFromAddContent = true;
         	if(!savehere().equals("failure"))
     		{
-        		System.out.println("NO problems saving");
         		callFromAddContent = false;
     		    setSuccess(true);
     		}
