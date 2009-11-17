@@ -659,7 +659,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	 public String addResourceItem(String name, String res_mime_type,String addCollId, byte[] secContentData, ResourcePropertiesEdit res ) throws Exception
 	{
 		 ContentResource resource = null;
-		// Variable displayName is to preserve the user provided name
+		// Variable displayName is to preserve the user provided name 
 		 String displayName = name;
 		 try
 		 {
@@ -668,12 +668,12 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		 catch(Exception e)
 		 {
 			 // if decode fails then use name as is
-			 // comment line below otherwise on uploading bad file name again through Manage display name changes to cat_-1.gif instead of cat%-1.gif
+			 // comment line below otherwise on uploading bad file name again through Manage display name changes to cat_-1.gif instead of cat%-1.gif 
 			 // and is moved out for name variable for creating resource url
 			// name = Validator.escapeResourceName(name);
 		 }
 		 String courseId = getCourseId(addCollId);
-
+		
 		// need to add notify logic here and set the arg6 accordingly.
 		try
  	    {
@@ -705,19 +705,19 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				}
 				resource = getContentservice().addResource(name, addCollId, MAXIMUM_ATTEMPTS_FOR_UNIQUENESS, res_mime_type, secContentData, res, 0);
 				 if (logger.isDebugEnabled()) logger.debug("IN addResourceItem "+displayName+" resourceId "+ resource.getId());
-
+				 
 				// check if its duplicate file and edit the resource name if it is
 				String checkDup = resource.getUrl().substring(resource.getUrl().lastIndexOf("/") + 1);
 				String numberStr = null;
 				if (addCollId.endsWith("uploads/")&&(!checkDup.equals(Validator.escapeResourceName(name))))
-				{
+				{	
 				   int lastDashIndex = checkDup.lastIndexOf("-");
-				   int lastDotIndex = checkDup.lastIndexOf(".");
+				   int lastDotIndex = checkDup.lastIndexOf(".");	
 				   if ((lastDashIndex != -1)&&(lastDotIndex != -1))
-				   {
+				   {	  
 				      numberStr = checkDup.substring(lastDashIndex, lastDotIndex);
 				      checkDup = checkDup.substring(0,lastDotIndex);
-				   }
+				   }  
 				}
 				ContentResourceEdit edit = null;
 				try
@@ -794,7 +794,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		}
 	     return resource.getId();
 	}
-
+		 
 	/*
 	 *  create a new display name with -1, -2 etc for duplicate resources
 	 */
@@ -809,10 +809,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 			base = name.substring(0, index);
 			ext = name.substring(index);
 		}
-		dupName = base+numberStr+ext;
+		dupName = base+numberStr+ext;	 	
 		return dupName;
-	}
-
+	}		 
+	 
 	public String getLinkContent(String resourceId)
 	{
 		ContentResourceEdit cr = null;
@@ -903,7 +903,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		 processed = processed.replaceAll("&lt;", "<");
 		 processed = processed.replaceAll("&gt;", ">");
 		 processed = processed.replaceAll("&quot;", "\"");
-
+		
 		 // if a browser sees a plus, it sends a plus (URLDecoder will change it to a space)
 		 processed = processed.replaceAll("\\+", "%2b");
 		 return processed;
@@ -933,7 +933,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		{
         			logger.debug("get resource fails while decoding " + resourceId);
         		}
-
+        		
         		return (getContentservice().getResource(resourceId));
 	    }
 		catch(Exception e)
@@ -963,7 +963,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		meleteSecurityService.pushAdvisor();
         		try
 				{
-        			// edit save for + sign files on upload type
+        			// edit save for + sign files on upload type 
         			resourceId = beforeDecode(resourceId);
         			resourceId = URLDecoder.decode(resourceId,"UTF-8");
 				} catch(Exception decodeEx)
@@ -1129,9 +1129,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		             // read data
 		             try{
 		            	 File re = null;
-		            	 if (uploadHomeDir != null && uploadHomeDir.length() > 0)
+		            	 if (uploadHomeDir != null && uploadHomeDir.length() > 0) 
 		            		 re = new File(uploadHomeDir+File.separator+fileName);
-		            	 else
+		            	 else 
 		            	 {
 		            		 logger.warn("Melete Upload directory property is not set. Please check.");
 		            		 break;
@@ -1597,7 +1597,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		    }
 		    return null;
 	  }
-
+	  
 	  public String getTypeEditorSectionName(Integer sectionId)
 	  {
 		  if (sectionId != null)
@@ -1614,7 +1614,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		  {
 			  return null;
 		  }
-	  }
+	  }	  
 
 	    /**
 	     * @return Returns the contentservice.
