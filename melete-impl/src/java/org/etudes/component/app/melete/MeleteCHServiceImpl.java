@@ -671,7 +671,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 			 // comment line below otherwise on uploading bad file name again through Manage display name changes to cat_-1.gif instead of cat%-1.gif 
 			 // and is moved out for name variable for creating resource url
 			// name = Validator.escapeResourceName(name);
-		 }
+		 }		
 		 String courseId = getCourseId(addCollId);
 		
 		// need to add notify logic here and set the arg6 accordingly.
@@ -1166,8 +1166,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		            Pattern pattern = Pattern.compile(patternStr);
 
 		            //Rashmi's change to fix infinite loop on uploading images
-		            contentEditor = meleteUtil.replace(contentEditor,patternStr,replaceStr);
-		            checkforimgs = meleteUtil.replace(checkforimgs,patternStr,replaceStr);
+		            contentEditor = meleteUtil.replacePath(contentEditor,patternStr,replaceStr);
+		            checkforimgs = meleteUtil.replacePath(checkforimgs,patternStr,replaceStr);
 		             }
 		             catch(FileNotFoundException ff)
 					 {
@@ -1207,8 +1207,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 							sectiondb.getMeleteResource(newEmbedResourceId);
 						}
 						String replaceStr = meleteUtil.replace(fileName, ServerConfigurationService.getServerUrl(), "");
-						contentEditor = meleteUtil.replace(contentEditor, patternStr, replaceStr);
-						checkforimgs = meleteUtil.replace(checkforimgs, patternStr, replaceStr);
+						contentEditor = meleteUtil.replacePath(contentEditor, patternStr, replaceStr);
+						checkforimgs = meleteUtil.replacePath(checkforimgs, patternStr, replaceStr);
 					}
 					// process links and append http:// protocol if not provided
 					else if (!(fileName.startsWith("/") || fileName.startsWith("./") || fileName.startsWith("../") || fileName.startsWith("#"))
@@ -1217,23 +1217,24 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 					{
 						logger.debug("processing embed link src for appending protocol");
 						String replaceLinkStr = "http://" + fileName;
-						contentEditor = meleteUtil.replace(contentEditor, fileName, replaceLinkStr);
-						checkforimgs = meleteUtil.replace(checkforimgs, fileName, replaceLinkStr);
+						contentEditor = meleteUtil.replacePath(contentEditor, fileName, replaceLinkStr);
+						checkforimgs = meleteUtil.replacePath(checkforimgs, fileName, replaceLinkStr);
 					}
 					// FCK editor word paste puts bad ../../..'s in the src so remove them
 					else if(fileName.startsWith("../") && fileName.indexOf("/access/") != -1)
 					{
 						logger.debug("paste in FCK puts extra ../..");
 						String replaceStr = fileName.substring(fileName.indexOf("/access/"));
-						contentEditor = meleteUtil.replace(contentEditor, fileName, replaceStr);
-						checkforimgs = meleteUtil.replace(checkforimgs, fileName, replaceStr);
+						contentEditor = meleteUtil.replacePath(contentEditor, fileName, replaceStr);
+						checkforimgs = meleteUtil.replacePath(checkforimgs, fileName, replaceStr);
 					}
 					// convert relative paths to full urls
 					else if(fileName.indexOf("://") == -1 && fileName.indexOf("/") == -1)
 					{
-						String replaceStr = "/access/meleteDocs/content" +UploadCollId + fileName;
-						contentEditor = meleteUtil.replace(contentEditor, fileName, replaceStr);
-						checkforimgs = meleteUtil.replace(checkforimgs, fileName, replaceStr);
+						String replaceStr = getResourceUrl(UploadCollId + fileName);
+						replaceStr = meleteUtil.replace(replaceStr, ServerConfigurationService.getServerUrl(), "");
+						contentEditor = meleteUtil.replacePath(contentEditor, fileName, replaceStr);
+						checkforimgs = meleteUtil.replacePath(checkforimgs, fileName, replaceStr);
 					}
 				}
 		            // iterate next
