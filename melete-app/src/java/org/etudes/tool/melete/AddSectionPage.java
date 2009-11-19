@@ -147,7 +147,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	  	// validation 4: check link url - moved to addresourcetoMeleteCollection()
 	  	 try
 		 {
-	 		if(!section.getContentType().equals("notype") && !section.getContentType().equals("typeEditor") && meleteResource.getResourceId() == null)
+	 		if(!section.getContentType().equals("notype") && !section.getContentType().equals("typeEditor") && ((meleteResource == null)||(meleteResource.getResourceId() == null)))
 	 		{
 	 			String errMsg = bundle.getString("section_content_required");
 				context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"section_content_required",errMsg));
