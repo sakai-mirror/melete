@@ -230,6 +230,11 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			if (resHrefAttr != null)
 			{
 				String hrefVal = resHrefAttr.getValue();
+				hrefVal = hrefVal.trim();
+				
+				//for old melete packages which don't have identifier starting with NEXTSTEPS 
+				if(hrefVal != null && hrefVal.indexOf("module_")!= -1 && hrefVal.endsWith("nextsteps.html"))continue;
+				
 				String melResourceName = null;
 				String melResourceDescription = null;
 				String contentType = "typeUpload";
