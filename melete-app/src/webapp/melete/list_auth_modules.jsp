@@ -206,7 +206,7 @@ if (msg != null)
 				     <h:dataTable id="table" 
                   value="#{listAuthModulesPage.moduleDateBeans}"
                   var="mdbean"   border="0"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListTitleClass,ListDateClass,ListDateClass,ListActionClass" 
-                  styleClass="maintabledata1"
+                  styleClass="maintabledata1" cellpadding="3" 
 				  width="100%" binding="#{listAuthModulesPage.table}" summary="#{msgs.list_auth_modules_summary}">
                       
     <h:column>
@@ -242,9 +242,7 @@ if (msg != null)
         <h:graphicImage id="col_gif" alt="#{msgs.list_auth_modules_authoring_collapse}" value="images/collapse.gif" rendered="#{(((mdbean.moduleId == listAuthModulesPage.showModuleId)&&(mdbean.sectionBeans != listAuthModulesPage.nullList))||((listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag)&&(mdbean.sectionBeans != listAuthModulesPage.nullList)))}" styleClass="ExpClass"/>
          <h:inputHidden id="moduleHideId" value="#{mdbean.moduleId}"/>
       </h:commandLink>    
-      <h:outputText id="emp_spacemod" value=" "/>
       <h:outputText id="mod_seq" value="#{mdbean.cmod.seqNo}. " />
-      <h:outputText id="emp_spacemod2" value=" "/>
       
       <h:commandLink id="editMod" actionListener="#{listAuthModulesPage.editModule}"  action="#{listAuthModulesPage.redirectToEditModule}">     
              <f:param name="modidx" value="#{listAuthModulesPage.table.rowIndex}" />
@@ -252,14 +250,12 @@ if (msg != null)
                </h:outputText>
       </h:commandLink>
       <h:dataTable id="tablesec" rendered="#{((mdbean.moduleId == listAuthModulesPage.showModuleId)||(listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag))}"
-                  value="#{mdbean.sectionBeans}"
+                  value="#{mdbean.sectionBeans}" cellpadding="4" 
                   var="sectionBean" columnClasses="SectionClass" rowClasses="#{mdbean.rowClasses}" width="95%" binding="#{listAuthModulesPage.secTable}" summary="#{msgs.list_auth_modules_sections_summary}">
                <h:column>
               <h:selectBooleanCheckbox value="#{sectionBean.selected}"  valueChangeListener="#{listAuthModulesPage.selectedSection}"/> 
-               <h:outputText id="emp_space" value=" "/>
                <h:outputText id="disp_seq" value="#{sectionBean.displaySequence}. " />
-               <h:outputText id="emp_space2" value=" "/>
-              
+                             
               <h:commandLink id="editSec" actionListener="#{listAuthModulesPage.editSection}"  action="#{listAuthModulesPage.redirectToEditSection}">
                 <f:param name="modidx" value="#{listAuthModulesPage.table.rowIndex}" />
                <f:param name="secidx" value="#{listAuthModulesPage.secTable.rowIndex}" />   
