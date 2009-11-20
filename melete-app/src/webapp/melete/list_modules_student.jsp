@@ -135,7 +135,7 @@ return newWindow;
           </h:dataTable>
           
           <h:outputText id="emp_space6_bul" value="  " styleClass="NextStepsPaddingClass"/>
-          <h:outputText id="next_seq" value="#{vmbean.nextStepsNumber}. " rendered="#{listModulesPage.autonumber}"/>
+          <h:outputText id="next_seq" value="#{vmbean.nextStepsNumber}. " rendered="#{listModulesPage.autonumber && vmbean.whatsNext != listModulesPage.isNull && listModulesPage.expandAllFlag == listModulesPage.trueFlag}"/>
           <h:graphicImage id="bul_gif1" value="images/bullet_black.gif" rendered="#{!listModulesPage.autonumber && vmbean.whatsNext != listModulesPage.isNull && listModulesPage.expandAllFlag == listModulesPage.trueFlag}" style="border:0"/>
           
           <h:commandLink id="whatsNext" action="#{listModulesPage.goWhatsNext}" immediate="true" rendered="#{((vmbean.visibleFlag == listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}">
