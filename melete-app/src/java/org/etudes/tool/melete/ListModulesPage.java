@@ -330,88 +330,66 @@ public class ListModulesPage implements Serializable{
 	        this.showModuleId = moduleId;
 	  }
 
-
-
-
-	  public String showSections() {
-	  	ViewModBean vmbean = null;
-	  	FacesContext ctx = FacesContext.getCurrentInstance();
-	  	 UIViewRoot root = ctx.getViewRoot();
-	        UIData table = null;
-	        if (getRole()!= null && getRole().equals("INSTRUCTOR")){
-	        table = (UIData)
-	            root.findComponent("listmodulesform").findComponent("table");
-	        }
-	        if (getRole()!= null && getRole().equals("STUDENT")){
-	        table = (UIData)
-            root.findComponent("listmodulesStudentform").findComponent("table");
-	        }
-
-	        ValueBinding binding =
-	            Util.getBinding("#{listModulesPage}");
-	        ListModulesPage lmPage = (ListModulesPage)
-	            binding.getValue(ctx);
-	        String retVal = "list_modules_student";
-	        if (getRole()!= null && getRole().equals("INSTRUCTOR")){
-	        	vmbean = (ViewModBean) table.getRowData();
-	        	lmPage.setShowModuleId(vmbean.getModuleId());
-	        	retVal = "list_modules_inst";
-	        }
-	        if (getRole()!= null && getRole().equals("STUDENT")) {
-	        	vmbean = (ViewModBean) table.getRowData();
-	        	lmPage.setShowModuleId(vmbean.getModuleId());
-	        }
-
-	  	return retVal;
-	  }
-
-	  public String hideSections() {
-	  	setShowModuleId(-1);
-        setExpandAllFlag(false);
-	  	String retVal = "list_modules_student";
-	  	 if (getRole()!= null && getRole().equals("INSTRUCTOR"))
-	    {
-	    	retVal = "list_modules_inst";
-	    }
-		  	return retVal;
-	  }
-
-     //Mallika - 6/7/06 - adding this method to expand all modules
-      public String expandAllAction() {
-	  	FacesContext ctx = FacesContext.getCurrentInstance();
-	  	       ValueBinding binding =
-	            Util.getBinding("#{listModulesPage}");
-	        ListModulesPage lmPage = (ListModulesPage)
-	            binding.getValue(ctx);
-            lmPage.setExpandAllFlag(true);
-        String retVal = "list_modules_student";
-        if (getRole()!= null && getRole().equals("INSTRUCTOR"))
-	    {
-	    	retVal = "list_modules_inst";
-	    }
-
-	   return retVal;
-	  }
-
-      public String collapseAllAction() {
-	  FacesContext ctx = FacesContext.getCurrentInstance();
-	  	       ValueBinding binding =
-	            Util.getBinding("#{listModulesPage}");
-	        ListModulesPage lmPage = (ListModulesPage)
-	            binding.getValue(ctx);
-            lmPage.setExpandAllFlag(false);
-	        lmPage.setShowModuleId(-1);
-
-	  	String retVal = "list_modules_student";
-	    if (getRole()!= null && getRole().equals("INSTRUCTOR"))
+	  public String showHideSections()
 		{
-		  retVal = "list_modules_inst";
+			if (getExpandAllFlag() == true)
+			{
+				setShowModuleId(-1);
+				setExpandAllFlag(false);
+			}
+			else
+			{
+				ViewModBean vmbean = null;
+				FacesContext ctx = FacesContext.getCurrentInstance();
+				UIViewRoot root = ctx.getViewRoot();
+			    UIData table = null;
+			    if (getRole()!= null && getRole().equals("INSTRUCTOR")){
+			       table = (UIData)
+			        root.findComponent("listmodulesform").findComponent("table");
+			    }
+			    if (getRole()!= null && getRole().equals("STUDENT")){
+			        table = (UIData)
+		            root.findComponent("listmodulesStudentform").findComponent("table");
+			     }
+		        vmbean = (ViewModBean) table.getRowData();
+		        if (getShowModuleId() != vmbean.getModuleId())
+				{	
+				   setShowModuleId(vmbean.getModuleId());
+				}
+				else
+				{
+					setShowModuleId(-1);
+					setExpandAllFlag(false);
+				}
+			}
+			String retVal = "list_modules_student";
+		   if (getRole()!= null && getRole().equals("INSTRUCTOR"))
+		    {
+		    	retVal = "list_modules_inst";
+		    }
+			  	return retVal;
 		}
 
-	  	return retVal;
-	  }
-	  //Mallika - new code end
-
+	  public String expandCollapseAction()
+		{
+			if (getExpandAllFlag() == false)
+			{		
+			  setExpandAllFlag(true);
+			}
+			else
+			{	
+			  setExpandAllFlag(false);
+			  setShowModuleId(-1);
+			}  
+			 String retVal = "list_modules_student";
+		    if (getRole()!= null && getRole().equals("INSTRUCTOR"))
+			{
+			   	retVal = "list_modules_inst";
+			}
+		   return retVal;	
+		}
+	  
+   
       public String redirectToViewModule()
 	  {
 	  	String retVal = "view_module_student";

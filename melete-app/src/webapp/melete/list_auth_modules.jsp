@@ -224,24 +224,19 @@ if (msg != null)
    <h:column>
  	<f:facet name="header">
  	 <h:panelGroup>
-      <h:commandLink id="expandAllAction" action="#{listAuthModulesPage.expandAllAction}" immediate="true">
+      <h:commandLink id="expandCollapseAction" action="#{listAuthModulesPage.expandCollapseAction}" immediate="true">
      	<h:graphicImage id="exp_all_gif" alt="#{msgs.list_auth_modules_authoring_expand_all}" title="#{msgs.list_auth_modules_authoring_expand}" value="images/expand-collapse.gif"   rendered="#{listAuthModulesPage.expandAllFlag != listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
-      </h:commandLink>
-      <h:commandLink id="collapseAllAction" action="#{listAuthModulesPage.collapseAllAction}" immediate="true">
         <h:graphicImage id="col_all_gif" alt="#{msgs.list_auth_modules_authoring_collapse_all}" title="#{msgs.list_auth_modules_authoring_collapse}" value="images/collapse-expand.gif"   rendered="#{listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
       </h:commandLink>  
       <h:outputText id="t2" value="#{msgs.list_auth_modules_title}" />
      </h:panelGroup>        
     </f:facet>
 					
-     <h:commandLink id="viewSections" action="#{listAuthModulesPage.showAuthSections}" immediate="true">
+     <h:commandLink id="showHideSections" action="#{listAuthModulesPage.showHideSections}" immediate="true">
         <h:graphicImage id="exp_gif" alt="#{msgs.list_auth_modules_authoring_expand}" value="images/expand.gif" rendered="#{((mdbean.moduleId != listAuthModulesPage.showModuleId)&&(mdbean.sectionBeans != listAuthModulesPage.nullList)&&(listAuthModulesPage.expandAllFlag != listAuthModulesPage.trueFlag))}" styleClass="ExpClass"/>
-        <h:inputHidden id="moduleShowId" value="#{mdbean.moduleId}"/>
-      </h:commandLink>  
-     <h:commandLink id="hideSections" action="#{listAuthModulesPage.hideAuthSections}" immediate="true">
         <h:graphicImage id="col_gif" alt="#{msgs.list_auth_modules_authoring_collapse}" value="images/collapse.gif" rendered="#{(((mdbean.moduleId == listAuthModulesPage.showModuleId)&&(mdbean.sectionBeans != listAuthModulesPage.nullList))||((listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag)&&(mdbean.sectionBeans != listAuthModulesPage.nullList)))}" styleClass="ExpClass"/>
-         <h:inputHidden id="moduleHideId" value="#{mdbean.moduleId}"/>
-      </h:commandLink>    
+     </h:commandLink>    
+     
       <h:outputText id="mod_seq" value="#{mdbean.cmod.seqNo}. " />
       
       <h:commandLink id="editMod" actionListener="#{listAuthModulesPage.editModule}"  action="#{listAuthModulesPage.redirectToEditModule}">     

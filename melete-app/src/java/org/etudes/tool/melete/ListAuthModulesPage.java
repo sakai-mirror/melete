@@ -518,57 +518,50 @@ public class ListAuthModulesPage implements Serializable
 		this.listSize = listSize;
 	}
 	
-	public String showAuthSections()
+	public String showHideSections()
 	{
 		resetSelectedLists();
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIViewRoot root = ctx.getViewRoot();
-		UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
-		ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
-		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
-		ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(ctx);
-
-		lamPage.setShowModuleId(mdbean.getModuleId());
-
+		if (getExpandAllFlag() == true)
+		{
+			setShowModuleId(-1);
+			setExpandAllFlag(false);
+		}
+		else
+		{
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			UIViewRoot root = ctx.getViewRoot();
+			UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
+			ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
+			if (getShowModuleId() != mdbean.getModuleId())
+			{	
+			   setShowModuleId(mdbean.getModuleId());
+			}
+			else
+			{
+				setShowModuleId(-1);
+				setExpandAllFlag(false);
+			}
+		}
 		return "list_auth_modules";
 	}
-
-	public String hideAuthSections()
+	
+	public String expandCollapseAction()
 	{
 		resetSelectedLists();
-		setShowModuleId(-1);
-		setExpandAllFlag(false);
-		return "list_auth_modules";
+	
+		if (getExpandAllFlag() == false)
+		{		
+		  setExpandAllFlag(true);
+		}
+		else
+		{	
+		  setExpandAllFlag(false);
+		  setShowModuleId(-1);
+		}  
+		return "list_auth_modules";		
 	}
-
-	// Mallika - 6/6/06 - adding this method to expand all modules
-	public String expandAllAction()
-	{
-
-		resetSelectedLists();
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
-		ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(ctx);
-
-		lamPage.setExpandAllFlag(true);
-
-		return "list_auth_modules";
-	}
-
-	public String collapseAllAction()
-	{
-		resetSelectedLists();
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
-		ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(ctx);
-		lamPage.setExpandAllFlag(false);
-		lamPage.setShowModuleId(-1);
-
-		return "list_auth_modules";
-	}
-
-	// Mallika - new code end
-
+	
+	
 	/*
 	 * Revised by Rashmi to include module number Revised by Rashmi to point to editmodulesections.jsp page instead of edit_section nav rule.
 	 */
