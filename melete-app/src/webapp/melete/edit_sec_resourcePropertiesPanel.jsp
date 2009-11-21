@@ -51,7 +51,7 @@
 				</h:panelGrid>
 
 
-    <f:subview id="EditLicenseForm" rendered="#{!editSectionPage.shouldRenderNotype}">
+    <f:subview id="LicenseForm" rendered="#{!editSectionPage.shouldRenderNotype}">
 		<h:panelGrid id="licproppanel" columns="1" width="100%">
 					<h:column>
 						  						<jsp:include page="licenseform.jsp"/>  

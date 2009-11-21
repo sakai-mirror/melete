@@ -410,7 +410,7 @@ public abstract class SectionPage implements Serializable {
      * @param contentEditor
      *
      */
-    public void setContentEditor(String contentEditor){
+    public void setContentEditor(String contentEditor){		
                     this.contentEditor = contentEditor;
             }
 
@@ -529,29 +529,34 @@ public abstract class SectionPage implements Serializable {
          	    lPage.setInitialValues(this.formName, mup);
             //}
             //The code below is required because the setter for the license code kicks in by default
-            //and we need to actually set the component with the values determined above.(ME-1071)
-            UIComponent licComp = (UIComponent)contentTypeRadio.findComponent(getFormName()).findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView");
-            UIInput uiInp = (UIInput)licComp.findComponent("licenseCodes");
-            uiInp.setValue(lPage.getLicenseCodes());
-            licComp = (UIComponent)contentTypeRadio.findComponent(getFormName()).findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("CCLicenseForm");
-            uiInp = (UIInput)licComp.findComponent("allowCmrcl");
-            uiInp.setValue(lPage.getAllowCmrcl());
-            uiInp = (UIInput)licComp.findComponent("allowMod");
-            uiInp.setValue(lPage.getAllowMod());
-            if (lPage.isShouldRenderCC())
-            {
-              uiInp = (UIInput)licComp.findComponent("copy_owner");
-              uiInp.setValue(lPage.getCopyright_owner());
-              uiInp = (UIInput)licComp.findComponent("copy_year");
-              uiInp.setValue(lPage.getCopyright_year());
-            }
-            if (lPage.isShouldRenderCopyright()||lPage.isShouldRenderPublicDomain()||lPage.isShouldRenderFairUse())
-            {
-              uiInp = (UIInput)licComp.findComponent("copy_owner1");
-              uiInp.setValue(lPage.getCopyright_owner());
-              uiInp = (UIInput)licComp.findComponent("copy_year1");
-              uiInp.setValue(lPage.getCopyright_year());
-            }
+            //and we need to actually set the component with the values determined above.(ME-1071)         	   
+            UIComponent licComp = (UIComponent)contentTypeRadio.findComponent(getFormName());
+            if(licComp != null && licComp.findComponent("ResourcePropertiesPanel") != null && licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm") != null
+            	&& licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView") != null)
+            	{
+            		licComp = licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView");
+            		UIInput uiInp = (UIInput)licComp.findComponent("licenseCodes");
+            		uiInp.setValue(lPage.getLicenseCodes());
+            		licComp = (UIComponent)contentTypeRadio.findComponent(getFormName()).findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("CCLicenseForm");
+            		uiInp = (UIInput)licComp.findComponent("allowCmrcl");
+            		uiInp.setValue(lPage.getAllowCmrcl());
+            		uiInp = (UIInput)licComp.findComponent("allowMod");
+            		uiInp.setValue(lPage.getAllowMod());
+            		if (lPage.isShouldRenderCC())
+            		{
+            			uiInp = (UIInput)licComp.findComponent("copy_owner");
+            			uiInp.setValue(lPage.getCopyright_owner());
+            			uiInp = (UIInput)licComp.findComponent("copy_year");
+            			uiInp.setValue(lPage.getCopyright_year());
+            		}
+            		if (lPage.isShouldRenderCopyright()||lPage.isShouldRenderPublicDomain()||lPage.isShouldRenderFairUse())
+            		{
+            			uiInp = (UIInput)licComp.findComponent("copy_owner1");
+            			uiInp.setValue(lPage.getCopyright_owner());
+            			uiInp = (UIInput)licComp.findComponent("copy_year1");
+            			uiInp.setValue(lPage.getCopyright_year());
+            		}
+            	}
     }
 
     /**
