@@ -22,80 +22,59 @@
  *
  **********************************************************************************/
  
-INSTRUCTIONS TO UPGRADE FROM MELETE 2.5 >> MELETE 2.6
+INSTRUCTIONS TO UPGRADE FROM MELETE 2.6 >> MELETE 2.7
 For a patched Sakai 2.3, patched Sakai 2.4, OR Sakai 2.5
 -----------------------------------------------------
 SETUP INSTRUCTIONS
-
-1. Patch Instructions
-2. Internationalize Messages (Optional)
-3. Compile Melete 
-4. Database Configuration
+1. Melete Settings in Sakai.properties
+2. Internationalize Messages
+3. Sferyx Configuration
+4. Compile Melete 
+5. Database Changes
 ---------------------------------
 
-1. Patch Instructions
-   a. Sakai 2.3.x Patch Instructions
-	** SKIP this step if you will run Melete with Sakai 2.4.**
+1. Melete Settings in Sakai.properties 
+	The upload Directory and packagingDir settings are moved from melete's web.xml file and are now read from sakai.properties.
+	melete.uploadDir=/var/uploads
+	melete.packagingDir =/var/melete/packagefiles
 	
-	If you are using Sakai 2.3, you need to execute a patch that enables Sakai
-	2.3 to run with Melete 2.6. The patch is at /patch/meletepatchsak23.sh.
-	
-	Instructions for running the patch are in /patch/patch-SAK2.3_for_melete.txt.
-   
-   b. Sakai 2.4.x Patch Instructions
-	** SKIP this step if you will run Melete with Sakai 2.3.**
-	
-	If you are using Sakai 2.4, you need to execute a patch that enables Sakai
-	2.4 to run with Melete 2.6. The patch is at /patch/meletepatchsak24.sh.
-	
-	Instructions for running the patch are in /patch/patch-SAK2.4_for_melete.txt.	
-	
-	NOTE: No patch is needed for Sakai 2.5
-
-2. Internationalize Messages (Optional)
-	If you want to run Melete in a different language than English, you need to update messages.properties of your language 
+2. Internationalize Messages 
+	If you are running Melete in a different language than English, you need to update messages.properties of your language 
 	under melete-app/src/bundle and under melete-impl/src/bundle.
+	Image buttons are no longer required and is read from messages.properties file as text.
 	   
-3. Compile Melete
-    At the command prompt, go to the melete source directory which you placed 
-	under sakai and run maven commands just like you did for sakai.
+3. Sferyx Configuration 
+	Sferyx applet is moved out of melete webapp and now lives in its own webapp.This is to simplify melete rollout process.
+		a. Download sferyx from https://source.sakaiproject.org/contrib/etudes/sferyx/trunk and place it under sakai source directory.
+		b. Place your purchased applet jar file under /sferyx. 
+		c. Copy the entire folder and place it in tomcat/webapps.
+		
+	NOTE: Make sure you configured melete.uploadDir setting in Step 1.
+		       
+4. Compile Melete
+    At the command prompt, go to the melete source directory which you placed under sakai and run maven commands just like you
+    did for sakai.
 	
-	3.1 Sakai 2.4 and previous versions
+	4.1 Sakai 2.4 and previous versions
 	
-	Note: Undeploy any previous Melete versions from your source before deploying Melete 2.6 as artifacts name has changed. 
+	Note: Undeploy any previous Melete versions from your source before deploying Melete 2.7 as artifacts name has changed. 
 	
 	To build(using Maven version 1), run 'maven sakai:build' and then to deploy 'maven sakai:deploy'
 	
 	(for more instructions, see section titled 'Sakai Maven Goals' in the 
 	"How we build Sakai Using Maven" document provided by Sakai lead developers)
 	
-	3.2 Sakai 2.5 and above versions
-	
-	NOTE: For Oracle, you will need to apply a patch to handle NULL values. This patch is located at /patch/2.6 melete oracle patch.txt
+	4.2 Sakai 2.5 and above versions
 	
 	To build and deploy(using Maven version 2), run 'mvn clean install sakai:deploy'
 	
 	Note: If you are using sakai version other than 2.5.0 before building change the version in pom.xml. The default version in pom.xml is <version>2.5.0</version>. Sakai version can be obtained from master/pom.xml from version element.
 
 	
-4. Database Configuration
-  
-	* Melete works with HSQLDB, Oracle or Mysql4.1 Database. The driver used is 
-	the MySql Connector/J 3.1.12 (same as Sakai). It has been tested just on Mysql, 
-	but it has been deployed successfully with Oracle at many universities. 
-	
-	* Melete shares the same database as Sakai's and adds a few tables to the database. 
-	
-	4.1. To setup the Melete tables: 
-	
-		a. You need to run the Melete upgrade script manually
-		Mysql Users: /components/src/sql/mysql/melete26_upgrade.sql
-		Oracle Users: /components/src/sql/oracle/melete26_upgrade.sql
-		
-		NOTE: a. Please make sure secondary index on user_id column of melete_user_preference table is created.
-			  Hibernate sometimes doesn't create it.
-		      b. We see duplicate indices created by hibernate on module_id column of melete_course_module and melete_module_shdates table.
-	         	section_id column of melete_section_resource table. please remove the duplicate keys. It will improve the performance.	   	
+5. Database Changes
+  	Few tables are modified. Either run upgrade script manually or turn auto_ddl ON.
+  	  Mysql Users: /components/src/sql/mysql/melete27_upgrade.sql
+	  Oracle Users: /components/src/sql/oracle/melete27_upgrade.sql		
 	
 	Start tomcat, make sure there are no errors in the logs.
 		

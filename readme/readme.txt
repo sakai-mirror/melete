@@ -22,7 +22,7 @@
  *
  **********************************************************************************/
  
-MELETE 2.6 SETUP INSTRUCTIONS
+MELETE 2.7 SETUP INSTRUCTIONS
 For a patched Sakai 2.3, patched Sakai 2.4, OR Sakai 2.5
 
 Melete is a lesson builder tool for Sakai (A.K.A. Modules). To work with Melete source, you need the same development environment as Sakai, essentially Java 1.4 and Maven 1.0.2.
@@ -45,43 +45,37 @@ SETUP INSTRUCTIONS
    a. Sakai 2.3.x Patch Instructions
 	** SKIP this step if you will run Melete with Sakai 2.4.**
 	
-	If you are using Sakai 2.3, you need to execute a patch that enables Sakai
-	2.3 to run with Melete 2.6. The patch is at /patch/meletepatchsak23.sh.
+	If you are using Sakai 2.3, you need to execute a patch that enables Sakai2.3 to run with Melete 2.7. The patch is at /patch/meletepatchsak23.sh.
 	
 	Instructions for running the patch are in /patch/patch-SAK2.3_for_melete.txt.
    
    b. Sakai 2.4.x Patch Instructions
 	** SKIP this step if you will run Melete with Sakai 2.3.**
 	
-	If you are using Sakai 2.4, you need to execute a patch that enables Sakai
-	2.4 to run with Melete 2.6. The patch is at /patch/meletepatchsak24.sh.
+	If you are using Sakai 2.4, you need to execute a patch that enables Sakai2.4 to run with Melete 2.7. The patch is at /patch/meletepatchsak24.sh.
 	
 	Instructions for running the patch are in /patch/patch-SAK2.4_for_melete.txt.	
 	
 	NOTE: No patch is needed for Sakai 2.5
 
 	
-2. Configuring Melete 2.6
+2. Configuring Melete 2.7
        
   2.1 Packagingdir settings
 	
 	The dependency files for the export process are in the /var/melete/packagefiles directory in the Melete source code.
-    Copy the /var directory and its contents into a directory. 
+    
+    	a. Copy the /var directory and its contents into a directory. 
 
-	Eg. If you are on unix/linux, and your packaging directory path is /var/melete/packagefiles, specify this in the following manner in web.xml
-               
-        <!-- Settings for packaging directory --> 
-        <context-param>
-		     <param-name>packagingdir</param-name>
-		     <param-value>/var/melete/packagefiles</param-value>
-	      </context-param>		    
-        
+	b. Configure melete.packagingDir setting in Sakai.properties 
+	   Eg. If you are on unix/linux, and your packaging directory path is /var/melete/packagefiles, specify in sakai.properties.
+     	   
+     	   melete.packagingDir =/var/melete/packagefiles        
 	      
   2.2 Upload size settings for IMS import file
 	
-	By setting this sakai property, system administrators can set a different file upload 
-	limit for Melete IMS CP import than the upload max limit for content files. If this 
-	property is not set, then melete assumes the max value as 50MB.
+	By setting this sakai property, system administrators can set a different file upload limit for Melete IMS CP import than the
+	upload max limit for content files. If this property is not set, then melete assumes max value as 50MB.
 
 	content.upload.ceiling=50
 
@@ -91,31 +85,17 @@ SETUP INSTRUCTIONS
 					   
   3.1 SFERYX SOURCE
 		a. Purchase a license and binary source for Sferyx (http://www.sferyx.com)
-		b. Add the purchased applet jar file under /melete-app/src/webapp. 
-		c. Change settings in melete web.xml for enabling uploads of embedded media
-			 *  Create a directory for enabling uploads of embedded media via the Sferyx editor.
+		b. Download sferyx from https://source.sakaiproject.org/contrib/etudes/sferyx/trunk and place it under sakai source directory.
+		c. Place the purchased applet jar file under /sferyx. 
+		d. Copy the entire folder and place it in tomcat/webapps.
+		e. Configure settings in sakai.properties for enabling uploads of embedded media
+			 * Create a directory for enabling uploads of embedded media via the Sferyx editor.
 			 * Make sure the owner and group of this directory is the same as that of the tomcat instances. 
-			 * Specify the absolute path to this directory in web.xml under the uploadDir 
-			 context-param settings *AND* under the Orielly filter's settings.
-
-				Eg. If you are on unix/linux, and your uploads directory is /var/uploads, 
-				specify this in the following manner in web.xml
+			 * Specify the absolute path to this directory in sakai.properties as melete.uploadDir 
+			   melete.uploadDir=/var/uploads
 				
-				<!--Context param area->
-				 <context-param>
-					 <param-name>uploadDir</param-name>
-					 <param-value>/var/uploads</param-value>
-				</context-param>
-				
-				<!-- Oreilly filter settings -->
-				 <init-param>
-						<param-name>uploadDir</param-name>
-						<param-value>/var/uploads</param-value>
-				</init-param>	      
-
  3.2. DEFAULT MELETE EDITOR 
-		 This is done by specifying the following property. For example, if the 
-		 default Melete editor is Sferyx,
+		 This is done by specifying the following property. For example, if default Melete editor is Sferyx,
 		
 			melete.wysiwyg.editor=Sferyx Editor
 		
@@ -140,12 +120,12 @@ SETUP INSTRUCTIONS
 	under melete-app/src/bundle and under melete-impl/src/bundle.
 	
 5. Compile Melete
-	 At the command prompt, go to the melete source directory which you placed 
-	under sakai and run maven commands just like you did for sakai.
+	 At the command prompt, go to the melete source directory which you placed under sakai and run maven commands just 
+	 like you did for sakai.
 	
 	5.1 Sakai 2.4 and previous versions
 	
-	Note: Undeploy any previous Melete versions from your source before deploying Melete 2.6 as artifacts name has changed. 
+	Note: Undeploy any previous Melete versions from your source before deploying Melete 2.7 as artifacts name has changed. 
 	
 	To build(using Maven version 1), run 'maven sakai:build' and then to deploy 'maven sakai:deploy'
 	
@@ -153,8 +133,6 @@ SETUP INSTRUCTIONS
 	"How we build Sakai Using Maven" document provided by Sakai lead developers)
 	
 	5.2 Sakai 2.5 and above versions
-	
-	NOTE: For Oracle, you will need to apply a patch to handle NULL values. This patch is located at /patch/2.6 melete oracle patch.txt
 	
 	To build and deploy(using Maven version 2), run 'mvn clean install sakai:deploy'
 	
@@ -172,7 +150,7 @@ SETUP INSTRUCTIONS
 	6.1 Set up the Melete tables: 
 	
 	You can either run the sql script manually; it is provided under
-	/components/src/sql/mysql/melete26.sql, 
+	/components/src/sql/mysql/melete27.sql, 
 	
 	OR
 	
