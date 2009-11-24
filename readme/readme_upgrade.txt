@@ -46,8 +46,8 @@ SETUP INSTRUCTIONS
 3. Sferyx Configuration 
 	Sferyx applet is moved out of melete webapp and now lives in its own webapp.This is to simplify melete rollout process.
 		a. Download sferyx from https://source.sakaiproject.org/contrib/etudes/sferyx/trunk and place it under sakai source directory.
-		b. Place your purchased applet jar file under /sferyx. 
-		c. Copy the entire folder and place it in tomcat/webapps.
+		b. Place your purchased applet jar file under /src/webapp/sferyx. 
+		c. Compile and deploy sferyx webapp using maven.
 		
 	NOTE: Make sure you configured melete.uploadDir setting in Step 1.
 		       

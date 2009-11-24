@@ -86,13 +86,15 @@ SETUP INSTRUCTIONS
   3.1 SFERYX SOURCE
 		a. Purchase a license and binary source for Sferyx (http://www.sferyx.com)
 		b. Download sferyx from https://source.sakaiproject.org/contrib/etudes/sferyx/trunk and place it under sakai source directory.
-		c. Place the purchased applet jar file under /sferyx. 
-		d. Copy the entire folder and place it in tomcat/webapps.
-		e. Configure settings in sakai.properties for enabling uploads of embedded media
+		c. Place the purchased applet jar file under /src/webapp/sferyx. 
+		d. Configure settings in sakai.properties for enabling uploads of embedded media
 			 * Create a directory for enabling uploads of embedded media via the Sferyx editor.
 			 * Make sure the owner and group of this directory is the same as that of the tomcat instances. 
 			 * Specify the absolute path to this directory in sakai.properties as melete.uploadDir 
 			   melete.uploadDir=/var/uploads
+		e. Compile and deploy sferyx webapp using maven.	
+		
+		NOTE: Make sure you configured melete.uploadDir setting in sakai.properties.	   
 				
  3.2. DEFAULT MELETE EDITOR 
 		 This is done by specifying the following property. For example, if default Melete editor is Sferyx,
