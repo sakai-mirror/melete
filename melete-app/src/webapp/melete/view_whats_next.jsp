@@ -25,7 +25,6 @@
 <html>
 <head>
 
-<link rel="stylesheet" href="rtbc004.css" type="text/css">
 <title>Melete - Modules: Author Student View</title>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">

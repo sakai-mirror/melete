@@ -26,7 +26,6 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@include file="accesscheck.jsp" %>
 
-<link rel="stylesheet" type="text/css" href="rtbc004.css"> 
 	   <h:panelGrid id="propertiesPanel" columns="1" width="100%" styleClass="maintabledata2">
 		<h:column>
 					<h:outputText id="propertiesPaneltxt" value="#{msgs.resources_proper_pan_properties}" />

@@ -39,7 +39,6 @@
 	
 %>
 
-<LINK href="rtbc004.css" type=text/css rel=stylesheet />
 <title>Melete - Add Module</title>
 
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>

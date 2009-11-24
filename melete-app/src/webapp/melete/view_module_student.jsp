@@ -25,8 +25,6 @@
 <html>
 <head>
 
-<link rel="stylesheet" href="rtbc004.css" type="text/css">
-
 <title>Melete - View Module</title>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -34,7 +32,6 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <link href="/library/skin/tool_base.css" type="text/css" rel="stylesheet" media="all" />
 <link href="/library/skin/default/tool.css" type="text/css" rel="stylesheet" media="all" />
-<link href="rtbc004.css" type="text/css" rel="stylesheet" media="all" />
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <script type="text/javascript" language="javascript">
 function OpenPrintWindow(print_id, windowName)

@@ -33,7 +33,6 @@
 <meta name="description" content="ETUDES-NG Course Management System, Powered by Sakai">
 <meta name="keywords" content="ETUDES-NG course management system, e-learning">
 
-<link rel="stylesheet" type="text/css" href="rtbc004.css">
 <title>Melete - Sort Sections</title>
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <script language="javascript">

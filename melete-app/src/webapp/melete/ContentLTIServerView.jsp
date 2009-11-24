@@ -54,6 +54,10 @@ function contentChangeSubmit()
 				<td width="1962">
         		<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
           			<tr><td width="100%" height="20" bordercolor="#E2E4E8">
+          			<!-- top nav bar -->
+		                <f:subview id="top">
+			              <jsp:include page="topnavbar.jsp"/> 
+		                </f:subview>
 					<div class="meletePortletToolBarMessage"><img src="images/replace2.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.editcontentlinkserverview_selecting}"/></div>
 				</td></tr>
 				 <tr><td>

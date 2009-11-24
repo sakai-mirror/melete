@@ -23,9 +23,6 @@
  **********************************************************************************
 -->
 <html>
-<head>
-
-<link rel="stylesheet" href="rtbc004.css" type="text/css">
 
 <title>Melete - View Module</title>
 <head>

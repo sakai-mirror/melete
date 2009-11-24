@@ -32,7 +32,6 @@
 <meta name="description" content="ETUDES-NG Course Management System, Powered by Sakai">
 <meta name="keywords" content="ETUDES-NG course management system, e-learning">
 
-<link rel="stylesheet" type="text/css" href="rtbc004.css">
 <title>Melete - Sort Modules</title>
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 </head>
@@ -120,6 +119,9 @@
 				</td>
 		  	</tr>
 		</table>
+		</td>
+		</tr>
+</table>		
 </h:form>
 <!-- This Ends the Main Text Area -->
 </body>

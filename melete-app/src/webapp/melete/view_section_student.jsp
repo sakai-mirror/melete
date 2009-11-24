@@ -31,7 +31,6 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <link href="/library/skin/tool_base.css" type="text/css" rel="stylesheet" media="all" />
 <link href="/library/skin/default/tool.css" type="text/css" rel="stylesheet" media="all" />
-<link href="rtbc004.css" type="text/css" rel="stylesheet" media="all" />
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 </head>
 <f:view>

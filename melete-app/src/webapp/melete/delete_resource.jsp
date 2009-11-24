@@ -35,7 +35,7 @@
 
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <!-- End code to put in head section for image pre-loading. -->
-<link rel="stylesheet" href="rtbc004.css" type="text/css">
+
 <title>Melete - Delete Resource</title>
 </head>
 <f:view>

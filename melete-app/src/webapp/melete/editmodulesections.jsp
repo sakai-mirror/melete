@@ -38,7 +38,6 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <%@include file="accesscheck.jsp" %>
 
-<link rel="stylesheet" type="text/css" href="rtbc004.css">
 <%@ page import="org.sakaiproject.util.ResourceLoader"%>
 
 <% 

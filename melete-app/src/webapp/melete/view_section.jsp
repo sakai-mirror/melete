@@ -30,7 +30,6 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
-<link rel="stylesheet" href="rtbc004.css" type="text/css">
 </head>
 
 <f:view>
