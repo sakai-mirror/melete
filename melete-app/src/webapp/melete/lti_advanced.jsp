@@ -20,7 +20,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@include file="accesscheck.jsp" %>
-<h:panelGrid width="77%" border="0" columns="2">											
+<h:panelGrid width="77%" border="0" columns="2" columnClasses="valignStyle9,valignStyle9">											
 <h:column>
 	<h:outputText id="addLTITitle" value="#{msgs.addmodulesections_lti_item_title}" />
 	<h:outputText value="  "/>

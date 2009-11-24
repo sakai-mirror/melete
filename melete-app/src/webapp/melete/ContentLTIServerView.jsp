@@ -66,7 +66,7 @@ function contentChangeSubmit()
 				<tr><td height="20" colspan="2"> <h:outputText id="Stext_add" value="#{msgs.editcontentltiserverview_replace}" styleClass="bold"/> </td></tr>	 
 <!--replace with new link part Begin -->
 				<tr><td>
-					<table width="60%" border="0" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >
+					<table width="59%" border="0" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >
 					 <tr> <td><h:outputText id="format_text" value="#{msgs.editcontentltiserverview_format}"/>
 					 	</td>
 					 	<td>						  

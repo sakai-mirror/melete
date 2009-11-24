@@ -20,7 +20,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@include file="accesscheck.jsp" %>
-<h:panelGrid width="65%" border="0" columns="2">											
+<h:panelGrid width="80%" border="0" columns="2">											
 <h:column>
 	<h:outputText id="editLTIBasic1" value="#{msgs.addmodulesections_lti_url}" />
 	<h:outputText value="  "/>

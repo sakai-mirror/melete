@@ -58,15 +58,16 @@ function contentChangeSubmit()
 					<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 				</td></tr>
 				<tr><td>
-  					 <h:outputText id="Stext_2" value="#{msgs.editcontentlinkserverview_msg1}"/> 
+  					 <h:outputText id="Stext_2" value="#{msgs.editcontentlinkserverview_msg1}"/>
+  				</td></tr>
+  				<tr><td colspan="2"> &nbsp; </td></tr>						
+				<tr><td height="20" colspan="2"> <h:outputText id="Stext_add" value="#{msgs.editcontentltiserverview_replace}" styleClass="bold"/> </td></tr>									 
+						  
 <!--replace with new link part Begin -->
-					<table width="100%" border="0" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >
-					<tr><td colspan="2"> &nbsp; </td></tr>						
-					<tr><td height="20" colspan="2" class="maintabledata8"> <h:outputText id="Stext_add" value="#{msgs.editcontentltiserverview_replace}" styleClass="bold"/> 									 
-					
+					<table width="59%" border="0" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >
 					<tr> <td><h:outputText id="format_text" value="#{msgs.editcontentltiserverview_format}"/>
 					</td>
-                    <td align="left">
+                    <td>
                             <h:inputHidden id="contentChange" value=""/>
                             <h:selectOneMenu id="LTIDisplay" value="#{editSectionPage.LTIDisplay}" 
                                     valueChangeListener="#{editSectionPage.toggleLTIDisplay}" 
@@ -88,21 +89,20 @@ function contentChangeSubmit()
 							<h:outputText id="editLTIText_8" value="#{msgs.editcontentlinkserverview_openwindow}" />	
 					</td></tr>	
 					</table> </td></tr>       
-					<tr><td colspan="2">
+					<tr><td>
 						<div class="actionBar" align="left">
 							 <h:commandButton id="addButton_1" action="#{editSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
 					     	<h:commandButton id="cancelButton_1" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>		
 						</div></td></tr>
 	<!-- new link end -->				            		
-					<tr><td>
-	<!-- start main -->
+						<!-- start main -->
 				            <tr><td width="100%" valign="top" align="center">
 						
 									<f:subview id="ResourceListingForm" >
 										<jsp:include page="list_resources.jsp"/> 
 									</f:subview>		
 					     </td></tr>
-			                     <tr><td  colspan="2">
+			                     <tr><td>
 			                     <div class="actionBar" align="left">
 						 			 <h:commandButton id="addButton" action="#{editSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
 					    			 <h:commandButton id="cancelButton" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
