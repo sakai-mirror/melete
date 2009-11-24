@@ -20,7 +20,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@include file="accesscheck.jsp" %>
-<h:panelGrid width="65%" border="0" columns="2">											
+<h:panelGrid width="77%" border="0" columns="2">											
 <h:column>
 	<h:outputText id="addLTITitle" value="#{msgs.addmodulesections_lti_item_title}" />
 	<h:outputText value="  "/>
@@ -30,13 +30,11 @@
 	<h:inputText id="LTI_title" value="#{addSectionPage.newURLTitle}" size="40" />
 </h:column>
 <h:column>
-	<h:outputText id="addLTIText_9" value="#{msgs.addmodulesections_lti_descriptor}" styleClass="valignStyle9"/>
-	<h:outputText value="  " styleClass="valignStyle9"/>
-	<h:outputText value="*" styleClass="required,valignStyle9" />
-</h:column>
-<h:column/>
-<h:column/>
+	<h:outputText id="addLTIText_9" value="#{msgs.addmodulesections_lti_descriptor_1}" />	
+	<h:outputText value="*" styleClass="required" />
+</h:column>	
 <h:column>
 	<h:inputTextarea id="LTI_descriptor" value="#{addSectionPage.LTIDescriptor}" cols="60" rows="20" /> 
 </h:column>
 </h:panelGrid>
+<h:outputText id="addLTIText_9-1" value="#{msgs.addmodulesections_lti_descriptor_2}" styleClass="italics"/>

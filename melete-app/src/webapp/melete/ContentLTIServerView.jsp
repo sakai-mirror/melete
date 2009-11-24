@@ -61,14 +61,15 @@ function contentChangeSubmit()
 				</td></tr>
 				<tr><td>
   					 <h:outputText id="Stext_2" value="#{msgs.editcontentlinkserverview_msg1}"/> 
+  				</td></tr>
+  				<tr><td> &nbsp; </td></tr>						
+				<tr><td height="20" colspan="2"> <h:outputText id="Stext_add" value="#{msgs.editcontentltiserverview_replace}" styleClass="bold"/> </td></tr>	 
 <!--replace with new link part Begin -->
-					<table width="100%" border="0" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >
-					<tr><td colspan="2"> &nbsp; </td></tr>						
-					<tr><td height="20" colspan="2" class="maintabledata8"> <h:outputText id="Stext_add" value="#{msgs.editcontentltiserverview_replace}" styleClass="bold"/> 									 
+				<tr><td>
+					<table width="60%" border="0" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >
 					 <tr> <td><h:outputText id="format_text" value="#{msgs.editcontentltiserverview_format}"/>
 					 	</td>
-					 	<td align="left">
-						<h:inputHidden id="contentChange" value=""/>  
+					 	<td>						  
 						<h:selectOneMenu id="LTIDisplay" value="#{addSectionPage.LTIDisplay}" 
 							valueChangeListener="#{addSectionPage.toggleLTIDisplay}" 
 							onchange="contentChangeSubmit();this.form.submit();" 
@@ -76,38 +77,39 @@ function contentChangeSubmit()
 						<f:selectItem itemValue="Basic" itemLabel="#{msgs.addmodulesections_basic_lti}"/>
 						<f:selectItem itemValue="Advanced" itemLabel="#{msgs.addmodulesections_advanced_lti}"/>
 						</h:selectOneMenu>
+						<h:inputHidden id="contentChange" value=""/>
 					</td></tr>
-					                          
+					                         
 						<f:subview id="LTIBasic" rendered="#{addSectionPage.shouldLTIDisplayBasic}">
 							<jsp:include page="lti_basic.jsp"/>
-						</f:subview>                                                                  
+						</f:subview> 
+						                                                                 
 						<f:subview id="LTIAdvanced" rendered="#{addSectionPage.shouldLTIDisplayAdvanced}">
 							<jsp:include page="lti_advanced.jsp"/>
 						</f:subview>
-										
+								
 					 <tr><td colspan="2"> <h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{addSectionPage.section.openWindow}" />												
 						<h:outputText id="editLTIText_8" value="#{msgs.editcontentlinkserverview_openwindow}" /> </td></tr>	
 					</table> 
 					</td></tr>       
-					     <tr><td  colspan="2">
+					     <tr><td>
 					     	<div class="actionBar" align="left">
 					     	 <h:commandButton id="addButton_1" action="#{addSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
 						     <h:commandButton id="cancelButton_1" immediate="true" action="#{addSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
 				 	    	</div>
 					    </td></tr>
 	<!-- new link end -->
-					<tr><td>
+					
 	<!-- start main -->
-				            <tr><td width="100%" valign="top" align="center">
-						
-									<f:subview id="ResourceListingForm" >	
-										<jsp:include page="list_resources.jsp"/> 
-									</f:subview>		
-								
-		             	            </td></tr>
-			             	</table>
-				</td></tr>
-				<tr><td  colspan="2">
+			            <tr><td width="100%" valign="top" align="center">
+					
+								<f:subview id="ResourceListingForm" >	
+									<jsp:include page="list_resources.jsp"/> 
+								</f:subview>		
+							
+	             	            </td></tr>
+			             	
+				<tr><td>
 				  <div class="actionBar" align="left">
 		     	     <h:commandButton id="addButton" action="#{addSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
 			 	     <h:commandButton id="cancelButton" immediate="true" action="#{addSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>	
