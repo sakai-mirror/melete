@@ -93,15 +93,18 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 
 	private MeleteCHService meleteCHService;
 
-	private ArrayList remoteFiles = null;
+	private ArrayList<RemoteBrowserFile> remoteFiles = null;
 
-	private ArrayList remoteLinkFiles = null;
-
+	private ArrayList<RemoteBrowserFile> remoteLinkFiles = null;
+	
+	private String displayName;
+	
 	public RemoteBrowserFile()
 	{
 		this.fileName = null;
 		this.size = 0;
 		this.modifiedDate = null;
+		this.displayName = null;
 	}
 
 	public RemoteBrowserFile(String filename, long sz, long mdate)
@@ -109,6 +112,7 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 		this.fileName = filename;
 		this.size = sz;
 		this.modifiedDate = new Date(mdate);
+		this.displayName = filename;
 	}
 
 	public RemoteBrowserFile(String filename, long sz)
@@ -116,6 +120,15 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 		this.fileName = filename;
 		this.size = sz;
 		this.modifiedDate = new Date();
+		this.displayName = filename;
+	}
+	
+	public RemoteBrowserFile(String filename, long sz, String displayname)
+	{
+		this.fileName = filename;
+		this.size = sz;
+		this.modifiedDate = new Date();
+		this.displayName = displayname;
 	}
 
 	public int compareTo(RemoteBrowserFile n)
@@ -154,6 +167,14 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 		this.modifiedDate = modifiedDate;
 	}
 
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
 	/**
 	 * @return remote directory location
 	 */
@@ -174,7 +195,7 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 	/*
 	 * new method to get files from collection
 	 */
-	public List getRemoteBrowserFiles()
+	public List<RemoteBrowserFile> getRemoteBrowserFiles()
 	{
 		if (remoteFiles == null)
 		{
@@ -190,8 +211,11 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 				while (allmembers_iter != null && allmembers_iter.hasNext())
 				{
 					ContentResource cr = (ContentResource) allmembers_iter.next();
-					String displayName = getMeleteCHService().getResourceUrl(cr.getId()).replaceFirst(serverConfigurationService.getServerUrl(), "");
-					RemoteBrowserFile ob = new RemoteBrowserFile(displayName.substring(displayName.lastIndexOf("/")+1), cr.getContentLength());
+					String fileUrl = getMeleteCHService().getResourceUrl(cr.getId());
+					fileUrl = fileUrl.substring(fileUrl.lastIndexOf("/")+1);
+					String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
+					RemoteBrowserFile ob = new RemoteBrowserFile(fileUrl, cr.getContentLength(),displayName);
+					//RemoteBrowserFile ob = new RemoteBrowserFile(fileUrl.substring(fileUrl.lastIndexOf("/")+1), cr.getContentLength());
 					remoteFiles.add(ob);
 				}
 				java.util.Collections.sort(remoteFiles);
@@ -207,11 +231,11 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 	/*
 	 * new method to get links from collection
 	 */
-	public List getRemoteBrowserLinkFiles()
+	public List<RemoteBrowserFile> getRemoteBrowserLinkFiles()
 	{
 		if (remoteLinkFiles == null)
 		{
-			remoteLinkFiles = new ArrayList();
+			remoteLinkFiles = new ArrayList<RemoteBrowserFile>();
 			try
 			{
 				// 1. get upload collection
@@ -225,8 +249,11 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 				while (allmembers_iter != null && allmembers_iter.hasNext())
 				{
 					ContentResource cr = (ContentResource) allmembers_iter.next();
-					String displayName = getMeleteCHService().getResourceUrl(cr.getId()).replaceFirst(serverConfigurationService.getServerUrl(), "");
-					RemoteBrowserFile ob = new RemoteBrowserFile(displayName.substring(displayName.lastIndexOf("/")+1), cr.getContentLength());
+					String fileUrl = getMeleteCHService().getResourceUrl(cr.getId());
+					fileUrl = fileUrl.substring(fileUrl.lastIndexOf("/")+1);
+					String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
+					RemoteBrowserFile ob = new RemoteBrowserFile(fileUrl, cr.getContentLength(),displayName);
+					//RemoteBrowserFile ob = new RemoteBrowserFile(fileUrl.substring(fileUrl.lastIndexOf("/")+1), cr.getContentLength());
 					remoteLinkFiles.add(ob);
 				}
 				java.util.Collections.sort(remoteLinkFiles);
@@ -275,7 +302,7 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 	 * @param remoteFiles
 	 *        The remoteFiles to set.
 	 */
-	public void setRemoteFiles(ArrayList remoteFiles)
+	public void setRemoteFiles(ArrayList<RemoteBrowserFile> remoteFiles)
 	{
 		this.remoteFiles = remoteFiles;
 	}
@@ -284,7 +311,7 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 	 * @param remoteLinkFiles
 	 *        The remoteLinkFiles to set.
 	 */
-	public void setRemoteLinkFiles(ArrayList remoteLinkFiles)
+	public void setRemoteLinkFiles(ArrayList<RemoteBrowserFile> remoteLinkFiles)
 	{
 		this.remoteLinkFiles = remoteLinkFiles;
 	}

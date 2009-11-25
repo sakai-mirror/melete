@@ -22,26 +22,30 @@
  *
  **********************************************************************************
 -->
-<%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
-<%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@include file="accesscheck.jsp" %>
+<%@ page import="java.util.*,org.etudes.tool.melete.RemoteBrowserFile,javax.faces.application.FacesMessage"%>
+<% 
+	final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
+	final RemoteBrowserFile rPage = (RemoteBrowserFile)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "remoteBrowserFile");
+	List<RemoteBrowserFile> files = rPage.getRemoteBrowserLinkFiles();
+	%>
 
 <body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0">
-<f:view>
-<h:form id="remotelinkform">
-<table border="0" width="100%">
-<tr><td>
-	<h:dataTable id="table1"  value="#{remoteBrowserFile.remoteBrowserLinkFiles}" var="rbf" width="100%">
-		<h:column>
-            <h:commandButton id="head1" value="#{rbf.fileName}" ></h:commandButton>
-		</h:column>
-		<h:column>
-           <h:outputText id="head2" value="#{rbf.size}" ></h:outputText>
-		</h:column>	
-	</h:dataTable>
-	</td></tr>
-</table>	
-</h:form>
-</f:view>
+<form id="remotelinkform">
+	<table>
+	<%
+	if(files != null)
+		for(RemoteBrowserFile robj: files)
+		{	
+		%>
+		<tr><td>
+		<input type="submit" name="anyName" value="<%=robj.getFileName()%>" displaylabel="<%=robj.getDisplayName()%>" />
+		</td></tr>
+		<%
+		}
+	%>
+	</table>
+</form>
+
 </body>
 
