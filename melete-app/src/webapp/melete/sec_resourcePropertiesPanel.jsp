@@ -28,7 +28,7 @@
 
 	   <h:panelGrid id="propertiesPanel" columns="1" width="100%" styleClass="maintabledata2">
 		<h:column>
-					<h:outputText id="propertiesPaneltxt" value="#{msgs.resources_proper_pan_properties}" />
+					<h:outputText id="propertiesPaneltxt" value="#{msgs.editsec_resources_proper_pan_properties}" />					
 					<h:outputText id="propertiesPaneltxt1" value="#{addSectionPage.secResourceName}" />
 		</h:column>
 	</h:panelGrid>
