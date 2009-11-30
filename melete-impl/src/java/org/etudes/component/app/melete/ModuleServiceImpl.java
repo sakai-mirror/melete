@@ -538,6 +538,10 @@ public void restoreModules(List modules, String courseId) throws Exception
 			return noOfDeleted;
 		}
 
+		public int getCourseModuleSize(String courseId)
+		{
+			return moduledb.getCourseModuleSize(courseId);
+		}
 	/**
 	 * @return Returns the moduledb.
 	 */

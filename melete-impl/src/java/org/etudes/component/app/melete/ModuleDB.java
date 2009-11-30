@@ -953,6 +953,35 @@ public class ModuleDB implements Serializable {
 		    return modList;
 		  }
 
+	 public int getCourseModuleSize(String courseId)
+	 {
+		 Integer size=new Integer(0);
+	  	try
+		{
+	      Session session = hibernateUtil.currentSession();
+	      String queryString =  "select count(*) from CourseModule as cmod where cmod.courseId = :courseId and cmod.archvFlag = 0 and cmod.deleteFlag = 0";
+	      Query query = session.createQuery(queryString);
+	      query.setParameter("courseId", courseId);
+	      size = (Integer)query.uniqueResult();
+	    }
+	    catch (HibernateException he)
+	    {
+		  logger.error(he.toString());
+	    }
+	    finally
+		{
+	    	try
+			  {
+		      	hibernateUtil.closeSession();
+			  }
+		      catch (HibernateException he)
+			  {
+				  logger.error(he.toString());
+			  }
+		}
+	    return size.intValue();
+	 }	 
+	 
 //
 	 public ModuleDateBean getModuleDateBean(String userId, String courseId,  int moduleId) throws HibernateException {
 	 	List modList = new ArrayList();

@@ -95,4 +95,6 @@ public interface ModuleService{
 	public String printModule(ModuleObjService module) throws MeleteException;
 
 	public int cleanUpDeletedModules() throws Exception;
+	
+	public int getCourseModuleSize(String courseId);
 }

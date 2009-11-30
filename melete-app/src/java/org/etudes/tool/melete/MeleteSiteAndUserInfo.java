@@ -31,6 +31,7 @@ import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.context.FacesContext;
 import javax.faces.application.FacesMessage;
+import javax.faces.el.ValueBinding;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -252,8 +253,11 @@ public class MeleteSiteAndUserInfo {
 		try{
 		populateMeleteSession();
 
-		if (isSuperUser()) return "list_auth_modules";
-		if (isUserAuthor()) return "list_auth_modules";
+		if (isSuperUser() || isUserAuthor()) 
+		{
+			setPage("INSTRUCTOR");
+			return "list_auth_modules";
+		}
 		if (isUserStudent()) return "list_modules_student";
 
 		} catch (Exception e) {
@@ -264,7 +268,19 @@ public class MeleteSiteAndUserInfo {
 		return "list_modules_student";
 	}
 
-
+	private void setPage(String role)
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		int sz = moduleService.getCourseModuleSize(getCurrentSiteId());
+		if(role.equals("INSTRUCTOR"))
+		{			
+			ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+			ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(ctx);
+			if (sz > 0)	listPage.setNomodsFlag(true);
+			else listPage.setNomodsFlag(false);
+		}
+	}
+	
 	/**
 	 * gets the season and year of the term
 	 * @return season and year
