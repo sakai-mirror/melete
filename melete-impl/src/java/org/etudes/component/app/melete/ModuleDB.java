@@ -411,12 +411,14 @@ public class ModuleDB implements Serializable {
 				  if (startEventId == null)
 				  {	  
 				    logger.debug("ADDING start event for non-null start date");
-				    startEventId = createCalendarEvent(c, startDate, "Opens: "+module1.getTitle(), "This module opens today and closes "+endDate.toString());
+				    String desc = endDate != null ? "This module opens today and closes "+endDate.toString():"This module opens today";
+				    startEventId = createCalendarEvent(c, startDate, "Opens: "+module1.getTitle(), desc);
 				  }
 				  else
 				  {
 					  logger.debug("UPDATING start event for non-nul start date");
-					  updateCalendarEvent(c, startEventId, startDate);
+					  String desc = endDate != null ? "This module opens today and closes "+endDate.toString():"This module opens today";
+					  updateCalendarEvent(c, startEventId, startDate, desc);
 				  }
 				  moduleshdates1.setStartEventId(startEventId);
 				}
@@ -434,12 +436,14 @@ public class ModuleDB implements Serializable {
 				  if (endEventId == null)
 				  {		
 					logger.debug("ADDING end event for non-null end date");
-					endEventId = createCalendarEvent(c, endDate, "Closes: "+module1.getTitle(), "This module closes today");			   
+					String desc = "This module closes today";
+					endEventId = createCalendarEvent(c, endDate, "Closes: "+module1.getTitle(), desc);			   
 				  } 
 				  else
 				  {
 					  logger.debug("UPDATING end event for non-null end date");
-					  updateCalendarEvent(c, endEventId, endDate);
+					  String desc = "This module closes today";
+					  updateCalendarEvent(c, endEventId, endDate, desc);
 				  }
 				  moduleshdates1.setEndEventId(endEventId);
 				}
@@ -490,17 +494,18 @@ public class ModuleDB implements Serializable {
 		       if (eEvent != null)
 			   {
 				 eventId = eEvent.getId();
-			   }
+			   }      
 		return eventId;       
 	}
 	
 	
-	private void updateCalendarEvent(org.sakaiproject.calendar.api.Calendar c,String eventId, Date eventDate) throws Exception
+	private void updateCalendarEvent(org.sakaiproject.calendar.api.Calendar c,String eventId, Date eventDate, String description) throws Exception
 	{
 		 CalendarEventEdit evEdit = c.getEditEvent(eventId, "Deadline");
 		  if (evEdit != null)
 		  {
 			  evEdit.setRange(TimeService.newTimeRange(eventDate.getTime(),0));
+			  evEdit.setDescription(description);
 			  c.commitEvent(evEdit);
 		  }
 	}
