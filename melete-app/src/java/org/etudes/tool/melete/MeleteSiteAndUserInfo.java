@@ -258,7 +258,11 @@ public class MeleteSiteAndUserInfo {
 			setPage("INSTRUCTOR");
 			return "list_auth_modules";
 		}
-		if (isUserStudent()) return "list_modules_student";
+		if (isUserStudent()) 
+		{
+			setPage("STUDENT");
+			return "list_modules_student";
+		}
 
 		} catch (Exception e) {
 			String errMsg = bundle.getString("auth_failed");
@@ -272,11 +276,19 @@ public class MeleteSiteAndUserInfo {
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		int sz = moduleService.getCourseModuleSize(getCurrentSiteId());
+		
 		if(role.equals("INSTRUCTOR"))
 		{			
 			ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
 			ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(ctx);
-			if (sz > 0)	listPage.setNomodsFlag(true);
+			if (sz <= 0)listPage.setNomodsFlag(true);
+			else listPage.setNomodsFlag(false);
+		}
+		else if(role.equals("STUDENT"))
+		{			
+			ValueBinding binding = Util.getBinding("#{listModulesPage}");
+			ListModulesPage listPage = (ListModulesPage) binding.getValue(ctx);
+			if (sz <= 0)listPage.setNomodsFlag(true);
 			else listPage.setNomodsFlag(false);
 		}
 	}
