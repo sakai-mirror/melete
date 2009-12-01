@@ -510,7 +510,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 				endSrc = ((Integer)embedData.get(2)).intValue();
 				checkLink = (String)embedData.get(3);
 			}
-			if (endSrc <= 0) break;
+			if (endSrc <= 0 || endSrc > checkforimgs.length()) break;
 
 			imgSrcPath = checkforimgs.substring(startSrc, endSrc);
 			if (imgSrcPath == null || imgSrcPath.length() == 0)
