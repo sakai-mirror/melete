@@ -339,7 +339,10 @@ public List getViewModules(String userId, String courseId) {
 
  }
 
-
+public boolean checkCalendar()
+{
+	return moduledb.checkCalendar();
+}
 
  /*public void deleteModules(List moduleDateBeans, String courseId, String userId)
   {

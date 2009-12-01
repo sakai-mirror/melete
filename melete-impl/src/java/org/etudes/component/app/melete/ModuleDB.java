@@ -89,6 +89,9 @@ import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.exception.PermissionException;
 
+import org.sakaiproject.site.api.Site;
+import org.sakaiproject.tool.cover.ToolManager;
+
 /* Mallika - 4/17/07 - added code to support subsections on list pages
  * Mallika -6/6/07 - consolidated methods
  * Mallika - 6/6/07 - Added methods for multiple indent (same as previous)
@@ -353,8 +356,31 @@ public class ModuleDB implements Serializable {
 
   }
 	
+	boolean checkCalendar()
+	{
+		Site site = null;
+		  try
+		  {
+		    site = SiteService.getSite(ToolManager.getCurrentPlacement().getContext());
+	      }
+		  catch (Exception e) {
+			logger.debug("Exception thrown while getting site"+e.toString());
+		  }
+		  if (site.getToolForCommonId("sakai.schedule") != null)
+	      {
+	    	  return true;
+	      }    
+	      else
+	      {
+	    	  return false;
+	      }
+	}
+	
+	
 	void updateCalendar(Module module1, ModuleShdates moduleshdates1, String courseId) throws Exception
 	{
+		if (checkCalendar() == true)
+		{	
 		//The code below adds the start and stop dates to the Calendar
 		boolean addtoSchedule = moduleshdates1.getAddtoSchedule().booleanValue();
 		Date startDate = moduleshdates1.getStartDate();
@@ -448,9 +474,8 @@ public class ModuleDB implements Serializable {
 		  {
 		  logger.error("Exception thrown while getting Calendar");
 		  }
-		
-		 
-		updateModuleShdates((ModuleShdates)moduleshdates1); 
+		updateModuleShdates((ModuleShdates)moduleshdates1);
+		}
 	}
 	
 	private String createCalendarEvent(org.sakaiproject.calendar.api.Calendar c, Date eventDate, String title, String description) throws Exception
@@ -491,6 +516,8 @@ public class ModuleDB implements Serializable {
 
 	void deleteCalendar(List delModules, String courseId)
 	 {
+		if (checkCalendar() == true)
+		{	
 		 //Delete all calendar associated events
 		 CalendarService cService = org.sakaiproject.calendar.cover.CalendarService.getInstance();
 		  String calendarId = cService.calendarReference(courseId, SiteService.MAIN_CONTAINER);
@@ -535,7 +562,8 @@ public class ModuleDB implements Serializable {
 		  catch (Exception ex)
 		  {
 			  logger.error("Exception thrown while getting Calendar");
-		  }   	 
+		  }
+		}  
 	 }
 
 	void addArchivedModule(Module module, ModuleShdates moduleshowdates, String userId, String courseId, CourseModule coursemodule) throws Exception
