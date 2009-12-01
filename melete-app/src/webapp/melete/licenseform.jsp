@@ -27,29 +27,38 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@include file="accesscheck.jsp" %>
 
-<f:subview id="SectionView" rendered="#{licensePage.callFromSection}">
+<h:panelGrid id="SectionView" rendered="#{licensePage.callFromSection}">
+<h:column>
  <h:outputText value="#{msgs.licenseform_resources_proper_pan_cstatus}" />	 
  <h:outputText value="          " styleClass="MediumPaddingClass" />
  <h:selectOneMenu id="licenseCodes" value="#{licensePage.licenseCodes}" valueChangeListener="#{licensePage.hideLicense}" onchange="transferEditordata(); this.form.submit();" >
 	 <f:selectItems value="#{licensePage.licenseTypes}" />							
  </h:selectOneMenu>
- </f:subview>
+ <h:outputText value="          " styleClass="ExtraPaddingClass" />
+<h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
+ </h:column>
+</h:panelGrid> 
  
- <f:subview id="PreferenceView" rendered="#{!licensePage.callFromSection}">
+ <h:panelGrid id="PreferenceView" rendered="#{!licensePage.callFromSection}">
+ <h:column>
  <h:outputText value="#{msgs.licenseform_select_license}" styleClass="bold"/>	 
  <h:outputText value="<br><br>" escape="false"/>
  <h:selectOneMenu id="licenseCodes2" value="#{licensePage.licenseCodes}" valueChangeListener="#{licensePage.hideLicense}" onchange="this.form.submit();">
 	 <f:selectItems value="#{licensePage.licenseTypes}" />							
  </h:selectOneMenu>
- </f:subview>
- 
-<h:outputText value="          " styleClass="ExtraPaddingClass" />
+ <h:outputText value="          " styleClass="ExtraPaddingClass" />
 <h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
+</h:column>
+</h:panelGrid>
+ 
 <h:panelGrid id="propertiesPanel3" columns="1" width="100%">
   <h:column>
-  <f:subview id="CCLicenseForm" rendered="#{licensePage.shouldRenderCC || licensePage.shouldRenderCopyright || licensePage.shouldRenderPublicDomain || licensePage.shouldRenderFairUse}">	
+  <h:panelGrid id="CCLicenseForm" columns="1" width="100%" rendered="#{licensePage.shouldRenderCC || licensePage.shouldRenderCopyright || licensePage.shouldRenderPublicDomain || licensePage.shouldRenderFairUse}">
+  <h:column>	
     <h:panelGrid id="cclicensetable1" columns="1" columnClasses="maintabledata8" width="100%"  rendered="#{licensePage.shouldRenderCC}">
+	<h:column>
 	<h:outputText value="#{msgs.licenseform_cclicense}" />
+	</h:column>
     </h:panelGrid>
     <h:panelGrid id="cclicensetable2" columns="1" width="100%" rendered="#{licensePage.shouldRenderCC}">
 	<h:column>
@@ -95,9 +104,11 @@
 	</h:panelGrid>
 		
 	<h:panelGrid id="copyrighttable1" columns="1" columnClasses="maintabledata8" width="100%" >
+	  <h:column>		 
 			 <h:outputText value="#{msgs.licenseform_cclicense_form_copy_of_aut}" rendered="#{licensePage.shouldRenderCopyright}"/> 
 			 <h:outputText value="#{msgs.licenseform_cclicense_form_public}" rendered="#{licensePage.shouldRenderPublicDomain}"/> 
-			  <h:outputText value="#{msgs.licenseform_cclicense_form_fair}" rendered="#{licensePage.shouldRenderFairUse}"/> 
+			  <h:outputText value="#{msgs.licenseform_cclicense_form_fair}" rendered="#{licensePage.shouldRenderFairUse}"/>
+      </h:column>			   
     </h:panelGrid>			 
     <h:panelGrid id="copyrighttable2" columns="1"  width="100%">
 	<h:column>	  
@@ -122,6 +133,7 @@
      </h:panelGrid>
     </h:column>
     </h:panelGrid>			
-  </f:subview>	
+  </h:column>
+ </h:panelGrid> 	
  </h:column>	
 </h:panelGrid>				 					 

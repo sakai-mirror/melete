@@ -175,15 +175,15 @@ function contentChangeSubmit()
             <td class="maintabledata5">
 			<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" height="98">
               <tr bgcolor="#FFFFFF">
-                <td width="100%" height="35" valign="top"><table style="BORDER-COLLAPSE: collapse" bordercolor=#111111 cellspacing=0 
-      cellpadding=0 width=100% border=0>
+                <td width="100%" height="35" valign="top">
+                <table style="BORDER-COLLAPSE: collapse" bordercolor="#111111" cellspacing="0" cellpadding="0" width="100%" border="0">
                   <tbody>
                     <tr>
-                      <td align="left" valign="top"><table style="BORDER-COLLAPSE: collapse" bordercolor=#111111 cellspacing=0 
-      cellpadding=0 width="100%" border="0">
+                      <td align="left" valign="top">
+                      <table style="BORDER-COLLAPSE: collapse" bordercolor="#111111" cellspacing="0" cellpadding="0" width="100%" border="0">
                           <tbody>
                             <tr>
-                              <td align="left" valign="top style="white-space:nowrap">
+                              <td align="left" valign="top" style="white-space:nowrap">
                               <table style="white-space:nowrap" bordercolor="#111111" cellspacing="0" cellpadding="4" width="100%" border="0">
                                   <tr>
                                     <td align="left" valign="top"><h:outputText id="text7" value="#{msgs.addmodulesections_section_title}" /><span class="required">*</span></td>
@@ -266,7 +266,10 @@ function contentChangeSubmit()
 													 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>																																
 											<div id="othereditor" style="visibility:visible"><sakai:inputRichText  id="otherMeletecontentEditor" value="#{addSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{addSectionPage.FCK_CollId}" /></div>
-										</td></tr>	 
+										</td>
+										</tr>
+									</table>	 
+									 <table style="white-space:nowrap" bordercolor="#111111" cellspacing="0" cellpadding="4" width="100%" border="0">
 									<tr>
 									<td colspan="2">
 										<f:subview id="ResourcePropertiesPanel" rendered="#{!addSectionPage.shouldRenderNotype}">
@@ -279,7 +282,8 @@ function contentChangeSubmit()
 							  </td>
                             </tr>
                           </tbody>
-                      </table></td>
+                      </table>
+                      </td>
                     </tr>
                   </tbody>
                 </table></td>
