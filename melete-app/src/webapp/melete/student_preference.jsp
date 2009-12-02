@@ -61,7 +61,7 @@
           <td class="maintabledata3" valign="top">
           	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 		 </td></tr>		
-			<tr><td  height="20" class="maintabledata5" ><h:outputText id="t2" value="#{msgs.student_preference_view_select}"  styleClass="tableheader2"/>          </td></tr>
+			<tr><td  height="20" class="maintabledata5" ><h:outputText id="t2" value="#{msgs.student_preference_view_select}"  styleClass="bold"/>          </td></tr>
               <tr>
                 <td>
 						<table border="0" cellpadding="0" cellspacing="0" width="100%">
