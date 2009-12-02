@@ -641,6 +641,11 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		return toolIds;
 	}
 
+    public void transferCopyEntities(String fromContext, String toContext, List ids, boolean cleanup)
+   {
+	transferCopyEntities(fromContext, toContext, ids);
+   }
+
 	public void transferCopyEntities(String fromContext, String toContext, List ids)
 	{
 		try
