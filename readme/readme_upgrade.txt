@@ -72,7 +72,7 @@ SETUP INSTRUCTIONS
 
 	
 5. Database Changes
-  	Few tables are modified. Either run upgrade script manually or turn auto_ddl ON.
+  	Few tables are modified. Run the upgrade script manually.
   	  Mysql Users: /components/src/sql/mysql/melete27_upgrade.sql
 	  Oracle Users: /components/src/sql/oracle/melete27_upgrade.sql		
 	
