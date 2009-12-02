@@ -465,16 +465,24 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		}
 		//for chars like [] which decode passes but is converted for xml parser
 		fileResourceName = meleteUtil.escapeFileforExportPackage(fileResourceName);
-
+		String checkFileName = fileResourceName;
 		// to look for exact filename ex:- menu.jpg and applemenu.jpg. menu.jpg search shouldnot pick applemenu.jpg
-		if(fileResourceName.indexOf("/") == -1)	fileResourceName = "/" + fileResourceName;
+		if(checkFileName.indexOf("/") == -1)	checkFileName = "/" + checkFileName;
 
 		for(int i=0; i < resElements.size(); i++)
 		{
 			Element FileEle = (Element)resElements.get(i);
 			actualFileLocation = FileEle.attributeValue("href");
-			if (actualFileLocation != null && actualFileLocation.indexOf(fileResourceName) != -1) return actualFileLocation;
+			if (actualFileLocation != null && actualFileLocation.indexOf(checkFileName) != -1) return actualFileLocation;
 		}
+		// if not found as /menu.jpg then look for menu.jpg for eXe packages
+		for(int i=0; i < resElements.size(); i++)
+		{
+			Element FileEle = (Element)resElements.get(i);
+			actualFileLocation = FileEle.attributeValue("href");
+			if (actualFileLocation != null && actualFileLocation.equals(fileResourceName)) return actualFileLocation;
+		}
+		
 		return null;
 	}
 	/*
@@ -512,7 +520,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			}
 			if (endSrc <= 0 || endSrc > checkforimgs.length()) break;
 
-			imgSrcPath = checkforimgs.substring(startSrc, endSrc);
+			imgSrcPath = checkforimgs.substring(startSrc, endSrc);			
 			if (imgSrcPath == null || imgSrcPath.length() == 0)
 			{
 				checkforimgs = checkforimgs.substring(endSrc);
@@ -599,7 +607,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 */
 	protected String uploadSectionDependentFile(String hrefVal, String courseId, String unZippedDirPath) {
 		try {
-			String filename = null;
+			String filename = hrefVal;
 			String res_mime_type = null;
 			byte[] melContentData = null;
 
@@ -1172,12 +1180,11 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 *  argument hrefVal is the actual filename i.e. <file href="xxxx.xxx"/>
 	 */
 	private String processEmbedDatafromHTML(String hrefVal,String fileResourceName, String courseId,String uploadCollId, List resElements, String unZippedDirPath) throws Exception
-	{
-		logger.debug("processing embed html :" + hrefVal);
+	{		
 		byte[] contentData = readData(unZippedDirPath, hrefVal);
 
 		if(contentData != null)
-		{
+		{			
 			String contentEditor = new String(contentData);
 			ArrayList content = createHTMLFile(contentEditor,resElements,unZippedDirPath, courseId,new HashSet<String>() ,null);
 			if(fileResourceName == null) fileResourceName = readTitlefromElement(resElements, true, hrefVal);
