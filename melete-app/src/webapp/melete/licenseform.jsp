@@ -27,10 +27,11 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@include file="accesscheck.jsp" %>
 
-<h:panelGrid id="SectionView" rendered="#{licensePage.callFromSection}">
+<h:panelGrid id="SectionView" columns="2" width="82%" columnClasses="copyrightColumn1,copyrightColumn2" rendered="#{licensePage.callFromSection}">
 <h:column>
  <h:outputText value="#{msgs.licenseform_resources_proper_pan_cstatus}" />	 
- <h:outputText value="          " styleClass="MediumPaddingClass" />
+ </h:column>
+ <h:column>
  <h:selectOneMenu id="licenseCodes" value="#{licensePage.licenseCodes}" valueChangeListener="#{licensePage.hideLicense}" onchange="transferEditordata(); this.form.submit();" >
 	 <f:selectItems value="#{licensePage.licenseTypes}" />							
  </h:selectOneMenu>
@@ -39,16 +40,18 @@
  </h:column>
 </h:panelGrid> 
  
- <h:panelGrid id="PreferenceView" rendered="#{!licensePage.callFromSection}">
+ <h:panelGrid id="PreferenceView"  columns="1" rendered="#{!licensePage.callFromSection}">
  <h:column>
- <h:outputText value="#{msgs.licenseform_select_license}" styleClass="bold"/>	 
- <h:outputText value="<br><br>" escape="false"/>
- <h:selectOneMenu id="licenseCodes2" value="#{licensePage.licenseCodes}" valueChangeListener="#{licensePage.hideLicense}" onchange="this.form.submit();">
+   <h:outputText value="#{msgs.licenseform_select_license}" styleClass="bold"/>
+ </h:column>
+ <h:column/>
+ <h:column>  	 
+   <h:selectOneMenu id="licenseCodes2" value="#{licensePage.licenseCodes}" valueChangeListener="#{licensePage.hideLicense}" onchange="this.form.submit();">
 	 <f:selectItems value="#{licensePage.licenseTypes}" />							
- </h:selectOneMenu>
- <h:outputText value="          " styleClass="ExtraPaddingClass" />
-<h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
-</h:column>
+   </h:selectOneMenu>
+   <h:outputText value="          " styleClass="ExtraPaddingClass" />
+  <h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
+ </h:column>  
 </h:panelGrid>
  
 <h:panelGrid id="propertiesPanel3" columns="1" width="100%">
