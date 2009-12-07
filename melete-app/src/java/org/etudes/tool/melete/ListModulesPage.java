@@ -524,7 +524,7 @@ public class ListModulesPage implements Serializable{
 			{
 		    	vmBean = (ViewModBean) viewModuleBeans.get(selModIndex);
 		    	//Fix for ArrayIndexOutofBoundsException: -1
-		    	if (selSecIndex == -1) selSecIndex = 0;
+		    	if ((selSecIndex < 0)||(selSecIndex >= vmBean.getVsBeans().size())) selSecIndex = 0;
 			    vsBean = (ViewSecBean) vmBean.getVsBeans().get(selSecIndex);
 		        modSeqNo = vmBean.getSeqNo();
 			}
