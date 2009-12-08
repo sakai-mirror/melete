@@ -33,7 +33,7 @@
   <name>Etudes</name> 
   <groupId>org.etudes</groupId> 
   <artifactId>melete-base</artifactId> 
-  <version>2.5.0</version> 
+  <version>2.7.0</version> 
   <packaging>pom</packaging> 
  <modules>
   <module>components</module> 
@@ -43,7 +43,7 @@
   <module>melete-hbm</module> 
   <module>melete-impl</module> 
   </modules>
- <repositories>
+  <repositories>
  <repository>
   <id>sakai-maven</id> 
   <name>Sakai Maven Repo</name> 
