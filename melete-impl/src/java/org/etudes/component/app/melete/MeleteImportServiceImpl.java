@@ -60,6 +60,7 @@ import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.Entity;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.apache.commons.logging.Log;
@@ -79,7 +80,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 *******************************************************************************/
 	/** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(MeleteImportServiceImpl.class);
-
+	protected ThreadLocalManager importThreadLocal = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
+	
 	private void buildModuleTitle(Element titleEle, Module module)
 	{
 		boolean moduleTitleFlag = false;
@@ -234,6 +236,10 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 				
 				//for old melete packages which don't have identifier starting with NEXTSTEPS 
 				if(hrefVal != null && hrefVal.indexOf("module_")!= -1 && hrefVal.endsWith("nextsteps.html"))continue;
+				
+				// for files already imported
+				Set recordFiles = (Set)importThreadLocal.get("MeleteIMSImportFiles");
+				if (recordFiles != null && recordFiles.contains(hrefVal))continue;					
 				
 				String melResourceName = null;
 				String melResourceDescription = null;
@@ -680,6 +686,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		// loop thru organization elements - item elements
 		if(eleOrg != null)
 		{
+			importThreadLocal.set("MeleteIMSImportFiles", new HashSet<String>());
 			List elements = eleOrg.elements();
 			for (Iterator iter = eleOrg.elementIterator("item"); iter.hasNext();)
 			{
@@ -1212,7 +1219,9 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 
 		if (logger.isDebugEnabled())
 			logger.debug("Entering createSection...");
-
+		
+		Set recordFiles = (Set)importThreadLocal.get("MeleteIMSImportFiles");
+		if (recordFiles != null) recordFiles.add(hrefVal);
 		//html file
 		if (!(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:"))&&
 			 (hrefVal.lastIndexOf('.') != -1	&& (hrefVal.substring(hrefVal.lastIndexOf('.') + 1).equalsIgnoreCase("html")
