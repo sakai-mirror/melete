@@ -1128,13 +1128,15 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 					// if filename contains percentage sign then throw error
 					if(fileName.indexOf("%") != -1)
 					{
+						String cName = "";
 						try
 						{
-							String cName = URLDecoder.decode(fileName,"UTF-8");
+							cName = URLDecoder.decode(fileName,"UTF-8");
 						}catch(Exception decodex){
 							logger.debug("embedded FILE contains percentage or other characters " + fileName);
 							throw new MeleteException("embed_img_bad_filename1");
 						}
+						if(cName.indexOf("%") != -1)throw new MeleteException("embed_img_bad_filename1");
 					}
 		             // add the file to collection and move from uploads directory
 		             // read data
