@@ -2502,6 +2502,8 @@ public class ModuleDB implements Serializable {
 
 	public void copyModule(Module module, String courseId, String userId) throws MeleteException
 	{
+		 ResourceLoader bundle = new ResourceLoader("melete_license");
+
 		try
 		{
 			//get module and its sections
@@ -2513,7 +2515,7 @@ public class ModuleDB implements Serializable {
 
 			copyMod.setCreatedByFname(firstName);
 			copyMod.setCreatedByLname(lastName);
-			copyMod.setTitle(copyMod.getTitle() + " (Copied " + shortTime.format(new Date())+" )");
+			copyMod.setTitle(copyMod.getTitle() + " ("+bundle.getString("Copied")+" " + shortTime.format(new Date())+" )");
 			ModuleShdates CopyModuleshowdates = new ModuleShdates((ModuleShdates)module.getModuleshdate());
 
 			// insert copy module with blank seq_xml and sections as null
@@ -2531,7 +2533,7 @@ public class ModuleDB implements Serializable {
 					copySection.setCreatedByFname(firstName);
 					copySection.setCreatedByLname(lastName);
 					copySection.setModule(copyMod);
-					copySection.setTitle(copySection.getTitle() + " (Copied " + shortTime.format(new Date())+" )");
+					copySection.setTitle(copySection.getTitle() + " ("+bundle.getString("Copied")+" " + shortTime.format(new Date())+" )");
 					//insert section
 					Integer copySectionId = sectionDB.addSection(copyMod, copySection, false);
 					copySection.setSectionId(copySectionId);
