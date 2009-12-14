@@ -73,7 +73,7 @@ return newWindow;
 	<tr> <td colspan="4" valign="top">
  <h:dataTable id="table" 
                   value="#{listModulesPage.modDataModel}"
-                  var="vmbean"   rowClasses="row1,row2" 
+                  var="vmbean"   rowClasses="row1,row2"  
               columnClasses="ListTitleClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
                    border="0" cellpadding="3" width="100%" 
                    binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_stud_summary}">
@@ -172,9 +172,13 @@ return newWindow;
 	 	    <h:graphicImage id="printImgLink" value="images/printer.png"  alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 	 	 </h:outputLink>
 	    
-	    </h:column>  
-      </h:dataTable>   
-      <h:outputText id="nomodstext" value="#{msgs.no_modules}" rendered="#{listModulesPage.nomodsFlag}" style="text-align:left"/>    
+	    </h:column>	      
+      </h:dataTable>  
+      <h:panelGrid columns="1" rendered="#{listModulesPage.nomodsFlag}">
+      	<h:column>
+	   	 <h:outputText id="nomodstext" value="#{msgs.no_modules}"  style="text-align:left"/>
+	    </h:column> 
+      </h:panelGrid>          
 	  </td></tr>
 	  <tr>
          <td  height="20" colspan="4" class="maintabledata5">&nbsp;   </td>
