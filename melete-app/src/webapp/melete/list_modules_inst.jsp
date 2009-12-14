@@ -213,10 +213,14 @@ return newWindow;
          <h:outputLink id="printModuleLink" value="list_modules_inst" onclick="OpenPrintWindow(#{listModulesPage.printModuleId},'Melete Print Window');" rendered="#{vmbean.visibleFlag}">
 	  	    	<h:graphicImage id="printImgLink" value="images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 	 	 </h:outputLink>
-  	  	
-       </h:column>  
-    </h:dataTable>   
-  		<h:outputText id="nomodstext" value="#{msgs.no_modules}" rendered="#{listModulesPage.nomodsFlag}" style="text-align:left"/>    
+	    
+	    </h:column>	     
+      </h:dataTable> 
+      <h:panelGrid columns="1" rendered="#{listModulesPage.nomodsFlag}">
+      	<h:column>
+	   	 <h:outputText id="nomodstext" value="#{msgs.no_modules}"  style="text-align:left"/>
+	    </h:column> 
+      </h:panelGrid>          
 	  </td></tr>
 	  <tr>
          <td  height="20" colspan="5" class="maintabledata5">&nbsp;   </td>
