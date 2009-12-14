@@ -48,67 +48,58 @@
 								<div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.view_section_viewing_student}" /></div>	
 					</td>
 				</tr>
-	<!--Page Content-->
+<tr>
+<td colspan="2" align="center">
+<f:subview id="topmod">
+	<jsp:include page="view_navigate.jsp"/>
+</f:subview>
 
-	<tr>
-		<td colspan="2" align="center">
-					<f:subview id="topmod">
-						<jsp:include page="view_navigate.jsp"/>
-					</f:subview>
-				<h:panelGroup id="bcsecpgroup" binding="#{viewSectionsPage.secpgroup}"/>
-			</td>
-</tr> 
+	<h:panelGroup id="bcsecpgroup" binding="#{viewSectionsPage.secpgroup}"/>
+</td>
+</tr>    
+	<tr>	<td colspan="2">&nbsp;</td>		</tr>     
 <tr>
-		<td colspan="2" align="left">  &nbsp;		</td>
-</tr> 
-<tr>
-    	<td colspan="2" align="left">  
-	        <h:outputText id="mod_seq" value="#{viewSectionsPage.moduleSeqNo}. " styleClass="bold style6" rendered="#{viewSectionsPage.autonumber}"/>
-		<h:outputText id="modtitle" value="#{viewSectionsPage.module.title}" styleClass="bold style6"></h:outputText>
-		</td>
-</tr> 
+<td colspan="2" align="left">
+         <h:outputText id="mod_seq" value="#{viewSectionsPage.moduleSeqNo}. " styleClass="bold style6" rendered="#{viewSectionsPage.autonumber}"/>
+	 <h:outputText id="modtitle" value="#{viewSectionsPage.module.title}" styleClass="bold style6" >
+</h:outputText>
 
-<tr>
-		<td colspan="2" align="left">  
-	        <h:outputText id="sec_seq" value="#{viewSectionsPage.sectionDisplaySequence}. " styleClass="bold style7" rendered="#{viewSectionsPage.autonumber}"/>
-		  <h:outputText id="title" value="#{viewSectionsPage.section.title}" styleClass="bold style7"></h:outputText>     
-		</td>
-		
-</tr> 
+</td>
+</tr>    
 
 <tr>
-		<td colspan="2" align="left">  
-				<h:outputText value="#{msgs.view_section_instructions} "  rendered="#{((viewSectionsPage.section.instr != viewSectionsPage.nullString)&&(viewSectionsPage.section.instr != viewSectionsPage.emptyString))}"  styleClass="italics"></h:outputText> <h:outputText id="instr" value="#{viewSectionsPage.section.instr}" rendered="#{((viewSectionsPage.section.instr != viewSectionsPage.nullString)&&(viewSectionsPage.section.instr != viewSectionsPage.emptyString))}"></h:outputText>     
-		</td>
-</tr> 
-<tr>
-	<td colspan="2" align="left">
-		    <h:inputHidden id="contentType" value="#{viewSectionsPage.section.contentType}"/>
-			 <h:inputHidden id="openWindow" value="#{viewSectionsPage.section.openWindow}"/>
-			
-		<br> 
-       <h:outputText escape="false" value="<a target='new_window' href='" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink || viewSectionsPage.section.contentType == viewSectionsPage.typeUpload || viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}"/>
+<td colspan="2" align="left">
+<h:panelGrid id="sectionContentGrid" columns="1" width="100%" border="0" rendered="#{viewSectionsPage.section != null}">
+<h:column>
+ 	<h:outputText id="sec_seq" value="#{viewSectionsPage.sectionDisplaySequence}. " styleClass="bold style7" rendered="#{viewSectionsPage.autonumber}"/>
+ 	<h:outputText id="title" value="#{viewSectionsPage.section.title}" styleClass="bold style7"></h:outputText>     
+</h:column>
+<h:column>
+	<h:outputText value="#{msgs.view_section_student_instructions} " rendered="#{((viewSectionsPage.section.instr != viewSectionsPage.nullString)&&(viewSectionsPage.section.instr != viewSectionsPage.emptyString))}" styleClass="italics"/>
+	<h:outputText id="instr" value="#{viewSectionsPage.section.instr}" rendered="#{((viewSectionsPage.section.instr != viewSectionsPage.nullString)&&(viewSectionsPage.section.instr != viewSectionsPage.emptyString))}"/>
+</h:column>
+<h:column rendered="#{viewSectionsPage.section.contentType != viewSectionsPage.nullString}">
+	<h:inputHidden id="contentType" value="#{viewSectionsPage.section.contentType}"/>
+	<h:inputHidden id="openWindow" value="#{viewSectionsPage.section.openWindow}"/>
+	<h:outputText escape="false" value="<a target='new_window' href='" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink || viewSectionsPage.section.contentType == viewSectionsPage.typeUpload || viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}"/>
        <h:outputText value="#{viewSectionsPage.contentLink}" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink || viewSectionsPage.section.contentType == viewSectionsPage.typeUpload || viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}"/>
        <h:outputText escape="false" value="'>#{viewSectionsPage.linkName}</a>" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink || viewSectionsPage.section.contentType == viewSectionsPage.typeUpload || viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}"/>
-
-    <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{viewSectionsPage.content}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
-    border=\"0\" frameborder= \"0\"></iframe>" rendered="#{((viewSectionsPage.section.contentType ==viewSectionsPage.typeLink)&&(viewSectionsPage.linkName !=
+    
+    <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{viewSectionsPage.content}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\" border=\"0\" frameborder= \"0\"></iframe>" rendered="#{((viewSectionsPage.section.contentType ==viewSectionsPage.typeLink)&&(viewSectionsPage.linkName !=
     viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
-
-   <h:outputText value="#{viewSectionsPage.content}" escape="false" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeEditor)&&(viewSectionsPage.content != viewSectionsPage.nullString))}"/>
-
+    
+  <h:outputText value="#{viewSectionsPage.content}" escape="false" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeEditor)&&(viewSectionsPage.content != viewSectionsPage.nullString))}"/>
 	<h:outputText id="contentUploadFrame" value="<iframe id=\"iframe2\" src=\"#{viewSectionsPage.contentLink}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
-    border=\"0\" frameborder= \"0\"></iframe>" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeUpload)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
-
+    border=\"0\" frameborder= \"0\"></iframe>" rendered="#{((viewSectionsPage.section.contentType ==viewSectionsPage.typeUpload)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
+	
 	<h:outputText id="contentLTI" value="#{viewSectionsPage.contentLTI}" 
-              rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
-	</td>
-	</tr>
+              rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />	
+</h:column>
+</h:panelGrid>
 
+</td>
 
- <tr>
-<td colspan="2" align="left"> &nbsp;</td>
-</tr>
+</tr>    
 <tr>
 <td colspan="2" align="center">
 					<f:subview id="bottommod">
