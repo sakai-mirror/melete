@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
  ***********************************************************************************
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/tags/2.7.0/melete-app/pom.xml $
+ * $URL: https://source.sakaiproject.org/contrib/etudes/melete/tags/2.7.1/melete-app/pom.xml $
  * $Id: pom.xml 59695 2009-04-06 23:00:53Z mallika@etudes.org $  
  ***********************************************************************************
  *
@@ -27,13 +27,13 @@
   <parent>
     <artifactId>melete-base</artifactId>
     <groupId>org.etudes</groupId>
-    <version>2.7.0</version>
+    <version>2.7.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <name>etudes-melete-tool</name>
   <groupId>org.etudes</groupId>
   <artifactId>etudes-melete-tool</artifactId>
-  <version>2.7.0</version>
+  <version>2.7.1</version>
   <organization>
     <name>Etudes</name>
     <url>http://etudes.org/</url>
@@ -56,24 +56,24 @@
     <dependency>
       <groupId>org.etudes</groupId>
       <artifactId>etudes-melete-util</artifactId>
-      <version>2.7.0</version>
+      <version>2.7.1</version>
     </dependency>
     <dependency>
       <groupId>org.etudes</groupId>
       <artifactId>etudes-melete-impl</artifactId>
-      <version>2.7.0</version>
+      <version>2.7.1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.etudes</groupId>
       <artifactId>etudes-melete-hbm</artifactId>
-      <version>2.7.0</version>
+      <version>2.7.1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.etudes</groupId>
       <artifactId>etudes-melete-api</artifactId>
-      <version>2.7.0</version>
+      <version>2.7.1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

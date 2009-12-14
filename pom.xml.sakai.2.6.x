@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
  ***********************************************************************************
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/tags/2.7.0/pom.xml $
+ * $URL: https://source.sakaiproject.org/contrib/etudes/melete/tags/2.7.1/pom.xml $
  * $Id: pom.xml 59696 2009-04-06 23:02:57Z mallika@etudes.org $  
  ***********************************************************************************
  *
@@ -32,7 +32,7 @@
   <name>Etudes</name>
   <groupId>org.etudes</groupId>
   <artifactId>melete-base</artifactId>
-  <version>2.7.0</version>
+  <version>2.7.1</version>
   <packaging>pom</packaging>
   <modules>
     <module>components</module>

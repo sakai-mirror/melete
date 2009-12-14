@@ -23,13 +23,13 @@
   <parent>
     <artifactId>melete-base</artifactId>
     <groupId>org.etudes</groupId>
-    <version>2.7.0</version>
+    <version>2.7.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <name>Etudes Melete Utilities</name>
   <groupId>org.etudes</groupId>
   <artifactId>etudes-melete-util</artifactId>
-  <version>2.7.0</version>
+  <version>2.7.1</version>
   <organization>
     <name>Etudes</name>
     <url>http://etudes.org/</url>
