@@ -787,7 +787,7 @@ public abstract class SectionPage implements Serializable {
      */
     public boolean getRenderInstr()
     {
-            if (this.section.getInstr()== null ||this.section.getInstr().length() == 0 )
+            if (this.section == null || this.section.getInstr()== null ||this.section.getInstr().length() == 0 )
                     renderInstr=false;
             else renderInstr=true;
             return renderInstr;
