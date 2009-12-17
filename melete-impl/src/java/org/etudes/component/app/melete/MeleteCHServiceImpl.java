@@ -1323,9 +1323,24 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    	try
      	    {
      	      	meleteSecurityService.pushAdvisor();
-     	  	    //Note that beforedecode and decode call has been removed as it messes up resource ids with %20 in them
-     	      	//For ex:b%20day.jpg becomes b day.jpg and the resource is not found.	
-     	      	return getContentservice().getUrl(newResourceId);
+     	      	//first try with original id for resources like b%20day.jpg 
+     	      	// and for other resources with &amp; or + sign decode it
+        		try
+        		{
+        			return (getContentservice().getUrl(newResourceId));
+        		}
+        		catch(Exception getResourceEx)
+        		{
+        			try
+            		{
+         	      		newResourceId = beforeDecode(newResourceId);
+         	      		newResourceId = URLDecoder.decode(newResourceId,"UTF-8");
+            		} catch(Exception decodeEx)
+            		{
+            			logger.debug("get resource fails while decoding " + newResourceId);
+            		}
+        			return (getContentservice().getUrl(newResourceId));	
+        		}
              }
        catch (Exception e)
            {
