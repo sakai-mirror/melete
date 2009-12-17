@@ -922,6 +922,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		logger.info("User is not authorized to access meleteDocs collection");
         		return null;
         		}
+        	String originalResourceId = resourceId;
    			//          setup a security advisor
         		meleteSecurityService.pushAdvisor();
         		// absolute reqd otherwise import from site creates desert Landscape.jpg and desert%20Landscape-1.jpg
@@ -934,7 +935,14 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         			logger.debug("get resource fails while decoding " + resourceId);
         		}
         		
-        		return (getContentservice().getResource(resourceId));
+        		try
+        		{
+        			return (getContentservice().getResource(resourceId));
+        		}
+        		catch(Exception getResourceEx)
+        		{
+        			return (getContentservice().getResource(originalResourceId));	
+        		}
 	    }
 		catch(Exception e)
 		{
@@ -1315,11 +1323,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    	try
      	    {
      	      	meleteSecurityService.pushAdvisor();
-     	      	try
-     	      	{
-     	      		newResourceId = beforeDecode(newResourceId);
-     	      		newResourceId = URLDecoder.decode(newResourceId,"UTF-8");
-     	      	}catch(Exception decodex){}
+     	  	    //Note that beforedecode and decode call has been removed as it messes up resource ids with %20 in them
+     	      	//For ex:b%20day.jpg becomes b day.jpg and the resource is not found.	
      	      	return getContentservice().getUrl(newResourceId);
              }
        catch (Exception e)
