@@ -127,11 +127,11 @@ public class SakaiBLTIUtil {
 	if ( user != null )
 	{
 		setProperty(props,"user_id",user.getId());
-		setProperty(props,"launch_presentaion_locale","en_US"); // TODO: Really get this
+		setProperty(props,"launch_presentation_locale","en_US"); // TODO: Really get this
 		setProperty(props,"lis_person_name_given",user.getFirstName());
 		setProperty(props,"lis_person_name_family",user.getLastName());
 		setProperty(props,"lis_person_name_full",user.getDisplayName());
-		setProperty(props,"lis_person_contact_emailprimary",user.getEmail());
+		setProperty(props,"lis_person_contact_email_primary",user.getEmail());
 		setProperty(props,"lis_person_sourcedid",user.getEid());
 	}
 
@@ -152,8 +152,8 @@ public class SakaiBLTIUtil {
 			setProperty(props,"context_type","CourseOffering");
 		}
 		setProperty(props,"context_id",site.getId());
+		setProperty(props,"context_label",site.getTitle());
 		setProperty(props,"context_title",site.getTitle());
-		setProperty(props,"course_name",site.getShortDescription());
 		String courseRoster = getExternalRealmId(site.getId());
 		if ( courseRoster != null ) 
 		{
