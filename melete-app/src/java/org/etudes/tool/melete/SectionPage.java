@@ -522,7 +522,17 @@ public abstract class SectionPage implements Serializable {
          	AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding2.getValue(context);
          	MeleteUserPreference mup = preferencePage.getMup();
          	lPage.setInitialValues(this.formName, mup);
-  
+         	
+            //The code below is required because the setter for the license code kicks in by default
+            //and we need to actually set the component with the values determined above.(ME-1071)         	   
+            UIComponent licComp = (UIComponent)contentTypeRadio.findComponent(getFormName());
+            if(licComp != null && licComp.findComponent("ResourcePropertiesPanel") != null && licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm") != null
+            	&& licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView") != null)
+            	{
+            		licComp = licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView");
+            		UIInput uiInp = (UIInput)licComp.findComponent("licenseCodes");
+            		uiInp.setValue(lPage.getLicenseCodes());
+            	}          
     }
 
     /**
