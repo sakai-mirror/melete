@@ -92,14 +92,16 @@ public class LicensePage {
 			this.melResource = melResource;
 
 			if(melResource !=null)
+			{
 				setLicenseCodes(String.valueOf(melResource.getLicenseCode()));
+				setAllowCmrcl(String.valueOf(melResource.isAllowCmrcl()));
+		  		setAllowMod(String.valueOf(melResource.getAllowMod()));
+		  		setReqAttr(String.valueOf(melResource.isReqAttr()));
+		  		setCopyright_owner(melResource.getCopyrightOwner());
+		  		setCopyright_year(melResource.getCopyrightYear());
+			}
 			else setLicenseCodes("0");
 
-			if(melResource !=null && formName.equals("EditSectionForm") && !licenseCodes.equals(CC_CODE))
-			{
-				this.melResource.setAllowCmrcl(false);
-				this.melResource.setAllowMod(1);
-			}
 		  }
 
 		  public void setInitialValues(String formName,  MeleteUserPreference mup)
@@ -353,28 +355,9 @@ public class LicensePage {
 			}
 
 
-			 public String getAllowCmrcl(){
-				if (formName == null)
-				{
-					allowCmrcl = "false";
-				}
-				else
-				{
-		          if(formName.equals("EditSectionForm"))
-		          {
-		        	if (melResource == null)
-		        	{
-		        		allowCmrcl = "false";
-		        	}
-		        	else
-		        	{
-		        		allowCmrcl = String.valueOf(melResource.isAllowCmrcl());
-		        	}
-		          }
-				}
-
+			public String getAllowCmrcl(){
 				return allowCmrcl;
-				}
+			}
 
 			  /**
 			 * @param allowCmrcl
@@ -383,27 +366,9 @@ public class LicensePage {
 			  	this.allowCmrcl = allowCmrcl;
 			   }
 
-			 public String getAllowMod(){
-				 if (formName == null)
-				 {
-					 allowMod = "1";
-				 }
-				 else
-				 {
-				   if(formName.equals("EditSectionForm"))
-				   {
-					 if (melResource == null)
-					 {
-						 allowMod = "1";
-					 }
-					 else
-					 {
-						 allowMod = String.valueOf(melResource.getAllowMod());
-					 }
-				   }
-				 }
-			   return allowMod;
-				}
+			public String getAllowMod(){				
+				return allowMod;
+			}
 
 			  /**
 			 * @param allowMod
