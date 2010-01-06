@@ -52,12 +52,12 @@ return newWindow;
 <body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
 <h:form id="listmodulesform">
 
-<table border="0" width="99%" height="350" cellpadding="0" cellspacing="0" class ="table3">
+<table border="0" width="100%" height="350" cellpadding="0" cellspacing="0" class ="table3">
 <tr>
  <td valign="top">
-<table width="99%" border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
+<table width="100%" border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
 <tr>
-<td >
+<td height="20" class="maintabledata1">
 <f:subview id="top">
 <jsp:include page="topnavbar.jsp"/> 
 </f:subview>
