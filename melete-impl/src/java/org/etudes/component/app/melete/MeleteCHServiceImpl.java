@@ -1084,8 +1084,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    		// remove word comments code end
 
 	    		//check for form tag and remove it
-	    		checkforimgs = meleteUtil.findFormPattern(checkforimgs);
-	    		logger.debug("after find form pattern "+ endSrc);
+	    		//checkforimgs = meleteUtil.findFormPattern(checkforimgs);
+	    		//logger.debug("after find form pattern "+ endSrc);
 				contentEditor = checkforimgs;
 
 		         while(checkforimgs !=null)
