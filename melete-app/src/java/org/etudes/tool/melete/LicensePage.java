@@ -84,7 +84,16 @@ public class LicensePage {
 		  public LicensePage()
 		  {
 		  }
-
+		  
+		  public void resetFlags()
+		  {				
+				// reset flags
+				shouldRenderCC = licenseCodes.equals(CC_CODE);
+				shouldRenderCopyright = licenseCodes.equals(Copyright_CODE);
+				shouldRenderPublicDomain = licenseCodes.equals(PD_CODE);
+				shouldRenderFairUse = licenseCodes.equals(FU_CODE);
+		  }
+		  
 		  public void setInitialValues(String formName, MeleteResource melResource)
 		  {
 		  	this.formName = formName;
@@ -101,7 +110,7 @@ public class LicensePage {
 		  		setCopyright_year(melResource.getCopyrightYear());
 			}
 			else setLicenseCodes("0");
-
+			resetFlags();
 		  }
 
 		  public void setInitialValues(String formName,  MeleteUserPreference mup)
@@ -123,6 +132,7 @@ public class LicensePage {
 		  	  setInitialValues();
 			  setLicenseCodes("0");
 		  	}
+		  	resetFlags();
 		  }
 
 		  public void resetValues()
