@@ -104,12 +104,15 @@ public class MeleteUtil {
 	 public ArrayList findEmbedItemPattern(String checkforimgs)
 	 {
 		 ArrayList returnData = new ArrayList();
-		 Pattern p1 = Pattern.compile("<[iI][mM][gG]\\s|<[aA]\\s|<[eE][mM][bB][eE][dD]\\s");
+		 // a and link uses href, applet uses archive, object uses data
+		 Pattern p1 = Pattern.compile("<[iI][mM][gG]\\s|<[aA]\\s|<[eE][mM][bB][eE][dD]\\s|<[sS][cC][rR][iI][pP][tT]\\s|<[lL][iI][nN][kK]\\s|<[aA][pP][pP][lL][eE][tT]\\s|<[oO][bB][jJ][eE][cC][tT]\\s");
 		 Pattern pi = Pattern.compile(">|\\s[sS][rR][cC]\\s*=");
 		 Pattern pa = Pattern.compile(">|\\s[hH][rR][eE][fF]\\s*=");
+		 Pattern pa1 = Pattern.compile(">|\\s[aA][rR][cC][hH][iI][vV][eE]\\s*=");
+		 Pattern pd = Pattern.compile(">|\\s[dD][aA][tT][aA]\\s*=");
 		 Pattern ps = Pattern.compile("\\S");
 		 Pattern pe = Pattern.compile("\\s|>");
-
+		 
 		 int startSrc = 0;
 		 int endSrc = 0;
 		 String foundPattern = null;
@@ -124,12 +127,21 @@ public class MeleteUtil {
 			 if (checkforimgs.startsWith("<i") ||
 					 checkforimgs.startsWith("<I") ||
 					 checkforimgs.startsWith("<e") ||
-					 checkforimgs.startsWith("<E"))
+					 checkforimgs.startsWith("<E") ||
+					 checkforimgs.startsWith("<s") ||
+					 checkforimgs.startsWith("<S"))
 				 m = pi.matcher(checkforimgs);
+			 else if (checkforimgs.startsWith("<applet")|| checkforimgs.startsWith("<Applet") ||
+					 checkforimgs.startsWith("<APPLET"))
+				 m = pa1.matcher(checkforimgs);
+			 else if (checkforimgs.startsWith("<o")|| checkforimgs.startsWith("<O"))
+				 m = pd.matcher(checkforimgs);
 			 else
 				 m = pa.matcher(checkforimgs);
 
-			 if(m.pattern().pattern().equals(pa.pattern())){foundPattern = "link";}
+			 if(m.pattern().pattern().equals(pa.pattern())){
+				 if(checkforimgs.startsWith("<a") ||
+				 checkforimgs.startsWith("<A"))foundPattern = "link";}
 			 // end = start+1 means that we found a >
 			 // i.e. the attribute we're looking for isn't there
 			 if (!m.find() || (m.end() == m.start() + 1)) {
