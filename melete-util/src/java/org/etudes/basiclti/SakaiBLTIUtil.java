@@ -127,11 +127,11 @@ public class SakaiBLTIUtil {
 	if ( user != null )
 	{
 		setProperty(props,"user_id",user.getId());
-		setProperty(props,"launch_presentaion_locale","en_US"); // TODO: Really get this
+		setProperty(props,"launch_presentation_locale","en_US"); // TODO: Really get this
 		setProperty(props,"lis_person_name_given",user.getFirstName());
 		setProperty(props,"lis_person_name_family",user.getLastName());
 		setProperty(props,"lis_person_name_full",user.getDisplayName());
-		setProperty(props,"lis_person_contact_emailprimary",user.getEmail());
+		setProperty(props,"lis_person_contact_email_primary",user.getEmail());
 		setProperty(props,"lis_person_sourcedid",user.getEid());
 	}
 
@@ -152,8 +152,8 @@ public class SakaiBLTIUtil {
 			setProperty(props,"context_type","CourseOffering");
 		}
 		setProperty(props,"context_id",site.getId());
+		setProperty(props,"context_label",site.getTitle());
 		setProperty(props,"context_title",site.getTitle());
-		setProperty(props,"course_name",site.getShortDescription());
 		String courseRoster = getExternalRealmId(site.getId());
 		if ( courseRoster != null ) 
 		{
@@ -239,16 +239,36 @@ public class SakaiBLTIUtil {
 	if ( launch_url == null ) launch_url = info.getProperty("launch_url");
         if ( launch_url == null ) return postError("<p>" + getRB(rb, "error.missing" ,"Not configured")+"</p>");
 
-	String secret = toNull(info.getProperty("secret"));
-	String key = toNull(info.getProperty("key"));
-
         String org_guid = ServerConfigurationService.getString("basiclti.consumer_instance_guid",null);
-	String org_name = ServerConfigurationService.getString("basiclti.consumer_instance_name",null);
-        String org_secret = null;
-        if ( org_guid != null ) {
-	    org_secret = getToolConsumerSecret(launch_url);
+        String org_name = ServerConfigurationService.getString("basiclti.consumer_instance_name",null);
+        String org_url = ServerConfigurationService.getString("basiclti.consumer_instance_url",null);
+
+        // Look up the LMS-wide secret and key - default key is guid
+        String key = getToolConsumerInfo(launch_url,"key");
+	if ( key == null ) key = org_guid;
+        String secret = getToolConsumerInfo(launch_url,"secret");
+
+        // Demand LMS-wide key/secret to be both or none
+        if ( key == null || secret == null ) {
+                key = null;
+                secret = null;
         }
-        
+
+        // If we do not have LMS-wide info, use the local key/secret
+        if ( secret == null ) {
+                secret = toNull(info.getProperty("secret"));
+                key = toNull(info.getProperty("key"));
+        }
+
+        // Pull in all of the custom parameters
+        for(Object okey : info.keySet() ) {
+                String skey = (String) okey;
+                if ( ! skey.startsWith("custom_") ) continue;
+                String value = info.getProperty(skey);
+                if ( value == null ) continue;
+                setProperty(launch, skey, value);
+        }
+
         String oauth_callback = ServerConfigurationService.getString("basiclti.oauth_callback",null);
 	// Too bad there is not a better default callback url for OAuth
         // Actually since we are using signing-only, there is really not much point 
@@ -258,15 +278,15 @@ public class SakaiBLTIUtil {
         setProperty(launch, BasicLTIUtil.BASICLTI_SUBMIT, getRB(rb, "launch.button", "Press to Launch External Tool"));
 
         // Sanity checks
-        if ( secret == null && org_secret == null ) {
+        if ( secret == null ) {
             return postError("<p>" + getRB(rb, "error.nosecret", "Error - must have a secret.")+"</p>");
         }
-        if ( ( secret != null && key == null) || ( org_secret != null && org_guid == null ) ){
+        if (  secret != null && key == null ){
             return postError("<p>" + getRB(rb, "error.nokey", "Error - must have a secret and a key.")+"</p>");
         }
 
-        launch = BasicLTIUtil.signProperties(launch, launch_url, "POST", 
-            key, secret, org_secret, org_guid, org_name);
+        launch = BasicLTIUtil.signProperties(launch, launch_url, "POST",
+            key, secret, org_guid, org_name, org_url);
 
         if ( launch == null ) return postError("<p>" + getRB(rb, "error.sign", "Error signing message.")+"</p>");
         dPrint("LAUNCH III="+launch);
@@ -315,9 +335,9 @@ public class SakaiBLTIUtil {
     } // getExternalRealmId
 
     // Look through a series of secrets from the properties based on the launchUrl
-    private static String getToolConsumerSecret(String launchUrl)
+    private static String getToolConsumerInfo(String launchUrl, String data)
     {
-        String default_secret = ServerConfigurationService.getString("basiclti.consumer_instance_secret",null);
+        String default_secret = ServerConfigurationService.getString("basiclti.consumer_instance_"+data,null);
         dPrint("launchUrl = "+launchUrl);
         URL url = null;
         try {
@@ -331,15 +351,15 @@ public class SakaiBLTIUtil {
         dPrint("host = "+hostName);
         if ( hostName == null || hostName.length() < 1 ) return default_secret;
         // Look for the property starting with the full name
-        String org_secret = ServerConfigurationService.getString("basiclti.consumer_instance_secret."+hostName,null);
-        if ( org_secret != null ) return org_secret;
+        String org_info = ServerConfigurationService.getString("basiclti.consumer_instance_"+data+"."+hostName,null);
+        if ( org_info != null ) return org_info;
         for ( int i = 0; i < hostName.length(); i++ ) {
             if ( hostName.charAt(i) != '.' ) continue;
             if ( i > hostName.length()-2 ) continue;
             String hostPart = hostName.substring(i+1);
-            String propName = "basiclti.consumer_instance_secret."+hostPart;
-            org_secret = ServerConfigurationService.getString(propName,null);
-            if ( org_secret != null ) return org_secret;
+            String propName = "basiclti.consumer_instance_"+data+"."+hostPart;
+            org_info = ServerConfigurationService.getString(propName,null);
+            if ( org_info != null ) return org_info;
         }
         return default_secret;
     }
