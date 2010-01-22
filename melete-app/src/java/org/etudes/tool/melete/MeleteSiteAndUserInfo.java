@@ -226,8 +226,8 @@ public class MeleteSiteAndUserInfo {
 			sessionMap.put("institute", "Foothill College");
             sessionMap.put("maxSize", String.valueOf(getMaxUploadSize()));
 
-            logger.debug("Is Author is "+ isUserAuthor());
-
+        //    logger.debug("Is Author is "+ isUserAuthor());
+            logger.debug("tool id: " + ToolManager.getCurrentPlacement().getToolId());
 
 			if (isUserAuthor()){
 				sessionMap.put("role", "INSTRUCTOR");
@@ -247,7 +247,7 @@ public class MeleteSiteAndUserInfo {
 	 * @return the name the page to naviagate
 	 */
 	public String processNavigate(){
-		if (logger.isDebugEnabled()) logger.debug("new process navigate is called");
+	//	if (logger.isDebugEnabled()) logger.debug("new process navigate is called");
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		try{
@@ -430,7 +430,7 @@ public class MeleteSiteAndUserInfo {
 	public int getMaxUploadSize()
 	{
 		int maxSize = ServerConfigurationService.getInt("content.upload.max", 2);
-		logger.debug("MAX UPLOAD SIZE IS "+maxSize);
+	//	logger.debug("MAX UPLOAD SIZE IS "+maxSize);
 		return maxSize;
 	}
 	/*******************************************************************************
