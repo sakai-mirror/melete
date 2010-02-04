@@ -71,12 +71,6 @@ function showupload()
 		     document.getElementById("AddSectionForm:contentEditorView:EditorPanel").style.visibility="hidden";
 		     document.getElementById("AddSectionForm:contentEditorView:EditorPanel").style.display="none";
 		  }
-
-		if(document.getElementById("othereditor") != undefined && document.getElementById("othereditor") != null)
-		  {
-		      document.getElementById("othereditor").style.visibility="hidden";
-		      document.getElementById("othereditor").style.display="none";
-		  }
 	}
 	
 		
@@ -95,19 +89,6 @@ function showupload()
                   document.getElementById("AddSectionForm:contentEditorView").style.display="none";
             }
 	}	
-	
-	if(sferyxdisplay != undefined && str.match("typeEditor"))	
-		{	
-		 var k1=document.getElementById("AddSectionForm:contentEditorView:contentTextArea").value;     
-			if(k1 != undefined && k1 != null) document.htmleditor.setContent(k1); //May use initialURLEncodedContent param instead
-		  }
-
-    //This check is to hide fckeditor		  
-    if(!str.match("typeEditor"))
-	{
-		document.getElementById("othereditor").style.visibility="hidden";
-		document.getElementById("othereditor").style.display="none";
-	}		  
  }	
 
 function transferEditordata()
@@ -118,7 +99,7 @@ function transferEditordata()
 	if(document.htmleditor!= undefined && document.htmleditor!= null)
 	{
 	  window.defaultStatus="Adding content....";
-	  	var k =document.htmleditor.getBodyContent();
+	  	var k =document.htmleditor.getContent();
 	  		 if(document.getElementById("AddSectionForm:contentEditorView:contentTextArea") !=undefined &&
 	  		   document.getElementById("AddSectionForm:contentEditorView:contentTextArea") != null)
 			 {
@@ -260,12 +241,12 @@ function contentChangeSubmit()
 										 <td colspan="2" align="center"> 
 												
 											<f:subview id="contentEditorView" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
-														<jsp:include page="contentSferyxEditor.jsp"/> 
+														<jsp:include page="contentSferyxEditor.jsp?mode=Add"/> 
 													<h:inputHidden id="contentTextArea" value="#{addSectionPage.contentEditor}" />
 													
 													 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>																																
-											<div id="othereditor" style="visibility:visible"><sakai:inputRichText  id="otherMeletecontentEditor" value="#{addSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{addSectionPage.FCK_CollId}" /></div>
+											<sakai:inputRichText  id="otherMeletecontentEditor" value="#{addSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{addSectionPage.FCK_CollId}" />
 										</td>
 										</tr>
 									</table>	 

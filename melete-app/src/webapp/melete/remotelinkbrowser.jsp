@@ -22,7 +22,6 @@
  *
  **********************************************************************************
 -->
-<%@include file="accesscheck.jsp" %>
 <%@ page import="java.util.*,org.etudes.tool.melete.RemoteBrowserFile,javax.faces.application.FacesMessage"%>
 <% 
 	final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
