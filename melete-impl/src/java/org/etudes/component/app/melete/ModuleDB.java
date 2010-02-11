@@ -3121,6 +3121,89 @@ public class ModuleDB implements Serializable {
 		  return allresNames;
 	}
 
+	public Date getMinStartDate(String courseId)
+	{
+	  Connection dbConnection = null;
+	  List resList = new ArrayList();
+	  Date minStartDate = null;
+	  java.sql.Timestamp startTimestamp;
+	  try
+	  {
+		dbConnection = SqlService.borrowConnection();
+		ResultSet rs = null;
+
+	    String sql = "select min(mshdates.start_date) as minstartdate from melete_module_shdates mshdates, melete_course_module mcm where mshdates.module_id = mcm.module_id and mcm.course_id = ?";
+	    PreparedStatement pstmt = dbConnection.prepareStatement(sql);
+	    pstmt.setString(1,courseId);
+		rs = pstmt.executeQuery();
+		if (rs != null)
+		{
+		  while (rs.next())
+		  {
+			  startTimestamp = rs.getTimestamp("minstartdate");
+			  minStartDate = new java.util.Date(startTimestamp.getTime() + (startTimestamp.getNanos()/1000000));
+	      }
+		  rs.close();
+		  pstmt.close();
+		}
+	  }
+	  catch (Exception e)
+	  {
+		if (logger.isErrorEnabled()) logger.error(e);
+	  }
+	  finally
+	  {
+		try{
+		  if (dbConnection != null)
+		  SqlService.returnConnection(dbConnection);
+		}catch (Exception e1){
+		  if (logger.isErrorEnabled()) logger.error(e1);
+		}
+	  }
+	  return minStartDate;
+    }
+
+	public boolean applyBaseDate(String courseId, int number_of_days)
+	{
+		   Connection dbConnection = null;
+		  List resList = new ArrayList();
+		  Date minStartDate = null;
+		  java.sql.Timestamp startTimestamp;
+		  boolean result;
+		  try
+		  {
+			dbConnection = SqlService.borrowConnection();
+			int res;
+
+			String sql = "update melete_module_shdates set start_date = date_add(start_date, INTERVAL ? DAY),end_date = date_add(end_date, INTERVAL ? DAY) where module_id in (select module_id from melete_course_module where course_id = ?)";
+		    dbConnection.setAutoCommit(true);
+		    PreparedStatement pstmt = dbConnection.prepareStatement(sql);
+		    pstmt.setInt(1,number_of_days);
+		    pstmt.setInt(2,number_of_days);
+		    pstmt.setString(3,courseId);
+			res = pstmt.executeUpdate();
+			pstmt.close();
+			result = true;
+		  }
+		  catch (Exception e)
+		  {
+			result = false;
+			if (logger.isErrorEnabled())
+				logger.error(e);
+		  }
+		  finally
+		  {
+			try{
+			  if (dbConnection != null)
+			      SqlService.returnConnection(dbConnection);
+			 }catch (Exception e1){
+		      result = false;
+			  if (logger.isErrorEnabled()) logger.error(e1);
+			}
+		  }
+		  return result;
+	}
+
 // end clean up deleted stuff code
 	 /**
 	 * @param meleteSecurityService The meleteSecurityService to set.

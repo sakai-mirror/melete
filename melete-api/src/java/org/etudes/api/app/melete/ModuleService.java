@@ -98,4 +98,8 @@ public interface ModuleService{
 	public int cleanUpDeletedModules() throws Exception;
 	
 	public int getCourseModuleSize(String courseId);
+	
+	public Date getMinStartDate(String courseId);
+	
+	public boolean applyBaseDate(String courseId, int number_of_days);
 }
