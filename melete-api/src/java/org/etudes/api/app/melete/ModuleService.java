@@ -101,5 +101,5 @@ public interface ModuleService{
 	
 	public Date getMinStartDate(String courseId);
 	
-	public boolean applyBaseDate(String courseId, int number_of_days);
+	public boolean applyBaseDate(String courseId, int time_diff);
 }

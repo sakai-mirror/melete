@@ -3123,84 +3123,117 @@ public class ModuleDB implements Serializable {
 
 	public Date getMinStartDate(String courseId)
 	{
-	  Connection dbConnection = null;
-	  List resList = new ArrayList();
-	  Date minStartDate = null;
-	  java.sql.Timestamp startTimestamp;
-	  try
-	  {
-		dbConnection = SqlService.borrowConnection();
-		ResultSet rs = null;
-
-	    String sql = "select min(mshdates.start_date) as minstartdate from melete_module_shdates mshdates, melete_course_module mcm where mshdates.module_id = mcm.module_id and mcm.course_id = ?";
-	    PreparedStatement pstmt = dbConnection.prepareStatement(sql);
-	    pstmt.setString(1,courseId);
-		rs = pstmt.executeQuery();
-		if (rs != null)
-		{
-		  while (rs.next())
-		  {
-			  startTimestamp = rs.getTimestamp("minstartdate");
-			  minStartDate = new java.util.Date(startTimestamp.getTime() + (startTimestamp.getNanos()/1000000));
-	      }
-		  rs.close();
-		  pstmt.close();
-		}
-	  }
-	  catch (Exception e)
-	  {
-		if (logger.isErrorEnabled()) logger.error(e);
-	  }
-	  finally
-	  {
-		try{
-		  if (dbConnection != null)
-		  SqlService.returnConnection(dbConnection);
-		}catch (Exception e1){
-		  if (logger.isErrorEnabled()) logger.error(e1);
-		}
-	  }
+		 Date minStartDate = null;
+		  try
+			{
+		 	  List modList = getModules(courseId);
+		      Iterator i = modList.iterator();
+		      List dateList = new ArrayList();
+		      
+		      //Create a list of just the non-null dates
+		      while (i.hasNext())
+		      {
+		    	  Module mod = (Module) i.next();
+		    	  if (mod.getModuleshdate() != null)
+		    	  {
+		    		  if (mod.getModuleshdate().getStartDate() != null)
+		    		  {
+		    			  dateList.add(mod.getModuleshdate().getStartDate());
+		    		  }
+		    	  }
+		      }
+		      
+		      if (dateList != null)
+		      {
+		    	  if (dateList.size() > 0)
+		    	  {
+		    		  i = dateList.iterator();
+		    		  if (i.hasNext())
+		    		  {
+		    			  minStartDate = (Date)i.next();
+		    			  while (i.hasNext())
+		    			  {
+		    				  Date modDate = (Date)i.next();
+		    				  if (modDate.before(minStartDate))
+		    				  {
+		    					  minStartDate = modDate; 
+		    				  }
+		    			  }
+		    		  }
+		    	  }
+		      }     
+		    }
+		    catch (Exception he)
+		    {
+			  logger.error(he.toString());
+			  he.printStackTrace();
+		    }
 	  return minStartDate;
     }
 
-	public boolean applyBaseDate(String courseId, int number_of_days)
+	public boolean applyBaseDate(String courseId, int time_diff)
 	{
-		   Connection dbConnection = null;
-		  List resList = new ArrayList();
-		  Date minStartDate = null;
-		  java.sql.Timestamp startTimestamp;
-		  boolean result;
-		  try
-		  {
-			dbConnection = SqlService.borrowConnection();
-			int res;
+		Transaction tx = null;
 
-			String sql = "update melete_module_shdates set start_date = date_add(start_date, INTERVAL ? DAY),end_date = date_add(end_date, INTERVAL ? DAY) where module_id in (select module_id from melete_course_module where course_id = ?)";
-		    dbConnection.setAutoCommit(true);
-		    PreparedStatement pstmt = dbConnection.prepareStatement(sql);
-		    pstmt.setInt(1,number_of_days);
-		    pstmt.setInt(2,number_of_days);
-		    pstmt.setString(3,courseId);
-			res = pstmt.executeUpdate();
-			pstmt.close();
-			result = true;
-		  }
-		  catch (Exception e)
-		  {
-			result = false;
-			if (logger.isErrorEnabled())
-				logger.error(e);
-		  }
-		  finally
-		  {
-			try{
-			  if (dbConnection != null)
-			      SqlService.returnConnection(dbConnection);
-			 }catch (Exception e1){
-		      result = false;
-			  if (logger.isErrorEnabled()) logger.error(e1);
-			}
-		  }
+        boolean result = false;
+		 try
+			{
+		 	  List modList = getModules(courseId);
+		      Iterator i = modList.iterator();
+		      GregorianCalendar gc = new GregorianCalendar();
+		      
+		      Session session = hibernateUtil.currentSession();
+		      while (i.hasNext())
+		      {
+		    	  Module mod = (Module) i.next();
+		    	  ModuleShdates mshdates = (ModuleShdates) mod.getModuleshdate();
+		    	  if (mshdates != null)
+		    	  {
+		    		  try
+		    		  {
+		    			tx = session.beginTransaction();
+		    		    if (mshdates.getStartDate() != null)
+		    		    {
+		    			  gc.setTime(mshdates.getStartDate());
+		    			  gc.add(Calendar.SECOND, time_diff);
+		    			  Date resultStartDate = gc.getTime();
+		    			  mshdates.setStartDate(resultStartDate);
+		    		    }
+		    		    if (mshdates.getEndDate() != null)
+		    		    {
+		    			  gc.setTime(mshdates.getEndDate());
+		    			  gc.add(Calendar.SECOND, time_diff);
+		    			  Date resultEndDate = gc.getTime();
+		    			  mshdates.setEndDate(resultEndDate);
+		    		    }
+		    		    session.saveOrUpdate(mshdates);
+		        	    tx.commit();
+		        	    result = true;
+		    		  }
+			 	       catch(Exception e)
+			           {
+					     if(tx !=null) tx.rollback();
+					     logger.error(e.toString());
+					     result = false;
+			           }
+		    	  }
+		      }//End while    
+		    }
+		    catch (Exception he)
+		    {
+			  logger.error(he.toString());
+			  he.printStackTrace();
+			  result = false;
+		    }		
+		    try
+		    {
+	      	   hibernateUtil.closeSession();
+		    }
+	        catch (HibernateException he)
+		    {
+			   logger.error(he.toString());
+			   result = false;
+		    }		
 		  return result;
 	}
 
