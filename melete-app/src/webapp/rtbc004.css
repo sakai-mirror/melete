@@ -1,13 +1,13 @@
 
 .actionBar   		{	background: #EEEEEE;
-						border: 0;
+						border: 0px none black;
 						margin: 5px 0 0 0;
 						line-height: 2em;
 						padding-left: 1em;
 					}
 /* this group sets the font size for paragraphs */
 .formtext			{font-family : Verdana, Arial, sans-serif;
-					font-size : 10pt;}
+					font-size : 100%;}
 
 /* this group sets the normal link colors */
 a1:link 				{color : #000080;}
@@ -37,13 +37,6 @@ a1:active 			{color : #000080;}
 					font-family: Verdana, Arial, sans-serif;
 					font-size : 10px;
 					font-weight : bold;
-					color : #000000;
-					text-align: left;
-					height:20px;}
-
-.tableheader3 		{background: #EAEAEA;
-					font-family: Verdana, Arial, sans-serif;
-					font-size : 10px;
 					color : #000000;
 					text-align: left;
 					height:20px;}
@@ -126,27 +119,24 @@ a1:active 			{color : #000080;}
 .ListTitleClass {
 	font-size: 10pt;
   	vertical-align: top;
-  	align: left;
+  	text-align: left;
   }
 
 .ListDateClass {
 	font-size: 9pt;
 	vertical-align: top;
-    align: left;
     width: 17%;  
     white-space: nowrap;	
   }
 
 .ListActionClass {
-	vertical-align: top;
-    align: left;
+	vertical-align: top;    
     width: 11%;
   	white-space: nowrap;
   } 
   
  .ListModCheckClass {
    vertical-align: top;
-	align:left;
 	width: 2%;
 	white-space:nowrap;
    }
@@ -157,26 +147,24 @@ a1:active 			{color : #000080;}
  }
   
 .ListDatePickerClass	{  
-width: 16;  
-height: 16;  border: 0;  
-vertical-align: top;  align:center;  }
+width: 16px;  
+height: 16px;  border: 0 none black;  
+vertical-align: bottom;  }
 
 .ListClosedClass {
-   vertical-align: top;
-	align:center;
+   vertical-align: top;	
 	width: 2%;
 	white-space:nowrap;
    }
     
 .ListPrintClass {
-   vertical-align: top;
-	align:center;
+   vertical-align: top;	
 	width: 7%;
 	white-space:nowrap;
    }
 
 .SectionClass 	{font-size: 10pt; 
-align: left;
+text-align: left;
 width :85%;} 
 
 .SectionTableClass {vertical-align: top;}
@@ -191,7 +179,7 @@ width :85%;}
 .DatePickerClass	{  
 width: 16px;  
 height: 16px;  border: 0 none black;  
-vertical-align: middle;  align:center;  }
+vertical-align: middle; }
 
 .ExpClass			{ border: 0 none black;}
 .NextStepsPaddingClass {padding:11.3px;}
@@ -202,15 +190,14 @@ vertical-align: middle;  align:center;  }
 .LotsofPaddingClass {padding:110px;}
 
 .ViewSectionTableClass {padding:8px;
-hspace:5;
-valign:top;}
+ vertical-align:top;}
 
-.AuthImgClass		{ width: 16px;    height: 16px;    border: 0 none black;    align: absbottom;   }
+.AuthImgClass		{ width: 16px;    height: 16px;    border: 0 none black;    vertical-align: text-bottom;   }
 
 .AddImgClass		{   height: 16px;   
-width: 16px;   border: 0 none black;  hspace:10; }
+width: 16px;   border: 0 none black;  vertical-align: top;}
      
-.MainTableClass		{ border-color: #E2E4E8;border:1;}
+.MainTableClass		{ border-color: #E2E4E8;border:1 solid #E2E4E8;}
 td.MainTableClass     { white-space: nowrap;}
 
 .BottomImgSave,.BottomImgContinue		{  	padding-left:2em;
@@ -283,12 +270,6 @@ white-space:nowrap;}
   }
   .ExpClass{
    border: 0 none black;
-   }
- 
-   .ModCheckClass {
-   vertical-align: top;
-	align:center;
-	white-space:nowrap;
    }
 
 .meletePortletToolBarMessage{

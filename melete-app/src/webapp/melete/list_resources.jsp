@@ -55,9 +55,9 @@
                 </h:column>
                 <h:column/>
    	        <h:column>
-   		  <h:graphicImage id="leftImg_disable" value="images/nav_left_disable.jpg" alt="#{msgs.list_resources_previous}" styleClass="ModCheckClass" style="border:0" rendered="#{!listResourcesPage.listNav.displayPrev}" />
+   		  <h:graphicImage id="leftImg_disable" value="images/nav_left_disable.jpg" alt="#{msgs.list_resources_previous}" style="border:0 none;vertical-align:middle;" rendered="#{!listResourcesPage.listNav.displayPrev}" />
 		  <h:commandLink id="prev_nav"  action="#{listResourcesPage.listNav.goPrev}" rendered="#{listResourcesPage.listNav.displayPrev}">		
-						 <h:graphicImage id="leftImg" value="images/nav_left.jpg" alt="#{msgs.list_resources_previous2}" title="#{msgs.list_resources_previous2}" styleClass="ModCheckClass" style="border:0" />
+						 <h:graphicImage id="leftImg" value="images/nav_left.jpg" alt="#{msgs.list_resources_previous2}" title="#{msgs.list_resources_previous2}" style="border:0 none;vertical-align:middle;"/>
 		   </h:commandLink>		 
 		   	 <h:outputText id="nav_spaces_left" value="" styleClass="ExtraPaddingClass" />
 		  <h:selectOneMenu id="chunkSize"  valueChangeListener="#{listResourcesPage.listNav.changeChunkSize}" onchange="this.form.submit();">
@@ -67,9 +67,9 @@
 		 </h:selectOneMenu>
 		 <h:outputText id="nav_spaces" value="" styleClass="ExtraPaddingClass" />
 				<h:commandLink id="next_nav" action="#{listResourcesPage.listNav.goNext}" rendered="#{listResourcesPage.listNav.displayNext}">
-							 <h:graphicImage id="rightImg" value="images/nav_right.jpg" alt="#{msgs.list_resources_next}" title="#{msgs.list_resources_next}" styleClass="ModCheckClass" style="border:0" />
+							 <h:graphicImage id="rightImg" value="images/nav_right.jpg" alt="#{msgs.list_resources_next}" title="#{msgs.list_resources_next}" style="border:0 none;vertical-align:middle;" />
 			   </h:commandLink>	 
-			   <h:graphicImage id="rightImg_disable" value="images/nav_right_disable.jpg" alt="#{msgs.list_resources_next2}" title="#{msgs.list_resources_next2}" styleClass="ModCheckClass" style="border:0" rendered="#{!listResourcesPage.listNav.displayNext}"/> 
+			   <h:graphicImage id="rightImg_disable" value="images/nav_right_disable.jpg" alt="#{msgs.list_resources_next2}" title="#{msgs.list_resources_next2}" style="border:0 none;vertical-align:middle;" rendered="#{!listResourcesPage.listNav.displayNext}"/> 
    	      </h:column>											
               </h:panelGrid>
                <!-- navigation ends -->            		 

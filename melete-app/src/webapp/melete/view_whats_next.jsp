@@ -48,7 +48,7 @@
 												  <jsp:include page="topnavbar.jsp"/> 
 									</f:subview>
 								<div class="meletePortletToolBarMessage">
-								<h:graphicImage id="previewtopimg" value="images/preview.png" styleClass="AuthMessageImgClass" rendered="#{viewNextStepsPage.instRole == true}"/>
+								<h:graphicImage id="previewtopimg" value="images/preview.png" styleClass="AuthImgClass" rendered="#{viewNextStepsPage.instRole == true}"/>
 								<h:outputText value="#{msgs.view_whats_next_viewing}" rendered="#{viewNextStepsPage.instRole == true}"/>
 								</div>	
 					</td>
