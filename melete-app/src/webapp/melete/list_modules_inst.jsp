@@ -169,7 +169,7 @@ return newWindow;
           </h:panelGrid> 
            </h:column>
            <h:column>
-               <h:graphicImage id="closed_gif" value="images/closed.gif" alt="#{msgs.list_modules_inst_closed}" title="#{msgs.list_modules_inst_closed}" rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag}" styleClass="ExpClass"/>
+               <h:graphicImage id="closed_gif" value="images/view_closed.png" alt="#{msgs.list_modules_inst_closed}" title="#{msgs.list_modules_inst_closed}" rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag}" styleClass="ExpClass"/>
            </h:column>
            <h:column>
              <f:facet name="header">
