@@ -40,10 +40,25 @@ final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)faces
 <sakai:view_content>
 
 <sakai:tool_bar id="topbar">
-<sakai:tool_bar_item id="viewItem" action="#{navPage.viewAction}" value="#{msgs.topnavbar_view}"  immediate="true"/>
-<sakai:tool_bar_item id="authorItem" action="#{navPage.authAction}" value="#{msgs.topnavbar_author}" immediate="true"  rendered="#{navPage.isInstructor}"/>
-<sakai:tool_bar_item id="manageItem" action="#{navPage.manageAction}" value="#{msgs.topnavbar_manage}"  immediate="true"  rendered="#{navPage.isInstructor}"/>
-<sakai:tool_bar_item id="prefItem" action="#{navPage.PreferenceAction}" value="#{msgs.topnavbar_preferences}"   immediate="true"/>
+  <h:commandLink id="viewItem" action="#{navPage.viewAction}" immediate="true" >
+	 <h:graphicImage url="/images/preview.png" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
+	 <h:outputText  value="#{msgs.topnavbar_view}"/>
+  </h:commandLink>
+<sakai:tool_bar_spacer/>
+  <h:commandLink id="authorItem" action="#{navPage.authAction}" immediate="true" rendered="#{navPage.isInstructor}">
+	 <h:graphicImage url="/images/pen_red.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
+	 <h:outputText  value="#{msgs.topnavbar_author}"/>
+  </h:commandLink>
+<sakai:tool_bar_spacer/>
+  <h:commandLink id="manageItem" action="#{navPage.manageAction}" immediate="true" rendered="#{navPage.isInstructor}">
+	 <h:graphicImage url="/images/folder_document.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
+	 <h:outputText  value="#{msgs.topnavbar_manage}"/>
+  </h:commandLink>
+<sakai:tool_bar_spacer/>
+  <h:commandLink id="prefItem" action="#{navPage.PreferenceAction}" immediate="true">
+	 <h:graphicImage url="/images/user1_preferences.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
+	 <h:outputText  value="#{msgs.topnavbar_preferences}"/>
+  </h:commandLink>
 </sakai:tool_bar>
 <!-- End code to display images horizontally. -->
 
