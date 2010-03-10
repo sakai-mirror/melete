@@ -197,7 +197,7 @@ vertical-align: middle; }
 .AddImgClass		{   height: 16px;   
 width: 16px;   border: 0 none black;  vertical-align: top;}
      
-.MainTableClass		{ border-color: #E2E4E8;border:1 solid #E2E4E8;}
+.MainTableClass		{ border:1px solid #E2E4E8;}
 td.MainTableClass     { white-space: nowrap;}
 
 .BottomImgSave,.BottomImgContinue		{  	padding-left:2em;
@@ -209,9 +209,12 @@ td.MainTableClass     { white-space: nowrap;}
 .BottomImgAdd		{  	padding-left:2em;
 						background: #eee url('images/add.png') .2em no-repeat;
 					}	
-.BottomImgCancel,.BottomImgReturn	{  	padding-left:2em;
+.BottomImgReturn	{  	padding-left:2em;
 						background: #eee url('images/return_sm.png') .2em no-repeat;
 					}	
+.BottomImgCancel	{  	padding-left:2em;
+						background: #eee url('images/closed.gif') .2em no-repeat;
+					}						
 .BottomImgSet		{  	padding-left:2em;
 						background: #eee url('images/set.png') .2em no-repeat;
 					}
@@ -294,7 +297,7 @@ color: #5A6D95;
 
 .copyrightColumn2{
    width:50%;
-	align:right;
+	text-align:right;
 }
 .col30 {
 	width:30%;
