@@ -224,7 +224,7 @@ return newWindow;
         </tr>
         <tr>
         <td colspan="5">
-         <h:graphicImage id="closed_gif" value="images/closed.gif" alt="" styleClass="ExpClass" rendered="#{listModulesPage.closedModulesFlag == listModulesPage.trueFlag}"/>
+         <h:graphicImage id="closed_gif" value="images/view_closed.png" alt="" styleClass="ExpClass" rendered="#{listModulesPage.closedModulesFlag == listModulesPage.trueFlag}"/>
          <h:outputText styleClass="style3" value="#{msgs.list_modules_inst_module_not_open}" rendered="#{listModulesPage.closedModulesFlag == listModulesPage.trueFlag}"/>
          </td>
          </tr>
