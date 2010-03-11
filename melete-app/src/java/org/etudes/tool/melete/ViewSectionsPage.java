@@ -767,6 +767,11 @@ public String goNextModule()
 	}
 }
 
+public String gotoAddBookmark()
+{
+	return "add_bookmark";
+}
+
 /*
  * section breadcrumps in format module title >> section title
  */

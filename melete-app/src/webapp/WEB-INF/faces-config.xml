@@ -417,7 +417,19 @@
 			<property-name>moduleService</property-name>
 			<value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
 		</managed-property>     
-</managed-bean>  
+</managed-bean> 
+
+<managed-bean>
+          <description>bookmark section</description>
+          <managed-bean-name>bookmarkPage</managed-bean-name>
+          <managed-bean-class>org.etudes.tool.melete.BookmarkPage</managed-bean-class>
+          <managed-bean-scope>session</managed-bean-scope>    
+          	<managed-property>
+			<description>Service Dependency: Bookmark service</description>
+			<property-name>bookmarkService</property-name>
+			<value>#{Components["org.etudes.api.app.melete.BookmarkService"]}</value>
+		</managed-property>     
+</managed-bean>   
 
  <managed-bean>
       <description>Manages the DeleteResource page</description>
@@ -1595,7 +1607,11 @@
        <navigation-case>
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
-     </navigation-case>                                                             
+     </navigation-case>  
+     <navigation-case>
+		   <from-outcome>add_bookmark</from-outcome>
+        <to-view-id>/melete/add_bookmark.jsp</to-view-id>
+      </navigation-case>                                                             
    </navigation-rule>     
    
 <!--Rule for view_whats_next -->  
@@ -1844,7 +1860,15 @@
 		   <from-outcome>list_modules_student</from-outcome>
         <to-view-id>/melete/list_modules_student.jsp</to-view-id>
       </navigation-case>                                      
- </navigation-rule>        
+ </navigation-rule>     
+ 
+ <navigation-rule>
+		<from-view-id>/melete/add_bookmark.jsp</from-view-id>
+		 <navigation-case>
+      <from-outcome>confirm_bookmark</from-outcome>
+      <to-view-id>/melete/confirm_bookmark.jsp</to-view-id>
+     </navigation-case>                                     
+ </navigation-rule>    
 <!-- remove Components and render-kit by rashmi as samigo tag is no longer used-->
  
 </faces-config>

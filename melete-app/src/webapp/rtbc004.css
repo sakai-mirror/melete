@@ -89,6 +89,7 @@ a1:active 			{color : #000080;}
 /* Sets border color to light grey & background color to dull grey in Main Text tables */ 
 .maintabledata8 	{border-color:#E2E4E8;  background-color:#EAEAEA; } 
 
+.forumline {BORDER-RIGHT: #c8d1d7 2px solid; BORDER-TOP: #c8d1d7 2px solid; BORDER-LEFT: #c8d1d7 2px solid; BORDER-BOTTOM: #c8d1d7 2px solid; BACKGROUND-COLOR: #ffffff}
 .style1 			{color: #FFFFFF; }    /* Course + Instructor name in Header */
 .style2 			{color: #51698D; font-weight: bold;}  /*  */
 .style3 			{font-size: 9pt; }    /* "back to Top" and other such text buttons */

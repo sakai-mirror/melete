@@ -38,7 +38,8 @@
 				<value>org/etudes/component/app/melete/SectionResource.hbm.xml</value>	
 				<value>org/etudes/component/app/melete/MeleteUserPreference.hbm.xml</value>					
 				<value>org/etudes/component/app/melete/MeleteResource.hbm.xml</value>	
-				<value>org/etudes/component/app/melete/MeleteSitePreference.hbm.xml</value>	
+				<value>org/etudes/component/app/melete/MeleteSitePreference.hbm.xml</value>
+				<value>org/etudes/component/app/melete/Bookmark.hbm.xml</value>	
 	        </list>
 		</property>
 	</bean>
@@ -259,6 +260,22 @@
 				singleton="true">	
 		<property name="userPrefdb">
 			<ref local="org.etudes.component.app.melete.MeleteUserPreferenceDB"/>
+        </property>
+	</bean>    
+	
+	<bean id="org.etudes.component.app.melete.BookmarkDB"
+			class="org.etudes.component.app.melete.BookmarkDB"
+			singleton="true">
+			<property name="hibernateUtil">
+            <ref local="org.etudes.component.app.melete.HibernateUtil" />
+        </property>        
+	</bean>
+	
+	<bean id="org.etudes.api.app.melete.BookmarkService"
+				class="org.etudes.component.app.melete.BookmarkServiceImpl"
+				singleton="true">	
+		<property name="bookmarkDb">
+			<ref local="org.etudes.component.app.melete.BookmarkDB"/>
         </property>
 	</bean>    
    

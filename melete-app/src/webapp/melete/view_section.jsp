@@ -30,6 +30,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
+<script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
 </head>
 
 <f:view>
@@ -56,6 +57,16 @@
 
 	<h:panelGroup id="bcsecpgroup" binding="#{viewSectionsPage.secpgroup}"/>
 </td>
+<tr>
+<td colspan="2" align="right">
+
+  <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'Melete Bookmark Window');">
+		    	<f:param id="sectionId" name="sectionId" value="#{viewSectionsPage.section.sectionId}" />
+	  			<h:graphicImage id="bul_gif" value="images/icon_bookmark.gif" />
+				      <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
+ 	</h:outputLink>				  
+</td>
+</tr>
 </tr>    
 	<tr>	<td colspan="2">&nbsp;</td>		</tr>     
 <tr>
