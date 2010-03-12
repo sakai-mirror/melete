@@ -37,24 +37,22 @@ final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)faces
 <link href="/library/skin/default/tool.css" type="text/css" rel="stylesheet" media="all" />
 <link href="rtbc004.css" type="text/css" rel="stylesheet" media="all" />
 
-<sakai:view_content>
-
 <sakai:tool_bar id="topbar">
   <h:commandLink id="viewItem" action="#{navPage.viewAction}" immediate="true" >
 	 <h:graphicImage url="/images/preview.png" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
-	 <h:outputText  value="#{msgs.topnavbar_view}"/>
+	 <h:outputText  value="#{msgs.topnavbar_view}"/>	
   </h:commandLink>
-<sakai:tool_bar_spacer/>
+  <h:outputText  value="|" style="margin-left:5px; margin-right:10px;" rendered="#{navPage.isInstructor}"/>
   <h:commandLink id="authorItem" action="#{navPage.authAction}" immediate="true" rendered="#{navPage.isInstructor}">
 	 <h:graphicImage url="/images/pen_red.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
-	 <h:outputText  value="#{msgs.topnavbar_author}"/>
-  </h:commandLink>
-<sakai:tool_bar_spacer/>
+	 <h:outputText  value="#{msgs.topnavbar_author}"/>	
+	</h:commandLink>
+  <h:outputText  value="|" style="margin-left:5px; margin-right:10px;" rendered="#{navPage.isInstructor}"/>	
   <h:commandLink id="manageItem" action="#{navPage.manageAction}" immediate="true" rendered="#{navPage.isInstructor}">
 	 <h:graphicImage url="/images/folder_document.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
-	 <h:outputText  value="#{msgs.topnavbar_manage}"/>
+	 <h:outputText  value="#{msgs.topnavbar_manage}"/>	
   </h:commandLink>
-<sakai:tool_bar_spacer/>
+   <h:outputText  value="|" style="margin-left:5px; margin-right:10px;"/>
   <h:commandLink id="prefItem" action="#{navPage.PreferenceAction}" immediate="true">
 	 <h:graphicImage url="/images/user1_preferences.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
 	 <h:outputText  value="#{msgs.topnavbar_preferences}"/>
@@ -62,6 +60,5 @@ final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)faces
 </sakai:tool_bar>
 <!-- End code to display images horizontally. -->
 
-</sakai:view_content>
 
 
