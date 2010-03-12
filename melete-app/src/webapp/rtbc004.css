@@ -7,7 +7,7 @@
 					}
 /* this group sets the font size for paragraphs */
 .formtext			{font-family : Verdana, Arial, sans-serif;
-					font-size : 80%;}
+					font-size : 100%;}
 
 /* this group sets the normal link colors */
 a1:link 				{color : #000080;}
@@ -35,7 +35,7 @@ a1:active 			{color : #000080;}
 
 .tableheader 		{background: #EAEAEA;
 					font-family: Verdana, Arial, sans-serif;
-					font-size :80%;
+					font-size :83%;
 					font-weight : bold;
 					color : #000000;
 					text-align: left;
@@ -53,7 +53,7 @@ a1:active 			{color : #000080;}
 /*Sets <th> to align:left*/
 .leftheader 		{background: #EAEAEA;
 					font-family: Verdana, Arial, sans-serif;
-					font-size : 80%;
+					font-size : 83%;
 					font-weight : bold;
 					color : #000000;
 					text-align: left;}
@@ -93,13 +93,11 @@ a1:active 			{color : #000080;}
 .forumline {BORDER-RIGHT: #c8d1d7 2px solid; BORDER-TOP: #c8d1d7 2px solid; BORDER-LEFT: #c8d1d7 2px solid; BORDER-BOTTOM: #c8d1d7 2px solid; BACKGROUND-COLOR: #ffffff}
 .style1 			{color: #FFFFFF; }    /* Course + Instructor name in Header */
 .style2 			{color: #51698D; font-weight: bold;}  /*  */
-.style3 			{font-size: 75%; }    /* "back to Top" and other such text buttons */
+.style3 			{font-size: 74%; }    /* "back to Top" and other such text buttons */
 .style4 			{font-size: 100%; }	  /*  */
-.style5 			{font-size: 70%; }    /* Small Table data text */
+.style5 			{font-size: 71%; }    /* Small Table data text */
 .orange 			{color: #C48C68; }    /* Highlighting text in Orange color */
-.italics			{font-style: italic;
-					font-size: 80%;
-  					} /* For italicizing text */
+.italics			{font-style: italic;} /* For italicizing text */
 .bold				{font-weight: bold; }  /* For making text bold */
 .center				{text-align: center; } /* For center alignment */
 .left				{text-align: left; } /* For left alignment*/
@@ -115,17 +113,17 @@ a1:active 			{color : #000080;}
 .underlineClass {text-decoration: underline;}
 .style6 			{font-size: 116%;}	  /*  */
 .style7 			{}	  /*  */
-.style8			{font-size: 80%;}	  /*  */
+.style8			{font-size: 83%;}	  /*  */
 .valignStyle9  { vertical-align: top;}
 
 .ListTitleClass {
-	font-size: 75%;
+	font-size: 92%;
   	vertical-align: top;
   	text-align: left;
   }
 
 .ListDateClass {
-	font-size: 75%;
+	font-size: 92%;
 	vertical-align: top;
     width: 17%;  
     white-space: nowrap;	
@@ -144,7 +142,7 @@ a1:active 			{color : #000080;}
    }
    
  .ListDateInput{
- 	font-size: 75%;
+ 	font-size: 92%;
  	width:85%;
  }
   
@@ -165,7 +163,7 @@ vertical-align: bottom;  }
 	white-space:nowrap;
    }
 
-.SectionClass 	{font-size: 75%; 
+.SectionClass 	{font-size: 83%; 
 text-align: left;
 width :85%;} 
 
@@ -281,7 +279,7 @@ white-space:nowrap;}
 background-color:#FFFFFF;
 display:block;
 color:#51698D;
-font-size:70%;
+font-size:83%;
 margin:0;
 padding:8px;
 text-align:left;
@@ -313,3 +311,5 @@ color: #5A6D95;
 }
 
 .colNowrap {white-space:nowrap;}
+
+.authBarCol {font-size:83%;white-space:nowrap;}
