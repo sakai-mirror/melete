@@ -25,6 +25,7 @@
 package org.etudes.component.app.melete;
 
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
@@ -109,7 +110,55 @@ public class BookmarkDB {
 		}
 		return mb;
 	}
+	private void adjustLastVisited(List mbList, int sectionId) throws Exception
+	{
+		Transaction tx = null;
+	 	try
+		{
+	 		 Session session = hibernateUtil.currentSession();
+		      tx = session.beginTransaction();
+		      for (ListIterator i = mbList.listIterator(); i.hasNext(); )
+		    {
+			 Bookmark bm = (Bookmark)i.next();
+			 if ((bm.getSectionId() != sectionId)&&(bm.getLastVisited().booleanValue() == true))
+			 {
+			   bm.setLastVisited(new Boolean(false));
+			   session.saveOrUpdate(bm);
+			 }
+		     }
+		   tx.commit();
 
+	    }
+	 	catch(StaleObjectStateException sose)
+	     {
+			if(tx !=null) tx.rollback();
+			logger.error("stale object exception" + sose.toString());
+			throw sose;
+	     }
+	    catch (HibernateException he)
+	    {
+		  logger.error(he.toString());
+		  he.printStackTrace();
+		  throw he;
+	    }
+	    catch (Exception e) {
+	      if (tx!=null) tx.rollback();
+	      logger.error(e.toString());
+	      throw e;
+	    }
+	    finally
+		{
+	    	try
+			  {
+		      	hibernateUtil.closeSession();
+			  }
+		      catch (HibernateException he)
+			  {
+				  logger.error(he.toString());
+				  throw he;
+			  }
+		}		
+	}
 	public void setBookmark(Bookmark mb) throws Exception
 	{
 		Transaction tx = null;
@@ -168,6 +217,19 @@ public class BookmarkDB {
 				  throw he;
 			  }
 		}
+	    //This code sets all other last visited flags to false
+	    //for this user's site
+	    if (mb.getLastVisited().booleanValue() == true)
+	    {
+	    	List mbList = getBookmarks(mb.getUserId(), mb.getSiteId());
+	    	if (mbList != null)
+	    	{
+	    		if (mbList.size() > 0)
+	    		{
+	    			adjustLastVisited(mbList, mb.getSectionId());
+	    		}	
+	    	}
+	    }
 	}
 
 	/**
