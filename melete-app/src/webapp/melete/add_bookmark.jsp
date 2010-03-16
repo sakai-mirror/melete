@@ -33,13 +33,11 @@
 <link rel="stylesheet" href="rtbc004.css" type="text/css" media="all" >
 </head>
 <%
-System.out.println("IN BEG OF PAGE");
 final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 final BookmarkPage bookmarkPage = (BookmarkPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "bookmarkPage");
 bookmarkPage.setBookmark(null);
 String sectionId = (String)request.getParameter("sectionId");
 bookmarkPage.setSectionId(sectionId);
-
 %>
 <f:view>
 <body>

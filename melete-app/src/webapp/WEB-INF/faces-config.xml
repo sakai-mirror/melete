@@ -429,6 +429,11 @@
 			<property-name>bookmarkService</property-name>
 			<value>#{Components["org.etudes.api.app.melete.BookmarkService"]}</value>
 		</managed-property>     
+		<managed-property>
+            <description>Service Dependency: Section service</description>
+            <property-name>sectionService</property-name>
+            <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
+        </managed-property>
 </managed-bean>   
 
  <managed-bean>
@@ -1525,7 +1530,11 @@
      <navigation-case>
       <from-outcome>view_whats_next</from-outcome>
       <to-view-id>/melete/view_whats_next.jsp</to-view-id>
-     </navigation-case>                           
+     </navigation-case>    
+     <navigation-case>
+		   <from-outcome>list_bookmarks</from-outcome>
+        <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
+      </navigation-case>                        
    </navigation-rule>       
      
  <!--Rule for view_module -->    
@@ -1570,7 +1579,11 @@
   <navigation-case>
 		   <from-outcome>view_section_student</from-outcome>
         <to-view-id>/melete/view_section_student.jsp</to-view-id>
-      </navigation-case>                                                                
+      </navigation-case>       
+       <navigation-case>
+		   <from-outcome>list_bookmarks</from-outcome>
+        <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
+      </navigation-case>                                                           
    </navigation-rule>        
    
  <!--Rule for view_section -->  
@@ -1611,6 +1624,10 @@
      <navigation-case>
 		   <from-outcome>add_bookmark</from-outcome>
         <to-view-id>/melete/add_bookmark.jsp</to-view-id>
+      </navigation-case>  
+      <navigation-case>
+		   <from-outcome>list_bookmarks</from-outcome>
+        <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
       </navigation-case>                                                             
    </navigation-rule>     
    
@@ -1656,7 +1673,11 @@
       <navigation-case>
       <from-outcome>student_preference</from-outcome>
       <to-view-id>/melete/student_preference.jsp</to-view-id>
-     </navigation-case>                                                                                             
+     </navigation-case> 
+     <navigation-case>
+		   <from-outcome>list_bookmarks</from-outcome>
+        <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
+      </navigation-case>                                                                                             
    </navigation-rule>     
    
          
@@ -1682,7 +1703,11 @@
      <navigation-case>
       <from-outcome>view_whats_next</from-outcome>
       <to-view-id>/melete/view_whats_next.jsp</to-view-id>
-     </navigation-case>                                                                  
+     </navigation-case>       
+     <navigation-case>
+		   <from-outcome>list_bookmarks</from-outcome>
+        <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
+      </navigation-case>                                                            
    </navigation-rule>             
 
 
@@ -1708,7 +1733,11 @@
       <navigation-case>
       <from-outcome>student_preference</from-outcome>
       <to-view-id>/melete/student_preference.jsp</to-view-id>
-     </navigation-case>                                                                       
+     </navigation-case>     
+      <navigation-case>
+		   <from-outcome>list_bookmarks</from-outcome>
+        <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
+      </navigation-case>                                                                    
    </navigation-rule>           
    
 <!--Rule for view_section_student -->   
@@ -1733,7 +1762,11 @@
       <navigation-case>
       <from-outcome>student_preference</from-outcome>
       <to-view-id>/melete/student_preference.jsp</to-view-id>
-     </navigation-case>                                  
+     </navigation-case>        
+     <navigation-case>
+		   <from-outcome>list_bookmarks</from-outcome>
+        <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
+      </navigation-case>                          
    </navigation-rule>          
    
 
@@ -1868,7 +1901,79 @@
       <from-outcome>confirm_bookmark</from-outcome>
       <to-view-id>/melete/confirm_bookmark.jsp</to-view-id>
      </navigation-case>                                     
- </navigation-rule>    
+ </navigation-rule>   
+ 
+ <navigation-rule>
+		<from-view-id>/melete/list_bookmarks.jsp</from-view-id>
+		 <navigation-case>
+      <from-outcome>view_section</from-outcome>
+      <to-view-id>/melete/view_section.jsp</to-view-id>
+     </navigation-case>       
+      <navigation-case>
+      <from-outcome>view_section_student</from-outcome>
+      <to-view-id>/melete/view_section_student.jsp</to-view-id>
+     </navigation-case> 
+      <navigation-case>
+      <from-outcome>delete_bookmark</from-outcome>
+      <to-view-id>/melete/delete_bookmark.jsp</to-view-id>
+     </navigation-case> 
+     <navigation-case>
+		   <from-outcome>list_modules_inst</from-outcome>
+        <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
+      </navigation-case>          
+    <navigation-case>
+		   <from-outcome>list_modules_student</from-outcome>
+        <to-view-id>/melete/list_modules_student.jsp</to-view-id>
+      </navigation-case>   
+      <navigation-case>
+		   <from-outcome>list_auth_modules</from-outcome>
+        <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
+      </navigation-case> 
+     <navigation-case>
+		   <from-outcome>modules_author_manage</from-outcome>
+        <to-view-id>/melete/modules_author_manage.jsp</to-view-id>
+      </navigation-case>    
+       <navigation-case>
+      <from-outcome>author_preference</from-outcome>
+      <to-view-id>/melete/author_preference.jsp</to-view-id>
+     </navigation-case>        
+      <navigation-case>
+      <from-outcome>student_preference</from-outcome>
+      <to-view-id>/melete/student_preference.jsp</to-view-id>
+     </navigation-case>                                  
+ </navigation-rule>   
+ 
+ <navigation-rule>
+		<from-view-id>/melete/delete_bookmark.jsp</from-view-id>
+		 <navigation-case>
+      <from-outcome>list_bookmarks</from-outcome>
+      <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
+     </navigation-case>      
+     <navigation-case>
+		   <from-outcome>list_modules_inst</from-outcome>
+        <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
+      </navigation-case>          
+    <navigation-case>
+		   <from-outcome>list_modules_student</from-outcome>
+        <to-view-id>/melete/list_modules_student.jsp</to-view-id>
+      </navigation-case>   
+      <navigation-case>
+		   <from-outcome>list_auth_modules</from-outcome>
+        <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
+      </navigation-case> 
+     <navigation-case>
+		   <from-outcome>modules_author_manage</from-outcome>
+        <to-view-id>/melete/modules_author_manage.jsp</to-view-id>
+      </navigation-case>    
+       <navigation-case>
+      <from-outcome>author_preference</from-outcome>
+      <to-view-id>/melete/author_preference.jsp</to-view-id>
+     </navigation-case>        
+      <navigation-case>
+      <from-outcome>student_preference</from-outcome>
+      <to-view-id>/melete/student_preference.jsp</to-view-id>
+     </navigation-case>                                  
+ </navigation-rule>  
 <!-- remove Components and render-kit by rashmi as samigo tag is no longer used-->
  
 </faces-config>

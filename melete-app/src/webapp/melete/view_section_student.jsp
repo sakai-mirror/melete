@@ -60,13 +60,17 @@
 </tr>
 <tr>
 <td colspan="2" align="right">
-
+<h:commandLink id="myBookmarksLink" action="#{viewSectionsPage.gotoMyBookmarks}">
+ <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
+</h:commandLink>
+<h:outputText value="|"/>  														
   <h:outputLink id="bookmarkSectionLink" value="view_section_student" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'Melete Bookmark Window');">
 		    	<f:param id="sectionId" name="sectionId" value="#{viewSectionsPage.section.sectionId}" />
 	  			<h:graphicImage id="bul_gif" value="images/icon_bookmark.gif" />
 				      <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
  	</h:outputLink>				  
-</td>    
+</td>
+</tr>
 	<tr>	<td colspan="2">&nbsp;</td>		</tr>     
 <tr>
 <td colspan="2" align="left">

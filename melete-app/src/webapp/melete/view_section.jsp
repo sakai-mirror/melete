@@ -53,14 +53,17 @@
 <tr>
 <td colspan="2" align="center">
 <f:subview id="topmod">
-	<jsp:include page="view_navigate.jsp"/>
+ 	<jsp:include page="view_navigate.jsp"/>
 </f:subview>
 
 	<h:panelGroup id="bcsecpgroup" binding="#{viewSectionsPage.secpgroup}"/>
 </td>
 <tr>
 <td colspan="2" align="right">
-
+<h:commandLink id="myBookmarksLink" action="#{viewSectionsPage.gotoMyBookmarks}">
+ <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
+</h:commandLink>
+<h:outputText value="|"/>  														
   <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'Melete Bookmark Window');">
 		    	<f:param id="sectionId" name="sectionId" value="#{viewSectionsPage.section.sectionId}" />
 	  			<h:graphicImage id="bul_gif" value="images/icon_bookmark.gif" />

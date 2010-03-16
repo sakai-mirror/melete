@@ -223,6 +223,17 @@ public String goNextModule()
 	}
 }
 
+public String gotoMyBookmarks()
+{
+	FacesContext context = FacesContext.getCurrentInstance();
+	ValueBinding binding =
+        Util.getBinding("#{bookmarkPage}");
+    BookmarkPage bmPage = (BookmarkPage)binding.getValue(context);
+    bmPage.resetValues();
+	return "list_bookmarks";
+}
+
+
 /*
  * section breadcrumps in format module title >> section title
  */

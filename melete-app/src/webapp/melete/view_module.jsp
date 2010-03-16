@@ -63,7 +63,14 @@
 			<jsp:include page="view_navigate_mod.jsp"/>
 			</f:subview>
 			</td>
-		</tr>                     
+		</tr>      
+<tr>
+<td align="right">
+<h:commandLink id="myBookmarksLink" action="#{viewModulesPage.gotoMyBookmarks}">
+ <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
+</h:commandLink>				  
+</td>
+</tr>			               
 <tr>
 <td>
 	<h:panelGrid id="moduleContentGrid" columns="2" width="97%" border="0" cellpadding="5" rendered="#{viewModulesPage.mdbean != null && viewModulesPage.mdbean.module != null}">

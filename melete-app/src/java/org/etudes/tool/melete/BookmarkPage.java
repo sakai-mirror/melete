@@ -44,6 +44,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ValueChangeEvent;
+import javax.faces.event.ActionEvent;
 
 import org.etudes.api.app.melete.BookmarkService;
 import org.etudes.api.app.melete.BookmarkObjService;
@@ -57,7 +58,17 @@ public class BookmarkPage implements Serializable
 
 	private BookmarkService bookmarkService;
 
+	protected SectionService sectionService;
+
 	private String sectionId;
+
+	private List bmList;
+
+	private boolean instRole;
+
+	private int deleteBookmarkId;
+
+	private String deleteBookmarkTitle;
 
 	/** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(BookmarkPage.class);
@@ -95,10 +106,109 @@ public class BookmarkPage implements Serializable
 		return "confirm_bookmark";
 
 	}
+
+	   public void viewSection(ActionEvent evt)
+		{
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			UIViewRoot root = ctx.getViewRoot();
+
+			UICommand cmdLink = (UICommand)evt.getComponent();
+
+	      	List cList = cmdLink.getChildren();
+	      	if(cList == null || cList.size() <1) return;
+	    	UIParameter param1 = (UIParameter) cList.get(0);
+			ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
+
+			ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
+
+			vsPage.resetValues();
+			vsPage.setSectionId(((Integer)param1.getValue()).intValue());
+			Section sec = (Section)sectionService.getSection(((Integer)param1.getValue()).intValue());
+			vsPage.setModuleId(sec.getModuleId());
+			vsPage.setModuleSeqNo(sec.getModule().getCoursemodule().getSeqNo());
+			vsPage.setSection(sec);
+			vsPage.setModule(null);
+
+		}
+
+	public String redirectViewSection()
+	{
+		boolean isAuthor = getInstRole();
+		String retVal = "view_section_student";
+		if (isAuthor) retVal = "view_section";
+
+		return retVal;
+	}
+	  public void deleteAction(ActionEvent evt)
+		{
+			UICommand cmdLink = (UICommand)evt.getComponent();
+
+	      	List cList = cmdLink.getChildren();
+	      	if(cList == null || cList.size() <2) return;
+	    	UIParameter param1 = (UIParameter) cList.get(0);
+	    	UIParameter param2 = (UIParameter) cList.get(1);
+
+		    setDeleteBookmarkId(((Integer)param1.getValue()).intValue());
+			setDeleteBookmarkTitle((String)param2.getValue());
+			return;
+		}
+
+	  public String redirectDeleteLink()
+		{
+			 return "delete_bookmark";
+		}
+
+
+	public String deleteBookmark()
+	{
+		try
+	    {
+	      bookmarkService.deleteBookmark(this.deleteBookmarkId);
+	    }catch(Exception ex)
+		{
+          //TODO: add exception handling
+		}
+	    return "list_bookmarks";
+	}
+
+	public String cancelDeleteResource()
+  	{
+  		return "list_bookmarks";
+  	}
+
+
 	public void resetValues()
 	{
-
+      deleteBookmarkId = 0;
+      deleteBookmarkTitle = null;
+      bmList = null;
 	}
+
+	public int getDeleteBookmarkId() {
+	      return deleteBookmarkId;
+	   }
+
+    public void setDeleteBookmarkId(int deleteBookmarkId) {
+	     this.deleteBookmarkId = deleteBookmarkId;
+	 }
+
+	public String getDeleteBookmarkTitle() {
+		  return deleteBookmarkTitle;
+	}
+
+    public void setDeleteBookmarkTitle(String deleteBookmarkTitle) {
+		     this.deleteBookmarkTitle = deleteBookmarkTitle;
+	}
+
+	public boolean getInstRole()
+    {
+    	FacesContext context = FacesContext.getCurrentInstance();
+	  	Map sessionMap = context.getExternalContext().getSessionMap();
+	  	if ((String)sessionMap.get("role") !=null)
+	  		this.instRole = ((String)sessionMap.get("role")).equals("INSTRUCTOR");
+	  	else this.instRole = false;
+    	return instRole;
+    }
 
     public BookmarkObjService getBookmark() {
 	  FacesContext context = FacesContext.getCurrentInstance();
@@ -114,6 +224,19 @@ public class BookmarkPage implements Serializable
    public void setBookmark(BookmarkObjService bookmark) {
     this.bookmark = bookmark;
   }
+
+   public List getBmList()
+   {
+	   FacesContext context = FacesContext.getCurrentInstance();
+	   Map sessionMap = context.getExternalContext().getSessionMap();
+	   bmList = bookmarkService.getBookmarks((String)sessionMap.get("userId"),(String)sessionMap.get("courseId"));
+	   return bmList;
+   }
+
+   public void setBmList(List bmList)
+   {
+	   this.bmList = bmList;
+   }
 
   public String getSectionId() {
       return sectionId;
@@ -137,6 +260,20 @@ public class BookmarkPage implements Serializable
 	{
 		this.bookmarkService = bookmarkService;
 	}
+
+	/**
+     * @return Returns the SectionService.
+     */
+    public SectionService getSectionService() {
+            return sectionService;
+    }
+
+    /**
+     * @param SectionService The SectionService to set.
+     */
+    public void setSectionService(SectionService sectionService) {
+            this.sectionService = sectionService;
+    }
 
 
 }

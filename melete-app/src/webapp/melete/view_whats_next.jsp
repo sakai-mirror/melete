@@ -65,6 +65,13 @@
 			</td>
 </tr> 
 <tr>
+<td align="right">
+<h:commandLink id="myBookmarksLink" action="#{viewNextStepsPage.gotoMyBookmarks}">
+ <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
+</h:commandLink>				  
+</td>
+</tr>
+<tr>
 		<td align="left">  &nbsp;		</td>
 </tr> 
 

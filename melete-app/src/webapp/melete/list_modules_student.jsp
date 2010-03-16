@@ -52,6 +52,13 @@
 					 </td>
 			</tr>
 <tr>
+<td align="right">
+<h:commandLink id="myBookmarksLink" action="#{listModulesPage.gotoMyBookmarks}">
+ <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
+</h:commandLink>				  
+</td>
+</tr>			
+<tr>
 <td colspan="2">
 <h:messages showDetail="true" showSummary="false"/>
 

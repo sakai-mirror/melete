@@ -76,7 +76,15 @@ public List getBookmarks(String userId, String siteId)
 		return mbList;
 	}
 
-
+  public void deleteBookmark(int bookmarkId)
+  {
+	  try{
+			bookmarkDb.deleteBookmark(bookmarkId);
+		}catch(Exception e)
+			{
+			logger.debug("melete bookmark business -- delete bookmark failed");
+			}
+  }
 
 	/**
 	 * @return Returns the bookmarkDb

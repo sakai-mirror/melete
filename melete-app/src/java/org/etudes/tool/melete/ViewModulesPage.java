@@ -504,7 +504,16 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 	  	return retVal;
 
     }
-
+    public String gotoMyBookmarks()
+    {
+    	FacesContext context = FacesContext.getCurrentInstance();
+    	ValueBinding binding =
+            Util.getBinding("#{bookmarkPage}");
+        BookmarkPage bmPage = (BookmarkPage)binding.getValue(context);
+        bmPage.resetValues();
+    	return "list_bookmarks";
+    }
+    
     public boolean isPrintable()
 	  {
 		  FacesContext ctx = FacesContext.getCurrentInstance();

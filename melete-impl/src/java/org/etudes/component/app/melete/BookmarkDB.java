@@ -231,6 +231,30 @@ public class BookmarkDB {
 	    	}
 	    }
 	}
+	
+	public void deleteBookmark(int bookmarkId)
+	{
+		Bookmark mb = null;
+		try{
+		    Session session = getHibernateUtil().currentSession();
+		     int deletedEntities = session.createQuery("delete Bookmark bm where bm.bookmarkId = "+bookmarkId).executeUpdate();
+		}
+	    catch (HibernateException he)
+	    {
+		  logger.error(he.toString());
+	    }
+	    finally
+		{
+	    	try
+			  {
+		      	hibernateUtil.closeSession();
+			  }
+		      catch (HibernateException he)
+			  {
+				  logger.error(he.toString());
+			  }
+		}
+	}
 
 	/**
 	 * @return Returns the hibernateUtil.

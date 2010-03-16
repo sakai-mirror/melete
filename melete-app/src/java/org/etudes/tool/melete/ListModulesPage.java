@@ -607,6 +607,17 @@ public class ListModulesPage implements Serializable{
       	return "view_whats_next";
 
       }      
+      
+      public String gotoMyBookmarks()
+      {
+      	FacesContext context = FacesContext.getCurrentInstance();
+      	ValueBinding binding =
+              Util.getBinding("#{bookmarkPage}");
+          BookmarkPage bmPage = (BookmarkPage)binding.getValue(context);
+          bmPage.resetValues();
+      	return "list_bookmarks";
+      }
+      
 
 	  private void addNoModulesMessage(FacesContext ctx){
 	  	FacesMessage msg =

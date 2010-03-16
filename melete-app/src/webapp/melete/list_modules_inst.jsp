@@ -58,6 +58,13 @@
 </td>
 </tr>
 <tr>
+<td align="right">
+<h:commandLink id="myBookmarksLink" action="#{listModulesPage.gotoMyBookmarks}">
+ <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
+</h:commandLink>				  
+</td>
+</tr>	
+<tr>
 <td >
 <h:messages showDetail="true" showSummary="false"/>
 <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" >
