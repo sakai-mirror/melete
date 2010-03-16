@@ -1683,6 +1683,7 @@ public class ModuleDB implements Serializable {
 			// delete modules and sections
 			String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in ";
 			String delSectionResourceStr = "delete SectionResource sr where sr.section in ";
+			String delBookmarksStr = "delete Bookmark bm where bm.sectionId in ";
 			String delSectionStr = "delete Section s where s.moduleId in " + delModuleIds;
 			String delCourseModuleStr = "delete CourseModule cm where cm.moduleId in " + delModuleIds;
 			String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId in " + delModuleIds;
@@ -1696,6 +1697,8 @@ public class ModuleDB implements Serializable {
 					 deletedEntities = session.createQuery(updSectionResourceStr + allSectionIds.toString()).executeUpdate();
 					 logger.debug("section resource deleted" + deletedEntities);
 					 deletedEntities = session.createQuery(delSectionResourceStr + allSectionIds.toString()).executeUpdate();
+					 deletedEntities = session.createQuery(delBookmarksStr + allSectionIds.toString()).executeUpdate();
+					 logger.debug("Boomkarks deleted "+deletedEntities);
 				}
 			}
 
