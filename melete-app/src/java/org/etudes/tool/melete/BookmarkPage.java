@@ -69,6 +69,8 @@ public class BookmarkPage implements Serializable
 	private int deleteBookmarkId;
 
 	private String deleteBookmarkTitle;
+	
+	private boolean nobmsFlag;
 
 	/** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(BookmarkPage.class);
@@ -83,6 +85,7 @@ public class BookmarkPage implements Serializable
 	{
 	  FacesContext context = FacesContext.getCurrentInstance();
 	  Map sessionMap = context.getExternalContext().getSessionMap();
+	  ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 
 	  if (bookmarkService == null)
 	    bookmarkService = getBookmarkService();
@@ -98,10 +101,9 @@ public class BookmarkPage implements Serializable
 	      bookmarkService.insertBookmark(this.bookmark);
 	    }catch(Exception ex)
 		{
-		   //TODO replace this with add bookmark fail msg
-			/*String errMsg = bundle.getString("add_module_fail");
-			addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-			return "add_module";*/
+	    	String errMsg = bundle.getString(ex.getMessage());
+	    	context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,ex.getMessage(),errMsg));
+			return "failure";
 		}
 		return "confirm_bookmark";
 
@@ -161,12 +163,17 @@ public class BookmarkPage implements Serializable
 
 	public String deleteBookmark()
 	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		 ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+
 		try
 	    {
 	      bookmarkService.deleteBookmark(this.deleteBookmarkId);
 	    }catch(Exception ex)
 		{
-          //TODO: add exception handling
+	    	String errMsg = bundle.getString(ex.getMessage());
+	    	context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,ex.getMessage(),errMsg));
+			return "failure";
 		}
 	    return "list_bookmarks";
 	}
@@ -182,6 +189,7 @@ public class BookmarkPage implements Serializable
       deleteBookmarkId = 0;
       deleteBookmarkTitle = null;
       bmList = null;
+      nobmsFlag = true;
 	}
 
 	public int getDeleteBookmarkId() {
@@ -209,6 +217,16 @@ public class BookmarkPage implements Serializable
 	  	else this.instRole = false;
     	return instRole;
     }
+	
+	public boolean getNobmsFlag()
+	{
+		return this.nobmsFlag;
+	}
+	
+	public void setNobmsFlag(boolean nobmsFlag)
+	{
+		this.nobmsFlag = nobmsFlag;
+	}
 
     public BookmarkObjService getBookmark() {
 	  FacesContext context = FacesContext.getCurrentInstance();
@@ -230,6 +248,14 @@ public class BookmarkPage implements Serializable
 	   FacesContext context = FacesContext.getCurrentInstance();
 	   Map sessionMap = context.getExternalContext().getSessionMap();
 	   bmList = bookmarkService.getBookmarks((String)sessionMap.get("userId"),(String)sessionMap.get("courseId"));
+	   if ((bmList != null)&&(bmList.size() > 0))
+	   {
+		   setNobmsFlag(false);
+	   }
+	   else
+	   {
+		   setNobmsFlag(true);
+	   }
 	   return bmList;
    }
 

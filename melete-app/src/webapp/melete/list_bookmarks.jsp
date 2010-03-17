@@ -105,6 +105,7 @@
 					 </h:commandLink>	
 				    </h:column>
                    </h:dataTable>
+                    <h:outputText id="nobookmsg" value="#{msgs.list_bookmarks_no_bookmarks_available}" rendered="#{bookmarkPage.nobmsFlag == true}" style="text-align:left"/>
 	          </h:column>					
          </h:panelGrid>
          </td>

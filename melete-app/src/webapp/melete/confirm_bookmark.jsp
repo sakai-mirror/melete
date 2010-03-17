@@ -1,3 +1,5 @@
+<%@ page import="org.etudes.tool.melete.BookmarkPage,javax.faces.application.FacesMessage, java.util.ResourceBundle"%>
+
 <!--
  ***********************************************************************************
  * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/webapp/melete/confirm_bookmark.jsp $
@@ -21,6 +23,11 @@
  *
  **********************************************************************************
 -->
+<%
+final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
+final BookmarkPage bookmarkPage = (BookmarkPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "bookmarkPage");
+bookmarkPage.resetValues();
+%>
 <html>
 <body>
 <script language="javascript">

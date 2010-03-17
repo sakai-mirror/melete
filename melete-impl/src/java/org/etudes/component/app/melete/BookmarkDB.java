@@ -56,7 +56,7 @@ public class BookmarkDB {
 		List mbList = new ArrayList();
 		try{
 		     Session session = getHibernateUtil().currentSession();
-		     Query q=session.createQuery("from Bookmark mb where mb.userId =:userId and mb.siteId=:siteId");
+		     Query q=session.createQuery("from Bookmark mb where mb.userId =:userId and mb.siteId=:siteId order by mb.lastVisited desc,mb.bookmarkId asc");
 			  q.setParameter("userId",userId);
 			  q.setParameter("siteId", siteId);
 			  mbList = q.list();
@@ -110,6 +110,35 @@ public class BookmarkDB {
 		}
 		return mb;
 	}
+
+	public int getLastVisitSectionId(String userId, String siteId)
+	{
+		int sectionId = 0;
+		try{
+		    Session session = getHibernateUtil().currentSession();
+		     Query q=session.createQuery("select mb.sectionId from Bookmark mb where mb.userId =:userId and mb.siteId=:siteId and mb.lastVisited=1");
+			  q.setParameter("userId",userId);
+			  q.setParameter("siteId", siteId);
+			  sectionId = ((Integer)q.uniqueResult()).intValue();
+		}
+	    catch (HibernateException he)
+	    {
+		  logger.error(he.toString());
+	    }
+	    finally
+		{
+	    	try
+			  {
+		      	hibernateUtil.closeSession();
+			  }
+		      catch (HibernateException he)
+			  {
+				  logger.error(he.toString());
+			  }
+		}
+		return sectionId;
+	}
+
 	private void adjustLastVisited(List mbList, int sectionId) throws Exception
 	{
 		Transaction tx = null;
@@ -157,7 +186,7 @@ public class BookmarkDB {
 				  logger.error(he.toString());
 				  throw he;
 			  }
-		}		
+		}
 	}
 	public void setBookmark(Bookmark mb) throws Exception
 	{
@@ -227,21 +256,22 @@ public class BookmarkDB {
 	    		if (mbList.size() > 0)
 	    		{
 	    			adjustLastVisited(mbList, mb.getSectionId());
-	    		}	
+	    		}
 	    	}
 	    }
 	}
-	
-	public void deleteBookmark(int bookmarkId)
+
+	public void deleteBookmark(int bookmarkId) throws Exception
 	{
 		Bookmark mb = null;
 		try{
 		    Session session = getHibernateUtil().currentSession();
 		     int deletedEntities = session.createQuery("delete Bookmark bm where bm.bookmarkId = "+bookmarkId).executeUpdate();
 		}
-	    catch (HibernateException he)
+	    catch (Exception e)
 	    {
-		  logger.error(he.toString());
+		  logger.error(e.toString());
+		  throw e;
 	    }
 	    finally
 		{

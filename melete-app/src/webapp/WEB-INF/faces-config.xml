@@ -102,7 +102,12 @@
                 <description>Service Dependency: Modules service</description>
                 <property-name>moduleService</property-name>
                 <value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
-            </managed-property>                              
+            </managed-property>    
+            <managed-property>
+			<description>Service Dependency: Bookmark service</description>
+			<property-name>bookmarkService</property-name>
+			<value>#{Components["org.etudes.api.app.melete.BookmarkService"]}</value>
+		</managed-property>                          
         </managed-bean>
 
  <managed-bean>

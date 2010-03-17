@@ -64,7 +64,7 @@ public BookmarkObjService getBookmark(String userId, String siteId, int sectionI
 	return bObj;
 }
 
-public List getBookmarks(String userId, String siteId)
+  public List getBookmarks(String userId, String siteId)
 	{
 	List mbList = null;
 		try{
@@ -76,13 +76,25 @@ public List getBookmarks(String userId, String siteId)
 		return mbList;
 	}
 
-  public void deleteBookmark(int bookmarkId)
+  public int getLastVisitSectionId(String userId, String siteId)
+  {
+	int sectionId = 0;
+	try{
+		sectionId = bookmarkDb.getLastVisitSectionId(userId, siteId);
+	}catch(Exception e)
+		{
+		logger.debug("melete bookmark business --get last visit sectionid failed");
+		}
+	return sectionId;
+  }
+  public void deleteBookmark(int bookmarkId) throws Exception
   {
 	  try{
 			bookmarkDb.deleteBookmark(bookmarkId);
 		}catch(Exception e)
 			{
 			logger.debug("melete bookmark business -- delete bookmark failed");
+			throw new MeleteException("delete_bookmark_fail");
 			}
   }
 

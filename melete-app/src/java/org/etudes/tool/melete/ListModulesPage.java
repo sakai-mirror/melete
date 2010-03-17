@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -80,6 +80,7 @@ public class ListModulesPage implements Serializable{
       private boolean trueFlag = true;
 
       private ModuleService moduleService;
+      private BookmarkService bookmarkService;
 
       private Section nullSection = null;
       private List nullList = null;
@@ -98,6 +99,8 @@ public class ListModulesPage implements Serializable{
 	  private UIData modTable;
 	  private UIData secTable;
 	  private ListDataModel modDataModel;
+
+	  private int bookmarkSectionId;
 
 
 	  public ListDataModel getModDataModel()
@@ -141,6 +144,7 @@ public class ListModulesPage implements Serializable{
 
 	  	  expandAllFlag = true;
 	  	}
+	  	setBookmarkSectionId(-1);
 	  }
 
 	  public void resetValues()
@@ -171,6 +175,7 @@ public class ListModulesPage implements Serializable{
 	  	  expandAllFlag = true;
 	  	}
 	  	setShowModuleId(-1);
+	  	setBookmarkSectionId(-1);
 	  }
 
 	  public boolean getInstRole()
@@ -202,6 +207,21 @@ public class ListModulesPage implements Serializable{
 		this.moduleService = moduleService;
 	  }
 
+	  /**
+		 * @return Returns the BookmarkService.
+		 */
+		public BookmarkService getBookmarkService()
+		{
+			return bookmarkService;
+		}
+
+		/**
+		 * @param bookmarkService The bookmarkService to set.
+		 */
+		public void setBookmarkService(BookmarkService bookmarkService)
+		{
+			this.bookmarkService = bookmarkService;
+		}
 
 	  public String getRole() {
 	  	return role;
@@ -211,7 +231,7 @@ public class ListModulesPage implements Serializable{
 	  	this.role = role;
 	  }
 
-	 
+
 	  public List  getNullList() {
 	  	return nullList;
 	  }
@@ -330,6 +350,15 @@ public class ListModulesPage implements Serializable{
 	        this.showModuleId = moduleId;
 	  }
 
+	  public int getBookmarkSectionId() {
+		    this.bookmarkSectionId = bookmarkService.getLastVisitSectionId(getUserId(), getCourseId());
+	        return this.bookmarkSectionId;
+	  }
+
+	  public void setBookmarkSectionId(int bookmarkSectionId) {
+	        this.bookmarkSectionId = bookmarkSectionId;
+	  }
+
 	  public String showHideSections()
 		{
 			if (getExpandAllFlag() == true)
@@ -353,7 +382,7 @@ public class ListModulesPage implements Serializable{
 			     }
 		        vmbean = (ViewModBean) table.getRowData();
 		        if (getShowModuleId() != vmbean.getModuleId())
-				{	
+				{
 				   setShowModuleId(vmbean.getModuleId());
 				}
 				else
@@ -373,23 +402,23 @@ public class ListModulesPage implements Serializable{
 	  public String expandCollapseAction()
 		{
 			if (getExpandAllFlag() == false)
-			{		
+			{
 			  setExpandAllFlag(true);
 			}
 			else
-			{	
+			{
 			  setExpandAllFlag(false);
 			  setShowModuleId(-1);
-			}  
+			}
 			 String retVal = "list_modules_student";
 		    if (getRole()!= null && getRole().equals("INSTRUCTOR"))
 			{
 			   	retVal = "list_modules_inst";
 			}
-		   return retVal;	
+		   return retVal;
 		}
-	  
-   
+
+
       public String redirectToViewModule()
 	  {
 	  	String retVal = "view_module_student";
@@ -547,14 +576,14 @@ public class ListModulesPage implements Serializable{
 
 	    vsPage.setModuleSeqNo(modSeqNo);
    }
-      
+
       public String goWhatsNext()
       {
         ViewModBean vmBean = null;
     	FacesContext ctx = FacesContext.getCurrentInstance();
     	Map params = ctx.getExternalContext().getRequestParameterMap();
     	int selModIndex=0,modSeqNo=-1;
-    	
+
     	if(params != null)
     	 {
     		  String modidxStr = (String) params.get("modidx2");
@@ -577,23 +606,23 @@ public class ListModulesPage implements Serializable{
     			 modSeqNo = -1;
     		  }
     	}
-    	 
+
     	  ValueBinding binding =
               Util.getBinding("#{viewNextStepsPage}");
             ViewNextStepsPage vnPage = (ViewNextStepsPage)
               binding.getValue(ctx);
-    	  if (getRole()!= null && (getRole().equals("INSTRUCTOR") || getRole().equals("STUDENT"))) 
+    	  if (getRole()!= null && (getRole().equals("INSTRUCTOR") || getRole().equals("STUDENT")))
     	  {
   			if ((viewModuleBeans != null)&&(viewModuleBeans.size() > 0))
   			{
   		    	vmBean = (ViewModBean) viewModuleBeans.get(selModIndex);
   			}
-  		}    	  
+  		}
       	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNo),getInstRole());
       	vnPage.setNextSeqNo(nextSeqNo);
       	vnPage.setModule(getModuleService().getModule(vmBean.getModuleId()));
       	if ((vmBean.getVsBeans() == null)||(vmBean.getVsBeans().size() == 0))
-      	{	
+      	{
       	  vnPage.setPrevSecId(0);
       	  vnPage.setPrevModId(vmBean.getModuleId());
       	}
@@ -601,13 +630,13 @@ public class ListModulesPage implements Serializable{
       	{
       		vnPage.setPrevModId(vmBean.getModuleId());
       		ViewSecBean vsBean = (ViewSecBean) vmBean.getVsBeans().get(vmBean.getVsBeans().size()-1);
-      	    vnPage.setPrevSecId(vsBean.getSectionId());   
+      	    vnPage.setPrevSecId(vsBean.getSectionId());
       	}
 
       	return "view_whats_next";
 
-      }      
-      
+      }
+
       public String gotoMyBookmarks()
       {
       	FacesContext context = FacesContext.getCurrentInstance();
@@ -617,7 +646,7 @@ public class ListModulesPage implements Serializable{
           bmPage.resetValues();
       	return "list_bookmarks";
       }
-      
+
 
 	  private void addNoModulesMessage(FacesContext ctx){
 	  	FacesMessage msg =
