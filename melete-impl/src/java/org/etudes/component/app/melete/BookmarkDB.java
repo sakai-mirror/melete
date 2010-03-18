@@ -86,7 +86,7 @@ public class BookmarkDB {
 		Bookmark mb = null;
 		try{
 		    Session session = getHibernateUtil().currentSession();
-		     Query q=session.createQuery("from Bookmark mb where mb.userId =:userId and mb.siteId=:siteId and mb.section.sectionId=:sectionId");
+		     Query q=session.createQuery("from Bookmark mb where mb.userId =:userId and mb.siteId=:siteId and mb.section.sectionId=:sectionId and mb.section.module.coursemodule.archvFlag = 0");
 			  q.setParameter("userId",userId);
 			  q.setParameter("siteId", siteId);
 			  q.setParameter("sectionId", sectionId);
@@ -116,7 +116,7 @@ public class BookmarkDB {
 		int sectionId = 0;
 		try{
 		    Session session = getHibernateUtil().currentSession();
-		     Query q=session.createQuery("select mb.sectionId from Bookmark mb where mb.userId =:userId and mb.siteId=:siteId and mb.lastVisited=1");
+		     Query q=session.createQuery("select mb.sectionId from Bookmark mb where mb.userId =:userId and mb.siteId=:siteId and mb.lastVisited=1 and mb.section.module.coursemodule.archvFlag = 0");
 			  q.setParameter("userId",userId);
 			  q.setParameter("siteId", siteId);
 			  sectionId = ((Integer)q.uniqueResult()).intValue();
