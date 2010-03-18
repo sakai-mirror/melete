@@ -304,16 +304,16 @@ color: #5A6D95;
 .col15 {
  width:15%;
 }
-.col15nowrap {
- width:15%;
- white-space:nowrap;
-}
 .col25 {
 width:25%;
 }
 .col45 {
 width:45%;
-} 
+}
+.col45wordwrap {
+width:45%;
+word-wrap:break-word;
+}
 .col30 {
 	width:30%;
 }

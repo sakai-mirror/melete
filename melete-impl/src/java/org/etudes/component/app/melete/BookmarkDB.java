@@ -56,7 +56,7 @@ public class BookmarkDB {
 		List mbList = new ArrayList();
 		try{
 		     Session session = getHibernateUtil().currentSession();
-		     Query q=session.createQuery("from Bookmark mb where mb.userId =:userId and mb.siteId=:siteId order by mb.lastVisited desc,mb.bookmarkId asc");
+		     Query q=session.createQuery("from Bookmark mb where mb.userId =:userId and mb.siteId=:siteId and mb.section.module.coursemodule.archvFlag = 0 order by mb.lastVisited desc,mb.bookmarkId asc");
 			  q.setParameter("userId",userId);
 			  q.setParameter("siteId", siteId);
 			  mbList = q.list();

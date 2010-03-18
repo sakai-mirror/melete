@@ -44,9 +44,8 @@
  <h:form id="ManageBookmarksForm">
 <table>
 	<tr>
-		<td valign="top"></td>
-    	<td width="1962" valign="top">
-        	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+		<td width="1050px" valign="top">
+    	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
           		<tr>
             		<td width="100%" height="20" bordercolor="#E2E4E8">
 					<!-- top nav bar -->
@@ -54,18 +53,15 @@
 								<jsp:include page="topnavbar.jsp"/> 
 						</f:subview>
 		  <div class="meletePortletToolBarMessage"><img src="images/manage_content.png" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.list_bookmarks_headtitle}" /></div>				
-				</td>
-        </tr>
-        </table>
-        <table width="100%"  border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
-        <tr>
-          <td class="maintabledata3">
+			   </td>
+			   </tr>
+			 </table>  	
+        	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+          		<tr>
+            		<td class="maintabledata3">
           	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-		   
-          <h:panelGrid width="100%" border="0" cellpadding="4" cellspacing="0"  style="border-collapse: collapse border-color: #F5F5F5" >											
-		   <h:column>		                    	
-		   
-			 <h:dataTable id="table"  value="#{bookmarkPage.bmList}"  var="bookmark"  border="0" headerClass="tableheader2" columnClasses="col25,col45,col15,col15" rowClasses="row1,row2"  width="100%" summary="#{msgs.list_resources_summary}">
+		
+			 <h:dataTable id="table"  value="#{bookmarkPage.bmList}"  var="bookmark"  border="0" headerClass="tableheader2" columnClasses="col25,col45wordwrap,col15,col15" rowClasses="row1,row2"  width="1050px" summary="#{msgs.list_resources_summary}">
 				  <h:column>
 					   <f:facet name="header">
 							<h:panelGroup>
@@ -106,8 +102,7 @@
 				    </h:column>
                    </h:dataTable>
                     <h:outputText id="nobookmsg" value="#{msgs.list_bookmarks_no_bookmarks_available}" rendered="#{bookmarkPage.nobmsFlag == true}" style="text-align:left"/>
-	          </h:column>					
-         </h:panelGrid>
+	        
          </td>
          </tr>
          </table>
