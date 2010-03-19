@@ -33,8 +33,6 @@ final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesC
 final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "meleteSiteAndUserInfo");
  meleteSiteAndUserInfo.populateMeleteSession();
 %>
-<link href="/library/skin/tool_base.css" type="text/css" rel="stylesheet" media="all" />
-<link href="/library/skin/default/tool.css" type="text/css" rel="stylesheet" media="all" />
 <link href="rtbc004.css" type="text/css" rel="stylesheet" media="all" />
 
 <sakai:tool_bar id="topbar">
