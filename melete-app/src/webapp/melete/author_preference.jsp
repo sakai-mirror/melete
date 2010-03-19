@@ -58,17 +58,17 @@
 				</td>
         </tr>
         </table>
-        <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+        <table width="100%"  border="1" cellpadding="1" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
           
         <tr>
-          <td class="maintabledata3">
+          <td class="maintabledata3" >
           	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 		  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
 		  	<tr>
 		  		<td height="20" class="maintabledata5"><h:outputText id="t1_1" value="#{msgs.author_preference_global_preference}" styleClass="bold"/> </td></tr>
             <tr>
-                <td align="center">                	
-                	<h:panelGrid id="editorPrefPanel" columns="1" width="95%" cellpadding="0" cellspacing="3" border="0" rendered="#{authorPreferences.shouldRenderEditorPanel}">
+                <td>                	
+                	<h:panelGrid id="editorPrefPanel" columns="1" width="95%" cellpadding="1" cellspacing="3" border="0" rendered="#{authorPreferences.shouldRenderEditorPanel}">
                 	 <h:column>
                 		<h:outputText id="t1" value="#{msgs.author_preference_editor_select}" styleClass="bold"/>
                 	</h:column>
@@ -78,7 +78,7 @@
 						</h:selectOneRadio>	
 					</h:column>
 				   </h:panelGrid>		
-				<h:panelGrid id="collapsePrefPanel" columns="1" width="95%" cellpadding="0" cellspacing="3" border="0">
+				<h:panelGrid id="collapsePrefPanel" columns="1" width="95%" cellpadding="1" cellspacing="3" border="0">
 				<h:column>
 				 	<h:outputText id="t2" value="#{msgs.author_preference_view_select}"  styleClass="bold"/>      
 				 </h:column>
@@ -89,7 +89,7 @@
 					</h:selectOneRadio>	
 				</h:column>
 				 </h:panelGrid>
-<h:panelGrid id="LTIPrefPanel" columns="1" width="95%" cellpadding="0" cellspacing="3" border="0">
+<h:panelGrid id="LTIPrefPanel" columns="1" width="95%" cellpadding="1" cellspacing="3" border="0">
 				<h:column>
 				 	<h:outputText id="LTI1" value="#{msgs.author_preference_LTI_select}"  styleClass="bold"/>      
 				 </h:column>
@@ -112,8 +112,8 @@
 						<tr>
 						<td  height="20" class="maintabledata5"><h:outputText id="t3_1" value="#{msgs.author_preference_site_preference}"  styleClass="bold"/>          </td></tr>
 						<tr>
-							  <td align="center">
-                				<table border="0" cellpadding="0" cellspacing="3" width="95%">
+							  <td>
+                				<table border="0" cellpadding="1" cellspacing="3" width="95%">
                 				<tr><td>
 								 <h:outputText id="t3" value="#{msgs.author_preference_material_printable}"  styleClass="bold"/>          
 								 </td></tr>
@@ -124,7 +124,7 @@
 										<f:selectItem itemLabel="#{msgs.author_preference_no}" itemValue="false"/>
 								</h:selectOneRadio>	
 					</td></tr></table>
-                				<table border="0" cellpadding="0" cellspacing="3" width="95%">
+                				<table border="0" cellpadding="1" cellspacing="3" width="95%">
                 				<tr><td>
 								 <h:outputText id="t4" value="#{msgs.author_preference_autonumber}"  styleClass="bold"/>          
 								 </td></tr>
