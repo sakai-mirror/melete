@@ -32,7 +32,6 @@ a1:active 			{color : #000080;}
 /* Sets  border color to grey and background color to l.grey for Table in Main Area*/
 .table5				{border-color: #999999; 
 					 background-color: #CCCCCC;}
-.tablemax900 (max-width:900px;}					 
 
 .tableheader 		{background: #EAEAEA;
 					font-family: Verdana, Arial, sans-serif;
@@ -299,20 +298,6 @@ color: #5A6D95;
 .copyrightColumn2{
    width:50%;
 	text-align:right;
-}
-
-.col15 {
- width:15%;
-}
-.col25 {
-width:25%;
-}
-.col45 {
-width:45%;
-}
-.col45wordwrap {
-width:45%;
-word-wrap:break-word;
 }
 .col30 {
 	width:30%;
