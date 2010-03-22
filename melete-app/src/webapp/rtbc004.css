@@ -299,6 +299,20 @@ color: #5A6D95;
    width:50%;
 	text-align:right;
 }
+
+.col15 {
+ width:15%;
+}
+.col25 {
+width:25%;
+}
+.col45 {
+width:45%;
+}
+.col45wordwrap {
+width:45%;
+word-wrap:break-word;
+}
 .col30 {
 	width:30%;
 }
