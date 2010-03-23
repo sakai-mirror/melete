@@ -160,6 +160,8 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
       if (this.mdbean == null)
  	  {
     	try {
+  
+        	 
     	String courseId = getCourseId();
     	String userId = getUserId();
     	 if (this.moduleId > 0)
@@ -193,6 +195,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
   	  	catch (Exception e)
           {
   			logger.debug(e.toString());
+  			e.printStackTrace();
           }
  	  }
   	  	return this.mdbean;
@@ -273,11 +276,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 		UIData table = null;
 		boolean isAuthor = getInstRole();
 
-		if (isAuthor)
-			table = (UIData) root.findComponent("viewmoduleform").findComponent("tablesec");
-		else
-			table = (UIData) root.findComponent("viewmoduleStudentform").findComponent("tablesec");
-
+		table = (UIData) root.findComponent("viewmoduleform").findComponent("tablesec");
 		ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
 
 		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
@@ -292,9 +291,8 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 		// added by rashmi on 6/14/05
 		vsPage.setModule(null);
 		//vsPage.setAutonumber(this.autonumber);
-		String retVal = "view_section_student";
-		if (isAuthor) retVal = "view_section";
 
+		String retVal = "view_section";
 		return retVal;
 	}
 
@@ -335,23 +333,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
  	            vsPage.setModule(null);
  	            vsPage.setAutonumber(null);
 
-
- 	     String retVal = "view_section_student";
-
- 	    //03/10/05  rashmi - added seperate page for links and upload to show them in frame
- 	    //3/21/05 - mallika - the if condition was slightly ambiguous, so needed to change that
-
- 	    if (getInstRole() == true)
- 	    {
-
- 	      retVal = "view_section";
-
- 	    }
- 	    else
- 	    {
- 	      retVal = "view_section_student";
-
- 	    }
+ 	    String retVal = "view_section";        
  	  	return retVal;
     }
     public String goPrevSection()
@@ -373,23 +355,8 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
  	            //added by rashmi on 6/14/05
  	            vsPage.setModule(null);
  	            vsPage.setAutonumber(null);
- 	     String retVal = "view_section_student";
-
- 	    //03/10/05  rashmi - added seperate page for links and upload to show them in frame
- 	    //3/21/05 - mallika - the if condition was slightly ambiguous, so needed to change that
-
- 	    if (getInstRole() == true)
- 	    {
-
- 	      retVal = "view_section";
-
- 	    }
- 	    else
- 	    {
- 	      retVal = "view_section_student";
-
- 	    }
- 	  	return retVal;
+ 	            String retVal = "view_section";        
+ 	    return retVal;
     }
     public String goPrevWhatsNext()
     {
@@ -451,15 +418,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     	this.moduleSeqNo = new Integer(((String)ctx.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue();
     	this.mdbean = null;
         this.moduleId = 0;
-
-    	if (getInstRole())
-    	{
-    			return "view_module";
-    	}
-    	else
-    	{
-    			return "view_module_student";
-    	}
+        return "view_module";
     }
     public void viewModule(ActionEvent evt) {
 
@@ -496,13 +455,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     }
 
     public String redirectToViewModule(){
-    	String retVal = "view_module_student";
-	    if (getInstRole() == true)
-	    {
-	    	retVal = "view_module";
-	    }
-	  	return retVal;
-
+    	return "view_module";
     }
     public String gotoMyBookmarks()
     {
@@ -557,4 +510,5 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     {
     	this.autonumber = autonumber;
     }
+
 }

@@ -451,6 +451,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     {
     	Element secElement;
     	Node prevNode,nextNode;
+    	
     	if (this.module == null)
     	{
     	try {
@@ -666,16 +667,9 @@ public String goPrevNext()
 		}
 	}
 	this.module = null;
-
-	if (getInstRole())
-	{
-			return "view_section";
-	}
-	else
-	{
-			return "view_section_student";
-	}
+	return "view_section";
 }
+
 public String goWhatsNext()
 {
 	resetValues();
@@ -721,14 +715,8 @@ public String goPrevModule()
   	vmPage.setMdbean(null);
   	vmPage.setPrevMdbean(null);
     vmPage.setModuleSeqNo(this.moduleSeqNo);
-    if (getInstRole())
-	{
-			return "view_module";
-	}
-	else
-	{
-			return "view_module_student";
-	}
+
+    return "view_module";
 }
 
 public String goNextModule()
@@ -757,14 +745,8 @@ public String goNextModule()
     vmPage.setModuleSeqNo(this.nextSeqNo);
     vmPage.setPrintable(null);
     vmPage.setAutonumber(null);
-    if (getInstRole())
-	{
-			return "view_module";
-	}
-	else
-	{
-			return "view_module_student";
-	}
+    
+    return "view_module";
 }
 
 public String gotoAddBookmark()

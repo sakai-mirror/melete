@@ -35,9 +35,9 @@
 <script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
 </head>
 <f:view>
-<body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
-
+<body>
 <h:form id="viewmoduleform">
+ 
 <table width="100%"  border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse" >
 	<tr>
 		<td width="100%" valign="top">
@@ -49,8 +49,7 @@
 				<td>
 						<f:subview id="top">
 							  <jsp:include page="topnavbar.jsp"/>
-							</f:subview>
-						<div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.view_module_studente_side}" /></div>		
+							</f:subview>								
 						</td>
 					</tr>		
 <!--Page Content-->

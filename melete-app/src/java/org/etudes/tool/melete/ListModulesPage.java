@@ -421,12 +421,7 @@ public class ListModulesPage implements Serializable{
 
       public String redirectToViewModule()
 	  {
-	  	String retVal = "view_module_student";
-	    if (getRole()!= null && getRole().equals("INSTRUCTOR"))
-		{
-		  retVal = "view_module";
-	    }
-
+    	String retVal = "view_module";
 	  	return retVal;
 	  }
 
@@ -479,27 +474,12 @@ public class ListModulesPage implements Serializable{
 
       public String redirectToViewSection()
 	  {
-        String retVal = "view_section_student";
-	    //3/21/05 - Mallika - added this code in to handle linked and uploaded sections
-        if (getRole()!= null && getRole().equals("INSTRUCTOR"))
-	    {
-	    	retVal = "view_section";
-
-	    }
-
-	  	return retVal;
+   	  	return "view_section";
 	  }
 
       public String redirectToViewSectionLink()
 	  {
-        String retVal = "view_section_student";
-	    //3/21/05 - Mallika - added this code in to handle linked and uploaded sections
-        if (getRole()!= null && getRole().equals("INSTRUCTOR"))
-	    {
-	    		retVal = "view_section";
-	    }
-
-	  	return retVal;
+    	  return "view_section";
 	  }
 
 

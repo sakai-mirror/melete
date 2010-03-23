@@ -509,7 +509,6 @@
       </managed-property>
 </managed-bean>
 
-
     <!-- rules for add module page -->
      <navigation-rule>
     <from-view-id>/melete/add_module.jsp</from-view-id>
@@ -577,6 +576,8 @@
   </navigation-rule>    
   
   <!-- rules for add section page -->
+  
+  
    <navigation-rule>
     <from-view-id>/melete/addmodulesections.jsp</from-view-id>
      <navigation-case>
@@ -1512,18 +1513,10 @@
 		   <from-outcome>view_module</from-outcome>
         <to-view-id>/melete/view_module.jsp</to-view-id>
       </navigation-case>     
- <navigation-case>
-		   <from-outcome>view_module_student</from-outcome>
-        <to-view-id>/melete/view_module_student.jsp</to-view-id>
-      </navigation-case>                                         
-<navigation-case>
+   <navigation-case>
 		   <from-outcome>view_section</from-outcome>
         <to-view-id>/melete/view_section.jsp</to-view-id>
       </navigation-case>              
-      <navigation-case>
-		   <from-outcome>view_section_student</from-outcome>
-        <to-view-id>/melete/view_section_student.jsp</to-view-id>
-      </navigation-case>                   
    <navigation-case>
 		   <from-outcome>modules_author_manage</from-outcome>
         <to-view-id>/melete/modules_author_manage.jsp</to-view-id>
@@ -1576,19 +1569,12 @@
        <navigation-case>
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
-     </navigation-case>  
-      <navigation-case>
-		   <from-outcome>view_module_student</from-outcome>
-        <to-view-id>/melete/view_module_student.jsp</to-view-id>
-      </navigation-case>             
-  <navigation-case>
-		   <from-outcome>view_section_student</from-outcome>
-        <to-view-id>/melete/view_section_student.jsp</to-view-id>
-      </navigation-case>       
-       <navigation-case>
+     </navigation-case>                                                                  
+     <navigation-case>
 		   <from-outcome>list_bookmarks</from-outcome>
         <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
       </navigation-case>                                                           
+
    </navigation-rule>        
    
  <!--Rule for view_section -->  
@@ -1629,7 +1615,11 @@
      <navigation-case>
 		   <from-outcome>add_bookmark</from-outcome>
         <to-view-id>/melete/add_bookmark.jsp</to-view-id>
-      </navigation-case>  
+      </navigation-case> 
+       <navigation-case>
+      <from-outcome>student_preference</from-outcome>
+      <to-view-id>/melete/student_preference.jsp</to-view-id>
+     </navigation-case>                                                               
       <navigation-case>
 		   <from-outcome>list_bookmarks</from-outcome>
         <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
@@ -1647,15 +1637,7 @@
 		   <from-outcome>view_section</from-outcome>
         <to-view-id>/melete/view_section.jsp</to-view-id>
       </navigation-case>   
-       <navigation-case>
-		   <from-outcome>view_module_student</from-outcome>
-        <to-view-id>/melete/view_module_student.jsp</to-view-id>
-      </navigation-case>             
-  <navigation-case>
-		   <from-outcome>view_section_student</from-outcome>
-        <to-view-id>/melete/view_section_student.jsp</to-view-id>
-      </navigation-case>        
-       <navigation-case>
+      <navigation-case>
 		   <from-outcome>list_modules_inst</from-outcome>
         <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
       </navigation-case>          
@@ -1693,14 +1675,6 @@
 		   <from-outcome>list_modules_student</from-outcome>
         <to-view-id>/melete/list_modules_student.jsp</to-view-id>
       </navigation-case>         
- <navigation-case>
-		   <from-outcome>view_module_student</from-outcome>
-        <to-view-id>/melete/view_module_student.jsp</to-view-id>
-      </navigation-case>                                         
-      <navigation-case>
-		   <from-outcome>view_section_student</from-outcome>
-        <to-view-id>/melete/view_section_student.jsp</to-view-id>
-      </navigation-case>   
       <navigation-case>
       <from-outcome>student_preference</from-outcome>
       <to-view-id>/melete/student_preference.jsp</to-view-id>
@@ -1708,72 +1682,22 @@
      <navigation-case>
       <from-outcome>view_whats_next</from-outcome>
       <to-view-id>/melete/view_whats_next.jsp</to-view-id>
-     </navigation-case>       
+     </navigation-case> 
+     <navigation-case>
+		   <from-outcome>view_module</from-outcome>
+        <to-view-id>/melete/view_module.jsp</to-view-id>
+      </navigation-case>     
+     <navigation-case>
+		   <from-outcome>view_section</from-outcome>
+        <to-view-id>/melete/view_section.jsp</to-view-id>
+      </navigation-case>                                                                  
+    
      <navigation-case>
 		   <from-outcome>list_bookmarks</from-outcome>
         <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
       </navigation-case>                                                            
+
    </navigation-rule>             
-
-
-  <!--Rule for view_module_student --> 
-  <navigation-rule>
-    <from-view-id>/melete/view_module_student.jsp</from-view-id>
-    <navigation-case>
-		   <from-outcome>view_module_student</from-outcome>
-        <to-view-id>/melete/view_module_student.jsp</to-view-id>
-      </navigation-case>
-   <navigation-case>
-		   <from-outcome>view_section_student</from-outcome>
-        <to-view-id>/melete/view_section_student.jsp</to-view-id>
-      </navigation-case>   
-       <navigation-case>
-		   <from-outcome>view_whats_next</from-outcome>
-        <to-view-id>/melete/view_whats_next.jsp</to-view-id>
-      </navigation-case>                                
-  <navigation-case>
-		   <from-outcome>list_modules_student</from-outcome>
-        <to-view-id>/melete/list_modules_student.jsp</to-view-id>
-      </navigation-case>   
-      <navigation-case>
-      <from-outcome>student_preference</from-outcome>
-      <to-view-id>/melete/student_preference.jsp</to-view-id>
-     </navigation-case>     
-      <navigation-case>
-		   <from-outcome>list_bookmarks</from-outcome>
-        <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
-      </navigation-case>                                                                    
-   </navigation-rule>           
-   
-<!--Rule for view_section_student -->   
-<navigation-rule>
-    <from-view-id>/melete/view_section_student.jsp</from-view-id>
-    <navigation-case>
-		   <from-outcome>view_module_student</from-outcome>
-        <to-view-id>/melete/view_module_student.jsp</to-view-id>
-      </navigation-case>
-   <navigation-case>
-		   <from-outcome>view_section_student</from-outcome>
-        <to-view-id>/melete/view_section_student.jsp</to-view-id>
-      </navigation-case>            
-   <navigation-case>
-		   <from-outcome>view_whats_next</from-outcome>
-        <to-view-id>/melete/view_whats_next.jsp</to-view-id>
-      </navigation-case>  
-       <navigation-case>
-		   <from-outcome>list_modules_student</from-outcome>
-        <to-view-id>/melete/list_modules_student.jsp</to-view-id>
-      </navigation-case>
-      <navigation-case>
-      <from-outcome>student_preference</from-outcome>
-      <to-view-id>/melete/student_preference.jsp</to-view-id>
-     </navigation-case>        
-     <navigation-case>
-		   <from-outcome>list_bookmarks</from-outcome>
-        <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
-      </navigation-case>                          
-   </navigation-rule>          
-   
 
    <navigation-rule>
 		<from-view-id>/melete/importexportmodules.jsp</from-view-id>
@@ -1914,10 +1838,6 @@
       <from-outcome>view_section</from-outcome>
       <to-view-id>/melete/view_section.jsp</to-view-id>
      </navigation-case>       
-      <navigation-case>
-      <from-outcome>view_section_student</from-outcome>
-      <to-view-id>/melete/view_section_student.jsp</to-view-id>
-     </navigation-case> 
       <navigation-case>
       <from-outcome>delete_bookmark</from-outcome>
       <to-view-id>/melete/delete_bookmark.jsp</to-view-id>

@@ -44,10 +44,9 @@
 			<table  border="0" cellpadding="2" cellspacing="0" bordercolor="#EAEAEA" width="99%">
 					<tr>
 					<td colspan="2">
-								<f:subview id="top" rendered="#{viewSectionsPage.instRole == true}">
+								<f:subview id="top">
 												  <jsp:include page="topnavbar.jsp"/> 
-									</f:subview>
-								<div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.view_section_viewing_student}" /></div>	
+									</f:subview>						
 					</td>
 				</tr>
 <tr>
