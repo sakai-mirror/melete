@@ -57,7 +57,8 @@
 			   </tr>
                <tr>
                <td align="right">
-                 <h:commandLink id="exportNotesLink" actionListener="#{bookmarkPage.exportNotes}" action="#{bookmarkPage.redirectExportNotes}" >
+               <h:inputHidden id="bmlistflag" value="#{bookmarkPage.nobmsFlag}"/>
+                 <h:commandLink id="exportNotesLink" actionListener="#{bookmarkPage.exportNotes}" action="#{bookmarkPage.redirectExportNotes}" rendered="#{bookmarkPage.nobmsFlag == false}">
                    <h:outputText id="exportnotes" value="#{msgs.list_bookmarks_export_notes}" />									
                  </h:commandLink>
                </td>

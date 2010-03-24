@@ -349,6 +349,7 @@ public class BookmarkPage implements Serializable
 
 	public boolean getNobmsFlag()
 	{
+		getBmList();
 		return this.nobmsFlag;
 	}
 
@@ -380,15 +381,18 @@ public class BookmarkPage implements Serializable
    {
 	   FacesContext context = FacesContext.getCurrentInstance();
 	   Map sessionMap = context.getExternalContext().getSessionMap();
-	   bmList = bookmarkService.getBookmarks((String)sessionMap.get("userId"),(String)sessionMap.get("courseId"));
-	   if ((bmList != null)&&(bmList.size() > 0))
-	   {
+	   if (bmList == null)
+	   {	   
+	     bmList = bookmarkService.getBookmarks((String)sessionMap.get("userId"),(String)sessionMap.get("courseId"));
+	     if ((bmList != null)&&(bmList.size() > 0))
+	     {
 		   setNobmsFlag(false);
-	   }
-	   else
-	   {
+	     }
+	     else
+	     {
 		   setNobmsFlag(true);
-	   }
+	     }
+	   }  
 	   return bmList;
    }
 
