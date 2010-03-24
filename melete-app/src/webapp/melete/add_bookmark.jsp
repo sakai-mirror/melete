@@ -31,13 +31,38 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <link rel="stylesheet" href="rtbc004.css" type="text/css" media="all" >
+<script language="javascript1.2">
+function validate_required(value,alerttxt)
+{
+if (value==null||value=="")
+    {
+    alert(alerttxt);return false;
+    }
+  else
+    {
+    return true;
+    }
+  
+}
+
+function validate_form()
+{
+	if (validate_required(document.getElementById("AddBookmarkForm:title").value,"Title is required")==false)
+	  {
+   	     document.getElementById("AddBookmarkForm:title").focus();
+		  return false;
+	}
+}
+</script>
 </head>
 <%
 final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 final BookmarkPage bookmarkPage = (BookmarkPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "bookmarkPage");
 bookmarkPage.setBookmark(null);
 String sectionId = (String)request.getParameter("sectionId");
+String sectionTitle = (String)request.getParameter("sectionTitle");
 bookmarkPage.setSectionId(sectionId);
+bookmarkPage.setSectionTitle(sectionTitle);
 %>
 <f:view>
 <body>
@@ -49,8 +74,8 @@ bookmarkPage.setSectionId(sectionId);
 			<table class="forumline" cellspacing="1" cellpadding="4" width="100%" border="0">
 				<tr>
 					<th class="thHead" height="25" colspan="2">
-						<h:outputText value="#{msgs.add_bookmark_headtitle}" rendered="#{bookmarkPage.bookmark.title == null}"/>
-						<h:outputText value="#{msgs.add_bookmark_editheadtitle}" rendered="#{bookmarkPage.bookmark.title != null}"/>
+						<h:outputText value="#{msgs.add_bookmark_headtitle}" rendered="#{bookmarkPage.bookmark.bookmarkId == 0}"/>
+						<h:outputText value="#{msgs.add_bookmark_editheadtitle}" rendered="#{bookmarkPage.bookmark.bookmarkId != 0}"/>
 						
 					</th>
 				</tr>
@@ -79,13 +104,17 @@ bookmarkPage.setSectionId(sectionId);
 					<td colspan="2" align="center">
 					<div class="actionBar" align="left">
 				
-          	        <h:commandButton action="#{bookmarkPage.addBookmark}" value="#{msgs.im_add_button}" accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"  rendered="#{bookmarkPage.bookmark.title == null}" />
-          	        <h:commandButton action="#{bookmarkPage.addBookmark}"  value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgAdd" rendered="#{bookmarkPage.bookmark.title != null}" />
+				    <h:inputHidden id="sectionId" value="#{bookmarkPage.sectionId}"/>
+				    <h:inputHidden id="sectionTitle" value="#{bookmarkPage.sectionTitle}"/>
+				    
+          	        <h:commandButton action="#{bookmarkPage.addBookmark}" value="#{msgs.im_add_button}" accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"  onclick="return validate_form();" rendered="#{bookmarkPage.bookmark.bookmarkId == 0}" />
+          	        <h:commandButton action="#{bookmarkPage.addBookmark}"  value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgAdd" onclick="return validate_form();" rendered="#{bookmarkPage.bookmark.bookmarkId != 0}" />
           	        
 			        </div>
 					</tr>
 					
 			</table>
+			<p class="bold"><span class="required">*</span>&nbsp;<h:outputText value="#{msgs.add_bookmark_required}" /></p>
 		</td>
 	</tr>
 </table>

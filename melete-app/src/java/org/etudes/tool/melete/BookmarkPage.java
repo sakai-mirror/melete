@@ -62,6 +62,8 @@ public class BookmarkPage implements Serializable
 
 	private String sectionId;
 
+	private String sectionTitle;
+
 	private List bmList;
 
 	private boolean instRole;
@@ -69,7 +71,7 @@ public class BookmarkPage implements Serializable
 	private int deleteBookmarkId;
 
 	private String deleteBookmarkTitle;
-	
+
 	private boolean nobmsFlag;
 
 	/** Dependency:  The logging service. */
@@ -83,7 +85,7 @@ public class BookmarkPage implements Serializable
 
 	public String addBookmark()
 	{
-	  FacesContext context = FacesContext.getCurrentInstance();
+		  FacesContext context = FacesContext.getCurrentInstance();
 	  Map sessionMap = context.getExternalContext().getSessionMap();
 	  ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 
@@ -217,24 +219,28 @@ public class BookmarkPage implements Serializable
 	  	else this.instRole = false;
     	return instRole;
     }
-	
+
 	public boolean getNobmsFlag()
 	{
 		return this.nobmsFlag;
 	}
-	
+
 	public void setNobmsFlag(boolean nobmsFlag)
 	{
 		this.nobmsFlag = nobmsFlag;
 	}
 
     public BookmarkObjService getBookmark() {
-	  FacesContext context = FacesContext.getCurrentInstance();
+ 	  FacesContext context = FacesContext.getCurrentInstance();
 	  Map sessionMap = context.getExternalContext().getSessionMap();
 	  if (bookmark == null)
 	  {
 		  bookmark = bookmarkService.getBookmark((String)sessionMap.get("userId"),(String)sessionMap.get("courseId"),Integer.parseInt(this.sectionId));
-          if (bookmark == null) bookmark = new Bookmark();
+          if (bookmark == null)
+          {
+        	  bookmark = new Bookmark();
+        	  bookmark.setTitle(getSectionTitle());
+          }
 	  }
 	return bookmark;
     }
@@ -270,6 +276,14 @@ public class BookmarkPage implements Serializable
 
    public void setSectionId(String sectionId) {
      this.sectionId = sectionId;
+   }
+
+   public String getSectionTitle() {
+	      return sectionTitle;
+   }
+
+   public void setSectionTitle(String sectionTitle) {
+	     this.sectionTitle = sectionTitle;
    }
 	/**
 	 * @return Returns the BookmarkService.

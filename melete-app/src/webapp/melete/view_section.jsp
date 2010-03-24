@@ -62,9 +62,10 @@
 <h:commandLink id="myBookmarksLink" action="#{viewSectionsPage.gotoMyBookmarks}">
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
 </h:commandLink>
-<h:outputText value="|"/>  														
-  <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'Melete Bookmark Window');">
+<h:outputText value="|"/> 														
+  <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','Melete Bookmark Window');">
 		    	<f:param id="sectionId" name="sectionId" value="#{viewSectionsPage.section.sectionId}" />
+	  			<f:param id="sectionTitle" name="sectionTitle" value="#{viewSectionsPage.section.title}" />
 	  			<h:graphicImage id="bul_gif" value="images/icon_bookmark.gif" />
 				      <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
  	</h:outputLink>				  
