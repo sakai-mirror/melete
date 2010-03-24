@@ -27,15 +27,19 @@ package org.etudes.component.app.melete;
 import java.io.Serializable;
 import java.util.Set;
 import java.util.List;
+import java.util.Iterator;
+import java.io.File;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.BookmarkService;
 import org.etudes.api.app.melete.BookmarkObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
+import org.etudes.component.app.melete.MeleteUtil;
 
 public class BookmarkServiceImpl implements Serializable, BookmarkService{
 private Log logger = LogFactory.getLog(BookmarkServiceImpl.class);
+protected MeleteUtil meleteUtil = new MeleteUtil();
 private BookmarkDB bookmarkDb;
 
 
@@ -96,6 +100,25 @@ public BookmarkObjService getBookmark(String userId, String siteId, int sectionI
 			logger.debug("melete bookmark business -- delete bookmark failed");
 			throw new MeleteException("delete_bookmark_fail");
 			}
+  }
+  
+  public void deleteFiles(File delfile){
+
+		meleteUtil.deleteFiles(delfile);
+	}
+  
+  public void createFile(List bmList, String fileName) throws Exception
+  {
+	  StringBuffer bmStrbuf = new StringBuffer();
+	  for (Iterator iter = bmList.iterator(); iter.hasNext();)
+	  {
+		  Bookmark bm = (Bookmark)iter.next();
+		  bmStrbuf.append("\nTitle: "+bm.getTitle());
+		  bmStrbuf.append("\nNotes: "+bm.getNotes());
+		  bmStrbuf.append("\n");
+		  bmStrbuf.append("\n------------------------------------------------------------------");
+	  }
+	  meleteUtil.createFileFromContent(bmStrbuf.toString().getBytes(), fileName);
   }
 
 	/**

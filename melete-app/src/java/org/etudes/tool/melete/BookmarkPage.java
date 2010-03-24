@@ -46,6 +46,13 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.event.ActionEvent;
 
+import javax.faces.context.ExternalContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import org.sakaiproject.util.ResourceLoader;
+import org.sakaiproject.component.cover.ServerConfigurationService;
+
 import org.etudes.api.app.melete.BookmarkService;
 import org.etudes.api.app.melete.BookmarkObjService;
 
@@ -53,6 +60,8 @@ public class BookmarkPage implements Serializable
 {
 
 	/** identifier field */
+	
+	protected MeleteSiteAndUserInfo meleteSiteAndUserInfo;
 
 	private BookmarkObjService bookmark;
 
@@ -193,6 +202,124 @@ public class BookmarkPage implements Serializable
       bmList = null;
       nobmsFlag = true;
 	}
+	
+	public void exportNotes(ActionEvent evt)
+	{
+		String packagingdirpath = ServerConfigurationService.getString("melete.packagingDir", "");
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map sessionMap = context.getExternalContext().getSessionMap();
+		
+		File packagedir = null;
+		ResourceLoader bundle = new ResourceLoader(
+		"org.etudes.tool.melete.bundle.Messages");
+		try {
+			if(packagingdirpath == null || packagingdirpath.length() <=0 )
+			{
+				logger.warn("Melete Packaging Dir property is not set. Please check melete's readme file. ");
+				return;
+			}
+			File basePackDir = new File(packagingdirpath);
+			if (!basePackDir.exists())
+				basePackDir.mkdirs();
+
+			String title = getMeleteSiteAndUserInfo().getCourseTitle();
+			title = title.trim();
+			
+			String courseId = (String)sessionMap.get("courseId");
+			String userId = (String)sessionMap.get("userId");
+			
+			packagedir = new File(basePackDir.getAbsolutePath()
+					+ File.separator + courseId + "_" + userId + File.separator + title.replace(' ', '_'));
+			
+			if (!packagedir.exists())
+				packagedir.mkdirs();
+
+			String outputfilename = packagedir.getParentFile()
+			.getAbsolutePath() + File.separator  + title.replace(' ', '_') + "_my_bookmarks_notes.txt";
+	
+			bookmarkService.createFile(bmList, outputfilename);
+			File outfile = new File(outputfilename);
+			
+			download(new File(outfile.getAbsolutePath()));
+
+			FacesContext facesContext = FacesContext
+			.getCurrentInstance();
+			facesContext.responseComplete();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			String errMsg = bundle.getString("list_bookmarks_export_error");
+			FacesMessage msg = new FacesMessage(null, errMsg);
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			context.addMessage(null, msg);
+		} finally {
+			// delete the files - Directory courseid_instructorid and
+			// it's child
+			if (packagedir != null && packagedir.exists())
+				bookmarkService.deleteFiles(packagedir
+						.getParentFile());
+
+		}
+
+	}
+	
+	public String redirectExportNotes()
+	{
+		return "list_bookmarks";
+	}
+	
+	
+	/**
+	 * writes the text file to browser
+	 *
+	 * @param file -
+	 *            text file to download
+	 * @throws Exception
+	 */
+	private void download(File file) throws Exception {
+		FileInputStream fis = null;
+		ServletOutputStream out = null;
+		try {
+			String disposition = "attachment; filename=\"" + file.getName()
+					+ "\"";
+			fis = new FileInputStream(file);
+
+			FacesContext cxt = FacesContext.getCurrentInstance();
+			ExternalContext context = cxt.getExternalContext();
+			HttpServletResponse response = (HttpServletResponse) context
+					.getResponse();
+			response.setContentType("application/text"); // application/text
+			response.addHeader("Content-Disposition", disposition);
+			// Contributed by Diego for ME-233
+			response.setHeader("Pragma", "public");
+			response.setHeader("Cache-Control",
+					"public, post-check=0, must-revalidate, pre-check=0");
+
+			out = response.getOutputStream();
+
+			int len;
+			byte buf[] = new byte[102400];
+			while ((len = fis.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+
+			out.flush();
+		} catch (IOException e) {
+			throw e;
+		} finally {
+			try {
+				if (out != null)
+					out.close();
+			} catch (IOException e1) {
+			}
+
+			try {
+				if (fis != null)
+					fis.close();
+			} catch (IOException e2) {
+			}
+		}
+	}	
 
 	public int getDeleteBookmarkId() {
 	      return deleteBookmarkId;
@@ -314,6 +441,23 @@ public class BookmarkPage implements Serializable
     public void setSectionService(SectionService sectionService) {
             this.sectionService = sectionService;
     }
+    
+    /**
+	 * get MeleteSiteAndUserInfo
+	 *
+	 * @return
+	 */
+	private MeleteSiteAndUserInfo getMeleteSiteAndUserInfo() {
+		if (meleteSiteAndUserInfo == null) {
+			FacesContext context = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			meleteSiteAndUserInfo = (MeleteSiteAndUserInfo) binding
+					.getValue(context);
+
+			return meleteSiteAndUserInfo;
+		} else
+			return meleteSiteAndUserInfo;
+	}
 
 
 }

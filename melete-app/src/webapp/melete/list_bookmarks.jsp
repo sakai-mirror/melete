@@ -55,6 +55,13 @@
 		  <div class="meletePortletToolBarMessage"><img src="images/manage_content.png" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.list_bookmarks_headtitle}" /></div>				
 			   </td>
 			   </tr>
+               <tr>
+               <td align="right">
+                 <h:commandLink id="exportNotesLink" actionListener="#{bookmarkPage.exportNotes}" action="#{bookmarkPage.redirectExportNotes}" >
+                   <h:outputText id="exportnotes" value="#{msgs.list_bookmarks_export_notes}" />									
+                 </h:commandLink>
+               </td>
+              </tr>				   
 			 </table>  	
         	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
           		<tr>

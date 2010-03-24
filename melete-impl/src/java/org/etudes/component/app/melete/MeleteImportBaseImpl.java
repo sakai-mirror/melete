@@ -168,17 +168,7 @@ abstract public class MeleteImportBaseImpl {
 	 * @param delfile - file to be deleted
 	 */
 	public void deleteFiles(File delfile){
-
-		if (delfile.isDirectory()){
-			File files[] = delfile.listFiles();
-			int i = files.length;
-			while (i > 0)
-				deleteFiles(files[--i]);
-
-			delfile.delete();
-		}else
-			delfile.delete();
-
+      meleteUtil.deleteFiles(delfile);
 	}
 
 	/**

@@ -25,6 +25,8 @@ package org.etudes.component.app.melete;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -332,4 +334,39 @@ public class MeleteUtil {
 
 			return s;
 		}
+		
+		public void deleteFiles(File delfile){
+
+			if (delfile.isDirectory()){
+				File files[] = delfile.listFiles();
+				int i = files.length;
+				while (i > 0)
+					deleteFiles(files[--i]);
+
+				delfile.delete();
+			}else
+				delfile.delete();
+
+		}
+		
+		/**
+		 * creates file from input path to output path
+		 * @param inputpath - input path for file
+		 * @param outputpath - output path for file
+		 * @throws Exception
+		 */
+		public void createFileFromContent(byte[] content, String outputurl)throws Exception{
+			FileOutputStream fout = new FileOutputStream(new File(outputurl));
+			try {
+				fout.write(content);
+				fout.flush();
+			} catch (IOException e) {
+				throw e;
+			} catch (Exception e) {
+				throw e;
+			} finally {
+				if (fout != null)
+					fout.close();
+			}
+		}		
 }

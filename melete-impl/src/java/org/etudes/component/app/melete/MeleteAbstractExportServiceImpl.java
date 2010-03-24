@@ -636,18 +636,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 	 * @throws Exception
 	 */
 	public void createFileFromContent(byte[] content, String outputurl)throws Exception{
-		FileOutputStream fout = new FileOutputStream(new File(outputurl));
-		try {
-			fout.write(content);
-			fout.flush();
-		} catch (IOException e) {
-			throw e;
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			if (fout != null)
-				fout.close();
-		}
+		meleteUtil.createFileFromContent(content, outputurl);
 	}
 
 	/**
@@ -656,15 +645,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 	 */
 	public void deleteFiles(File delfile){
 
-		if (delfile.isDirectory()){
-			File files[] = delfile.listFiles();
-			int i = files.length;
-			while (i > 0)
-				deleteFiles(files[--i]);
-
-			delfile.delete();
-		}else
-			delfile.delete();
+		meleteUtil.deleteFiles(delfile);
 
 	}
 

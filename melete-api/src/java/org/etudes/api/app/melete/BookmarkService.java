@@ -22,6 +22,7 @@
 package org.etudes.api.app.melete;
 
 import java.util.List;
+import java.io.File;
 
 /**
  * @author Faculty
@@ -35,4 +36,6 @@ public interface BookmarkService {
 	public List getBookmarks(String userId, String siteId);
 	 public int getLastVisitSectionId(String userId, String siteId);
 	public void deleteBookmark(int bookmarkId) throws Exception;
+	public void deleteFiles(File delfile);
+	public void createFile(List bmList, String fileName) throws Exception;
 }
