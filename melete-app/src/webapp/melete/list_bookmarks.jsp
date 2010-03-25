@@ -94,8 +94,8 @@
 					 </f:facet>
 					 <h:outputLink id="editBookmarkLink" value="list_bookmarks" onclick="OpenBookmarkWindow(#{bookmark.sectionId},'Melete Bookmark Window');">
 		    	       <f:param id="sectionId" name="sectionId" value="#{bookmark.sectionId}" />
-						<h:graphicImage id="delgif0" alt="" value="images/delete.gif" styleClass="AuthImgClass" />
-							<h:outputText id="emp_space-20" value=" " />
+						  <h:graphicImage id="editgif" alt="" value="images/document_edit.gif" styleClass="AuthImgClass" />
+			                <h:outputText id="emp_space-20" value=" " />
 				    		<h:outputText id="deltext0" value="#{msgs.list_bookmarks_edit}"  />
 					 </h:outputLink>						
 					</h:column> 
