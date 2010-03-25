@@ -451,12 +451,30 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     {
     	Element secElement;
     	Node prevNode,nextNode;
+    	String courseId = "";
+    	FacesContext ctx = FacesContext.getCurrentInstance();
+    	logger.debug("get Module at viewsection java param value" + ctx.getExternalContext().getRequestParameterMap().get("vs_id"));
+    	String directvs_id = (String)ctx.getExternalContext().getRequestParameterMap().get("vs_id");
+    	if(directvs_id != null) 
+    	{
+    		int d_vs_id=new Integer(directvs_id).intValue();
+    		if(d_vs_id != this.sectionId)
+    		{
+    			this.sectionId=d_vs_id;
+    			this.moduleId = getSectionService().getSection(sectionId).getModuleId();
+    			this.module = null;
+    			this.section= null;
+    		}
+    		String direct_cid = (String)ctx.getExternalContext().getRequestParameterMap().get("c_id");
+        	if(direct_cid != null) courseId = direct_cid;        		
+    	}
     	
     	if (this.module == null)
-    	{
+    	{    		
     	try {
+    		if(courseId == null) courseId = getCourseId();	
   	  	  this.module = (ModuleObjService) getModuleService().getModule(this.moduleId);
-  	  	  this.nextSeqNo = getModuleService().getNextSeqNo(getCourseId(), this.moduleSeqNo, getInstRole());
+  	  	  this.nextSeqNo = getModuleService().getNextSeqNo(courseId, this.moduleSeqNo, getInstRole());
   	  	  this.subSectionW3CDom = getModuleService().getSubSectionW3CDOM(this.module.getSeqXml());
   	  	  secElement = subSectionW3CDom.getElementById(String.valueOf(this.sectionId));
   	  	  prevNode = getPreviousNode(secElement);
