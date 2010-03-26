@@ -147,14 +147,8 @@ public String goPrevItem()
         vmPage.setModuleSeqNo(prevSeqNo);
   	  }
       vmPage.setPrevMdbean(null);
-      if (instRole)
-	  {
-			return "view_module";
-	  }
-	  else
-	  {
-			return "view_module_student";
-	  }
+    	return "view_module";
+	
 	}
 	else
 	{
@@ -180,18 +174,7 @@ public String goPrevItem()
 	    //added by rashmi on 6/14/05
 	    vsPage.setModule(null);
 	    vsPage.setAutonumber(null);
-
-	    if (getInstRole() == true)
-	    {
-
-	      return "view_section";
-
-	    }
-	    else
-	    {
-	      return "view_section_student";
-
-	    }
+	    return "view_section";
 	}
 }
 
@@ -213,14 +196,7 @@ public String goNextModule()
     vmPage.setModuleSeqNo(nextSeqNo);
     vmPage.setPrintable(null);
     vmPage.setAutonumber(null);
-    if (instRole)
-	{
-			return "view_module";
-	}
-	else
-	{
-			return "view_module_student";
-	}
+ 	return "view_module";
 }
 
 public String gotoMyBookmarks()

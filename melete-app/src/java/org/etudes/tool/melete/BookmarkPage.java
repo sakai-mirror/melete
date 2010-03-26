@@ -146,11 +146,7 @@ public class BookmarkPage implements Serializable
 
 	public String redirectViewSection()
 	{
-		boolean isAuthor = getInstRole();
-		String retVal = "view_section_student";
-		if (isAuthor) retVal = "view_section";
-
-		return retVal;
+		return "view_section";
 	}
 	  public void deleteAction(ActionEvent evt)
 		{
