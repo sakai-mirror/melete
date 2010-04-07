@@ -149,6 +149,11 @@
 			<artifactId>servletapi</artifactId>
 			<version>2.4</version>
 		</dependency>
+		<dependency>
+			<groupId>etudes</groupId>
+			<artifactId>etudes-util</artifactId>
+			<version>1.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<sourceDirectory>src/java</sourceDirectory>

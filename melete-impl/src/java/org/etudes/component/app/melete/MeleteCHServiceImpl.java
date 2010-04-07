@@ -38,6 +38,7 @@ import java.net.URLDecoder;
 
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.MeleteSecurityService;
+import org.etudes.util.HtmlHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.component.app.melete.MeleteUtil;
@@ -1088,8 +1089,13 @@ public class MeleteCHServiceImpl implements MeleteCHService {
     			checkforimgs= pre + checkforimgs;
     			wordcommentIdx = -1;
     		}
-	    		contentEditor = checkforimgs;
-	    		// remove word comments code end
+	      	//strip all other MS word comments
+	      	checkforimgs = HtmlHelper.stripComments(checkforimgs);
+	      	//strip bad link and meta tags
+	      	checkforimgs = HtmlHelper.stripLinks(checkforimgs);
+
+	      	contentEditor = checkforimgs;	    		
+	      	// remove word comments code end	      	
 
 	    		//check for form tag and remove it
 	    	//	checkforimgs = meleteUtil.findFormPattern(checkforimgs);
@@ -1192,6 +1198,13 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 					 {
 		             	logger.debug(ff.toString() + fileName);
 		             	throw new MeleteException("embed_image_size_exceed");
+/*		             	ignore if file is missing and throw exceed message if request filter upload.status says so
+		             	//throw new MeleteException("embed_image_size_exceed");
+		             	if(endSrc > 0 && endSrc <= checkforimgs.length())
+	    					checkforimgs =checkforimgs.substring(endSrc);
+	    				else checkforimgs = null;
+			            startSrc=0; endSrc = 0; foundLink = null;
+		             	continue;*/
 					 }
 				}
 				// for internal links to make it relative
