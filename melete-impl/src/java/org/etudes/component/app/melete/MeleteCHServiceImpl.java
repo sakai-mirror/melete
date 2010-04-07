@@ -38,6 +38,7 @@ import java.net.URLDecoder;
 
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.MeleteSecurityService;
+import org.etudes.util.HtmlHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.component.app.melete.MeleteUtil;
@@ -1080,9 +1081,14 @@ public class MeleteCHServiceImpl implements MeleteCHService {
     			checkforimgs= pre + checkforimgs;
     			wordcommentIdx = -1;
     		}
-	    		contentEditor = checkforimgs;
-	    		// remove word comments code end
-
+	    	//strip all other MS word comments
+	      	checkforimgs = HtmlHelper.stripComments(checkforimgs);
+	      	//strip bad link and meta tags
+	      	checkforimgs = HtmlHelper.stripLinks(checkforimgs);
+	      	
+	    	contentEditor = checkforimgs;	    		
+	    	// remove word comments code end
+	    		
 	    		//check for form tag and remove it
 	    		checkforimgs = meleteUtil.findFormPattern(checkforimgs);
 	    		logger.debug("after find form pattern "+ endSrc);
