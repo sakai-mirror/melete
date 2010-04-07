@@ -27,13 +27,13 @@
   <parent>
     <artifactId>melete-base</artifactId>
     <groupId>org.etudes</groupId>
-    <version>2.7.3</version>
+    <version>2.7.2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <name>Etudes Melete Pack</name>
   <groupId>org.etudes</groupId>
   <artifactId>etudes-melete-pack</artifactId>
-  <version>2.7.3</version>
+  <version>2.7.2</version>
   <organization>
     <name>Etudes</name>
     <url>http://etudes.org/</url>
@@ -51,12 +51,12 @@
     <dependency>
       <groupId>org.etudes</groupId>
       <artifactId>etudes-melete-impl</artifactId>
-      <version>2.7.3</version>
+      <version>2.7.2</version>
     </dependency>
     <dependency>
       <groupId>org.etudes</groupId>
       <artifactId>etudes-melete-util</artifactId>
-      <version>2.7.3</version>
+      <version>2.7.2</version>
     </dependency>
   </dependencies>
   <build>

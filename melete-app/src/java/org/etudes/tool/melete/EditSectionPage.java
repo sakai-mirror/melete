@@ -438,16 +438,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 		Map sessionMap = context.getExternalContext().getSessionMap();
 		sessionMap.put("currModule", module);
 
-		ValueBinding binding = Util.getBinding("#{authorPreferences}");
-		AuthorPreferencePage authPage = (AuthorPreferencePage) binding.getValue(context);
-		authPage.setEditorFlags();
-		
-		binding = Util.getBinding("#{addSectionPage}");
+		ValueBinding binding = Util.getBinding("#{addSectionPage}");
 		AddSectionPage aPage = (AddSectionPage) binding.getValue(context);
 		aPage.setSection(null);
 		aPage.resetSectionValues();
 		aPage.setModule(module);
-		logger.debug("render flags:" + aPage.getShouldRenderEditor() + authPage.isShouldRenderFCK());
 		return "addmodulesections";
 	}
 

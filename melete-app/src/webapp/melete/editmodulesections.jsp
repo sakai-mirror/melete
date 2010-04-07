@@ -73,7 +73,21 @@ function showupload()
 			     document.getElementById("EditSectionForm:contentEditorView").style.visibility="hidden";
 			     document.getElementById("EditSectionForm:contentEditorView").style.display="none";
 			  }
-				
+	
+			if(document.getElementById("othereditor") != undefined && document.getElementById("othereditor") != null)
+			  {
+			      document.getElementById("othereditor").style.visibility="hidden";
+			      document.getElementById("othereditor").style.display="none";
+			  }
+	}
+	
+	if(sferyxdisplay != undefined && str.match("typeEditor"))
+	{	
+	 var k1=document.getElementById("EditSectionForm:contentEditorView:contentTextArea").value;     
+	 if(k1 != undefined && k1 !=null)
+		 {
+		 document.htmleditor.setContent(k1); //May use initialURLEncodedContent param instead
+        	}
 	}
 
 	if(!str.match("typeEditor"))
@@ -259,7 +273,7 @@ window.open('editpreviewEditor.jsf');
 									<tr> 
 										 <td colspan="2" align="center"> 										
 											 <f:subview id="contentEditorView" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
-												<jsp:include page="contentSferyxEditor.jsp?mode=Edit"/>
+												<jsp:include page="contentSferyxEditor.jsp"/> 
 												 <h:inputHidden id="contentTextArea" value="#{editSectionPage.contentEditor}" />
 												 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>

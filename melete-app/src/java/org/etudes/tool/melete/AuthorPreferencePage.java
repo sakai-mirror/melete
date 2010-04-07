@@ -70,43 +70,13 @@ public class AuthorPreferencePage {
   {
   }
 
-  public void setEditorFlags()
-  {
-	  FacesContext context = FacesContext.getCurrentInstance();
-	  Map sessionMap = context.getExternalContext().getSessionMap();
-	  mup = getMup((String)sessionMap.get("userId"));
-	  shouldRenderSferyx = false;
-	  shouldRenderFCK = false;
-
-	  // if no choice is set then read default from sakai.properties
-	  if ((mup == null)||(mup.getEditorChoice() == null))
-	  {
-		  editorChoice = getMeleteDefaultEditor();
-	  }
-	  else
-	  {
-		  editorChoice = mup.getEditorChoice();
-	  }
-	  if(editorChoice.equals(SFERYX))
-	  {
-		  shouldRenderSferyx = true;
-		  shouldRenderFCK = false;
-	  }
-	  else if(editorChoice.equals(FCKEDITOR))
-	  {
-		  shouldRenderSferyx = false;
-		  shouldRenderFCK = true;
-	  }
-
-  }
-  
   public void resetValues()
   {
 	FacesContext context = FacesContext.getCurrentInstance();
 	Map sessionMap = context.getExternalContext().getSessionMap();
 
 	  mup = getMup((String)sessionMap.get("userId"));
-	
+	  	
       ValueBinding binding =
 	        Util.getBinding("#{licensePage}");
 	  LicensePage lPage = (LicensePage)binding.getValue(context);
@@ -124,9 +94,26 @@ public class AuthorPreferencePage {
   		mup = getMup((String)sessionMap.get("userId"));
   		msp = (MeleteSitePreference) getAuthorPref().getSiteChoice((String)sessionMap.get("courseId"));
 
-  		// reset flags
-		setEditorFlags();
-		
+  		// if no choice is set then read default from sakai.properties
+  		if ((mup == null)||(mup.getEditorChoice() == null))
+  		{
+  			editorChoice = getMeleteDefaultEditor();
+  		}
+  		else
+  		{
+  			editorChoice = mup.getEditorChoice();
+  		}
+  		if(editorChoice.equals(SFERYX))
+  		{
+  			shouldRenderSferyx = true;
+  		  	shouldRenderFCK = false;
+  		}
+  		else if(editorChoice.equals(FCKEDITOR))
+  		{
+  			shouldRenderSferyx = false;
+  		  	shouldRenderFCK = true;
+  		 }
+
   		if (mup != null && (mup.isViewExpChoice() == null || !mup.isViewExpChoice().booleanValue()))
   			userView = "false";
   		else

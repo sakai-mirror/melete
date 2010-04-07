@@ -32,15 +32,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="description" content="ETUDES-NG Course Management System, Powered by Sakai">
 <meta name="keywords" content="ETUDES-NG course management system, e-learning">
-<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 
 <title>Melete - Sort Sections</title>
 <script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <script language="javascript">
 function resetModuleSelection() {
       	var element = document.getElementById("SortSectionForm:currmodule");
-		if ((document.referrer.substring(document.referrer.length-17,document.referrer.length) == "list_auth_modules")||(document.referrer.substring(document.referrer.length-12,document.referrer.length) == "modules_sort"))
+		if ((document.referrer.substring(document.referrer.length-13,document.referrer.length) == "author_manage")||(document.referrer.substring(document.referrer.length-12,document.referrer.length) == "modules_sort"))
   
     	{
     		element.options[0].selected = true;
