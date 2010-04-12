@@ -24,16 +24,7 @@
  **********************************************************************************
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
-<%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
-
-<%
-final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
-
-final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "meleteSiteAndUserInfo");
- meleteSiteAndUserInfo.populateMeleteSession();
-%>
-<link href="rtbc004.css" type="text/css" rel="stylesheet" media="all" />
 
 <sakai:tool_bar id="topbar">
   <h:commandLink id="viewItem" action="#{navPage.viewAction}" immediate="true" >
@@ -57,6 +48,7 @@ final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)faces
   </h:commandLink>
 </sakai:tool_bar>
 <!-- End code to display images horizontally. -->
+
 
 
 
