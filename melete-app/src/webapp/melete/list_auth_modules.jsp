@@ -23,14 +23,12 @@
  *
  **********************************************************************************
 -->
-<html>
-
-<title>Melete - Modules: Author View</title>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+
+<f:view>
+<sakai:view title="Modules: Author View" toolCssHref="rtbc004.css">
 
 <%@include file="accesscheck.jsp" %>
 <%
@@ -50,7 +48,6 @@ if (request.getAttribute("msg") != null)
 	
 %>
 
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <script type="text/javascript" language="JavaScript" src="js/calendar2.js"></script>
 <script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
 <script type="text/javascript" language="javascript">
@@ -146,12 +143,7 @@ function resetAllMod()
 }
 
 </script>
-</head>
 
-
-<f:view>
-
-<body onload="resetCheck();setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');" >
 <h:form id="listauthmodulesform">
 <%
 
@@ -163,36 +155,25 @@ if (msg != null)
   facesContext.addMessage(null, facesMsg);		
 }  
 %>
-<table border="0" width="100%" height="350" cellpadding="2" cellspacing="0" class ="table3">
-<tr>		
-		<td valign="top">
-			<table width="100%" border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
-				<tr>
-					<td height="20" class="maintabledata1">
-						<f:subview id="top">
-							<jsp:include page="topnavbar.jsp"/> 
-						</f:subview>
-						<div class="meletePortletToolBarMessage"><img src="images/pen_red.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_auth_modules_authoring_options}" /> </div>
-				 </td>
-			</tr>
-			<tr><td>
-					<f:subview id="authtop">
-							<jsp:include page="authnavbar.jsp"/> 
-					</f:subview>
-			</td>
-		</tr>
-<!--Page Content-->
-	
-		<tr>
-		<td align="left">
-			<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-			 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" height="100%" id="AutoNumber1" > 
-                   <tr>
-				   <td colspan="5">
-				     <h:dataTable id="table" 
+	<f:subview id="top">
+		<jsp:include page="topnavbar.jsp"/> 
+	</f:subview>
+	<div class="meletePortletToolBarMessage"><img src="images/pen_red.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_auth_modules_authoring_options}" /> </div>
+	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
+	<table width="100%" border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse;">
+	<tr><td>
+			<f:subview id="authtop">
+					<jsp:include page="authnavbar.jsp"/> 
+			</f:subview>
+		</td>
+	</tr>
+<!--Page Content-->	
+	<tr>
+		<td valign="top">			
+	     <h:dataTable id="table" 
                   value="#{listAuthModulesPage.moduleDateBeans}"
                   var="mdbean"   border="0"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListTitleClass,ListDateClass,ListDateClass,ListActionClass" 
-                  styleClass="maintabledata1" cellpadding="3" 
+                  styleClass="maintabledata1" cellpadding="0" 
 				  width="100%" binding="#{listAuthModulesPage.table}" summary="#{msgs.list_auth_modules_summary}">
                       
     <h:column>
@@ -302,28 +283,22 @@ if (msg != null)
     </h:dataTable>   
     <h:inputHidden id="listSize" value="#{listAuthModulesPage.listSize}"/>   
 	<h:outputText id="nomodmsg" value="#{msgs.list_auth_modules_no_modules_available}" rendered="#{listAuthModulesPage.nomodsFlag == true}" style="text-align:left"/>
-	</td></tr>
-	  <tr > <td colspan="5">
+
 	  <div class="actionBar" align="left">
 	   <h:commandButton id="saveChanges" action="#{listAuthModulesPage.saveChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
 	   <h:commandButton id="cancelChanges" immediate="true" action="#{listAuthModulesPage.cancelChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_cancel}"  accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
-	  </div>
-	  </td> </tr>
-                 </table>
+	  </div>	 
 </td>
 </tr>
 </table> 
  
 
 <!--End Content-->
-</td>
-</tr>
-</table>
+ 
 </h:form>
-</body>
-
+</sakai:view>
 </f:view>
-</html>
+
 
  
 
