@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -100,12 +100,12 @@ function showEdateCal()
 	
 	
 	<table border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" height="57">
-      <tr>
-      	<td height="20" class="maintabledata2"> <h:outputText value="#{msgs.add_module_define_properties}" /> 	</td>
-      </tr>
        <tr>
          <td>
          	<table border="0" cellpadding="3" cellspacing="0" width="100%" >
+         	  <tr>
+      			<td colspan="2" height="20" class="maintabledata2"> <h:outputText value="#{msgs.add_module_define_properties}" /> 	</td>
+     		 </tr>
          	  <tr>
                 <td  align="left" valign="top"> <h:outputText value="#{msgs.add_module_module_title}" /> <span class="required">*</span></td>
                 <td  align="left" valign="top">
@@ -192,6 +192,7 @@ function showEdateCal()
 	       </div>
         </td></tr>		
 </table>
+<p class="bold"><span class="required">*</span>&nbsp;<h:outputText value="#{msgs.edit_module_required}" /></p>
 	<!-- here -->	
 	</h:form>
 </sakai:view>
