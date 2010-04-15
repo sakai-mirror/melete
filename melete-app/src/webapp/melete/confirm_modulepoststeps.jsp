@@ -23,46 +23,21 @@
  *
  **********************************************************************************
 -->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
-<head>
-<meta http-equiv="Content-Language" content="en-us">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<meta name="description" content="ETUDES-NG Course Management System, Powered by Sakai">
-<meta name="keywords" content="ETUDES-NG course management system, e-learning">
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+
+<f:view>
+<sakai:view title="Modules: Post Steps Confirmation" toolCssHref="rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
-
-
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
-
-<!-- End code to put in head section for image pre-loading. -->
-
-<title>Melete - Post Steps Confirmation</title>
-</head>
-<f:view>
-<body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
 <h:form id="PostStepsConfirmForm">
-<table border="0" cellpadding="0" cellspacing="0" class ="table3">
-	<tr>
-		<td valign="top"> &nbsp;</td>
-      <!-- This Begins the Main Text Area -->
-      <td width="100%" valign="top" >
-       <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
-        <tr>
-          <td width="100%" height="20" class="maintabledata1">
-	          <!-- Begin code to display images horizontally. -->
-				<f:subview id="top">
-					<jsp:include page="topnavbar.jsp"/> 
-				</f:subview>	
-					<div class="meletePortletToolBarMessage"><img src="images/check.gif" alt="" width="16" height="16" align="absbottom">Confirmation </div>
-			</td>
-        </tr>
-          
-        <tr>
+	<f:subview id="top">
+		<jsp:include page="topnavbar.jsp"/> 
+	</f:subview>	
+	<div class="meletePortletToolBarMessage"><img src="images/check.gif" alt="" width="16" height="16" align="absbottom">Confirmation </div>
+     <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
+       <tr>
           <td class="maintabledata3">
 
 		  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
@@ -77,24 +52,18 @@
                         <br> <h:outputText value="#{moduleNextStepsPage.mdBean.module.title}" styleClass="bold" />                 
 					  </td>
                     </tr>
-                  </table><br></td>
+                  </table></td>
               </tr>
-			  					              <tr>
-                <td height="30" colspan="2">         
-                <div align="center">				
-					<h:commandButton id="ReturntoModules" action="#{moduleNextStepsPage.returnToModules}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgSpace"/>					
-				</div></td>
-              </tr>
-			 <tr><td colspan="2" height="20" class="maintabledata5">&nbsp;</td></tr>
-            </table>
+           </table>
+          <div class="actionBar" align="left">				
+			<h:commandButton id="ReturntoModules" action="#{moduleNextStepsPage.returnToModules}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgSpace"/>					
+	      </div>
           </td>
         </tr>
       </table>   
-	   </h:form>      
-    </td>
-  </tr>
-</table>
+	   </h:form>    
+    
   <!-- This Ends the Main Text Area --> 
-</body>
+</sakai:view>
 </f:view>
-</html>
+

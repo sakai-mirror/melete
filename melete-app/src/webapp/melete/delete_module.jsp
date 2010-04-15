@@ -1,11 +1,4 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
-<head>
-<meta http-equiv="Content-Language" content="en-us">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<meta name="description" content="ETUDES-NG Course Management System, Powered by Sakai">
-<meta name="keywords" content="ETUDES-NG course management system, e-learning">
-
 <!--
  ***********************************************************************************
  * $URL$
@@ -33,11 +26,10 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<f:view>
+<sakai:view title="Modules: Delete Module" toolCssHref="rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
-
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
-<!-- End code to put in head section for image pre-loading. -->
 <script language="javascript1.2">
 function showProcessMessage()
 {
@@ -45,30 +37,18 @@ function showProcessMessage()
  document.getElementById("DeleteModuleForm:delButton").style.visibility="hidden"; 
 }
 </script>
-<title>Melete - Delete Module</title>
-</head>
-<f:view>
-<body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
  <h:form id="DeleteModuleForm">
+	<f:subview id="top">
+		<jsp:include page="topnavbar.jsp"/> 
+	</f:subview>
+	  <div class="meletePortletToolBarMessage"><img src="images/Warning.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.delete_module_module}" rendered="#{deleteModulePage.moduleSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion1}" rendered="#{deleteModulePage.sectionSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion2}" /></div>
       <!-- This Begins the Main Text Area -->
-       <table width="100%"  border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
+      <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
+      <tr><td width="100%" height="20" class="maintabledata5"></td></tr>
         <tr>
-          <td width="100%" height="20" class="maintabledata1">
-
-          <!-- Begin code to display images horizontally. -->
-				<f:subview id="top">
-					<jsp:include page="topnavbar.jsp"/> 
-				</f:subview>
-		  <div class="meletePortletToolBarMessage"><img src="images/Warning.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.delete_module_module}" rendered="#{deleteModulePage.moduleSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion1}" rendered="#{deleteModulePage.sectionSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion2}" /></div>				
-		</td>
-        </tr>
-        </table>  
-         <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
-      
-        <tr>
-          <td class="maintabledata3">
+          <td>
 			<h:messages id="deletemoduleerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-		    <table width="100%"  border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
+		    <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#CCCCCC">
                <tr class="maintabledata3">
                   <td valign="top"><h:graphicImage id="warngif" value="images/Warning.gif" width="24" height="24" alt="#{msgs.delete_module_deletion_warning}" title="#{msgs.delete_module_deletion_warning}"/></td>
                   <td align="left"><h:outputText value="#{msgs.delete_module_message1}" /><br>
@@ -89,27 +69,21 @@ function showProcessMessage()
 						<h:outputText value="#{secbean.section.title}" styleClass="bold"  rendered="#{deleteModulePage.sectionSelected}" />
                       </h:column>
                    </h:dataTable>    
-                  <p align="left"><h:outputText value="#{msgs.delete_module_long1}" /><B><h:outputText value="#{msgs.delete_module_long2}" /></B> <h:outputText value="#{msgs.delete_module_long3}" /><B><h:outputText value="#{msgs.delete_module_long4}" /></B><h:outputText value="#{msgs.delete_module_long5}" />
-</p></td>
+					<h:outputText value="#{msgs.delete_module_long1}" /><B><h:outputText value="#{msgs.delete_module_long2}" /></B> <h:outputText value="#{msgs.delete_module_long3}" /><B><h:outputText value="#{msgs.delete_module_long4}" /></B><h:outputText value="#{msgs.delete_module_long5}" />
+					  </td>
                     </tr>
                   </table>
-                  </td>
-              </tr>
-              <tr>
-              	<td> <h:outputLabel id="processmsg" value="#{msgs.processMsg}" styleClass="orange" style="visibility:hidden" />
-              	</td>
-              </tr>
-			  <tr>
-                <td>
-                <div class="actionBar" align="left" id="deleteActionPanel">
+                  <h:outputLabel id="processmsg" value="#{msgs.processMsg}" styleClass="orange" style="visibility:hidden" />
+                  <div class="actionBar" align="left" id="deleteActionPanel">
                 	<h:commandButton id="delButton" action="#{deleteModulePage.deleteAction}"  rendered="#{deleteModulePage.sameModuleSectionSelected == false}" value="#{msgs.im_continue}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgDelete" onclick="showProcessMessage()"/>
 					<h:commandButton id="delButton_1" action="#{deleteModulePage.reConfirmedDeleteAction}"  rendered="#{deleteModulePage.sameModuleSectionSelected}" value="#{msgs.im_continue}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgDelete"/>	
 					<h:commandButton id="cancelButton" action="#{deleteModulePage.backToModules}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>       
-				</div></td>          
-        </tr>
+				  </div>
+                  </td>
+              </tr>              
       </table>
 	</h:form>
   <!-- This Ends the Main Text Area -->
-</body>
+</sakai:view>
 </f:view>
-</html>
+

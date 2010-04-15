@@ -25,24 +25,18 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+
+<f:view>
+<sakai:view title="Modules: Preview Section" toolCssHref="rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
-
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
-<title>Melete - Preview Section</title>
-<f:view>
-<body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
  	<h:form id="previewForm" > 	
-     <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
-          <tr>
-            <td width="100%" height="20" >
-				<!-- top nav bar -->		
-				<f:subview id="top">
-						<jsp:include page="topnavbar.jsp"/> 
-				</f:subview>		
-				<div class="meletePortletToolBarMessage"><img src="images/note_view.gif" alt="" width="24" height="24" align="absmiddle"><h:outputText value="#{msgs.edit_preview_previewing_section}" /></div>
-		    </td>
-		  </tr>
+ 	<f:subview id="top">
+		<jsp:include page="topnavbar.jsp"/> 
+	</f:subview>		
+	<div class="meletePortletToolBarMessage"><img src="images/note_view.gif" alt="" width="24" height="24" align="absmiddle"><h:outputText value="#{msgs.edit_preview_previewing_section}" /></div>
+     <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">          
 		  <tr>
 		    <td colspan="2" height="20" class="maintabledata5">&nbsp;
 		    </td>
@@ -151,5 +145,5 @@ rendered="#{((editSectionPage.meleteResource.licenseCode == 4)&&(editSectionPage
 
 </h:form>
 
-</body>
+</sakai:view>
 </f:view>

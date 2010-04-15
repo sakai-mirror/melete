@@ -23,40 +23,24 @@
  *
  **********************************************************************************
 -->
-<html>
 
-<title>Melete - Modules: Student View</title>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+
+<f:view>
+<sakai:view title="Modules: Student View" toolCssHref="rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
-</head>
-<f:view>
-<body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
+
 <h:form id="listmodulesform">
-
-<table border="0" width="100%" height="350" cellpadding="0" cellspacing="0" class ="table3">
-<tr>
- <td valign="top">
-<table width="100%" border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
-<tr>
-<td height="20" class="maintabledata1">
 <f:subview id="top">
-<jsp:include page="topnavbar.jsp"/> 
+	<jsp:include page="topnavbar.jsp"/> 
 </f:subview>
-</td>
-</tr>
-<tr>
-<td >
-
 <div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_modules_inst_viewing_student}" /> </div>
 
-</td>
-</tr>
+<table width="100%" border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
 <tr>
 <td align="right">
 <h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">
@@ -72,12 +56,9 @@
 <tr>
 <td >
 <h:messages showDetail="true" showSummary="false"/>
-<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" >
-  
-	<tr> <td colspan="5" valign="top">
- <h:dataTable id="table"  
+ <h:dataTable id="StudentTable"  
                   value="#{listModulesPage.viewModuleBeans}" 
-                  var="vmbean"  rowClasses="row1,row2" columnClasses="ListTitleClass,ListClosedClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
+                  var="vmbean"  rowClasses="row1,row2" columnClasses="StudentListTitleClass,ListClosedClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
                   border="0" cellpadding="3" width="100%" binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_inst_summary}">
         <h:column>      
         <f:facet name="header">
@@ -111,7 +92,7 @@
                 
           
            <h:dataTable id="tablesec" rendered="#{(((vmbean.moduleId == listModulesPage.showModuleId)||(listModulesPage.expandAllFlag == listModulesPage.trueFlag)))}"
-                  value="#{vmbean.vsBeans}"
+                  value="#{vmbean.vsBeans}" cellpadding="3"
                   var="vsbean"  rowClasses="#{vmbean.rowClasses}"  width="95%" binding="#{listModulesPage.secTable}" summary="#{msgs.list_modules_inst_sections_summary}">
                    <h:column>                         
                <h:graphicImage id="bul_gif" value="images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}"/>
@@ -219,26 +200,19 @@
       </h:panelGrid>          
 	  </td></tr>
 	  <tr>
-         <td  height="20" colspan="5" class="maintabledata5">&nbsp;   </td>
+         <td  height="20" class="maintabledata5">&nbsp;   </td>
         </tr>
         <tr>
-        <td colspan="5">
+        <td >
          <h:graphicImage id="closed_gif" value="images/view_closed.png" alt="" styleClass="ExpClass" rendered="#{listModulesPage.closedModulesFlag == listModulesPage.trueFlag}"/>
          <h:outputText styleClass="style3" value="#{msgs.list_modules_inst_module_not_open}" rendered="#{listModulesPage.closedModulesFlag == listModulesPage.trueFlag}"/>
          </td>
          </tr>
         </table>
- </td>
- </tr>
-</table>	
+ 	
 
 <!--End Content-->
-</td>
-</tr>
-</table>
-
  </h:form>
-
-</body>
+</sakai:view>
 </f:view>
-</html>
+

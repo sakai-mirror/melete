@@ -25,7 +25,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@include file="accesscheck.jsp" %>
 
-	<h:panelGrid id="uploadView1" columns="2" columnClasses="col30,col50" width="80%">
+	<h:panelGrid id="uploadView1" columns="2" columnClasses="col50,col50left" width="100%">
 		<h:column>
 			<h:outputText id="uploadText1" value="#{msgs.contentuploadview_upload}" rendered="#{addSectionPage.shouldRenderUpload}"/>				
 			<h:outputText id="extraspacesUpload" value="    " styleClass="ExtraPaddingClass" />	

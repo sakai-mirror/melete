@@ -26,18 +26,11 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+
+<f:view>
+<sakai:view title="Modules: Sort Sections" toolCssHref="rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
-<html><head>
-<meta http-equiv="Content-Language" content="en-us">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<meta name="description" content="ETUDES-NG Course Management System, Powered by Sakai">
-<meta name="keywords" content="ETUDES-NG course management system, e-learning">
-<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-
-<title>Melete - Sort Sections</title>
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <script language="javascript">
 function resetModuleSelection() {
       	var element = document.getElementById("SortSectionForm:currmodule");
@@ -52,27 +45,17 @@ function resetModuleSelection() {
     	}  
 }
 </script>
-</head>
-<f:view>
-<body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onload="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');resetModuleSelection();" >
-<h:form id="SortSectionForm">
-  <h:inputHidden id="formName" value="SortSectionForm"/>  
-<!-- This Begins the Main Text Area -->
 
-<table>
-	<tr>
-		<td valign="top"></td>
-    	<td width="1962" valign="top">
-        	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
-          		<tr>
-            		<td width="100%" height="20" bordercolor="#E2E4E8">
-					<!-- top nav bar -->
-						<f:subview id="top">
-								<jsp:include page="topnavbar.jsp"/> 
-						</f:subview>
-						<div class="meletePortletToolBarMessage"><img src="images/document_exchange.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.sort_sections_top_message}" /></div>
-					</td>
-				</tr>
+<h:form id="SortSectionForm">
+  <h:inputHidden id="formName" value="SortSectionForm"/>
+	<!-- top nav bar -->
+		<f:subview id="top">
+				<jsp:include page="topnavbar.jsp"/> 
+		</f:subview>
+		<div class="meletePortletToolBarMessage"><img src="images/document_exchange.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.sort_sections_top_message}" /></div>
+
+<!-- This Begins the Main Text Area -->
+       	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
 				<tr>
 					<td valign="top">
 						<!-- main page contents -->
@@ -97,7 +80,7 @@ function resetModuleSelection() {
 							  </tr>
 							  <tr>
 										<td height="30"><h:outputText value="#{msgs.sort_sections_choose_module}"/> 
-							          <h:selectOneMenu id="currmodule" value="#{sortModuleSectionPage.currSecModule}"  valueChangeListener="#{sortModuleSectionPage.nextModuleSections}" onchange="this.form.submit();" style="width:30%">
+							          <h:selectOneMenu id="currmodule" value="#{sortModuleSectionPage.currModule}"  valueChangeListener="#{sortModuleSectionPage.nextModuleSections}" onchange="this.form.submit();" style="width:30%">
 															 <f:selectItems value="#{sortModuleSectionPage.allModulesList}" />							
 												 </h:selectOneMenu>													
 										</td>
@@ -144,13 +127,9 @@ function resetModuleSelection() {
 							</table>							
 						</td>
 				  	</tr>
-				</table>
-				</td>
-			  </tr>
-		    </table>
+				</table>				
 </h:form>
 <!-- This Ends the Main Text Area -->
-
-</body>
+</sakai:view>
 </f:view>
-</html>	  
+	  

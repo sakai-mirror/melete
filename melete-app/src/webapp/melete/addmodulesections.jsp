@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<!--
+<%--
  ***********************************************************************************
  * $URL$
  * $Id$  
@@ -22,20 +22,12 @@
  * permissions and limitations under the License.
  *
  **********************************************************************************
--->
-<html>
-<head>
-<title>Melete: Add Module Sections</title>
-<meta http-equiv="Content-Language" content="en-us">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<meta name="description" content="ETUDES-NG Course Management System, Powered by Sakai">
-<meta name="keywords" content="ETUDES-NG course management system, e-learning">
-<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-
+--%>
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<f:view>
+<sakai:view title="Modules: Add Module Sections" toolCssHref="rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
 <%@ page import="javax.faces.application.FacesMessage, org.sakaiproject.util.ResourceLoader"%>
@@ -46,13 +38,13 @@
 	String mensaje2=bundle .getString("addmodulesections_done");
 
 %>
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
+
 <style type="text/css">
 <!--
 .style1 {color: #FFFFFF}
 -->
 </style>
-</head>
+
 <script language="javascript1.2">
 
 function showupload()
@@ -123,93 +115,70 @@ function contentChangeSubmit()
 	   document.getElementById("AddSectionForm:contentChange").value = "true";
 }
 </script>
-<f:view>
-<body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onload="showupload(),setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');" >
-      <!-- This Begins the Main Text Area -->
-	<h:form id="AddSectionForm" enctype="multipart/form-data">		
-<table width="100%"  border="0" cellpadding="0" cellspacing="0" class ="table3">
-	<tr>
-		<td valign="top"> &nbsp;
-		</td>
 
-    <td width="100%"  valign="top">
+      <!-- This Begins the Main Text Area -->
+	<h:form id="AddSectionForm" enctype="multipart/form-data">	
+	<!-- top nav bar -->
+		<f:subview id="top">
+			<jsp:include page="topnavbar.jsp"/> 
+		</f:subview>
+		<div class="meletePortletToolBarMessage"><img src="images/document_add.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.addmodulesections_adding_section}" /> </div>	
+		<h:messages id="addsectionerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
+
         <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
           <tr>
-            <td width="100%"  >
-					<!-- top nav bar -->
-		<f:subview id="top">
-							<jsp:include page="topnavbar.jsp"/> 
-						</f:subview>
-						<div class="meletePortletToolBarMessage"><img src="images/document_add.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.addmodulesections_adding_section}" /> </div>
-		</td></tr>
-	
-		  <tr><td>
-			 <h:messages id="addsectionerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-  		  </td></tr>
-          <tr>
-            <td height="20" class="maintabledata5">
-					<h:commandLink id="TOCButton"  action="#{addSectionPage.cancel}"  immediate="true">
-						<h:outputText id="toc" value="#{msgs.addmodulesections_TOC}" />
-					</h:commandLink> &raquo; <h:outputText id="text11" value="#{addSectionPage.module.title}" />  &raquo; <h:outputText id="add_new_section" value="#{msgs.addmodulesections_add_new_section}" />
-			</td>
-          </tr>
-          <tr>
-            <td class="maintabledata5">
-			<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" height="98">
-              <tr bgcolor="#FFFFFF">
-                <td width="100%" height="35" valign="top">
-                <table style="BORDER-COLLAPSE: collapse" bordercolor="#111111" cellspacing="0" cellpadding="0" width="100%" border="0">
-                  <tbody>
-                    <tr>
-                      <td align="left" valign="top">
-                      <table style="BORDER-COLLAPSE: collapse" bordercolor="#111111" cellspacing="0" cellpadding="0" width="100%" border="0">
-                          <tbody>
-                            <tr>
-                              <td align="left" valign="top" style="white-space:nowrap">
-                              <table style="white-space:nowrap" bordercolor="#111111" cellspacing="0" cellpadding="4" width="100%" border="0">
+            <td>
+                     <table style="white-space:nowrap" bordercolor="#111111" cellspacing="0" cellpadding="4" width="100%" border="0">
                                   <tr>
-                                    <td align="left" valign="top"><h:outputText id="text7" value="#{msgs.addmodulesections_section_title}" /><span class="required">*</span></td>
-                                    <td width="600" align="left" valign="top">
+						            <td colspan="2" height="20" class="maintabledata5">
+											<h:commandLink id="TOCButton"  action="#{addSectionPage.cancel}"  immediate="true">
+												<h:outputText id="toc" value="#{msgs.addmodulesections_TOC}" />
+											</h:commandLink> &raquo; <h:outputText id="text11" value="#{addSectionPage.module.title}" />  &raquo; <h:outputText id="add_new_section" value="#{msgs.addmodulesections_add_new_section}" />
+									</td>
+						          </tr>
+                                  <tr>
+                                    <td class="col50" align="left" valign="top"><h:outputText id="text7" value="#{msgs.addmodulesections_section_title}" /><span class="required">*</span></td>
+                                    <td class="col50" align="left" valign="top">
 										<h:inputText id="title" value="#{addSectionPage.section.title}" size="45" required="true" styleClass="formtext" title="Title"/>
 										
 									</td>
                                   </tr>
                                   <tr>
-                                    <td align="left" valign="top"><h:outputText id="text6" value="#{msgs.addmodulesections_author}" /></td>
-                                    <td align="left" valign="top"><h:outputText id="author" value="#{addSectionPage.author}" styleClass="formtext"/></td>
+                                    <td class="col50" align="left" valign="top"><h:outputText id="text6" value="#{msgs.addmodulesections_author}" /></td>
+                                    <td class="col50" align="left" valign="top"><h:outputText id="author" value="#{addSectionPage.author}" styleClass="formtext"/></td>
                                    </tr>
                                    <tr>
-                                    <td align="left" valign="top"><h:outputText id="text5" value="#{msgs.addmodulesections_instructions}" /></td>
-                                    <td align="left" valign="top">
+                                    <td class="col50" align="left" valign="top"><h:outputText id="text5" value="#{msgs.addmodulesections_instructions}" /></td>
+                                    <td class="col50" align="left" valign="top">
 									  <h:inputTextarea id="instr" cols="45" rows="5" value="#{addSectionPage.section.instr}" styleClass="formtext" >
 											<f:validateLength maximum="250" minimum="1"/>
 									</h:inputTextarea>													
 									</td>
                                   </tr>
                                 <tr>
-                                    <td align="left" valign="top"> <h:outputText id="modality" value="#{msgs.addmodulesections_modality}" /><span class="required">*</span></td>
-                                    <td align="left" valign="top"><h:outputText id="text4" value="#{msgs.addmodulesections_message1} "/>
+                                    <td class="col50" align="left" valign="top"> <h:outputText id="modality" value="#{msgs.addmodulesections_modality}" /><span class="required">*</span></td>
+                                    <td class="col50" align="left" valign="top"><h:outputText id="text4" value="#{msgs.addmodulesections_message1} "/>
 									</td>
 									  </tr>	
 								  <tr>
-								  <td>&nbsp;</td>
-                                    <td valign="top">
+								  <td class="col50">&nbsp;</td>
+                                    <td class="col50" valign="top">
                         			<h:selectBooleanCheckbox id="contentext" title="textualContent" value="#{addSectionPage.section.textualContent}">
 									</h:selectBooleanCheckbox>
 									<h:outputText  id="text12" value="#{msgs.addmodulesections_textual_content}" />
 									</td>
 									  </tr>	
 								  <tr>
-								    <td>&nbsp;</td>
-                                    <td valign="top">									
+								    <td class="col50">&nbsp;</td>
+                                    <td class="col50" valign="top">									
 									<h:selectBooleanCheckbox id="contentvideo" title="videoContent" value="#{addSectionPage.section.videoContent}" >
 									</h:selectBooleanCheckbox>
 									<h:outputText  id="text13" value="#{msgs.addmodulesections_visual_content}" />
 									</td>
 									  </tr>	
 								  <tr>
-								    <td>&nbsp;</td>
-                                    <td  valign="top">
+								    <td class="col50">&nbsp;</td>
+                                    <td class="col50" valign="top">
 									<h:selectBooleanCheckbox  id="contentaudio" title="audioContent" value="#{addSectionPage.section.audioContent}" >
 									</h:selectBooleanCheckbox>
 									<h:outputText id="text14" value="#{msgs.addmodulesections_auditory_content}"/>			
@@ -217,8 +186,8 @@ function contentChangeSubmit()
 									  </tr>	
 									 
 								  <tr>
-								  	  <td  align="left" valign="middle"><h:outputText id="text15" value="#{msgs.addmodulesections_content_type}" /></td>
-                                 	  <td> 
+								  	  <td class="col50" align="left" valign="middle"><h:outputText id="text15" value="#{msgs.addmodulesections_content_type}" /></td>
+                                 	  <td class="col50"> 
 										   <h:inputHidden id="contentChange" value=""/>								  
 												  <h:selectOneMenu id="contentType" value="#{addSectionPage.section.contentType}" valueChangeListener="#{addSectionPage.showHideContent}" onchange="contentChangeSubmit();this.form.submit();"  >
 													<f:selectItems value="#{addSectionPage.allContentTypes}" />
@@ -250,44 +219,27 @@ function contentChangeSubmit()
 											<sakai:inputRichText  id="otherMeletecontentEditor" value="#{addSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{addSectionPage.FCK_CollId}" />
 										</td>
 										</tr>
-									</table>	 
-									 <table style="white-space:nowrap" bordercolor="#111111" cellspacing="0" cellpadding="4" width="100%" border="0">
-									<tr>
-									<td colspan="2">
+										<tr>
+										<td colspan="2">
 										<f:subview id="ResourcePropertiesPanel" rendered="#{!addSectionPage.shouldRenderNotype}">
 											<jsp:include page="sec_resourcePropertiesPanel.jsp"/>
 										</f:subview>
 									</td>	
-									</tr>									 
-									<tr><td colspan="2">&nbsp;</td></tr>
-                              </table>
-							  </td>
-                            </tr>
-                          </tbody>
-                      </table>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table></td>
-              </tr>
-              <tr>
-                <td>
-                   <div class="actionBar" align="left">	
-					<h:commandButton id="submitsave" action="#{addSectionPage.save}" rendered="#{addSectionPage.shouldRenderEditor}" onclick="transferEditordata()" value="#{msgs.im_add_button}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
-					<h:commandButton id="submitsave1" action="#{addSectionPage.save}" rendered="#{addSectionPage.shouldRenderUpload}" onclick="clearmessage()" value="#{msgs.im_add_button}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
-					<h:commandButton id="submitsave2" action="#{addSectionPage.save}" rendered="#{!addSectionPage.shouldRenderEditor && !addSectionPage.shouldRenderUpload}" value="#{msgs.im_add_button}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
-					<h:commandButton id="cancelButton" immediate="true" action="#{addSectionPage.cancel}" value="#{msgs.im_cancel}"  onclick="clearmessage()" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
-				 </div></td>
-              </tr>  
-            </table>
+									</tr>
+									</table>	 
+									
+	          <div class="actionBar" align="left">	
+				<h:commandButton id="submitsave" action="#{addSectionPage.save}" rendered="#{addSectionPage.shouldRenderEditor}" onclick="transferEditordata()" value="#{msgs.im_add_button}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
+				<h:commandButton id="submitsave1" action="#{addSectionPage.save}" rendered="#{addSectionPage.shouldRenderUpload}" onclick="clearmessage()" value="#{msgs.im_add_button}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
+				<h:commandButton id="submitsave2" action="#{addSectionPage.save}" rendered="#{!addSectionPage.shouldRenderEditor && !addSectionPage.shouldRenderUpload}" value="#{msgs.im_add_button}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
+				<h:commandButton id="cancelButton" immediate="true" action="#{addSectionPage.cancel}" value="#{msgs.im_cancel}"  onclick="clearmessage()" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+			 </div>
 			</td>
           </tr>
         </table>
 		<p class="bold"><span class="required">*</span>&nbsp;<h:outputText value="#{msgs.addmodulesections_required}" /></p>
-	 </td>
-  </tr>
-</table>
+	
 </h:form>
-</body>
+</sakai:view>
 </f:view>
-</html>
+

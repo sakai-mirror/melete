@@ -23,38 +23,26 @@
  *
  **********************************************************************************
 -->
-<html>
-
-<title>Melete - Move Sections</title>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+
+<f:view>
+<sakai:view title="Modules: Move Section" toolCssHref="rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
-</head>
-<f:view>
-<body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
 <h:form id="moveSectionsForm">
+	<f:subview id="top">
+		<jsp:include page="topnavbar.jsp"/> 
+	</f:subview>
+	<div class="meletePortletToolBarMessage"><img src="images/page_go.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.move_sections_msg}" /> </div>
 
-<table border="0" height="350" cellpadding="0" cellspacing="0" class ="table3">
-	<tr>
-		<td valign="top"> 		&nbsp;		</td>
-		<td width="1962" valign="top">
-		  <table width="100%" border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
-			<tr>
-				<td>
-					<f:subview id="top">
-						<jsp:include page="topnavbar.jsp"/> 
-					</f:subview>
-					<div class="meletePortletToolBarMessage"><img src="images/page_go.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.move_sections_msg}" /> </div>
-				</td>
-			</tr>
+
+		  <table width="100%" border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
 			<tr>
 				<td class="maintabledata3">
 					<h:messages id="movesectionerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-					<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" summary="<h:outputText value='#{msgs.move_sections_summary}'/>">
+					<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" summary="<h:outputText value='#{msgs.move_sections_summary}'/>">
 					<tr>
 						<td class="tableheader"><h:outputText id="title" value="#{msgs.move_sections_title}" /> 
 						</td></tr>
@@ -64,18 +52,15 @@
 	       				     	<f:selectItems value="#{moveSectionsPage.availableModules}" />	       				     
 	       				     </h:selectOneRadio>
 	       			<h:outputText id="no_modules_text" value="#{msgs.move_section_no_Modules}" rendered="#{moveSectionsPage.nomodsFlag}" />
-         		    </td></tr>
-         		    <tr>
-			          <td>
-			          <div class="actionBar" align="left">
-			          	<h:commandButton id="moveSectionChanges" action="#{moveSectionsPage.move}"  rendered="#{moveSectionsPage.nomodsFlag == false}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
-			          	<h:commandButton id="cancelButton" immediate="true" action="#{moveSectionsPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
-			          </div>
-     				   </td></tr>
-         		    </table>         		    	        		    
+         		    </td></tr>         		    
+         		    </table> 
+         		    <div class="actionBar" align="left">
+		          		<h:commandButton id="moveSectionChanges" action="#{moveSectionsPage.move}"  rendered="#{moveSectionsPage.nomodsFlag == false}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
+		          		<h:commandButton id="cancelButton" immediate="true" action="#{moveSectionsPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+		           </div>        		    	        		    
          		</td></tr>
          	</table>
-      </td></tr></table>
+      
       </h:form>
-     </body>
+  	 </sakai:view>
    </f:view>     		    		   

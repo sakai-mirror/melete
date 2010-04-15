@@ -23,15 +23,15 @@
  *
  **********************************************************************************
 -->
-<html>
-<head>
 
-<title>Melete-Edit Module</title>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+
+<f:view>
+<sakai:view title="Modules: Edit Module" toolCssHref="rtbc004.css">
 <%@include file="accesscheck.jsp" %>
+
 <%@ page import="org.sakaiproject.util.ResourceLoader"%>
 
 <% 
@@ -40,8 +40,6 @@
 	
 %>
 
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
-</head>
 <script language="JavaScript" src="js/calendar2.js"></script>
 <script language="javascript">
 function newWindow(newContent){
@@ -93,45 +91,31 @@ function showEdateCal()
 } 
 </script>
 
-<f:view>
-<body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
- 	<h:form id="EditModuleForm">
-			  <h:inputHidden id="formName" value="EditModuleForm"/>  
-<table border="0" cellpadding="0" cellspacing="0" class ="table3">
-
-	<tr>
-		<td valign="top"> &nbsp;</td>
-	<td width="1962" valign="top"> 
-    <table width="100%"  border="0" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA">
-          <tr>
-			<td width="100%" height="20" class="maintabledata1"> 
-				<f:subview id="top">
-					<jsp:include page="topnavbar.jsp"/>
-				</f:subview>
-				<div class="meletePortletToolBarMessage"><img src="images/document_add.gif" alt="" width="16" height="16" align="absbottom"> <h:outputText value="#{msgs.edit_module_editing_module}" /> </div>
-				</td></tr>
-		<!--Page Content-->		
-			  <tr>
-	 		<td height="20" class="maintabledata2"> 
-				<h:commandLink id="TOCButton"  action="#{editModulePage.gotoTOC}">
+ <h:form id="EditModuleForm">
+ 	<f:subview id="top">
+		<jsp:include page="topnavbar.jsp"/>
+	</f:subview>
+	<div class="meletePortletToolBarMessage"><img src="images/document_add.gif" alt="" width="16" height="16" align="absbottom"> <h:outputText value="#{msgs.edit_module_editing_module}" /> </div>
+    <h:inputHidden id="formName" value="EditModuleForm"/>  
+    <h:messages id="editmoduleerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
+	<table border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" >
+         <tr>
+          <td valign="top">
+		  	<table width="100%" border="0" valign="top" cellpadding="4" cellspacing="0" class="table3">
+		   	  <tr>
+		 		<td colspan="2" height="20" class="maintabledata2"> 
+					<h:commandLink id="TOCButton"  action="#{editModulePage.gotoTOC}">
 						<h:outputText id="toc" value="#{msgs.edit_module_TOC}" />
 					</h:commandLink> &raquo;  <h:outputText value="#{editModulePage.module.title}" /> &raquo;
-				 <h:commandLink id="editFirstSection" action="#{editModulePage.editSection}" rendered="#{editModulePage.hasSections}">
-				     <h:outputText id="editSectionText" value="#{msgs.edit_module_edit_sections}"/>				     
-				  </h:commandLink> 	
-				<h:outputText id="editSectionText_1" value=" / " rendered="#{editModulePage.hasSections}" />
-			  <h:commandLink id="addSection" action="#{editModulePage.addContentSections}">
-				   <h:outputText id="addSectionText" value="#{msgs.edit_module_add_content_sections}"/>
-			  </h:commandLink> 				  
-		 </td>
-	  </tr>	
-    <tr>
-    <td class="maintabledata3">
-	<h:messages id="editmoduleerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>		
-		<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" >
-        <tr bgcolor="#FFFFFF">
-          <td width="100%" height="35" valign="top">
-		  	<table width="98%" border="0" align="center" valign="top" cellpadding="4" cellspacing="0" class="table3">
+					<h:commandLink id="editFirstSection" action="#{editModulePage.editSection}" rendered="#{editModulePage.hasSections}">
+					     <h:outputText id="editSectionText" value="#{msgs.edit_module_edit_sections}"/>				     
+					 </h:commandLink> 	
+					<h:outputText id="editSectionText_1" value=" / " rendered="#{editModulePage.hasSections}" />
+				  	<h:commandLink id="addSection" action="#{editModulePage.addContentSections}">
+					   <h:outputText id="addSectionText" value="#{msgs.edit_module_add_content_sections}"/>
+				  </h:commandLink> 				  
+			 	</td>
+	  		 </tr>
               <tr>
                 <td  align="left" valign="top"> <h:outputText value="#{msgs.edit_module_created_by}" /> </td>
                 <td  align="left" valign="top">
@@ -155,8 +139,8 @@ function showEdateCal()
               </tr>
              
               <tr>
-                <td width="233" align="left" valign="top"><h:outputText value="#{msgs.edit_module_descr_over_object}" /> </td>
-                <td width="472" align="left" valign="top">
+                <td align="left" valign="top"><h:outputText value="#{msgs.edit_module_descr_over_object}" /> </td>
+                <td align="left" valign="top">
 				<h:inputTextarea id="description" cols="45" rows="5" value="#{editModulePage.module.description}" styleClass="formtext">
 					<f:validateLength maximum="500" minimum="1"/>
 				</h:inputTextarea>	
@@ -179,8 +163,8 @@ function showEdateCal()
 				   </td>
               </tr>
 			  <tr>
-                <td width="233" align="left" valign="top"><h:outputText value="#{msgs.edit_module_start_date}" /></td>
-                <td width="472" align="left" valign="top">					
+                <td  align="left" valign="top"><h:outputText value="#{msgs.edit_module_start_date}" /></td>
+                <td  align="left" valign="top">					
 					  <a name="startCalender"></a><h:inputText id="startDate" 
                            value="#{editModulePage.moduleShdates.startDate}" size="22" styleClass="formtext">
 		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
@@ -191,8 +175,8 @@ function showEdateCal()
 					 </td>
               </tr>
 			  <tr>
-                <td width="233" align="left" valign="top"><h:outputText value="#{msgs.edit_module_end_date}" /></td>
-                <td width="472" align="left" valign="top">
+                <td align="left" valign="top"><h:outputText value="#{msgs.edit_module_end_date}" /></td>
+                <td align="left" valign="top">
 					 <a name="endCalender"></a> <h:inputText id="endDate" 
                            value="#{editModulePage.moduleShdates.endDate}"  size="22" styleClass="formtext">
                <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
@@ -203,38 +187,24 @@ function showEdateCal()
 					 </td>
               </tr>
               <tr>
-                <td width="233">&nbsp;</td>
-                <td width="472" valign="top">
+                <td >&nbsp;</td>
+                <td valign="top">
                  <h:selectBooleanCheckbox id="addtoschedule" title="addtoSchedule" value="#{editModulePage.moduleShdates.addtoSchedule}" rendered="#{editModulePage.calendarFlag}">
 		         </h:selectBooleanCheckbox>
 		         <h:outputText id="addtoScheduleTxt" value="#{msgs.edit_module_schedule}" rendered="#{editModulePage.calendarFlag}"/>
                 </td>
-              </tr>     
+              </tr>  
           		
-     </table>
-	</td>
+     </table>	
+ 	<div class="actionBar" align="left">
+  	  <h:commandButton id="submitsave" action="#{editModulePage.save}" value="#{msgs.im_save}" tabindex="" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
+  	  <h:commandButton id="sectionButton" action="#{editModulePage.addContentSections}" value="#{msgs.im_add_content_sections}" tabindex="" accesskey="#{msgs.add_access}" title="#{msgs.im_add_content_sections_text}" styleClass="BottomImgAdd"/>
+  	  <h:commandButton id="cancelButton" action="#{editModulePage.cancel}" immediate="true" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+  	</div>
+   </td>
   </tr>
-     <tr>
-          <td colspan="2">
-          	<div class="actionBar" align="left">
-          	  <h:commandButton id="submitsave" action="#{editModulePage.save}" value="#{msgs.im_save}" tabindex="" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
-          	  <h:commandButton id="sectionButton" action="#{editModulePage.addContentSections}" value="#{msgs.im_add_content_sections}" tabindex="" accesskey="#{msgs.add_access}" title="#{msgs.im_add_content_sections_text}" styleClass="BottomImgAdd"/>
-          	  <h:commandButton id="cancelButton" action="#{editModulePage.cancel}" immediate="true" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
-          	</div>  	
-        </td></tr>
-    </table></td>
-  </tr>
-  </h:form>
 </table>
 <p class="bold"><span class="required">*</span>&nbsp; <h:outputText value="#{msgs.edit_module_required}" /> </p>
-
-    </tr>
-
-</table>
-
-
-
-
-</body>
+  </h:form>
+</sakai:view>
 </f:view>
-</html>

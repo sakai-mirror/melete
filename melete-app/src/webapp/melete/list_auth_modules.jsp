@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<!--
+<%--
  ***********************************************************************************
  * $URL$
  * $Id$  
@@ -22,7 +22,7 @@
  * permissions and limitations under the License.
  *
  **********************************************************************************
--->
+--%>
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
@@ -54,7 +54,7 @@ if (request.getAttribute("msg") != null)
 
 function showSdateCal(index)
 {
-  var string2 = "listauthmodulesform:table:"+index+":startDate";
+  var string2 = "listauthmodulesform:listTable:"+index+":startDate";
   //alert(string2);
   //alert(document.getElementById(string2).value);
  // var dt = new Date(document.getElementById(string2).value);
@@ -77,7 +77,7 @@ function showSdateCal(index)
 }
 function showEdateCal(index)
 {
-  var string2 = "listauthmodulesform:table:"+index+":endDate";
+  var string2 = "listauthmodulesform:listTable:"+index+":endDate";
   //alert(string2);
   // alert(document.getElementById(string2).value);
   // var dt = new Date(document.getElementById(string2).value);
@@ -160,20 +160,16 @@ if (msg != null)
 	</f:subview>
 	<div class="meletePortletToolBarMessage"><img src="images/pen_red.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_auth_modules_authoring_options}" /> </div>
 	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-	<table width="100%" border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse;">
-	<tr><td>
-			<f:subview id="authtop">
-					<jsp:include page="authnavbar.jsp"/> 
-			</f:subview>
-		</td>
-	</tr>
-<!--Page Content-->	
-	<tr>
-		<td valign="top">			
-	     <h:dataTable id="table" 
+	<f:subview id="authtop">
+		<jsp:include page="authnavbar.jsp"/> 
+	</f:subview>
+	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+          		<tr>
+					<td valign="top">
+    <h:dataTable id="listTable" 
                   value="#{listAuthModulesPage.moduleDateBeans}"
-                  var="mdbean"   border="0"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListTitleClass,ListDateClass,ListDateClass,ListActionClass" 
-                  styleClass="maintabledata1" cellpadding="0" 
+                  var="mdbean"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListTitleClass,ListDateClass,ListDateClass,ListActionClass" 
+                  cellpadding="3" cellspacing="0"
 				  width="100%" binding="#{listAuthModulesPage.table}" summary="#{msgs.list_auth_modules_summary}">
                       
     <h:column>
@@ -181,13 +177,10 @@ if (msg != null)
     <h:panelGroup>
        <h:selectBooleanCheckbox id="allmodcheck" value="#{listAuthModulesPage.selectAllFlag}" onclick="selectAll()" valueChangeListener="#{listAuthModulesPage.selectAllModules}"  rendered="#{listAuthModulesPage.nomodsFlag == false}"/>   
     </h:panelGroup> 
-     </f:facet>
-                      
+     </f:facet>                      
       <h:selectBooleanCheckbox id="modCheck" value="#{mdbean.selected}" onclick="resetAllMod()" valueChangeListener="#{listAuthModulesPage.selectedModuleSection}" />
          <h:graphicImage id="err_gif" value="images/pin_red.gif" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
-    </h:column>
-  
-               
+    </h:column>               
    <h:column>
  	<f:facet name="header">
  	 <h:panelGroup>
@@ -197,15 +190,12 @@ if (msg != null)
       </h:commandLink>  
       <h:outputText id="t2" value="#{msgs.list_auth_modules_title}" />
      </h:panelGroup>        
-    </f:facet>
-					
+    </f:facet>					
      <h:commandLink id="showHideSections" action="#{listAuthModulesPage.showHideSections}" immediate="true">
         <h:graphicImage id="exp_gif" alt="#{msgs.list_auth_modules_authoring_expand}" value="images/expand.gif" rendered="#{((mdbean.moduleId != listAuthModulesPage.showModuleId)&&(mdbean.sectionBeans != listAuthModulesPage.nullList)&&(listAuthModulesPage.expandAllFlag != listAuthModulesPage.trueFlag))}" styleClass="ExpClass"/>
         <h:graphicImage id="col_gif" alt="#{msgs.list_auth_modules_authoring_collapse}" value="images/collapse.gif" rendered="#{(((mdbean.moduleId == listAuthModulesPage.showModuleId)&&(mdbean.sectionBeans != listAuthModulesPage.nullList))||((listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag)&&(mdbean.sectionBeans != listAuthModulesPage.nullList)))}" styleClass="ExpClass"/>
-     </h:commandLink>    
-     
-      <h:outputText id="mod_seq" value="#{mdbean.cmod.seqNo}. " />
-      
+     </h:commandLink>         
+      <h:outputText id="mod_seq" value="#{mdbean.cmod.seqNo}. " />      
       <h:commandLink id="editMod" actionListener="#{listAuthModulesPage.editModule}"  action="#{listAuthModulesPage.redirectToEditModule}">     
              <f:param name="modidx" value="#{listAuthModulesPage.table.rowIndex}" />
                    <h:outputText id="title2" value="#{mdbean.module.title}">
@@ -226,14 +216,12 @@ if (msg != null)
                 </h:outputText>
               </h:commandLink>
             </h:column>
-          </h:dataTable>
-     
+          </h:dataTable>     
         </h:column>      
        <h:column>
         <f:facet name="header">
              <h:outputText id="t4" value="#{msgs.list_auth_modules_start_date}" />
-             </f:facet>
-             
+             </f:facet>             
                 <h:inputText id="startDate"
                            value="#{mdbean.moduleShdate.startDate}" styleClass="ListDateInput">
             <f:convertDateTime type="both" dateStyle="medium" timeStyle="short"/>
@@ -241,9 +229,8 @@ if (msg != null)
             <h:outputLink id="viewsdateCal" onclick="showSdateCal(#{listAuthModulesPage.table.rowIndex})" value="#">
             <h:graphicImage id="sdateCal" value="images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="ListDatePickerClass"/>
            </h:outputLink> 
-           <h:outputText id="emp_space_startCal" value=" "/>
-         </h:column>
-         
+           
+         </h:column>         
         <h:column>
                <f:facet name="header">
 				 <h:outputText id="t6" value="#{msgs.list_auth_modules_end_date}" />
@@ -256,7 +243,7 @@ if (msg != null)
              <h:outputLink id="viewedateCal" onclick="showEdateCal(#{listAuthModulesPage.table.rowIndex})" value="#">
             <h:graphicImage id="edateCal" value="images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="ListDatePickerClass"/>
            </h:outputLink>
-           <h:outputText id="emp_spaceEndCal" value=" "/>
+           
          </h:column>
          <h:column>
           <f:facet name="header">
@@ -274,12 +261,9 @@ if (msg != null)
 		     <h:outputText id="emp_space5" value="  " styleClass="ExtraPaddingClass" />
 		     <h:outputLink id="printModuleLink" value="list_auth_modules" onclick="OpenPrintWindow(#{listAuthModulesPage.printModuleId},'Melete Print Window');">
 		       	<h:graphicImage id="printImgLink" value="images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
-		  </h:outputLink>
-  	  	   
+		  </h:outputLink>  	  	   
 		    <h:outputText id="emp_space7" value="  " styleClass="ExtraPaddingClass" />
-        </h:column>
-	    
-          
+        </h:column>          
     </h:dataTable>   
     <h:inputHidden id="listSize" value="#{listAuthModulesPage.listSize}"/>   
 	<h:outputText id="nomodmsg" value="#{msgs.list_auth_modules_no_modules_available}" rendered="#{listAuthModulesPage.nomodsFlag == true}" style="text-align:left"/>
@@ -288,13 +272,11 @@ if (msg != null)
 	   <h:commandButton id="saveChanges" action="#{listAuthModulesPage.saveChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
 	   <h:commandButton id="cancelChanges" immediate="true" action="#{listAuthModulesPage.cancelChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_cancel}"  accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
 	  </div>	 
-</td>
-</tr>
-</table> 
- 
-
 <!--End Content-->
- 
+ 	</td>
+ 	</tr>
+ 	</table>
+ 	
 </h:form>
 </sakai:view>
 </f:view>

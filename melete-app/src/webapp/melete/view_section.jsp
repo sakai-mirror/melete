@@ -23,32 +23,21 @@
  *
  **********************************************************************************
 -->
-<html>
-<head>
-<title>Melete - Modules: Author Student View</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
-<script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
-</head>
 
 <f:view>
-<body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
-<a name="newanchor"></a>
-<h:form id="viewsectionform">       
-<table height="470" border="0" cellpadding="20"  width="100%" bordercolor="#EAEAEA" style="border-collapse: collapse" >
-<tr>
-	<td vAlign="top" width="100%"> 
-			<table  border="0" cellpadding="2" cellspacing="0" bordercolor="#EAEAEA" width="99%">
-					<tr>
-					<td colspan="2">
-								<f:subview id="top">
-												  <jsp:include page="topnavbar.jsp"/> 
-									</f:subview>						
-					</td>
-				</tr>
+<sakai:view title="Modules: Student View" toolCssHref="rtbc004.css">
+<%@include file="accesscheck.jsp" %>
+<script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
+
+<h:form id="viewsectionform"> 
+	<f:subview id="top">
+	  <jsp:include page="topnavbar.jsp"/> 
+	</f:subview>  
+<p></p>   
+<table  border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" width="100%">
 <tr>
 <td colspan="2" align="center">
 <f:subview id="topmod">
@@ -71,14 +60,10 @@
  	</h:outputLink>				  
 </td>
 </tr>
-</tr>    
-	<tr>	<td colspan="2">&nbsp;</td>		</tr>     
 <tr>
 <td colspan="2" align="left">
-         <h:outputText id="mod_seq" value="#{viewSectionsPage.moduleSeqNo}. " styleClass="bold style6" rendered="#{viewSectionsPage.autonumber}"/>
-	 <h:outputText id="modtitle" value="#{viewSectionsPage.module.title}" styleClass="bold style6" >
-</h:outputText>
-
+     <h:outputText id="mod_seq" value="#{viewSectionsPage.moduleSeqNo}. " styleClass="bold style6" rendered="#{viewSectionsPage.autonumber}"/>
+	 <h:outputText id="modtitle" value="#{viewSectionsPage.module.title}" styleClass="bold style6" />
 </td>
 </tr>    
 
@@ -131,9 +116,8 @@
   			<jsp:include page="license_info.jsp"/>      
          </B></td></tr>
 	    </table>
-</td></tr>
-</table>
 </h:form>
-</body>
+
+</sakai:view>
 </f:view>
-</html>
+

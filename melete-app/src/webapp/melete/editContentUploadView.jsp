@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -27,7 +27,7 @@
 <%@include file="accesscheck.jsp" %>
 
 
-<h:panelGrid id="uploadView" columns="2" columnClasses="col30,col50" width="80%" border="0">
+<h:panelGrid id="uploadView" columns="2" columnClasses="col50,col50left" width="100%" border="0">
 	<h:column>
 		<h:outputText id="edituploadText1" value="#{msgs.editcontentuploadview_file_uploaded}" />
 		<h:outputText id="somespaces_1" value="   " styleClass="ExtraPaddingClass" />			

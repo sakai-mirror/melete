@@ -33,7 +33,7 @@
 					<h:outputText id="propertiesPaneltxt1" value="#{editSectionPage.secResourceName}" />
 		</h:column>
 	</h:panelGrid>
-	<h:panelGrid id="propertiesPanel2" columns="2" width="82%" cellpadding="3" columnClasses="copyrightColumn1,copyrightColumn2" border="0">
+	<h:panelGrid id="propertiesPanel2" columns="2" width="100%" cellpadding="3" columnClasses="col50,col50left" border="0">
 		<h:column>
 				 <h:outputText value="#{msgs.editsec_resources_proper_pan_URL}"  rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderLTI)}" /><h:outputText value="*" styleClass="required" rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderLTI)}"/>
 		</h:column>	 

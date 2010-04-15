@@ -26,17 +26,11 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://javascript4jsf.dev.java.net/" prefix="j4j" %>
+<%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+
+<f:view>
+<sakai:view title="Modules: Import/Export Modules" toolCssHref="rtbc004.css">
 <%@include file="accesscheck.jsp" %>
-<html>
-<head>
-<meta http-equiv="Content-Language" content="en-us">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<meta name="description" content="ETUDES-NG Course Management System, Powered by Sakai">
-<meta name="keywords" content="ETUDES-NG course management system, e-learning">
-
-
-<title>Melete - Import/Export Modules</title>
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <%@ page import="javax.faces.application.FacesMessage, java.util.ResourceBundle"%>
 
 <% 
@@ -57,30 +51,16 @@ function showprocessMsg()
  document.getElementById("importexportform:processmsg").style.visibility="visible";
 }
 </script>
-</head>
 
-<f:view>
-<body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onload="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');" >
 <h:form id="importexportform" enctype="multipart/form-data">
 <j4j:param name="upload.max" value="#{exportMeleteModules.uploadmax}" method="get" />
+	<f:subview id="top">
+			<jsp:include page="topnavbar.jsp"/> 
+	</f:subview>
+	<div class="meletePortletToolBarMessage"><img src="images/import1.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.importexportmodules_importing_or_exporting}" /></div>
 <!-- This Begins the Main Text Area -->
-
-<table>
-	<tr>
-		<td valign="top"></td>
-    	<td width="1962" valign="top">
-        	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
-          		<tr>
-            		<td width="100%" height="20" bordercolor="#E2E4E8">
-					<!-- top nav bar -->
-						<f:subview id="top">
-								<jsp:include page="topnavbar.jsp"/> 
-						</f:subview>
-						<div class="meletePortletToolBarMessage"><img src="images/import1.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.importexportmodules_importing_or_exporting}" /></div>
-					</td>
-				</tr>
-		</table>		
-                <table width="100%"  border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+	
+                <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
           					
 				<tr>
 					<td class="maintabledata3" valign="top">
@@ -144,34 +124,18 @@ function showprocessMsg()
                   				<tr><td>		
 										<h:outputText value="#{msgs.importexportmodules_export_one_more_select_msg}" />
                       			</td></tr>
-                  			</table></td></tr>
-                  			<tr>
-                    			<td colspan="2" class="maintabledata3">&nbsp;</td>
-                    		</tr>
-                    		
-                    		<tr>
-                    			<td colspan="2">
-									<div class="actionBar" align="left">
-                						<h:commandButton id="exportButton" action="#{exportMeleteModules.exportModules}" value="#{msgs.im_export}" accesskey="#{msgs.export_access}" title="#{msgs.im_export_text}" styleClass="BottomImgExport"/>
-                                        <h:commandButton id="cancelButton" immediate="true" action="#{manageModulesPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>			                
-      
-									</div>
-								</td>
-				    		</tr>      	
-				    	
+                  			</table></td></tr>                  			
            				</table>
-   
-            
+						<div class="actionBar" align="left">
+            				<h:commandButton id="exportButton" action="#{exportMeleteModules.exportModules}" value="#{msgs.im_export}" accesskey="#{msgs.export_access}" title="#{msgs.im_export_text}" styleClass="BottomImgExport"/>
+                            <h:commandButton id="cancelButton" immediate="true" action="#{manageModulesPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>			                
+  						</div>            
 		  			</td>
 		  		</tr>
 		  	</table> 
-		  	<p>&nbsp;</p>
-		</td>
-  	</tr>
-</table>
+	
 </h:form>
 <!-- This Ends the Main Text Area -->
-
-</body>
+</sakai:view>
 </f:view>
-</html>	  
+  

@@ -42,7 +42,7 @@
 %>			
 				<div class="meletePortletToolBarMessage">
 				 <a href="#" onclick="javascript:window.print()">
-				 <img src="images/printer.png" alt="" width="16" height="16" align="absmiddle">
+				 <img src="images/printer.png" alt="" width="16" height="16" border="0" align="absmiddle">
 				 <%=printMsg%></a>
 				<br><%=printNoteMsg%> </div>
 		</td></tr>

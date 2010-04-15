@@ -23,35 +23,22 @@
  *
  **********************************************************************************
 -->
-<html>
-
-<title>Melete - View Module</title>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
-<script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
-</head>
 <f:view>
-<body>
+<sakai:view title="Modules: Student View" toolCssHref="rtbc004.css">
+<%@include file="accesscheck.jsp" %>
+
+<script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
 <h:form id="viewmoduleform">
- 
-<table width="100%"  border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse" >
-	<tr>
-		<td width="100%" valign="top">
-<table border="0" class="table3" width="100%">
-<tr>
-		<td width="100%" valign="top">
-			<table width="100%" border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse" >
-				<tr>
-				<td>
-						<f:subview id="top">
-							  <jsp:include page="topnavbar.jsp"/>
-							</f:subview>								
-						</td>
-					</tr>		
+ <f:subview id="top">
+  	<jsp:include page="topnavbar.jsp"/>
+  </f:subview>
+  <p></p>
+	<table width="100%" border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse" >
+
 <!--Page Content-->
 		 <tr>
 			<td align="center">			
@@ -72,10 +59,10 @@
 </tr>			               
 <tr>
 <td>
-	<h:panelGrid id="moduleContentGrid" columns="2" width="97%" border="0" cellpadding="5" rendered="#{viewModulesPage.mdbean != null && viewModulesPage.mdbean.module != null}">
+	<h:panelGrid id="moduleContentGrid" columns="2" width="100%" columnClasses="style6,right" border="0" cellpadding="5" rendered="#{viewModulesPage.mdbean != null && viewModulesPage.mdbean.module != null}">
 		<h:column>
-			<h:outputText id="mod_seq" value="#{viewModulesPage.mdbean.cmod.seqNo}. " styleClass="bold style6" rendered="#{viewModulesPage.autonumber}"/>
-			<h:outputText id="title" value="#{viewModulesPage.mdbean.module.title}" styleClass="bold style6" ></h:outputText>
+			<h:outputText id="mod_seq" value="#{viewModulesPage.mdbean.cmod.seqNo}. " styleClass="bold" rendered="#{viewModulesPage.autonumber}"/>
+			<h:outputText id="title" value="#{viewModulesPage.mdbean.module.title}" styleClass="bold" ></h:outputText>
 		</h:column>
 		<h:column rendered="#{viewModulesPage.printable}">
 			<h:outputLink id="printModuleLink" value="view_module" onclick="OpenPrintWindow(#{viewModulesPage.mdbean.moduleId},'Melete Print Window');" rendered="#{viewModulesPage.printable}">
@@ -120,14 +107,10 @@
 		</tr>
 		<tr><td class="maintabledata5">&nbsp;   </td></tr>    
 		</table>
-</td>
-</tr>  
 
-  </table>
 <!--End Content-->
 </h:form>
-</body>
+</sakai:view>
 </f:view>
 
-</html>
  

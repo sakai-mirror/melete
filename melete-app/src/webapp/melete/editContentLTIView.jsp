@@ -1,7 +1,7 @@
 <!--
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2010 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@include file="accesscheck.jsp" %>
 
-<h:panelGrid id="LinkPanel" columns="2" columnClasses="col30,col50" width="80%" border="0">
+<h:panelGrid id="LinkPanel" columns="2" columnClasses="col50,col50left" width="100%" border="0">
 	<h:column>
   		<h:outputText id="editlinkText1" value="#{msgs.editcontentltiview_link1}"/>
 		<h:outputText id="somespaces_1" value="   " styleClass="ExtraPaddingClass" />		

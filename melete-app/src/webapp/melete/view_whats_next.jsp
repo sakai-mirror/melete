@@ -23,37 +23,23 @@
  *
  **********************************************************************************
 -->
-<html>
-<head>
-
-<title>Melete - Modules: Author Student View</title>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
-</head>
 
 <f:view>
-<body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
+<sakai:view title="Modules: Student View" toolCssHref="rtbc004.css">
+<%@include file="accesscheck.jsp" %>
 <a name="newanchor"></a>
-<h:form id="viewNSsectionform">       
-<table height="470" border="0" cellpadding="20"  width="100%" bordercolor="#EAEAEA" style="border-collapse: collapse" >
-<tr>
-	<td valign="top" width="100%"> 
-			<table  border="0" cellpadding="2" cellspacing="0" bordercolor="#EAEAEA" width="99%" style="border-collapse: collapse" >
-					<tr>
-					<td>
-								<f:subview id="top">
-												  <jsp:include page="topnavbar.jsp"/> 
-									</f:subview>
-								<div class="meletePortletToolBarMessage">
-								<h:graphicImage id="previewtopimg" value="images/preview.png" styleClass="AuthImgClass" rendered="#{viewNextStepsPage.instRole == true}"/>
-								<h:outputText value="#{msgs.view_whats_next_viewing}" rendered="#{viewNextStepsPage.instRole == true}"/>
-								</div>	
-					</td>
-				</tr>
+<h:form id="viewNSsectionform">   
+	<f:subview id="top">
+	  <jsp:include page="topnavbar.jsp"/> 
+	</f:subview>
+	<div class="meletePortletToolBarMessage">
+		<h:graphicImage id="previewtopimg" value="images/preview.png" styleClass="AuthImgClass" rendered="#{viewNextStepsPage.instRole == true}"/>
+		<h:outputText value="#{msgs.view_whats_next_viewing}" rendered="#{viewNextStepsPage.instRole == true}"/>
+	</div>	    
+	<table  border="0" cellpadding="2" cellspacing="0" bordercolor="#EAEAEA" width="100%" style="border-collapse: collapse" >
 	<!--Page Content-->
 
 	<tr>
@@ -102,10 +88,7 @@
   </table>
 
 <!--End Content-->
-</td>
-</tr>
-</table>
 </h:form>
-</body>
+</sakai:view>
 </f:view>
-</html>
+

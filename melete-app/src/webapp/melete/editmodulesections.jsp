@@ -1,11 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<!--
+<%--
  ***********************************************************************************
  * $URL$
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -22,20 +22,14 @@
  * permissions and limitations under the License.
  *
  **********************************************************************************
--->
-<html>
-<head>
-<title>Melete - Edit Module Section</title>
-<meta http-equiv="Content-Language" content="en-us">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<meta name="description" content="ETUDES-NG Course Management System, Powered by Sakai">
-<meta name="keywords" content="ETUDES-NG course management system, e-learning">
-<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
+--%>
 
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+
+<f:view>
+<sakai:view title="Modules: Edit Module Sections" toolCssHref="rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
 <%@ page import="org.sakaiproject.util.ResourceLoader"%>
@@ -46,7 +40,6 @@
 	
 %>
 
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <script type="text/javascript" language="javascript1.2">
 function fillupload()
 {
@@ -121,124 +114,98 @@ transferEditordata();
 window.open('editpreviewEditor.jsf');
 }
 </script>
-</head>
-<f:view>
-<body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onLoad="showupload(),setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
 
       <!-- This Begins the Main Text Area -->
 	<h:form id="EditSectionForm" enctype="multipart/form-data">	
 			  <h:inputHidden id="formName" value="EditSectionForm"/>  
-
-<table border="0" cellpadding="0" cellspacing="0" class ="table3">
-	<tr>
-		<td valign="top"> &nbsp;
-		
-		</td>
-	<td width="1962"  valign="top">
-        <table width="100%"  border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA">
-          <tr>
-			<td width="100%" height="20" > 
-			<!-- top nav bar -->
+		<!-- top nav bar -->
 		<f:subview id="top">
 			<jsp:include page="topnavbar.jsp"/> 
 		</f:subview>
 		<div class="meletePortletToolBarMessage"><img src="images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.editmodulesections_editing_section}" /> </div>
-		 </td></tr>
-		  <tr>
-            <td height="20" class="maintabledata8">            	   
-	     		<h:commandLink id="editPrevButton" onmousedown="transferEditordata();" action="#{editSectionPage.editPrevSection}" rendered="#{editSectionPage.hasPrev}">
- 					 <h:outputText id="text4_4" value="#{msgs.editmodulesections_edit_prev}"/>
-				</h:commandLink> 
-				<h:outputText id="text4_5" value="#{msgs.editmodulesections_edit_prev}" rendered="#{!editSectionPage.hasPrev}"/>
-				&laquo;
-     			<h:commandLink id="TOCButton"  onmousedown="transferEditordata();" action="#{editSectionPage.goTOC}">
-						<h:outputText id="toc" value="#{msgs.editmodulesections_TOC}" />
-					</h:commandLink>
-				&raquo;   
-	     		<h:commandLink id="editNextButton" onmousedown="transferEditordata();" action="#{editSectionPage.editNextSection}" rendered="#{editSectionPage.hasNext}">
- 					 <h:outputText id="text4_2" value="#{msgs.editmodulesections_edit_next}"/>
-				</h:commandLink>
-				<h:outputText id="text4_6" value="#{msgs.editmodulesections_edit_next}" rendered="#{!editSectionPage.hasNext}"/>
-				  <h:outputText id="text4_3" value=" / "/>				
-	     		<h:commandLink onmousedown="transferEditordata();" action="#{editSectionPage.saveAndAddAnotherSection}">
- 					 <h:outputText id="text5" value="#{msgs.editmodulesections_add_new}"/>
-				</h:commandLink> 
-			</td>
-          </tr>	
-          <tr>
-          	<td class="maintabledata8">
-          		<h:outputText id="text4" value="#{editSectionPage.module.title}" /> &raquo; <h:outputText id="text4_1" value="#{editSectionPage.section.title}" /> 
-          	</td>
-          </tr>	 
-     	  <tr>
-            <td  class="maintabledata7">
-			 <h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-			</td>
-          </tr>
-		  <tr>
+		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
+        <table width="100%"  border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA">
+     	   <tr>
             <td class="maintabledata3">
-			<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" >
-              <tr >
-                <td width="100%" height="35" valign="top">
-				<table style="BORDER-COLLAPSE: collapse" bordercolor=#111111 cellspacing=0 cellpadding=0 width=100% border="0">
-                  <tbody>
-                    <tr>
-                      <td align=left valign=top>
-					  <table style="BORDER-COLLAPSE: collapse" bordercolor=#111111 cellspacing=0 cellpadding=0 width="99%" border="0">
-                          <tbody>
-                            <tr>
-                              <td align="left" valign="top">
-							  <table  bordercolor="#111111" cellspacing="0" cellpadding="4" width="100%" border="0">
+				  <table  bordercolor="#111111" cellspacing="0" cellpadding="4" width="100%" border="0">
+	                   <!-- table header -->
+	                   <tr>
+			            <td colspan="2" height="20" class="maintabledata8">            	   
+				     		<h:commandLink id="editPrevButton" onmousedown="transferEditordata();" action="#{editSectionPage.editPrevSection}" rendered="#{editSectionPage.hasPrev}">
+			 					 <h:outputText id="text4_4" value="#{msgs.editmodulesections_edit_prev}"/>
+							</h:commandLink> 
+							<h:outputText id="text4_5" value="#{msgs.editmodulesections_edit_prev}" rendered="#{!editSectionPage.hasPrev}"/>
+							&laquo;
+			     			<h:commandLink id="TOCButton"  onmousedown="transferEditordata();" action="#{editSectionPage.goTOC}">
+									<h:outputText id="toc" value="#{msgs.editmodulesections_TOC}" />
+								</h:commandLink>
+							&raquo;   
+				     		<h:commandLink id="editNextButton" onmousedown="transferEditordata();" action="#{editSectionPage.editNextSection}" rendered="#{editSectionPage.hasNext}">
+			 					 <h:outputText id="text4_2" value="#{msgs.editmodulesections_edit_next}"/>
+							</h:commandLink>
+							<h:outputText id="text4_6" value="#{msgs.editmodulesections_edit_next}" rendered="#{!editSectionPage.hasNext}"/>
+							  <h:outputText id="text4_3" value=" / "/>				
+				     		<h:commandLink onmousedown="transferEditordata();" action="#{editSectionPage.saveAndAddAnotherSection}">
+			 					 <h:outputText id="text5" value="#{msgs.editmodulesections_add_new}"/>
+							</h:commandLink> 
+						</td>
+			          </tr>	
+			          <tr>
+			          	<td colspan="2" class="maintabledata8">
+			          		<h:outputText id="text4" value="#{editSectionPage.module.title}" /> &raquo; <h:outputText id="text4_1" value="#{editSectionPage.section.title}" /> 
+			          	</td>
+			          </tr>	 
+	                   <!-- end table header -->
                                    <tr>
-                                    <td align="left" valign="top"><h:outputText id="text7" value="#{msgs.editmodulesections_section_title}" /><span class="required">*</span></td>
-                                    <td width="600" align="left" valign="top">
+                                    <td class="col50" align="left" valign="top"><h:outputText id="text7" value="#{msgs.editmodulesections_section_title}" /><span class="required">*</span></td>
+                                    <td class="col50" align="left" valign="top">
 									<h:inputText id="title" value="#{editSectionPage.section.title}" size="45"  required="true" styleClass="formtext"/>
 									</td>
                                   </tr>
                                   <tr>
-                                    <td align="left" valign="top"><h:outputText id="text8" value="#{msgs.editmodulesections_author}"/></td>
-                                    <td align="left" valign="top"><h:outputText value="#{editSectionPage.section.createdByFname}" styleClass="formtext"/>&nbsp;<h:outputText value="#{editSectionPage.section.createdByLname}" styleClass="formtext"/></td>
+                                    <td class="col50" align="left" valign="top"><h:outputText id="text8" value="#{msgs.editmodulesections_author}"/></td>
+                                    <td class="col50" align="left" valign="top"><h:outputText value="#{editSectionPage.section.createdByFname}" styleClass="formtext"/>&nbsp;<h:outputText value="#{editSectionPage.section.createdByLname}" styleClass="formtext"/></td>
                                   </tr>
 								  <tr>
-                                    <td align="left" valign="top"><h:outputText id="text9" value="#{msgs.editmodulesections_instructions}" /></td>
-                                    <td align="left" valign="top">
+                                    <td class="col50" align="left" valign="top"><h:outputText id="text9" value="#{msgs.editmodulesections_instructions}" /></td>
+                                    <td class="col50" align="left" valign="top">
 										  <h:inputTextarea id="instr" cols="45" rows="5" value="#{editSectionPage.section.instr}" styleClass="formtext">
 											<f:validateLength maximum="250" minimum="1"/>
 									</h:inputTextarea>
 									</td>
                                   </tr>
                                   <tr>
-                                    <td align="left" valign="top"> <h:outputText id="text10" value="#{msgs.editmodulesections_modality}" /><span class="required">*</span></td>
-                                    <td align="left" valign="top"><h:outputText id="text11" value="#{msgs.editmodulesections_message1} "/>
+                                    <td class="col50" align="left" valign="top"> <h:outputText id="text10" value="#{msgs.editmodulesections_modality}" /><span class="required">*</span></td>
+                                    <td class="col50" align="left" valign="top"><h:outputText id="text11" value="#{msgs.editmodulesections_message1} "/>
 									</td>
 									  </tr>	
 								  <tr>
-								  <td>&nbsp;</td>
-                                    <td valign="top">
+								  <td class="col50">&nbsp;</td>
+                                    <td class="col50" valign="top">
                         			<h:selectBooleanCheckbox id="contentext" title="textualContent" value="#{editSectionPage.section.textualContent}" >
 									</h:selectBooleanCheckbox>
 									<h:outputText  id="text12" value="#{msgs.editmodulesections_textual_content}"/>
 									</td>
 									  </tr>	
 								  <tr>
-								    <td>&nbsp;</td>
-                                    <td valign="top">									
+								    <td class="col50">&nbsp;</td>
+                                    <td class="col50" valign="top">									
 									<h:selectBooleanCheckbox id="contentvideo" title="videoContent" value="#{editSectionPage.section.videoContent}" >
 									</h:selectBooleanCheckbox>
 									<h:outputText  id="text13" value="#{msgs.editmodulesections_visual_content}"/>
 									</td>
 									  </tr>	
 								  <tr>
-								    <td>&nbsp;</td>
-                                    <td  valign="top">
+								    <td class="col50">&nbsp;</td>
+                                    <td class="col50" valign="top">
 									<h:selectBooleanCheckbox id="contentaudio" title="audioContent" value="#{editSectionPage.section.audioContent}" >
 									</h:selectBooleanCheckbox>
 									<h:outputText id="text14" value="#{msgs.editmodulesections_auditory_content}"/>			
 										</td>
 									  </tr>	
 									  <tr>
-								  	  <td  align="left" valign="middle"><h:outputText id="text15" value="#{msgs.editmodulesections_content_type}" rendered="#{editSectionPage.shouldRenderContentTypeSelect}" /></td>
-                                 	  <td> 
+								  	  <td  class="col50" align="left" valign="middle"><h:outputText id="text15" value="#{msgs.editmodulesections_content_type}" rendered="#{editSectionPage.shouldRenderContentTypeSelect}" /></td>
+                                 	  <td class="col50"> 
 										<h:inputHidden id="contentType"  value="#{editSectionPage.section.contentType}"  />	  								  	
 										  <h:selectOneMenu id="contentType1" value="#{editSectionPage.section.contentType}" valueChangeListener="#{editSectionPage.showHideContent}" onchange="this.form.submit();"  rendered="#{editSectionPage.shouldRenderContentTypeSelect}">
 											<f:selectItems value="#{editSectionPage.allContentTypes}" />											
@@ -273,16 +240,7 @@ window.open('editpreviewEditor.jsf');
 												</f:subview>
 									</td>	
 									</tr>																									
-		
-									<tr><td colspan="2">&nbsp;</td></tr>
-                              </table>
-							  </td>
-                            </tr>
-                          </tbody>
-                      </table></td>
-                    </tr>
-                  </tbody>
-                </table>
+		                           </table>
                 </td>
               </tr>
               <tr>
@@ -308,17 +266,12 @@ window.open('editpreviewEditor.jsf');
 		          </tr>
             </table>
 			
-			</td>
-          </tr>
-        </table>
-       </h:form>  
+			
 	   <p class="bold"><span class="required">*</span>&nbsp; <h:outputText value="#{msgs.editmodulesections_required}" /></p>
-
-	 </td>
-  </tr>  
-</table>
+  </h:form>
+	 
 
   <!-- This Ends -->
-</body>
+</sakai:view>
 </f:view>
-</html>
+

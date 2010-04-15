@@ -23,34 +23,21 @@
  *
  **********************************************************************************
 -->
-<html>
-
-<title>Melete - Modules: Student View</title>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
-<script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
-</head>
 <f:view>
-<body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
+<sakai:view title="Modules: Student View" toolCssHref="rtbc004.css">
+<%@include file="accesscheck.jsp" %>
+<script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
+
 <h:form id="listmodulesStudentform">
-<table border="0" height="350" cellpadding="0" cellspacing="0" class ="table3">
-<tr>
-		<td valign="top"> &nbsp;		
-		</td>
-	<td width="1962" valign="top">
+	<f:subview id="top">
+		<jsp:include page="topnavbar.jsp"/> 
+	</f:subview>
 <!--Page Content-->
 <table width="100%" border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
-<tr>
-					<td colspan="2">
-						<f:subview id="top">
-							<jsp:include page="topnavbar.jsp"/> 
-						</f:subview>
-					 </td>
-			</tr>
 <tr>
 <td align="right">
 <h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">
@@ -66,14 +53,10 @@
 <tr>
 <td colspan="2">
 <h:messages showDetail="true" showSummary="false"/>
-
-<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" >
-  
-	<tr> <td colspan="4" valign="top">
  <h:dataTable id="table" 
                   value="#{listModulesPage.modDataModel}"
                   var="vmbean"   rowClasses="row1,row2"  
-              columnClasses="ListTitleClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
+              columnClasses="StudentListTitleClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
                    border="0" cellpadding="3" width="100%" 
                    binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_stud_summary}">
       <h:column>   
@@ -178,18 +161,12 @@
 	   	 <h:outputText id="nomodstext" value="#{msgs.no_modules}"  style="text-align:left"/>
 	    </h:column> 
       </h:panelGrid>          
-	  </td></tr>
-	  <tr>
-         <td  height="20" colspan="4" class="maintabledata5">&nbsp;   </td>
-        </tr></table>
+
  </td>
  </tr>
  </table>
  <!--End Content-->
-</td>
-</tr>
-</table>
-</body>
-  </h:form>
+  	</h:form>
+  </sakai:view>
 </f:view>
-</html>
+

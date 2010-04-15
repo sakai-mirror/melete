@@ -32,13 +32,14 @@ a1:active 			{color : #000080;}
 /* Sets  border color to grey and background color to l.grey for Table in Main Area*/
 .table5				{border-color: #999999; 
 					 background-color: #CCCCCC;}
-
+					
 .tableheader 		{background: #EAEAEA;
 					font-family: Verdana, Arial, sans-serif;
 					font-size :83%;
 					font-weight : bold;
 					color : #000000;
 					text-align: left;
+					margin: 0 1em 0 0;
 					height:20px;}
 
 .tableheader2 	{background: #EAEAEA;
@@ -66,7 +67,7 @@ a1:active 			{color : #000080;}
 
 
 /* Sets border color to light grey in Main Text tables */ 
-.maintabledata1 	{border-color: #E2E4E8; } 
+.maintabledata1 	{border-color: #E2E4E8; vertical-align:top;} 
 
 /* Sets border & background color to light grey in Main Text tables */  
 .maintabledata2 	{border-color:#E2E4E8;  background-color:#E2E4E8; }   
@@ -79,7 +80,6 @@ a1:active 			{color : #000080;}
 
 /* Sets background color to dull grey in Main Text tables */ 
 .maintabledata5 	{background-color: #EAEAEA; } 
-.maintabledata5 table {max-width:900px;}
  
 /* Sets background color to white in Main Text tables */   
 .maintabledata6 	{background-color: #FFFFFF; } 
@@ -116,6 +116,12 @@ a1:active 			{color : #000080;}
 .style8			{font-size: 83%;}	  /*  */
 .valignStyle9  { vertical-align: top;}
 
+.StudentListTitleClass {
+	font-size: 100%;
+  	vertical-align: top;
+  	text-align: left;
+  }
+  
 .ListTitleClass {
 	font-size: 92%;
   	vertical-align: top;
@@ -125,7 +131,7 @@ a1:active 			{color : #000080;}
 .ListDateClass {
 	font-size: 92%;
 	vertical-align: top;
-    width: 17%;  
+    width: 18%;  
     white-space: nowrap;	
   }
 
@@ -142,14 +148,13 @@ a1:active 			{color : #000080;}
    }
    
  .ListDateInput{
- 	font-size: 92%;
- 	width:85%;
+ 	font-size: 98%; 
  }
   
 .ListDatePickerClass	{  
 width: 16px;  
 height: 16px;  border: 0 none black;  
-vertical-align: bottom;  }
+vertical-align: top;  }
 
 .ListClosedClass {
    vertical-align: top;	
@@ -319,6 +324,10 @@ word-wrap:break-word;
 .col50 {
 	width:50%;
 }
+.col50left {
+	width:50%;
+	text-align:left;
+}
 
 .col70 {
 	width:70%;
@@ -326,4 +335,4 @@ word-wrap:break-word;
 
 .colNowrap {white-space:nowrap;}
 
-.authBarCol {font-size:83%;white-space:nowrap;}
+.authBarCol {font-size:92%;white-space:nowrap;}
