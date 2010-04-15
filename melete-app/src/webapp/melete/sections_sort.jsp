@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -30,6 +30,8 @@
 <f:view>
 <sakai:view title="Modules: Sort Sections" toolCssHref="rtbc004.css">
 <%@include file="accesscheck.jsp" %>
+
+<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
 
 <script language="javascript">
 function resetModuleSelection() {
@@ -127,7 +129,14 @@ function resetModuleSelection() {
 							</table>							
 						</td>
 				  	</tr>
-				</table>				
+				</table>	
+<script type="text/javascript">
+
+		jQuery(document).ready(function(){
+		resetModuleSelection();		
+		});
+</script>
+							
 </h:form>
 <!-- This Ends the Main Text Area -->
 </sakai:view>
