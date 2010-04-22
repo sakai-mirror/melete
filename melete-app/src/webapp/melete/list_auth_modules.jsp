@@ -168,8 +168,8 @@ if (msg != null)
 					<td valign="top">
     <h:dataTable id="listTable" 
                   value="#{listAuthModulesPage.moduleDateBeans}"
-                  var="mdbean"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListTitleClass,ListDateClass,ListDateClass,ListActionClass" 
-                  cellpadding="3" cellspacing="0"
+                  var="mdbean"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass,ListActionClass" 
+                  cellpadding="3" cellspacing="0" 
 				  width="100%" binding="#{listAuthModulesPage.table}" summary="#{msgs.list_auth_modules_summary}">
                       
     <h:column>
@@ -223,7 +223,7 @@ if (msg != null)
              <h:outputText id="t4" value="#{msgs.list_auth_modules_start_date}" />
              </f:facet>             
                 <h:inputText id="startDate"
-                           value="#{mdbean.moduleShdate.startDate}" styleClass="ListDateInput">
+                           value="#{mdbean.moduleShdate.startDate}">
             <f:convertDateTime type="both" dateStyle="medium" timeStyle="short"/>
             </h:inputText>
             <h:outputLink id="viewsdateCal" onclick="showSdateCal(#{listAuthModulesPage.table.rowIndex})" value="#">
@@ -237,7 +237,7 @@ if (msg != null)
              </f:facet>
              
             <h:inputText id="endDate" 
-                           value="#{mdbean.moduleShdate.endDate}" styleClass="ListDateInput">
+                           value="#{mdbean.moduleShdate.endDate}" >
                <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
             </h:inputText>
              <h:outputLink id="viewedateCal" onclick="showEdateCal(#{listAuthModulesPage.table.rowIndex})" value="#">

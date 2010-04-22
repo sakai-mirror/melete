@@ -25,7 +25,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@include file="accesscheck.jsp" %>
 
-<h:panelGrid columns="9" columnClasses="authBarCol" cellspacing="5" style=" border-width:medium; border-color: #E2E4E8" width="60%">
+<h:panelGrid columns="8" columnClasses="authBarCol" cellspacing="5" width="64%">
 	<h:column>
 		<h:commandLink id="addAction" action="#{listAuthModulesPage.AddModuleAction}" immediate="true">
 		    <h:graphicImage id="addModuleImg" value="images/document_add.gif" styleClass="AuthImgClass"/>
@@ -37,12 +37,6 @@
 	  		<h:graphicImage id="addContentImg" value="images/document_add.gif" styleClass="AuthImgClass"/>
 	  		<h:outputText  value="#{msgs.authnavbar_add_content}"/>
 		</h:commandLink>
-	</h:column>
-	<h:column>
-		<h:commandLink id="editAction" action="#{listAuthModulesPage.editAction}">
-		  <h:graphicImage id="editModImg" value="images/document_edit.gif" styleClass="AuthImgClass" />
-		  <h:outputText  value="#{msgs.authnavbar_edit}"/>
-		</h:commandLink>    
 	</h:column>
 	<h:column>
 		<h:commandLink id="BringUpSubSectionAction" action="#{listAuthModulesPage.BringSubSectionLevelUpAction}">

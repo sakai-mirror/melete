@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -32,7 +32,7 @@
 					<h:outputText id="propertiesPaneltxt1" value="#{addSectionPage.secResourceName}" />
 		</h:column>
 	</h:panelGrid>
-	<h:panelGrid id="propertiesPanel2" columns="2" width="82%" cellpadding="3" columnClasses="copyrightColumn1,copyrightColumn2" border="0">
+	<h:panelGrid id="propertiesPanel2" columns="2" width="100%" cellpadding="3" columnClasses="col50,col50left" border="0">
 		<h:column>
 				 <h:outputText value="#{msgs.resources_proper_pan_URL}"  rendered="#{addSectionPage.shouldRenderLink}" /><h:outputText value="*" styleClass="required" rendered="#{addSectionPage.shouldRenderLink}"/>
 		</h:column>	 
@@ -48,6 +48,7 @@
 						<!-- copyright license code -->
 			
 		</h:panelGrid>
+
 		
 		<f:subview id="LicenseForm" rendered="#{!addSectionPage.shouldRenderNotype}">
 		<h:panelGrid id="licproppanel" columns="1" width="100%">
