@@ -50,7 +50,6 @@ a1:active 			{color : #000080;}
 					text-align: left;
 					height:20px;}
 
-
 /*Sets <th> to align:left*/
 .leftheader 		{background: #EAEAEA;
 					font-family: Verdana, Arial, sans-serif;
@@ -147,10 +146,12 @@ a1:active 			{color : #000080;}
 	white-space:nowrap;
    }
    
- .ListDateInput{
- 	font-size: 98%; 
- }
-  
+ .ListDateInputClass {
+	font-size: 85%;
+	vertical-align: top;
+    width: 18%;  
+    white-space: nowrap;	
+  }  
 .ListDatePickerClass	{  
 width: 16px;  
 height: 16px;  border: 0 none black;  
@@ -335,4 +336,4 @@ word-wrap:break-word;
 
 .colNowrap {white-space:nowrap;}
 
-.authBarCol {font-size:92%;white-space:nowrap;}
+.authBarCol {font-size:83%;white-space:nowrap;}
