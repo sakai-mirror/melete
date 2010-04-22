@@ -56,7 +56,7 @@ if (request.getAttribute("msg") != null)
 
 function showSdateCal(index)
 {
-  var string2 = "listauthmodulesform:listTable:"+index+":startDate";
+  var string2 = "listauthmodulesform:table:"+index+":startDate";
   //alert(string2);
   //alert(document.getElementById(string2).value);
  // var dt = new Date(document.getElementById(string2).value);
@@ -79,7 +79,7 @@ function showSdateCal(index)
 }
 function showEdateCal(index)
 {
-  var string2 = "listauthmodulesform:listTable:"+index+":endDate";
+  var string2 = "listauthmodulesform:table:"+index+":endDate";
   //alert(string2);
   // alert(document.getElementById(string2).value);
   // var dt = new Date(document.getElementById(string2).value);
@@ -168,7 +168,7 @@ if (msg != null)
 	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
           		<tr>
 					<td valign="top">
-    <h:dataTable id="listTable" 
+    <h:dataTable id="table" 
                   value="#{listAuthModulesPage.moduleDateBeans}"
                   var="mdbean"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass,ListActionClass" 
                   cellpadding="3" cellspacing="0" 
