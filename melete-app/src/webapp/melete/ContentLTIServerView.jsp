@@ -49,9 +49,9 @@ function contentChangeSubmit()
 <!--replace with new link part Begin -->
 				<tr><td>
 					<table width="59%" border="0" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >
-					 <tr> <td><h:outputText id="format_text" value="#{msgs.editcontentltiserverview_format}"/>
+					 <tr> <td class="col30"><h:outputText id="format_text" value="#{msgs.editcontentltiserverview_format}"/>
 					 	</td>
-					 	<td>						  
+					 	<td class="col70">						  
 						<h:selectOneMenu id="LTIDisplay" value="#{addSectionPage.LTIDisplay}" 
 							valueChangeListener="#{addSectionPage.toggleLTIDisplay}" 
 							onchange="contentChangeSubmit();this.form.submit();" 
@@ -61,7 +61,7 @@ function contentChangeSubmit()
 						</h:selectOneMenu>
 						<h:inputHidden id="contentChange" value=""/>								
 					</td></tr>
-					<tr><td>   
+					<tr><td colspan="2">   
 					<f:subview id="LTIBasic" rendered="#{addSectionPage.shouldLTIDisplayBasic}">
 							<jsp:include page="lti_basic.jsp"/>
 						</f:subview> 

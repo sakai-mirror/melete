@@ -31,6 +31,7 @@
 <sakai:view title="Modules: Author View" toolCssHref="rtbc004.css">
 
 <%@include file="accesscheck.jsp" %>
+
 <%
 /*The following piece of java code needs to stay above the loadBundle tag, otherwise the request attribute gets replaced by msg*/
 
@@ -50,6 +51,7 @@ if (request.getAttribute("msg") != null)
 
 <script type="text/javascript" language="JavaScript" src="js/calendar2.js"></script>
 <script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
+<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
 <script type="text/javascript" language="javascript">
 
 function showSdateCal(index)
@@ -276,7 +278,12 @@ if (msg != null)
  	</td>
  	</tr>
  	</table>
- 	
+ <script type="text/javascript">
+
+		jQuery(document).ready(function(){
+		resetCheck();		
+		});
+</script>	
 </h:form>
 </sakai:view>
 </f:view>

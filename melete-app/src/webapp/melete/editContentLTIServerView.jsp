@@ -47,9 +47,9 @@ function contentChangeSubmit()
 						  
 <!--replace with new link part Begin -->
 					<table width="59%" border="0" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >
-					<tr> <td><h:outputText id="format_text" value="#{msgs.editcontentltiserverview_format}"/>
+					<tr> <td class="col30"><h:outputText id="format_text" value="#{msgs.editcontentltiserverview_format}"/>
 					</td>
-                    <td>
+                    <td class="col70">
                             <h:inputHidden id="contentChange" value=""/>
                             <h:selectOneMenu id="LTIDisplay" value="#{editSectionPage.LTIDisplay}" 
                                     valueChangeListener="#{editSectionPage.toggleLTIDisplay}" 
@@ -59,13 +59,14 @@ function contentChangeSubmit()
                             <f:selectItem itemValue="Advanced" itemLabel="#{msgs.addmodulesections_advanced_lti}"/>
                             </h:selectOneMenu>
 					</td></tr> 
-					
+					<tr><td colspan="2"> 
                                                 <f:subview id="LTIBasic" rendered="#{editSectionPage.shouldLTIDisplayBasic}">
                                                         <jsp:include page="lti_basic_edit.jsp"/>
                                                 </f:subview>
                                                 <f:subview id="LTIAdvanced" rendered="#{editSectionPage.shouldLTIDisplayAdvanced}">
                                                         <jsp:include page="lti_advanced_edit.jsp"/>
                                                 </f:subview>
+                        </td></tr>                        
 					 	<tr><td colspan="2"> 
 							<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{editSectionPage.section.openWindow}" />												
 							<h:outputText id="editLTIText_8" value="#{msgs.editcontentlinkserverview_openwindow}" />	
