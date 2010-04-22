@@ -23,14 +23,15 @@
  *
  **********************************************************************************
 -->
-<html>
-<head>
-<title>Bookmarks -</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
-<link rel="stylesheet" href="rtbc004.css" type="text/css" media="all" >
+
+<f:view>
+<sakai:view title="Modules: Add bookmarks" toolCssHref="rtbc004.css">
+<%@include file="accesscheck.jsp" %>
+
 <script language="javascript1.2">
 function validate_required(value,alerttxt)
 {
@@ -54,7 +55,7 @@ function validate_form()
 	}
 }
 </script>
-</head>
+
 <%
 final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 final BookmarkPage bookmarkPage = (BookmarkPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "bookmarkPage");
@@ -64,8 +65,7 @@ String sectionTitle = (String)request.getParameter("sectionTitle");
 bookmarkPage.setSectionId(sectionId);
 bookmarkPage.setSectionTitle(sectionTitle);
 %>
-<f:view>
-<body>
+
 <h:form id="AddBookmarkForm">
 <h:messages id="addbookmarkerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 <table cellspacing="0" cellpadding="10" width="100%" border="0" align="center">
@@ -120,6 +120,5 @@ bookmarkPage.setSectionTitle(sectionTitle);
 </table>
 
 </h:form>
-</body>
+</sakai:view>
 </f:view>
-</html>
