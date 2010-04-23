@@ -128,7 +128,7 @@ function contentChangeSubmit()
         <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
           <tr>
             <td>
-                     <table style="white-space:nowrap" bordercolor="#111111" cellspacing="0" cellpadding="4" width="100%" border="0">
+                     <table  bordercolor="#111111" cellspacing="0" cellpadding="4" width="100%" border="0">
                                   <tr>
 						            <td colspan="2" height="20" class="maintabledata5">
 											<h:commandLink id="TOCButton"  action="#{addSectionPage.cancel}"  immediate="true">
