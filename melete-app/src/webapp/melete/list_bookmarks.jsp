@@ -43,7 +43,7 @@
 <table>
 	<tr>
 		<td width="1050px" valign="top">
-    	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+    	<table class="maintableCollapseWithBorder">
                <tr>
                <td align="right">
                <h:inputHidden id="bmlistflag" value="#{bookmarkPage.nobmsFlag}"/>
@@ -53,7 +53,7 @@
                </td>
               </tr>				   
 			 </table>  	
-        	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+        	<table class="maintableCollapseWithBorder">
           		<tr>
             		<td class="maintabledata3">
           	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>

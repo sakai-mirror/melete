@@ -125,11 +125,11 @@ function contentChangeSubmit()
 		<div class="meletePortletToolBarMessage"><img src="images/document_add.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.addmodulesections_adding_section}" /> </div>	
 		<h:messages id="addsectionerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 
-        <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+        <table class="maintableCollapseWithBorder">
           <tr>
             <td>
                      <table  bordercolor="#111111" cellspacing="0" cellpadding="4" width="100%" border="0">
-                                  <tr>
+                                <tr>
 						            <td colspan="2" height="20" class="maintabledata5">
 											<h:commandLink id="TOCButton"  action="#{addSectionPage.cancel}"  immediate="true">
 												<h:outputText id="toc" value="#{msgs.addmodulesections_TOC}" />

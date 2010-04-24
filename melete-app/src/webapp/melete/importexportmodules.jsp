@@ -60,13 +60,13 @@ function showprocessMsg()
 	<div class="meletePortletToolBarMessage"><img src="images/import1.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.importexportmodules_importing_or_exporting}" /></div>
 <!-- This Begins the Main Text Area -->
 	
-                <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+                <table class="maintableCollapseWithBorder">
           					
 				<tr>
 					<td class="maintabledata3" valign="top">
 						<!-- main page contents -->
 						<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/></br>
-						<table border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse" width="100%" id="AutoNumber1">
+						<table class="maintableCollapseWithBorder0" id="AutoNumber1">
 						<tr>
 			  					<th class="leftheader maintabledata5 style4" colspan="2" height="20"><h:outputText value="#{msgs.importexportmodules_import_ims}" /></th>
 			  				</tr>

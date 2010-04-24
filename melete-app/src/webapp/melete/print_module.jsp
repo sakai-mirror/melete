@@ -31,7 +31,7 @@
 </head>
 <body>
 <form id="printModuleForm" >
-     <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+     <table class="maintableCollapseWithBorder">
           <tr>
             <td width="100%" height="20" >	
             	<%

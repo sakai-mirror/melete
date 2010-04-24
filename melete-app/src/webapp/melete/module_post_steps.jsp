@@ -40,10 +40,10 @@
 
 <!-- This Begins the Main Text Area -->
 <h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
+<table class="maintableCollapseWithBorder">
 		<tr>
 			  <td class="maintabledata6">
-				<table width="100%" border="0" cellspacing="0" cellpadding="3">
+				<table class="maintableCollapseWithBorder0">
 				  <tr>
 				  <td height="20" class="maintabledata5">
 							  <h:outputText id="text5" value="#{msgs.module_post_steps_message1}"/> 

@@ -63,10 +63,10 @@ function fillupload()
 <!-- This Begins the Main Text Area -->
 			<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 			<p><h:outputText id="Stext_2" value="#{msgs.editcontentuploadserverview_msg1}"/></p>
-    		<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+    		<table class="maintableCollapseWithBorder">
 				<tr><td>  					 
 <!--replace with local part Begin -->
-					<table width="100%" border="0" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >
+					<table class="maintableCollapseWithNoBorder" >
 						<tr><td height="20" colspan="2" class="maintabledata8"> <h:outputText id="Stext_add" value="#{msgs.editcontentuploadserverview_replace}" styleClass="bold"/> 									 
 						 <tr><td height="20" colspan="2"> <h:outputText id="Stext3" value="#{msgs.editcontentuploadserverview_upload}"/> 				
 																			<INPUT TYPE="FILE" id="file1" NAME="file1" style="visibility:visible" onChange="javascript:fillupload()"/>

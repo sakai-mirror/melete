@@ -37,7 +37,7 @@
 	  <jsp:include page="topnavbar.jsp"/> 
 	</f:subview>  
 <p></p>   
-<table  border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" width="100%">
+<table   class="maintableCollapseWithBorder0">
 <tr>
 <td colspan="2" align="center">
 <f:subview id="topmod">
@@ -110,7 +110,7 @@
 </td>
 </tr>
 <tr><td>
-<table width="100%" height="20" border="0" cellpadding="3" cellspacing="0" >
+<table  height="20"  class="maintableCollapseWithBorder0" >
    	<tr>
 	 <td align="center" class="meleteLicenseMsg center"><B>
   			<jsp:include page="license_info.jsp"/>      

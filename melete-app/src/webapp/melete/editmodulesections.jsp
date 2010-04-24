@@ -124,10 +124,10 @@ window.open('editpreviewEditor.jsf');
 		</f:subview>
 		<div class="meletePortletToolBarMessage"><img src="images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.editmodulesections_editing_section}" /> </div>
 		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-        <table width="100%"  border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA">
+        <table class="maintableCollapseWithBorder">
      	   <tr>
             <td class="maintabledata3">
-				  <table  bordercolor="#111111" cellspacing="0" cellpadding="4" width="100%" border="0">
+				  <table class="maintableCollapseWithNoBorder">
 	                   <!-- table header -->
 	                   <tr>
 			            <td colspan="2" height="20" class="maintabledata8">            	   

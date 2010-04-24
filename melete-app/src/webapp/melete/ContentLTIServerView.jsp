@@ -44,7 +44,7 @@ function contentChangeSubmit()
 <!-- This Begins the Main Text Area -->
 	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 	<p><h:outputText id="Stext_2" value="#{msgs.editcontentlinkserverview_msg1}"/> </p>
-	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+	<table class="maintableCollapseWithBorder">
 				<tr><td height="20" colspan="2" class="maintabledata8"> <h:outputText id="Stext_add" value="#{msgs.editcontentltiserverview_replace}" styleClass="bold"/> </td></tr>	 
 <!--replace with new link part Begin -->
 				<tr><td>

@@ -36,17 +36,16 @@
 	</f:subview>	
 	<div class="meletePortletToolBarMessage"><img src="images/check.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.confirm_addmodulesection_confirming_section}" /></div>
 	  <!-- This Begins the Main Text Area -->
-      <table width="100%"  border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
+      <table class="maintableCollapseWithBorder">
            
         <tr>
           <td class="maintabledata3">
 		
-		  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
+		  <table width="100%" cellpadding="0" cellspacing="0">
 		  	<tr><td height="20" class="maintabledata5">&nbsp;</td></tr>
             <tr>
                 <td valign="top">
-                  <br>
-                  <table width="100%"  border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
+                   <table width="100%"  border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
                     <tr class="maintabledata3">
                       <td valign="top"><img src="images/right_check.gif" width="24" height="24" align="absbottom" alt="Confirmation Signal" border="0"></td>
                       <td align="left"><h:outputText value="#{msgs.confirm_addmodulesection_you_have_succes}" /><br>

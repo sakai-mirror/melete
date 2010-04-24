@@ -165,7 +165,8 @@ if (msg != null)
 	<f:subview id="authtop">
 		<jsp:include page="authnavbar.jsp"/> 
 	</f:subview>
-	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+	
+	<table class="maintableCollapseWithBorder">
           		<tr>
 					<td valign="top">
     <h:dataTable id="table" 

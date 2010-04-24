@@ -98,7 +98,7 @@ function showEdateCal()
 	<div class="meletePortletToolBarMessage"><img src="images/document_add.gif" alt="" width="16" height="16" align="absbottom"> <h:outputText value="#{msgs.edit_module_editing_module}" /> </div>
     <h:inputHidden id="formName" value="EditModuleForm"/>  
     <h:messages id="editmoduleerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-	<table border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" >
+	<table class="maintableCollapseWithBorder" id="AutoNumber1" >
          <tr>
           <td valign="top">
 		  	<table width="100%" border="0" valign="top" cellpadding="4" cellspacing="0" class="table3">

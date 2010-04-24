@@ -43,11 +43,14 @@ function showProcessMessage()
 	</f:subview>
 	  <div class="meletePortletToolBarMessage"><img src="images/Warning.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.delete_module_module}" rendered="#{deleteModulePage.moduleSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion1}" rendered="#{deleteModulePage.sectionSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion2}" /></div>
       <!-- This Begins the Main Text Area -->
-      <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
+      <h:messages id="deletemoduleerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
+  <table class="maintableCollapseWithBorder">
+  <tr><td width="100%">
+      <table width="100%">
       <tr><td width="100%" height="20" class="maintabledata5"></td></tr>
         <tr>
           <td>
-			<h:messages id="deletemoduleerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
+          <div height="20" class="maintabledata5"></div>			
 		    <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#CCCCCC">
                <tr class="maintabledata3">
                   <td valign="top"><h:graphicImage id="warngif" value="images/Warning.gif" width="24" height="24" alt="#{msgs.delete_module_deletion_warning}" title="#{msgs.delete_module_deletion_warning}"/></td>
@@ -80,7 +83,10 @@ function showProcessMessage()
 					<h:commandButton id="cancelButton" action="#{deleteModulePage.backToModules}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>       
 				  </div>
                   </td>
-              </tr>              
+             	 </tr>              
+     		 </table>
+     	 </td>
+        </tr>              
       </table>
 	</h:form>
   <!-- This Ends the Main Text Area -->

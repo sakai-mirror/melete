@@ -39,17 +39,17 @@
 	<div class="meletePortletToolBarMessage"><img src="images/folder_document.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.modules_author_manage_managing_options}" /></div>
 <!-- This Begins the Main Text Area -->	
 
-        		<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+        		<table class="maintableCollapseWithBorder">
 					<tr>
 						<td>
 							<!-- start main -->
 					<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-							<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
+							<table class="maintableCollapseWithBorder" id="AutoNumber1">
 							  	<tr><td colspan="2" class="maintabledata5">&nbsp;
 							  		</td></tr>
 					            <tr>
 						              <td width="100%" valign="top">
-											<table width="100%" border="1" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >
+											<table class="maintableCollapseWithWhiteBorder" >
 											<tr rowspan="5" valign="top">
 							                    	<td align="center" class="menu left">
 								                    	<h:commandLink id="contentgoto" action="#{manageModulesPage.goToManageContent}">

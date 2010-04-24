@@ -38,7 +38,7 @@
 	</f:subview>
     <div class="meletePortletToolBarMessage"><img src="images/user1_preferences.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.student_preference_user_preference}" /></div>				
 	
-     <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+     <table  class="maintableCollapseWithBorder">
         <tr>
           <td class="maintabledata3" valign="top">
           	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
@@ -46,7 +46,7 @@
 			<tr><td  height="20" class="maintabledata5" ><h:outputText id="t2" value="#{msgs.student_preference_view_select}"  styleClass="bold"/>          </td></tr>
               <tr>
                 <td>
-						<table border="0" cellpadding="0" cellspacing="0" width="100%">
+						<table  class="maintableCollapseWithBorder0">
 						<tr>
 					<td>
 							<h:selectOneRadio value="#{studentPreferences.userView}" layout="pageDirection">

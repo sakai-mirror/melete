@@ -57,12 +57,12 @@ function resetModuleSelection() {
 		<div class="meletePortletToolBarMessage"><img src="images/document_exchange.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.sort_sections_top_message}" /></div>
 
 <!-- This Begins the Main Text Area -->
-       	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+       	<table class="maintableCollapseWithBorder">
 				<tr>
 					<td valign="top">
 						<!-- main page contents -->
 			 			<h:messages id="sorterror" layout="table" style="color : red" />
-						<table width="100%"  border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
+						<table class="maintableCollapseWithBorder0">
 			   				    <tr>
                     			<td>
 									<table width="25%"  border="0" cellspacing="0" cellpadding="0">
@@ -89,7 +89,7 @@ function resetModuleSelection() {
 									  </tr>
 							   <tr>
 							   	<td  bgcolor="#EEEEEE">
-							   	<table width="100%"  border="0" cellspacing="0" cellpadding="0" bgcolor="#EEEEEE">
+							   	<table class="maintableBackgroundWithNoBorder">
 									<th class="tableheader style4 " height="20"><h:outputText value="#{msgs.sort_modules_curr_seq}" /> </th>
 									<th class="tableheader">&nbsp;</th>
 									<th class="tableheader style4" height="20"><h:outputText value="#{msgs.sort_modules_new_seq}" /></th>

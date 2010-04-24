@@ -37,11 +37,11 @@
 	</f:subview>
 	 <div class="meletePortletToolBarMessage"><img src="images/Warning.gif" width="16" height="16" align="absbottom" border="0">
 		     <h:outputText value="#{msgs.delete_resource_deletion_warning}" /></div>
-  <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+  <table class="maintableCollapseWithBorder">
        <!-- This Begins the Main Text Area -->
   	 <tr>       
       <td width="100%" valign="top" >
-       <table width="100%"  border="1" cellpadding="0" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
+       <table class="maintableCollapseWithBorder">
         <!-- show table with delete resources -->
         <tr><td width="100%" height="20" class="maintabledata5"></td></tr>
         <tr> 

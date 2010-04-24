@@ -35,7 +35,8 @@
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>		
 	<div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="24" height="24" align="absmiddle"><h:outputText value="#{msgs.add_preview_previewing_section}" /></div>
-     <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+    
+     <table class="maintableCollapseWithBorder">
 		<tr><td colspan="2" height="20" class="maintabledata5">&nbsp;</td></tr>	
 		  <tr><td>
 				<h:outputText value="#{msgs.add_preview_previewing_section_of}" styleClass="bold" /> <h:outputText value="#{addSectionPage.module.title}" styleClass="bold"/>

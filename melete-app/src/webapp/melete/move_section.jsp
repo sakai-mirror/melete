@@ -38,11 +38,11 @@
 	<div class="meletePortletToolBarMessage"><img src="images/page_go.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.move_sections_msg}" /> </div>
 
 
-		  <table width="100%" border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
+		  <table class="maintableCollapseWithBorder">
 			<tr>
 				<td class="maintabledata3">
 					<h:messages id="movesectionerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-					<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" summary="<h:outputText value='#{msgs.move_sections_summary}'/>">
+					<table class="maintableCollapseWithBorder0" id="AutoNumber1" summary="<h:outputText value='#{msgs.move_sections_summary}'/>">
 					<tr>
 						<td class="tableheader"><h:outputText id="title" value="#{msgs.move_sections_title}" /> 
 						</td></tr>

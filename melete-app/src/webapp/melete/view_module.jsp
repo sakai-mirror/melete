@@ -37,7 +37,7 @@
   	<jsp:include page="topnavbar.jsp"/>
   </f:subview>
   <p></p>
-	<table width="100%" border="0" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse" >
+	<table class="maintableCollapseWithBorder" >
 
 <!--Page Content-->
 		 <tr>

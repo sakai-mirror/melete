@@ -89,6 +89,62 @@ a1:active 			{color : #000080;}
 /* Sets border color to light grey & background color to dull grey in Main Text tables */ 
 .maintabledata8 	{border-color:#E2E4E8;  background-color:#EAEAEA; } 
 
+.maintableCollapseWithBorder {
+      border: 1px solid #EAEAEA;
+      border-collapse: collapse;
+      width: 100%;
+}
+
+.maintableCollapseWithBorder td {
+       padding: 3px;
+}
+
+.maintableCollapseWithBorder0 {
+      border: 0px solid #EAEAEA;
+      border-collapse: collapse;
+      width: 100%;
+}
+
+.maintableCollapseWithBorder0 td {
+       padding: 3px;
+}
+
+.maintableCollapseWithNoBorder {
+      border: 0px solid #F5F5F5;
+      border-collapse: collapse;
+      width: 100%;
+}
+
+.maintableCollapseWithNoBorder td {
+       padding: 4px;
+}
+
+.maintableCollapseWithWhiteBorder {
+      border: 1px solid #F5F5F5;
+      border-collapse: collapse;
+      width: 100%;
+}
+
+.maintableCollapseWithWhiteBorder td {
+       padding: 4px;
+}
+
+.maintableBackgroundWithNoBorder {
+      border: 0px solid #F5F5F5;
+      border-collapse: collapse;
+      background-color:#EEEEEE;
+      width: 100%;
+}
+
+.authorPrefTable {
+      border: 0px solid #F5F5F5;
+      border-collapse: collapse;
+      width: 95%;
+}
+
+.authorPrefTable td {
+       padding: 1px 3px;
+}
 .forumline {BORDER-RIGHT: #c8d1d7 2px solid; BORDER-TOP: #c8d1d7 2px solid; BORDER-LEFT: #c8d1d7 2px solid; BORDER-BOTTOM: #c8d1d7 2px solid; BACKGROUND-COLOR: #ffffff}
 .style1 			{color: #FFFFFF; }    /* Course + Instructor name in Header */
 .style2 			{color: #51698D; font-weight: bold;}  /*  */

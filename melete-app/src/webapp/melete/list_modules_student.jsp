@@ -37,7 +37,7 @@
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
 <!--Page Content-->
-<table width="100%" border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
+<table class="maintableCollapseWithBorder">
 <tr>
 <td align="right">
 <h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">

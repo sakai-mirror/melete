@@ -36,11 +36,11 @@
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>	
 	<div class="meletePortletToolBarMessage"><img src="images/check.gif" alt="" width="16" height="16" align="absbottom">Confirmation </div>
-     <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA" style="border-collapse: collapse">
+     <table class="maintableCollapseWithBorder">
        <tr>
           <td class="maintabledata3">
 
-		  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
+		  <table class="maintableCollapseWithBorder" id="AutoNumber1">
 		  	<tr><td colspan="2" height="20" class="maintabledata5">&nbsp;</td></tr>
               <tr>
                 <td width="100%" valign="top">

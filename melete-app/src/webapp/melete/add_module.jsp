@@ -95,11 +95,8 @@ function showEdateCal()
 	</f:subview>
 	<div class="meletePortletToolBarMessage"><img src="images/document_add.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.add_module_adding_module}" /> </div>
     <h:messages id="addmoduleerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-
-   			 
 	
-	
-	<table border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1" height="57">
+	<table id="AutoNumber1" class="maintableCollapseWithBorder">
        <tr>
          <td>
          	<table border="0" cellpadding="3" cellspacing="0" width="100%" >
@@ -132,18 +129,13 @@ function showEdateCal()
 				</h:inputTextarea>		
 				</td>
               </tr>
-			  <tr>
-			  <td colspan="2">&nbsp;</td>
-			  </tr>
+			  
               <tr>
                 <td width="233" align="left" valign="top"><h:outputText value="#{msgs.add_module_added_by}" /></td>
                 <td width="472" align="left" valign="top">
 				<h:outputText value="#{addModulePage.author}"  styleClass="formtext"/></td>
               </tr>
 			  <tr>
-			  <td colspan="2">&nbsp;</td>
-			  </tr>
-              <tr>
                 <td align="left" valign="top"><h:outputText value="#{msgs.add_module_term_year}" /></td>
                 <td align="left" valign="top">
 					<h:outputText id="season" value="#{addModulePage.season}"/>				 

@@ -79,12 +79,12 @@ function resetCheck()
 	</f:subview>
 	<div class="meletePortletToolBarMessage"><img src="images/folder_into.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.restore_modules_restoring_inactive}" /></div>
 	<!-- This Begins the Main Text Area -->			
-        	<table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+        	<table class="maintableCollapseWithBorder">
           		<tr>
 					<td class="maintabledata6" valign="top">
 						<!-- main page contents -->
 						<h:messages id="restorerror" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-			            <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
+			            <table class="maintableCollapseWithBorder0" id="AutoNumber1">
 						<tr>
               					<td colspan="2" width="100%" valign="top">
 			  						<h:dataTable id="table1"  value="#{manageModulesPage.archiveModulesList}" var="aml" width="110%"  headerClass="tableheader2" columnClasses="ListTitleClass,ListDateClass" summary="#{msgs.restore_modules_summary}">

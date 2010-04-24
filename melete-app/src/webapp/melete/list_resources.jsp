@@ -25,7 +25,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@include file="accesscheck.jsp" %>
-<h:panelGrid width="100%" border="0" cellpadding="4" cellspacing="0"  style="border-collapse: collapse border-color: #F5F5F5" >											
+<h:panelGrid styleClass="maintableCollapseWithNoBorder" >											
 <h:column>	
     		<h:outputText value="#{msgs.edit_list_resources_selected_res} "  rendered="#{listResourcesPage.renderSelectedResource}" styleClass="blue" />
 		<h:outputText value="#{listResourcesPage.secResourceName}" rendered="#{listResourcesPage.renderSelectedResource}" styleClass="bold"/>
@@ -37,9 +37,7 @@
 </h:column>										   	
 
 <h:column>		                    	
-		<h:panelGrid id="uploadSView1" columns="1" width="100%">	
-		<h:column>
-                <h:panelGrid id="selresPanel" columns="1" width="100%">		
+         <h:panelGrid id="selresPanel" columns="1" width="100%">		
 	        <h:column>
 		<h:outputText value="#{msgs.list_resources_currently}" rendered="#{listResourcesPage.renderSelectedResource}" /><h:outputText value="#{listResourcesPage.secResourceName}" rendered="#{listResourcesPage.renderSelectedResource}" />
 	        </h:column>											
@@ -119,8 +117,6 @@
 				    		<h:outputText id="deltext" value="#{msgs.list_resources_del}"  />
 					 </h:commandLink>	
 				    </h:column>
-                   </h:dataTable>
-		</h:column>													
-		</h:panelGrid>
+                   </h:dataTable>		
 	</h:column>					
 </h:panelGrid>
