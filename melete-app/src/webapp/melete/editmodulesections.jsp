@@ -31,6 +31,7 @@
 <f:view>
 <sakai:view title="Modules: Edit Module Sections" toolCssHref="rtbc004.css">
 <%@include file="accesscheck.jsp" %>
+<script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
 
 <%@ page import="org.sakaiproject.util.ResourceLoader"%>
 
@@ -128,6 +129,20 @@ window.open('editpreviewEditor.jsf');
      	   <tr>
             <td class="maintabledata3">
 				  <table class="maintableCollapseWithNoBorder">
+                    <tr>
+                    <td colspan="2" align="right">
+                       <h:commandLink id="myBookmarksLink" action="#{viewSectionsPage.gotoMyBookmarks}">
+                         <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
+                       </h:commandLink>
+                       <h:outputText value="|"/> 														
+                       <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="OpenBookmarkWindow(#{editSectionPage.section.sectionId},'#{editSectionPage.section.title}','Melete Bookmark Window');">
+		    	         <f:param id="sectionId" name="sectionId" value="#{editSectionPage.section.sectionId}" />
+	  			         <f:param id="sectionTitle" name="sectionTitle" value="#{editSectionPage.section.title}" />
+	  			         <h:graphicImage id="bul_gif" value="images/icon_bookmark.gif" />
+				         <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
+ 	                   </h:outputLink>				  
+                     </td>
+                     </tr>
 	                   <!-- table header -->
 	                   <tr>
 			            <td colspan="2" height="20" class="maintabledata8">            	   

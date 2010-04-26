@@ -48,11 +48,11 @@
 </td>
 <tr>
 <td colspan="2" align="right">
-<h:commandLink id="myBookmarksLink" action="#{viewSectionsPage.gotoMyBookmarks}">
+<h:commandLink id="myBookmarksLink" action="#{viewSectionsPage.gotoMyBookmarks}" rendered="#{viewSectionsPage.instRole == false}">
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
 </h:commandLink>
 <h:outputText value="|"/> 														
-  <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','Melete Bookmark Window');">
+  <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','Melete Bookmark Window');" rendered="#{viewSectionsPage.instRole == false}">
 		    	<f:param id="sectionId" name="sectionId" value="#{viewSectionsPage.section.sectionId}" />
 	  			<f:param id="sectionTitle" name="sectionTitle" value="#{viewSectionsPage.section.title}" />
 	  			<h:graphicImage id="bul_gif" value="images/icon_bookmark.gif" />

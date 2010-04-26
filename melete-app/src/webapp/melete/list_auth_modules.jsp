@@ -167,6 +167,18 @@ if (msg != null)
 	</f:subview>
 	
 	<table class="maintableCollapseWithBorder">
+    <tr>
+     <td align="right">
+     <h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.editSection}" action="#{bookmarkPage.redirectEditSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">
+      <f:param name="sectionId" value="#{listModulesPage.bookmarkSectionId}" /> 
+      <h:outputText id="lastvisit" value="#{msgs.last_visited}" />									
+     </h:commandLink>
+     <h:outputText value="|" rendered="#{listModulesPage.bookmarkSectionId > 0}"/> 
+     <h:commandLink id="myBookmarksLink" action="#{listModulesPage.gotoMyBookmarks}">
+      <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
+     </h:commandLink>				  
+    </td>
+   </tr>	
           		<tr>
 					<td valign="top">
     <h:dataTable id="table" 

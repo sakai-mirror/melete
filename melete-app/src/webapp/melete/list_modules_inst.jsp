@@ -42,18 +42,6 @@
 
 <table class="maintableCollapseWithBorder">
 <tr>
-<td align="right">
-<h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">
- <f:param name="sectionId" value="#{listModulesPage.bookmarkSectionId}" /> 
- <h:outputText id="lastvisit" value="#{msgs.last_visited}" />									
-</h:commandLink>
-<h:outputText value="|" rendered="#{listModulesPage.bookmarkSectionId > 0}"/> 
-<h:commandLink id="myBookmarksLink" action="#{listModulesPage.gotoMyBookmarks}">
- <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
-</h:commandLink>				  
-</td>
-</tr>	
-<tr>
 <td >
 <h:messages showDetail="true" showSummary="false"/>
  <h:dataTable id="StudentTable"  

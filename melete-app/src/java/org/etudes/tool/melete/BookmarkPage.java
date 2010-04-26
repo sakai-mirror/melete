@@ -144,11 +144,33 @@ public class BookmarkPage implements Serializable
 			vsPage.setModule(null);
 
 		}
-
+	   
 	public String redirectViewSection()
 	{
 		return "view_section";
 	}
+	
+	  public void editSection(ActionEvent evt)
+		{
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			UIViewRoot root = ctx.getViewRoot();
+			UICommand cmdLink = (UICommand)evt.getComponent();
+
+	      	List cList = cmdLink.getChildren();
+	      	if(cList == null || cList.size() <1) return;
+	    	UIParameter param1 = (UIParameter) cList.get(0);
+	    	Section sec = (Section)sectionService.getSection(((Integer)param1.getValue()).intValue());
+			
+			ValueBinding binding = Util.getBinding("#{editSectionPage}");
+			EditSectionPage esPage = (EditSectionPage) binding.getValue(ctx);
+			esPage.setEditInfo(sec);
+		}	
+	  
+	  public String redirectEditSection()
+		{
+			return "editmodulesections";
+		}
+	  
 	  public void deleteAction(ActionEvent evt)
 		{
 			UICommand cmdLink = (UICommand)evt.getComponent();
