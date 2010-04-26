@@ -116,6 +116,7 @@ public class BookmarkPage implements Serializable
 	    	context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,ex.getMessage(),errMsg));
 			return "failure";
 		}
+	    resetValues();
 		return "confirm_bookmark";
 
 	}
@@ -186,7 +187,7 @@ public class BookmarkPage implements Serializable
 	    return "list_bookmarks";
 	}
 
-	public String cancelDeleteResource()
+	public String cancelDeleteBookmark()
   	{
   		return "list_bookmarks";
   	}
