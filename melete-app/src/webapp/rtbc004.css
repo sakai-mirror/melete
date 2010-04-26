@@ -370,17 +370,13 @@ color: #5A6D95;
 width:25%;
 vertical-align:top;
 }
-.col45 {
-width:45%;
-}
+
 .col45wordwrap {
 width:45%;
 word-wrap:break-word;
 vertical-align:top;
 }
-.col30 {
-	width:30%;
-}
+
 .col50 {
 	width:50%;
 }
@@ -388,11 +384,5 @@ vertical-align:top;
 	width:50%;
 	text-align:left;
 }
-
-.col70 {
-	width:70%;
-}
-
-.colNowrap {white-space:nowrap;}
 
 .authBarCol {font-size:90%;white-space:nowrap;}
