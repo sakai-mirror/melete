@@ -182,6 +182,7 @@ public class BookmarkPage implements Serializable
 	    	context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,ex.getMessage(),errMsg));
 			return "failure";
 		}
+	    resetValues();
 	    return "list_bookmarks";
 	}
 
