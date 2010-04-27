@@ -51,7 +51,7 @@
 <h:commandLink id="myBookmarksLink" action="#{viewSectionsPage.gotoMyBookmarks}" rendered="#{viewSectionsPage.instRole == false}">
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
 </h:commandLink>
-<h:outputText value="|"/> 														
+<h:outputText value="|" rendered="#{viewSectionsPage.instRole == false}"/> 														
   <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','Melete Bookmark Window');" rendered="#{viewSectionsPage.instRole == false}">
 		    	<f:param id="sectionId" name="sectionId" value="#{viewSectionsPage.section.sectionId}" />
 	  			<f:param id="sectionTitle" name="sectionTitle" value="#{viewSectionsPage.section.title}" />
