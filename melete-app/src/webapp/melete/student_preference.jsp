@@ -29,7 +29,6 @@
 
 <f:view>
 <sakai:view title="Modules: Student Preference" toolCssHref="rtbc004.css">
-<%@include file="accesscheck.jsp" %>
 
  <h:form id="UserPreferenceForm">
 	<!-- top nav bar -->

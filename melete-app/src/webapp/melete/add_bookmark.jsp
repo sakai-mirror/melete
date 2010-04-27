@@ -30,7 +30,6 @@
 
 <f:view>
 <sakai:view title="Modules: Add bookmarks" toolCssHref="rtbc004.css">
-<%@include file="accesscheck.jsp" %>
 
 <script language="javascript1.2">
 function validate_required(value,alerttxt)

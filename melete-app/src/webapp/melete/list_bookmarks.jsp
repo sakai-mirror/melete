@@ -30,7 +30,7 @@
 
 <f:view>
 <sakai:view title="Modules: List of bookmarks" toolCssHref="rtbc004.css">
-<%@include file="accesscheck.jsp" %>
+
 <script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
 
  <h:form id="ManageBookmarksForm">

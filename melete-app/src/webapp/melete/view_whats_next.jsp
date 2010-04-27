@@ -29,7 +29,7 @@
 
 <f:view>
 <sakai:view title="Modules: Student View" toolCssHref="rtbc004.css">
-<%@include file="accesscheck.jsp" %>
+
 <a name="newanchor"></a>
 <h:form id="viewNSsectionform">   
 	<f:subview id="top">
