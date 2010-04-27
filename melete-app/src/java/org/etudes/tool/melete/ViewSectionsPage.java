@@ -451,7 +451,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     {
     	Element secElement;
     	Node prevNode,nextNode;
-    	String courseId = "";
+    	String courseId = null;
     	FacesContext ctx = FacesContext.getCurrentInstance();
     	logger.debug("get Module at viewsection java param value" + ctx.getExternalContext().getRequestParameterMap().get("vs_id"));
     	String directvs_id = (String)ctx.getExternalContext().getRequestParameterMap().get("vs_id");
