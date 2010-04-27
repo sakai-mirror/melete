@@ -87,7 +87,7 @@ public BookmarkObjService getBookmark(String userId, String siteId, int sectionI
 		sectionId = bookmarkDb.getLastVisitSectionId(userId, siteId);
 	}catch(Exception e)
 		{
-		logger.debug("melete bookmark business --get last visit sectionid failed");
+		  //It is ok to not have a last visited section
 		}
 	return sectionId;
   }
