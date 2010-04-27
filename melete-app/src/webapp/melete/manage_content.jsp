@@ -78,16 +78,12 @@
 			</tr>	
 			</table>
 				</td></tr>						
-				</table></td></tr>
-										
-              <tr>
-                <td>         
-                <div class="actionBar" align="left">	
-                <h:commandButton id="continueButton" action="#{manageResourcesPage.addItems}" value="#{msgs.im_continue}"  accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
-                <h:commandButton id="cancelButton" immediate="true" action="#{manageResourcesPage.cancel}" value="#{msgs.im_cancel}"  accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
-				 
-			</div></td>
-              </tr>
+				</table>
+				<div class="actionBar" align="left">	
+            	    <h:commandButton id="continueButton" action="#{manageResourcesPage.addItems}" value="#{msgs.im_continue}"  accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
+        	        <h:commandButton id="cancelButton" immediate="true" action="#{manageResourcesPage.cancel}" value="#{msgs.im_cancel}"  accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+				</div>
+				</td></tr>             
 			 <tr>
         		 <td align="center">
 				  <f:subview id="DeleteResourceView">

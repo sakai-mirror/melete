@@ -40,14 +40,14 @@
 </f:subview>
 <div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_modules_inst_viewing_student}" /> </div>
 
+<h:messages showDetail="true" showSummary="false"/>
 <table class="maintableCollapseWithBorder">
 <tr>
 <td >
-<h:messages showDetail="true" showSummary="false"/>
  <h:dataTable id="StudentTable"  
                   value="#{listModulesPage.viewModuleBeans}" 
                   var="vmbean"  rowClasses="row1,row2" columnClasses="StudentListTitleClass,ListClosedClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
-                  border="0" cellpadding="3" width="100%" binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_inst_summary}">
+                  border="0" cellpadding="3" width="100%" styleClass="valignStyle9" binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_inst_summary}">
         <h:column>      
         <f:facet name="header">
         <h:panelGroup>

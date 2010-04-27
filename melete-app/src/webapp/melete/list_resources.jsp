@@ -26,22 +26,20 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@include file="accesscheck.jsp" %>
 <h:panelGrid styleClass="maintableCollapseWithNoBorder" >											
-<h:column>	
-    		<h:outputText value="#{msgs.edit_list_resources_selected_res} "  rendered="#{listResourcesPage.renderSelectedResource}" styleClass="blue" />
-		<h:outputText value="#{listResourcesPage.secResourceName}" rendered="#{listResourcesPage.renderSelectedResource}" styleClass="bold"/>
-		<h:outputText value="#{msgs.edit_list_resources_selected_res_1}"  rendered="#{listResourcesPage.renderSelectedResource}" styleClass="blue"/>
-  
-</h:column>
-<h:column>
-  <h:outputText id="Stext3" value="#{msgs.edit_list_resources_select}" rendered="#{listResourcesPage.callFromSection}" styleClass="bold"/> 
-</h:column>										   	
-
 <h:column>		                    	
-         <h:panelGrid id="selresPanel" columns="1" width="100%">		
+         <h:panelGrid id="selresPanel" columns="1" width="100%" rendered="#{listResourcesPage.callFromSection}" >
+         	<h:column>	
+    			<h:outputText value="#{msgs.edit_list_resources_selected_res} "  rendered="#{listResourcesPage.renderSelectedResource}" styleClass="blue" />
+				<h:outputText value="#{listResourcesPage.secResourceName}" rendered="#{listResourcesPage.renderSelectedResource}" styleClass="bold"/>
+				<h:outputText value="#{msgs.edit_list_resources_selected_res_1}"  rendered="#{listResourcesPage.renderSelectedResource}" styleClass="blue"/>
+			</h:column>		
+	      	<h:column>
+  				<h:outputText id="Stext3" value="#{msgs.edit_list_resources_select}" styleClass="bold"/> 
+			</h:column>
 	        <h:column>
-		<h:outputText value="#{msgs.list_resources_currently}" rendered="#{listResourcesPage.renderSelectedResource}" /><h:outputText value="#{listResourcesPage.secResourceName}" rendered="#{listResourcesPage.renderSelectedResource}" />
+				<h:outputText value="#{msgs.list_resources_currently}" rendered="#{listResourcesPage.renderSelectedResource}" /><h:outputText value="#{listResourcesPage.secResourceName}" rendered="#{listResourcesPage.renderSelectedResource}" />
 	        </h:column>											
-                </h:panelGrid>
+          </h:panelGrid>
 
                  <!-- navigation with showing 15 recs --> 
                 <h:panelGrid id="selresNavigationPanel" columns="2"  width="100%" border="0" columnClasses="TitleWid4,ActionWid2" rendered="#{listResourcesPage.listNav.displayNav}" summary="#{msgs.list_resources_nav_summary}">

@@ -41,11 +41,11 @@
         <tr>
           <td class="maintabledata3">
 		
-		  <table width="100%" cellpadding="0" cellspacing="0">
+		  <table class="maintableCollapseWithBorder0">
 		  	<tr><td height="20" class="maintabledata5">&nbsp;</td></tr>
             <tr>
                 <td valign="top">
-                   <table width="100%"  border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
+                   <table class="deleteConfirmTable" border="1">
                     <tr class="maintabledata3">
                       <td valign="top"><img src="images/right_check.gif" width="24" height="24" align="absbottom" alt="Confirmation Signal" border="0"></td>
                       <td align="left"><h:outputText value="#{msgs.confirm_addmodulesection_you_have_succes}" /><br>

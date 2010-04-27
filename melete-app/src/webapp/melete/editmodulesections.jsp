@@ -125,25 +125,23 @@ window.open('editpreviewEditor.jsf');
 		</f:subview>
 		<div class="meletePortletToolBarMessage"><img src="images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.editmodulesections_editing_section}" /> </div>
 		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
+        <div class="right">
+           <h:commandLink id="myBookmarksLink" action="#{viewSectionsPage.gotoMyBookmarks}">
+             <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
+           </h:commandLink>
+           <h:outputText value="|"/> 														
+           <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="OpenBookmarkWindow(#{editSectionPage.section.sectionId},'#{editSectionPage.section.title}','Melete Bookmark Window');">
+	         <f:param id="sectionId" name="sectionId" value="#{editSectionPage.section.sectionId}" />
+	         <f:param id="sectionTitle" name="sectionTitle" value="#{editSectionPage.section.title}" />
+	         <h:graphicImage id="bul_gif" value="images/icon_bookmark.gif" />
+	         <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
+           </h:outputLink>				  
+        </div>
         <table class="maintableCollapseWithBorder">
      	   <tr>
             <td class="maintabledata3">
-				  <table class="maintableCollapseWithNoBorder">
-                    <tr>
-                    <td colspan="2" align="right">
-                       <h:commandLink id="myBookmarksLink" action="#{viewSectionsPage.gotoMyBookmarks}">
-                         <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
-                       </h:commandLink>
-                       <h:outputText value="|"/> 														
-                       <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="OpenBookmarkWindow(#{editSectionPage.section.sectionId},'#{editSectionPage.section.title}','Melete Bookmark Window');">
-		    	         <f:param id="sectionId" name="sectionId" value="#{editSectionPage.section.sectionId}" />
-	  			         <f:param id="sectionTitle" name="sectionTitle" value="#{editSectionPage.section.title}" />
-	  			         <h:graphicImage id="bul_gif" value="images/icon_bookmark.gif" />
-				         <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
- 	                   </h:outputLink>				  
-                     </td>
-                     </tr>
-	                   <!-- table header -->
+				  <table class="maintableCollapseWithBorder0">
+                   <!-- table header -->
 	                   <tr>
 			            <td colspan="2" height="20" class="maintabledata8">            	   
 				     		<h:commandLink id="editPrevButton" onmousedown="transferEditordata();" action="#{editSectionPage.editPrevSection}" rendered="#{editSectionPage.hasPrev}">

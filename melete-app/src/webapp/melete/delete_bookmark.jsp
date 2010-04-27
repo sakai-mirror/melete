@@ -46,7 +46,7 @@
         <tr> 
         <td width="100%" valign="top">
            <h:messages id="deleteBookmarkError" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-           <table width="100%"  border="1" align="center" cellpadding="10" cellspacing="5" bordercolor="#CCCCCC" style="border-collapse: collapse">
+           <table class="deleteConfirmTable">
         	<tr>
         		<td> <img src="images/Warning.gif" border="0">
         		</td>

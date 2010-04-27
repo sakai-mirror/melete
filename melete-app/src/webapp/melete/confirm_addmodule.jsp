@@ -44,7 +44,7 @@
 		  	<tr><td  height="20" class="maintabledata5">&nbsp;</td></tr>
               <tr>
                 <td width="100%">
-                    <table width="100%"  border="1" cellpadding="0" cellspacing="0" bordercolor="#CCCCCC">
+                    <table class="deleteConfirmTable" border="1">
                     <tr class="maintabledata3">
                       <td valign="top"><img src="images/right_check.gif" width="24" height="24" align="absbottom" alt="#{msgs.confirm_addmodule_confirmation_signal}" border="0"></td>
                       <td align="left"><h:outputText value="#{msgs.confirm_addmodule_you_have_succes}" /><br>

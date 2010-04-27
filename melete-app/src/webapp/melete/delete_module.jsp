@@ -46,12 +46,11 @@ function showProcessMessage()
       <h:messages id="deletemoduleerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
   <table class="maintableCollapseWithBorder">
   <tr><td width="100%">
-      <table width="100%">
+      <table class="maintableCollapseWithBorder0">
       <tr><td width="100%" height="20" class="maintabledata5"></td></tr>
         <tr>
           <td>
-          <div height="20" class="maintabledata5"></div>			
-		    <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#CCCCCC">
+            <table class="deleteConfirmTable" border="1">
                <tr class="maintabledata3">
                   <td valign="top"><h:graphicImage id="warngif" value="images/Warning.gif" width="24" height="24" alt="#{msgs.delete_module_deletion_warning}" title="#{msgs.delete_module_deletion_warning}"/></td>
                   <td align="left"><h:outputText value="#{msgs.delete_module_message1}" /><br>
@@ -77,14 +76,14 @@ function showProcessMessage()
                     </tr>
                   </table>
                   <h:outputLabel id="processmsg" value="#{msgs.processMsg}" styleClass="orange" style="visibility:hidden" />
-                  <div class="actionBar" align="left" id="deleteActionPanel">
+                  </td>
+             	 </tr>              
+     		 </table>
+     		 <div class="actionBar" align="left" id="deleteActionPanel">
                 	<h:commandButton id="delButton" action="#{deleteModulePage.deleteAction}"  rendered="#{deleteModulePage.sameModuleSectionSelected == false}" value="#{msgs.im_continue}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgDelete" onclick="showProcessMessage()"/>
 					<h:commandButton id="delButton_1" action="#{deleteModulePage.reConfirmedDeleteAction}"  rendered="#{deleteModulePage.sameModuleSectionSelected}" value="#{msgs.im_continue}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgDelete"/>	
 					<h:commandButton id="cancelButton" action="#{deleteModulePage.backToModules}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>       
 				  </div>
-                  </td>
-             	 </tr>              
-     		 </table>
      	 </td>
         </tr>              
       </table>

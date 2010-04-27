@@ -99,7 +99,7 @@ function showEdateCal()
 	<table id="AutoNumber1" class="maintableCollapseWithBorder">
        <tr>
          <td>
-         	<table border="0" cellpadding="3" cellspacing="0" width="100%" >
+         	<table class="maintableCollapseWithBorder0" >
          	  <tr>
       			<td colspan="2" height="20" class="maintabledata2"> <h:outputText value="#{msgs.add_module_define_properties}" /> 	</td>
      		 </tr>

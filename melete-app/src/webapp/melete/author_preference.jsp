@@ -38,17 +38,20 @@
 			<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
    <div class="meletePortletToolBarMessage"><img src="images/user1_preferences.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.author_preference_user_preference}" /></div>
-		  
-    <table class="maintableCollapseWithBorder">
-          
+	
+	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>	  
+    <table class="maintableCollapseWithBorder">          
         <tr>
-          <td class="maintabledata3" >
-          	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-		  <table class="maintableCollapseWithBorder0">
-		  	<tr>
-		  		<td height="20" class="maintabledata5"><h:outputText id="t1_1" value="#{msgs.author_preference_global_preference}" styleClass="bold"/> 
-                	
-                	<h:panelGrid styleClass="authorPrefTable" rendered="#{authorPreferences.shouldRenderEditorPanel}">
+          <td>
+          	<table class="maintableCollapseWithBorder0">          
+    		   <tr>
+       			  <td height="20" class="maintabledata5">          	
+          			<h:outputText id="t1_1" value="#{msgs.author_preference_global_preference}" styleClass="bold"/>  
+          	 	  </td>
+          	    </tr>  
+          	    <tr>
+          	   	 <td>
+					<h:panelGrid styleClass="authorPrefTable" rendered="#{authorPreferences.shouldRenderEditorPanel}">
                 	 <h:column>
                 		<h:outputText id="t1" value="#{msgs.author_preference_editor_select}" styleClass="bold"/>
                 	</h:column>
@@ -58,66 +61,72 @@
 						</h:selectOneRadio>	
 					</h:column>
 				   </h:panelGrid>		
-				<h:panelGrid id="collapsePrefPanel" columns="1" styleClass="authorPrefTable">
-				<h:column>
-				 	<h:outputText id="t2" value="#{msgs.author_preference_view_select}"  styleClass="bold"/>      
-				 </h:column>
-               	 <h:column>
-					<h:selectOneRadio value="#{authorPreferences.userView}" layout="pageDirection">
-						<f:selectItem itemLabel="#{msgs.author_preference_Expanded}" itemValue="true" />
-						<f:selectItem itemLabel="#{msgs.author_preference_Collapsed}" itemValue="false"/>
-					</h:selectOneRadio>	
-				</h:column>
-				 </h:panelGrid>
-<h:panelGrid id="LTIPrefPanel" columns="1" styleClass="authorPrefTable">
-				<h:column>
-				 	<h:outputText id="LTI1" value="#{msgs.author_preference_LTI_select}"  styleClass="bold"/>      
-				 </h:column>
-               	 <h:column>
-					<h:selectOneRadio value="#{authorPreferences.showLTI}" layout="pageDirection">
-						<f:selectItem itemLabel="#{msgs.author_preference_yes}" itemValue="true" />
-						<f:selectItem itemLabel="#{msgs.author_preference_no}" itemValue="false"/>
-					</h:selectOneRadio>	
-				</h:column>
-				<h:column>
-				 </h:column>
-                <h:column>
-				<jsp:include page="licenseform.jsp"/>
-				 </h:column>	
-				 </h:panelGrid>
-				</td></tr>			
+				   <h:panelGrid id="collapsePrefPanel" columns="1" styleClass="authorPrefTable">
+						<h:column>
+						 	<h:outputText id="t2" value="#{msgs.author_preference_view_select}"  styleClass="bold"/>      
+						 </h:column>
+		               	 <h:column>
+							<h:selectOneRadio value="#{authorPreferences.userView}" layout="pageDirection">
+								<f:selectItem itemLabel="#{msgs.author_preference_Expanded}" itemValue="true" />
+								<f:selectItem itemLabel="#{msgs.author_preference_Collapsed}" itemValue="false"/>
+							</h:selectOneRadio>	
+						</h:column>
+					 </h:panelGrid>
+					<h:panelGrid id="LTIPrefPanel" columns="1" styleClass="authorPrefTable">
+						<h:column>
+						 	<h:outputText id="LTI1" value="#{msgs.author_preference_LTI_select}"  styleClass="bold"/>      
+						 </h:column>
+		               	 <h:column>
+							<h:selectOneRadio value="#{authorPreferences.showLTI}" layout="pageDirection">
+								<f:selectItem itemLabel="#{msgs.author_preference_yes}" itemValue="true" />
+								<f:selectItem itemLabel="#{msgs.author_preference_no}" itemValue="false"/>
+							</h:selectOneRadio>	
+						</h:column>
+					
+		                <h:column>
+						<jsp:include page="licenseform.jsp"/>
+						 </h:column>	
+					 </h:panelGrid>
+          	     </td>
+          	    </tr> 
+          	    <tr>
+					<td height="20" class="maintabledata5">
+						<h:outputText id="t3_1" value="#{msgs.author_preference_site_preference}"  styleClass="bold"/>  
+					</td>
+				</tr>
 				<tr>
-					<td  height="20" class="maintabledata5"><h:outputText id="t3_1" value="#{msgs.author_preference_site_preference}"  styleClass="bold"/>          </td></tr>
-				<tr>
-					  <td>
-                		<table class="authorPrefTable">
-                				<tr><td>
-								 <h:outputText id="t3" value="#{msgs.author_preference_material_printable}"  styleClass="bold"/>          
-								 </td></tr>
-								<tr>
-						   <td>
-							<h:selectOneRadio value="#{authorPreferences.materialPrintable}" layout="pageDirection">
-										<f:selectItem itemLabel="#{msgs.author_preference_yes}" itemValue="true" />
-										<f:selectItem itemLabel="#{msgs.author_preference_no}" itemValue="false"/>
-								</h:selectOneRadio>	
-					</td></tr>
-                				<tr><td>
-								 <h:outputText id="t4" value="#{msgs.author_preference_autonumber}"  styleClass="bold"/>          
-								 </td></tr>
-								<tr>
-						   <td>
-							<h:selectOneRadio value="#{authorPreferences.materialAutonumber}" layout="pageDirection">
-										<f:selectItem itemLabel="#{msgs.author_preference_yes}" itemValue="true" />
-										<f:selectItem itemLabel="#{msgs.author_preference_no}" itemValue="false"/>
-								</h:selectOneRadio>	
-					</td></tr></table>
-					</td></tr></table>
-					</td></tr>		
-      
-                <div class="actionBar" align="left">	
-                <h:commandButton action="#{authorPreferences.setUserChoice}" value="#{msgs.im_set}" accesskey="#{msgs.set_access}" title="#{msgs.im_set_text}" styleClass="BottomImgSet"/>
-			</div>		
-            </table>
+				  <td>
+				    <h:panelGrid styleClass="authorPrefTable">
+                	 <h:column>
+                		<h:outputText id="t3" value="#{msgs.author_preference_material_printable}"  styleClass="bold"/>
+                	</h:column>
+                	 <h:column>
+						<h:selectOneRadio value="#{authorPreferences.materialPrintable}" layout="pageDirection">
+								<f:selectItem itemLabel="#{msgs.author_preference_yes}" itemValue="true" />
+								<f:selectItem itemLabel="#{msgs.author_preference_no}" itemValue="false"/>
+						</h:selectOneRadio>		
+					</h:column>
+				   </h:panelGrid>	
+				   <h:panelGrid styleClass="authorPrefTable">
+                	 <h:column>
+                		<h:outputText id="t4" value="#{msgs.author_preference_autonumber}"  styleClass="bold"/>
+                	</h:column>
+                	 <h:column>
+						<h:selectOneRadio value="#{authorPreferences.materialAutonumber}" layout="pageDirection">
+								<f:selectItem itemLabel="#{msgs.author_preference_yes}" itemValue="true" />
+								<f:selectItem itemLabel="#{msgs.author_preference_no}" itemValue="false"/>
+						</h:selectOneRadio>		
+					</h:column>
+				   </h:panelGrid>	
+				  </td>
+				</tr>				       	    
+          	   </table> 		
+               <div class="actionBar" align="left">	
+        	        <h:commandButton action="#{authorPreferences.setUserChoice}" value="#{msgs.im_set}" accesskey="#{msgs.set_access}" title="#{msgs.im_set_text}" styleClass="BottomImgSet"/>
+				</div>	
+		   </td>
+	   </tr>		
+     </table>
 	</h:form>
   <!-- This Ends the Main Text Area -->
 </sakai:view>

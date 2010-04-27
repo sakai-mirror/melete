@@ -101,7 +101,7 @@ function showEdateCal()
 	<table class="maintableCollapseWithBorder" id="AutoNumber1" >
          <tr>
           <td valign="top">
-		  	<table width="100%" border="0" valign="top" cellpadding="4" cellspacing="0" class="table3">
+		  	<table class="maintableCollapseWithBorder0">
 		   	  <tr>
 		 		<td colspan="2" height="20" class="maintabledata2"> 
 					<h:commandLink id="TOCButton"  action="#{editModulePage.gotoTOC}">
