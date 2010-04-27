@@ -282,7 +282,7 @@ window.open('editpreviewEditor.jsf');
             </table>
 			
 			
-	   <p class="bold"><span class="required">*</span>&nbsp; <h:outputText value="#{msgs.editmodulesections_required}" /></p>
+	   <p><span class="required">*</span>&nbsp; <h:outputText value="#{msgs.editmodulesections_required}" /></p>
   </h:form>
 	 
 

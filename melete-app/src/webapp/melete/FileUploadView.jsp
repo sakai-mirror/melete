@@ -395,7 +395,7 @@ function validateFileName(divID, sourceID)
 	     </tr>	
 	     <tr>
 	       <td colspan="2">
-	       <b><span class="required">* Required</span></b>
+	       <span class="required">* Required</span>
 	       <br>
 	       <h:outputText id="note" value="#{msgs.file_upload_view_note} #{addResourcesPage.maxUploadSize}MB."  styleClass="comment red"/>							<h:inputHidden id="filename" value="#{addSectionPage.hiddenUpload}" />						
 		   <br>

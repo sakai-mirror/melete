@@ -184,7 +184,7 @@ function showEdateCal()
 	       </div>
         </td></tr>		
 </table>
-<p class="bold"><span class="required">*</span>&nbsp;<h:outputText value="#{msgs.edit_module_required}" /></p>
+<p ><span class="required">*</span>&nbsp;<h:outputText value="#{msgs.edit_module_required}" /></p>
 	<!-- here -->	
 	</h:form>
 </sakai:view>

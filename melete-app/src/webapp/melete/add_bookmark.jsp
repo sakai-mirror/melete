@@ -114,7 +114,7 @@ bookmarkPage.setSectionTitle(sectionTitle);
 					</tr>
 					
 			</table>
-			<p class="bold"><span class="required">*</span>&nbsp;<h:outputText value="#{msgs.add_bookmark_required}" /></p>
+			<p><span class="required">*</span>&nbsp;<h:outputText value="#{msgs.add_bookmark_required}" /></p>
 		</td>
 	</tr>
 </table>

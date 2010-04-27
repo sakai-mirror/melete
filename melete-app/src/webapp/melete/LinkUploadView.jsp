@@ -113,7 +113,7 @@
 	     </tr>	
          <tr>
 	       <td colspan="2">
-	       <b><span class="required">* Required</span></b>
+	       <span class="required">* Required</span>
 	       <br>
 	       <br>
 	       </td>

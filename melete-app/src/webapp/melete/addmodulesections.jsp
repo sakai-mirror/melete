@@ -237,7 +237,7 @@ function contentChangeSubmit()
 			</td>
           </tr>
         </table>
-		<p class="bold"><span class="required">*</span>&nbsp;<h:outputText value="#{msgs.addmodulesections_required}" /></p>
+		<p ><span class="required">*</span>&nbsp;<h:outputText value="#{msgs.addmodulesections_required}" /></p>
 	
 </h:form>
 </sakai:view>
