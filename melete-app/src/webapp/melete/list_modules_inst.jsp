@@ -116,7 +116,7 @@
              </h:commandLink>  
             </h:column>
           </h:dataTable>
-          <h:panelGrid id="nextsteps" columns="1" width="100%" rendered="#{vmbean.whatsNext != listModulesPage.isNull && listModulesPage.expandAllFlag == listModulesPage.trueFlag}">
+          <h:panelGrid id="nextsteps" columns="1" width="100%" rendered="#{vmbean.whatsNext != listModulesPage.isNull && ((listModulesPage.expandAllFlag == listModulesPage.trueFlag)||(vmbean.moduleId == listModulesPage.showModuleId))}">
 	          <h:column>
 		          <h:outputText id="emp_space6_bul" value="  " styleClass="NextStepsPaddingClass"/>
 		          <h:outputText id="next_seq" value="#{vmbean.nextStepsNumber}. " rendered="#{listModulesPage.autonumber}"/>

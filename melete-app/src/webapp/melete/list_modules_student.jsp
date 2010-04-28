@@ -110,15 +110,15 @@
           </h:dataTable>
           
           <h:outputText id="emp_space6_bul" value="  " styleClass="NextStepsPaddingClass"/>
-          <h:outputText id="next_seq" value="#{vmbean.nextStepsNumber}. " rendered="#{listModulesPage.autonumber && vmbean.whatsNext != listModulesPage.isNull && listModulesPage.expandAllFlag == listModulesPage.trueFlag}"/>
-          <h:graphicImage id="bul_gif1" value="images/bullet_black.gif" rendered="#{!listModulesPage.autonumber && vmbean.whatsNext != listModulesPage.isNull && listModulesPage.expandAllFlag == listModulesPage.trueFlag}" style="border:0"/>
+          <h:outputText id="next_seq" value="#{vmbean.nextStepsNumber}. " rendered="#{listModulesPage.autonumber && vmbean.whatsNext != listModulesPage.isNull && ((listModulesPage.expandAllFlag == listModulesPage.trueFlag)||(vmbean.moduleId == listModulesPage.showModuleId))}"/>
+          <h:graphicImage id="bul_gif1" value="images/bullet_black.gif" rendered="#{!listModulesPage.autonumber && vmbean.whatsNext != listModulesPage.isNull && ((listModulesPage.expandAllFlag == listModulesPage.trueFlag)||(vmbean.moduleId == listModulesPage.showModuleId))}" style="border:0"/>
           
-          <h:commandLink id="whatsNext" action="#{listModulesPage.goWhatsNext}" immediate="true" rendered="#{((vmbean.visibleFlag == listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}">
+          <h:commandLink id="whatsNext" action="#{listModulesPage.goWhatsNext}" immediate="true" rendered="#{((vmbean.visibleFlag == listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&((listModulesPage.expandAllFlag == listModulesPage.trueFlag)||(vmbean.moduleId == listModulesPage.showModuleId)))}">
 		    <h:outputText  id="whatsNextMsg" value="#{msgs.list_modules_stud_next_steps}" />
 		    <f:param name="modidx2" value="#{listModulesPage.modTable.rowIndex}" />
 		    <f:param name="modseqno" value="#{vmbean.seqNo}" />
           </h:commandLink>  
-          <h:outputText  id="whatsNextMsg2" value="#{msgs.list_modules_stud_next_steps}" rendered="#{((vmbean.visibleFlag != listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}"/>
+          <h:outputText  id="whatsNextMsg2" value="#{msgs.list_modules_stud_next_steps}" rendered="#{((vmbean.visibleFlag != listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&((listModulesPage.expandAllFlag == listModulesPage.trueFlag)||(vmbean.moduleId == listModulesPage.showModuleId)))}"/>
            </h:column>
            <h:column>
            <f:facet name="header">

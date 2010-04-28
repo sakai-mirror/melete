@@ -374,7 +374,7 @@ public class ListModulesPage implements Serializable{
 			    UIData table = null;
 			    if (getRole()!= null && getRole().equals("INSTRUCTOR")){
 			       table = (UIData)
-			        root.findComponent("listmodulesform").findComponent("table");
+			        root.findComponent("listmodulesform").findComponent("StudentTable");
 			    }
 			    if (getRole()!= null && getRole().equals("STUDENT")){
 			        table = (UIData)
@@ -633,7 +633,7 @@ public class ListModulesPage implements Serializable{
 				UIData table;
 				if (getRole() != null && getRole().equals("INSTRUCTOR"))
 				{
-					table = (UIData) root.findComponent("listmodulesform").findComponent("table");
+					table = (UIData) root.findComponent("listmodulesform").findComponent("StudentTable");
 				}
 				else
 					table = (UIData) root.findComponent("listmodulesStudentform").findComponent("table");
