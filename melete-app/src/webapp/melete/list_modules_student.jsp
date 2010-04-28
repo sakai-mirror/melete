@@ -44,8 +44,9 @@
  <h:outputText id="lastvisit" value="#{msgs.last_visited}" />									
 </h:commandLink>
 <h:outputText value="|" rendered="#{listModulesPage.bookmarkSectionId > 0}"/> 
-<h:commandLink id="myBookmarksLink" action="#{listModulesPage.gotoMyBookmarks}">
+<h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
+ <f:param name="fromPage" value="list_modules_student" />
 </h:commandLink>				  
 </td>
 </tr>			

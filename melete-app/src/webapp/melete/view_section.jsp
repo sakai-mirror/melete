@@ -48,8 +48,9 @@
 </td>
 <tr>
 <td colspan="2" align="right">
-<h:commandLink id="myBookmarksLink" action="#{viewSectionsPage.gotoMyBookmarks}" rendered="#{viewSectionsPage.instRole == false}">
+<h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}" rendered="#{viewSectionsPage.instRole == false}">
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
+ <f:param name="fromPage" value="view_section" />
 </h:commandLink>
 <h:outputText value="|" rendered="#{viewSectionsPage.instRole == false}"/> 														
   <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','Melete Bookmark Window');" rendered="#{viewSectionsPage.instRole == false}">

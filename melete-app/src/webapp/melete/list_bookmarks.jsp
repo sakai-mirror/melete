@@ -103,6 +103,9 @@
          </td>
          </tr>
          </table>
+          <div class="actionBar" align="left">				
+				<h:commandButton id="returnButton"  action="#{bookmarkPage.returnAction}" value="#{msgs.im_return}" tabindex="" accesskey="#{msgs.return_access}" title="#{msgs.im_return_text}" styleClass="BottomImgReturn" />
+			</div>
          </td>
          </tr>
          </table>

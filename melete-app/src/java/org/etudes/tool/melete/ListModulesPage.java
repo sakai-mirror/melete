@@ -600,7 +600,7 @@ public class ListModulesPage implements Serializable{
   		}
       	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNo),getInstRole());
       	vnPage.setNextSeqNo(nextSeqNo);
-      	vnPage.setModule(getModuleService().getModule(vmBean.getModuleId()));
+      	//vnPage.setModule(getModuleService().getModule(vmBean.getModuleId()));
       	if ((vmBean.getVsBeans() == null)||(vmBean.getVsBeans().size() == 0))
       	{
       	  vnPage.setPrevSecId(0);
@@ -617,17 +617,7 @@ public class ListModulesPage implements Serializable{
 
       }
 
-      public String gotoMyBookmarks()
-      {
-      	FacesContext context = FacesContext.getCurrentInstance();
-      	ValueBinding binding =
-              Util.getBinding("#{bookmarkPage}");
-          BookmarkPage bmPage = (BookmarkPage)binding.getValue(context);
-          bmPage.resetValues();
-      	return "list_bookmarks";
-      }
-
-
+ 
 	  private void addNoModulesMessage(FacesContext ctx){
 	  	FacesMessage msg =
 	  		new FacesMessage("No modules", "No modules are available for the course at this time.");

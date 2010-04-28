@@ -51,8 +51,9 @@
 		</tr>      
 <tr>
 <td align="right">
-<h:commandLink id="myBookmarksLink" action="#{viewModulesPage.gotoMyBookmarks}">
+<h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
+ <f:param name="fromPage" value="view_module" />
 </h:commandLink>				  
 </td>
 </tr>			               

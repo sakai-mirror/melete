@@ -303,6 +303,10 @@ public void setPrevSecId(int prevSecId) {
 
 public ModuleObjService getModule()
 {
+	  if (this.module == null)
+	  {
+		  this.module = getModuleService().getModule(this.prevModId);
+	  }
 	  return this.module;
 }
 

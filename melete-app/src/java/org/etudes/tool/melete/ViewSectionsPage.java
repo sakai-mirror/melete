@@ -325,7 +325,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     	    {
               resource = getMeleteCHService().getResource(resourceId);
               setLinkName(resource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
-             
+
               url = getMeleteCHService().getResourceUrl(resourceId);
               if (logger.isDebugEnabled()) logger.debug("Resource url is "+url);
       	      contentLinkUrl = url;
@@ -454,8 +454,9 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     	String courseId = null;
     	FacesContext ctx = FacesContext.getCurrentInstance();
     	logger.debug("get Module at viewsection java param value" + ctx.getExternalContext().getRequestParameterMap().get("vs_id"));
+
     	String directvs_id = (String)ctx.getExternalContext().getRequestParameterMap().get("vs_id");
-    	if(directvs_id != null) 
+    	if(directvs_id != null)
     	{
     		int d_vs_id=new Integer(directvs_id).intValue();
     		if(d_vs_id != this.sectionId)
@@ -466,14 +467,14 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     			this.section= null;
     		}
     		String direct_cid = (String)ctx.getExternalContext().getRequestParameterMap().get("c_id");
-        	if(direct_cid != null) courseId = direct_cid;        		
+        	if(direct_cid != null) courseId = direct_cid;
     	}
-    	
+
     	if (this.module == null)
-    	{    		
+    	{
     	try {
-    		if(courseId == null) courseId = getCourseId();	
-  	  	  this.module = (ModuleObjService) getModuleService().getModule(this.moduleId);
+    		if(courseId == null) courseId = getCourseId();
+    	  this.module = (ModuleObjService) getModuleService().getModule(this.moduleId);
   	  	  this.nextSeqNo = getModuleService().getNextSeqNo(courseId, this.moduleSeqNo, getInstRole());
   	  	  this.subSectionW3CDom = getModuleService().getSubSectionW3CDOM(this.module.getSeqXml());
   	  	  secElement = subSectionW3CDom.getElementById(String.valueOf(this.sectionId));
@@ -703,7 +704,7 @@ public String goWhatsNext()
 	vnPage.setNextSeqNo(this.nextSeqNo);
 	vnPage.setModuleSeqNo(this.moduleSeqNo);
 
-    vnPage.setModule(this.module);
+    //vnPage.setModule(this.module);
 
 	return "view_whats_next";
 }
@@ -763,23 +764,13 @@ public String goNextModule()
     vmPage.setModuleSeqNo(this.nextSeqNo);
     vmPage.setPrintable(null);
     vmPage.setAutonumber(null);
-    
+
     return "view_module";
 }
 
 public String gotoAddBookmark()
 {
 	return "add_bookmark";
-}
-
-public String gotoMyBookmarks()
-{
-	FacesContext context = FacesContext.getCurrentInstance();
-	ValueBinding binding =
-        Util.getBinding("#{bookmarkPage}");
-    BookmarkPage bmPage = (BookmarkPage)binding.getValue(context);
-    bmPage.resetValues();
-	return "list_bookmarks";
 }
 
 

@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008, 2009 Etudes, Inc.
@@ -162,7 +162,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     	try {
     		FacesContext ctx = FacesContext.getCurrentInstance();
         	logger.debug("get mdbean found req param value" + ctx.getExternalContext().getRequestParameterMap().get("vm_id"));
-        	
+
         	ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 
         	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
@@ -173,7 +173,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
         	String direct_cid = (String)ctx.getExternalContext().getRequestParameterMap().get("c_id");
         	if(direct_cid != null) courseId = direct_cid;
         	else courseId = getCourseId();
-        	 
+
     	/*String courseId = getCourseId();
 	String userId = getUserId();*/
     	 if (this.moduleId > 0)
@@ -345,7 +345,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
  	            vsPage.setModule(null);
  	            vsPage.setAutonumber(null);
 
- 	    String retVal = "view_section";        
+ 	    String retVal = "view_section";
  	  	return retVal;
     }
     public String goPrevSection()
@@ -367,7 +367,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
  	            //added by rashmi on 6/14/05
  	            vsPage.setModule(null);
  	            vsPage.setAutonumber(null);
- 	            String retVal = "view_section";        
+ 	            String retVal = "view_section";
  	    return retVal;
     }
     public String goPrevWhatsNext()
@@ -390,7 +390,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
         	vnPage.setPrevSecId(0);
           }
           vnPage.setPrevModId(this.prevMdbean.getModule().getModuleId());
-          vnPage.setModule(this.prevMdbean.getModule());
+          //vnPage.setModule(this.prevMdbean.getModule());
         }
         else
         {
@@ -418,7 +418,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 
     	vnPage.setNextSeqNo(this.nextSeqNo);
 
-        if (this.mdbean != null) vnPage.setModule(this.mdbean.getModule());
+        //if (this.mdbean != null) vnPage.setModule(this.mdbean.getModule());
 
     		return "view_whats_next";
 
@@ -469,16 +469,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     public String redirectToViewModule(){
     	return "view_module";
     }
-    public String gotoMyBookmarks()
-    {
-    	FacesContext context = FacesContext.getCurrentInstance();
-    	ValueBinding binding =
-            Util.getBinding("#{bookmarkPage}");
-        BookmarkPage bmPage = (BookmarkPage)binding.getValue(context);
-        bmPage.resetValues();
-    	return "list_bookmarks";
-    }
-    
+
     public boolean isPrintable()
 	  {
 		  FacesContext ctx = FacesContext.getCurrentInstance();

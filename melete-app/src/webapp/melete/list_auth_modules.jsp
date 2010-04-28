@@ -171,9 +171,10 @@ if (msg != null)
 	      <h:outputText id="lastvisit" value="#{msgs.last_visited}" />									
 	     </h:commandLink>
 	     <h:outputText value="|" rendered="#{listModulesPage.bookmarkSectionId > 0}"/> 
-	     <h:commandLink id="myBookmarksLink" action="#{listModulesPage.gotoMyBookmarks}">
-	      <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
-	     </h:commandLink>				  
+	     <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
+           <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />		
+           <f:param name="fromPage" value="list_auth_modules"/>							
+         </h:commandLink>				  
    	</div>
 	<table class="maintableCollapseWithBorder">
   	 <tr>

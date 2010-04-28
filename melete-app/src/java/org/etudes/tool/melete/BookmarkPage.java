@@ -60,7 +60,7 @@ public class BookmarkPage implements Serializable
 {
 
 	/** identifier field */
-	
+
 	protected MeleteSiteAndUserInfo meleteSiteAndUserInfo;
 
 	private BookmarkObjService bookmark;
@@ -82,6 +82,8 @@ public class BookmarkPage implements Serializable
 	private String deleteBookmarkTitle;
 
 	private boolean nobmsFlag;
+
+	private String fromPage;
 
 	/** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(BookmarkPage.class);
@@ -144,12 +146,12 @@ public class BookmarkPage implements Serializable
 			vsPage.setModule(null);
 
 		}
-	   
+
 	public String redirectViewSection()
 	{
 		return "view_section";
 	}
-	
+
 	  public void editSection(ActionEvent evt)
 		{
 			FacesContext ctx = FacesContext.getCurrentInstance();
@@ -160,17 +162,17 @@ public class BookmarkPage implements Serializable
 	      	if(cList == null || cList.size() <1) return;
 	    	UIParameter param1 = (UIParameter) cList.get(0);
 	    	Section sec = (Section)sectionService.getSection(((Integer)param1.getValue()).intValue());
-			
+
 			ValueBinding binding = Util.getBinding("#{editSectionPage}");
 			EditSectionPage esPage = (EditSectionPage) binding.getValue(ctx);
 			esPage.setEditInfo(sec);
-		}	
-	  
+		}
+
 	  public String redirectEditSection()
 		{
 			return "editmodulesections";
 		}
-	  
+
 	  public void deleteAction(ActionEvent evt)
 		{
 			UICommand cmdLink = (UICommand)evt.getComponent();
@@ -206,6 +208,7 @@ public class BookmarkPage implements Serializable
 			return "failure";
 		}
 	    resetValues();
+	    setFromPage("list_bookmarks");
 	    return "list_bookmarks";
 	}
 
@@ -222,13 +225,13 @@ public class BookmarkPage implements Serializable
       bmList = null;
       nobmsFlag = true;
 	}
-	
+
 	public void exportNotes(ActionEvent evt)
 	{
 		String packagingdirpath = ServerConfigurationService.getString("melete.packagingDir", "");
 		FacesContext context = FacesContext.getCurrentInstance();
 		Map sessionMap = context.getExternalContext().getSessionMap();
-		
+
 		File packagedir = null;
 		ResourceLoader bundle = new ResourceLoader(
 		"org.etudes.tool.melete.bundle.Messages");
@@ -244,22 +247,22 @@ public class BookmarkPage implements Serializable
 
 			String title = getMeleteSiteAndUserInfo().getCourseTitle();
 			title = title.trim();
-			
+
 			String courseId = (String)sessionMap.get("courseId");
 			String userId = (String)sessionMap.get("userId");
-			
+
 			packagedir = new File(basePackDir.getAbsolutePath()
 					+ File.separator + courseId + "_" + userId + File.separator + title.replace(' ', '_'));
-			
+
 			if (!packagedir.exists())
 				packagedir.mkdirs();
 
 			String outputfilename = packagedir.getParentFile()
 			.getAbsolutePath() + File.separator  + title.replace(' ', '_') + "_my_bookmarks_notes.txt";
-	
+
 			bookmarkService.createFile(bmList, outputfilename);
 			File outfile = new File(outputfilename);
-			
+
 			download(new File(outfile.getAbsolutePath()));
 
 			FacesContext facesContext = FacesContext
@@ -282,13 +285,67 @@ public class BookmarkPage implements Serializable
 		}
 
 	}
-	
+
 	public String redirectExportNotes()
 	{
 		return "list_bookmarks";
 	}
-	
-	
+
+	public String gotoMyBookmarks()
+	{
+		resetValues();
+		FacesContext context = FacesContext.getCurrentInstance();
+		setFromPage((String)context.getExternalContext().getRequestParameterMap().get("fromPage"));
+		return "list_bookmarks";
+	}
+
+	public String returnAction()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+
+		if (this.fromPage != null)
+		{
+			if (this.fromPage.equals("list_auth_modules"))
+			{
+		      ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+		      ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(context);
+	          lamPage.resetValues();
+			}
+			if (this.fromPage.equals("list_modules_student"))
+			{
+	          ValueBinding binding = Util.getBinding("#{listModulesPage}");
+		      ListModulesPage lmPage = (ListModulesPage) binding.getValue(context);
+	         lmPage.resetValues();
+			}
+			if (this.fromPage.equals("view_section"))
+			{
+			  ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
+		      ViewSectionsPage vsPage = (ViewSectionsPage)binding.getValue(context);
+		      vsPage.resetValues();
+		      vsPage.setSection(null);
+		      vsPage.setModule(null);
+			}
+			if (this.fromPage.equals("view_module"))
+			{
+		      ValueBinding binding = Util.getBinding("#{viewModulesPage}");
+	    	  ViewModulesPage vmPage = (ViewModulesPage)binding.getValue(context);
+	          vmPage.setMdbean(null);
+			}
+			if (this.fromPage.equals("view_whats_next"))
+			{
+	          ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
+	          ViewNextStepsPage vnPage = (ViewNextStepsPage)binding.getValue(context);
+	          vnPage.setModule(null);
+			}
+		}
+		else
+		{
+			this.fromPage = "list_bookmarks";
+		}
+		return this.fromPage;
+	}
+
+
 	/**
 	 * writes the text file to browser
 	 *
@@ -339,7 +396,7 @@ public class BookmarkPage implements Serializable
 			} catch (IOException e2) {
 			}
 		}
-	}	
+	}
 
 	public int getDeleteBookmarkId() {
 	      return deleteBookmarkId;
@@ -378,6 +435,14 @@ public class BookmarkPage implements Serializable
 		this.nobmsFlag = nobmsFlag;
 	}
 
+	public String getFromPage() {
+		  return fromPage;
+	}
+
+    public void setFromPage(String fromPage) {
+		     this.fromPage = fromPage;
+	}
+
     public BookmarkObjService getBookmark() {
  	  FacesContext context = FacesContext.getCurrentInstance();
 	  Map sessionMap = context.getExternalContext().getSessionMap();
@@ -402,7 +467,7 @@ public class BookmarkPage implements Serializable
 	   FacesContext context = FacesContext.getCurrentInstance();
 	   Map sessionMap = context.getExternalContext().getSessionMap();
 	   if (bmList == null)
-	   {	   
+	   {
 	     bmList = bookmarkService.getBookmarks((String)sessionMap.get("userId"),(String)sessionMap.get("courseId"));
 	     if ((bmList != null)&&(bmList.size() > 0))
 	     {
@@ -412,7 +477,7 @@ public class BookmarkPage implements Serializable
 	     {
 		   setNobmsFlag(true);
 	     }
-	   }  
+	   }
 	   return bmList;
    }
 
@@ -465,7 +530,7 @@ public class BookmarkPage implements Serializable
     public void setSectionService(SectionService sectionService) {
             this.sectionService = sectionService;
     }
-    
+
     /**
 	 * get MeleteSiteAndUserInfo
 	 *

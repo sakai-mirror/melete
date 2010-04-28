@@ -44,6 +44,9 @@
 
 	<tr>
 		<td align="center">
+		     <!-- The getmodule method correctly determines the prev and next seq nos in the backing bean -->
+			<!-- The hidden field below has been added just to get the getmodule method to execute first -->
+		    <h:inputHidden id="hacktitle" value="#{viewNextStepsPage.module.title}"/>
 					<f:subview id="topmod">
 						<jsp:include page="view_navigate_wn.jsp"/>
 					</f:subview>
@@ -52,8 +55,9 @@
 </tr> 
 <tr>
 <td align="right">
-<h:commandLink id="myBookmarksLink" action="#{viewNextStepsPage.gotoMyBookmarks}">
- <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
+<h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
+ <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />
+ <f:param name="fromPage" value="view_whats_next" />
 </h:commandLink>				  
 </td>
 </tr>
