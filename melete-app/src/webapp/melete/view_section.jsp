@@ -47,18 +47,18 @@
 	<h:panelGroup id="bcsecpgroup" binding="#{viewSectionsPage.secpgroup}"/>
 </td>
 <tr>
-<td colspan="2" align="right">
-<h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}" rendered="#{viewSectionsPage.instRole == false}">
- <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
- <f:param name="fromPage" value="view_section" />
-</h:commandLink>
-<h:outputText value="|" rendered="#{viewSectionsPage.instRole == false}"/> 														
+<td colspan="2" align="right">										
   <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','Melete Bookmark Window');" rendered="#{viewSectionsPage.instRole == false}">
 		    	<f:param id="sectionId" name="sectionId" value="#{viewSectionsPage.section.sectionId}" />
 	  			<f:param id="sectionTitle" name="sectionTitle" value="#{viewSectionsPage.section.title}" />
 	  			<h:graphicImage id="bul_gif" value="images/icon_bookmark.gif" />
 				      <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
- 	</h:outputLink>				  
+ 	</h:outputLink>		
+ <h:outputText value="|" rendered="#{viewSectionsPage.instRole == false}"/> 			
+ <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}" rendered="#{viewSectionsPage.instRole == false}">
+ <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
+ <f:param name="fromPage" value="view_section" />
+</h:commandLink>
 </td>
 </tr>
 <tr>
