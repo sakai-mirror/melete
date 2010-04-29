@@ -45,7 +45,7 @@
 			<tr><td  height="20" class="maintabledata5" ><h:outputText id="t2" value="#{msgs.student_preference_view_select}"  styleClass="bold"/>          </td></tr>
               <tr>
                 <td>
-						<table  class="maintableCollapseWithBorder0">
+						<table  class="maintableCollapseWithNoBorder">
 						<tr>
 					<td>
 							<h:selectOneRadio value="#{studentPreferences.userView}" layout="pageDirection">

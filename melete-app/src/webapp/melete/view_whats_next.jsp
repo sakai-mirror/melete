@@ -39,7 +39,7 @@
 		<h:graphicImage id="previewtopimg" value="images/preview.png" styleClass="AuthImgClass" rendered="#{viewNextStepsPage.instRole == true}"/>
 		<h:outputText value="#{msgs.view_whats_next_viewing}" rendered="#{viewNextStepsPage.instRole == true}"/>
 	</div>	    
-	<table class="maintableCollapseWithBorder0" >
+	<table class="maintableCollapseWithNoBorder" >
 	<!--Page Content-->
 
 	<tr>

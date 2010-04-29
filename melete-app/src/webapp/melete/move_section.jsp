@@ -42,7 +42,7 @@
 			<tr>
 				<td class="maintabledata3">
 					<h:messages id="movesectionerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-					<table class="maintableCollapseWithBorder0" id="AutoNumber1" summary="<h:outputText value='#{msgs.move_sections_summary}'/>">
+					<table class="maintableCollapseWithNoBorder" id="AutoNumber1" summary="<h:outputText value='#{msgs.move_sections_summary}'/>">
 					<tr>
 						<td class="tableheader"><h:outputText id="title" value="#{msgs.move_sections_title}" /> 
 						</td></tr>

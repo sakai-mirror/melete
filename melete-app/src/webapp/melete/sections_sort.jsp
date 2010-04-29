@@ -62,7 +62,7 @@ function resetModuleSelection() {
 					<td valign="top">
 						<!-- main page contents -->
 			 			<h:messages id="sorterror" layout="table" style="color : red" />
-						<table class="maintableCollapseWithBorder0">
+						<table class="maintableCollapseWithNoBorder">
 			   				    <tr>
                     			<td>
 									<table width="25%"  border="0" cellspacing="0" cellpadding="0">

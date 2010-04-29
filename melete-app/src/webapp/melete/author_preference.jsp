@@ -43,7 +43,7 @@
     <table class="maintableCollapseWithBorder">          
         <tr>
           <td>
-          	<table class="maintableCollapseWithBorder0">          
+          	<table class="maintableCollapseWithNoBorder">          
     		   <tr>
        			  <td height="20" class="maintabledata5">          	
           			<h:outputText id="t1_1" value="#{msgs.author_preference_global_preference}" styleClass="bold"/>  

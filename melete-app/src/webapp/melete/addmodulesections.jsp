@@ -128,7 +128,7 @@ function contentChangeSubmit()
         <table class="maintableCollapseWithBorder">
           <tr>
             <td>
-                     <table class="maintableCollapseWithBorder0">
+                     <table class="maintableCollapseWithNoBorder">
                                 <tr>
 						            <td colspan="2" height="20" class="maintabledata5">
 											<h:commandLink id="TOCButton"  action="#{addSectionPage.cancel}"  immediate="true">

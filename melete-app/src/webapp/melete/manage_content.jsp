@@ -41,11 +41,11 @@
         <tr>
           <td class="maintabledata3">
           	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-		  <table class="maintableCollapseWithBorder0" id="AutoNumber1">
+		  <table class="maintableCollapseWithNoBorder" id="AutoNumber1">
 		  	<tr>
 		  		<td height="20" class="maintabledata5"><h:outputText id="t1_1" value="#{msgs.manage_content_new_item}" styleClass="tableheader2"/> </td></tr>
             <tr>
-                <td align="center">
+                <td>
                 	<table border="0" cellpadding="0" cellspacing="3" width="95%">
                 	<tr>
                 		<td colspan="2">
@@ -85,7 +85,7 @@
 				</div>
 				</td></tr>             
 			 <tr>
-        		 <td align="center">
+        		 <td>
 				  <f:subview id="DeleteResourceView">
 						<jsp:include page="list_resources.jsp"/> 
 				  </f:subview>	

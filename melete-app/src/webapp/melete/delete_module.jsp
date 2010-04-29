@@ -46,7 +46,7 @@ function showProcessMessage()
       <h:messages id="deletemoduleerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
   <table class="maintableCollapseWithBorder">
   <tr><td width="100%">
-      <table class="maintableCollapseWithBorder0">
+      <table class="maintableCollapseWithNoBorder">
       <tr><td width="100%" height="20" class="maintabledata5"></td></tr>
         <tr>
           <td>

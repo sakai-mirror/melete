@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -84,10 +84,10 @@ function resetCheck()
 					<td class="maintabledata6" valign="top">
 						<!-- main page contents -->
 						<h:messages id="restorerror" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-			            <table class="maintableCollapseWithBorder0" id="AutoNumber1">
+			            <table class="maintableCollapseWithNoBorder" id="AutoNumber1">
 						<tr>
               					<td colspan="2" width="100%" valign="top">
-			  						<h:dataTable id="table1"  value="#{manageModulesPage.archiveModulesList}" var="aml" width="110%"  headerClass="tableheader2" columnClasses="ListTitleClass,ListDateClass" summary="#{msgs.restore_modules_summary}">
+			  						<h:dataTable id="table1"  value="#{manageModulesPage.archiveModulesList}" var="aml" width="100%"  headerClass="tableheader2" columnClasses="ListTitleClass,ListDateClass" summary="#{msgs.restore_modules_summary}">
 			  							<h:column>
 			  							<f:facet name="header">
 			  							<h:panelGroup>

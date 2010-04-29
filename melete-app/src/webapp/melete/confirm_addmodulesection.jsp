@@ -41,7 +41,7 @@
         <tr>
           <td class="maintabledata3">
 		
-		  <table class="maintableCollapseWithBorder0">
+		  <table class="maintableCollapseWithNoBorder">
 		  	<tr><td height="20" class="maintabledata5">&nbsp;</td></tr>
             <tr>
                 <td valign="top">

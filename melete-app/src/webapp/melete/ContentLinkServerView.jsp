@@ -76,7 +76,7 @@
 
 							<!-- start main -->
 						            <tr>
-						              <td width="100%" valign="top" align="center">
+						              <td width="100%" valign="top">
 						              <f:subview id="LinkResourceListingForm" >	
 										<jsp:include page="list_resources.jsp"/> 
 										</f:subview>	

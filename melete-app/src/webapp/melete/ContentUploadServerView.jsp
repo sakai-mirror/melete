@@ -95,7 +95,7 @@ function fillupload()
 
 				<!-- start main -->
 						            <tr>
-						              <td width="100%" valign="top" align="center">
+						              <td width="100%" valign="top">
 						          															
 														<!-- resource listing begin-->											
 											 	<f:subview id="UploadResourceListingForm">	

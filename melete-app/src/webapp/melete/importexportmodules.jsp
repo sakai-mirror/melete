@@ -66,7 +66,7 @@ function showprocessMsg()
 					<td class="maintabledata3" valign="top">
 						<!-- main page contents -->
 						<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/></br>
-						<table class="maintableCollapseWithBorder0" id="AutoNumber1">
+						<table class="maintableCollapseWithNoBorder" id="AutoNumber1">
 						<tr>
 			  					<th class="leftheader maintabledata5 style4" colspan="2" height="20"><h:outputText value="#{msgs.importexportmodules_import_ims}" /></th>
 			  				</tr>

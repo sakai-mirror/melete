@@ -41,7 +41,7 @@
        <!-- This Begins the Main Text Area -->
   	 <tr>       
       <td width="100%" valign="top" >
-       <table class="maintableCollapseWithBorder0">
+       <table class="maintableCollapseWithNoBorder">
         <!-- show table with delete resources -->
         <tr><td width="100%" height="20" class="maintabledata5"></td></tr>
         <tr> 

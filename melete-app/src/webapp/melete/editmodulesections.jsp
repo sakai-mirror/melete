@@ -141,7 +141,7 @@ window.open('editpreviewEditor.jsf');
         <table class="maintableCollapseWithBorder">
      	   <tr>
             <td class="maintabledata3">
-				  <table class="maintableCollapseWithBorder0">
+				  <table class="maintableCollapseWithNoBorder">
                    <!-- table header -->
 	                   <tr>
 			            <td colspan="2" height="20" class="maintabledata8">            	   

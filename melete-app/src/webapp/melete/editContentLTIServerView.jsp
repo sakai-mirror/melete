@@ -79,7 +79,7 @@ function contentChangeSubmit()
 						</div></td></tr>
 	<!-- new link end -->				            		
 						<!-- start main -->
-				            <tr><td width="100%" valign="top" align="center">
+				            <tr><td width="100%" valign="top">
 						
 									<f:subview id="ResourceListingForm" >
 										<jsp:include page="list_resources.jsp"/> 

@@ -43,7 +43,7 @@
 <table class="maintableCollapseWithBorder">
 		<tr>
 			  <td class="maintabledata6">
-				<table class="maintableCollapseWithBorder0">
+				<table class="maintableCollapseWithNoBorder">
 				  <tr>
 				  <td height="20" class="maintabledata5">
 							  <h:outputText id="text5" value="#{msgs.module_post_steps_message1}"/> 

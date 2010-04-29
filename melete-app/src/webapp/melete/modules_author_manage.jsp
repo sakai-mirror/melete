@@ -51,7 +51,7 @@
 						              <td width="100%" valign="top">
 											<table class="maintableCollapseWithWhiteBorder" >
 											<tr rowspan="5" valign="top">
-							                    	<td align="center" class="menu left">
+							                    	<td class="menu left">
 								                    	<h:commandLink id="contentgoto" action="#{manageModulesPage.goToManageContent}">
 															<h:graphicImage id="image0"
 									   							alt=""
@@ -63,7 +63,7 @@
 							                    	<td  align="left"><h:outputText value="#{msgs.modules_author_manage_content_text}" /></td>
 							                  	</tr>
 							                  	<tr rowspan="5" valign="top">
-							                    	<td align="center" class="menu left">
+							                    	<td  class="menu left">
 								                    	<h:commandLink id="restoregoto" action="#{manageModulesPage.goToRestoreModules}">
 															<h:graphicImage id="image"
 									   							alt=""
@@ -75,7 +75,7 @@
 							                    	<td  align="left"><h:outputText value="#{msgs.modules_author_manage_archive_delete_list}" /></td>
 							                  	</tr>
 							                   	<tr rowspan="5" valign="top">
-							                    	<td align="center" class="menu left">
+							                    	<td class="menu left">
 								                    	<h:commandLink id="goto_impexp" action="#{manageModulesPage.importExportModules}">
 															<h:graphicImage id="image_impexp"
 									   							alt=""

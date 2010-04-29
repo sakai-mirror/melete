@@ -90,7 +90,7 @@ function fillupload()
 		<!-- replace local end -->			            
 				<!-- start main -->
 						            <tr>
-						              <td width="100%" valign="top" align="center">
+						              <td width="100%" valign="top">
 						          								                    													
 											<f:subview id="UploadResourceListingForm" >	
 												<jsp:include page="list_resources.jsp"/> 
