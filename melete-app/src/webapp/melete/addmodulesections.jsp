@@ -137,48 +137,48 @@ function contentChangeSubmit()
 									</td>
 						          </tr>
                                   <tr>
-                                    <td class="col50" align="left" valign="top"><h:outputText id="text7" value="#{msgs.addmodulesections_section_title}" /><span class="required">*</span></td>
-                                    <td class="col50" align="left" valign="top">
+                                    <td class="col1" align="left" valign="top"><h:outputText id="text7" value="#{msgs.addmodulesections_section_title}" /><span class="required">*</span></td>
+                                    <td class="col2" align="left" valign="top">
 										<h:inputText id="title" value="#{addSectionPage.section.title}" size="45" required="true" styleClass="formtext" title="Title"/>
 										
 									</td>
                                   </tr>
                                   <tr>
-                                    <td class="col50" align="left" valign="top"><h:outputText id="text6" value="#{msgs.addmodulesections_author}" /></td>
-                                    <td class="col50" align="left" valign="top"><h:outputText id="author" value="#{addSectionPage.author}" styleClass="formtext"/></td>
+                                    <td class="col1" align="left" valign="top"><h:outputText id="text6" value="#{msgs.addmodulesections_author}" /></td>
+                                    <td class="col2" align="left" valign="top"><h:outputText id="author" value="#{addSectionPage.author}" styleClass="formtext"/></td>
                                    </tr>
                                    <tr>
-                                    <td class="col50" align="left" valign="top"><h:outputText id="text5" value="#{msgs.addmodulesections_instructions}" /></td>
-                                    <td class="col50" align="left" valign="top">
+                                    <td class="col1" align="left" valign="top"><h:outputText id="text5" value="#{msgs.addmodulesections_instructions}" /></td>
+                                    <td class="col2" align="left" valign="top">
 									  <h:inputTextarea id="instr" cols="45" rows="5" value="#{addSectionPage.section.instr}" styleClass="formtext" >
 											<f:validateLength maximum="250" minimum="1"/>
 									</h:inputTextarea>													
 									</td>
                                   </tr>
                                 <tr>
-                                    <td class="col50" align="left" valign="top"> <h:outputText id="modality" value="#{msgs.addmodulesections_modality}" /><span class="required">*</span></td>
-                                    <td class="col50" align="left" valign="top"><h:outputText id="text4" value="#{msgs.addmodulesections_message1} "/>
+                                    <td class="col1" align="left" valign="top"> <h:outputText id="modality" value="#{msgs.addmodulesections_modality}" /><span class="required">*</span></td>
+                                    <td class="col2" align="left" valign="top"><h:outputText id="text4" value="#{msgs.addmodulesections_message1} "/>
 									</td>
 									  </tr>	
 								  <tr>
-								  <td class="col50">&nbsp;</td>
-                                    <td class="col50" valign="top">
+								  <td class="col1">&nbsp;</td>
+                                    <td class="col2" valign="top">
                         			<h:selectBooleanCheckbox id="contentext" title="textualContent" value="#{addSectionPage.section.textualContent}">
 									</h:selectBooleanCheckbox>
 									<h:outputText  id="text12" value="#{msgs.addmodulesections_textual_content}" />
 									</td>
 									  </tr>	
 								  <tr>
-								    <td class="col50">&nbsp;</td>
-                                    <td class="col50" valign="top">									
+								    <td class="col1">&nbsp;</td>
+                                    <td class="col2" valign="top">									
 									<h:selectBooleanCheckbox id="contentvideo" title="videoContent" value="#{addSectionPage.section.videoContent}" >
 									</h:selectBooleanCheckbox>
 									<h:outputText  id="text13" value="#{msgs.addmodulesections_visual_content}" />
 									</td>
 									  </tr>	
 								  <tr>
-								    <td class="col50">&nbsp;</td>
-                                    <td class="col50" valign="top">
+								    <td class="col1">&nbsp;</td>
+                                    <td class="col2" valign="top">
 									<h:selectBooleanCheckbox  id="contentaudio" title="audioContent" value="#{addSectionPage.section.audioContent}" >
 									</h:selectBooleanCheckbox>
 									<h:outputText id="text14" value="#{msgs.addmodulesections_auditory_content}"/>			
@@ -186,8 +186,8 @@ function contentChangeSubmit()
 									  </tr>	
 									 
 								  <tr>
-								  	  <td class="col50" align="left" valign="middle"><h:outputText id="text15" value="#{msgs.addmodulesections_content_type}" /></td>
-                                 	  <td class="col50"> 
+								  	  <td class="col1" align="left" valign="middle"><h:outputText id="text15" value="#{msgs.addmodulesections_content_type}" /></td>
+                                 	  <td class="col2"> 
 										   <h:inputHidden id="contentChange" value=""/>								  
 												  <h:selectOneMenu id="contentType" value="#{addSectionPage.section.contentType}" valueChangeListener="#{addSectionPage.showHideContent}" onchange="contentChangeSubmit();this.form.submit();"  >
 													<f:selectItems value="#{addSectionPage.allContentTypes}" />

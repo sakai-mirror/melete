@@ -394,4 +394,22 @@ vertical-align:top;
 	text-align:left;
 }
 
+.col1 {
+	width:20%;
+	white-space:nowrap;
+}
+.col2 {
+	width:80%;
+	text-align:left;
+}
+
+.col1a {
+	width:35%;
+	white-space:nowrap;
+}
+.col2a {
+	width:65%;
+	text-align:left;
+}
+
 .authBarCol {font-size:90%;white-space:nowrap;}

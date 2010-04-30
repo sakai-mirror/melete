@@ -25,19 +25,21 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@include file="accesscheck.jsp" %>
 
-	<h:panelGrid id="uploadView1" columns="2" columnClasses="col50,col50left" width="100%">
+	<h:panelGrid id="uploadView1" columns="2" columnClasses="col1,col2" width="100%">
 		<h:column>
 			<h:outputText id="uploadText1" value="#{msgs.contentuploadview_upload}" rendered="#{addSectionPage.shouldRenderUpload}"/>				
-			<h:outputText id="extraspacesUpload" value="    " styleClass="ExtraPaddingClass" />	
-			<h:outputText id="uploadText2" value="#{addSectionPage.uploadFileName}" rendered="#{addSectionPage.uploadFileName != null}" styleClass="bold"/>	
-			<h:outputText id="uploadText3" value="#{msgs.contentuploadview_nofile}" rendered="#{addSectionPage.uploadFileName == null}" styleClass="bold"/>	
-			<h:outputText id="extraspacesUpload1" value="" styleClass="ExtraPaddingClass" />
+
 		</h:column>
 		<h:column>	
 			<h:commandLink id="serverViewButton"  action="#{addSectionPage.gotoServerView}" >
 					<h:graphicImage id="replaceImg2" value="images/replace2.gif" styleClass="AuthImgClass"/>
 					<h:outputText value="#{msgs.contentuploadview_select}" />
              </h:commandLink>
+        </h:column>
+        <h:column/>
+        <h:column> 
+        	<h:outputText id="uploadText2" value="#{addSectionPage.uploadFileName}" rendered="#{addSectionPage.uploadFileName != null}" styleClass="bold"/>	
+			<h:outputText id="uploadText3" value="#{msgs.contentuploadview_nofile}" rendered="#{addSectionPage.uploadFileName == null}" styleClass="bold"/>	
         </h:column>
         <h:column/>
         <h:column>     	

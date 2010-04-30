@@ -32,7 +32,7 @@
 					<h:outputText id="propertiesPaneltxt1" value="#{addSectionPage.secResourceName}" />
 		</h:column>
 	</h:panelGrid>
-	<h:panelGrid id="propertiesPanel2" columns="2" width="100%" cellpadding="3" columnClasses="col50,col50left" border="0">
+	<h:panelGrid id="propertiesPanel2" columns="2" width="100%" cellpadding="3" columnClasses="col1,col2" border="0">
 		<h:column>
 				 <h:outputText value="#{msgs.resources_proper_pan_URL}"  rendered="#{addSectionPage.shouldRenderLink}" /><h:outputText value="*" styleClass="required" rendered="#{addSectionPage.shouldRenderLink}"/>
 		</h:column>	 
@@ -51,13 +51,7 @@
 
 		
 		<f:subview id="LicenseForm" rendered="#{!addSectionPage.shouldRenderNotype}">
-		<h:panelGrid id="licproppanel" columns="1" width="100%">
-					<h:column>
-						  						<jsp:include page="licenseform.jsp"/>
-						  						
-											
-					</h:column>	
-		</h:panelGrid>
+			<jsp:include page="licenseform.jsp"/>
 		</f:subview>
 		
 			        <!-- end license code -->		

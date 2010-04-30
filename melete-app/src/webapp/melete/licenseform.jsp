@@ -27,7 +27,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@include file="accesscheck.jsp" %>
 
-<h:panelGrid id="SectionView" columns="2" width="82%" columnClasses="copyrightColumn1,copyrightColumn2" rendered="#{licensePage.callFromSection}">
+<h:panelGrid id="SectionView" columns="2" width="100%" columnClasses="col1,col2" rendered="#{licensePage.callFromSection}">
 <h:column>
  <h:outputText value="#{msgs.licenseform_resources_proper_pan_cstatus}" />	 
  </h:column>
@@ -69,7 +69,7 @@
 	 </h:column>
 	 <h:column><h:outputText value=""/></h:column>
 	 <h:column>
-	 	<h:panelGrid id="licenseoptions" columns="2" width="97%" cellpadding="5" cellspacing="5" border="0"> 
+	 	<h:panelGrid id="licenseoptions" columns="2" width="100%" cellpadding="5" cellspacing="5" border="0" columnClasses="col1a, col2a"> 
 		 <h:column>
 				  <h:outputText value="#{msgs.licenseform_cclicense_form_allow_commercial}"/>
 		</h:column>			
@@ -120,7 +120,7 @@
             <h:outputText value="#{msgs.licenseform_cclicense_form_msg4}" rendered="#{licensePage.shouldRenderFairUse}"/> 	 
     </h:column>
     <h:column>	  
-      <h:panelGrid id="copyrightoptions" columns="2"  width="82%"  cellpadding="5" cellspacing="5" columnClasses="copyrightColumn1, copyrightColumn2" border="0" rendered="#{!licensePage.shouldRenderCC}">
+      <h:panelGrid id="copyrightoptions" columns="2"  width="100%"  cellpadding="5" cellspacing="5" columnClasses="col1, col2" border="0" rendered="#{!licensePage.shouldRenderCC}">
 	   <h:column>
 		 <h:outputText value="#{msgs.licenseform_cclicense_form_lic_holder2}"/>  <h:outputText value="*" styleClass="required" rendered="#{licensePage.shouldRenderCopyright}"/>
 	   </h:column>	  

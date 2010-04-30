@@ -22,19 +22,21 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@include file="accesscheck.jsp" %>
 
-<h:panelGrid id="LinkPanel2" columns="2" width="100%" columnClasses="col50,col50left" border="0" rendered="#{addSectionPage.shouldRenderLTI}">
-  <h:column><h:outputText id="linkText1" value="#{msgs.contentlinkviewlti_link}"/>
-     <h:outputText id="extraspacesUpload0" value="" styleClass="ExtraPaddingClass" />
-     <h:outputLink id="showResourceLTI" value="#{addSectionPage.currLTIUrl}" target="_blank" title="Section Resource" styleClass="a1" rendered="#{addSectionPage.displayCurrLTI != null}">
-       <h:outputText id="editlinkText3" value="#{addSectionPage.displayCurrLTI}" />
-    </h:outputLink>
-    <h:outputText id="linkText2" value="#{msgs.contentlinkviewlti_nofile}" rendered="#{addSectionPage.displayCurrLTI == null}" styleClass="bold"/>
+<h:panelGrid id="LinkPanel2" columns="2" width="100%" columnClasses="col1,col2" border="0" rendered="#{addSectionPage.shouldRenderLTI}">
+  <h:column><h:outputText id="linkText1" value="#{msgs.contentlinkviewlti_link}"/>    
   </h:column>
   <h:column>
       <h:commandLink id="serverViewButton"  action="#{addSectionPage.gotoServerLTIView}" >
         <h:graphicImage id="replaceImg2" value="images/replace2.gif" styleClass="AuthImgClass"/>
         <h:outputText value="#{msgs.contentuploadview_select}" />
       </h:commandLink>
+  </h:column>
+  <h:column/>
+  <h:column>
+    <h:outputLink id="showResourceLTI" value="#{addSectionPage.currLTIUrl}" target="_blank" title="Section Resource" styleClass="a1" rendered="#{addSectionPage.displayCurrLTI != null}">
+       <h:outputText id="editlinkText3" value="#{addSectionPage.displayCurrLTI}" />
+    </h:outputLink>
+    <h:outputText id="linkText2" value="#{msgs.contentlinkviewlti_nofile}" rendered="#{addSectionPage.displayCurrLTI == null}" styleClass="bold"/>
   </h:column>
   <h:column/>
   <h:column>
