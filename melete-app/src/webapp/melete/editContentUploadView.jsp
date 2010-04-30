@@ -27,7 +27,7 @@
 <%@include file="accesscheck.jsp" %>
 
 
-<h:panelGrid id="uploadView" columns="2" columnClasses="col50,col50left" width="100%" border="0">
+<h:panelGrid id="uploadView" columns="2" columnClasses="col1,col2" width="100%" border="0">
 	<h:column>
 		<h:outputText id="edituploadText1" value="#{msgs.editcontentuploadview_file_uploaded}" />
 		<h:outputText id="somespaces_1" value="   " styleClass="ExtraPaddingClass" />			

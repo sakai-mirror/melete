@@ -171,55 +171,55 @@ window.open('editpreviewEditor.jsf');
 			          </tr>	 
 	                   <!-- end table header -->
                                    <tr>
-                                    <td class="col50" align="left" valign="top"><h:outputText id="text7" value="#{msgs.editmodulesections_section_title}" /><span class="required">*</span></td>
-                                    <td class="col50" align="left" valign="top">
+                                    <td class="col1" align="left" valign="top"><h:outputText id="text7" value="#{msgs.editmodulesections_section_title}" /><span class="required">*</span></td>
+                                    <td class="col2" align="left" valign="top">
 									<h:inputText id="title" value="#{editSectionPage.section.title}" size="45"  required="true" styleClass="formtext"/>
 									</td>
                                   </tr>
                                   <tr>
-                                    <td class="col50" align="left" valign="top"><h:outputText id="text8" value="#{msgs.editmodulesections_author}"/></td>
-                                    <td class="col50" align="left" valign="top"><h:outputText value="#{editSectionPage.section.createdByFname}" styleClass="formtext"/>&nbsp;<h:outputText value="#{editSectionPage.section.createdByLname}" styleClass="formtext"/></td>
+                                    <td class="col1" align="left" valign="top"><h:outputText id="text8" value="#{msgs.editmodulesections_author}"/></td>
+                                    <td class="col2" align="left" valign="top"><h:outputText value="#{editSectionPage.section.createdByFname}" styleClass="formtext"/>&nbsp;<h:outputText value="#{editSectionPage.section.createdByLname}" styleClass="formtext"/></td>
                                   </tr>
 								  <tr>
-                                    <td class="col50" align="left" valign="top"><h:outputText id="text9" value="#{msgs.editmodulesections_instructions}" /></td>
-                                    <td class="col50" align="left" valign="top">
+                                    <td class="col1" align="left" valign="top"><h:outputText id="text9" value="#{msgs.editmodulesections_instructions}" /></td>
+                                    <td class="col2" align="left" valign="top">
 										  <h:inputTextarea id="instr" cols="45" rows="5" value="#{editSectionPage.section.instr}" styleClass="formtext">
 											<f:validateLength maximum="250" minimum="1"/>
 									</h:inputTextarea>
 									</td>
                                   </tr>
                                   <tr>
-                                    <td class="col50" align="left" valign="top"> <h:outputText id="text10" value="#{msgs.editmodulesections_modality}" /><span class="required">*</span></td>
-                                    <td class="col50" align="left" valign="top"><h:outputText id="text11" value="#{msgs.editmodulesections_message1} "/>
+                                    <td class="col1" align="left" valign="top"> <h:outputText id="text10" value="#{msgs.editmodulesections_modality}" /><span class="required">*</span></td>
+                                    <td class="col2" align="left" valign="top"><h:outputText id="text11" value="#{msgs.editmodulesections_message1} "/>
 									</td>
 									  </tr>	
 								  <tr>
-								  <td class="col50">&nbsp;</td>
-                                    <td class="col50" valign="top">
+								  <td class="col1">&nbsp;</td>
+                                    <td class="col2" valign="top">
                         			<h:selectBooleanCheckbox id="contentext" title="textualContent" value="#{editSectionPage.section.textualContent}" >
 									</h:selectBooleanCheckbox>
 									<h:outputText  id="text12" value="#{msgs.editmodulesections_textual_content}"/>
 									</td>
 									  </tr>	
 								  <tr>
-								    <td class="col50">&nbsp;</td>
-                                    <td class="col50" valign="top">									
+								    <td class="col1">&nbsp;</td>
+                                    <td class="col2" valign="top">									
 									<h:selectBooleanCheckbox id="contentvideo" title="videoContent" value="#{editSectionPage.section.videoContent}" >
 									</h:selectBooleanCheckbox>
 									<h:outputText  id="text13" value="#{msgs.editmodulesections_visual_content}"/>
 									</td>
 									  </tr>	
 								  <tr>
-								    <td class="col50">&nbsp;</td>
-                                    <td class="col50" valign="top">
+								    <td class="col1">&nbsp;</td>
+                                    <td class="col2" valign="top">
 									<h:selectBooleanCheckbox id="contentaudio" title="audioContent" value="#{editSectionPage.section.audioContent}" >
 									</h:selectBooleanCheckbox>
 									<h:outputText id="text14" value="#{msgs.editmodulesections_auditory_content}"/>			
 										</td>
 									  </tr>	
 									  <tr>
-								  	  <td  class="col50" align="left" valign="middle"><h:outputText id="text15" value="#{msgs.editmodulesections_content_type}" rendered="#{editSectionPage.shouldRenderContentTypeSelect}" /></td>
-                                 	  <td class="col50"> 
+								  	  <td  class="col1" align="left" valign="middle"><h:outputText id="text15" value="#{msgs.editmodulesections_content_type}" rendered="#{editSectionPage.shouldRenderContentTypeSelect}" /></td>
+                                 	  <td class="col2"> 
 										<h:inputHidden id="contentType"  value="#{editSectionPage.section.contentType}"  />	  								  	
 										  <h:selectOneMenu id="contentType1" value="#{editSectionPage.section.contentType}" valueChangeListener="#{editSectionPage.showHideContent}" onchange="this.form.submit();"  rendered="#{editSectionPage.shouldRenderContentTypeSelect}">
 											<f:selectItems value="#{editSectionPage.allContentTypes}" />											
