@@ -104,16 +104,16 @@ function showEdateCal()
       			<td colspan="2" height="20" class="maintabledata2"> <h:outputText value="#{msgs.add_module_define_properties}" /> 	</td>
      		 </tr>
          	  <tr>
-                <td  align="left" valign="top"> <h:outputText value="#{msgs.add_module_module_title}" /> <span class="required">*</span></td>
-                <td  align="left" valign="top">
+                <td class="col1" align="left" valign="top"> <h:outputText value="#{msgs.add_module_module_title}" /> <span class="required">*</span></td>
+                <td  class="col2" align="left" valign="top">
 					<h:inputText id="title" size="45" value="#{addModulePage.module.title}" required="true" styleClass="formtext" />
 					
 				</td>
               </tr>
 			 
               <tr>
-                <td width="233" align="left" valign="top"><h:outputText value="#{msgs.add_module_descr_over_object}" /> </td>
-                <td width="472" align="left" valign="top">
+                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_descr_over_object}" /> </td>
+                <td  class="col2" align="left" valign="top">
 				<h:inputTextarea id="description" cols="45" rows="5" value="#{addModulePage.module.description}" styleClass="formtext" >
 					<f:validateLength maximum="500" minimum="1"/>
 				</h:inputTextarea>	
@@ -121,9 +121,9 @@ function showEdateCal()
               </tr>
 			  
               <tr>
-                <td align="left" valign="top"><h:outputText value="#{msgs.add_module_keywords}" />				
+                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_keywords}" />				
                  </td>
-                <td align="left" valign="top">
+                <td  class="col2" align="left" valign="top">
 				<h:inputTextarea id="keywords" cols="45" rows="3" value="#{addModulePage.module.keywords}"  styleClass="formtext" >
 						<f:validateLength maximum="250" minimum="1" />
 				</h:inputTextarea>		
@@ -131,21 +131,21 @@ function showEdateCal()
               </tr>
 			  
               <tr>
-                <td width="233" align="left" valign="top"><h:outputText value="#{msgs.add_module_added_by}" /></td>
-                <td width="472" align="left" valign="top">
+                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_added_by}" /></td>
+                <td  class="col2" align="left" valign="top">
 				<h:outputText value="#{addModulePage.author}"  styleClass="formtext"/></td>
               </tr>
 			  <tr>
-                <td align="left" valign="top"><h:outputText value="#{msgs.add_module_term_year}" /></td>
-                <td align="left" valign="top">
+                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_term_year}" /></td>
+                <td  class="col2" align="left" valign="top">
 					<h:outputText id="season" value="#{addModulePage.season}"/>				 
 				   </td>
               </tr>
 			   
               <tr>
-                <td width="233" align="left" valign="top"><h:outputText value="#{msgs.add_module_start_date}" />
+                <td class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_start_date}" />
 				</td>
-                <td width="472" align="left" valign="top">
+                <td  class="col2" align="left" valign="top">
 					  <a name="startCalender"></a> <h:inputText id="startDate" 
                            value="#{addModulePage.moduleShdates.startDate}" size="22" styleClass="formtext">
 		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
@@ -157,8 +157,8 @@ function showEdateCal()
               </tr>
 			  
               <tr>
-                <td width="233" align="left" valign="top"><h:outputText value="#{msgs.add_module_end_date}" /></td>
-                <td width="472" align="left" valign="top">
+                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_end_date}" /></td>
+                <td  class="col2" align="left" valign="top">
 				<a name="endCalender"></a><h:inputText id="endDate" 
                            value="#{addModulePage.moduleShdates.endDate}" size="22" styleClass="formtext">
              			  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
@@ -169,8 +169,8 @@ function showEdateCal()
 					 </td>
               </tr>			  
               <tr>
-                <td width="233">&nbsp;</td>
-                <td width="472" valign="top">
+                <td  class="col1">&nbsp;</td>
+                <td  class="col2" valign="top">
                  <h:selectBooleanCheckbox id="addtoschedule" title="addtoSchedule" value="#{addModulePage.moduleShdates.addtoSchedule}" rendered="#{addModulePage.calendarFlag}">
 		         </h:selectBooleanCheckbox>
 		         <h:outputText id="addtoScheduleTxt" value="#{msgs.add_module_schedule}" rendered="#{addModulePage.calendarFlag}"/>

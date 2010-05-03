@@ -190,6 +190,7 @@ a1:active 			{color : #000080;}
 	font-size: 92%;
   	vertical-align: top;
   	text-align: left;
+  	word-break:break-all;
   }
 
 .ListDateClass {
@@ -386,14 +387,6 @@ word-wrap:break-word;
 vertical-align:top;
 }
 
-.col50 {
-	width:50%;
-}
-.col50left {
-	width:50%;
-	text-align:left;
-}
-
 .col1 {
 	width:20%;
 	white-space:nowrap;
@@ -412,4 +405,8 @@ vertical-align:top;
 	text-align:left;
 }
 
+.col1b {
+	vertical-align: top;
+	width:20%;
+}
 .authBarCol {font-size:90%;white-space:nowrap;}

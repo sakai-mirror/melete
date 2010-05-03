@@ -117,54 +117,54 @@ function showEdateCal()
 			 	</td>
 	  		 </tr>
               <tr>
-                <td  align="left" valign="top"> <h:outputText value="#{msgs.edit_module_created_by}" /> </td>
-                <td  align="left" valign="top">
+                <td  class="col1" align="left" valign="top"> <h:outputText value="#{msgs.edit_module_created_by}" /> </td>
+                <td   class="col2" align="left" valign="top">
 					<h:outputText value="#{editModulePage.module.createdByFname}"></h:outputText>&nbsp;<h:outputText value="#{editModulePage.module.createdByLname}"></h:outputText>&nbsp;&nbsp;
 					<h:outputText value="#{editModulePage.module.creationDate}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm:ss a"/></h:outputText>
 				</td>
               </tr>
               <tr>
-                <td  align="left" valign="top"> <h:outputText value="#{msgs.edit_module_modified_by}" /> </td>
-                <td  align="left" valign="top">
+                <td   class="col1" align="left" valign="top"> <h:outputText value="#{msgs.edit_module_modified_by}" /> </td>
+                <td  class="col2" align="left" valign="top">
 					<h:outputText value="#{editModulePage.module.modifiedByFname}"></h:outputText>&nbsp;<h:outputText value="#{editModulePage.module.modifiedByLname}"></h:outputText>&nbsp;&nbsp;
 					<h:outputText value="#{editModulePage.module.modificationDate}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm:ss a"/></h:outputText>
 					</br> 
 				</td>
               </tr>       
               <tr>
-                <td  align="left" valign="top"> <h:outputText value="#{msgs.edit_module_module_title}" /> <span class="required">*</span>  </td>
-                <td  align="left" valign="top">  
+                <td  class="col1" align="left" valign="top"> <h:outputText value="#{msgs.edit_module_module_title}" /> <span class="required">*</span>  </td>
+                <td  class="col2" align="left" valign="top">  
 						<h:inputText id="title" size="45" value="#{editModulePage.module.title}" required="true" styleClass="formtext" />											
 				</td>
               </tr>
              
               <tr>
-                <td align="left" valign="top"><h:outputText value="#{msgs.edit_module_descr_over_object}" /> </td>
-                <td align="left" valign="top">
+                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.edit_module_descr_over_object}" /> </td>
+                <td  class="col2" align="left" valign="top">
 				<h:inputTextarea id="description" cols="45" rows="5" value="#{editModulePage.module.description}" styleClass="formtext">
 					<f:validateLength maximum="500" minimum="1"/>
 				</h:inputTextarea>	
 				</td>
               </tr>
               <tr>
-                <td align="left" valign="top"><h:outputText value="#{msgs.edit_module_keywords}" />  
+                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.edit_module_keywords}" />  
                 </td>
-                <td align="left" valign="top">
+                <td  class="col2" align="left" valign="top">
 				<h:inputTextarea id="keywords" cols="45" rows="3" value="#{editModulePage.module.keywords}" styleClass="formtext">
 						<f:validateLength maximum="250" minimum="1" />
 				</h:inputTextarea>		
 				</td>
               </tr>
        	 	   <tr>
-                <td align="left" valign="top"><h:outputText value="#{msgs.edit_module_term_year}" /></td>
-               <td align="left" valign="top">
+                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.edit_module_term_year}" /></td>
+               <td  class="col2" align="left" valign="top">
 					<h:outputText id="season" value="#{editModulePage.season}"/>
 				  	 <h:outputText id="year" value="#{editModulePage.year}" />
 				   </td>
               </tr>
 			  <tr>
-                <td  align="left" valign="top"><h:outputText value="#{msgs.edit_module_start_date}" /></td>
-                <td  align="left" valign="top">					
+                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.edit_module_start_date}" /></td>
+                <td  class="col2" align="left" valign="top">					
 					  <a name="startCalender"></a><h:inputText id="startDate" 
                            value="#{editModulePage.moduleShdates.startDate}" size="22" styleClass="formtext">
 		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
@@ -175,8 +175,8 @@ function showEdateCal()
 					 </td>
               </tr>
 			  <tr>
-                <td align="left" valign="top"><h:outputText value="#{msgs.edit_module_end_date}" /></td>
-                <td align="left" valign="top">
+                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.edit_module_end_date}" /></td>
+                <td  class="col2" align="left" valign="top">
 					 <a name="endCalender"></a> <h:inputText id="endDate" 
                            value="#{editModulePage.moduleShdates.endDate}"  size="22" styleClass="formtext">
                <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
@@ -187,8 +187,8 @@ function showEdateCal()
 					 </td>
               </tr>
               <tr>
-                <td >&nbsp;</td>
-                <td valign="top">
+                <td  class="col1">&nbsp;</td>
+                <td  class="col2" valign="top">
                  <h:selectBooleanCheckbox id="addtoschedule" title="addtoSchedule" value="#{editModulePage.moduleShdates.addtoSchedule}" rendered="#{editModulePage.calendarFlag}">
 		         </h:selectBooleanCheckbox>
 		         <h:outputText id="addtoScheduleTxt" value="#{msgs.edit_module_schedule}" rendered="#{editModulePage.calendarFlag}"/>

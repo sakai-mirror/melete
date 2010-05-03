@@ -46,10 +46,10 @@ function contentChangeSubmit()
 			<tr><td height="20" colspan="2"> <h:outputText id="Stext_add" value="#{msgs.editcontentltiserverview_replace}" styleClass="bold"/> </td></tr>									 
 						  
 <!--replace with new link part Begin -->
-					<table width="59%" border="0" cellpadding="4" cellspacing="0" bordercolor="#F5F5F5" style="border-collapse: collapse" >
-					<tr> <td class="col30"><h:outputText id="format_text" value="#{msgs.editcontentltiserverview_format}"/>
+					<table class="maintableCollapseWithNoBorder"  >
+					<tr> <td class="col1"><h:outputText id="format_text" value="#{msgs.editcontentltiserverview_format}"/>
 					</td>
-                    <td class="col70">
+                    <td class="col2">
                             <h:inputHidden id="contentChange" value=""/>
                             <h:selectOneMenu id="LTIDisplay" value="#{editSectionPage.LTIDisplay}" 
                                     valueChangeListener="#{editSectionPage.toggleLTIDisplay}" 
