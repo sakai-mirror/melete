@@ -129,11 +129,12 @@ window.open('editpreviewEditor.jsf');
           <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="OpenBookmarkWindow(#{editSectionPage.section.sectionId},'#{editSectionPage.section.title}','Melete Bookmark Window');">
 	         <f:param id="sectionId" name="sectionId" value="#{editSectionPage.section.sectionId}" />
 	         <f:param id="sectionTitle" name="sectionTitle" value="#{editSectionPage.section.title}" />
-	         <h:graphicImage id="bul_gif" value="images/icon_bookmark.gif" />
+	         <h:graphicImage id="bul_gif" value="images/bookmark-it.png" alt=""/>
 	         <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
            </h:outputLink>		
             <h:outputText value="|"/> 
            <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
+             <h:graphicImage id="mybook_gif" value="images/my-bookmarks.png" alt="" />
              <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
              <f:param name="fromPage" value="editmodulesections" /> 
            </h:commandLink>

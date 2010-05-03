@@ -41,12 +41,14 @@
 <td align="right">
 <h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">
  <f:param name="sectionId" value="#{listModulesPage.bookmarkSectionId}" /> 
+ <h:graphicImage id="lvisit_gif" value="images/last-visited.png" alt="" />
  <h:outputText id="lastvisit" value="#{msgs.last_visited}" />									
 </h:commandLink>
 <h:outputText value="|" rendered="#{listModulesPage.bookmarkSectionId > 0}"/> 
 <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
+<f:param name="fromPage" value="list_modules_student" />
+<h:graphicImage id="mybook_gif" value="images/my-bookmarks.png" alt="" />
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
- <f:param name="fromPage" value="list_modules_student" />
 </h:commandLink>				  
 </td>
 </tr>			

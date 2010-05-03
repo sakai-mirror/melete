@@ -38,7 +38,7 @@
 		<f:subview id="top">
 				<jsp:include page="topnavbar.jsp"/> 
 		</f:subview>
-		<div class="meletePortletToolBarMessage"><img src="images/manage_content.png" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.list_bookmarks_headtitle}" /></div>				
+		<div class="meletePortletToolBarMessage"><img src="images/my-bookmarks.png" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.list_bookmarks_headtitle}" /></div>				
 		   
 <table>
 	<tr>
