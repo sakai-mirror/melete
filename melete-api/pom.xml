@@ -22,19 +22,18 @@
  * permissions and limitations under the License.
  *
  **********************************************************************************
--->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+--><project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>melete-base</artifactId>
     <groupId>org.etudes</groupId>
-    <version>2.7.0</version>
+    <version>2.7.2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <name>Etudes Melete Service</name>
   <groupId>org.etudes</groupId>
   <artifactId>etudes-melete-api</artifactId>
-  <version>2.7.0</version>
+  <version>2.7.2</version>
   <organization>
     <name>Etudes</name>
     <url>http://etudes.org/</url>
@@ -46,19 +45,12 @@
   </properties>
   <dependencies>
     <dependency>
-      <groupId>org.sakaiproject</groupId>
-      <artifactId>sakai-entity-api</artifactId>
-      
+      <groupId>org.sakaiproject.kernel</groupId>
+      <artifactId>sakai-kernel-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.sakaiproject</groupId>
-      <artifactId>sakai-component</artifactId>
-      
-    </dependency>
-    <dependency>
-      <groupId>org.sakaiproject</groupId>
-      <artifactId>sakai-content-api</artifactId>
-      
+      <groupId>org.sakaiproject.kernel</groupId>
+      <artifactId>sakai-component-manager</artifactId>
     </dependency>
     <dependency>
       <groupId>dom4j</groupId>
