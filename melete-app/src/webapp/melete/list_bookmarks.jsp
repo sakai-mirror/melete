@@ -66,9 +66,13 @@
 							 </h:panelGroup> 
 						 </f:facet>
 					 <h:outputText id="emp_space" value="     "  styleClass="ExtraPaddingClass" />	
-					 <h:commandLink id="viewSection"  actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}">
+					 <h:commandLink id="viewSection"  actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}" rendered="#{bookmarkPage.instRole == false}">
 					   <f:param name="sectionId" value="#{bookmark.sectionId}" />
 					   <h:outputText id="bmtitle" value="#{bookmark.title}"/>
+					 </h:commandLink>
+					  <h:commandLink id="editSection"  actionListener="#{bookmarkPage.editSection}" action="#{bookmarkPage.redirectEditSection}" rendered="#{bookmarkPage.instRole == true}">
+					   <f:param name="sectionId" value="#{bookmark.sectionId}" />
+					   <h:outputText id="editbmtitle" value="#{bookmark.title}"/>
 					 </h:commandLink>
 				    </h:column>
 				    <h:column>
