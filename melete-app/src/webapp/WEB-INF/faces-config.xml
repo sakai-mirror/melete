@@ -1833,11 +1833,11 @@
  </navigation-rule>     
  
  <navigation-rule>
-		<from-view-id>/melete/add_bookmark.jsp</from-view-id>
-		 <navigation-case>
+		<from-view-id>/melete/add_bookmark.jsp</from-view-id> 
+     <navigation-case>
       <from-outcome>confirm_bookmark</from-outcome>
       <to-view-id>/melete/confirm_bookmark.jsp</to-view-id>
-     </navigation-case>                                     
+     </navigation-case>                                    
  </navigation-rule>   
  
  <navigation-rule>
@@ -1885,7 +1885,11 @@
       <navigation-case>
       <from-outcome>student_preference</from-outcome>
       <to-view-id>/melete/student_preference.jsp</to-view-id>
-     </navigation-case>                                  
+     </navigation-case> 
+     <navigation-case>
+      <from-outcome>list_bookmarks</from-outcome>
+      <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
+     </navigation-case>                                
  </navigation-rule>   
  
  <navigation-rule>

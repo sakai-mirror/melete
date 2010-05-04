@@ -119,7 +119,7 @@ public class BookmarkPage implements Serializable
 			return "failure";
 		}
 	    resetValues();
-		return "confirm_bookmark";
+	   return "confirm_bookmark";
 
 	}
 
@@ -285,6 +285,7 @@ public class BookmarkPage implements Serializable
 		}
 
 	}
+	
 
 	public String redirectExportNotes()
 	{
@@ -299,6 +300,12 @@ public class BookmarkPage implements Serializable
 		return "list_bookmarks";
 	}
 
+	public String refreshAction()
+	{
+		resetValues();
+		return "list_bookmarks";
+	}
+	
 	public String returnAction()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -468,7 +475,18 @@ public class BookmarkPage implements Serializable
 	   Map sessionMap = context.getExternalContext().getSessionMap();
 	   if (bmList == null)
 	   {
-	     bmList = bookmarkService.getBookmarks((String)sessionMap.get("userId"),(String)sessionMap.get("courseId"));
+		  bmList = bookmarkService.getBookmarks((String)sessionMap.get("userId"),(String)sessionMap.get("courseId"));
+	     if (bmList != null)
+	     {
+	    	 for (ListIterator i = bmList.listIterator(); i.hasNext(); )
+	 		 {
+	 			 Bookmark bmark = (Bookmark)i.next();
+	 			 if (bmark.getNotes().length() > 70)
+	 			 {
+	 				 bmark.setNotes(bmark.getNotes().substring(0,69)+"...");
+	 			 }
+	 		 }	 
+	     }
 	     if ((bmList != null)&&(bmList.size() > 0))
 	     {
 		   setNobmsFlag(false);

@@ -114,6 +114,20 @@ function previewSec()
 transferEditordata();
 window.open('editpreviewEditor.jsf');
 }
+function saveSection()
+{
+	var elementToGet = "EditSectionForm"+ ":" + "saveForBookmarkbutton";  
+	var form = document.forms['EditSectionForm'];  
+	if (form != null)
+	{
+	   var button = form.elements[elementToGet];  
+	   button.click();
+	 }
+	 else
+	 {
+	   //Do nothing
+	 }    
+}
 </script>
 
       <!-- This Begins the Main Text Area -->
@@ -126,7 +140,7 @@ window.open('editpreviewEditor.jsf');
 		<div class="meletePortletToolBarMessage"><img src="images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.editmodulesections_editing_section}" /> </div>
 		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
         <div class="right">
-          <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="OpenBookmarkWindow(#{editSectionPage.section.sectionId},'#{editSectionPage.section.title}','Melete Bookmark Window');">
+          <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="saveSection();OpenBookmarkWindow(#{editSectionPage.section.sectionId},'#{editSectionPage.section.title}','Melete Bookmark Window');">
 	         <f:param id="sectionId" name="sectionId" value="#{editSectionPage.section.sectionId}" />
 	         <f:param id="sectionTitle" name="sectionTitle" value="#{editSectionPage.section.title}" />
 	         <h:graphicImage id="bul_gif" value="images/bookmark-it.png" alt=""/>
@@ -276,7 +290,9 @@ window.open('editpreviewEditor.jsf');
                 <td>
                     <div class="actionBar" align="left">
                 		<h:commandButton id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" onclick="transferEditordata()" styleClass="BottomImgAdd"/>
-						<h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" onclick="transferEditordata()" styleClass="BottomImgFinish"/>		
+						<h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" onclick="transferEditordata()" styleClass="BottomImgFinish"/>
+						<h:commandButton id="saveForBookmarkbutton"  action="#{editSectionPage.save}" onclick="transferEditordata()" style="display: none; visibility: hidden;"/>
+								
 					</div></td>
 		          </tr>
             </table>

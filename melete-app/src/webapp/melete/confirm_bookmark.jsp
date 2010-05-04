@@ -23,6 +23,7 @@
  *
  **********************************************************************************
 -->
+
 <%
 final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 final BookmarkPage bookmarkPage = (BookmarkPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "bookmarkPage");
@@ -32,6 +33,17 @@ bookmarkPage.resetValues();
 <body>
 <script language="javascript">
 alert("Bookmark saved");
+var elementToGet = "ManageBookmarksForm"+ ":" + "refreshButton";  
+var form = window.opener.document.forms['ManageBookmarksForm'];  
+if (form != null)
+{
+   var button = form.elements[elementToGet];  
+    button.click();
+ }
+ else
+ {
+   //Do nothing
+ }    
 window.close();
 </script>
 </body>

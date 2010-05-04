@@ -31,7 +31,7 @@
 <f:view>
 <sakai:view title="Modules: Add bookmarks" toolCssHref="rtbc004.css">
 
-<script language="javascript1.2">
+<script type="text/javascript" language="javascript">
 function validate_required(value,alerttxt)
 {
 if (value==null||value=="")
@@ -52,6 +52,7 @@ function validate_form()
    	     document.getElementById("AddBookmarkForm:title").focus();
 		  return false;
 	}
+
 }
 </script>
 
@@ -61,11 +62,16 @@ final BookmarkPage bookmarkPage = (BookmarkPage)facesContext.getApplication().ge
 bookmarkPage.setBookmark(null);
 String sectionId = (String)request.getParameter("sectionId");
 String sectionTitle = (String)request.getParameter("sectionTitle");
-bookmarkPage.setSectionId(sectionId);
-bookmarkPage.setSectionTitle(sectionTitle);
+if (sectionId != null)
+{
+  bookmarkPage.setSectionId(sectionId);
+  bookmarkPage.setSectionTitle(sectionTitle);
+}  
 %>
 
 <h:form id="AddBookmarkForm">
+<h:inputHidden id="sectionId" value="#{bookmarkPage.sectionId}"/>
+<h:inputHidden id="sectionTitle" value="#{bookmarkPage.sectionTitle}"/>
 <h:messages id="addbookmarkerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 <table cellspacing="0" cellpadding="10" width="100%" border="0" align="center">
 	<tr>
@@ -106,8 +112,7 @@ bookmarkPage.setSectionTitle(sectionTitle);
 				    <h:inputHidden id="sectionId" value="#{bookmarkPage.sectionId}"/>
 				    <h:inputHidden id="sectionTitle" value="#{bookmarkPage.sectionTitle}"/>
 				    
-          	        <h:commandButton action="#{bookmarkPage.addBookmark}" value="#{msgs.im_add_button}" accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"  onclick="return validate_form();" rendered="#{bookmarkPage.bookmark.bookmarkId == 0}" />
-          	        <h:commandButton action="#{bookmarkPage.addBookmark}"  value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgAdd" onclick="return validate_form();" rendered="#{bookmarkPage.bookmark.bookmarkId != 0}" />
+          	        <h:commandButton action="#{bookmarkPage.addBookmark}" value="#{msgs.im_done}" accesskey="#{msgs.done_access}" title="#{msgs.im_done_text}" styleClass="BottomImgReturn"  onclick="return validate_form();" />
           	        
 			        </div>
 					</tr>
@@ -117,7 +122,6 @@ bookmarkPage.setSectionTitle(sectionTitle);
 		</td>
 	</tr>
 </table>
-
 </h:form>
 </sakai:view>
 </f:view>

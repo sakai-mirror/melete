@@ -39,7 +39,7 @@
 				<jsp:include page="topnavbar.jsp"/> 
 		</f:subview>
 		<div class="meletePortletToolBarMessage"><img src="images/my-bookmarks.png" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.list_bookmarks_headtitle}" /></div>				
-		   
+	  
 <table>
 	<tr>
 		<td width="1050px" valign="top">
@@ -105,10 +105,13 @@
          </table>
           <div class="actionBar" align="left">				
 				<h:commandButton id="returnButton"  action="#{bookmarkPage.returnAction}" value="#{msgs.im_return}" tabindex="" accesskey="#{msgs.return_access}" title="#{msgs.im_return_text}" styleClass="BottomImgReturn" />
+		        <h:commandButton id="refreshButton"  action="#{bookmarkPage.refreshAction}" style="display: none; visibility: hidden;"  />
+		
 			</div>
          </td>
          </tr>
          </table>
+         
          </h:form>
           </sakai:view>   
     </f:view>
