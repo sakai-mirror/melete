@@ -208,7 +208,7 @@ function contentChangeSubmit()
 									     </td>
 									     </tr>
 									     <tr>			
-										 <td colspan="2" align="center"> 
+										 <td colspan="2"> 
 												
 											<f:subview id="contentEditorView" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
 														<jsp:include page="contentSferyxEditor.jsp?mode=Add"/> 

@@ -239,7 +239,7 @@ window.open('editpreviewEditor.jsf');
 										</f:subview>	
 									</td></tr>	
 									<tr> 
-										 <td colspan="2" align="center"> 										
+										 <td colspan="2"> 										
 											 <f:subview id="contentEditorView" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
 												<jsp:include page="contentSferyxEditor.jsp?mode=Edit"/>
 												 <h:inputHidden id="contentTextArea" value="#{editSectionPage.contentEditor}" />
