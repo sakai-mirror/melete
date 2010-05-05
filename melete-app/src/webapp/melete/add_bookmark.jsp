@@ -29,7 +29,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Add bookmarks" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Bookmark It" toolCssHref="rtbc004.css">
 
 <script type="text/javascript" language="javascript">
 function validate_required(value,alerttxt)
@@ -76,29 +76,29 @@ if (sectionId != null)
 <table cellspacing="0" cellpadding="10" width="100%" border="0" align="center">
 	<tr>
 		<td>
-			<table class="forumline" cellspacing="1" cellpadding="4" width="100%" border="0">
+			<table cellspacing="1" cellpadding="4" width="100%" border="0">
 				<tr>
-					<th class="thHead" height="25" colspan="2">
+					<th height="25" colspan="2">
 						<h:outputText value="#{msgs.add_bookmark_headtitle}" rendered="#{bookmarkPage.bookmark.bookmarkId == 0}"/>
 						<h:outputText value="#{msgs.add_bookmark_editheadtitle}" rendered="#{bookmarkPage.bookmark.bookmarkId != 0}"/>
 						
 					</th>
 				</tr>
 				<tr>
-					<td width="20%"><span class="gen"><h:outputText value="#{msgs.add_bookmark_title}" /> <span class="required">*</span></td>
-					<td>	<h:inputText id="title" size="45" value="#{bookmarkPage.bookmark.title}" required="true" styleClass="formtext" />
+					<td class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_bookmark_title}" /> <span class="required">*</span></td>
+					<td class="col2" align="left" valign="top"><h:inputText id="title" size="45" value="#{bookmarkPage.bookmark.title}" required="true" styleClass="formtext" />
 				</td>
 				</tr>
                 
                 <tr>
-					<td width="20%" valign="top"><span class="gen"><h:outputText value="#{msgs.add_bookmark_notes}" /></td>
-					<td>	<h:inputTextarea id="notes" cols="45" rows="20" value="#{bookmarkPage.bookmark.notes}" styleClass="formtext" />
+					<td class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_bookmark_notes}" /></td>
+					<td  class="col2" align="left" valign="top">	<h:inputTextarea id="notes" cols="45" rows="20" value="#{bookmarkPage.bookmark.notes}" styleClass="formtext" />
 				</td>
 				</tr>
 				
 				<tr>
-					<td width="20%"><span class="gen"><h:outputText value="#{msgs.add_bookmark_lastvisited}" /></td>
-					<td>	 
+					<td class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_bookmark_lastvisited}" /></td>
+					<td class="col2" align="left" valign="top">	 
 					<h:selectBooleanCheckbox id="flaglastvisited" title="flaglastvisited" value="#{bookmarkPage.bookmark.lastVisited}" >
 		            </h:selectBooleanCheckbox>
 				</td>
@@ -115,6 +115,7 @@ if (sectionId != null)
           	        <h:commandButton action="#{bookmarkPage.addBookmark}" value="#{msgs.im_done}" accesskey="#{msgs.done_access}" title="#{msgs.im_done_text}" styleClass="BottomImgReturn"  onclick="return validate_form();" />
           	        
 			        </div>
+			        </td>
 					</tr>
 					
 			</table>
