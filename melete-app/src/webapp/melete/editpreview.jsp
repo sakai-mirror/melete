@@ -29,6 +29,7 @@
 
 <f:view>
 <sakai:view title="Modules: Preview Section" toolCssHref="rtbc004.css">
+<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
 <%@include file="accesscheck.jsp" %>
 
  	<h:form id="previewForm" > 	
@@ -58,8 +59,7 @@
 			  </td></tr>
 			  <tr><td>
 		      <h:inputHidden id="contentType" value="#{editSectionPage.section.contentType}"/>
-			  <h:outputText id="typeEditorContents" value="#{editSectionPage.previewContentData}" escape="false"  rendered="#{editSectionPage.shouldRenderEditor}"></h:outputText>		 
-                <br>
+			 
 	            <h:outputLink id="viewSectionLink"  value="#{editSectionPage.previewContentData}" target="_blank" rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLTI) && editSectionPage.section.openWindow == true}">
                 <h:outputText id="sectitleLink" 
                            value="#{editSectionPage.secResourceName}">
@@ -67,6 +67,13 @@
                 </h:outputLink>	
                     <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{editSectionPage.previewContentData}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
                	    border=\"0\" frameborder= \"0\"></iframe>" rendered="#{(editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLink|| editSectionPage.shouldRenderLTI) && editSectionPage.section.openWindow == false}" escape="false" />			
+		      
+		      <h:outputText id="contentTextFrame" rendered="#{editSectionPage.shouldRenderEditor}" >
+					<f:verbatim>
+					<iframe id="iframe3" name="iframe3" src="${editSectionPage.previewContentData}" width="100%" height="700px" style="visibility:visible" scrolling= "auto" border="0" frameborder= "0">
+					</iframe>
+					</f:verbatim>
+				</h:outputText>
 		      </td></tr>
 	       
 			<tr><td>
@@ -144,6 +151,32 @@ rendered="#{((editSectionPage.meleteResource.licenseCode == 4)&&(editSectionPage
 			</table>
 
 </h:form>
-
+<script type="text/javascript">
+            //when parent doc finishes loading
+           jQuery(document).ready(function(){
+                // for each link in the parent doc
+                $("head link").each(function(){
+                    // create a new link
+                    var link = document.createElement("link");
+					// get the href attribute of the link in the parent doc
+                    var sheet = $(this).attr("href");
+					//finish constructing the links
+                    link.setAttribute("rel", "stylesheet");
+                    link.setAttribute("type", "text/css");
+					//assign this new link the href of the parent one
+                    link.setAttribute("href", sheet);
+					//append the new link to the iframed doc
+					 var oIframe = document.getElementById("iframe3");
+					 if(oIframe)
+					 {
+   						 var oDoc = oIframe.contentWindow || oIframe.contentDocument;
+					    if (oDoc.document) {
+					        oDoc = oDoc.document;
+					        oDoc.body.appendChild(link);
+					    }   						
+   					}					
+                });
+            });
+        </script>
 </sakai:view>
 </f:view>

@@ -286,30 +286,18 @@ public class AddSectionPage extends SectionPage implements Serializable{
 
 	public String previewFromAdd()
 	{
-
-		try{
+		this.previewContentData = null;
+		try
+		{
 			if(!section.getContentType().equals("notype"))
 			{
-			  if (this.section.getContentType().equals("typeEditor"))
-			  {
-				this.previewContentData = this.contentEditor;
-				return "addpreview";
-			  }
-			  else
-			  {
-	    	      this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
-	               return "addpreview";
-	           }
+				this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
 			}
-			else
-			{
-				this.previewContentData = null;
-				return "addpreview";
-			}
-  	     } catch (Exception e) {
+
+		} catch (Exception e) {
 			logger.debug(e.toString());
-		  }
-		return "#";
+		}
+		return "addpreview";
 	}
 
 	  public String gotoServerView()

@@ -143,11 +143,14 @@
                     link.setAttribute("href", sheet);
 					//append the new link to the iframed doc
 					 var oIframe = document.getElementById("iframe3");
-   					 var oDoc = oIframe.contentWindow || oIframe.contentDocument;
-				    if (oDoc.document) {
-				        oDoc = oDoc.document;
-				    }
-   					oDoc.body.appendChild(link);					
+					 if(oIframe)
+					 {
+   						 var oDoc = oIframe.contentWindow || oIframe.contentDocument;
+					    if (oDoc.document) {
+					        oDoc = oDoc.document;
+					        oDoc.body.appendChild(link);
+					    }   						
+   					}					
                 });
             });
         </script>

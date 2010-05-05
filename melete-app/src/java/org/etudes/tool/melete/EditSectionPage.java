@@ -511,12 +511,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 						context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
 						return "failure";
 					}
-
 				}
-				else
-				{
-					this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
-				}
+				this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
+				
 			}
 			else
 			{
