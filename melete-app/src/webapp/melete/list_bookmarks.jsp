@@ -79,7 +79,7 @@
 					  <f:facet name="header">
 							 <h:outputText id="t3" value="#{msgs.list_bookmarks_actions}" />
 					 </f:facet>
-					 <h:outputLink id="editBookmarkLink" value="list_bookmarks" onclick="OpenBookmarkWindow(#{bookmark.sectionId},'Melete Bookmark Window');">
+					 <h:outputLink id="editBookmarkLink" value="list_bookmarks" onclick="OpenBookmarkWindow(#{bookmark.sectionId},'','Melete Bookmark Window');">
 		    	       <f:param id="sectionId" name="sectionId" value="#{bookmark.sectionId}" />
 						  <h:graphicImage id="editgif" alt="" value="images/document_edit.gif" styleClass="AuthImgClass" />
 			                <h:outputText id="emp_space-20" value=" " />
