@@ -181,12 +181,8 @@
 	    
 	    </h:column>	     
       </h:dataTable> 
-      <h:panelGrid columns="1" rendered="#{listModulesPage.nomodsFlag}">
-      	<h:column>
-	   	 <h:outputText id="nomodstext" value="#{msgs.no_modules}"  style="text-align:left"/>
-	    </h:column> 
-      </h:panelGrid>          
-	  </td></tr>
+       	 <h:outputText id="nomodstext" value="#{msgs.no_modules}" rendered="#{listModulesPage.nomodsFlag == true}" style="text-align:left"/>
+	    </td></tr>
 	  <tr>
          <td  height="20" class="maintabledata5">&nbsp;   </td>
         </tr>
