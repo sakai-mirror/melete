@@ -36,9 +36,8 @@
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
 <!--Page Content-->
-<table class="maintableCollapseWithBorder">
-<tr>
-<td align="right">
+<p>&nbsp;</p>
+<div align="right">
 <h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">
  <f:param name="sectionId" value="#{listModulesPage.bookmarkSectionId}" /> 
  <h:graphicImage id="lvisit_gif" value="images/last-visited.png" alt="" />
@@ -49,9 +48,9 @@
 <f:param name="fromPage" value="list_modules_student" />
 <h:graphicImage id="mybook_gif" value="images/my-bookmarks.png" alt="" />
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
-</h:commandLink>				  
-</td>
-</tr>			
+</h:commandLink>	
+</div>
+<table class="maintableCollapseWithBorder">
 <tr>
 <td colspan="2">
 <h:messages showDetail="true" showSummary="false"/>
@@ -159,6 +158,7 @@
 	    </h:column>	      
       </h:dataTable>  
        	 <h:outputText id="nomodstext" value="#{msgs.no_modules}" rendered="#{listModulesPage.nomodsFlag == true}" style="text-align:left"/>
+       	 <div class="actionBar" align="left">&nbsp;</div>
  </td>
  </tr>
  </table>
