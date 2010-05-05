@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="org.etudes.tool.melete.BookmarkPage,javax.faces.application.*,javax.faces.context.*,javax.faces.component.*, java.util.ResourceBundle"%>
 
 <!--
@@ -39,26 +40,19 @@
 				<jsp:include page="topnavbar.jsp"/> 
 		</f:subview>
 		<div class="meletePortletToolBarMessage"><img src="images/my-bookmarks.png" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.list_bookmarks_headtitle}" /></div>				
-	  
-<table>
-	<tr>
-		<td width="1050px" valign="top">
-    	<table class="maintableCollapseWithBorder">
-               <tr>
-               <td align="right">
-               <h:inputHidden id="bmlistflag" value="#{bookmarkPage.nobmsFlag}"/>
+	  	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
+		
+    	<div class="right">
+    	      <h:inputHidden id="bmlistflag" value="#{bookmarkPage.nobmsFlag}"/>
                  <h:commandLink id="exportNotesLink" actionListener="#{bookmarkPage.exportNotes}" action="#{bookmarkPage.redirectExportNotes}" rendered="#{bookmarkPage.nobmsFlag == false}">
                    <h:outputText id="exportnotes" value="#{msgs.list_bookmarks_export_notes}" />									
                  </h:commandLink>
-               </td>
-              </tr>				   
-			 </table>  	
-        	<table class="maintableCollapseWithBorder">
+          </div>
+    	<table class="maintableCollapseWithBorder">
           		<tr>
-            		<td class="maintabledata3">
-          	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-		
-			 <h:dataTable id="table"  value="#{bookmarkPage.bmList}"  var="bookmark"  border="0" headerClass="tableheader2" columnClasses="col25,col45wordwrap,col15,col15" rowClasses="row1,row2"  width="1050px" summary="#{msgs.list_resources_summary}">
+            		<td valign="top">
+          
+			 <h:dataTable id="table"  value="#{bookmarkPage.bmList}"  var="bookmark"  border="0" headerClass="tableheader2" columnClasses="col25,col45wordwrap,col15,col15" rowClasses="row1,row2"  width="100%" summary="#{msgs.list_resources_summary}">
 				  <h:column>
 					   <f:facet name="header">
 							<h:panelGroup>
@@ -102,20 +96,14 @@
 					 </h:commandLink>	
 				    </h:column>
                    </h:dataTable>
-                    <h:outputText id="nobookmsg" value="#{msgs.list_bookmarks_no_bookmarks_available}" rendered="#{bookmarkPage.nobmsFlag == true}" style="text-align:left"/>
-	        
-         </td>
-         </tr>
-         </table>
-          <div class="actionBar" align="left">				
+                   <h:outputText id="nobookmsg" value="#{msgs.list_bookmarks_no_bookmarks_available}" rendered="#{bookmarkPage.nobmsFlag == true}" style="text-align:left"/>
+                 <div class="actionBar" align="left">				
 				<h:commandButton id="returnButton"  action="#{bookmarkPage.returnAction}" value="#{msgs.im_return}" tabindex="" accesskey="#{msgs.return_access}" title="#{msgs.im_return_text}" styleClass="BottomImgReturn" />
 		        <h:commandButton id="refreshButton"  action="#{bookmarkPage.refreshAction}" style="display: none; visibility: hidden;"  />
-		
-			</div>
-         </td>
+			    </div>
+            </td>
          </tr>
-         </table>
-         
+         </table>    
          </h:form>
           </sakai:view>   
     </f:view>
