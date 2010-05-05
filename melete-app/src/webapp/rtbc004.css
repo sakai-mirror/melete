@@ -189,8 +189,7 @@ a1:active 			{color : #000080;}
 .ListTitleClass {
 	font-size: 92%;
   	vertical-align: top;
-  	text-align: left;
-  	word-break:break-all;
+  	text-align: left; 
   }
 
 .ListDateClass {
