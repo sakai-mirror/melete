@@ -388,7 +388,7 @@ public class SectionDB implements Serializable {
 		    	     //Delete bookmarks for this section
 		    	     if (sectionId != null)
 		    	     {
-		    	       affectedEntities = session.createQuery(delBookmarksStr).setInteger("sectionId", secRes.getSectionId()).executeUpdate();
+		    	       affectedEntities = session.createQuery(delBookmarksStr).setInteger("sectionId", sectionId).executeUpdate();
 		    	       logger.debug(affectedEntities+" row was deleted from MELETE_BOOKMARK");
 		    	     }
 		    	     
