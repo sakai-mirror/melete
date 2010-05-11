@@ -147,9 +147,9 @@
 					 {
    						 var oDoc = oIframe.contentWindow || oIframe.contentDocument;
 					    if (oDoc.document) {
-					        oDoc = oDoc.document;
-					        oDoc.body.appendChild(link);
-					    }   						
+					        oDoc = oDoc.document;					       
+					    } 
+					     oDoc.body.appendChild(link);  						
    					}					
                 });
             });

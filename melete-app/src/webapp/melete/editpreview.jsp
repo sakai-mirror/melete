@@ -169,11 +169,11 @@ rendered="#{((editSectionPage.meleteResource.licenseCode == 4)&&(editSectionPage
 					 var oIframe = document.getElementById("iframe3");
 					 if(oIframe)
 					 {
-   						 var oDoc = oIframe.contentWindow || oIframe.contentDocument;
+   					    var oDoc = oIframe.contentWindow || oIframe.contentDocument;
 					    if (oDoc.document) {
-					        oDoc = oDoc.document;
-					        oDoc.body.appendChild(link);
-					    }   						
+					        oDoc = oDoc.document;					       
+					    } 
+					    oDoc.body.appendChild(link);  						
    					}					
                 });
             });
