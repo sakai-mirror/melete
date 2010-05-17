@@ -88,6 +88,7 @@ import org.sakaiproject.calendar.api.CalendarService;
 import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.exception.PermissionException;
+import org.sakaiproject.exception.IdUnusedException;
 
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.tool.cover.ToolManager;
@@ -393,7 +394,7 @@ public class ModuleDB implements Serializable {
 		try
 		{
 		  org.sakaiproject.calendar.api.Calendar c = cService.getCalendar(calendarId);
-		  try
+		 try
 		  {
 			if (addtoSchedule == true)
 			{
@@ -418,7 +419,7 @@ public class ModuleDB implements Serializable {
 				  {
 					  logger.debug("UPDATING start event for non-nul start date");
 					  String desc = endDate != null ? "This module opens today and closes "+endDate.toString():"This module opens today";
-					  updateCalendarEvent(c, startEventId, startDate, desc);
+					  startEventId = updateCalendarEvent(c, startEventId, startDate, "Opens: "+module1.getTitle(), desc);
 				  }
 				  moduleshdates1.setStartEventId(startEventId);
 				}
@@ -443,7 +444,7 @@ public class ModuleDB implements Serializable {
 				  {
 					  logger.debug("UPDATING end event for non-null end date");
 					  String desc = "This module closes today";
-					  updateCalendarEvent(c, endEventId, endDate, desc);
+					  endEventId = updateCalendarEvent(c, endEventId, endDate, "Closes: "+module1.getTitle(), desc);
 				  }
 				  moduleshdates1.setEndEventId(endEventId);
 				}
@@ -452,7 +453,7 @@ public class ModuleDB implements Serializable {
 			  {
 			    if (startEventId != null)
 				{
-				  logger.debug("REMOVING start event for false flag");
+			     logger.debug("REMOVING start event for false flag");
 				  deleteCalendarEvent(c, startEventId);
 				  moduleshdates1.setStartEventId(null);
 				}
@@ -499,24 +500,42 @@ public class ModuleDB implements Serializable {
 	}
 
 
-	private void updateCalendarEvent(org.sakaiproject.calendar.api.Calendar c,String eventId, Date eventDate, String description) throws Exception
+	private String updateCalendarEvent(org.sakaiproject.calendar.api.Calendar c,String eventId, Date eventDate, String title, String description) throws Exception
 	{
-		 CalendarEventEdit evEdit = c.getEditEvent(eventId, "Deadline");
-		  if (evEdit != null)
-		  {
+		try
+		{	  
+		   CalendarEventEdit evEdit = c.getEditEvent(eventId, "Deadline");
+		    if (evEdit != null)
+		    {
 			  evEdit.setRange(TimeService.newTimeRange(eventDate.getTime(),0));
 			  evEdit.setDescription(description);
 			  c.commitEvent(evEdit);
-		  }
+			  return eventId;
+		    }
+		}
+		catch (IdUnusedException idUEx)
+		{
+			logger.debug("In updateCalendarEvent COULD Not find ID creating new event");
+			String newEventId = createCalendarEvent(c,eventDate, title, description);
+			return newEventId;
+		}		    
+		return eventId;
 	}
 
 	private void deleteCalendarEvent(org.sakaiproject.calendar.api.Calendar c,String eventId) throws Exception
 	{
+	  try
+	  {
 		CalendarEventEdit evEdit = c.getEditEvent(eventId, "Deadline");
 		if (evEdit != null)
 		{
 		    c.removeEvent(evEdit);
 		}
+	  }
+	  catch (IdUnusedException idUEx)
+	  {
+		logger.debug("deleteCalendarEvent - COULD Not find ID");
+	  }
 	}
 
 	void deleteCalendar(List delModules, String courseId)
