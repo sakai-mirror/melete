@@ -63,6 +63,8 @@ import org.imsglobal.simplelti.SimpleLTIUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.etudes.util.HtmlHelper;
+
 /**
  * @author Faculty
  *
@@ -120,11 +122,13 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 
       // added to reduce queries
       private String contentLinkUrl;
-
+      private Boolean contentWithHtml;
+      
 	  public ViewSectionsPage(){
 	  	courseId = null;
 	  	userId = null;
 	  	contentLinkUrl = null;
+	  	contentWithHtml = null;
 	  }
 
 	  //Code to test
@@ -157,7 +161,14 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	  {
 		  contentLinkUrl =null;
 		  autonumber = null;
+		  contentWithHtml = null;
 	  }
+
+	public Boolean getcontentWithHtml() {
+		logger.debug("getcontentWithHtml is" + contentWithHtml);
+		if(contentWithHtml == null) getContent();
+		return contentWithHtml;
+	}
 
 	private ContentResource getContentResource()
 	{
@@ -185,6 +196,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	   */
 	  public String getContent()
 	  {
+		contentWithHtml = false;
 		ContentResource resource = getContentResource();
 		if ( resource == null ) return "";
 		String str = null;
@@ -192,6 +204,19 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		{
 			byte[] rsrcArray = resource.getContent();
 			str = new String(rsrcArray);
+			
+			// look for html or form tags in the content
+			Pattern pForm = Pattern.compile("<\\s*[hH][tT][mM][lL]\\s*| <\\s*[fF][oO][rR][mM]\\s*");
+			Matcher m = pForm.matcher(str);
+			if (m.find())
+			{
+				contentWithHtml = true;
+				return "";	
+			}
+			// strip MS comments and bogus links
+			str = HtmlHelper.stripComments(str);
+	      	//strip bad link and meta tags
+			str = HtmlHelper.stripLinks(str);
 		}
 		catch(Exception e)
 		{
