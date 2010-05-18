@@ -182,11 +182,9 @@
 	    </h:column>	     
       </h:dataTable> 
        	 <h:outputText id="nomodstext" value="#{msgs.no_modules}" rendered="#{listModulesPage.nomodsFlag == true}" style="text-align:left"/>
+	    <div class="actionBar" align="left">&nbsp;</div>
 	    </td></tr>
-	  <tr>
-         <td  height="20" class="maintabledata5">&nbsp;   </td>
-        </tr>
-        <tr>
+	    <tr>
         <td >
          <h:graphicImage id="closed_gif" value="images/view_closed.png" alt="" styleClass="ExpClass" rendered="#{listModulesPage.closedModulesFlag == listModulesPage.trueFlag}"/>
          <h:outputText styleClass="style3" value="#{msgs.list_modules_inst_module_not_open}" rendered="#{listModulesPage.closedModulesFlag == listModulesPage.trueFlag}"/>

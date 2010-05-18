@@ -31,8 +31,6 @@
 <sakai:view title="Modules: Sort Sections" toolCssHref="rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
-<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
-
 <script language="javascript">
 function resetModuleSelection() {
       	var element = document.getElementById("SortSectionForm:currmodule");
@@ -131,10 +129,9 @@ function resetModuleSelection() {
 				  	</tr>
 				</table>	
 <script type="text/javascript">
-
-		jQuery(document).ready(function(){
-		resetModuleSelection();		
-		});
+		window.onload=function(){
+ 		 resetModuleSelection();	
+}
 </script>
 							
 </h:form>

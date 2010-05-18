@@ -31,7 +31,6 @@
 <sakai:view title="Modules: Student View" toolCssHref="rtbc004.css">
 
 <script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
-<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
 
 <h:form id="viewsectionform"> 
 	<f:subview id="top">
@@ -90,17 +89,23 @@
     
     <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{viewSectionsPage.content}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\" border=\"0\" frameborder= \"0\"></iframe>" rendered="#{((viewSectionsPage.section.contentType ==viewSectionsPage.typeLink)&&(viewSectionsPage.linkName !=
     viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
-    
+  
+  	<!-- render typeUpload  content in same window --> 
  	<h:outputText id="contentUploadFrame" value="<iframe id=\"iframe2\" src=\"#{viewSectionsPage.contentLink}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
     border=\"0\" frameborder= \"0\"></iframe>" rendered="#{((viewSectionsPage.section.contentType ==viewSectionsPage.typeUpload)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
 
-<h:outputText id="contentTextFrame" rendered="#{(viewSectionsPage.section.contentType == viewSectionsPage.typeEditor)&&(viewSectionsPage.content != viewSectionsPage.nullString)}" >
-<f:verbatim>
-<iframe id="iframe3" name="iframe3" src="${viewSectionsPage.contentLink}" width="100%" height="700px" style="visibility:visible" scrolling= "auto" border="0" frameborder= "0">
-</iframe>
-</f:verbatim>
-</h:outputText>
-	
+	<!-- render typeEditor content with form tags --> 
+	<h:outputText id="contentTextFrame" rendered="#{(viewSectionsPage.section.contentType == viewSectionsPage.typeEditor)&& (viewSectionsPage.contentWithHtml == true) &&(viewSectionsPage.content != viewSectionsPage.nullString)}" >
+		<f:verbatim>
+		<iframe id="iframe3" name="iframe3" src="${viewSectionsPage.contentLink}" width="100%" height="700px" style="visibility:visible" scrolling= "auto" border="0" frameborder= "0">
+		</iframe>
+		</f:verbatim>
+	</h:outputText>
+
+	<!-- render typeEditor content without form tags -->
+	<h:outputText value="#{viewSectionsPage.content}" escape="false" rendered="#{(viewSectionsPage.section.contentType == viewSectionsPage.typeEditor) && (viewSectionsPage.contentWithHtml == false) &&(viewSectionsPage.content != viewSectionsPage.nullString)}"/>	
+
+	<!-- render typeLTI content -->
 	<h:outputText id="contentLTI" value="#{viewSectionsPage.contentLTI}" 
               rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />	
 </h:column>
@@ -128,32 +133,27 @@
 	    </table>
 </h:form>
 <script type="text/javascript">
-            //when parent doc finishes loading
-           jQuery(document).ready(function(){
-                // for each link in the parent doc
-                $("head link").each(function(){
-                    // create a new link
-                    var link = document.createElement("link");
-					// get the href attribute of the link in the parent doc
-                    var sheet = $(this).attr("href");
-					//finish constructing the links
-                    link.setAttribute("rel", "stylesheet");
-                    link.setAttribute("type", "text/css");
-					//assign this new link the href of the parent one
-                    link.setAttribute("href", sheet);
-					//append the new link to the iframed doc
-					 var oIframe = document.getElementById("iframe3");
-					 if(oIframe)
-					 {
-   						 var oDoc = oIframe.contentWindow || oIframe.contentDocument;
-					    if (oDoc.document) {
-					        oDoc = oDoc.document;					       
-					    } 
-					     oDoc.body.appendChild(link);  						
-   					}					
-                });
-            });
-        </script>
+	window.onload=function(){
+	 var oIframe = document.getElementById("iframe3");
+	 if(oIframe)
+		 {
+	        var oDoc = oIframe.contentWindow || oIframe.contentDocument;
+		    if (oDoc.document) {
+			oDoc = oDoc.document;					       
+		    } 
+		   	for (i=0; i < document.styleSheets.length; i++)
+			{
+			  var link = document.createElement("link");
+			  //finish constructing the links
+		       link.setAttribute("rel", "stylesheet");
+		       link.setAttribute("type", "text/css");
+			   //assign this new link the href of the parent one
+		       link.setAttribute("href", document.styleSheets[i].href);
+			   oDoc.body.appendChild(link); 
+		    } 						
+		  }	
+		 }
+</script>
 </sakai:view>
 </f:view>
 

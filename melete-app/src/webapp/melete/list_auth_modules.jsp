@@ -51,7 +51,7 @@ if (request.getAttribute("msg") != null)
 
 <script type="text/javascript" language="JavaScript" src="js/calendar2.js"></script>
 <script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
-<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
+
 <script type="text/javascript" language="javascript">
 
 function showSdateCal(index)
@@ -291,14 +291,11 @@ if (msg != null)
  	</td>
  	</tr>
  	</table>
- <script type="text/javascript">
-
-		jQuery(document).ready(function(){
-		resetCheck();		
-		});
-</script>	
 </h:form>
 </sakai:view>
+<script type="text/javascript">
+ 		 resetCheck();	
+</script>
 </f:view>
 
 
