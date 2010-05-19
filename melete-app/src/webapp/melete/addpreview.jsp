@@ -29,7 +29,7 @@
 
 <f:view>
 <sakai:view title="Modules: Preview Section" toolCssHref="rtbc004.css">
-<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
+
 <%@include file="accesscheck.jsp" %>
 <h:form id="previewAddForm" >
 	<f:subview id="top">
@@ -38,7 +38,7 @@
 	<div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="24" height="24" align="absmiddle"><h:outputText value="#{msgs.add_preview_previewing_section}" /></div>
     
      <table class="maintableCollapseWithBorder">
-		<tr><td colspan="2" height="20" class="maintabledata5">&nbsp;</td></tr>	
+		<tr><td colspan="2" height="20"> <div  class="maintabledata5">&nbsp;</div></td></tr>	
 		  <tr><td>
 				<h:outputText value="#{msgs.add_preview_previewing_section_of}" styleClass="bold" /> <h:outputText value="#{addSectionPage.module.title}" styleClass="bold"/>
 					</td></tr>	
@@ -64,12 +64,15 @@
                  <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{addSectionPage.previewContentData}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
                  border=\"0\" frameborder= \"0\"></iframe>" rendered="#{(addSectionPage.shouldRenderUpload || addSectionPage.shouldRenderLink || addSectionPage.shouldRenderLTI) && addSectionPage.section.openWindow == false}" escape="false" />
 	             
-	          	<h:outputText id="contentTextFrame" rendered="#{addSectionPage.shouldRenderEditor}" >
+	          	<h:outputText id="contentTextFrame" rendered="#{addSectionPage.shouldRenderEditor && addSectionPage.contentWithHtml == true}" >
 					<f:verbatim>
 					<iframe id="iframe3" name="iframe3" src="${addSectionPage.previewContentData}" width="100%" height="700px" style="visibility:visible" scrolling= "auto" border="0" frameborder= "0">
 					</iframe>
 					</f:verbatim>
 				</h:outputText>
+				
+				<!-- render typeEditor content without form tags -->
+				<h:outputText value="#{addSectionPage.previewContentData}" escape="false" rendered="#{addSectionPage.shouldRenderEditor && addSectionPage.contentWithHtml == false}"/>
 				</td></tr>
 			
 			<tr><td> 
@@ -148,33 +151,31 @@ rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 4)&
 			 </td></tr>
 			</table>
 
-</h:form>
+
 <script type="text/javascript">
-            //when parent doc finishes loading
-           jQuery(document).ready(function(){
-                // for each link in the parent doc
-                $("head link").each(function(){
-                    // create a new link
-                    var link = document.createElement("link");
-					// get the href attribute of the link in the parent doc
-                    var sheet = $(this).attr("href");
-					//finish constructing the links
-                    link.setAttribute("rel", "stylesheet");
-                    link.setAttribute("type", "text/css");
-					//assign this new link the href of the parent one
-                    link.setAttribute("href", sheet);
-					//append the new link to the iframed doc
-					 var oIframe = document.getElementById("iframe3");
-					 if(oIframe)
-					 {
-   						 var oDoc = oIframe.contentWindow || oIframe.contentDocument;
-					    if (oDoc.document) {
-					        oDoc = oDoc.document;					      
-					    }   
-					    oDoc.body.appendChild(link);						
-   					}					
-                });
-            });
-        </script>
+      window.onload=function(){
+	 var oIframe = document.getElementById("iframe3");
+	 if(oIframe)
+		 {
+	        var oDoc = oIframe.contentWindow || oIframe.contentDocument;
+		    if (oDoc.document) {
+			oDoc = oDoc.document;					       
+		    } 
+		   	for (i=0; i < document.styleSheets.length; i++)
+			{
+			  var link = document.createElement("link");
+			  //finish constructing the links
+		       link.setAttribute("rel", "stylesheet");
+		       link.setAttribute("type", "text/css");
+			   //assign this new link the href of the parent one
+		       link.setAttribute("href", document.styleSheets[i].href);
+			   oDoc.body.appendChild(link); 
+		    } 
+		    oIframe.height = oDoc.body.offsetHeight + 100 ;  						
+		  }	
+		setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');  
+	}
+ </script>
+  </h:form>      
 </sakai:view>
 </f:view>

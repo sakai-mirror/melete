@@ -491,7 +491,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		     lPage.setFormName(getFormName());
 			meleteResource = lPage.processLicenseInformation(meleteResource);
 	   }
-
+	   contentWithHtml = false;
 		try
 		{
 			if (!section.getContentType().equals("notype"))
@@ -503,6 +503,13 @@ public class EditSectionPage extends SectionPage implements Serializable
 					{
 					  this.previewContentData = getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir, contentEditor);
 					  contentEditor = previewContentData;
+						if(Util.FindNestedHTMLTags(contentEditor))
+						{
+							this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
+							contentWithHtml = true;
+						}
+	
+						return "editpreview";
 					}
 					catch (MeleteException mex)
 					{
@@ -511,9 +518,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 						context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
 						return "failure";
 					}
+					
 				}
 				this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
-				
 			}
 			else
 			{

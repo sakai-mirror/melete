@@ -97,7 +97,7 @@
 	<!-- render typeEditor content with form tags --> 
 	<h:outputText id="contentTextFrame" rendered="#{(viewSectionsPage.section.contentType == viewSectionsPage.typeEditor)&& (viewSectionsPage.contentWithHtml == true) &&(viewSectionsPage.content != viewSectionsPage.nullString)}" >
 		<f:verbatim>
-		<iframe id="iframe3" name="iframe3" src="${viewSectionsPage.contentLink}" width="100%" height="700px" style="visibility:visible" scrolling= "auto" border="0" frameborder= "0">
+		<iframe id="iframe3" name="iframe3" src="${viewSectionsPage.contentLink}" width="100%" height="100%" style="visibility:visible" scrolling= "auto" border="0" frameborder= "0">
 		</iframe>
 		</f:verbatim>
 	</h:outputText>
@@ -131,7 +131,10 @@
   			<jsp:include page="license_info.jsp"/>      
          </B></td></tr>
 	    </table>
-</h:form>
+
+	<h:inputHidden id="viewSectionFrameId" value="#{meleteSiteAndUserInfo.winEncodeName}"/>
+
+
 <script type="text/javascript">
 	window.onload=function(){
 	 var oIframe = document.getElementById("iframe3");
@@ -150,10 +153,14 @@
 			   //assign this new link the href of the parent one
 		       link.setAttribute("href", document.styleSheets[i].href);
 			   oDoc.body.appendChild(link); 
-		    } 						
-		  }	
-		 }
+		    }
+		  oIframe.height = oDoc.body.offsetHeight + 100 ;   						
+		  }
+
+	  setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');			  
+	 }
 </script>
+</h:form>
 </sakai:view>
 </f:view>
 

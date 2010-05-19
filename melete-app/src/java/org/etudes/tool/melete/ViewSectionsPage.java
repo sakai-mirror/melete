@@ -204,15 +204,13 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		{
 			byte[] rsrcArray = resource.getContent();
 			str = new String(rsrcArray);
-			
-			// look for html or form tags in the content
-			Pattern pForm = Pattern.compile("<\\s*[hH][tT][mM][lL]\\s*| <\\s*[fF][oO][rR][mM]\\s*");
-			Matcher m = pForm.matcher(str);
-			if (m.find())
+
+			if(Util.FindNestedHTMLTags(str))
 			{
 				contentWithHtml = true;
 				return "";	
 			}
+		
 			// strip MS comments and bogus links
 			str = HtmlHelper.stripComments(str);
 	      	//strip bad link and meta tags

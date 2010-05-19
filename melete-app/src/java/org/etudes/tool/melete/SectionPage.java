@@ -160,7 +160,8 @@ public abstract class SectionPage implements Serializable {
      protected String selectedResourceDescription;
 
  	protected MeleteResource selectedResource;
-
+ 	
+ 	protected Boolean contentWithHtml;
 
  	protected String oldType;
 
@@ -178,6 +179,7 @@ public abstract class SectionPage implements Serializable {
             secResource = null;
             meleteResource = null;
             allContentTypes = null;
+            contentWithHtml = null;
             }
 
 
@@ -268,7 +270,11 @@ public abstract class SectionPage implements Serializable {
         }
 		return shouldRenderNotype;
 	}
-    /**
+    public Boolean getContentWithHtml() {
+		return contentWithHtml;
+	}
+
+	/**
      * @return module
      * if module is not set, get the module from session.
      * revision -- 12/20 Rashmi -- to refresh module to currModule
@@ -814,6 +820,7 @@ public abstract class SectionPage implements Serializable {
 	shouldRenderNotype = false;
 	allContentTypes = null;
 	oldType = null;
+	contentWithHtml = null;
     if (logger.isDebugEnabled()) logger.debug("!!!!!!!!!reseting section values done !!!!!!!");
     }
 

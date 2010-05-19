@@ -27,6 +27,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
@@ -87,40 +89,16 @@ public class Util {
     	{
     	  throw new UserErrorException("add_section_bad_url_format");
     	}
-
-        /*try
-        {
-        if(!linkUrl.startsWith(serverConfigurationService.getServerUrl()))
-   	 	{
-         		URL url = new URL(linkUrl);
-                 HttpURLConnection uc = (HttpURLConnection) url.openConnection();
-                 uc.setFollowRedirects(true);
-                 uc.setInstanceFollowRedirects(false);
-                 String serverReplies = uc.getResponseMessage();
-                 // if link is ok server replies "OK" otherwise its null or "Not Found"
-                 if(serverReplies != null && serverReplies.equals("OK"))
-         		  		return "OK";
-         		else return "Link possibly broken or not found";
-   	 	}	else return "OK";
-        }
-        catch(MalformedURLException me)
-        {
-           logger.debug(me.toString());
-           errMsg = "add_section_bad_url";
-           throw new MeleteException(errMsg);
-        }
-        catch(UnknownHostException ue)
-        {
-           logger.debug(ue.toString());
-           errMsg = "add_section_bad_url";
-           throw new MeleteException(errMsg);
-        }
-        catch(Exception e)
-        {
-           logger.debug(e.toString());
-           errMsg = "add_section_bad_link";
-           throw new MeleteException(errMsg);
-        }*/
     }
 
+    public static boolean FindNestedHTMLTags(String str)
+    {
+    	if(str == null) return false;
+    	// look for html or form tags in the content
+    	Pattern pForm = Pattern.compile("<\\s*[hH][tT][mM][lL]\\s*| <\\s*[hH][eE][aA][dD]\\s*| <\\s*[bB][oO][dD][yY]\\s*| <\\s*[fF][oO][rR][mM]\\s*");
+    	Matcher m = pForm.matcher(str);
+    	if (m.find()) return true;	
+    
+    	return false;
+    }
 }
