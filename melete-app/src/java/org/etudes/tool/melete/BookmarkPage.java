@@ -84,6 +84,8 @@ public class BookmarkPage implements Serializable
 	private boolean nobmsFlag;
 
 	private String fromPage;
+	
+	private boolean trueFlag = true;
 
 	/** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(BookmarkPage.class);
@@ -485,6 +487,7 @@ public class BookmarkPage implements Serializable
 	 			 {
 	 				 bmark.setNotes(bmark.getNotes().substring(0,69)+"...");
 	 			 }
+	 			 bmark.setSectionVisibleFlag(bmark.getSection().getModule().getModuleshdate().isVisibleFlag());
 	 		 }	 
 	     }
 	     if ((bmList != null)&&(bmList.size() > 0))
@@ -518,6 +521,10 @@ public class BookmarkPage implements Serializable
 
    public void setSectionTitle(String sectionTitle) {
 	     this.sectionTitle = sectionTitle;
+   }
+   
+   public boolean  getTrueFlag() {
+	  	return true;
    }
 	/**
 	 * @return Returns the BookmarkService.

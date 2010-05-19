@@ -95,5 +95,9 @@ public interface BookmarkObjService {
 	 * @param lastVisited the lastVisited to set
 	 */
 	public abstract void setLastVisited(Boolean lastVisited);
+	
+	public abstract boolean isSectionVisibleFlag();
+	
+	public abstract void setSectionVisibleFlag(boolean sectionVisibleFlag);
 
 }

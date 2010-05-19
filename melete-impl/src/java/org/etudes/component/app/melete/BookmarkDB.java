@@ -116,10 +116,18 @@ public class BookmarkDB {
 		int sectionId = 0;
 		try{
 		    Session session = getHibernateUtil().currentSession();
-		     Query q=session.createQuery("select mb.sectionId from Bookmark mb where mb.userId =:userId and mb.siteId=:siteId and mb.lastVisited=1 and mb.section.module.coursemodule.archvFlag = 0");
+		     Query q=session.createQuery("select mb.section from Bookmark mb where mb.userId =:userId and mb.siteId=:siteId and mb.lastVisited=1 and mb.section.module.coursemodule.archvFlag = 0");
 			  q.setParameter("userId",userId);
 			  q.setParameter("siteId", siteId);
-			  sectionId = ((Integer)q.uniqueResult()).intValue();
+			  Section section = (Section)q.uniqueResult();
+			  if (section.getModule().getModuleshdate().isVisibleFlag())
+			  {
+				  sectionId = section.getSectionId().intValue();
+			  }
+			  else
+			  {
+				  sectionId = 0;
+			  }
 		}
 	    catch (HibernateException he)
 	    {

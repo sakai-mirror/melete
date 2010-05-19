@@ -1131,14 +1131,7 @@ public class ModuleDB implements Serializable {
 	   java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
 
 	   if (mod == null) mod = new Module();
-	   if (((mod.getModuleshdate().getStartDate() == null)||(mod.getModuleshdate().getStartDate().before(currentTimestamp)))&&((mod.getModuleshdate().getEndDate() == null)||(mod.getModuleshdate().getEndDate().after(currentTimestamp))))
-	   {
-		   mdBean.setVisibleFlag(true);
-	   }
-	   else
-	   {
-		   mdBean.setVisibleFlag(false);
-	   }
+	   mdBean.setVisibleFlag(mod.getModuleshdate().isVisibleFlag());
 	   mdBean.setModuleId(mod.getModuleId().intValue());
 	   mdBean.setModule((Module)mod);
 	   mdBean.setModuleShdate(mod.getModuleshdate());

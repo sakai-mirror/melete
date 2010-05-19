@@ -63,6 +63,7 @@ public interface ModuleShdatesService {
 	public abstract void setModule(
 			org.etudes.api.app.melete.ModuleObjService module);
 
+	public boolean isVisibleFlag();
 
 	public abstract String toString();
 

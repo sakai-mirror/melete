@@ -48,6 +48,8 @@ public class Bookmark implements Serializable, BookmarkObjService {
     
     private Boolean lastVisited;   
     
+    private boolean sectionVisibleFlag;
+    
     public Bookmark()
     {
     	this.sectionId = 0;
@@ -172,6 +174,14 @@ public class Bookmark implements Serializable, BookmarkObjService {
 		this.lastVisited = lastVisited;
 	}
 
+	public boolean isSectionVisibleFlag()
+	{
+		return sectionVisibleFlag;
+	}
 	
-
+	public void setSectionVisibleFlag(boolean sectionVisibleFlag)
+	{
+		this.sectionVisibleFlag = sectionVisibleFlag;
+	}
+	
 }

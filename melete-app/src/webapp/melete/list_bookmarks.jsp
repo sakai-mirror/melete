@@ -60,14 +60,19 @@
 							 </h:panelGroup> 
 						 </f:facet>
 					 <h:outputText id="emp_space" value="     "  styleClass="ExtraPaddingClass" />	
-					 <h:commandLink id="viewSection"  actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}" rendered="#{bookmarkPage.instRole == false}">
+					 <h:commandLink id="viewSection"  actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}" rendered="#{((bookmarkPage.instRole == false)&&(bookmark.sectionVisibleFlag == bookmarkPage.trueFlag))}">
 					   <f:param name="sectionId" value="#{bookmark.sectionId}" />
 					   <h:outputText id="bmtitle" value="#{bookmark.title}"/>
 					 </h:commandLink>
-					  <h:commandLink id="editSection"  actionListener="#{bookmarkPage.editSection}" action="#{bookmarkPage.redirectEditSection}" rendered="#{bookmarkPage.instRole == true}">
+					  <h:commandLink id="editSection"  actionListener="#{bookmarkPage.editSection}" action="#{bookmarkPage.redirectEditSection}" rendered="#{((bookmarkPage.instRole == true)&&(bookmark.sectionVisibleFlag == bookmarkPage.trueFlag))}">
 					   <f:param name="sectionId" value="#{bookmark.sectionId}" />
 					   <h:outputText id="editbmtitle" value="#{bookmark.title}"/>
 					 </h:commandLink>
+                     <h:commandLink id="editSectionItalics"  actionListener="#{bookmarkPage.editSection}" action="#{bookmarkPage.redirectEditSection}" rendered="#{((bookmarkPage.instRole == true)&&(bookmark.sectionVisibleFlag != bookmarkPage.trueFlag))}">
+					   <f:param name="sectionId" value="#{bookmark.sectionId}" />
+					   <h:outputText id="editbmtitleitalics" value="#{bookmark.title}" styleClass="italics"/>
+					 </h:commandLink>					 
+					 <h:outputText id="bmtitletext" value="#{bookmark.title}" rendered="#{((bookmarkPage.instRole == false)&&(bookmark.sectionVisibleFlag != bookmarkPage.trueFlag))}"/>
 				    </h:column>
 				    <h:column>
 				    <f:facet name="header">
