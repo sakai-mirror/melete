@@ -585,7 +585,7 @@ public class ListAuthModulesPage implements Serializable
 		// module selected
 		if (moduleSelected)
 		{
-			if (moduleDateBeans != null)
+			if (moduleDateBeans != null && selectedModIndex > -1)
 			{
 			ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selectedModIndex);
 			ValueBinding binding = Util.getBinding("#{editModulePage}");
@@ -603,7 +603,7 @@ public class ListAuthModulesPage implements Serializable
 		}
 		if (sectionSelected)
 		{
-			if (moduleDateBeans != null)
+			if (moduleDateBeans != null && selectedModIndex > -1 && selectedSecIndex > -1)
 			{
 			ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selectedModIndex);
 			SectionBean secBean = (SectionBean) mdbean.getSectionBeans().get(selectedSecIndex);
@@ -663,6 +663,7 @@ public class ListAuthModulesPage implements Serializable
 		// module selected
 		if (moduleSelected || sectionSelected)
 		{
+			if(selectedModIndex <= -1) selectedModIndex = 0;
 			ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selectedModIndex);
 
 			ValueBinding binding = Util.getBinding("#{addSectionPage}");
@@ -710,7 +711,7 @@ public class ListAuthModulesPage implements Serializable
 		}
 
 		// module selected
-		if (moduleSelected)
+		if (moduleSelected && selectedModIndices != null)
 		{
 
 			if (selModBeans == null)
@@ -1108,6 +1109,11 @@ public class ListAuthModulesPage implements Serializable
 				indentSecBeans = new ArrayList();
 			}
 
+			if (selectedSecModIndices == null) 
+			{
+				resetSubSectionValues();
+				return "list_auth_modules";
+			}
 			// If one section is selected, we check if its the first section
 			// or if it is too deep to indent
 			// If multiple sections are selected, we indent those that we can
@@ -1233,6 +1239,12 @@ public class ListAuthModulesPage implements Serializable
 			if (indentSecBeans == null)
 			{
 				indentSecBeans = new ArrayList();
+			}
+			
+			if (selectedSecModIndices == null) 
+			{
+				resetSubSectionValues();
+				return "list_auth_modules";
 			}
 			// If one section is selected, we check if its the top level section
 			// If multiple sections are selected, we indent those that we can
@@ -1476,7 +1488,7 @@ public class ListAuthModulesPage implements Serializable
 				return "list_auth_modules";
 			}
 
-			if (sectionSelected)
+			if (sectionSelected && selectedSecModIndices != null)
 			{
 				ModuleDateBean mdbean = null;
 				SectionBean secBean = null;
