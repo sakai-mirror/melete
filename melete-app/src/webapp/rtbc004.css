@@ -89,6 +89,9 @@ a1:active 			{color : #000080;}
 /* Sets border color to light grey & background color to dull grey in Main Text tables */ 
 .maintabledata8 	{border-color:#E2E4E8;  background-color:#EAEAEA; } 
 
+/* Sets border color to light grey & background color to dull grey in Main Text tables */ 
+.maintabledata9 	{border-color:#FFFFFF;  background-color:#EEEEEE; } 
+
 .maintableCollapseWithBorder {
       border: 1px solid #EAEAEA;
       border-collapse: collapse;

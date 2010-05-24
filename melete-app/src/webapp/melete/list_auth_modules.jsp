@@ -178,10 +178,8 @@ if (msg != null)
            <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />				
          </h:commandLink>		  
    	</div>
-	<table class="maintableCollapseWithBorder">
-  	 <tr>
-		<td valign="top">
-   		 <h:dataTable id="table" 
+
+  <h:dataTable id="table" 
                   value="#{listAuthModulesPage.moduleDateBeans}"
                   var="mdbean"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass,ListActionClass" 
                   cellpadding="3" cellspacing="0" 
@@ -288,9 +286,7 @@ if (msg != null)
 	   <h:commandButton id="cancelChanges" immediate="true" action="#{listAuthModulesPage.cancelChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_cancel}"  accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
 	  </div>	 
 <!--End Content-->
- 	</td>
- 	</tr>
- 	</table>
+ 
 </h:form>
 </sakai:view>
 <script type="text/javascript">

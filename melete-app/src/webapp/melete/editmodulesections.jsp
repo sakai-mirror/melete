@@ -159,7 +159,7 @@ function saveSection()
 				  <table class="maintableCollapseWithNoBorder">
                    <!-- table header -->
 	                   <tr>
-			            <td colspan="2" height="20" class="maintabledata8">            	   
+			            <td colspan="2" height="20" class="maintabledata2">            	   
 				     		<h:commandLink id="editPrevButton" onmousedown="transferEditordata();" action="#{editSectionPage.editPrevSection}" rendered="#{editSectionPage.hasPrev}">
 			 					 <h:outputText id="text4_4" value="#{msgs.editmodulesections_edit_prev}"/>
 							</h:commandLink> 
@@ -176,12 +176,12 @@ function saveSection()
 							  <h:outputText id="text4_3" value=" / "/>				
 				     		<h:commandLink onmousedown="transferEditordata();" action="#{editSectionPage.saveAndAddAnotherSection}">
 			 					 <h:outputText id="text5" value="#{msgs.editmodulesections_add_new}"/>
-							</h:commandLink> 
+							</h:commandLink> 						   	
 						</td>
 			          </tr>	
 			          <tr>
-			          	<td colspan="2" class="maintabledata8">
-			          		<h:outputText id="text4" value="#{editSectionPage.module.title}" /> &raquo; <h:outputText id="text4_1" value="#{editSectionPage.section.title}" /> 
+			          	<td colspan="2" class="maintabledata9" >
+			     			<h:outputText id="text4" value="#{editSectionPage.module.title}" /> &raquo; <h:outputText id="text4_1" value="#{editSectionPage.section.title}" />
 			          	</td>
 			          </tr>	 
 	                   <!-- end table header -->

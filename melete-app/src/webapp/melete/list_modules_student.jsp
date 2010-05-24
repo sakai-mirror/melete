@@ -50,15 +50,13 @@
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
 </h:commandLink>	
 </div>
-<table class="maintableCollapseWithBorder">
-<tr>
-<td colspan="2">
+
 <h:messages showDetail="true" showSummary="false"/>
  <h:dataTable id="table" 
                   value="#{listModulesPage.modDataModel}"
                   var="vmbean"   rowClasses="row1,row2"  
               columnClasses="StudentListTitleClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
-                   border="0" cellpadding="3" width="100%" 
+                   border="0" cellpadding="3" cellspacing="0" width="100%" 
                    binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_stud_summary}">
       <h:column>   
       <f:facet name="header">
@@ -159,9 +157,7 @@
       </h:dataTable>  
        	 <h:outputText id="nomodstext" value="#{msgs.no_modules}" rendered="#{listModulesPage.nomodsFlag == true}" style="text-align:left"/>
        	 <div class="actionBar" align="left">&nbsp;</div>
- </td>
- </tr>
- </table>
+ 
  <!--End Content-->
   	</h:form>
   </sakai:view>
