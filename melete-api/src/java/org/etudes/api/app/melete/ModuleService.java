@@ -99,7 +99,7 @@ public interface ModuleService{
 	
 	public int getCourseModuleSize(String courseId);
 	
-	public Date getMinStartDate(String courseId);
+	public Date getMinStartDate(String course_id);
 	
-	public boolean applyBaseDate(String courseId, int time_diff);
+	public void applyBaseDateTx(String course_id, int time_diff);
 }

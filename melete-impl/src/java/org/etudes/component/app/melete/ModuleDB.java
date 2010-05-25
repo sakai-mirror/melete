@@ -51,6 +51,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -3136,12 +3137,12 @@ public class ModuleDB implements Serializable {
 		  return allresNames;
 	}
 
-	public Date getMinStartDate(String courseId)
+	public Date getMinStartDate(String course_id)
 	{
 		 Date minStartDate = null;
 		  try
 			{
-		 	  List modList = getModules(courseId);
+		 	  List modList = getModules(course_id);
 		      Iterator i = modList.iterator();
 		      List dateList = new ArrayList();
 
@@ -3186,71 +3187,32 @@ public class ModuleDB implements Serializable {
 	  return minStartDate;
     }
 
-	public boolean applyBaseDate(String courseId, int time_diff)
+	public void applyBaseDateTx(String course_id, int time_diff)
 	{
-		Transaction tx = null;
+		if (course_id == null)
+		{
+			throw new IllegalArgumentException("applyBaseDateTx: course_id is null");
+		}
+		if (time_diff == 0)
+		{
+			return;
+		}		
+		StringBuilder sql = new StringBuilder();
+		sql.append("UPDATE MELETE_MODULE_SHDATES MSH,MELETE_COURSE_MODULE MCM SET");
+		sql.append(" MSH.START_DATE=DATE_ADD(MSH.START_DATE,INTERVAL ? SECOND), MSH.END_DATE=DATE_ADD(MSH.END_DATE,INTERVAL ? SECOND)");
+		sql.append(" WHERE MSH.MODULE_ID=MCM.MODULE_ID AND MCM.COURSE_ID =?");
 
-        boolean result = false;
-		 try
-			{
-		 	  List modList = getModules(courseId);
-		      Iterator i = modList.iterator();
-		      GregorianCalendar gc = new GregorianCalendar();
+		Object[] fields = new Object[3];
+		int i = 0;
+		fields[i++] = time_diff;
+		fields[i++] = time_diff;
+		fields[i++] = course_id;
 
-		      Session session = hibernateUtil.currentSession();
-		      while (i.hasNext())
-		      {
-		    	  Module mod = (Module) i.next();
-		    	  ModuleShdates mshdates = (ModuleShdates) mod.getModuleshdate();
-		    	  if (mshdates != null)
-		    	  {
-		    		  try
-		    		  {
-		    			tx = session.beginTransaction();
-		    		    if (mshdates.getStartDate() != null)
-		    		    {
-		    			  gc.setTime(mshdates.getStartDate());
-		    			  gc.add(Calendar.SECOND, time_diff);
-		    			  Date resultStartDate = gc.getTime();
-		    			  mshdates.setStartDate(resultStartDate);
-		    		    }
-		    		    if (mshdates.getEndDate() != null)
-		    		    {
-		    			  gc.setTime(mshdates.getEndDate());
-		    			  gc.add(Calendar.SECOND, time_diff);
-		    			  Date resultEndDate = gc.getTime();
-		    			  mshdates.setEndDate(resultEndDate);
-		    		    }
-		    		    session.saveOrUpdate(mshdates);
-		        	    tx.commit();
-		        	    result = true;
-		    		  }
-			 	       catch(Exception e)
-			           {
-					     if(tx !=null) tx.rollback();
-					     logger.error(e.toString());
-					     result = false;
-			           }
-		    	  }
-		      }//End while
-		    }
-		    catch (Exception he)
-		    {
-			  logger.error(he.toString());
-			  he.printStackTrace();
-			  result = false;
-		    }
-		    try
-		    {
-	      	   hibernateUtil.closeSession();
-		    }
-	        catch (HibernateException he)
-		    {
-			   logger.error(he.toString());
-			   result = false;
-		    }
-		  return result;
+		if (!SqlService.dbWrite(sql.toString(), fields)) {
+			throw new RuntimeException("applyBaseDate: db write failed");
+		}		
 	}
+	
 
 // end clean up deleted stuff code
 	 /**
