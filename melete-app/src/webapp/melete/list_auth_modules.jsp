@@ -168,13 +168,13 @@ if (msg != null)
 	<div class="right">
 	     <h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.editSection}" action="#{bookmarkPage.redirectEditSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">
 	      <f:param name="sectionId" value="#{listModulesPage.bookmarkSectionId}" /> 
-	      <h:graphicImage id="lvisit_gif" value="images/last-visited.png" alt="" />
+	      <h:graphicImage id="lvisit_gif" value="images/last-visited.png" alt="" styleClass="AuthImgClass"/>
 	      <h:outputText id="lastvisit" value="#{msgs.last_visited}" />									
 	     </h:commandLink>
 	     <h:outputText value="|" rendered="#{listModulesPage.bookmarkSectionId > 0}"/> 
 	     <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
 	     <f:param name="fromPage" value="list_auth_modules"/>	
-	     <h:graphicImage id="mybook_gif" value="images/my-bookmarks.png" alt="" />
+	     <h:graphicImage id="mybook_gif" value="images/my-bookmarks.png" alt="" styleClass="AuthImgClass"/>
            <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />				
          </h:commandLink>		  
    	</div>

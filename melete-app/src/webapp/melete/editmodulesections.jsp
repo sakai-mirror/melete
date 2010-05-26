@@ -143,12 +143,12 @@ function saveSection()
           <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="saveSection();OpenBookmarkWindow(#{editSectionPage.section.sectionId},'#{editSectionPage.section.title}','Melete Bookmark Window');">
 	         <f:param id="sectionId" name="sectionId" value="#{editSectionPage.section.sectionId}" />
 	         <f:param id="sectionTitle" name="sectionTitle" value="#{editSectionPage.section.title}" />
-	         <h:graphicImage id="bul_gif" value="images/bookmark-it.png" alt=""/>
+	         <h:graphicImage id="bul_gif" value="images/bookmark-it.png" alt="" styleClass="AuthImgClass"/>
 	         <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
            </h:outputLink>		
             <h:outputText value="|"/> 
            <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
-             <h:graphicImage id="mybook_gif" value="images/my-bookmarks.png" alt="" />
+             <h:graphicImage id="mybook_gif" value="images/my-bookmarks.png" alt="" styleClass="AuthImgClass"/>
              <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
              <f:param name="fromPage" value="editmodulesections" /> 
            </h:commandLink>
