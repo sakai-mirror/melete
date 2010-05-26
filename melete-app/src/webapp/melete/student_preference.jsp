@@ -36,18 +36,14 @@
 			<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
     <div class="meletePortletToolBarMessage"><img src="images/user1_preferences.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.student_preference_user_preference}" /></div>				
-	
+	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
      <table  class="maintableCollapseWithBorder">
-        <tr>
-          <td class="maintabledata3" valign="top">
-          	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-		 </td></tr>		
-			<tr><td  height="20" class="maintabledata5" ><h:outputText id="t2" value="#{msgs.student_preference_view_select}"  styleClass="bold"/>          </td></tr>
-              <tr>
+		     <tr>
                 <td>
-						<table  class="maintableCollapseWithNoBorder">
-						<tr>
-					<td>
+				  <table  class="maintableCollapseWithNoBorder">
+				  <tr><td  height="20" class="maintabledata5" ><h:outputText id="t2" value="#{msgs.student_preference_view_select}"  styleClass="bold"/>          </td></tr>
+			    	<tr>
+					 <td>
 							<h:selectOneRadio value="#{studentPreferences.userView}" layout="pageDirection">
 										<f:selectItem itemLabel="Expanded" itemValue="true" />
 										<f:selectItem itemLabel="Collapsed" itemValue="false"/>
