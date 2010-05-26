@@ -255,7 +255,7 @@ width: 16px;
 height: 16px;  border: 0 none black;  
 vertical-align: middle; }
 
-.ExpClass			{ border: 0 none black;}
+.ExpClass			{ border: 0 none black;margin:0 3px 0 0;}
 .NextStepsPaddingClass {padding:11.3px;}
 .ExtraPaddingClass {padding:8px;}
 .TwiceExtraPaddingClass {padding:18px;}
@@ -266,10 +266,10 @@ vertical-align: middle; }
 .ViewSectionTableClass {padding:8px;
  vertical-align:top;}
 
-.AuthImgClass		{ width: 16px;    height: 16px;    border: 0 none black;    vertical-align: text-bottom;   }
+.AuthImgClass		{ width: 16px;    height: 16px;    border: 0 none black;    vertical-align: text-bottom; margin:0 3px 0 0;  }
 
 .AddImgClass		{   height: 16px;   
-width: 16px;   border: 0 none black;  vertical-align: top;}
+width: 16px;   border: 0 none black;  vertical-align: top; margin:0 3px 0 0;}
      
 .MainTableClass		{ border:1px solid #E2E4E8;}
 td.MainTableClass     { white-space: nowrap;}
@@ -385,7 +385,6 @@ vertical-align:top;
 
 .col45wordwrap {
 width:45%;
-word-wrap:break-word;
 vertical-align:top;
 }
 
