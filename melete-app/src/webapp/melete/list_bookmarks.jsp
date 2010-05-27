@@ -45,6 +45,7 @@
     	<div class="right">
     	      <h:inputHidden id="bmlistflag" value="#{bookmarkPage.nobmsFlag}"/>
                  <h:commandLink id="exportNotesLink" actionListener="#{bookmarkPage.exportNotes}" action="#{bookmarkPage.redirectExportNotes}" rendered="#{bookmarkPage.nobmsFlag == false}">
+                 	<h:graphicImage id="image0" alt="" url="images/export.png" styleClass="AuthImgClass"/>
                    <h:outputText id="exportnotes" value="#{msgs.list_bookmarks_export_notes}" />									
                  </h:commandLink>
           </div>
@@ -81,9 +82,6 @@
 					 <h:outputText id="bmnotes" value="#{bookmark.notes}"/>					 
 					</h:column>
 					<h:column>
-					  <f:facet name="header">
-							 <h:outputText id="t3" value="#{msgs.list_bookmarks_actions}" />
-					 </f:facet>
 					 <h:outputLink id="editBookmarkLink" value="list_bookmarks" onclick="OpenBookmarkWindow(#{bookmark.sectionId},'','Melete Bookmark Window');">
 		    	       <f:param id="sectionId" name="sectionId" value="#{bookmark.sectionId}" />
 						  <h:graphicImage id="editgif" alt="" value="images/document_edit.gif" styleClass="AuthImgClass" />

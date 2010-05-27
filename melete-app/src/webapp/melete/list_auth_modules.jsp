@@ -259,10 +259,7 @@ if (msg != null)
            
          </h:column>
          <h:column>
-          <f:facet name="header">
-        	 <h:outputText id="t8" value="#{msgs.list_auth_modules_actions}" />
-          </f:facet>
-       	   <h:outputText id="emp_space6" value="  " styleClass="ExtraPaddingClass" />
+           <h:outputText id="emp_space6" value="  " styleClass="ExtraPaddingClass" />
            <h:commandLink id="viewNextsteps" action="#{listAuthModulesPage.viewNextsteps}" >
 			   <h:graphicImage id="vns_gif" value="images/add.gif" alt="#{msgs.list_auth_modules_alt_add_steps}" title="#{msgs.list_auth_modules_alt_add_steps}" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext == listAuthModulesPage.isNull}"/>      
 			   <h:graphicImage id="vns1_gif" value="images/view_next.gif" alt="#{msgs.list_auth_modules_alt_next_steps}" title="#{msgs.list_auth_modules_alt_next_steps}" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext != listAuthModulesPage.isNull}"/>        		   

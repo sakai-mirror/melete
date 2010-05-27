@@ -1540,7 +1540,11 @@
      <navigation-case>
       <from-outcome>view_whats_next</from-outcome>
       <to-view-id>/melete/view_whats_next.jsp</to-view-id>
-     </navigation-case>                           
+     </navigation-case>      
+     <navigation-case>
+		   <from-outcome>list_bookmarks</from-outcome>
+        <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
+      </navigation-case>   
    </navigation-rule>       
      
  <!--Rule for view_module -->    

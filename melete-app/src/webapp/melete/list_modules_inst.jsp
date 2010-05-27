@@ -39,7 +39,19 @@
 	<jsp:include page="topnavbar.jsp"/> 
 </f:subview>
 <div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_modules_inst_viewing_student}" /> </div>
-
+<div align="right">
+<h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">
+ <f:param name="sectionId" value="#{listModulesPage.bookmarkSectionId}" /> 
+ <h:graphicImage id="lvisit_gif" value="images/last-visited.png" alt="" styleClass="AuthImgClass"/>
+ <h:outputText id="lastvisit" value="#{msgs.last_visited}" />									
+</h:commandLink>
+<h:outputText value="|" rendered="#{listModulesPage.bookmarkSectionId > 0}"/> 
+<h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
+<f:param name="fromPage" value="list_modules_inst" />
+<h:graphicImage id="mybook_gif" value="images/my-bookmarks.png" alt="" styleClass="AuthImgClass"/>
+ <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
+</h:commandLink>	
+</div>
 <h:messages showDetail="true" showSummary="false"/>
 
  <h:dataTable id="StudentTable"  

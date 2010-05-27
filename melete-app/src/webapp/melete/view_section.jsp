@@ -55,7 +55,7 @@
 				      <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
  	</h:outputLink>		
  <h:outputText value="|" rendered="#{viewSectionsPage.instRole == false}"/> 			
- <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}" rendered="#{viewSectionsPage.instRole == false}">
+ <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
 						<h:graphicImage id="mybook_gif" value="images/my-bookmarks.png" alt="" styleClass="AuthImgClass"/>
 						<h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
  <f:param name="fromPage" value="view_section" />
