@@ -142,8 +142,9 @@
 		 {
 	        var oDoc = oIframe.contentWindow || oIframe.contentDocument;
 		    if (oDoc.document) {
-			oDoc = oDoc.document;					       
-		    } 
+			oDoc = oDoc.document;	
+			oIframe.style.height = oDoc.body.scrollHeight + 100 +"px";				       
+		    } else oIframe.height = oDoc.body.offsetHeight + 100 ; 
 		   	for (i=0; i < document.styleSheets.length; i++)
 			{
 			  var link = document.createElement("link");
@@ -154,7 +155,7 @@
 		       link.setAttribute("href", document.styleSheets[i].href);
 			   oDoc.body.appendChild(link); 
 		    }
-		  oIframe.height = oDoc.body.offsetHeight + 100 ;   						
+		    						
 		  }
 
 	  setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');			  
