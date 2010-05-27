@@ -465,13 +465,13 @@ public class EditSectionPage extends SectionPage implements Serializable
 			setSuccess(true);
 			} else return "editmodulesections";
 
-
-		FacesContext context = FacesContext.getCurrentInstance();
+		// un-comment to show success message again.
+		/*FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		String successMsg = bundle.getString("edit_section_confirm");
 		FacesMessage msg = new FacesMessage("Info message", successMsg);
 		msg.setSeverity(FacesMessage.SEVERITY_INFO);
-		context.addMessage(null, msg);
+		context.addMessage(null, msg);*/
 		return "list_auth_modules";
 
 	}
