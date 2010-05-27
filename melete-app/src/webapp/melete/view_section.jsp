@@ -132,9 +132,6 @@
          </B></td></tr>
 	    </table>
 
-	<h:inputHidden id="viewSectionFrameId" value="#{meleteSiteAndUserInfo.winEncodeName}"/>
-
-
 <script type="text/javascript">
 	window.onload=function(){
 	 var oIframe = document.getElementById("iframe3");
