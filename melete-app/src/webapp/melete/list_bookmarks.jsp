@@ -101,7 +101,7 @@
                    </h:dataTable>
                    <h:outputText id="nobookmsg" value="#{msgs.list_bookmarks_no_bookmarks_available}" rendered="#{bookmarkPage.nobmsFlag == true}" style="text-align:left"/>
                  <div class="actionBar" align="left">				
-				<h:commandButton id="returnButton"  action="#{bookmarkPage.returnAction}" value="#{msgs.im_return}" tabindex="" accesskey="#{msgs.return_access}" title="#{msgs.im_return_text}" styleClass="BottomImgReturn" />
+				<h:commandButton id="returnButton"  immediate="true" action="#{bookmarkPage.returnAction}" value="#{msgs.im_return}" tabindex="" accesskey="#{msgs.return_access}" title="#{msgs.im_return_text}" styleClass="BottomImgReturn" />
 		        <h:commandButton id="refreshButton"  action="#{bookmarkPage.refreshAction}" style="display: none; visibility: hidden;"  />
 			    </div>
             </td>
