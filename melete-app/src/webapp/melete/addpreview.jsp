@@ -154,25 +154,26 @@ rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 4)&
 
 <script type="text/javascript">
       window.onload=function(){
-	 var oIframe = document.getElementById("iframe3");
-	 if(oIframe)
-		 {
-	        var oDoc = oIframe.contentWindow || oIframe.contentDocument;
-		    if (oDoc.document) {
-			oDoc = oDoc.document;					       
-		    } 
-		   	for (i=0; i < document.styleSheets.length; i++)
-			{
-			  var link = document.createElement("link");
-			  //finish constructing the links
-		       link.setAttribute("rel", "stylesheet");
-		       link.setAttribute("type", "text/css");
-			   //assign this new link the href of the parent one
-		       link.setAttribute("href", document.styleSheets[i].href);
-			   oDoc.body.appendChild(link); 
-		    } 
-		    oIframe.height = oDoc.body.offsetHeight + 100 ;  						
-		  }	
+		var oIframe = document.getElementById("iframe3");
+		 if(oIframe)
+			 {
+		        var oDoc = oIframe.contentWindow || oIframe.contentDocument;
+			    if (oDoc.document) {
+				oDoc = oDoc.document;	
+				oIframe.style.height = oDoc.body.scrollHeight + 100 +"px";				       
+			    } else oIframe.height = oDoc.body.offsetHeight + 100 ; 
+			   	for (i=0; i < document.styleSheets.length; i++)
+				{
+				  var link = document.createElement("link");
+				  //finish constructing the links
+			       link.setAttribute("rel", "stylesheet");
+			       link.setAttribute("type", "text/css");
+				   //assign this new link the href of the parent one
+			       link.setAttribute("href", document.styleSheets[i].href);
+				   oDoc.body.appendChild(link); 
+			    }
+			    						
+			  }
 		setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');  
 	}
  </script>
