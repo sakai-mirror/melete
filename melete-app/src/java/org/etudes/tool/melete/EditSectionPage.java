@@ -363,8 +363,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 			}
 
 			// uploadFileName=null;
-			String successMsg = bundle.getString("add_section_success");
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "add_section_success", successMsg));
+			//un-comment if want to show success message on save.
+			//String successMsg = bundle.getString("add_section_success");
+			//context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "add_section_success", successMsg));
 
 			//Track the event
 			EventTrackingService.post(EventTrackingService.newEvent("melete.section.edit", ToolManager.getCurrentPlacement().getContext(), true));
