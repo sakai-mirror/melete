@@ -36,7 +36,7 @@
 
 <h:form id="listmodulesform">
 <f:subview id="top">
-	<jsp:include page="topnavbar.jsp"/> 
+	<jsp:include page="topnavbar.jsp?myMode=View"/> 
 </f:subview>
 <div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_modules_inst_viewing_student}" /> </div>
 <div align="right">

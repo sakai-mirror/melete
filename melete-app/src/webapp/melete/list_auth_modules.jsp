@@ -158,7 +158,7 @@ if (msg != null)
 }  
 %>
 	<f:subview id="top">
-		<jsp:include page="topnavbar.jsp"/> 
+		<jsp:include page="topnavbar.jsp?myMode=Author"/> 
 	</f:subview>
 	<div class="meletePortletToolBarMessage"><img src="images/pen_red.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_auth_modules_authoring_options}" /> </div>
 	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>

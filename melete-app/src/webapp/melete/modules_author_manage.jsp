@@ -34,7 +34,7 @@
 <h:form id="ManageModuleForm">
 <!-- top nav bar --> 
 	<f:subview id="top">
-		<jsp:include page="topnavbar.jsp"/> 
+		<jsp:include page="topnavbar.jsp?myMode=Manage"/> 
 	</f:subview>
 	<div class="meletePortletToolBarMessage"><img src="images/folder_document.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.modules_author_manage_managing_options}" /></div>
 <!-- This Begins the Main Text Area -->	

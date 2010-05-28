@@ -34,7 +34,7 @@
 
 <h:form id="viewsectionform"> 
 	<f:subview id="top">
-	  <jsp:include page="topnavbar.jsp"/> 
+	  <jsp:include page="topnavbar.jsp?myMode=View"/> 
 	</f:subview>  
 <p></p>   
 <table   class="maintableCollapseWithNoBorder">

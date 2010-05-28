@@ -33,10 +33,10 @@
 
 <h:form id="listmodulesStudentform">
 	<f:subview id="top">
-		<jsp:include page="topnavbar.jsp"/> 
+		<jsp:include page="topnavbar.jsp?myMode=View"/> 
 	</f:subview>
 <!--Page Content-->
-<p>&nbsp;</p>
+
 <div align="right">
 <h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">
  <f:param name="sectionId" value="#{listModulesPage.bookmarkSectionId}" /> 

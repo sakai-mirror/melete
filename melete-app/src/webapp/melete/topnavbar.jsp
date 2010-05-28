@@ -27,25 +27,21 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <sakai:tool_bar id="topbar">
-  <h:commandLink id="viewItem" action="#{navPage.viewAction}" immediate="true" >
-	 <h:graphicImage url="/images/preview.png" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
-	 <h:outputText  value="#{msgs.topnavbar_view}"/>	
-  </h:commandLink>
+  <h:graphicImage url="/images/preview.png" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
+  <sakai:tool_bar_item disabled="#{!navPage.shouldRenderView}" immediate="true" value="#{msgs.topnavbar_view}" action="#{navPage.viewAction}"/>	 
+  <h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
   
-  <h:commandLink id="authorItem" action="#{navPage.authAction}" immediate="true" rendered="#{navPage.isInstructor}">
-	 <h:graphicImage url="/images/pen_red.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
-	 <h:outputText  value="#{msgs.topnavbar_author}"/>	
-	</h:commandLink>
- 	
-  <h:commandLink id="manageItem" action="#{navPage.manageAction}" immediate="true" rendered="#{navPage.isInstructor}">
-	 <h:graphicImage url="/images/folder_document.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
-	 <h:outputText  value="#{msgs.topnavbar_manage}"/>	
-  </h:commandLink>
- 
-  <h:commandLink id="prefItem" action="#{navPage.PreferenceAction}" immediate="true">
-	 <h:graphicImage url="/images/user1_preferences.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
-	 <h:outputText  value="#{msgs.topnavbar_preferences}"/>
-  </h:commandLink>
+  <h:graphicImage url="/images/pen_red.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass" rendered="#{navPage.isInstructor}" />
+  <sakai:tool_bar_item disabled="#{!navPage.shouldRenderAuthor}" immediate="true" value="#{msgs.topnavbar_author}" action="#{navPage.authAction}" rendered="#{navPage.isInstructor}" />
+  <h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
+  
+  <h:graphicImage url="/images/folder_document.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass" rendered="#{navPage.isInstructor}"/>
+  <sakai:tool_bar_item disabled="#{!navPage.shouldRenderManage}" immediate="true" value="#{msgs.topnavbar_manage}" action="#{navPage.manageAction}" rendered="#{navPage.isInstructor}" />
+  <h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
+  
+  <h:graphicImage url="/images/user1_preferences.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
+  <sakai:tool_bar_item disabled="#{!navPage.shouldRenderPreferences}" immediate="true" value="#{msgs.topnavbar_preferences}" action="#{navPage.PreferenceAction}"/>
+   
 </sakai:tool_bar>
 <!-- End code to display images horizontally. -->
 
