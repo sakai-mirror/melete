@@ -210,7 +210,7 @@ public class BookmarkPage implements Serializable
 			return "failure";
 		}
 	    resetValues();
-	    setFromPage("list_bookmarks");
+	    //setFromPage("list_bookmarks");
 	    return "list_bookmarks";
 	}
 
