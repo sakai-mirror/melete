@@ -269,30 +269,42 @@ public class BookmarkDB {
 	    }
 	}
 
-	public void deleteBookmark(int bookmarkId) throws Exception
-	{
-		Bookmark mb = null;
-		try{
-		    Session session = getHibernateUtil().currentSession();
-		     int deletedEntities = session.createQuery("delete Bookmark bm where bm.bookmarkId = "+bookmarkId).executeUpdate();
-		}
-	    catch (Exception e)
-	    {
-		  logger.error(e.toString());
-		  throw e;
-	    }
-	    finally
-		{
-	    	try
-			  {
-		      	hibernateUtil.closeSession();
-			  }
-		      catch (HibernateException he)
-			  {
-				  logger.error(he.toString());
-			  }
-		}
-	}
+	  public void deleteBookmark(int bookmarkId) throws Exception
+      {
+        Transaction tx = null;
+        Bookmark mb = null;
+        String delBookmarkStr = "delete Bookmark bm where bm.bookmarkId=:bookmarkId";
+        try{
+               Session session = getHibernateUtil().currentSession();
+               tx = session.beginTransaction();
+               int deletedEntities = session.createQuery(delBookmarkStr).setInteger("bookmarkId",bookmarkId).executeUpdate();
+               tx.commit();
+           }
+           catch (HibernateException he)
+           {
+               if (tx!=null) tx.rollback();
+               logger.error(he.toString());
+               throw he;
+           }
+           catch (Exception e) {
+              if (tx!=null) tx.rollback();
+               logger.error(e.toString());
+               throw e;
+            }
+            finally
+            {
+            	try
+    			{
+    				hibernateUtil.closeSession();
+    			}
+    			catch (HibernateException he)
+    			{
+    				logger.error(he.toString());
+    				throw he;
+    			}
+            }
+      }
+
 
 	/**
 	 * @return Returns the hibernateUtil.
