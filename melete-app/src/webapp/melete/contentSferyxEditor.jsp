@@ -35,6 +35,7 @@ final AuthorPreferencePage authorPreferencePage = (AuthorPreferencePage)facesCon
 
 String data_t = "typeEditor";
 String data = "Compose content here";
+
 if(request.getParameter("mode")!= null && request.getParameter("mode").equals("Edit"))
 {
 	final EditSectionPage eSectionPage = (EditSectionPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "editSectionPage");
@@ -61,7 +62,7 @@ String editorloca =  meleteSiteAndUserInfo.getEditorArchiveLocation() ;
 String absloca = meleteSiteAndUserInfo.getAbsoluteTranslationLocation();
 boolean renderSferyx = authorPreferencePage.isShouldRenderSferyx();
 boolean dispSferyx = authorPreferencePage.isDisplaySferyx();
-boolean showSferyx = renderSferyx && dispSferyx && data_t.equals("typeEditor");
+boolean showSferyx = renderSferyx && dispSferyx && (data_t.equals("notype") || data_t.equals("typeEditor"));
 %>
 
 <SCRIPT type="text/javascript" LANGUAGE="JavaScript">
@@ -91,9 +92,11 @@ document.writeln('<PARAM NAME="scriptable" VALUE="true">');
 		        document.writeln('<PARAM NAME="scriptable" VALUE="true">');
 				document.writeln('<PARAM NAME = "variableName" VALUE="html_content">');
 			<%
-				if(data_t.equals("typeEditor")){
+				if(data != null){
 				%>
 					document.writeln('<PARAM name="initialURLEncodedContent" VALUE="<%=java.net.URLEncoder.encode(data)%>">');
+				<%	} else { %>
+				document.writeln('<PARAM name="initialURLEncodedContent" VALUE="">');
 				<%	} %>
 				document.writeln('<PARAM name="saveURL" VALUE="<%=saveloca%>">');
 				document.writeln('<PARAM NAME = "uploadContentAsMultipartFormData" VALUE="true">');

@@ -475,43 +475,41 @@ public abstract class SectionPage implements Serializable {
             setMeleteResource(null);
             oldType = section.getContentType();
 
-            if(contentTypeRadio.findComponent(getFormName()).findComponent("uploadPath") != null)
-                    {
-                    contentTypeRadio.findComponent(getFormName()).findComponent("uploadPath").setRendered(shouldRenderUpload);
-                    contentTypeRadio.findComponent(getFormName()).findComponent("BrowsePath").setRendered(shouldRenderUpload);
-                    }
+            ValueBinding binding = Util.getBinding("#{authorPreferences}");
+            AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
+            String usereditor = preferencePage.getUserEditor();
+            preferencePage.setDisplaySferyx(false);
 
+            if(contentTypeRadio.findComponent(getFormName()).findComponent("uploadPath") != null)
+            {
+            	contentTypeRadio.findComponent(getFormName()).findComponent("uploadPath").setRendered(shouldRenderUpload);
+            	contentTypeRadio.findComponent(getFormName()).findComponent("BrowsePath").setRendered(shouldRenderUpload);
+            }
 
             if(contentTypeRadio.findComponent(getFormName()).findComponent("link") != null)
-            	{
-                   contentTypeRadio.findComponent(getFormName()).findComponent("link").setRendered(shouldRenderLink);
-            	}
+            {
+            	contentTypeRadio.findComponent(getFormName()).findComponent("link").setRendered(shouldRenderLink);
+            }
 
             if(contentTypeRadio.findComponent(getFormName()).findComponent("ContentLTIView") != null)
-            	{
-                   contentTypeRadio.findComponent(getFormName()).findComponent("ContentLTIView").setRendered(shouldRenderLTI);
-            	}
+            {
+            	contentTypeRadio.findComponent(getFormName()).findComponent("ContentLTIView").setRendered(shouldRenderLTI);
+            }
 
-              if(shouldRenderEditor)
-	            {
-            	  ValueBinding binding = Util.getBinding("#{authorPreferences}");
-   	    		  AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
-	               String usereditor = preferencePage.getUserEditor();
-	    		   this.contentEditor = new String("Compose content here");
-		           if(contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor") != null && usereditor.equals(preferencePage.FCKEDITOR))
-		                {
-		        	    setFCKCollectionAttrib();
-		                contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor").setRendered(shouldRenderEditor);		                
-		                }
+            this.contentEditor = new String("Compose content here");
+            if(contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor") != null)
+            {
+            	setFCKCollectionAttrib();
+            	contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor").setRendered(shouldRenderEditor && preferencePage.FCKEDITOR.equals(usereditor));		                
+            }
 
-		           if(contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView") != null && usereditor.equals(preferencePage.SFERYX))
-		           		{
-		           		preferencePage.setDisplaySferyx(true);
-		           		contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView").setRendered(shouldRenderEditor);
-		           		}
-	            }
+            if(contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView") != null)
+            {
+            	preferencePage.setDisplaySferyx(shouldRenderEditor && preferencePage.SFERYX.equals(usereditor));
+            	contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView").setRendered(shouldRenderEditor && preferencePage.SFERYX.equals(usereditor));
+            }
 
-            if(contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm") != null)
+           if(contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm") != null)
             {
             	section.setContentType((String)contentTypeRadio.getValue());
               contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm").setRendered(false);
@@ -519,13 +517,11 @@ public abstract class SectionPage implements Serializable {
 
             //Upon changing content type, license is set by the selected resource, if there is one,
             //or via User preferences
-            ValueBinding binding = Util.getBinding("#{licensePage}");
+            binding = Util.getBinding("#{licensePage}");
             LicensePage lPage = (LicensePage)binding.getValue(context);
             lPage.setFormName(this.formName);
             lPage.resetValues();
-
-            ValueBinding binding2 = Util.getBinding("#{authorPreferences}");
-         	AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding2.getValue(context);
+            
          	MeleteUserPreference mup = preferencePage.getMup();
          	lPage.setInitialValues(this.formName, mup);
          	
@@ -1315,7 +1311,7 @@ public abstract class SectionPage implements Serializable {
 
 	public String getCurrLTIUrl()
 	{
-		if ( meleteResource != null )
+		if ( meleteResource != null && meleteResource.getResourceId() != null)
 		{
 			try
 			{
