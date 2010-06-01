@@ -126,7 +126,7 @@ function saveSection()
 	 else
 	 {
 	   //Do nothing
-	 }    
+	 }  
 }
 </script>
 
@@ -140,7 +140,7 @@ function saveSection()
 		<div class="meletePortletToolBarMessage"><img src="images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.editmodulesections_editing_section}" /> </div>
 		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
         <div class="right">
-          <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="saveSection();OpenBookmarkWindow(#{editSectionPage.section.sectionId},'#{editSectionPage.section.title}','Melete Bookmark Window');">
+          <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="saveSection();var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},'#{editSectionPage.section.title}','Melete Bookmark Window');w.focus();">
 	         <f:param id="sectionId" name="sectionId" value="#{editSectionPage.section.sectionId}" />
 	         <f:param id="sectionTitle" name="sectionTitle" value="#{editSectionPage.section.title}" />
 	         <h:graphicImage id="bul_gif" value="images/bookmark-it.png" alt="" styleClass="AuthImgClass"/>
