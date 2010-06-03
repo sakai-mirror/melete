@@ -174,12 +174,12 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 			addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
 			return "failure";
 		}
-		if (callFromAddContent == false)
+		/*if (callFromAddContent == false)
 		{
 		  String msg="";
 		  msg = bundle.getString("edit_module_success");
 		  addMessage(context, "Info Message", msg, FacesMessage.SEVERITY_INFO);
-		}
+		}*/
 		setSuccess(true);
 		return "success";
 	 }
