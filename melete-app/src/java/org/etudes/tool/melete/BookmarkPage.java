@@ -471,6 +471,7 @@ public class BookmarkPage implements Serializable
     this.bookmark = bookmark;
   }
 
+   
    public List getBmList()
    {
 	   FacesContext context = FacesContext.getCurrentInstance();
@@ -483,9 +484,20 @@ public class BookmarkPage implements Serializable
 	    	 for (ListIterator i = bmList.listIterator(); i.hasNext(); )
 	 		 {
 	 			 Bookmark bmark = (Bookmark)i.next();
-	 			 if (bmark.getNotes().length() > 70)
+	 			 if (bmark.getNotes() != null)
+	 			 {	 
+	 			   if (bmark.getNotes().length() > 70)
+	 			   {
+	 				 bmark.setBriefNotes(bmark.getNotes().substring(0,69)+"...");
+	 			   }
+	 			   else
+	 			   {
+	 				   bmark.setBriefNotes(bmark.getNotes());
+	 			   }
+	 			 }
+	 			 else
 	 			 {
-	 				 bmark.setNotes(bmark.getNotes().substring(0,69)+"...");
+	 				 bmark.setBriefNotes("");
 	 			 }
 	 			 bmark.setSectionVisibleFlag(bmark.getSection().getModule().getModuleshdate().isVisibleFlag());
 	 		 }	 

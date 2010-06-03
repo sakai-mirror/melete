@@ -79,7 +79,7 @@
 				    <f:facet name="header">
 							 <h:outputText id="t2" value="#{msgs.list_bookmarks_notes}" />
 					 </f:facet>
-					 <h:outputText id="bmnotes" value="#{bookmark.notes}"/>					 
+					 <h:outputText id="bmnotes" value="#{bookmark.briefNotes}"/>					 
 					</h:column>
 					<h:column>
 					 <h:outputLink id="editBookmarkLink" value="list_bookmarks" onclick="OpenBookmarkWindow(#{bookmark.sectionId},'','Melete Bookmark Window');">
