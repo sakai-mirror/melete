@@ -46,6 +46,8 @@ public class Bookmark implements Serializable, BookmarkObjService {
 
     private String notes;
     
+    private String briefNotes;
+    
     private Boolean lastVisited;   
     
     private boolean sectionVisibleFlag;
@@ -160,6 +162,14 @@ public class Bookmark implements Serializable, BookmarkObjService {
 		this.notes = notes;
 	}
 
+	public String getBriefNotes() {
+		return briefNotes;
+	}
+	
+	public void setBriefNotes(String briefNotes) {
+		this.briefNotes = briefNotes;
+	}	
+	
 	/* (non-Javadoc)
 	 * @see org.etudes.component.app.melete.BookmarkObjService#getLastVisited()
 	 */
