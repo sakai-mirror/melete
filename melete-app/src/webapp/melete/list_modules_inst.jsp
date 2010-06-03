@@ -38,7 +38,7 @@
 <f:subview id="top">
 	<jsp:include page="topnavbar.jsp?myMode=View"/> 
 </f:subview>
-<div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_modules_inst_viewing_student}" /> </div>
+<br/>
 <div align="right">
 <h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">
  <f:param name="sectionId" value="#{listModulesPage.bookmarkSectionId}" /> 
