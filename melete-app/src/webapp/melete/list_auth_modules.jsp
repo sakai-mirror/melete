@@ -162,9 +162,7 @@ if (msg != null)
 	</f:subview>
 	<div class="meletePortletToolBarMessage"><img src="images/pen_red.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_auth_modules_authoring_options}" /> </div>
 	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-	<f:subview id="authtop">
-		<jsp:include page="authnavbar.jsp"/> 
-	</f:subview>
+	
 	<div class="right">
 	     <h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.editSection}" action="#{bookmarkPage.redirectEditSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">
 	      <f:param name="sectionId" value="#{listModulesPage.bookmarkSectionId}" /> 
@@ -178,8 +176,17 @@ if (msg != null)
            <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />				
          </h:commandLink>		  
    	</div>
-
-  <h:dataTable id="table" 
+ <table width="100%" rules="rows" class="maintableCollapseWithBorder">
+  <tr>
+   <td>
+ 	<f:subview id="authtop">
+		<jsp:include page="authnavbar.jsp"/> 
+	</f:subview>
+  </td>
+ </tr>
+ <tr>
+   <td>
+   <h:dataTable id="table" 
                   value="#{listAuthModulesPage.moduleDateBeans}"
                   var="mdbean"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass,ListActionClass" 
                   cellpadding="3" cellspacing="0" 
@@ -283,7 +290,9 @@ if (msg != null)
 	   <h:commandButton id="cancelChanges" immediate="true" action="#{listAuthModulesPage.cancelChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_cancel}"  accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
 	  </div>	 
 <!--End Content-->
- 
+   </td>
+  </tr>
+ </table>
 </h:form>
 </sakai:view>
 <script type="text/javascript">
