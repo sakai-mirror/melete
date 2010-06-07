@@ -809,6 +809,9 @@ public abstract class SectionPage implements Serializable {
 		  	rbPage.setRemoteLinkFiles(null);
   		}
 
+  	binding = Util.getBinding("#{authorPreferences}");
+    AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(ctx);
+    preferencePage.setDisplaySferyx(false);
 	shouldRenderEditor=false;
 	shouldRenderLink=false;
 	shouldRenderLTI=false;

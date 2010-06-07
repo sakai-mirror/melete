@@ -62,14 +62,13 @@ String editorloca =  meleteSiteAndUserInfo.getEditorArchiveLocation() ;
 String absloca = meleteSiteAndUserInfo.getAbsoluteTranslationLocation();
 boolean renderSferyx = authorPreferencePage.isShouldRenderSferyx();
 boolean dispSferyx = authorPreferencePage.isDisplaySferyx();
-boolean showSferyx = renderSferyx && dispSferyx && (data_t.equals("notype") || data_t.equals("typeEditor"));
 %>
 
 <SCRIPT type="text/javascript" LANGUAGE="JavaScript">
 <!--
     var _info = navigator.userAgent;
     var _ie = (_info.indexOf("MSIE") > 0 && _info.indexOf("Win") > 0 && _info.indexOf("Windows 3.1") < 0);
-if(<%=showSferyx %>){
+if(<%=dispSferyx %>){
      if(!_ie)
 		{
 				document.writeln('<applet code="sferyx.administration.editors.HTMLEditor" archive="<%=editorloca%>"  id="editor" WIDTH = "90%" HEIGHT = "600" name="htmleditor">');
