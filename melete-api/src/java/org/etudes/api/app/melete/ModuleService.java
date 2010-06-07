@@ -40,12 +40,6 @@ import org.etudes.api.app.melete.exception.MeleteException;
 
 public interface ModuleService{
 
-	public static final int MIGRATE_IN_PROCESS=0;
-	public static final int MIGRATE_FAILED=1;
-	public static final int MIGRATE_COMPLETE=2;
-	public static final int MIGRATE_INCOMPLETE=3;
-
-
 	public void insertProperties(ModuleObjService module, ModuleShdatesService moduleshdates,String userId, String courseId) throws Exception;
 
 	public List getViewModules(String userId, String courseId);
@@ -64,9 +58,9 @@ public interface ModuleService{
 
 	public void setModules(List modules) ;
 
-	public void updateProperties(List moduleDateBeans)  throws Exception;
+	public void updateProperties(List moduleDateBeans, String courseId)  throws Exception;
 
-	public void archiveModules(List selModBeans, List moduleDateBeans) throws Exception;
+	public void archiveModules(List selModBeans, List moduleDateBeans, String courseId) throws Exception;
 
 	public ModuleObjService getModule(int moduleId);
 
@@ -78,18 +72,14 @@ public interface ModuleService{
 
 	public CourseModuleService getCourseModule(int moduleId,  String courseId) throws Exception;
 
-//	public void deleteModules(List moduleDateBeans, String courseId, String userId) throws Exception;
-	public void deleteModules(List moduleDateBeans, String courseId, String userId) throws Exception;
-	public int getNextSeqNo(String courseId, int currSeqNo);
-	public int getPrevSeqNo(String courseId, int currSeqNo);
+	public void deleteModules(List delModules, String courseId, String userId) throws Exception;
+	public boolean checkCalendar();
+	public int getNextSeqNo(String courseId, int currSeqNo, boolean instRole);
+	public int getPrevSeqNo(String courseId, int currSeqNo, boolean instRole);
 
 	public org.w3c.dom.Document getSubSectionW3CDOM(String sectionsSeqXML);
 
-	public int getMigrateStatus() throws Exception;
-    public int migrateMeleteDocs(String meleteDocsDir) throws Exception;
 	public boolean updateSeqXml(String courseId) throws Exception;
-	public void checkInstallation() throws Exception;
-
 
 	public void createSubSection(ModuleObjService module, List secBeans) throws MeleteException;
 
@@ -106,4 +96,10 @@ public interface ModuleService{
 	public String printModule(ModuleObjService module) throws MeleteException;
 
 	public int cleanUpDeletedModules() throws Exception;
+	
+	public int getCourseModuleSize(String courseId);
+	
+	public Date getMinStartDate(String course_id);
+	
+	public void applyBaseDateTx(String course_id, int time_diff);
 }

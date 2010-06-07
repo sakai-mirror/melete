@@ -1,10 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!--
  ***********************************************************************************
  * $URL$
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -24,25 +25,20 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
-
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
-<title>Melete - Preview Section</title>
 <f:view>
-<body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
-<h:form id="previewAddForm" >
-	
-     <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
-          <tr>
-            <td width="100%" height="20" >
-			<!-- top nav bar -->		
-				<f:subview id="top">
-						<jsp:include page="topnavbar.jsp"/> 
-				</f:subview>		
-				<div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="24" height="24" align="absmiddle"><h:outputText value="#{msgs.add_preview_previewing_section}" /></div>
-		</td></tr>
+<sakai:view title="Modules: Preview Section" toolCssHref="rtbc004.css">
 
-		<tr><td colspan="2" height="20" class="maintabledata5">&nbsp;</td></tr>	
+<%@include file="accesscheck.jsp" %>
+<h:form id="previewAddForm" >
+	<f:subview id="top">
+		<jsp:include page="topnavbar.jsp"/> 
+	</f:subview>		
+	<div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="24" height="24" align="absmiddle"><h:outputText value="#{msgs.add_preview_previewing_section}" /></div>
+    
+     <table class="maintableCollapseWithBorder">
+		<tr><td colspan="2" height="20"> <div  class="maintabledata5">&nbsp;</div></td></tr>	
 		  <tr><td>
 				<h:outputText value="#{msgs.add_preview_previewing_section_of}" styleClass="bold" /> <h:outputText value="#{addSectionPage.module.title}" styleClass="bold"/>
 					</td></tr>	
@@ -58,9 +54,8 @@
 				</td></tr>
 				<tr><td>
                 <h:inputHidden id="contentType" value="#{addSectionPage.section.contentType}"/>
-			     <h:outputText id="typeEditorContents" value="#{addSectionPage.previewContentData}" escape="false"  rendered="#{addSectionPage.shouldRenderEditor}"></h:outputText>		
-                <br>
-	            <h:outputLink id="viewSectionLink"  value="#{addSectionPage.previewContentData}" target="_blank" rendered="#{(addSectionPage.shouldRenderLink || addSectionPage.shouldRenderUpload || addSectionPage.shouldRenderLTI) && addSectionPage.section.openWindow == true}">
+			   
+			    <h:outputLink id="viewSectionLink"  value="#{addSectionPage.previewContentData}" target="_blank" rendered="#{(addSectionPage.shouldRenderLink || addSectionPage.shouldRenderUpload || addSectionPage.shouldRenderLTI) && addSectionPage.section.openWindow == true}">
                 <h:outputText id="sectitleLink" 
                            value="#{addSectionPage.secResourceName}">
                 </h:outputText>
@@ -69,27 +64,22 @@
                  <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{addSectionPage.previewContentData}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
                  border=\"0\" frameborder= \"0\"></iframe>" rendered="#{(addSectionPage.shouldRenderUpload || addSectionPage.shouldRenderLink || addSectionPage.shouldRenderLTI) && addSectionPage.section.openWindow == false}" escape="false" />
 	             
-	          
+	          	<h:outputText id="contentTextFrame" rendered="#{addSectionPage.shouldRenderEditor && addSectionPage.contentWithHtml == true}" >
+					<f:verbatim>
+					<iframe id="iframe3" name="iframe3" src="${addSectionPage.previewContentData}" width="100%" height="700px" style="visibility:visible" scrolling= "auto" border="0" frameborder= "0">
+					</iframe>
+					</f:verbatim>
+				</h:outputText>
+				
+				<!-- render typeEditor content without form tags -->
+				<h:outputText value="#{addSectionPage.previewContentData}" escape="false" rendered="#{addSectionPage.shouldRenderEditor && addSectionPage.contentWithHtml == false}"/>
 				</td></tr>
 			
-			<tr><td> <div align="center">
-		   				
-				<h:commandLink id="saveAddAnotherbutton"  action="#{addSectionPage.saveAndAddAnotherSection}">
-						<h:graphicImage id="saveAddAnotherImg" value="#{msgs.im_add_another_section}" height="19" styleClass="BottomImgSpace" 
-							onmouseover="this.src = '#{msgs.im_add_another_section_over}'" 
-							onmouseout="this.src = '#{msgs.im_add_another_section}'" 
-							onmousedown="this.src = '#{msgs.im_add_another_section_down}'" 
-							onmouseup="this.src = '#{msgs.im_add_another_section_over}'"/>
-	                </h:commandLink>				
-					
-				<h:commandLink id="FinishButton"  action="list_auth_modules">
-						<h:graphicImage id="finishImg" value="#{msgs.im_finish}" height="19" styleClass="BottomImgSpace"
-							onmouseover="this.src = '#{msgs.im_finish_over}'" 
-							onmouseout="this.src = '#{msgs.im_finish}'" 
-							onmousedown="this.src = '#{msgs.im_finish_down}'" 
-							onmouseup="this.src = '#{msgs.im_finish_over}'" />
-	                </h:commandLink>				
-</div></td>
+			<tr><td> 
+				 <div class="actionBar" align="left">
+		   			<h:commandButton id="saveAddAnotherbutton"  action="#{addSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd"/>
+					<h:commandButton id="FinishButton" action="list_auth_modules" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgFinish"/>							
+				</div></td>
               </tr>
 			 <tr>
 			 <td>
@@ -147,7 +137,7 @@ rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 3)&
       <!--End license code CC license-->     	
 	 
         <!--License code fairuse license-->
-      <h:outputText id="lic4_val2" value="#{addSectionPage.section.sectionResource.resource.ccLicenseUrl}"  rendered="#{addSectionPage.section.sectionResource.resource.licenseCode == 4}"/>
+      <h:outputText id="lic4_val2" value="#{msgs.add_preview_fairuse}"  rendered="#{addSectionPage.section.sectionResource.resource.licenseCode == 4}"/>
     
    <h:outputText id="lic4_val5" value="#{addSectionPage.section.sectionResource.resource.copyrightYear}" rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 4)&&(addSectionPage.section.sectionResource.resource.copyrightYear != addSectionPage.nullString))}"/> 
 	   <h:outputText id="lic4_val3" escape="false" value="<BR>#{addSectionPage.section.sectionResource.resource.copyrightOwner} "  
@@ -161,7 +151,32 @@ rendered="#{((addSectionPage.section.sectionResource.resource.licenseCode == 4)&
 			 </td></tr>
 			</table>
 
-</h:form>
 
-</body>
+<script type="text/javascript">
+      window.onload=function(){
+		var oIframe = document.getElementById("iframe3");
+		 if(oIframe)
+			 {
+		        var oDoc = oIframe.contentWindow || oIframe.contentDocument;
+			    if (oDoc.document) {
+				oDoc = oDoc.document;	
+				oIframe.style.height = oDoc.body.scrollHeight + 100 +"px";				       
+			    } else oIframe.height = oDoc.body.offsetHeight + 100 ; 
+			   	for (i=0; i < document.styleSheets.length; i++)
+				{
+				  var link = document.createElement("link");
+				  //finish constructing the links
+			       link.setAttribute("rel", "stylesheet");
+			       link.setAttribute("type", "text/css");
+				   //assign this new link the href of the parent one
+			       link.setAttribute("href", document.styleSheets[i].href);
+				   oDoc.body.appendChild(link); 
+			    }
+			    						
+			  }
+		setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');  
+	}
+ </script>
+  </h:form>      
+</sakai:view>
 </f:view>

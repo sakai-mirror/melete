@@ -42,7 +42,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.imsglobal.simplelti.XMLMap;
+import org.imsglobal.basiclti.XMLMap;
 
 import java.io.PrintWriter;
 import java.io.InputStream;
@@ -66,17 +66,11 @@ public class SimpleLTIUtil {
     // We use the built-in Java logger because this code needs to be very generic
     private static Logger M_log = Logger.getLogger(SimpleLTIUtil.class.toString());
 
-    /** To turn on really verbose debugging */
-    private static boolean verbosePrint = false;
-
-    public static void setVerbosePrint(boolean value) 
-    {
-	verbosePrint = value;
-    }
     // Simple Debug Print Mechanism
     public static void dPrint(String str)
     {
-        if ( verbosePrint ) System.out.println(str);
+        // System.out.println(str);
+        M_log.fine(str);
     }
 
 	public static String BASE64SHA1(String text) 
@@ -215,8 +209,10 @@ public class SimpleLTIUtil {
 
     public static boolean validateDescriptor(String descriptor)
     {
-        Map<String,Object> tm = XMLMap.getFullMap(descriptor);
+        if ( descriptor == null ) return false;
+        if ( descriptor.indexOf("<toolInstance") < 0 ) return false;
 
+        Map<String,Object> tm = XMLMap.getFullMap(descriptor);
         if ( tm == null )
         {
                 return false;
@@ -265,7 +261,8 @@ public class SimpleLTIUtil {
 
         Properties newMap = getLaunchProperties(descriptor, siteId, resourceId);
         if ( newMap == null ) {
-            System.out.println("Invalid descriptor");
+            M_log.warning("Invalid descriptor");
+
             return null;
         }
         Properties pro = new Properties();
@@ -628,10 +625,12 @@ public class SimpleLTIUtil {
 
         String lti2ToolId = XMLMap.getString(tm,"/toolInstance/tool_id");
         String lti2LaunchTypes = XMLMap.getString(tm,"/toolInstance/accept_targets");
+        String lti2LaunchSecret = XMLMap.getString(tm,"/toolInstance/lti_secret");
 
         if ( lti2EndPoint != null ) retval.setProperty("launchurl", lti2EndPoint);
         if ( lti2ToolId != null ) retval.setProperty("tool_id", lti2ToolId);
         if ( lti2LaunchTypes != null ) retval.setProperty("accept_targets", lti2LaunchTypes);
+        if ( lti2LaunchSecret != null ) retval.setProperty("_secret", lti2LaunchSecret);
         return retval;
     }
 

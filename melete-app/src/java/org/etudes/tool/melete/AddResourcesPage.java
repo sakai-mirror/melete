@@ -143,7 +143,6 @@ public class AddResourcesPage {
 			 FacesContext ctx = FacesContext.getCurrentInstance();
 		     ValueBinding binding =Util.getBinding("#{manageResourcesPage}");
 		  	 ManageResourcesPage manResPage = (ManageResourcesPage) binding.getValue(ctx);
-		  	 manResPage.refreshCurrSiteResourcesList();
 		  	 manResPage.resetValues();
 			 return "manage_content";
 			 }
@@ -312,7 +311,6 @@ public class AddResourcesPage {
       FacesContext ctx = FacesContext.getCurrentInstance();
       ValueBinding binding =Util.getBinding("#{manageResourcesPage}");
   	  ManageResourcesPage manResPage = (ManageResourcesPage) binding.getValue(ctx);
-  	  manResPage.refreshCurrSiteResourcesList();
   	  manResPage.resetValues();
 	    return "manage_content";
       }
@@ -398,7 +396,6 @@ public class AddResourcesPage {
 	  FacesContext ctx = FacesContext.getCurrentInstance();
       ValueBinding binding =Util.getBinding("#{manageResourcesPage}");
   	  ManageResourcesPage manResPage = (ManageResourcesPage) binding.getValue(ctx);
-  	  manResPage.refreshCurrSiteResourcesList();
   	  manResPage.resetValues();
 	  return "manage_content";
   }

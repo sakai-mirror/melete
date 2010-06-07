@@ -63,6 +63,8 @@ import org.imsglobal.simplelti.SimpleLTIUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.etudes.util.HtmlHelper;
+
 /**
  * @author Faculty
  *
@@ -120,11 +122,13 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 
       // added to reduce queries
       private String contentLinkUrl;
-
+      private Boolean contentWithHtml;
+      
 	  public ViewSectionsPage(){
 	  	courseId = null;
 	  	userId = null;
 	  	contentLinkUrl = null;
+	  	contentWithHtml = null;
 	  }
 
 	  //Code to test
@@ -157,7 +161,14 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	  {
 		  contentLinkUrl =null;
 		  autonumber = null;
+		  contentWithHtml = null;
 	  }
+
+	public Boolean getcontentWithHtml() {
+		logger.debug("getcontentWithHtml is" + contentWithHtml);
+		if(contentWithHtml == null) getContent();
+		return contentWithHtml;
+	}
 
 	private ContentResource getContentResource()
 	{
@@ -185,6 +196,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	   */
 	  public String getContent()
 	  {
+		contentWithHtml = false;
 		ContentResource resource = getContentResource();
 		if ( resource == null ) return "";
 		String str = null;
@@ -192,6 +204,17 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		{
 			byte[] rsrcArray = resource.getContent();
 			str = new String(rsrcArray);
+
+			if(Util.FindNestedHTMLTags(str))
+			{
+				contentWithHtml = true;
+				return "";	
+			}
+		
+			// strip MS comments and bogus links
+			str = HtmlHelper.stripComments(str);
+	      	//strip bad link and meta tags
+			str = HtmlHelper.stripLinks(str);
 		}
 		catch(Exception e)
 		{
@@ -326,9 +349,8 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
               resource = getMeleteCHService().getResource(resourceId);
               setLinkName(resource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
 
-              if (logger.isDebugEnabled()) logger.debug("Resource url is "+resource.getUrl());
-              url = resource.getUrl();
-      	      url = url.replaceAll(" ", "%20");
+              url = getMeleteCHService().getResourceUrl(resourceId);
+              if (logger.isDebugEnabled()) logger.debug("Resource url is "+url);
       	      contentLinkUrl = url;
               }
               catch (Exception e)
@@ -452,11 +474,31 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     {
     	Element secElement;
     	Node prevNode,nextNode;
+    	String courseId = null;
+    	FacesContext ctx = FacesContext.getCurrentInstance();
+    	logger.debug("get Module at viewsection java param value" + ctx.getExternalContext().getRequestParameterMap().get("vs_id"));
+
+    	String directvs_id = (String)ctx.getExternalContext().getRequestParameterMap().get("vs_id");
+    	if(directvs_id != null)
+    	{
+    		int d_vs_id=new Integer(directvs_id).intValue();
+    		if(d_vs_id != this.sectionId)
+    		{
+    			this.sectionId=d_vs_id;
+    			this.moduleId = getSectionService().getSection(sectionId).getModuleId();
+    			this.module = null;
+    			this.section= null;
+    		}
+    		String direct_cid = (String)ctx.getExternalContext().getRequestParameterMap().get("c_id");
+        	if(direct_cid != null) courseId = direct_cid;
+    	}
+
     	if (this.module == null)
     	{
     	try {
-  	  	  this.module = (ModuleObjService) getModuleService().getModule(this.moduleId);
-  	  	  this.nextSeqNo = getModuleService().getNextSeqNo(getCourseId(), this.moduleSeqNo);
+    		if(courseId == null) courseId = getCourseId();
+    	  this.module = (ModuleObjService) getModuleService().getModule(this.moduleId);
+  	  	  this.nextSeqNo = getModuleService().getNextSeqNo(courseId, this.moduleSeqNo, getInstRole());
   	  	  this.subSectionW3CDom = getModuleService().getSubSectionW3CDOM(this.module.getSeqXml());
   	  	  secElement = subSectionW3CDom.getElementById(String.valueOf(this.sectionId));
   	  	  prevNode = getPreviousNode(secElement);
@@ -667,16 +709,9 @@ public String goPrevNext()
 		}
 	}
 	this.module = null;
-
-	if (getInstRole())
-	{
-			return "view_section";
-	}
-	else
-	{
-			return "view_section_student";
-	}
+	return "view_section";
 }
+
 public String goWhatsNext()
 {
 	resetValues();
@@ -692,7 +727,7 @@ public String goWhatsNext()
 	vnPage.setNextSeqNo(this.nextSeqNo);
 	vnPage.setModuleSeqNo(this.moduleSeqNo);
 
-    vnPage.setModule(this.module);
+    //vnPage.setModule(this.module);
 
 	return "view_whats_next";
 }
@@ -722,14 +757,8 @@ public String goPrevModule()
   	vmPage.setMdbean(null);
   	vmPage.setPrevMdbean(null);
     vmPage.setModuleSeqNo(this.moduleSeqNo);
-    if (getInstRole())
-	{
-			return "view_module";
-	}
-	else
-	{
-			return "view_module_student";
-	}
+
+    return "view_module";
 }
 
 public String goNextModule()
@@ -740,7 +769,7 @@ public String goNextModule()
 	//this.module = null;
 	String modSeqNoStr = (String)context.getExternalContext().getRequestParameterMap().get("modseqno");
 	if ((modSeqNoStr == null)||(modSeqNoStr.length() == 0)) modSeqNoStr = "0";
-	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNoStr).intValue());
+	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNoStr).intValue(),getInstRole());
 	//ModuleDateBean nextMdBean = (ModuleDateBean) getModuleService().getModuleDateBeanBySeq(getUserId(),getCourseId(),nextSeqNo);
 	this.module = null;
 	ValueBinding binding =
@@ -758,15 +787,15 @@ public String goNextModule()
     vmPage.setModuleSeqNo(this.nextSeqNo);
     vmPage.setPrintable(null);
     vmPage.setAutonumber(null);
-    if (getInstRole())
-	{
-			return "view_module";
-	}
-	else
-	{
-			return "view_module_student";
-	}
+
+    return "view_module";
 }
+
+public String gotoAddBookmark()
+{
+	return "add_bookmark";
+}
+
 
 /*
  * section breadcrumps in format module title >> section title

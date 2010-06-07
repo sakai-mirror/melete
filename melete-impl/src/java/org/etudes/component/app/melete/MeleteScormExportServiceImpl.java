@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008,2009 Etudes, Inc.
@@ -90,7 +90,7 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
      *  process section type and create resource element object
      */
     @Override
-    public void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String sectionFileName,int i) throws Exception
+    public void createResourceElement(Section section, Element resource, byte[] content_data1, File resoucesDir, String imagespath, String resource_id, String sectionFileName,int i) throws Exception
     {
         if (section.getContentType().equals("typeLink")){
             String linkData = new String(content_data1);
@@ -218,7 +218,7 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
                 resource.addAttribute("identifier","RESOURCE"+ item_ref_num);
                 resource.addAttribute("type ","webcontent");
                 resource.addAttribute("adlcp:scormType","asset");
-                createResourceElement(section, resource, content_data1, resoucesDir, imagespath,(String)content_data.get(0),i);
+                createResourceElement(section, resource, content_data1, resoucesDir, imagespath,null,(String)content_data.get(0),i);
                 secElement.addAttribute("identifierref", resource.attributeValue("identifier"));
                 // add copyright information - rashmi
                 Element imsmdright = imsmdlom.addElement("imsmd:rights");
@@ -243,7 +243,7 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
                  resource.addAttribute("identifier","RESOURCE"+ item_ref_num);
                  resource.addAttribute("type ","webcontent");
                  resource.addAttribute("adlcp:scormType","asset");
-                 createResourceElement(section, resource, null, resoucesDir, imagespath,"nocontent.html",i);
+                 createResourceElement(section, resource, null, resoucesDir, imagespath,null,"nocontent.html",i);
                  secElement.addAttribute("identifierref", resource.attributeValue("identifier"));
 
 
@@ -381,7 +381,7 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
             throw e;
         }
     }
-    
+
     public Element transferManageItems(Element resources, String courseId, File resoucesDir, int item_ref_num) throws Exception
 	{
 		String fromUploadsColl = Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR;
@@ -458,5 +458,5 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
 		  }
 		}
 		return resources;
-	}	    
+	}
 }

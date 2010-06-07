@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="org.etudes.tool.melete.PrintModulePage,javax.faces.application.FacesMessage, java.util.ResourceBundle"%>
 <!--
  ***********************************************************************************
@@ -5,7 +6,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -23,26 +24,28 @@
  *
  **********************************************************************************
 -->
-<html>
-<head>
-<link rel="stylesheet" href="rtbc004.css" type="text/css" media="all" >
-<link href="/library/skin/tool_base.css" type="text/css" rel="stylesheet" media="all" />
-<link href="/library/skin/default/tool.css" type="text/css" rel="stylesheet" media="all" />
-<title>Melete - Print Module</title>
-</head>
-<body>
+<%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+
+<f:view>
+<sakai:view title="Modules: Print Module" toolCssHref="rtbc004.css">
 <form id="printModuleForm" >
-     <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
+     <table class="maintableCollapseWithBorder">
           <tr>
             <td width="100%" height="20" >	
             	<%
 				final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 				final org.sakaiproject.util.ResourceLoader msg = (org.sakaiproject.util.ResourceLoader)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "msgs");
 				String printMsg = msg.getString("print_module_msg");
-				String printNoteMsg = msg.getString("print_note_msg");
+				String closeMsg = msg.getString("print_module_close_msg");
+				
 %>			
-				<div class="meletePortletToolBarMessage"><img src="images/printer.png" alt="" width="16" height="16" align="absmiddle" onclick="javascript:window.print()"> <a href="#" onclick="javascript:window.print()"><%=printMsg%></a>
-				<br><%=printNoteMsg%> </div>
+				<div class="meletePortletToolBarMessage">
+				 <a href="#" onclick="javascript:window.print()">
+				 <img src="images/printer.png" alt="" width="16" height="16" border="0" align="absmiddle">
+				 <%=printMsg%></a>
+				 | <a value="" href="" onClick="window.close();" ><%=closeMsg%>	</a>				 
+				</div>
 		</td></tr>
 
 		<tr><td colspan="2" height="20" class="maintabledata5">&nbsp;</td></tr>	
@@ -60,5 +63,5 @@ if(selected_module_id != null)
 		</td></tr>		 
 	</table>
 </form>
-</body>
-</html>
+</sakai:view>
+</f:view>

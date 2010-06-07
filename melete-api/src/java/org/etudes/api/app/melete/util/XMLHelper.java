@@ -107,9 +107,9 @@ public class XMLHelper {
 		XMLReader xmlreader;
 		xmlreader = XMLReaderFactory.createXMLReader(DEFAULT_PARSER_NAME);
 		//request XML Schema validation
-		xmlreader.setFeature(SCHEMA_VALIDATION_FEATURE_ID, true);
-		xmlreader.setFeature(VALIDATION_FEATURE_ID, true);
-		xmlreader.setFeature(DYNAMIC_VALIDATION_FEATURE_ID, true);
+	//	xmlreader.setFeature(SCHEMA_VALIDATION_FEATURE_ID, true);
+	//	xmlreader.setFeature(VALIDATION_FEATURE_ID, true);
+	//	xmlreader.setFeature(DYNAMIC_VALIDATION_FEATURE_ID, true);
 
 		return xmlreader;
 	}

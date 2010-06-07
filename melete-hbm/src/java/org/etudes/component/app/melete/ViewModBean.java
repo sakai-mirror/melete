@@ -61,7 +61,7 @@ public class ViewModBean implements Serializable, ViewModBeanService {
 
     protected List vsBeans;
 
-
+    private int vsBeansSize;
     /**
 	 * {@inheritDoc}
 	 */
@@ -150,7 +150,9 @@ public class ViewModBean implements Serializable, ViewModBeanService {
 	 * {@inheritDoc}
 	 */
     public List getVsBeans() {
-        return this.vsBeans;
+    	if(this.vsBeans != null) this.vsBeansSize = this.vsBeans.size();
+    	else this.vsBeansSize = 0;
+    	return this.vsBeans;        
     }
 
     /**
@@ -277,6 +279,8 @@ public class ViewModBean implements Serializable, ViewModBeanService {
 		this.seqNo = seqNo;
 		this.seqXml = seqXml;
 		this.vsBeans = vsBeans;
+		if(vsBeans != null)	this.vsBeansSize = vsBeans.size();
+		else this.vsBeansSize = 0;
 	}
 
 	/**
@@ -293,6 +297,12 @@ public class ViewModBean implements Serializable, ViewModBeanService {
 	public void setSeqXml(String seqXml)
 	{
 		this.seqXml = seqXml;
+	}
+
+	public String getNextStepsNumber() {
+		String sz = new String("0");
+		if(this.seqNo != 0)	sz = new String(this.seqNo +"." + (this.vsBeansSize+1));
+		return sz;
 	}
 
 	

@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/java/org/etudes/tool/melete/AuthorPreferencePage.java $
- * $Id: AuthorPreferencePage.java 60573 2009-05-19 20:17:20Z mallika@etudes.org $
+ * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/java/org/etudes/tool/melete/LicensePage.java $
+ * $Id: LicensePage.java 60573 2009-05-19 20:17:20Z mallika@etudes.org $
  ***********************************************************************************
  *
  * Copyright (c) 2008, 2009 Etudes, Inc.
@@ -84,7 +84,16 @@ public class LicensePage {
 		  public LicensePage()
 		  {
 		  }
-
+		  
+		  public void resetFlags()
+		  {				
+				// reset flags
+				shouldRenderCC = licenseCodes.equals(CC_CODE);
+				shouldRenderCopyright = licenseCodes.equals(Copyright_CODE);
+				shouldRenderPublicDomain = licenseCodes.equals(PD_CODE);
+				shouldRenderFairUse = licenseCodes.equals(FU_CODE);
+		  }
+		  
 		  public void setInitialValues(String formName, MeleteResource melResource)
 		  {
 		  	this.formName = formName;
@@ -92,14 +101,16 @@ public class LicensePage {
 			this.melResource = melResource;
 
 			if(melResource !=null)
-				setLicenseCodes(String.valueOf(melResource.getLicenseCode()));
-			else setLicenseCodes("0");
-
-			if(melResource !=null && formName.equals("EditSectionForm") && !licenseCodes.equals(CC_CODE))
 			{
-				this.melResource.setAllowCmrcl(false);
-				this.melResource.setAllowMod(1);
+				setLicenseCodes(String.valueOf(melResource.getLicenseCode()));
+				setAllowCmrcl(String.valueOf(melResource.isAllowCmrcl()));
+		  		setAllowMod(String.valueOf(melResource.getAllowMod()));
+		  		setReqAttr(String.valueOf(melResource.isReqAttr()));
+		  		setCopyright_owner(melResource.getCopyrightOwner());
+		  		setCopyright_year(melResource.getCopyrightYear());
 			}
+			else setLicenseCodes("0");
+			resetFlags();
 		  }
 
 		  public void setInitialValues(String formName,  MeleteUserPreference mup)
@@ -121,6 +132,7 @@ public class LicensePage {
 		  	  setInitialValues();
 			  setLicenseCodes("0");
 		  	}
+		  	resetFlags();
 		  }
 
 		  public void resetValues()
@@ -353,11 +365,9 @@ public class LicensePage {
 			}
 
 
-			 public String getAllowCmrcl(){
-		        if(formName.equals("EditSectionForm"))
-		        	allowCmrcl = String.valueOf(melResource.isAllowCmrcl());
+			public String getAllowCmrcl(){
 				return allowCmrcl;
-				}
+			}
 
 			  /**
 			 * @param allowCmrcl
@@ -366,11 +376,9 @@ public class LicensePage {
 			  	this.allowCmrcl = allowCmrcl;
 			   }
 
-			 public String getAllowMod(){
-				 if(formName.equals("EditSectionForm"))
-					 allowMod = String.valueOf(melResource.getAllowMod());
-			   return allowMod;
-				}
+			public String getAllowMod(){				
+				return allowMod;
+			}
 
 			  /**
 			 * @param allowMod
@@ -390,12 +398,12 @@ public class LicensePage {
 				  	this.reqAttr = reqAttr;
 			   }
 
-			public boolean getShouldRenderCC()
+			public boolean isShouldRenderCC()
 			{
 				return this.shouldRenderCC;
 			}
 
-			public boolean getShouldRenderCopyright()
+			public boolean isShouldRenderCopyright()
 			{
 				return this.shouldRenderCopyright;
 			}

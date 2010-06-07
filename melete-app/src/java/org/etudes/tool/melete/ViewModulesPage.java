@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008, 2009 Etudes, Inc.
@@ -160,8 +160,22 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
       if (this.mdbean == null)
  	  {
     	try {
-    	String courseId = getCourseId();
-    	String userId = getUserId();
+    		FacesContext ctx = FacesContext.getCurrentInstance();
+        	logger.debug("get mdbean found req param value" + ctx.getExternalContext().getRequestParameterMap().get("vm_id"));
+
+        	ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+
+        	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+        	String courseId = "";
+        	String userId = mPage.getCurrentUser().getId();
+        	String directvm_id = (String)ctx.getExternalContext().getRequestParameterMap().get("vm_id");
+        	if(directvm_id != null) this.moduleId=new Integer(directvm_id).intValue();
+        	String direct_cid = (String)ctx.getExternalContext().getRequestParameterMap().get("c_id");
+        	if(direct_cid != null) courseId = direct_cid;
+        	else courseId = getCourseId();
+
+    	/*String courseId = getCourseId();
+	String userId = getUserId();*/
     	 if (this.moduleId > 0)
     	  {
   	  	    this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBean(userId, courseId,this.moduleId);
@@ -173,8 +187,8 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     	  if (this.mdbean != null)
     	  {
     	  this.moduleSeqNo = this.mdbean.getModule().getCoursemodule().getSeqNo();
-  	  	  this.prevSeqNo = getModuleService().getPrevSeqNo(courseId,this.moduleSeqNo);
-  	  	  this.nextSeqNo = getModuleService().getNextSeqNo(courseId,this.moduleSeqNo);
+  	  	  this.prevSeqNo = getModuleService().getPrevSeqNo(courseId,this.moduleSeqNo,getInstRole());
+  	  	  this.nextSeqNo = getModuleService().getNextSeqNo(courseId,this.moduleSeqNo,getInstRole());
     	  }
   	  	  this.prevSectionSize = 0;
   	  	  if ((this.prevSeqNo > 0)&&(this.prevSeqNo != this.moduleSeqNo))
@@ -193,6 +207,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
   	  	catch (Exception e)
           {
   			logger.debug(e.toString());
+  			e.printStackTrace();
           }
  	  }
   	  	return this.mdbean;
@@ -273,11 +288,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 		UIData table = null;
 		boolean isAuthor = getInstRole();
 
-		if (isAuthor)
-			table = (UIData) root.findComponent("viewmoduleform").findComponent("tablesec");
-		else
-			table = (UIData) root.findComponent("viewmoduleStudentform").findComponent("tablesec");
-
+		table = (UIData) root.findComponent("viewmoduleform").findComponent("tablesec");
 		ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
 
 		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
@@ -292,9 +303,8 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 		// added by rashmi on 6/14/05
 		vsPage.setModule(null);
 		//vsPage.setAutonumber(this.autonumber);
-		String retVal = "view_section_student";
-		if (isAuthor) retVal = "view_section";
 
+		String retVal = "view_section";
 		return retVal;
 	}
 
@@ -335,23 +345,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
  	            vsPage.setModule(null);
  	            vsPage.setAutonumber(null);
 
-
- 	     String retVal = "view_section_student";
-
- 	    //03/10/05  rashmi - added seperate page for links and upload to show them in frame
- 	    //3/21/05 - mallika - the if condition was slightly ambiguous, so needed to change that
-
- 	    if (getInstRole() == true)
- 	    {
-
- 	      retVal = "view_section";
-
- 	    }
- 	    else
- 	    {
- 	      retVal = "view_section_student";
-
- 	    }
+ 	    String retVal = "view_section";
  	  	return retVal;
     }
     public String goPrevSection()
@@ -373,23 +367,8 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
  	            //added by rashmi on 6/14/05
  	            vsPage.setModule(null);
  	            vsPage.setAutonumber(null);
- 	     String retVal = "view_section_student";
-
- 	    //03/10/05  rashmi - added seperate page for links and upload to show them in frame
- 	    //3/21/05 - mallika - the if condition was slightly ambiguous, so needed to change that
-
- 	    if (getInstRole() == true)
- 	    {
-
- 	      retVal = "view_section";
-
- 	    }
- 	    else
- 	    {
- 	      retVal = "view_section_student";
-
- 	    }
- 	  	return retVal;
+ 	            String retVal = "view_section";
+ 	    return retVal;
     }
     public String goPrevWhatsNext()
     {
@@ -411,7 +390,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
         	vnPage.setPrevSecId(0);
           }
           vnPage.setPrevModId(this.prevMdbean.getModule().getModuleId());
-          vnPage.setModule(this.prevMdbean.getModule());
+          //vnPage.setModule(this.prevMdbean.getModule());
         }
         else
         {
@@ -428,7 +407,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     public String goWhatsNext()
     {
     	FacesContext context = FacesContext.getCurrentInstance();
-    	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(((String)context.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue());
+    	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(((String)context.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue(),getInstRole());
 
     	ValueBinding binding =
             Util.getBinding("#{viewNextStepsPage}");
@@ -439,7 +418,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 
     	vnPage.setNextSeqNo(this.nextSeqNo);
 
-        if (this.mdbean != null) vnPage.setModule(this.mdbean.getModule());
+        //if (this.mdbean != null) vnPage.setModule(this.mdbean.getModule());
 
     		return "view_whats_next";
 
@@ -451,15 +430,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     	this.moduleSeqNo = new Integer(((String)ctx.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue();
     	this.mdbean = null;
         this.moduleId = 0;
-
-    	if (getInstRole())
-    	{
-    			return "view_module";
-    	}
-    	else
-    	{
-    			return "view_module_student";
-    	}
+        return "view_module";
     }
     public void viewModule(ActionEvent evt) {
 
@@ -496,13 +467,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     }
 
     public String redirectToViewModule(){
-    	String retVal = "view_module_student";
-	    if (getInstRole() == true)
-	    {
-	    	retVal = "view_module";
-	    }
-	  	return retVal;
-
+    	return "view_module";
     }
 
     public boolean isPrintable()
@@ -548,4 +513,5 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     {
     	this.autonumber = autonumber;
     }
+
 }

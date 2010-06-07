@@ -1,11 +1,11 @@
-<?xml version="1.0" ?> 
+<?xml version="1.0"?>
 <!--
  ***********************************************************************************
  * $URL$
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -22,36 +22,35 @@
  * permissions and limitations under the License.
  *
  **********************************************************************************
--->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion> 
- <parent>
-  <artifactId>base</artifactId> 
-  <groupId>org.sakaiproject</groupId> 
-  <version>2.5.0</version> 
+--><project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>base</artifactId>
+    <groupId>org.sakaiproject</groupId>
+    <version>2.6.1</version>
   </parent>
-  <name>Etudes</name> 
-  <groupId>org.etudes</groupId> 
-  <artifactId>melete-base</artifactId> 
-  <version>2.5.0</version> 
-  <packaging>pom</packaging> 
- <modules>
-  <module>components</module> 
-  <module>melete-util</module> 
-  <module>melete-api</module> 
-  <module>melete-app</module> 
-  <module>melete-hbm</module> 
-  <module>melete-impl</module> 
+  <name>Etudes</name>
+  <groupId>org.etudes</groupId>
+  <artifactId>melete-base</artifactId>
+  <version>2.8m1</version>
+  <packaging>pom</packaging>
+  <modules>
+    <module>components</module>
+    <module>melete-util</module>
+    <module>melete-api</module>
+    <module>melete-app</module>
+    <module>melete-hbm</module>
+    <module>melete-impl</module>
   </modules>
- <repositories>
- <repository>
-  <id>sakai-maven</id> 
-  <name>Sakai Maven Repo</name> 
-  <layout>default</layout> 
-  <url>http://source.sakaiproject.org/maven2</url> 
- <snapshots>
-  <enabled>true</enabled> 
-  </snapshots>
-  </repository>
+  <repositories>
+    <repository>
+      <id>sakai-maven</id>
+      <name>Sakai Maven Repo</name>
+      <layout>default</layout>
+      <url>http://source.sakaiproject.org/maven2</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
   </repositories>
-  </project>
+</project>

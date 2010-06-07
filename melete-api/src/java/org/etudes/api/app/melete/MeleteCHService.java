@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008,2009 Etudes, Inc.
@@ -18,13 +18,13 @@
  * may not use this file except in compliance with the License. You may
  * obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
- * implied. See the License for the specific language governing 
- * permissions and limitations under the License. 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
  *
  **********************************************************************************/
 
@@ -43,7 +43,7 @@ public interface MeleteCHService{
 
 	 public static final String MIME_TYPE_EDITOR="text/html";
 	 public static final String MIME_TYPE_LINK="text/url";
-	 public static final String MIME_TYPE_LTI="ims/simplelti";
+	 public static final String MIME_TYPE_LTI="ims/basiclti";
 
 	 public String addCollectionToMeleteCollection(String meleteItemColl,String CollName);
 	 public String addResourceItem(String name, String res_mime_type,String addCollId, byte[] secContentData, ResourcePropertiesEdit res) throws Exception;
@@ -55,10 +55,8 @@ public interface MeleteCHService{
 	 public String getCollectionId( String contentType,Integer modId );
 	 public String getUploadCollectionId();
 	 
-	 //Methods used by migrate program - BEG
 	 public String getCollectionId(String courseId,String contentType,Integer modId );
 	 public String getUploadCollectionId(String courseId);
-	 //Methods used by migrate program - END
 	 
      public List getListofImagesFromCollection(String collId);
 	 public List getListofLinksFromCollection(String collId);
@@ -72,7 +70,7 @@ public interface MeleteCHService{
 	 public void editResource(String resourceId, String contentEditor) throws Exception;
 	 public List getAllResources(String uploadCollId);
 	 public String getResourceUrl(String resourceId);
-	 public void copyIntoFolder(String fromColl,String toColl);
+	 public String copyIntoFolder(String fromColl,String toColl);
 	 public ContentCollection getCollection(String toColl);
 	 public List<String> findAllEmbeddedImages(String sec_resid) throws Exception;
 	 public void removeResource(String delRes_id) throws Exception;
@@ -80,5 +78,7 @@ public interface MeleteCHService{
 	 public void removeCourseCollection(String delColl_id) throws Exception;
 	  public String moveResource(String resourceId, String destinationColl) throws Exception;
 	  public String getDisplayName(String resourceId);
+	  public String getLinkContent(String resourceId);
+	  public String getTypeEditorSectionName(Integer sectionId);
 }
 

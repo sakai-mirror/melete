@@ -1,10 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!--
  ***********************************************************************************
  * $URL$
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -25,16 +26,11 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
-<html>
-<head>
-<meta http-equiv="Content-Language" content="en-us">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<meta name="description" content="ETUDES-NG Course Management System, Powered by Sakai">
-<meta name="keywords" content="ETUDES-NG course management system, e-learning">
 
+<f:view>
+<sakai:view title="Modules: File Upload" toolCssHref="rtbc004.css">
+<%@include file="accesscheck.jsp" %>
 
-<title>Melete - File Upload</title>
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
 <%@ page import="javax.faces.application.FacesMessage, java.util.ResourceBundle"%>
 
 <% 
@@ -151,14 +147,14 @@ function showInputs()
   
   for (i=parseInt(str)+1; i<=10; i++)
   {
-    document.getElementById("upload"+i).innerHTML="<INPUT TYPE=\"FILE\" id=\"file"+i+"\" NAME=\"file"+i+"\" /> <img src=\"images/remove_item.png\"/> <a id=\"remove"+i+"\" href=\"#\" onClick=\"javascript:clearItem("+i+")\">Remove item</a>";
+    document.getElementById("upload"+i).innerHTML="<INPUT TYPE=\"FILE\" id=\"file"+i+"\" NAME=\"file"+i+"\" /> <a id=\"remove"+i+"\" href=\"#\" onClick=\"javascript:clearItem("+i+")\"><img src=\"images/remove_item.png\" alt=\"\" border=\"0\"/>Remove item</a>";
     document.getElementById("choose"+i).style.display='none';
   }
 
 }
 function clearItem(id)
 {
-  document.getElementById("upload"+id).innerHTML="<INPUT TYPE=\"FILE\" id=\"file"+id+"\" NAME=\"file"+id+"\" /> <img src=\"images/remove_item.png\"/> <a id=\"remove"+id+"\" href=\"#\" onClick=\"javascript:clearItem("+id+")\">Remove item</a>";
+  document.getElementById("upload"+id).innerHTML="<INPUT TYPE=\"FILE\" id=\"file"+id+"\" NAME=\"file"+id+"\" /> <a id=\"remove"+id+"\" href=\"#\" onClick=\"javascript:clearItem("+id+")\"><img src=\"images/remove_item.png\" alt=\"\" border=\"0\"/>Remove item</a>";
   var str=document.getElementById("FileUploadForm:number").selectedIndex;
   if (str >= 1) 
   {
@@ -197,29 +193,18 @@ function validateFileName(divID, sourceID)
   }
 }
 </script>
-</head>
 
-<f:view>
-<body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" onload="loadInputs();setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');" >
  <h:form id="FileUploadForm"  enctype="multipart/form-data">
- <table>
-	<tr>
-		<td valign="top"></td>
-    	<td width="1962" valign="top">
-        <table width="100%"  border="1" cellpadding="3" cellspacing="0" bordercolor="#EAEAEA"  style="border-collapse: collapse">
-        <tr>
-        <td width="100%" height="20" bordercolor="#E2E4E8">
-					<!-- top nav bar -->
-						<f:subview id="top">
-								<jsp:include page="topnavbar.jsp"/> 
-						</f:subview>
-		  <div class="meletePortletToolBarMessage"><img src="images/manage_content.png" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.file_upload_title}" /></div>				
-		</td>
-        </tr>
+	<!-- top nav bar -->
+				<f:subview id="top">
+						<jsp:include page="topnavbar.jsp"/> 
+				</f:subview>
+  <div class="meletePortletToolBarMessage"><img src="images/manage_content.png" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.file_upload_title}" /></div>
+      <table class="maintableCollapseWithBorder">
         <tr>
         <td class="maintabledata3">   
         <h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>     
-		  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#EAEAEA" width="100%" id="AutoNumber1">
+		  <table class="maintableCollapseWithNoBorder" id="AutoNumber1">
 		  	<tr>
 		  		<td height="20" class="maintabledata5"><h:outputText id="t1_1" value="#{msgs.manage_content_new_item}" styleClass="tableheader2"/> 
 		  		</td>
@@ -242,16 +227,7 @@ function validateFileName(divID, sourceID)
 							<f:selectItem itemValue="10" itemLabel="#{msgs.manage_content_ten}"/>
 						 </h:selectOneMenu>
 				</td>	
-			</tr>	
-			<tr>
-			  <td>
-			  <br>
-			  </td>
-			</tr>
-			<tr>
-		  		<td height="20" class="maintabledata5">&nbsp;
-		  		</td>
-		  	</tr>
+			</tr>				
 		  	<tr>
 			  <td>
 			  <br>
@@ -270,8 +246,8 @@ function validateFileName(divID, sourceID)
 			
 			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile1" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload1"><INPUT TYPE="FILE" id="file1" NAME="file1" onchange="validateFileName('errMsg1','file1')"/>
-			<img src="images/remove_item.png"/>
-			<a id="remove1" href="#" onClick="javascript:clearItem(1)"><h:outputText id="removeItem1" value="#{msgs.link_upload_remove_item}" /></a>
+			
+			<a id="remove1" href="#" onClick="javascript:clearItem(1)"><img src="images/remove_item.png" alt="" border="0"/><h:outputText id="removeItem1" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>
@@ -286,8 +262,7 @@ function validateFileName(divID, sourceID)
 
 			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile2" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload2"><INPUT TYPE="FILE" id="file2" NAME="file2" onchange="validateFileName('errMsg2','file2')"/>
-			<img src="images/remove_item.png"/>
-			<a id="remove2" href="#" onClick="javascript:clearItem(2)"><h:outputText id="removeItem2" value="#{msgs.link_upload_remove_item}" /></a>
+			<a id="remove2" href="#" onClick="javascript:clearItem(2)"><img src="images/remove_item.png" alt="" border="0"/><h:outputText id="removeItem2" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>
@@ -303,8 +278,7 @@ function validateFileName(divID, sourceID)
 	
 			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile3" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload3"><INPUT TYPE="FILE" id="file3" NAME="file3" onchange="validateFileName('errMsg3','file3')"/>
-			<img src="images/remove_item.png"/>
-			<a id="remove3" href="#" onClick="javascript:clearItem(3)"><h:outputText id="removeItem3" value="#{msgs.link_upload_remove_item}" /></a>
+			<a id="remove3" href="#" onClick="javascript:clearItem(3)"><img src="images/remove_item.png" alt="" border="0"/><h:outputText id="removeItem3" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>
@@ -319,8 +293,7 @@ function validateFileName(divID, sourceID)
 			</div>
 			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile4" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload4"><INPUT TYPE="FILE" id="file4" NAME="file4" onchange="validateFileName('errMsg4','file4')"/>
-			<img src="images/remove_item.png"/>
-			<a id="remove4" href="#" onClick="javascript:clearItem(4)"><h:outputText id="removeItem4" value="#{msgs.link_upload_remove_item}" /></a>
+			<a id="remove4" href="#" onClick="javascript:clearItem(4)"><img src="images/remove_item.png" alt="" border="0"/><h:outputText id="removeItem4" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>
@@ -335,8 +308,7 @@ function validateFileName(divID, sourceID)
 			</div>
 			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile5" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload5"><INPUT TYPE="FILE" id="file5" NAME="file5" onchange="validateFileName('errMsg5','file5')"/>
-			<img src="images/remove_item.png"/>
-			<a id="remove5" href="#" onClick="javascript:clearItem(5)"><h:outputText id="removeItem5" value="#{msgs.link_upload_remove_item}" /></a>
+			<a id="remove5" href="#" onClick="javascript:clearItem(5)"><img src="images/remove_item.png" alt="" border="0"/><h:outputText id="removeItem5" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>
@@ -351,8 +323,7 @@ function validateFileName(divID, sourceID)
 			</div>
 			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile6" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload6"><INPUT TYPE="FILE" id="file6" NAME="file6" onchange="validateFileName('errMsg6','file6')"/>
-			<img src="images/remove_item.png"/>
-			<a id="remove6" href="#" onClick="javascript:clearItem(6)"><h:outputText id="removeItem6" value="#{msgs.link_upload_remove_item}" /></a>
+			<a id="remove6" href="#" onClick="javascript:clearItem(6)"><img src="images/remove_item.png" alt="" border="0"/><h:outputText id="removeItem6" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>
@@ -367,8 +338,7 @@ function validateFileName(divID, sourceID)
 			</div>
 			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile7" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload7"><INPUT TYPE="FILE" id="file7" NAME="file7" onchange="validateFileName('errMsg7','file7')"/>
-			<img src="images/remove_item.png"/>
-			<a id="remove7" href="#" onClick="javascript:clearItem(7)"><h:outputText id="removeItem7" value="#{msgs.link_upload_remove_item}" /></a>
+			<a id="remove7" href="#" onClick="javascript:clearItem(7)"><img src="images/remove_item.png" alt="" border="0"/><h:outputText id="removeItem7" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>
@@ -383,8 +353,7 @@ function validateFileName(divID, sourceID)
 			</div>
 			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile8" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload8"><INPUT TYPE="FILE" id="file8" NAME="file8" onchange="validateFileName('errMsg8','file8')"/>
-			<img src="images/remove_item.png"/>
-			<a id="remove8" href="#" onClick="javascript:clearItem(8)"><h:outputText id="removeItem8" value="#{msgs.link_upload_remove_item}" /></a>
+			<a id="remove8" href="#" onClick="javascript:clearItem(8)"><img src="images/remove_item.png" alt="" border="0"/><h:outputText id="removeItem8" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>			
@@ -399,8 +368,7 @@ function validateFileName(divID, sourceID)
 			</div>
 			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile9" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload9"><INPUT TYPE="FILE" id="file9" NAME="file9" onchange="validateFileName('errMsg9','file9')"/>
-			<img src="images/remove_item.png"/>
-			<a id="remove9" href="#" onClick="javascript:clearItem(9)"><h:outputText id="removeItem9" value="#{msgs.link_upload_remove_item}" /></a>
+			<a id="remove9" href="#" onClick="javascript:clearItem(9)"><img src="images/remove_item.png" alt="" border="0"/><h:outputText id="removeItem9" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>	
@@ -415,8 +383,7 @@ function validateFileName(divID, sourceID)
 			</div>
 			<b>&nbsp;&nbsp;<span class="required">* </span></b><h:outputText id="chooseFile10" value="#{msgs.file_upload_view_choose}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span id="upload10"><INPUT TYPE="FILE" id="file10" NAME="file10" onchange="validateFileName('errMsg10','file10')"/>
-			<img src="images/remove_item.png"/>
-			<a id="remove10" href="#" onClick="javascript:clearItem(10)"><h:outputText id="removeItem10" value="#{msgs.link_upload_remove_item}" /></a>
+			<a id="remove10" href="#" onClick="javascript:clearItem(10)"><img src="images/remove_item.png" alt="" border="0"/><h:outputText id="removeItem10" value="#{msgs.link_upload_remove_item}" /></a>
 			</span>
 			<br>
 			</div>	
@@ -428,45 +395,25 @@ function validateFileName(divID, sourceID)
 	     </tr>	
 	     <tr>
 	       <td colspan="2">
-	       <b><span class="required">* Required</span></b>
+	       <span class="required">* Required</span>
 	       <br>
 	       <h:outputText id="note" value="#{msgs.file_upload_view_note} #{addResourcesPage.maxUploadSize}MB."  styleClass="comment red"/>							<h:inputHidden id="filename" value="#{addSectionPage.hiddenUpload}" />						
 		   <br>
 	       </td>
 	     </tr>
-	     <tr>
-	       <td colspan="2">
-	       <div align="center">
-	       <h:commandLink id="continueButton"  action="#{addResourcesPage.addItems}"  immediate="true" tabindex="9">
-					<h:graphicImage id="continueImg" value="#{msgs.im_continue}" styleClass="BottomImgSpace" onclick="clearmessage()"
-						onmouseover="this.src = '#{msgs.im_continue_over}'" 
-						onmouseout="this.src = '#{msgs.im_continue}'" 
-						onmousedown="this.src = '#{msgs.im_continue_down}'" 
-						onmouseup="this.src = '#{msgs.im_continue_over}'"/>
-                </h:commandLink>				
-				<h:commandLink id="cancelButton"  action="#{addResourcesPage.cancel}"  immediate="true" tabindex="9">
-					<h:graphicImage id="cancelImg" value="#{msgs.im_cancel}" styleClass="BottomImgSpace" onclick="clearmessage()"
-						onmouseover="this.src = '#{msgs.im_cancel_over}'" 
-						onmouseout="this.src = '#{msgs.im_cancel}'" 
-						onmousedown="this.src = '#{msgs.im_cancel_down}'" 
-						onmouseup="this.src = '#{msgs.im_cancel_over}'"/>
-                </h:commandLink>
-            </div>    	
-	       </td>
-	     </tr>
 	    </table>
+		<div class="actionBar" align="left">
+	        <h:commandButton id="continueButton" immediate="true" action="#{addResourcesPage.addItems}" value="#{msgs.im_continue}" onclick="clearmessage()" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
+	        <h:commandButton id="cancelButton" immediate="true" action="#{addResourcesPage.cancel}" value="#{msgs.im_cancel}" onclick="clearmessage()" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>			                
+        </div> 
 	   </td>
 	  </tr>						
-	</table>
-	</td>
-	</tr>									
-   							
-  </table>
+	</table>	
 </h:form>
 <!-- This Ends the Main Text Area -->
-</body>
+</sakai:view>
 </f:view>
-</html>
+
 
 
 

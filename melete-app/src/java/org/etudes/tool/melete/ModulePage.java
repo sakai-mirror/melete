@@ -40,30 +40,12 @@ import javax.faces.event.*;
 import org.sakaiproject.util.ResourceLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.etudes.component.app.melete.CourseModule;
 import org.etudes.component.app.melete.Module;
 import org.etudes.component.app.melete.ModuleShdates;
 import org.etudes.component.app.melete.ModuleDateBean;
 import org.etudes.api.app.melete.*;
-
-/**
- * @author Rashmi
- *
- * Add Module Page is the backing bean for the page add_module.jsp.
- * It also connects to other jsp pages like cclicenseform.jsp and
- * publicdomainform.jsp and license_results.jsp
- *
- * rashmi - 3/21 to make season and yr readable
- * revised by rashmi to get author name from sessionMap
- * revised by murthy to get currYear if its 0
- * revised by rashmi to remove dupl error messages for select a license
- * revised by rashmi on 6/15/05 to make FairUserender boolean as protected
- * revised by rashmi on 6/20/05 to add I agree and add messages
- * Mallika - 8/1/06 - removing I Agree code
- * Rashmi - 28/12/06 - removed extra variables and their getter/setters for license
- * Mallika - 10/18/06 - adding method to checkUploadExists
- * Mallika - 10/30/06 - Adding getAuthor to get author's name for copyright license
- *  */
 
 public abstract class ModulePage implements Serializable{
 
@@ -90,6 +72,7 @@ public abstract class ModulePage implements Serializable{
 
     private String formName;
     protected int moduleNumber;
+    private boolean calendarFlag;
 
     public ModulePage(){}
 
@@ -401,40 +384,12 @@ public ModuleDateBean getModuleDateBean() {
   public void setFormName(String formName){
   	this.formName = formName;
   }
-
-   //Mallika - 10/18/06 - new method to check if uploads directory exists
-       public void checkUploadExists()
-       {
-   	  FacesContext context = FacesContext.getCurrentInstance();
-   	   String uploadDir = context.getExternalContext().getInitParameter("uploadDir");
-	  if (logger.isDebugEnabled()) logger.debug("In checkUploadExists "+uploadDir);
-      File uploadsDir = new File(uploadDir);
-         if (uploadsDir.exists()) return;
-         if (!(uploadsDir.exists()))
-         {
-   		  boolean res = uploadsDir.mkdirs();
-   		  if (logger.isDebugEnabled()) logger.debug("Uploads directory was created "+res);
-
-
-   		  Map sessionMap = context.getExternalContext().getSessionMap();
-   		  String str = "User ID: "+sessionMap.get("userId")+"| Course ID: "+sessionMap.get("courseId")+"| Module ID: "+getModule().getModuleId().intValue()+"\n";
-
-   		  File logFile = new File(uploadsDir+File.separator+"uploads_missing_log.txt");
-
-             try
-             {
-   		    FileOutputStream fos = new FileOutputStream(logFile, true);
-   		    fos.write(str.getBytes());
-   		    fos.close();
-   	      }
-   	      catch (Exception e)
-   	      {
-   		    logger.error("Could not create log file "+e.toString());
-   	      }
-         }
-
-       }
-
+  
+  public boolean getCalendarFlag()
+  {
+	  return moduleService.checkCalendar();
+  }
+  
  /*
    * to remove retained values
    * Rashmi -- 12/21

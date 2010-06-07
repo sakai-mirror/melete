@@ -31,6 +31,7 @@ import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.context.FacesContext;
 import javax.faces.application.FacesMessage;
+import javax.faces.el.ValueBinding;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -192,6 +193,25 @@ public class MeleteSiteAndUserInfo {
 
 		return element;
 	}
+	
+	public boolean checkAuthorization()
+	{
+		try
+	    {
+		  if (isSuperUser() || isUserAuthor())
+		  {
+			return true;
+		  }
+		  else
+		  {
+			return false;
+		  }
+	    }
+	    catch (Exception e) {
+			logger.error(e.toString());
+	    }
+	    return false;
+	}
 
 	public void populateMeleteSession()
 	{
@@ -206,8 +226,8 @@ public class MeleteSiteAndUserInfo {
 			sessionMap.put("institute", "Foothill College");
             sessionMap.put("maxSize", String.valueOf(getMaxUploadSize()));
 
-            logger.debug("Is Author is "+ isUserAuthor());
-
+        //    logger.debug("Is Author is "+ isUserAuthor());
+            logger.debug("tool id: " + ToolManager.getCurrentPlacement().getToolId());
 
 			if (isUserAuthor()){
 				sessionMap.put("role", "INSTRUCTOR");
@@ -227,103 +247,52 @@ public class MeleteSiteAndUserInfo {
 	 * @return the name the page to naviagate
 	 */
 	public String processNavigate(){
-		if (logger.isDebugEnabled()) logger.debug("process navigate is called");
+	//	if (logger.isDebugEnabled()) logger.debug("new process navigate is called");
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		try{
 		populateMeleteSession();
 
-		int migrateResult=-1;
-		String beginMigrate = ServerConfigurationService.getString("melete.migrate","false");
-
-	    moduleService.checkInstallation();
-
-		if ((isSuperUser()&& beginMigrate.equals("false")) || ((!isSuperUser()) && isUserAuthor()) || ((!isSuperUser()) && isUserStudent()))
+		if (isSuperUser() || isUserAuthor()) 
 		{
-				migrateResult = moduleService.getMigrateStatus();
-				try
-				{
-				  if (migrateResult == moduleService.MIGRATE_COMPLETE)
-				  {
-					if (isUserAuthor()) return "list_auth_modules";
-					if (isUserStudent()) return "list_modules_student";
-				  }
-				  if (migrateResult == moduleService.MIGRATE_INCOMPLETE)
-				  {
-					String errMsg = bundle.getString("migration_process_incomplete");
-					context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_incomplete",errMsg));
-					return "error_migration";
-				  }
-				}
-				catch (Exception ex)
-				{
-				   logger.error("Some other error in getMigrateStatus");
-				   String errMsg = bundle.getString("migration_process_incomplete");
-				   context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_incomplete",errMsg));
-				   return "error_migration";
-				}
+			setPage("INSTRUCTOR");
+			return "list_auth_modules";
 		}
-		else
+		if (isUserStudent()) 
 		{
-			if (!isSuperUser() && !isUserAuthor() && !isUserStudent())
-			{
-				String errMsg = bundle.getString("access_denied");
-				context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"access_denied",errMsg));
-				return "error_migration";
-			}
-		}
-
-		migrateResult=-1;
-		//Only invoke program for admins
-		if (isSuperUser())
-		{
-
-		  if (beginMigrate.equals("true"))
-		  {
-			logger.info("User is admin, invoking migrateMeleteDocs");
-
-		    try
-		    {
-		      migrateResult = moduleService.migrateMeleteDocs(context.getExternalContext().getInitParameter("meleteDocsDir"));
-		      if (migrateResult == moduleService.MIGRATE_IN_PROCESS)
-		      {
-		    	  String errMsg = bundle.getString("migration_in_process");
-		    	  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_in_process",errMsg));
-		    	  return "error_migration";
-		      }
-		      if (migrateResult == moduleService.MIGRATE_FAILED)
-		      {
-		    	  String errMsg = bundle.getString("migration_process_fail");
-		    	  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_fail",errMsg));
-		    	  return "error_migration";
-		      }
-//		      if (migrateResult == moduleService.MIGRATE_COMPLETE)
-//			  {
-//				  String successMsg = bundle.getString("migration_process_success");
-//				  context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_INFO,"migration_process_success",successMsg));
-//				  return "list_auth_modules";
-//			  }
-		      if (migrateResult == moduleService.MIGRATE_COMPLETE)
-		    	  return "list_auth_modules";
-		    }
-		    catch (Exception ex)
-		    {
-				String errMsg = bundle.getString("migration_process_fail");
-				context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_fail",errMsg));
-				return "error_migration";
-		    }
-		  }
+			setPage("STUDENT");
+			return "list_modules_student";
 		}
 
 		} catch (Exception e) {
-			String errMsg = bundle.getString("migration_process_fail");
-			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"migration_process_fail",errMsg));
+			String errMsg = bundle.getString("auth_failed");
+			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"auth_failed",errMsg));
 			logger.warn(e.toString());
 		}
-		return "error_migration";
+		return "list_modules_student";
 	}
 
-
+	private void setPage(String role)
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		int sz = moduleService.getCourseModuleSize(getCurrentSiteId());
+		
+		if(role.equals("INSTRUCTOR"))
+		{			
+			ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+			ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(ctx);
+			if (sz <= 0)listPage.setNomodsFlag(true);
+			else listPage.setNomodsFlag(false);
+		}
+		else if(role.equals("STUDENT"))
+		{			
+			ValueBinding binding = Util.getBinding("#{listModulesPage}");
+			ListModulesPage listPage = (ListModulesPage) binding.getValue(ctx);
+			if (sz <= 0)listPage.setNomodsFlag(true);
+			else listPage.setNomodsFlag(false);
+		}
+	}
+	
 	/**
 	 * gets the season and year of the term
 	 * @return season and year
@@ -420,8 +389,8 @@ public class MeleteSiteAndUserInfo {
 
 	public String getMeleteDocsLocation()
 	{
-		String remoteurl = "/access/meleteDocs/content/private/meleteDocs/"+getCurrentSiteId()+"/uploads/";
-	//	String remoteurl = ServerConfigurationService.getServerUrl() + "/access/meleteDocs/content/private/meleteDocs/"+getCurrentSiteId()+"/uploads/";
+	//	String remoteurl = "/access/meleteDocs/content/private/meleteDocs/"+getCurrentSiteId()+"/uploads/";
+		String remoteurl = ServerConfigurationService.getServerUrl() + "/access/meleteDocs/content/private/meleteDocs/"+getCurrentSiteId()+"/uploads/";
 
 		return remoteurl;
 	}
@@ -454,14 +423,14 @@ public class MeleteSiteAndUserInfo {
 
 	public String getEditorArchiveLocation()
 	{
-		String remoteurl = ServerConfigurationService.getServerUrl() + "/etudes-melete-tool/HTMLEditorAppletEnterprise.jar";
+		String remoteurl = ServerConfigurationService.getServerUrl() + "/sferyx/sferyx/HTMLEditorAppletEnterprise.jar";
 		return remoteurl;
 	}
 
 	public int getMaxUploadSize()
 	{
 		int maxSize = ServerConfigurationService.getInt("content.upload.max", 2);
-		logger.debug("MAX UPLOAD SIZE IS "+maxSize);
+	//	logger.debug("MAX UPLOAD SIZE IS "+maxSize);
 		return maxSize;
 	}
 	/*******************************************************************************

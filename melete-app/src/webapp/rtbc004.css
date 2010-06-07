@@ -1,75 +1,26 @@
-/* this section sets the body properties */
-body 				{background-color : #FFFFFF;
-					font-family : Verdana, Arial, sans-serif;
-					font-size : 10pt;
-					margin: 0px; 
-					scrollbar-arrow-color: #FFFFFF;
-					scrollbar-face-color: #afb3c3;
-					scrollbar-3dlight-color: #afb3c3;
-					scrollbar-highlight-color: #000000;
-					scrollbar-shadow-color: #afb3c3;
-					scrollbar-darkshadow-color: #000000;
-					scrollbar-track-color: #FFFFFF;}
 
+.actionBar   		{	background: #EEEEEE;
+						border: 0px none black;
+						margin: 5px 0 0 0;
+						line-height: 2em;
+						padding-left: 1em;
+					}
 /* this group sets the font size for paragraphs */
-p, td 				{font-family : Verdana, Arial, sans-serif;
-					font-size : 10pt;}
-td.menu 			{font-family: Verdana, Arial, sans-serif; 
-					color: #ffffff; 
-					text-decoration : underline;
-					background-color: #ffffff;
-					font-size : 8pt;}
 .formtext			{font-family : Verdana, Arial, sans-serif;
-					font-size : 10pt;}
+					font-size : 100%;}
 
 /* this group sets the normal link colors */
-a:link 				{color : #000080;
-					text-decoration: underline;}
-a:visited 			{color : #999999;
-					text-decoration : underline;}
-a:hover 			{color : #666666;
-					text-decoration : underline;}
-a:active 			{color : #000080;
-					text-decoration : underline;}
-
 a1:link 				{color : #000080;}
 a1:visited 			{color : #999999;}
 a1:hover 			{color : #666666;}
 a1:active 			{color : #000080;}
-
-/* this group sets the style for H1-H6*/
-.h1 					{font-size : 20px;
-					font-weight : bold;
-					color : #1C472C;}
-.h2 					{font-size : 18px;
-					font-weight : bold;
-					color : #1C472C;}
-.h3 				{font-size : 16px;
-					font-weight : bold;
-					color : #1C472C;}
-.h4 				{font-size : 14px;
-					font-weight : bold;
-					color : #1C472C;
-					background-color: #DDE3EB;}
-.h5 					{font-size : 12px;
-					font-weight : bold;
-					color : #1C472C;}
-.h6 				{font-size : 10px;
-					font-weight : bold;
-					color : #afb3c3;}				
-
 
 /* this group defines Main Table properties*/
 /*Defines properties for the Top Table Area*/
 .table1				{background-image: url('images/splash.jpg'); 
 					border-collapse: collapse;} 
 
-/*Defines properties for the 2nd Table/Black Bar Area*/
-.toptable2 			{background: #000000;
-					font-family: Verdana, Arial, sans-serif;
-					color : #FFFFFF;
-					text-align: left;}
-					
+				
 /* Defines properties for the Left Navigation Table Area*/	
 .table3				{border-color: #111111; 
 					border-collapse: collapse;}  
@@ -81,195 +32,41 @@ a1:active 			{color : #000080;}
 /* Sets  border color to grey and background color to l.grey for Table in Main Area*/
 .table5				{border-color: #999999; 
 					 background-color: #CCCCCC;}
-
-.toptable 			{text-align: left;
-					font-family : Verdana, Arial, sans-serif; 
-					color: #FFFFFF;
-					background: #afb3c3;
-					line-height: normal;}
-
+					
 .tableheader 		{background: #EAEAEA;
 					font-family: Verdana, Arial, sans-serif;
-					font-size : 10px;
+					font-size :83%;
 					font-weight : bold;
 					color : #000000;
 					text-align: left;
-					height:20;}
-
-.tableheader3 		{background: #EAEAEA;
-					font-family: Verdana, Arial, sans-serif;
-					font-size : 10px;
-					color : #000000;
-					text-align: left;
-					height:20;}
+					margin: 0 1em 0 0;
+					height:20px;}
 
 .tableheader2 	{background: #EAEAEA;
 					font-family: Verdana, Arial, sans-serif;
-					font-size : 12px;
+					font-size : 100%;
 					font-weight : bold;
 					color : #000000;
 					text-align: left;
-					height:20;}
-
+					height:20px;}
 
 /*Sets <th> to align:left*/
 .leftheader 		{background: #EAEAEA;
 					font-family: Verdana, Arial, sans-serif;
-					font-size : 10px;
+					font-size : 83%;
 					font-weight : bold;
 					color : #000000;
 					text-align: left;}
-
-
-.copyrighttable 	{background: #000000;
-					font-family: Verdana, Arial, sans-serif;
-					font-size: 10px;
-					color : #FFFFFF;
-					text-align: center;}
-
 /* this group defines the comment, date, button, and navigation bar properties */
 .comment 			{background: #FFFFFF;
 					font-family: Verdana, Arial, sans-serif;
-					font-size: 9px;
+					font-size: 75%;
 					color : #000000;
 					text-align: left;}
 
-.date 				{background: #FFFFFF;
-					font-family: Verdana, Arial, sans-serif;
-					font-size: 9px;
-					color : #000000;
-					text-align: center;}
-
-.date2 				{background: #FFFFFF;
-					font-family: Verdana, Arial, sans-serif;
-					font-size: 10px;
-					color : #000000;
-					text-align: center;}
-
-.leftside 			{padding:5px; 
-					font-family : Verdana, Arial, sans-serif;
-					background: #FFFFFF;
-					line-height: normal;}
-
-.leftnav 			{padding:5px; 
-					font-family : Verdana, Arial, sans-serif;
-					border-right: 1px dotted #6e7592;
-					background: #FFFFFF;
-					line-height: normal;}
-
-.special 			{border-right: 1px dotted #6e7592;
-					border-left: 1px dotted #6e7592;
-					border-bottom: 1px dotted #6e7592;
-					padding: 5px;}
-
-.rightside 			{font-family : Verdana, Arial, sans-serif;
-					text-align: justify;
-					background: #FFFFFF;
-					line-height: 20px; /* sets the spacing between lines */
-					border-left: 1px dotted #6e7592;
-					padding-left: 20px;
-					padding-right: 30px;
-					padding-top: 10px;
-					padding-bottom: 10px;}
-
-.buttonarea 		{background: #FFFFFF;
-					border-left: 1px dotted #6e7592;
-					border-bottom: 1px dotted #6e7592;
-					padding: 4px;}
-
-.button:link 		{text-decoration: none; 
-					font-size: 12px; 
-					font-family : Verdana, Arial, sans-serif; 
-					color: #1C472C; 
-					background-color: #FFFFFF; 
-					letter-spacing: 3px; 
-					padding-top: 2px; 
-					padding-right: 2px; 
-					padding-bottom: 2px; 
-					padding-left: 2px; } 
-				
-.button:visited 	{text-decoration: none; 
-					font-size: 12px; 
-					font-family : Verdana, Arial, sans-serif; 
-					color: #1C472C; 
-					background-color: #FFFFFF; 
-					letter-spacing: 3px; 
-					padding-top: 2px; 
-					padding-right: 2px; 
-					padding-bottom: 2px; 
-					padding-left: 2px; }
-				 
-.button:hover 		{text-decoration: none; 
-					font-size: 12px; 
-					font-family : Verdana, Arial, sans-serif; 
-					color: #7BA59A; 
-					background-color: #FFFFFF; 
-					letter-spacing: 3px; 
-					padding-top: 2px; 
-					padding-right: 2px; 
-					padding-bottom: 2px; 
-					padding-left: 2px; }
- 
-.button:active 		{text-decoration: none; 
-					font-size: 12px; 
-					font-family : Verdana, Arial, sans-serif; 
-					color: #1C472C; 
-					background-color: #FFFFFF; 
-					letter-spacing: 3px; 
-					padding-top: 2px; 
-					padding-right: 2px; 
-					padding-bottom: 2px; 
-					padding-left: 2px; } 
-
-.menutable 			{font-family: Verdana, Arial, sans-serif;
-					font-size: 12px;
-					color: #000080;
-					text-align: left;}
-				
-.menutable:link 	{color: #000080; text-decoration: underline }  /* normal link color */
-.menutable:visited 	{color: #000080; text-decoration: underline }  /* visited link */
-.menutable:hover 	{color: #000080; text-decoration: none }  /* hover color */
-.menutable:active 	{color: #000080; text-decoration: underline }  /* active link */
-
-
-.copyrighttable:link 	{color: #FFFFFF; text-decoration: underline }  /* normal link color */
-.copyrighttable:visited {color: #FFffff; text-decoration: underline }  /* visited link */
-.copyrighttable:hover 	{color: #FFFFFF; text-decoration: none }  /* hover color */
-.copyrighttable:active 	{color: #FFFFFF; text-decoration: underline }  /* active link */
-
-.toptable2:link 	{color: #FFFFFF; text-decoration: underline }  /* normal link color */
-.toptable2:visited 	{color: #AFB3C3; text-decoration: none }  /* visited link */
-.toptable2:hover 	{color: #FFFFFF; text-decoration: none }  /* hover color */
-.toptable2:active 	{color: #FFFFFF; text-decoration: none }  /* active link */
-
-.top:link 			{color: #6e7592; text-decoration: underline }  /* normal link color */
-.top:visited 		{color: #9FB1AF; text-decoration: none }  /* visited link */
-.top:hover 			{color: #FFFFFF; text-decoration: underline overline }  /* hover color */
-.top:active 		{color: #FFFFFF; text-decoration: none }  /* active link */
-
-.authortabs:link  	{color: #ffffff; 
-					font-size: 9pt; 
-					font-family: Verdana, Arial, sans-serif; 
-					text-decoration: underline; 
-					background-color: #ffffff } 
-.authortabs:visited {color: #999999; 
-					font-size: 9pt; 
-					font-family: Verdana, Arial, sans-serif; 
-					text-decoration: underline; 
-					background-color: #ffffff }
-.authortabs:hover  {color: #666666; 
-					font-size: 9pt; 
-					font-family: Verdana, Arial, sans-serif; 
-					text-decoration: underline; 
-					background-color: #ffffff }
-.authortabs:active {color: #ffffff; 
-					font-size: 9pt; 
-					font-family: Verdana, Arial, sans-serif; 
-					text-decoration: underline; 
-					background-color: #ffffff } 
 
 /* Sets border color to light grey in Main Text tables */ 
-.maintabledata1 	{border-color: #E2E4E8; } 
+.maintabledata1 	{border-color: #E2E4E8; vertical-align:top;} 
 
 /* Sets border & background color to light grey in Main Text tables */  
 .maintabledata2 	{border-color:#E2E4E8;  background-color:#E2E4E8; }   
@@ -282,7 +79,7 @@ a1:active 			{color : #000080;}
 
 /* Sets background color to dull grey in Main Text tables */ 
 .maintabledata5 	{background-color: #EAEAEA; } 
-
+ 
 /* Sets background color to white in Main Text tables */   
 .maintabledata6 	{background-color: #FFFFFF; } 
 
@@ -292,31 +89,82 @@ a1:active 			{color : #000080;}
 /* Sets border color to light grey & background color to dull grey in Main Text tables */ 
 .maintabledata8 	{border-color:#E2E4E8;  background-color:#EAEAEA; } 
 
-/* Sets border color to white in Main Text tables */ 
-.maintabledata9 	{border-color:#FFFFFF; } 
+/* Sets border color to light grey & background color to dull grey in Main Text tables */ 
+.maintabledata9 	{border-color:#FFFFFF;  background-color:#EEEEEE; } 
 
-/* Sets border & background color to dull grey in Main Text tables */ 
-.maintabledata10 	{border-color:#EAEAEA;  background-color:#EAEAEA; } 
+.maintableCollapseWithBorder {
+      border: 1px solid #EAEAEA;
+      border-collapse: collapse;
+      width: 100%;
+}
 
-/* Sets border color to dull grey in Main Text tables */ 
-.maintabledata11 	{border-color:#EAEAEA; } 
+.maintableCollapseWithBorder td {
+       padding: 3px;
+}
 
-/* Sets border color to  in Main Text tables */ 
-.maintabledata12 	{border-color:#EDEDED; } 
+.maintableCollapseWithBorder0 {
+      border: 0px solid #EAEAEA;
+      border-collapse: collapse;
+      width: 100%;
+}
 
-/* Sets background color to faded grey in Main Text tables */ 
-.maintabledata13 	{background-color:#F0F0F0; } 
+.maintableCollapseWithBorder0 td {
+       padding: 3px;
+}
 
-/* Sets border color to dull green in Main Text tables */ 
-.maintabledata14 	{border-color:#CCCCCC; } 
+.maintableCollapseWithNoBorder {
+      border: 0px solid #F5F5F5;
+      border-collapse: collapse;
+      width: 100%;
+}
 
+.maintableCollapseWithNoBorder td {
+       padding: 4px;
+}
+
+.maintableCollapseWithWhiteBorder {
+      border: 1px solid #F5F5F5;
+      border-collapse: collapse;
+      width: 100%;
+}
+
+.maintableCollapseWithWhiteBorder td {
+       padding: 4px;
+}
+
+.maintableBackgroundWithNoBorder {
+      border: 0px solid #F5F5F5;
+      border-collapse: collapse;
+      background-color:#EEEEEE;
+      width: 100%;
+}
+
+.authorPrefTable {
+      border: 0px solid #F5F5F5;
+      border-collapse: collapse;
+      width: 95%;
+}
+
+.authorPrefTable td {
+       padding: 1px;
+}
+
+.deleteConfirmTable {
+	  border: 1px solid #CCCCCC;
+      border-collapse: collapse;
+      width: 100%;
+}
+.deleteConfirmTable td {
+	padding: 5px;
+}
+.forumline {BORDER-RIGHT: #c8d1d7 2px solid; BORDER-TOP: #c8d1d7 2px solid; BORDER-LEFT: #c8d1d7 2px solid; BORDER-BOTTOM: #c8d1d7 2px solid; BACKGROUND-COLOR: #ffffff}
 .style1 			{color: #FFFFFF; }    /* Course + Instructor name in Header */
 .style2 			{color: #51698D; font-weight: bold;}  /*  */
-.style3 			{font-size: 9pt; }    /* "back to Top" and other such text buttons */
-.style4 			{font-size: 12px; }	  /*  */
-.style5 			{font-size: 8.5pt; }    /* Small Table data text */
+.style3 			{font-size: 74%; }    /* "back to Top" and other such text buttons */
+.style4 			{font-size: 100%; }	  /*  */
+.style5 			{font-size: 71%; }    /* Small Table data text */
 .orange 			{color: #C48C68; }    /* Highlighting text in Orange color */
-.italics			{font-style: italic; } /* For italicizing text */
+.italics			{font-style: italic;} /* For italicizing text */
 .bold				{font-weight: bold; }  /* For making text bold */
 .center				{text-align: center; } /* For center alignment */
 .left				{text-align: left; } /* For left alignment*/
@@ -324,39 +172,73 @@ a1:active 			{color : #000080;}
 /*For setting properties of left-side of <td> */
 .lefttd				{border-left-color:#999999; border-left-style:groove;} 
 .red				{color: #990000; }  /* For error messages */
-.required			{color: #990000; font-weight:800; font-size:10px;} /* For required fields */
+.required			{color: #990000; font-weight:800; font-size:80%;} /* For required fields */
 .blue				{color: #0066CC; }  /* For warning messages */
 .styleblk                       {color: #000000; } /*Black*/
 
 /*Styles put in by developers*/
 .underlineClass {text-decoration: underline;}
-.style6 			{font-size: 14px;}	  /*  */
+.style6 			{font-size: 116%;}	  /*  */
 .style7 			{}	  /*  */
-.style8			{font-size: 10pt;}	  /*  */
-.TitleClass {
-font-size: 12px;
-  vertical-align: top;
-  align: center;
-  width: 350px;
-  }
-.IdClass {
-  font-size: 12px;
-    color: #000000;
-    vertical-align: top;
-    align: center;
-    
-}	    
-.DateClass 			
-{background: #FFFFFF;
-					font-family: Verdana, Arial, sans-serif;
-					font-size: 9px;
-					color : #000000;
-					text-align: left; 
-vertical-align: top;
-width: 200px}
+.style8			{font-size: 83%;}	  /*  */
+.valignStyle9  { vertical-align: top;}
 
-.SectionClass 	{font-size: 12px; 
-align: center;
+.StudentListTitleClass {
+	font-size: 100%;
+  	vertical-align: top;
+  	text-align: left;
+  }
+  
+.ListTitleClass {
+	font-size: 92%;
+  	vertical-align: top;
+  	text-align: left; 
+  }
+
+.ListDateClass {
+	font-size: 92%;
+	vertical-align: top;
+    width: 18%;  
+    white-space: nowrap;	
+  }
+
+.ListActionClass {
+	vertical-align: top;    
+    width: 11%;
+  	white-space: nowrap;
+  } 
+  
+ .ListModCheckClass {
+   vertical-align: top;
+	width: 2%;
+	white-space:nowrap;
+   }
+   
+ .ListDateInputClass {
+	font-size: 85%;
+	vertical-align: top;
+    width: 18%;  
+    white-space: nowrap;	
+  }  
+.ListDatePickerClass	{  
+width: 16px;  
+height: 16px;  border: 0 none black;  
+vertical-align: top;  }
+
+.ListClosedClass {
+   vertical-align: top;	
+	width: 2%;
+	white-space:nowrap;
+   }
+    
+.ListPrintClass {
+   vertical-align: top;	
+	width: 7%;
+	white-space:nowrap;
+   }
+
+.SectionClass 	{font-size: 83%; 
+text-align: left;
 width :85%;} 
 
 .SectionTableClass {vertical-align: top;}
@@ -369,219 +251,113 @@ width :85%;}
 
 
 .DatePickerClass	{  
-width: 16;  
-height: 16;  border: 0;  
-vertical-align: middle;  align:center;  }
+width: 16px;  
+height: 16px;  border: 0 none black;  
+vertical-align: middle; }
 
-.ExpClass			{ border: 0;}
-
+.ExpClass			{ border: 0 none black;margin:0 3px 0 0;}
+.NextStepsPaddingClass {padding:11.3px;}
 .ExtraPaddingClass {padding:8px;}
+.TwiceExtraPaddingClass {padding:18px;}
 .MorePaddingClass {padding:25px;}
 .MediumPaddingClass {padding:60px;}
 .LotsofPaddingClass {padding:110px;}
 
 .ViewSectionTableClass {padding:8px;
-hspace:5;
-valign:top}
+ vertical-align:top;}
 
-.AuthImgClass		{ width: 16;    height: 16;    border: 0;    align: absbottom;   }
- .TopNavImgClass{
-    height: 22;
-    width: 92;
-    hspace: 0;
-    border: 0;
-   }
-.HeaderHeight		{	height: 25;}
-
-.AddImgClass		{   height: 16;   
-width: 16;   border: 0;  hspace:10; }
-.PrereqClass {
-     vertical-align: top;
-     text-align: center;
-     }
- .NextstepsClass {
-          vertical-align: top;
-          text-align: center;
-     }
+.AuthImgClass		{ width: 16px;    height: 16px;    border: 0 none black;    vertical-align: text-bottom; margin:0 3px 0 0;  }
+.BmImgClass		{ width: 16px;    height: 16px;    border: 0 none black;    vertical-align: text-bottom; margin:3px 3px 0 0;  }
+.AddImgClass		{   height: 16px;   
+width: 16px;   border: 0 none black;  vertical-align: top; margin:0 3px 0 0;}
      
-.MainTableClass		{ border-color: #E2E4E8;border:1}
+.MainTableClass		{ border:1px solid #E2E4E8;}
+td.MainTableClass     { white-space: nowrap;}
 
-.CmdImgClass		{ hspace: 7; 
-border: 0; }
+.BottomImgSave,.BottomImgContinue		{  	padding-left:2em;
+						background: #eee url('images/save.png') .2em no-repeat;
+					}
+.BottomImgDelete	{  	padding-left:2em;
+						background: #eee url('images/delete.png') .2em no-repeat;
+					}	
+.BottomImgAdd		{  	padding-left:2em;
+						background: #eee url('images/add.png') .2em no-repeat;
+					}	
+.BottomImgReturn	{  	padding-left:2em;
+						background: #eee url('images/return_sm.png') .2em no-repeat;
+					}	
+.BottomImgCancel	{  	padding-left:2em;
+						background: #eee url('images/closed.gif') .2em no-repeat;
+					}						
+.BottomImgSet		{  	padding-left:2em;
+						background: #eee url('images/set.png') .2em no-repeat;
+					}
+.BottomImgPreview	{  	padding-left:2em;
+						background: #eee url('images/preview.png') .2em no-repeat;
+					}	
+.BottomImgFinish	{  	padding-left:2em;
+						background: #eee url('images/correct.png') .2em no-repeat;
+					}	
+.BottomImgExport	{  	padding-left:2em;
+						background: #eee url('images/export1.gif') .2em no-repeat;
+					}	
+.BottomImgImport	{  	padding-left:2em;
+						background: #eee url('images/import1.gif') .2em no-repeat;
+					}
+.BottomImgSort		{  	padding-left:2em;
+						background: #eee url('images/document_exchange.gif') .2em no-repeat;
+					}
+							
+.BottomImgRestore	{  	padding-left:2em;
+						background: #eee url('images/restore.png') .2em no-repeat;
+					}																																												
 
- .DatePickerImgClass{
-  align: center;
-  vertical-align: top;
-  }
-.HeaderHeightClass {
-  height: 20;
-  }
-  .searchlinkstyle 	{border-color:#E2E4E8; background-color:#FFFFFF; }
- 
+ /* list resources page styles */
 
-.ImgSpace			{  hspace: 3;   
-border: 0;}
-
-.BottomImgSpace		{  hspace: 7;  
- border: 0; align:center;}
- .UpLink
- {
- width: 1px;
- hspace: 0;
- }
- .SecLink
- {
- width:85px;
- }
- .TitleWid
-  {
-  hspace:5;
- padding:10px;
-  width:40%;
-  align:center;
- vertical-align: top;
- }
- .TitleWid2
-   {
-   width:45%;
- }
 .TitleWid3 {   width:75%; }
 .ActionWid {width:40%;
-white-space:nowrap;}
-
-.listActionWid {width:15%;
 white-space:nowrap;}
 
 .TitleWid4 {   width:65%; }
 .ActionWid2 {width:45%;
 white-space:nowrap;}
+/* list resources end */
 
- .DateWid1
-    {
-    width:25%;
-    vertical-align: top;
- }
- .DateWid2
-    {
-    width:25%;
-    vertical-align: top;
- }
- .PrWid
-   {
-   width:35px;
-   align: absmiddle;
-	valign:top;
- }
- .StWid
-    {
-    width:234px;
- }
- .EndWid
-     {
-     width:185px;
- }
- .row1 			{ background-color:#FFFFFF}
- .row2			{background-color:#F7F7F7}
- .secrow0       {text-indent:20px}
- .secrow1       {text-indent:40px}
- .secrow2       {text-indent:60px}
- .secrow3       {text-indent:80px}
- .secrow4       {text-indent:100px}
- .secrow5       {text-indent:120px}
- .secrow6       {text-indent:140px}
- .secrow7       {text-indent:160px}
- .secrow8       {text-indent:180px}
- .secrow9       {text-indent:200px}
-.justHeight 	{height:20;}
-.TitleClass {
-font-size: 12px;
-  vertical-align: top;
-  width: 300px
-  }
-.IdClass {
-  font-size: 12px;
-    color: #000000;
-    vertical-align: top;
-    
-}
-.DateClass {
-font-size: 12px;
-  color: #000000;
-  vertical-align: top;
-  
-  }
-  
-  .RedClass {
-  color: #FF0000;
-  }
+ .row1 			{ background-color:#FFFFFF;}
+ .row2			{background-color:#F7F7F7;}
+ .secrow0       {text-indent:20px;}
+ .secrow1       {text-indent:40px;}
+ .secrow2       {text-indent:60px;}
+ .secrow3       {text-indent:80px;}
+ .secrow4       {text-indent:100px;}
+ .secrow5       {text-indent:120px;}
+ .secrow6       {text-indent:140px;}
+ .secrow7       {text-indent:160px;}
+ .secrow8       {text-indent:180px;}
+ .secrow9       {text-indent:200px;}
+
   .BlueClass {
     color: #0000FF;
   }
   .DatePickerClass{
-  width: 16;
-  height: 16;
-  border: 0;
+  width: 16px;
+  height: 16px;
+  border: 0 none black;
   vertical-align: bottom;
   }
   .ExpClass{
-   border: 0;
+   border: 0 none black;
    }
-   .AuthImgClass{
-    width: 16;
-    height: 16;
-    border: 0;
-    align: absbottom;
-   }
-   
-    .AuthMessageImgClass{
-    width: 16;
-    height: 16;
-    border: 0;
-    align: absmiddle;
-   }
-   .TopNavImgClass{
-    height: 22;
-    hspace: 0;
-    border: 0;
-   }
-   .ModCheckClass {
-   vertical-align: top;
-	align:center;
-	white-space:nowrap;
-   }
-   .LicHelpImgClass {
-   border: 0;
-   align: absmiddle;
-   }
-
-.NavListImgClass	{  
-border:0; 
-align:bottom;
-}
-
-.UrlTitleClass {
-border: 0;
-height: 16;
-width: 16;
-}
 
 .meletePortletToolBarMessage{
 background-color:#FFFFFF;
 display:block;
 color:#51698D;
-font-size:85%;
+font-size:83%;
 margin:0;
 padding:8px;
 text-align:left;
 width:auto;
-}
-
-.meleteHtmlAreaButtonClass{
-background-color:#ffffff;
-border:0px;
-color:#646464;
-font-weight : bold;
-padding:1px 1px 1px 1px
 }
 
 .meleteLicenseMsg{
@@ -595,69 +371,43 @@ color: #5A6D95;
 
 .copyrightColumn2{
    width:50%;
-	align:right;
-}
-.col30 {
-	width:30%;
-}
-.col50 {
-	width:50%;
+	text-align:right;
 }
 
-.col70 {
-	width:70%;
+.col15 {
+ width:15%;
+ vertical-align:top;
+}
+.col25 {
+width:25%;
+vertical-align:top;
 }
 
-.placeCenter{
-	align:center;
+.col45wordwrap {
+width:45%;
+vertical-align:top;
 }
 
-.placeRight{
-	align:right;
+.col1 {
+	width:20%;
+	white-space:nowrap;
+}
+.col2 {
+	width:80%;
+	text-align:left;
 }
 
-.sortIconMsg{
-		color : #000080;
-		text-decoration: underline;
+.col1a {
+	width:35%;
+	white-space:nowrap;
+}
+.col2a {
+	width:65%;
+	text-align:left;
 }
 
-/* taken from sakai tools.css and modified background color */
-.chefToolBarWrap, .chefToolBarWrapForm, .navIntraTool{
-	background-color:#DDDFE4;
-	color: #000;
-	padding:.4em;
-	text-align:center;
-	font-size: .9em;
-	line-height:1.2em}
-
-.navIntraTool a:link, .navIntraTool a, .chefToolBarWrap a:link, .chefToolBarWrap a, .chefToolBarWrapForm a, .chefToolBarWrapForm a:link  {
-	border-bottom: 1px dashed #90A1C6;
-	background: #DDDFE4;
-	padding: 0px 2px 0px 3px;
-	color: #000;
-	font-size: .9em;
-	text-decoration:none;
-	margin-right:1em}
-.navIntraTool a:hover,.chefToolBarWrap a:hover, .chefToolBarWrapForm a:hover {
-	border:none;
-	text-decoration: none !important;
-	color: #084A87 !important;
-	font-size: .9em;
-	padding: 0px 2px 0px 3px;
-	border-bottom: 1px solid #FFF !important; 
-	 }
-.navIntraTool a:visited, .chefToolBarWrap a:visited, .chefToolBarWrapForm a:visited  {
-	border-bottom: 1px dashed #90A1C6;
-	background: #DDDFE4;
-	padding: 0px 2px 0px 3px;
-	font-size: .9em;
-	color: #000;
-	text-decoration:none;
+.col1b {
+	vertical-align: top;
+	width:20%;
 }
-.fileclass {
-	border: 1px;
-	border-width: 1px;
-	border-style: solid;
-	border-color:#EAEAEA;
-    border-bottom-color:#EAEAEA;
-    }
+.authBarCol {font-size:90%;white-space:nowrap;}

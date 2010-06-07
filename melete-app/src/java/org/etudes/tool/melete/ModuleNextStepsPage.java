@@ -30,6 +30,7 @@ import org.sakaiproject.util.ResourceLoader;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -84,12 +85,14 @@ public class ModuleNextStepsPage implements Serializable/*,ToolBean*/ {
 	public String steps()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
+		Map sessionMap = ctx.getExternalContext().getSessionMap();
+		
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		try {
 			mdBean.setDateFlag(false);
 			ArrayList mdbeanList = new ArrayList();
 			mdbeanList.add(mdBean);
-			moduleService.updateProperties(mdbeanList);
+			moduleService.updateProperties(mdbeanList, (String)sessionMap.get("courseId"));
 
 			return "success";
 

@@ -24,6 +24,7 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@include file="accesscheck.jsp" %>
 <h:panelGrid id="cclicensetable" columns="1" rendered="#{!addModulePage.copyright}" >
 	<h:column>
  <h:outputText value="#{msgs.license_results_1}" /> 

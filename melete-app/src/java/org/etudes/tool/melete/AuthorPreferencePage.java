@@ -70,7 +70,51 @@ public class AuthorPreferencePage {
   {
   }
 
+  public void setEditorFlags()
+  {
+	  FacesContext context = FacesContext.getCurrentInstance();
+	  Map sessionMap = context.getExternalContext().getSessionMap();
+	  mup = getMup((String)sessionMap.get("userId"));
+	  shouldRenderSferyx = false;
+	  shouldRenderFCK = false;
 
+	  // if no choice is set then read default from sakai.properties
+	  if ((mup == null)||(mup.getEditorChoice() == null))
+	  {
+		  editorChoice = getMeleteDefaultEditor();
+	  }
+	  else
+	  {
+		  editorChoice = mup.getEditorChoice();
+	  }
+	  if(editorChoice.equals(SFERYX))
+	  {
+		  shouldRenderSferyx = true;
+		  shouldRenderFCK = false;
+	  }
+	  else if(editorChoice.equals(FCKEDITOR))
+	  {
+		  shouldRenderSferyx = false;
+		  shouldRenderFCK = true;
+	  }
+
+  }
+  
+  public void resetValues()
+  {
+	FacesContext context = FacesContext.getCurrentInstance();
+	Map sessionMap = context.getExternalContext().getSessionMap();
+
+	  mup = getMup((String)sessionMap.get("userId"));
+	
+      ValueBinding binding =
+	        Util.getBinding("#{licensePage}");
+	  LicensePage lPage = (LicensePage)binding.getValue(context);
+	  if (lPage.getLicenseCodes() == null)
+	  {
+	    lPage.setInitialValues(this.formName, mup);
+	  }	  
+  }
 
   private void getUserChoice()
   {
@@ -80,26 +124,9 @@ public class AuthorPreferencePage {
   		mup = getMup((String)sessionMap.get("userId"));
   		msp = (MeleteSitePreference) getAuthorPref().getSiteChoice((String)sessionMap.get("courseId"));
 
-  		// if no choice is set then read default from sakai.properties
-  		if ((mup == null)||(mup.getEditorChoice() == null))
-  		{
-  			editorChoice = getMeleteDefaultEditor();
-  		}
-  		else
-  		{
-  			editorChoice = mup.getEditorChoice();
-  		}
-  		if(editorChoice.equals(SFERYX))
-  		{
-  			shouldRenderSferyx = true;
-  		  	shouldRenderFCK = false;
-  		}
-  		else if(editorChoice.equals(FCKEDITOR))
-  		{
-  			shouldRenderSferyx = false;
-  		  	shouldRenderFCK = true;
-  		 }
-
+  		// reset flags
+		setEditorFlags();
+		
   		if (mup != null && (mup.isViewExpChoice() == null || !mup.isViewExpChoice().booleanValue()))
   			userView = "false";
   		else
@@ -118,13 +145,6 @@ public class AuthorPreferencePage {
   		if(msp != null && msp.isAutonumber())
   			materialAutonumber = "true";
 
-  		ValueBinding binding =
-  	        Util.getBinding("#{licensePage}");
-  		LicensePage lPage = (LicensePage)binding.getValue(context);
-  		if (lPage.getLicenseCodes() == null)
-  		{
-  	    lPage.setInitialValues(this.formName, mup);
-  		}
 
   	return;
   	}
@@ -140,7 +160,7 @@ public class AuthorPreferencePage {
   public String getMeleteDefaultEditor()
 	{
 		String defaultEditor = ServerConfigurationService.getString("melete.wysiwyg.editor", "");
-		if (logger.isDebugEnabled()) logger.debug("getMeleteDefaultEditor:"+defaultEditor+"...");
+		logger.debug("getMeleteDefaultEditor:"+defaultEditor+"...");
 
 		if(defaultEditor == null || defaultEditor.length() == 0)
 		{
@@ -176,7 +196,7 @@ public class AuthorPreferencePage {
   public boolean isShouldRenderEditorPanel()
   {
 	  int count = ServerConfigurationService.getInt("melete.wysiwyg.editor.count", 0);
-	  if (count > 1) shouldRenderEditorPanel = true;
+	  if (count > 0) shouldRenderEditorPanel = true;
 	  return shouldRenderEditorPanel;
   }
 /**

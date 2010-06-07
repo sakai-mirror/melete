@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -103,6 +103,8 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 
 	     FacesContext context = FacesContext.getCurrentInstance();
      	 ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+     	 Map sessionMap = context.getExternalContext().getSessionMap();
+
 	    // rashmi added validations start
 //     	validation
       	module.setTitle(module.getTitle().trim());
@@ -149,10 +151,9 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 			mdbean.setDateFlag(false);
 			ArrayList mdbeanList = new ArrayList();
 			mdbeanList.add(mdbean);
-			moduleService.updateProperties(mdbeanList);
+			moduleService.updateProperties(mdbeanList, (String)sessionMap.get("courseId"));
 
 			// add module to session
-			Map sessionMap = context.getExternalContext().getSessionMap();
 			sessionMap.put("currModule",module);
 
 			//Track the event
@@ -173,12 +174,12 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 			addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
 			return "failure";
 		}
-		if (callFromAddContent == false)
+		/*if (callFromAddContent == false)
 		{
 		  String msg="";
 		  msg = bundle.getString("edit_module_success");
 		  addMessage(context, "Info Message", msg, FacesMessage.SEVERITY_INFO);
-		}
+		}*/
 		setSuccess(true);
 		return "success";
 	 }
@@ -232,11 +233,34 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
         addPage.resetSectionValues();
         addPage.setModule(module);
 
-        //Mallika - 10/18/06 - adding reference to checkUploadExists
-        checkUploadExists();
-
        return "addmodulesections";
     }
+
+    public String gotoTOC()
+	{
+    	String errMsg = "";
+
+        if(!getSuccess())
+        {
+        	callFromAddContent = true;
+        	if(!savehere().equals("failure"))
+    		{
+        		callFromAddContent = false;
+    		    setSuccess(true);
+    		}
+        	else
+        	{
+        		callFromAddContent = false;
+        		return "edit_module";
+        	}
+        }
+		FacesContext context = FacesContext.getCurrentInstance();
+        ValueBinding binding =Util.getBinding("#{listAuthModulesPage}");
+        ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
+        listPage.resetValues();
+        listPage.setModuleDateBeans(null);
+		return "list_auth_modules";
+	}
 
     /*
      * Revised by Rashmi -- 12/21 to fix bug#189

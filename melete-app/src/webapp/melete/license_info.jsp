@@ -70,7 +70,7 @@ rendered="#{((viewSectionsPage.section.sectionResource.resource.licenseCode == 3
       <!--End license code CC license-->     	
 	 
         <!--License code fairuse license-->
-      <h:outputText id="lic4_val2" value="#{viewSectionsPage.section.sectionResource.resource.ccLicenseUrl}"  rendered="#{viewSectionsPage.section.sectionResource.resource.licenseCode == 4}"/>
+      <h:outputText id="lic4_val2" value="#{msgs.license_info_fairuse}"  rendered="#{viewSectionsPage.section.sectionResource.resource.licenseCode == 4}"/>
       <h:outputText id="lic4_val5" value=" #{viewSectionsPage.section.sectionResource.resource.copyrightYear}" rendered="#{((viewSectionsPage.section.sectionResource.resource.licenseCode == 4)&&(viewSectionsPage.section.sectionResource.resource.copyrightYear != viewSectionsPage.nullString))}"/> 
        <h:outputText id="lic4_val3" escape="false" value="<BR>#{viewSectionsPage.section.sectionResource.resource.copyrightOwner}"  
 

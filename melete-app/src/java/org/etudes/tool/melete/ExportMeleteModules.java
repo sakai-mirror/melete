@@ -147,7 +147,7 @@ public class ExportMeleteModules {
 		if(selectedModules == null || selectedModules.size() == 0)return null;
 		if(selectedModules.size() == 1 && selectedModules.get(0).equals("all"))
 			return modList;
-        
+
 		List<Module> returnList = new ArrayList<Module>(0);
 		for(String sel:selectedModules)
 		{
@@ -172,14 +172,16 @@ public class ExportMeleteModules {
 
 		try {
 			List<Module>selectList = createSelectedList();
+			boolean allFlag = false;
 
 			if (selectList != null && selectList.size() > 0) {
-				if(selectedModules.size() == 1 && selectedModules.get(0).equals("all"))
+				if(selectedModules.get(0).equals("all"))
 				{
+					allFlag = true;
 					String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
 					List cmodArchList = getModuleService().getArchiveModules(courseId);
 				    if ((cmodArchList != null)&&(cmodArchList.size() > 0))
-				    {	
+				    {
 					  Iterator i = cmodArchList.iterator();
 				      List<Module> archModList=new ArrayList();
 				      while (i.hasNext()) {
@@ -187,10 +189,10 @@ public class ExportMeleteModules {
 				    	  archModList.add((Module)cmod.getModule());
 				      }
 				      selectList.addAll(archModList);
-				    }  
+				    }
 				}
-				if(selectFormat.startsWith("IMS")) exportIMSModules(selectList);
-				else exportScormModules(selectList);
+				if(selectFormat.startsWith("IMS")) exportIMSModules(selectList,allFlag);
+				else exportScormModules(selectList,allFlag);
 
 			}
 			else {
@@ -224,14 +226,13 @@ public class ExportMeleteModules {
 	 *
 	 * @return navigation page
 	 */
-	public void exportIMSModules(List<Module> selectList) throws Exception{
+	public void exportIMSModules(List<Module> selectList,boolean allFlag) throws Exception{
 		if (logger.isDebugEnabled())
 			logger.debug("Starting export IMS Modules....");
 
 		FacesContext context = FacesContext.getCurrentInstance();
 
-		String packagingdirpath = context.getExternalContext()
-		.getInitParameter("packagingdir");
+		String packagingdirpath = ServerConfigurationService.getString("melete.packagingDir", "");
 		String instr_id = getMeleteSiteAndUserInfo().getCurrentUser().getId();
 		instr_id = instr_id.trim();
 		String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
@@ -239,6 +240,11 @@ public class ExportMeleteModules {
 
 		File packagedir = null;
 		try {
+			if(packagingdirpath == null || packagingdirpath.length() <=0 )
+			{
+				logger.warn("Melete Packaging Dir property is not set. Please check melete's readme file. ");
+				return;
+			}
 			File basePackDir = new File(packagingdirpath);
 			if (!basePackDir.exists())
 				basePackDir.mkdirs();
@@ -285,16 +291,13 @@ public class ExportMeleteModules {
 					packagedir.getAbsolutePath() + File.separator
 					+ "xml.xsd");
 
-			
-			List orgResElements = meleteExportService
-			.generateOrganizationResourceItems(selectList,selectList.equals(modList),
-					packagedir, title, courseId);
-			
 
-			if (orgResElements != null && orgResElements.size() > 0) {
-				manifest.add((Element) orgResElements.get(0));
-				manifest.add((Element) orgResElements.get(1));
-			}
+			List orgResElements = meleteExportService
+			.generateOrganizationResourceItems(selectList,allFlag,
+					packagedir, title, courseId);
+
+			if (orgResElements != null && orgResElements.size() > 0) manifest.add((Element) orgResElements.get(0));
+			if (orgResElements != null && orgResElements.size() > 1) manifest.add((Element) orgResElements.get(1));			
 
 			// create xml document and add element
 			Document document = XMLHelper.createXMLDocument(manifest);
@@ -310,7 +313,7 @@ public class ExportMeleteModules {
 			title = Validator.escapeResourceName(title);
 
 			String outputfilename = null;
-			if(modList.equals(selectList))
+			if(allFlag)
 			{
 			outputfilename = packagedir.getParentFile()
 			.getAbsolutePath()
@@ -353,14 +356,20 @@ public class ExportMeleteModules {
 	 *
 	 * @return navigation page
 	 */
-	public void exportScormModules(List<Module> selectList) throws Exception
+	public void exportScormModules(List<Module> selectList,boolean allFlag) throws Exception
 	{
 		if (logger.isDebugEnabled()) logger.debug("Starting exportModules....");
 		FacesContext context = FacesContext.getCurrentInstance();
 		String instr_id = getMeleteSiteAndUserInfo().getCurrentUser().getId();
 		String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
 
-		String packagingdirpath = context.getExternalContext().getInitParameter("packagingdir") + File.separator + "packagefilesscorm";
+		String packagingdirpath =ServerConfigurationService.getString("melete.packagingDir", "");
+		if(packagingdirpath == null || packagingdirpath.length() <=0 )
+		{
+			logger.warn("Melete Packaging Dir property is not set. Please check melete's readme file. ");
+			return;
+		}
+		packagingdirpath = packagingdirpath.concat(File.separator + "packagefilesscorm");
 		File packagedir = null;
 		try
 		{
@@ -390,7 +399,7 @@ public class ExportMeleteModules {
 			// copy the schema files
 			File schemaFilesDir = basePackDir;
 
-			List orgResElements = meleteExportScormService.generateOrganizationResourceItems(selectList, selectList.equals(modList), packagedir, title, courseId);
+			List orgResElements = meleteExportScormService.generateOrganizationResourceItems(selectList, allFlag, packagedir, title, courseId);
 
 			if (orgResElements != null && orgResElements.size() > 0)
 			{
@@ -410,7 +419,7 @@ public class ExportMeleteModules {
 
 			title = Validator.escapeResourceName(title);
 			String outputfilename = null;
-			if(modList.equals(selectList))
+			if(allFlag)
 			{
 			  outputfilename = packagedir.getParentFile()
 			.getAbsolutePath()
@@ -476,8 +485,16 @@ public class ExportMeleteModules {
 								.equalsIgnoreCase("zip")) {
 					File unpackagedir = null;
 					try {
-						String packagingdirpath = context.getExternalContext()
-								.getInitParameter("packagingdir");
+						String packagingdirpath = ServerConfigurationService.getString("melete.packagingDir", "");
+						if(packagingdirpath == null || packagingdirpath.length() <=0 )
+						{
+							logger.warn("Melete Packaging Dir property is not set. Please check melete's readme file. ");
+							String infoMsg = bundle.getString("error_importing");
+							FacesMessage msg = new FacesMessage(null, infoMsg);
+							msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+							context.addMessage(null, msg);
+							return "importexportmodules";
+						}
 						String instr_id = getMeleteSiteAndUserInfo()
 								.getCurrentUser().getId();
 						String courseId = getMeleteSiteAndUserInfo()
@@ -551,7 +568,7 @@ public class ExportMeleteModules {
 						FacesMessage msg = new FacesMessage(null, infoMsg);
 						msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 						context.addMessage(null, msg);
-						e.printStackTrace();
+				//		e.printStackTrace();
 					} finally {
 						// delete the files - Directory courseid_instructorid
 						// and

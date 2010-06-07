@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008 Etudes, Inc.
@@ -69,9 +69,8 @@ public class ListModulesPage implements Serializable{
       private int showModuleId;
 
       private String formName;
-      private boolean instFlag;
-      private boolean studFlag;
       private String role;
+      private boolean instRole;
       private String typeEditor;
       private String typeLink;
       private String typeUpload;
@@ -81,6 +80,7 @@ public class ListModulesPage implements Serializable{
       private boolean trueFlag = true;
 
       private ModuleService moduleService;
+      private BookmarkService bookmarkService;
 
       private Section nullSection = null;
       private List nullList = null;
@@ -100,6 +100,8 @@ public class ListModulesPage implements Serializable{
 	  private UIData secTable;
 	  private ListDataModel modDataModel;
 
+	  private int bookmarkSectionId;
+
 
 	  public ListDataModel getModDataModel()
 	{
@@ -114,8 +116,6 @@ public class ListModulesPage implements Serializable{
 
 	public ListModulesPage(){
 
-	  	instFlag = true;
-	  	studFlag = false;
 	  	FacesContext context = FacesContext.getCurrentInstance();
 //	  	context.getViewRoot().setTransient(true);
 	  	Map sessionMap = context.getExternalContext().getSessionMap();
@@ -144,12 +144,11 @@ public class ListModulesPage implements Serializable{
 
 	  	  expandAllFlag = true;
 	  	}
+	  	setBookmarkSectionId(-1);
 	  }
 
 	  public void resetValues()
 	  {
-	  	instFlag = true;
-	  	studFlag = false;
 	  	nomodsFlag = false;
 	  	closedModulesFlag = false;
 	  	printMaterial = null;
@@ -176,8 +175,23 @@ public class ListModulesPage implements Serializable{
 	  	  expandAllFlag = true;
 	  	}
 	  	setShowModuleId(-1);
+	  	setBookmarkSectionId(-1);
 	  }
 
+	  public boolean getInstRole()
+	    {
+	    	FacesContext context = FacesContext.getCurrentInstance();
+		  	Map sessionMap = context.getExternalContext().getSessionMap();
+		  	if ((String)sessionMap.get("role") !=null)
+		  		this.instRole = ((String)sessionMap.get("role")).equals("INSTRUCTOR");
+		  	else this.instRole = false;
+	    	return instRole;
+	    }
+
+	    public void setInstRole(boolean instRole)
+	    {
+	    	this.instRole = instRole;
+	    }
 
  /**
 	   * @return Returns the ModuleService.
@@ -193,6 +207,21 @@ public class ListModulesPage implements Serializable{
 		this.moduleService = moduleService;
 	  }
 
+	  /**
+		 * @return Returns the BookmarkService.
+		 */
+		public BookmarkService getBookmarkService()
+		{
+			return bookmarkService;
+		}
+
+		/**
+		 * @param bookmarkService The bookmarkService to set.
+		 */
+		public void setBookmarkService(BookmarkService bookmarkService)
+		{
+			this.bookmarkService = bookmarkService;
+		}
 
 	  public String getRole() {
 	  	return role;
@@ -202,21 +231,7 @@ public class ListModulesPage implements Serializable{
 	  	this.role = role;
 	  }
 
-	  public boolean getInstFlag() {
-	  	return instFlag;
-	  }
 
-	  public void setInstFlag(boolean instFlag) {
-	  	this.instFlag = instFlag;
-	  }
-
-	  public boolean getStudFlag() {
-	  	return studFlag;
-	  }
-
-	  public void setStudFlag(boolean studFlag) {
-	  	this.studFlag = studFlag;
-	  }
 	  public List  getNullList() {
 	  	return nullList;
 	  }
@@ -335,96 +350,78 @@ public class ListModulesPage implements Serializable{
 	        this.showModuleId = moduleId;
 	  }
 
-
-
-
-	  public String showSections() {
-	  	ViewModBean vmbean = null;
-	  	FacesContext ctx = FacesContext.getCurrentInstance();
-	  	 UIViewRoot root = ctx.getViewRoot();
-	        UIData table = null;
-	        if (getRole()!= null && getRole().equals("INSTRUCTOR")){
-	        table = (UIData)
-	            root.findComponent("listmodulesform").findComponent("table");
-	        }
-	        if (getRole()!= null && getRole().equals("STUDENT")){
-	        table = (UIData)
-            root.findComponent("listmodulesStudentform").findComponent("table");
-	        }
-
-	        ValueBinding binding =
-	            Util.getBinding("#{listModulesPage}");
-	        ListModulesPage lmPage = (ListModulesPage)
-	            binding.getValue(ctx);
-	        String retVal = "list_modules_student";
-	        if (getRole()!= null && getRole().equals("INSTRUCTOR")){
-	        	vmbean = (ViewModBean) table.getRowData();
-	        	lmPage.setShowModuleId(vmbean.getModuleId());
-	        	retVal = "list_modules_inst";
-	        }
-	        if (getRole()!= null && getRole().equals("STUDENT")) {
-	        	vmbean = (ViewModBean) table.getRowData();
-	        	lmPage.setShowModuleId(vmbean.getModuleId());
-	        }
-
-	  	return retVal;
+	  public int getBookmarkSectionId() {
+		    this.bookmarkSectionId = bookmarkService.getLastVisitSectionId(getUserId(), getCourseId());
+	        return this.bookmarkSectionId;
 	  }
 
-	  public String hideSections() {
-	  	setShowModuleId(-1);
-        setExpandAllFlag(false);
-	  	String retVal = "list_modules_student";
-	  	 if (getRole()!= null && getRole().equals("INSTRUCTOR"))
-	    {
-	    	retVal = "list_modules_inst";
-	    }
-		  	return retVal;
+	  public void setBookmarkSectionId(int bookmarkSectionId) {
+	        this.bookmarkSectionId = bookmarkSectionId;
 	  }
 
-     //Mallika - 6/7/06 - adding this method to expand all modules
-      public String expandAllAction() {
-	  	FacesContext ctx = FacesContext.getCurrentInstance();
-	  	       ValueBinding binding =
-	            Util.getBinding("#{listModulesPage}");
-	        ListModulesPage lmPage = (ListModulesPage)
-	            binding.getValue(ctx);
-            lmPage.setExpandAllFlag(true);
-        String retVal = "list_modules_student";
-        if (getRole()!= null && getRole().equals("INSTRUCTOR"))
-	    {
-	    	retVal = "list_modules_inst";
-	    }
-
-	   return retVal;
-	  }
-
-      public String collapseAllAction() {
-	  FacesContext ctx = FacesContext.getCurrentInstance();
-	  	       ValueBinding binding =
-	            Util.getBinding("#{listModulesPage}");
-	        ListModulesPage lmPage = (ListModulesPage)
-	            binding.getValue(ctx);
-            lmPage.setExpandAllFlag(false);
-	        lmPage.setShowModuleId(-1);
-
-	  	String retVal = "list_modules_student";
-	    if (getRole()!= null && getRole().equals("INSTRUCTOR"))
+	  public String showHideSections()
 		{
-		  retVal = "list_modules_inst";
+			if (getExpandAllFlag() == true)
+			{
+				setShowModuleId(-1);
+				setExpandAllFlag(false);
+			}
+			else
+			{
+				ViewModBean vmbean = null;
+				FacesContext ctx = FacesContext.getCurrentInstance();
+				UIViewRoot root = ctx.getViewRoot();
+			    UIData table = null;
+			    if (getRole()!= null && getRole().equals("INSTRUCTOR")){
+			       table = (UIData)
+			        root.findComponent("listmodulesform").findComponent("StudentTable");
+			    }
+			    if (getRole()!= null && getRole().equals("STUDENT")){
+			        table = (UIData)
+		            root.findComponent("listmodulesStudentform").findComponent("table");
+			     }
+		        vmbean = (ViewModBean) table.getRowData();
+		        if (getShowModuleId() != vmbean.getModuleId())
+				{
+				   setShowModuleId(vmbean.getModuleId());
+				}
+				else
+				{
+					setShowModuleId(-1);
+					setExpandAllFlag(false);
+				}
+			}
+			String retVal = "list_modules_student";
+		   if (getRole()!= null && getRole().equals("INSTRUCTOR"))
+		    {
+		    	retVal = "list_modules_inst";
+		    }
+			  	return retVal;
 		}
 
-	  	return retVal;
-	  }
-	  //Mallika - new code end
+	  public String expandCollapseAction()
+		{
+			if (getExpandAllFlag() == false)
+			{
+			  setExpandAllFlag(true);
+			}
+			else
+			{
+			  setExpandAllFlag(false);
+			  setShowModuleId(-1);
+			}
+			 String retVal = "list_modules_student";
+		    if (getRole()!= null && getRole().equals("INSTRUCTOR"))
+			{
+			   	retVal = "list_modules_inst";
+			}
+		   return retVal;
+		}
+
 
       public String redirectToViewModule()
 	  {
-	  	String retVal = "view_module_student";
-	    if (getRole()!= null && getRole().equals("INSTRUCTOR"))
-		{
-		  retVal = "view_module";
-	    }
-
+    	String retVal = "view_module";
 	  	return retVal;
 	  }
 
@@ -477,27 +474,12 @@ public class ListModulesPage implements Serializable{
 
       public String redirectToViewSection()
 	  {
-        String retVal = "view_section_student";
-	    //3/21/05 - Mallika - added this code in to handle linked and uploaded sections
-        if (getRole()!= null && getRole().equals("INSTRUCTOR"))
-	    {
-	    	retVal = "view_section";
-
-	    }
-
-	  	return retVal;
+   	  	return "view_section";
 	  }
 
       public String redirectToViewSectionLink()
 	  {
-        String retVal = "view_section_student";
-	    //3/21/05 - Mallika - added this code in to handle linked and uploaded sections
-        if (getRole()!= null && getRole().equals("INSTRUCTOR"))
-	    {
-	    		retVal = "view_section";
-	    }
-
-	  	return retVal;
+    	  return "view_section";
 	  }
 
 
@@ -550,6 +532,8 @@ public class ListModulesPage implements Serializable{
 			if ((viewModuleBeans != null)&&(viewModuleBeans.size() > 0))
 			{
 		    	vmBean = (ViewModBean) viewModuleBeans.get(selModIndex);
+		    	//Fix for ArrayIndexOutofBoundsException: -1
+		    	if ((selSecIndex < 0)||(selSecIndex >= vmBean.getVsBeans().size())) selSecIndex = 0;
 			    vsBean = (ViewSecBean) vmBean.getVsBeans().get(selSecIndex);
 		        modSeqNo = vmBean.getSeqNo();
 			}
@@ -572,14 +556,14 @@ public class ListModulesPage implements Serializable{
 
 	    vsPage.setModuleSeqNo(modSeqNo);
    }
-      
+
       public String goWhatsNext()
       {
         ViewModBean vmBean = null;
     	FacesContext ctx = FacesContext.getCurrentInstance();
     	Map params = ctx.getExternalContext().getRequestParameterMap();
     	int selModIndex=0,modSeqNo=-1;
-    	
+
     	if(params != null)
     	 {
     		  String modidxStr = (String) params.get("modidx2");
@@ -602,23 +586,23 @@ public class ListModulesPage implements Serializable{
     			 modSeqNo = -1;
     		  }
     	}
-    	 
+
     	  ValueBinding binding =
               Util.getBinding("#{viewNextStepsPage}");
             ViewNextStepsPage vnPage = (ViewNextStepsPage)
               binding.getValue(ctx);
-    	  if (getRole()!= null && (getRole().equals("INSTRUCTOR") || getRole().equals("STUDENT"))) 
+    	  if (getRole()!= null && (getRole().equals("INSTRUCTOR") || getRole().equals("STUDENT")))
     	  {
   			if ((viewModuleBeans != null)&&(viewModuleBeans.size() > 0))
   			{
   		    	vmBean = (ViewModBean) viewModuleBeans.get(selModIndex);
   			}
-  		}    	  
-      	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNo));
+  		}
+      	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNo),getInstRole());
       	vnPage.setNextSeqNo(nextSeqNo);
-      	vnPage.setModule(getModuleService().getModule(vmBean.getModuleId()));
+      	//vnPage.setModule(getModuleService().getModule(vmBean.getModuleId()));
       	if ((vmBean.getVsBeans() == null)||(vmBean.getVsBeans().size() == 0))
-      	{	
+      	{
       	  vnPage.setPrevSecId(0);
       	  vnPage.setPrevModId(vmBean.getModuleId());
       	}
@@ -626,13 +610,14 @@ public class ListModulesPage implements Serializable{
       	{
       		vnPage.setPrevModId(vmBean.getModuleId());
       		ViewSecBean vsBean = (ViewSecBean) vmBean.getVsBeans().get(vmBean.getVsBeans().size()-1);
-      	    vnPage.setPrevSecId(vsBean.getSectionId());   
+      	    vnPage.setPrevSecId(vsBean.getSectionId());
       	}
 
       	return "view_whats_next";
 
-      }      
+      }
 
+ 
 	  private void addNoModulesMessage(FacesContext ctx){
 	  	FacesMessage msg =
 	  		new FacesMessage("No modules", "No modules are available for the course at this time.");
@@ -648,7 +633,7 @@ public class ListModulesPage implements Serializable{
 				UIData table;
 				if (getRole() != null && getRole().equals("INSTRUCTOR"))
 				{
-					table = (UIData) root.findComponent("listmodulesform").findComponent("table");
+					table = (UIData) root.findComponent("listmodulesform").findComponent("StudentTable");
 				}
 				else
 					table = (UIData) root.findComponent("listmodulesStudentform").findComponent("table");

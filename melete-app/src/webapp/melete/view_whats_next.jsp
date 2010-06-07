@@ -1,10 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!--
  ***********************************************************************************
  * $URL$
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -22,48 +23,45 @@
  *
  **********************************************************************************
 -->
-<html>
-<head>
-
-<link rel="stylesheet" href="rtbc004.css" type="text/css">
-<title>Melete - Modules: Author Student View</title>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
-<script type="text/javascript" language="JavaScript" src="js/headscripts.js"></script>
-</head>
 
 <f:view>
-<body onLoad="setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');">
+<sakai:view title="Modules: Student View" toolCssHref="rtbc004.css">
+
 <a name="newanchor"></a>
-<h:form id="viewNSsectionform">       
-<table height="470" border="0" cellpadding="20"  width="100%" bordercolor="#EAEAEA" style="border-collapse: collapse" >
-<tr>
-	<td valign="top" width="100%"> 
-			<table  border="0" cellpadding="2" cellspacing="0" bordercolor="#EAEAEA" width="99%" style="border-collapse: collapse" >
-					<tr>
-					<td>
-								<f:subview id="top">
-												  <jsp:include page="topnavbar.jsp"/> 
-									</f:subview>
-								<div class="meletePortletToolBarMessage">
-								<h:graphicImage id="previewtopimg" value="images/preview.png" styleClass="AuthMessageImgClass" rendered="#{viewNextStepsPage.instRole == true}"/>
-								<h:outputText value="#{msgs.view_whats_next_viewing}" rendered="#{viewNextStepsPage.instRole == true}"/>
-								</div>	
-					</td>
-				</tr>
+<h:form id="viewNSsectionform">   
+	<f:subview id="top">
+	  <jsp:include page="topnavbar.jsp?myMode=View"/> 
+	</f:subview>
+	<div class="meletePortletToolBarMessage">
+		<h:graphicImage id="previewtopimg" value="images/preview.png" styleClass="AuthImgClass" rendered="#{viewNextStepsPage.instRole == true}"/>
+		<h:outputText value="#{msgs.view_whats_next_viewing}" rendered="#{viewNextStepsPage.instRole == true}"/>
+	</div>	    
+	<table class="maintableCollapseWithNoBorder" >
 	<!--Page Content-->
 
 	<tr>
 		<td align="center">
+		     <!-- The getmodule method correctly determines the prev and next seq nos in the backing bean -->
+			<!-- The hidden field below has been added just to get the getmodule method to execute first -->
+		    <h:inputHidden id="hacktitle" value="#{viewNextStepsPage.module.title}"/>
 					<f:subview id="topmod">
 						<jsp:include page="view_navigate_wn.jsp"/>
 					</f:subview>
 				<h:panelGroup id="bcsecpgroup" binding="#{viewNextStepsPage.secpgroup}"/>
 			</td>
 </tr> 
+<tr>
+<td align="right">
+<h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
+<h:graphicImage id="mybook_gif" value="images/my-bookmarks.png" alt="" styleClass="AuthImgClass"/>
+ <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />
+ <f:param name="fromPage" value="view_whats_next" />
+</h:commandLink>				  
+</td>
+</tr>
 <tr>
 		<td align="left">  &nbsp;		</td>
 </tr> 
@@ -95,10 +93,7 @@
   </table>
 
 <!--End Content-->
-</td>
-</tr>
-</table>
 </h:form>
-</body>
+</sakai:view>
 </f:view>
-</html>
+

@@ -39,11 +39,11 @@
        <property name="viewExpChoice" column="EXP_CHOICE" type="boolean"/>
         <property name="showLTIChoice" column="LTI_CHOICE" type="boolean"/>
        <property name="licenseCode" column="LICENSE_CODE" type="int"   length="2" />				
-	   <property name="ccLicenseUrl" column="CC_LICENSE_URL"  type="string"  length="70" />				
+	   <property name="ccLicenseUrl" column="CC_LICENSE_URL"  type="string"  length="275" />				
 	   <property name="reqAttr" column="REQ_ATTR" type="boolean" />	
 	   <property name="allowCmrcl" column="ALLOW_CMRCL" type="boolean" />					
 	   <property name="allowMod" column="ALLOW_MOD" type="int"       length="1" />			
-	   <property name="copyrightOwner" column="COPYRIGHT_OWNER"  type="string"  length="55" />			
+	   <property name="copyrightOwner" column="COPYRIGHT_OWNER"  type="string"  length="255" />			
 	   <property name="copyrightYear" column="COPYRIGHT_YEAR"  type="string"  length="25" />	         
 	 </class>
 	 <database-object>

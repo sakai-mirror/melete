@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -23,20 +23,23 @@
  **********************************************************************************
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
+<%@include file="accesscheck.jsp" %>
 
-	<h:panelGrid id="uploadView1" columns="2" columnClasses="col30,col50" width="80%">
+	<h:panelGrid id="uploadView1" columns="2" columnClasses="col1,col2" width="100%">
 		<h:column>
 			<h:outputText id="uploadText1" value="#{msgs.contentuploadview_upload}" rendered="#{addSectionPage.shouldRenderUpload}"/>				
-			<h:outputText id="extraspacesUpload" value="    " styleClass="ExtraPaddingClass" />	
-			<h:outputText id="uploadText2" value="#{addSectionPage.uploadFileName}" rendered="#{addSectionPage.uploadFileName != null}" styleClass="bold"/>	
-			<h:outputText id="uploadText3" value="#{msgs.contentuploadview_nofile}" rendered="#{addSectionPage.uploadFileName == null}" styleClass="bold"/>	
-			<h:outputText id="extraspacesUpload1" value="" styleClass="ExtraPaddingClass" />
+
 		</h:column>
 		<h:column>	
 			<h:commandLink id="serverViewButton"  action="#{addSectionPage.gotoServerView}" >
 					<h:graphicImage id="replaceImg2" value="images/replace2.gif" styleClass="AuthImgClass"/>
 					<h:outputText value="#{msgs.contentuploadview_select}" />
              </h:commandLink>
+        </h:column>
+        <h:column/>
+        <h:column> 
+        	<h:outputText id="uploadText2" value="#{addSectionPage.uploadFileName}" rendered="#{addSectionPage.uploadFileName != null}" styleClass="bold"/>	
+			<h:outputText id="uploadText3" value="#{msgs.contentuploadview_nofile}" rendered="#{addSectionPage.uploadFileName == null}" styleClass="bold"/>	
         </h:column>
         <h:column/>
         <h:column>     	

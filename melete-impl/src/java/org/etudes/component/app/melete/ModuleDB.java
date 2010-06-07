@@ -51,6 +51,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -79,6 +80,19 @@ import org.etudes.component.app.melete.MeleteUserPreferenceDB;
 import org.sakaiproject.db.cover.SqlService;
 
 import org.etudes.api.app.melete.MeleteAuthorPrefService;
+
+import org.sakaiproject.site.cover.SiteService;
+
+import org.sakaiproject.calendar.api.CalendarEvent;
+import org.sakaiproject.calendar.api.CalendarEventEdit;
+import org.sakaiproject.calendar.api.CalendarService;
+import org.sakaiproject.time.cover.TimeService;
+import org.sakaiproject.entity.cover.EntityManager;
+import org.sakaiproject.exception.PermissionException;
+import org.sakaiproject.exception.IdUnusedException;
+
+import org.sakaiproject.site.api.Site;
+import org.sakaiproject.tool.cover.ToolManager;
 
 /* Mallika - 4/17/07 - added code to support subsections on list pages
  * Mallika -6/6/07 - consolidated methods
@@ -156,24 +170,32 @@ public class ModuleDB implements Serializable {
 
 
 
-	public int getNextSeqNo(String courseId, int currSeqNo)
+	public int getNextSeqNo(String courseId, int currSeqNo, boolean instRole)
 		{
 		 int nextSeqNo = -1;
 		 try
 			{
 			 Session session = hibernateUtil.currentSession();
-
-			   Query q=session.createQuery("select min(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId=ms.moduleId and ((ms.startDate < :currDate and ms.endDate > :currDate) or (ms.startDate is null and ms.endDate is null) or (ms.startDate is null and ms.endDate > :currDate) or (ms.startDate < :currDate and ms.endDate is null))");
+             String queryStr = null;
+             if (instRole)
+             {
+            	 queryStr = "select min(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId=ms.moduleId";
+             }
+             else
+             {
+              	 queryStr = "select min(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId=ms.moduleId and ((ms.startDate < :currDate and ms.endDate > :currDate) or (ms.startDate is null and ms.endDate is null) or (ms.startDate is null and ms.endDate > :currDate) or (ms.startDate < :currDate and ms.endDate is null))";
+             }
+			   Query q=session.createQuery(queryStr);
 			   q.setParameter("courseId",courseId);
 			   q.setParameter("currSeqNo", currSeqNo);
-			   q.setParameter("currDate", new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
+			   if (!instRole)q.setParameter("currDate", new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
 			   Integer minsequence = (Integer)q.uniqueResult();
 
 
 			   // if no sequence is found then this is the last module
 			  if(minsequence == null || minsequence.intValue() <= 0)
 			  {
-			    return -1;
+				 return -1;
 	 		  }
 			  nextSeqNo = minsequence.intValue();
 
@@ -191,17 +213,25 @@ public class ModuleDB implements Serializable {
 
 	}
 
-	public int getPrevSeqNo(String courseId, int currSeqNo)
+	public int getPrevSeqNo(String courseId, int currSeqNo, boolean instRole)
 	{
 	 int prevSeqNo = -1;
 	 try
 		{
 		 Session session = hibernateUtil.currentSession();
-
-		   Query q=session.createQuery("select max(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId=ms.moduleId and ((ms.startDate < :currDate and ms.endDate > :currDate) or (ms.startDate is null and ms.endDate is null) or (ms.startDate is null and ms.endDate > :currDate) or (ms.startDate < :currDate and ms.endDate is null))");
+           String queryStr = null;
+           if (instRole)
+           {
+        	   queryStr = "select max(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId=ms.moduleId";
+           }
+           else
+           {
+        	   queryStr = "select max(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId=ms.moduleId and ((ms.startDate < :currDate and ms.endDate > :currDate) or (ms.startDate is null and ms.endDate is null) or (ms.startDate is null and ms.endDate > :currDate) or (ms.startDate < :currDate and ms.endDate is null))";
+           }
+		   Query q=session.createQuery(queryStr);
 		   q.setParameter("courseId",courseId);
 		   q.setParameter("currSeqNo", currSeqNo);
-		   q.setParameter("currDate", new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
+		   if (!instRole) q.setParameter("currDate", new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
 		   Integer maxsequence = (Integer)q.uniqueResult();
 
 
@@ -257,8 +287,8 @@ public class ModuleDB implements Serializable {
 	public void addModule(Module module, ModuleShdates moduleshowdates, String userId, String courseId) throws Exception
 	{
 		/*
-   	 * Since Oracle silently transforms "" to nulls, we need to check to see if 
-		 * these non null properties are in fact null. 
+   	 * Since Oracle silently transforms "" to nulls, we need to check to see if
+		 * these non null properties are in fact null.
 		 */
 
 		hibernateUtil.ensureModuleHasNonNulls(module);
@@ -327,6 +357,239 @@ public class ModuleDB implements Serializable {
 	}
 
   }
+
+	boolean checkCalendar()
+	{
+		Site site = null;
+		  try
+		  {
+		    site = SiteService.getSite(ToolManager.getCurrentPlacement().getContext());
+	      }
+		  catch (Exception e) {
+			logger.debug("Exception thrown while getting site"+e.toString());
+		  }
+		  if (site.getToolForCommonId("sakai.schedule") != null)
+	      {
+	    	  return true;
+	      }
+	      else
+	      {
+	    	  return false;
+	      }
+	}
+
+
+	void updateCalendar(Module module1, ModuleShdates moduleshdates1, String courseId) throws Exception
+	{
+		if (checkCalendar() == true)
+		{
+		//The code below adds the start and stop dates to the Calendar
+		boolean addtoSchedule = moduleshdates1.getAddtoSchedule().booleanValue();
+		Date startDate = moduleshdates1.getStartDate();
+		Date endDate = moduleshdates1.getEndDate();
+		String startEventId = moduleshdates1.getStartEventId();
+		String endEventId = moduleshdates1.getEndEventId();
+
+	    CalendarService cService = org.sakaiproject.calendar.cover.CalendarService.getInstance();
+		String calendarId = cService.calendarReference(courseId, SiteService.MAIN_CONTAINER);
+		try
+		{
+		  org.sakaiproject.calendar.api.Calendar c = cService.getCalendar(calendarId);
+		 try
+		  {
+			if (addtoSchedule == true)
+			{
+				if (startDate == null)
+				{
+					if (startEventId != null)
+					{
+						logger.debug("REMOVING start event for null start date");
+						deleteCalendarEvent(c, startEventId);
+						moduleshdates1.setStartEventId(null);
+					}
+				}
+				else
+				{
+				  if (startEventId == null)
+				  {
+				    logger.debug("ADDING start event for non-null start date");
+				    String desc = endDate != null ? "This module opens today and closes "+endDate.toString():"This module opens today";
+				    startEventId = createCalendarEvent(c, startDate, "Opens: "+module1.getTitle(), desc);
+				  }
+				  else
+				  {
+					  logger.debug("UPDATING start event for non-nul start date");
+					  String desc = endDate != null ? "This module opens today and closes "+endDate.toString():"This module opens today";
+					  startEventId = updateCalendarEvent(c, startEventId, startDate, "Opens: "+module1.getTitle(), desc);
+				  }
+				  moduleshdates1.setStartEventId(startEventId);
+				}
+				if (endDate == null)
+				{
+					if (endEventId != null)
+					{
+						logger.debug("REMOVING end event for null end date");
+						deleteCalendarEvent(c, endEventId);
+						moduleshdates1.setEndEventId(null);
+					}
+				}
+				if (endDate != null)
+				{
+				  if (endEventId == null)
+				  {
+					logger.debug("ADDING end event for non-null end date");
+					String desc = "This module closes today";
+					endEventId = createCalendarEvent(c, endDate, "Closes: "+module1.getTitle(), desc);
+				  }
+				  else
+				  {
+					  logger.debug("UPDATING end event for non-null end date");
+					  String desc = "This module closes today";
+					  endEventId = updateCalendarEvent(c, endEventId, endDate, "Closes: "+module1.getTitle(), desc);
+				  }
+				  moduleshdates1.setEndEventId(endEventId);
+				}
+			  }
+			  else
+			  {
+			    if (startEventId != null)
+				{
+			     logger.debug("REMOVING start event for false flag");
+				  deleteCalendarEvent(c, startEventId);
+				  moduleshdates1.setStartEventId(null);
+				}
+				if (endEventId != null)
+				{
+				  logger.debug("REMOVING end event for false flag");
+				  deleteCalendarEvent(c, endEventId);
+				  moduleshdates1.setEndEventId(null);
+				}
+			  }
+			}
+			catch (PermissionException ee)
+			{
+				logger.warn("PermissionException while adding to calendar");
+			}
+			catch (Exception ee)
+			{
+				logger.error("Some other exception while adding to calendar "+ee.getMessage());
+			}
+			// try-catch
+		  }
+		  catch (Exception ex)
+		  {
+		  logger.error("Exception thrown while getting Calendar");
+		  }
+		updateModuleShdates((ModuleShdates)moduleshdates1);
+		}
+	}
+
+	private String createCalendarEvent(org.sakaiproject.calendar.api.Calendar c, Date eventDate, String title, String description) throws Exception
+	{
+		String eventId = null;
+		CalendarEvent eEvent = c.addEvent(/* TimeRange */TimeService.newTimeRange(eventDate.getTime(), 0),
+				/* title */title,
+				/* description */description,
+				/* type */"Deadline",
+				/* location */"",
+				/* attachments */EntityManager.newReferenceList());
+		       if (eEvent != null)
+			   {
+				 eventId = eEvent.getId();
+			   }
+		return eventId;
+	}
+
+
+	private String updateCalendarEvent(org.sakaiproject.calendar.api.Calendar c,String eventId, Date eventDate, String title, String description) throws Exception
+	{
+		try
+		{	  
+		   CalendarEventEdit evEdit = c.getEditEvent(eventId, "Deadline");
+		    if (evEdit != null)
+		    {
+			  evEdit.setRange(TimeService.newTimeRange(eventDate.getTime(),0));
+			  evEdit.setDescription(description);
+			  c.commitEvent(evEdit);
+			  return eventId;
+		    }
+		}
+		catch (IdUnusedException idUEx)
+		{
+			logger.debug("In updateCalendarEvent COULD Not find ID creating new event");
+			String newEventId = createCalendarEvent(c,eventDate, title, description);
+			return newEventId;
+		}		    
+		return eventId;
+	}
+
+	private void deleteCalendarEvent(org.sakaiproject.calendar.api.Calendar c,String eventId) throws Exception
+	{
+	  try
+	  {
+		CalendarEventEdit evEdit = c.getEditEvent(eventId, "Deadline");
+		if (evEdit != null)
+		{
+		    c.removeEvent(evEdit);
+		}
+	  }
+	  catch (IdUnusedException idUEx)
+	  {
+		logger.debug("deleteCalendarEvent - COULD Not find ID");
+	  }
+	}
+
+	void deleteCalendar(List delModules, String courseId)
+	 {
+		if (checkCalendar() == true)
+		{
+		 //Delete all calendar associated events
+		 CalendarService cService = org.sakaiproject.calendar.cover.CalendarService.getInstance();
+		  String calendarId = cService.calendarReference(courseId, SiteService.MAIN_CONTAINER);
+		  try
+		  {
+			  org.sakaiproject.calendar.api.Calendar c = cService.getCalendar(calendarId);
+			  for (ListIterator i = delModules.listIterator(); i.hasNext(); )
+		 	  {
+		        Module mod = (Module) i.next();
+		        String startEventId = mod.getModuleshdate().getStartEventId();
+		        String endEventId = mod.getModuleshdate().getEndEventId();
+		        try
+		        {
+		        	if ( startEventId != null)
+					{
+						logger.debug("REMOVING start event for null start date");
+						deleteCalendarEvent(c, startEventId);
+						mod.getModuleshdate().setStartEventId(null);
+					}
+		        	if (endEventId != null)
+		        	{
+						logger.debug("REMOVING end event for null start date");
+						deleteCalendarEvent(c, endEventId);
+						mod.getModuleshdate().setEndEventId(null);
+					}
+		        	if ((startEventId != null)||(endEventId != null))
+		        	{
+		        		updateModuleShdates((ModuleShdates)mod.getModuleshdate());
+		        	}
+		        }
+		        catch (PermissionException ee)
+				{
+					logger.warn("PermissionException while adding to calendar");
+				}
+				catch (Exception ee)
+				{
+					logger.error("Some other exception while adding to calendar "+ee.getMessage());
+				}
+		 	  }
+			// try-catch
+		  }
+		  catch (Exception ex)
+		  {
+			  logger.error("Exception thrown while getting Calendar");
+		  }
+		}
+	 }
 
 	void addArchivedModule(Module module, ModuleShdates moduleshowdates, String userId, String courseId, CourseModule coursemodule) throws Exception
 	{
@@ -409,6 +672,8 @@ public class ModuleDB implements Serializable {
 		    moduleDateBeansList.add(mdBean);
 	      	mod = null;
 	      }
+	      //moduleDateBeansList = populateModuleDateBeansList(modList);
+
 
 	    }
 	    catch (Exception he)
@@ -432,6 +697,21 @@ public class ModuleDB implements Serializable {
 
 	  }
 
+	 /*public List populateModuleBeansList(List modList) throws Exception
+	 {
+		 List moduleDateBeansList = new ArrayList();
+		  Iterator i = modList.iterator();
+
+	      while (i.hasNext()) {
+	      	ModuleDateBean mdBean = new ModuleDateBean();
+	      	Module mod = (Module) i.next();
+
+	      	populateModuleBean(mod, mdBean);
+
+		    moduleDateBeansList.add(mdBean);
+	      	mod = null;
+	      }
+	 }*/
 
 
 	 public List getModules(String courseId) throws HibernateException {
@@ -504,7 +784,7 @@ public class ModuleDB implements Serializable {
 				dbConnection = SqlService.borrowConnection();
 		    	ResultSet rs = null;
 
-	            String sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and s.delete_flag=0 order by c.seq_no";
+	            String sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
 	            PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 	            pstmt.setString(1,courseId);
 		    	rs = pstmt.executeQuery();
@@ -726,6 +1006,35 @@ public class ModuleDB implements Serializable {
 		    return modList;
 		  }
 
+	 public int getCourseModuleSize(String courseId)
+	 {
+		 Integer size=new Integer(0);
+	  	try
+		{
+	      Session session = hibernateUtil.currentSession();
+	      String queryString =  "select count(*) from CourseModule as cmod where cmod.courseId = :courseId and cmod.archvFlag = 0 and cmod.deleteFlag = 0";
+	      Query query = session.createQuery(queryString);
+	      query.setParameter("courseId", courseId);
+	      size = (Integer)query.uniqueResult();
+	    }
+	    catch (HibernateException he)
+	    {
+		  logger.error(he.toString());
+	    }
+	    finally
+		{
+	    	try
+			  {
+		      	hibernateUtil.closeSession();
+			  }
+		      catch (HibernateException he)
+			  {
+				  logger.error(he.toString());
+			  }
+		}
+	    return size.intValue();
+	 }
+
 //
 	 public ModuleDateBean getModuleDateBean(String userId, String courseId,  int moduleId) throws HibernateException {
 	 	List modList = new ArrayList();
@@ -823,14 +1132,7 @@ public class ModuleDB implements Serializable {
 	   java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
 
 	   if (mod == null) mod = new Module();
-	   if (((mod.getModuleshdate().getStartDate() == null)||(mod.getModuleshdate().getStartDate().before(currentTimestamp)))&&((mod.getModuleshdate().getEndDate() == null)||(mod.getModuleshdate().getEndDate().after(currentTimestamp))))
-	   {
-		   mdBean.setVisibleFlag(true);
-	   }
-	   else
-	   {
-		   mdBean.setVisibleFlag(false);
-	   }
+	   mdBean.setVisibleFlag(mod.getModuleshdate().isVisibleFlag());
 	   mdBean.setModuleId(mod.getModuleId().intValue());
 	   mdBean.setModule((Module)mod);
 	   mdBean.setModuleShdate(mod.getModuleshdate());
@@ -864,7 +1166,7 @@ public class ModuleDB implements Serializable {
 		 SubSectionUtilImpl ssuImpl = new SubSectionUtilImpl();
 		 String updSeqXml = null;
 		 if (sectionMap == null || sectionMap.size() == 0) return null;
-		 
+
 		 if (sectionMap != null)
 		 {
 
@@ -1159,7 +1461,7 @@ public class ModuleDB implements Serializable {
 
 	 public void updateModule(Module mod) throws Exception
 	 {
-	 
+
 	  hibernateUtil.ensureModuleHasNonNulls(mod);
 	 	Transaction tx = null;
 	 	try
@@ -1171,7 +1473,7 @@ public class ModuleDB implements Serializable {
 		  {
 			  mod.setCreatedByFname("");
 		  }
-		  
+
 		  if (null == mod.getCreatedByLname())
 		  {
 			  mod.setCreatedByLname("");
@@ -1180,6 +1482,56 @@ public class ModuleDB implements Serializable {
 
 	      //Update module properties
 	      session.saveOrUpdate(mod);
+
+	      tx.commit();
+
+	      //session.flush();
+
+	    }
+	 	catch(StaleObjectStateException sose)
+	     {
+			if(tx !=null) tx.rollback();
+			logger.error("stale object exception" + sose.toString());
+			throw new MeleteException("edit_module_multiple_users");
+	     }
+	    catch (HibernateException he)
+	    {
+		  logger.error(he.toString());
+		  throw he;
+	    }
+	    catch (Exception e) {
+	      if (tx!=null) tx.rollback();
+	      logger.error(e.toString());
+	      throw e;
+	    }
+	    finally
+		{
+	    	try
+			  {
+		      	hibernateUtil.closeSession();
+			  }
+		      catch (HibernateException he)
+			  {
+				  logger.error(he.toString());
+				  throw he;
+			  }
+		}
+	 }
+
+	 public void updateModuleShdates(ModuleShdates modShdates) throws Exception
+	 {
+       //MAY NEED TO ADD NOT NULL CHECK HERE FOR ORACLE
+	 	Transaction tx = null;
+	 	try
+		{
+
+	      Session session = hibernateUtil.currentSession();
+
+
+	      tx = session.beginTransaction();
+
+	      //Update module properties
+	      session.saveOrUpdate(modShdates);
 
 	      tx.commit();
 
@@ -1276,7 +1628,7 @@ public class ModuleDB implements Serializable {
 			// update seq_no for each deleted_module
 			StringBuffer allModuleIds = new StringBuffer("(");
 			StringBuffer allSectionIds = new StringBuffer("(");
-			ArrayList<StringBuffer> allSectionIdsArray = new ArrayList<StringBuffer>(); 
+			ArrayList<StringBuffer> allSectionIdsArray = new ArrayList<StringBuffer>();
 			String delModuleIds = null;
 			//String delSectionIds = null;
 			ArrayList<DelModuleInfo> DelModuleInfoList = new ArrayList<DelModuleInfo>(0);
@@ -1290,48 +1642,51 @@ public class ModuleDB implements Serializable {
 				{
 					for (Iterator i = delSections.keySet().iterator(); i.hasNext();)
 					{
-						 if (count % MAX_IN_CLAUSES == 0) { 
-							 allSectionIds.append(i.next() + ")"); 
-							 allSectionIdsArray.add(allSectionIds); 
-							 allSectionIds = new StringBuffer("("); 
-							 } 
-							 else { 
-							 allSectionIds.append(i.next() + ","); 
-							 } 
-							 count++; 				
+						 if (count % MAX_IN_CLAUSES == 0) {
+							 allSectionIds.append(i.next() + ")");
+							 allSectionIdsArray.add(allSectionIds);
+							 allSectionIds = new StringBuffer("(");
+							 }
+							 else {
+							 allSectionIds.append(i.next() + ",");
+							 }
+							 count++;
 					}
 				 }
-			
+
 
 				Map delDeletedSections = dm.getDeletedSections();
 				if (delDeletedSections != null && !delDeletedSections.isEmpty())
 				{
 					for (Iterator i1 = delDeletedSections.keySet().iterator(); i1.hasNext();)
 					{
-						if (count % MAX_IN_CLAUSES == 0) { 
-						 allSectionIds.append(i1.next() + ")"); 
-						 allSectionIdsArray.add(allSectionIds); 
-						 allSectionIds = new StringBuffer("("); 
-						 } 
-						 else { 
-						 allSectionIds.append(i1.next() + ","); 
-						 } 
-						count++; 
-					} 					
+						if (count % MAX_IN_CLAUSES == 0) {
+						 allSectionIds.append(i1.next() + ")");
+						 allSectionIdsArray.add(allSectionIds);
+						 allSectionIds = new StringBuffer("(");
+						 }
+						 else {
+						 allSectionIds.append(i1.next() + ",");
+						 }
+						count++;
+					}
 				}
 
 				// record seq_no and id
 				DelModuleInfoList.add(new DelModuleInfo(dm.getModuleId().toString(),dm.getCoursemodule().getSeqNo()));
 			}
-			
+
 			if (allModuleIds.lastIndexOf(",") != -1) delModuleIds = allModuleIds.substring(0, allModuleIds.lastIndexOf(",")) + " )";
 
 			//if (allSectionIds.lastIndexOf(",") != -1) delSectionIds = allSectionIds.substring(0, allSectionIds.lastIndexOf(",")) + " )";
-			 if (count % MAX_IN_CLAUSES != 0) { 
-			 allSectionIds.replace(allSectionIds.lastIndexOf(","), allSectionIds.lastIndexOf(",")+1, ")"); 
-			 allSectionIdsArray.add(allSectionIds); 
-			 } 
-			
+			if (allSectionIds.lastIndexOf(",") != -1)
+			{
+			 if (count % MAX_IN_CLAUSES != 0) {
+			 allSectionIds.replace(allSectionIds.lastIndexOf(","), allSectionIds.lastIndexOf(",")+1, ")");
+			 allSectionIdsArray.add(allSectionIds);
+			 }
+			}
+
 			Session session = hibernateUtil.currentSession();
 			tx = session.beginTransaction();
 
@@ -1339,8 +1694,9 @@ public class ModuleDB implements Serializable {
 			int deletedEntities;
 
 			// delete modules and sections
-			String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in "; 
-			String delSectionResourceStr = "delete SectionResource sr where sr.section in "; 	
+			String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in ";
+			String delSectionResourceStr = "delete SectionResource sr where sr.section in ";
+			String delBookmarksStr = "delete Bookmark bm where bm.sectionId in ";
 			String delSectionStr = "delete Section s where s.moduleId in " + delModuleIds;
 			String delCourseModuleStr = "delete CourseModule cm where cm.moduleId in " + delModuleIds;
 			String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId in " + delModuleIds;
@@ -1349,12 +1705,14 @@ public class ModuleDB implements Serializable {
 
 			if (allSectionIdsArray != null)
 			{
-				for (int i=0; i<allSectionIdsArray.size(); i++) { 
-					 allSectionIds = allSectionIdsArray.get(i); 
-					 deletedEntities = session.createQuery(updSectionResourceStr + allSectionIds.toString()).executeUpdate(); 
-					 logger.debug("section resource deleted" + deletedEntities); 
-					 deletedEntities = session.createQuery(delSectionResourceStr + allSectionIds.toString()).executeUpdate(); 
-				} 		
+				for (int i=0; i<allSectionIdsArray.size(); i++) {
+					 allSectionIds = allSectionIdsArray.get(i);
+					 deletedEntities = session.createQuery(updSectionResourceStr + allSectionIds.toString()).executeUpdate();
+					 logger.debug("section resource deleted" + deletedEntities);
+					 deletedEntities = session.createQuery(delSectionResourceStr + allSectionIds.toString()).executeUpdate();
+					 deletedEntities = session.createQuery(delBookmarksStr + allSectionIds.toString()).executeUpdate();
+					 logger.debug("Boomkarks deleted "+deletedEntities);
+				}
 			}
 
 			if (delModuleIds != null)
@@ -1462,7 +1820,14 @@ public class ModuleDB implements Serializable {
 				if (allModuleIds.lastIndexOf(",") != -1) delModuleIds = allModuleIds.substring(0, allModuleIds.lastIndexOf(",")) + " )";
 			    deleteEverything(courseId, session, delModuleIds);
                 //remove entire collection
-				meleteCHService.removeCollection(courseId,null);
+			    try
+			    {
+			    	meleteCHService.removeCollection(courseId,null);
+			    }
+			    catch(Exception removeColl)
+			    {
+			    	//do nothing
+			    }
 			    tx.commit();
 			}
 			catch (HibernateException he)
@@ -1556,28 +1921,33 @@ public class ModuleDB implements Serializable {
 	  }
 
 
-     public void archiveModules(List selModBeans, List moduleDateBeans) throws Exception {
+     public void archiveModules(List selModBeans, List moduleDateBeans, String courseId) throws Exception {
      	Transaction tx = null;
+     	StringBuffer moduleIds = new StringBuffer();
+		moduleIds.append("(");
+		ModuleDateBean mdbean = null;
+		for (ListIterator i = selModBeans.listIterator(); i.hasNext();)
+		{
+			mdbean = (ModuleDateBean) i.next();
+			moduleIds.append(mdbean.getModule().getModuleId().toString());
+			moduleIds.append(", ");
+		}
+		moduleIds.delete(moduleIds.toString().length() - 2, moduleIds.toString().length());
+		moduleIds.append(")");
+
      	try
 		{
      		Session session = hibernateUtil.currentSession();
 			tx = session.beginTransaction();
 
 			Date currentDate = Calendar.getInstance().getTime();
-			StringBuffer moduleIds = new StringBuffer();
-			moduleIds.append("(");
-			ModuleDateBean mdbean = null;
-			for (ListIterator i = selModBeans.listIterator(); i.hasNext();)
-			{
-				mdbean = (ModuleDateBean) i.next();
-				moduleIds.append(mdbean.getModule().getModuleId().toString());
-				moduleIds.append(", ");
-			}
-			moduleIds.delete(moduleIds.toString().length() - 2, moduleIds.toString().length());
-			moduleIds.append(")");
 			String updCourseModuleStr = "update CourseModule cm set cm.seqNo=-1, cm.archvFlag=1,cm.dateArchived=:currentDate where cm.moduleId in " + moduleIds.toString();
 			int updatedEntities = session.createQuery(updCourseModuleStr).setParameter("currentDate",currentDate).executeUpdate();
 			logger.debug("course module updated " +updatedEntities);
+			String updMshdatesStr = "update ModuleShdates mshdates set mshdates.addtoSchedule=0 where mshdates.moduleId in "+moduleIds.toString();
+			updatedEntities = session.createQuery(updMshdatesStr).executeUpdate();
+			logger.debug("ModuleShdates updated "+updatedEntities);
+
 			moduleDateBeans.removeAll(selModBeans);
 			 List<CourseModule> courseModules = new ArrayList<CourseModule>(0);
 			 for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext(); )
@@ -1588,7 +1958,6 @@ public class ModuleDB implements Serializable {
 			logger.debug("Updating sequence for all other modules");
 			assignSeqs(session,courseModules);
             tx.commit();
-
 		}
 		catch (HibernateException he)
 		{
@@ -1615,6 +1984,35 @@ public class ModuleDB implements Serializable {
 				throw he;
 			}
 		}
+		List modList = new ArrayList();
+	  	try
+		{
+	     Session session = hibernateUtil.currentSession();
+	      String queryString =  "from Module as mod where mod.moduleId in "+moduleIds.toString();
+	      Query query = session.createQuery(queryString);
+	      modList = query.list();
+	    }
+	    catch (HibernateException he)
+	    {
+		  logger.error(he.toString());
+	    }
+	    finally
+		{
+	    	try
+			  {
+		      	hibernateUtil.closeSession();
+			  }
+		      catch (HibernateException he)
+			  {
+				  logger.error(he.toString());
+			  }
+		}
+		for (ListIterator i = modList.listIterator(); i.hasNext();)
+		{
+			Module mod = (Module) i.next();
+		    updateCalendar(mod,(ModuleShdates)mod.getModuleshdate(),courseId);
+		}
+        logger.debug("Calendar updated");
 /*	 	try
 		{
 
@@ -2120,6 +2518,8 @@ public class ModuleDB implements Serializable {
 
 	public void copyModule(Module module, String courseId, String userId) throws MeleteException
 	{
+		 ResourceLoader bundle = new ResourceLoader("melete_license");
+
 		try
 		{
 			//get module and its sections
@@ -2131,7 +2531,7 @@ public class ModuleDB implements Serializable {
 
 			copyMod.setCreatedByFname(firstName);
 			copyMod.setCreatedByLname(lastName);
-			copyMod.setTitle(copyMod.getTitle() + " (Copied " + shortTime.format(new Date())+" )");
+			copyMod.setTitle(copyMod.getTitle() + " ("+bundle.getString("Copied")+" " + shortTime.format(new Date())+" )");
 			ModuleShdates CopyModuleshowdates = new ModuleShdates((ModuleShdates)module.getModuleshdate());
 
 			// insert copy module with blank seq_xml and sections as null
@@ -2149,7 +2549,7 @@ public class ModuleDB implements Serializable {
 					copySection.setCreatedByFname(firstName);
 					copySection.setCreatedByLname(lastName);
 					copySection.setModule(copyMod);
-					copySection.setTitle(copySection.getTitle() + " (Copied " + shortTime.format(new Date())+" )");
+					copySection.setTitle(copySection.getTitle() + " ("+bundle.getString("Copied")+" " + shortTime.format(new Date())+" )");
 					//insert section
 					Integer copySectionId = sectionDB.addSection(copyMod, copySection, false);
 					copySection.setSectionId(copySectionId);
@@ -2166,7 +2566,7 @@ public class ModuleDB implements Serializable {
 							byte[] secContentData = cr.getContent();
 
 							boolean encodingFlag = true;
-							String secResourceName = "Section_" + copySectionId;
+							String secResourceName = meleteCHService.getTypeEditorSectionName(copySectionId);
 							String secResourceDescription = "compose content";
 
 							ResourcePropertiesEdit res = meleteCHService.fillInSectionResourceProperties(encodingFlag, secResourceName,
@@ -2325,13 +2725,22 @@ public class ModuleDB implements Serializable {
 								continue;
 							}
 							String resourceId = sec.getSectionResource().getResource().getResourceId();
-							ContentResource resource = meleteCHService.getResource(resourceId);
+							ContentResource resource = null;
+							try
+							{
+								resource = meleteCHService.getResource(resourceId);
+							}
+							catch (Exception resEx)
+							{
+								//skip unable to get resource
+								continue;
+							}
 							if (sec.getContentType().equals("typeEditor"))
 							{
 								byte[] data = resource.getContent();
-							//	printText.append("<p>" + new String(data) + "</p>");
 								if(data != null && data.length != 0)
-									printText.append(new String(data));							}
+									printText.append("<p>" + new String(data) + "</p>");
+							}
 							if (sec.getContentType().equals("typeLink") || sec.getContentType().equals("typeUpload") ||
 							    sec.getContentType().equals("typeLTI") )
 							{
@@ -2370,49 +2779,28 @@ public class ModuleDB implements Serializable {
 		return null;
 	}
 
-
+	/*
+	 * construct the license information for print page
+	 */
 	private String getLicenseInformation(MeleteResource melResource)
 	{
 		ResourceLoader rl = new ResourceLoader("melete_license");
 		String licenseStr="";
 
-		if(melResource == null)return licenseStr;
-
-		if(melResource.getLicenseCode() == 1)
+		if(melResource == null || melResource.getLicenseCode()== 0)return licenseStr;
+		int lcode = melResource.getLicenseCode();
+		switch(lcode)
 		{
-		licenseStr = rl.getString("license_info_copyright");
-		if (melResource.getCopyrightYear() != null)
-			licenseStr += " " + melResource.getCopyrightYear()+", ";
-		if (melResource.getCopyrightOwner() != null)
-			licenseStr += melResource.getCopyrightOwner();
+		case 1: licenseStr = rl.getString("license_info_copyright");break;
+		case 2: licenseStr = rl.getString("license_info_dedicated_to");break;
+		case 3: licenseStr = rl.getString("license_info_licensed_under");break;
+		case 4: licenseStr = rl.getString("license_info_fairuse");break;
+		default:break;
 		}
-
-		if(melResource.getLicenseCode() == 2)
-		{
-		licenseStr = rl.getString("license_info_dedicated_to");
-		if (melResource.getCopyrightYear() != null)
-			licenseStr += " " +melResource.getCopyrightYear()+", ";
-		if (melResource.getCopyrightOwner() != null)
-		licenseStr += melResource.getCopyrightOwner();
-		}
-
-		if(melResource.getLicenseCode() == 3)
-		{
-		licenseStr = rl.getString("license_info_licensed_under");
-		if (melResource.getCopyrightYear() != null)
-			licenseStr += " " +melResource.getCopyrightYear()+", ";
-		if (melResource.getCopyrightOwner() != null)
-		licenseStr += melResource.getCopyrightOwner();
-		}
-
-		if(melResource.getLicenseCode() == 4)
-		{
-		licenseStr = rl.getString("license_info_fairuse");
-		if (melResource.getCopyrightYear() != null)
-			licenseStr += " " +melResource.getCopyrightYear()+", ";
-		if (melResource.getCopyrightOwner() != null)
-		licenseStr += melResource.getCopyrightOwner();
-		}
+		if (melResource.getCopyrightYear() != null && melResource.getCopyrightYear().length() > 0)
+			licenseStr += " " + melResource.getCopyrightYear();
+		if (melResource.getCopyrightOwner() != null && melResource.getCopyrightOwner().length() > 0)
+			licenseStr += ", " + melResource.getCopyrightOwner();
 		return licenseStr;
 	}
 
@@ -2748,6 +3136,83 @@ public class ModuleDB implements Serializable {
 		  allresNames.addAll(s);
 		  return allresNames;
 	}
+
+	public Date getMinStartDate(String course_id)
+	{
+		 Date minStartDate = null;
+		  try
+			{
+		 	  List modList = getModules(course_id);
+		      Iterator i = modList.iterator();
+		      List dateList = new ArrayList();
+
+		      //Create a list of just the non-null dates
+		      while (i.hasNext())
+		      {
+		    	  Module mod = (Module) i.next();
+		    	  if (mod.getModuleshdate() != null)
+		    	  {
+		    		  if (mod.getModuleshdate().getStartDate() != null)
+		    		  {
+		    			  dateList.add(mod.getModuleshdate().getStartDate());
+		    		  }
+		    	  }
+		      }
+
+		      if (dateList != null)
+		      {
+		    	  if (dateList.size() > 0)
+		    	  {
+		    		  i = dateList.iterator();
+		    		  if (i.hasNext())
+		    		  {
+		    			  minStartDate = (Date)i.next();
+		    			  while (i.hasNext())
+		    			  {
+		    				  Date modDate = (Date)i.next();
+		    				  if (modDate.before(minStartDate))
+		    				  {
+		    					  minStartDate = modDate;
+		    				  }
+		    			  }
+		    		  }
+		    	  }
+		      }
+		    }
+		    catch (Exception he)
+		    {
+			  logger.error(he.toString());
+			  he.printStackTrace();
+		    }
+	  return minStartDate;
+    }
+
+	public void applyBaseDateTx(String course_id, int time_diff)
+	{
+		if (course_id == null)
+		{
+			throw new IllegalArgumentException("applyBaseDateTx: course_id is null");
+		}
+		if (time_diff == 0)
+		{
+			return;
+		}		
+		StringBuilder sql = new StringBuilder();
+		sql.append("UPDATE MELETE_MODULE_SHDATES MSH,MELETE_COURSE_MODULE MCM SET");
+		sql.append(" MSH.START_DATE=DATE_ADD(MSH.START_DATE,INTERVAL ? SECOND), MSH.END_DATE=DATE_ADD(MSH.END_DATE,INTERVAL ? SECOND)");
+		sql.append(" WHERE MSH.MODULE_ID=MCM.MODULE_ID AND MCM.COURSE_ID =?");
+
+		Object[] fields = new Object[3];
+		int i = 0;
+		fields[i++] = time_diff;
+		fields[i++] = time_diff;
+		fields[i++] = course_id;
+
+		if (!SqlService.dbWrite(sql.toString(), fields)) {
+			throw new RuntimeException("applyBaseDate: db write failed");
+		}		
+	}
+	
 
 // end clean up deleted stuff code
 	 /**

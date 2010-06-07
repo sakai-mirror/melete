@@ -52,6 +52,9 @@ public class NavPage implements Serializable {
 	private String role;
 	private boolean isInstructor;
 	private boolean shouldRenderPreferences=false;
+	private boolean shouldRenderAuthor;
+	private boolean shouldRenderView;
+	private boolean shouldRenderManage;
 
 	  public NavPage() { }
      public String viewAction()
@@ -114,6 +117,7 @@ public class NavPage implements Serializable {
 		      AuthorPreferencePage aPage = (AuthorPreferencePage)
 		      authBinding.getValue(ctx);
 		      aPage.setFormName("UserPreferenceForm");
+		      aPage.resetValues();
 			return "author_preference";
 		}
 		else return "student_preference";
@@ -124,12 +128,9 @@ public class NavPage implements Serializable {
 	 */
 	public boolean isShouldRenderPreferences() {
 		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
-		role = (String)sessionMap.get("role");
-		int count = ServerConfigurationService.getInt("melete.wysiwyg.editor.count", 0);
-		if (count == 0)
-			shouldRenderPreferences = false;
-		else shouldRenderPreferences = true;
+	  	String usrMode = (String)ctx.getExternalContext().getRequestParameterMap().get("myMode");
+	  	
+	  	shouldRenderPreferences = !("Preferences".equals(usrMode));
 		return shouldRenderPreferences;
 	}
 	/**
@@ -152,4 +153,27 @@ public class NavPage implements Serializable {
 		else return false;
 	}
 
+	public boolean isShouldRenderAuthor() {
+		FacesContext ctx = FacesContext.getCurrentInstance();
+	  	String usrMode = (String)ctx.getExternalContext().getRequestParameterMap().get("myMode");
+	  	
+	  	shouldRenderAuthor = !("Author".equals(usrMode));
+		return shouldRenderAuthor;
+	}
+	
+	public boolean isShouldRenderView() {
+		FacesContext ctx = FacesContext.getCurrentInstance();
+	  	String usrMode = (String)ctx.getExternalContext().getRequestParameterMap().get("myMode");
+	  	
+	  	shouldRenderView = !("View".equals(usrMode));
+		return shouldRenderView;
+	}
+	
+	public boolean isShouldRenderManage() {
+		FacesContext ctx = FacesContext.getCurrentInstance();
+	  	String usrMode = (String)ctx.getExternalContext().getRequestParameterMap().get("myMode");
+	  	
+	  	shouldRenderManage = !("Manage".equals(usrMode));
+		return shouldRenderManage;
+	}
 }

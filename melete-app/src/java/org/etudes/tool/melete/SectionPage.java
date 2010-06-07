@@ -2,7 +2,8 @@
  *
  * $URL$
  * $$
- * $Id$  ***********************************************************************************
+ * $Id$
+ ************************************************************************************
  *
  * Copyright (c) 2008, 2009 Etudes, Inc.
  *
@@ -44,6 +45,7 @@ import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UICommand;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.component.UIParameter;
 import javax.faces.component.UIViewRoot;
@@ -59,6 +61,7 @@ import org.etudes.component.app.melete.Section;
 import org.etudes.component.app.melete.SectionResource;
 import org.etudes.component.app.melete.MeleteUserPreference;
 import org.imsglobal.simplelti.SimpleLTIUtil;
+import org.imsglobal.basiclti.BasicLTIUtil;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -81,7 +84,6 @@ import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.cover.ContentTypeImageService;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.tool.cover.SessionManager;
-import org.etudes.tool.melete.ManageResourcesPage.DisplayResources;
 import org.sakaiproject.util.ResourceLoader;
 import javax.faces.model.SelectItem;
 /**
@@ -115,7 +117,6 @@ public abstract class SectionPage implements Serializable {
 	protected boolean shouldRenderLink=false;
 	protected boolean shouldRenderLTI=false;
 	protected boolean shouldRenderUpload=false;
-	protected boolean shouldRenderResources=false;
 	protected boolean shouldRenderNotype = false;
 
 	protected boolean shouldLTIDisplayAdvanced = false;
@@ -133,17 +134,12 @@ public abstract class SectionPage implements Serializable {
     // rashmi - 3.0 added variables
 	 protected String access;
 	  protected SectionResourceService secResource;
-	  protected List<DisplaySecResources> currSiteResourcesList;
-	  private List<DisplaySecResources> displayResourcesList;
-	  private RemoteFilesListingNav listNav;
-	  private boolean sortAscFlag;
+
 	  private String linkUrl;
 	  private String ltiDescriptor;
 	  private byte[] secContentData;
 	  protected String selResourceIdFromList;
 	  private String nullString = null;
-	  protected boolean renderSelectedResource;
-	  protected boolean expandAllFlag;
 	  protected String secResourceName;
 	  protected String secResourceDescription;
 	  protected MeleteResource meleteResource;
@@ -151,6 +147,7 @@ public abstract class SectionPage implements Serializable {
 
 	 protected String currLinkUrl;
 	 protected String currLTIDescriptor;
+	 protected String currLTIKey;
 	 protected String currLTIPassword;
 	 protected String currLTIUrl;
      protected String displayCurrLink;
@@ -163,8 +160,9 @@ public abstract class SectionPage implements Serializable {
      protected String selectedResourceDescription;
 
  	protected MeleteResource selectedResource;
-
  	
+ 	protected Boolean contentWithHtml;
+
  	protected String oldType;
 
     public SectionPage()
@@ -178,47 +176,13 @@ public abstract class SectionPage implements Serializable {
             secResourceName=null;
             secResourceDescription="";
             selResourceIdFromList = null;
-            expandAllFlag = true;
             secResource = null;
             meleteResource = null;
-            sortAscFlag = true;
             allContentTypes = null;
+            contentWithHtml = null;
             }
 
 
-    static Comparator<DisplaySecResources> SectionResourcesComparatorDesc = new Comparator<DisplaySecResources>() {
-        public int compare(DisplaySecResources o1, DisplaySecResources o2) {
-               return -1 * (o1.compareTo(o2));
-        }
-     };
-
-     public String sortResourcesAsc()
-     {
-     	sortAscFlag=false;
-     	listNav.resetCurrIndex();
-     	sortList();
-     	return "#";
-     }
-
-
-     public String sortResourcesDesc()
-     {
-     	sortAscFlag=true;
-     	listNav.resetCurrIndex();
-     	sortList();
-     	return "#";
-     }
-
-     private void sortList()
-     {
-     	if(sortAscFlag) java.util.Collections.sort(currSiteResourcesList);
-     	else Collections.sort(currSiteResourcesList,SectionResourcesComparatorDesc);
-     }
-
-     public boolean getSortAscFlag()
-     {
-    	 return this.sortAscFlag;
-     }
     /**
        * @return Returns the ModuleService.
        */
@@ -295,17 +259,7 @@ public abstract class SectionPage implements Serializable {
     }
 
 
-	/**
-	 * @return Returns the shouldRenderResources.
-	 */
-	public boolean isShouldRenderResources() {
-		 if(this.section != null && this.section.getContentType() != null)
-         {
-		 	shouldRenderResources = this.section.getContentType().equals("typeExistUpload") ||
-		 							this.section.getContentType().equals("typeExistLink")	;
-         }
-		return shouldRenderResources;
-	}
+
 	/**
 	 * @return Returns the shouldRenderNotype.
 	 */
@@ -316,7 +270,11 @@ public abstract class SectionPage implements Serializable {
         }
 		return shouldRenderNotype;
 	}
-    /**
+    public Boolean getContentWithHtml() {
+		return contentWithHtml;
+	}
+
+	/**
      * @return module
      * if module is not set, get the module from session.
      * revision -- 12/20 Rashmi -- to refresh module to currModule
@@ -458,7 +416,7 @@ public abstract class SectionPage implements Serializable {
      * @param contentEditor
      *
      */
-    public void setContentEditor(String contentEditor){
+    public void setContentEditor(String contentEditor){		
                     this.contentEditor = contentEditor;
             }
 
@@ -508,82 +466,75 @@ public abstract class SectionPage implements Serializable {
             shouldRenderEditor = contentTypeRadio.getValue().equals("typeEditor");
             shouldRenderLink = contentTypeRadio.getValue().equals("typeLink");
             shouldRenderUpload = contentTypeRadio.getValue().equals("typeUpload");
-            shouldRenderResources = contentTypeRadio.getValue().equals("typeExistUpload") ||
-            							contentTypeRadio.getValue().equals("typeExistLink");
             shouldRenderNotype = contentTypeRadio.getValue().equals("notype");
             shouldRenderLTI = contentTypeRadio.getValue().equals("typeLTI");
 
             selResourceIdFromList = null;
             secResourceName = null;
             secResourceDescription = null;
-            currSiteResourcesList = null;
-            listNav = null;
+            setMeleteResource(null);
             oldType = section.getContentType();
 
-            if(contentTypeRadio.findComponent(getFormName()).findComponent("uploadPath") != null)
-                    {
-                    contentTypeRadio.findComponent(getFormName()).findComponent("uploadPath").setRendered(shouldRenderUpload);
-                    contentTypeRadio.findComponent(getFormName()).findComponent("BrowsePath").setRendered(shouldRenderUpload);
-                    }
+            ValueBinding binding = Util.getBinding("#{authorPreferences}");
+            AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
+            String usereditor = preferencePage.getUserEditor();
+            preferencePage.setDisplaySferyx(false);
 
+            if(contentTypeRadio.findComponent(getFormName()).findComponent("uploadPath") != null)
+            {
+            	contentTypeRadio.findComponent(getFormName()).findComponent("uploadPath").setRendered(shouldRenderUpload);
+            	contentTypeRadio.findComponent(getFormName()).findComponent("BrowsePath").setRendered(shouldRenderUpload);
+            }
 
             if(contentTypeRadio.findComponent(getFormName()).findComponent("link") != null)
-            	{
-                   contentTypeRadio.findComponent(getFormName()).findComponent("link").setRendered(shouldRenderLink);
-            	}
+            {
+            	contentTypeRadio.findComponent(getFormName()).findComponent("link").setRendered(shouldRenderLink);
+            }
 
             if(contentTypeRadio.findComponent(getFormName()).findComponent("ContentLTIView") != null)
-            	{
-                   contentTypeRadio.findComponent(getFormName()).findComponent("ContentLTIView").setRendered(shouldRenderLTI);
-            	}
-
-              if(shouldRenderEditor)
-	            {
-            	  ValueBinding binding = Util.getBinding("#{authorPreferences}");
-   	    		  AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
-	               String usereditor = preferencePage.getUserEditor();
-	    		   this.contentEditor = new String("Compose content here");
-		           if(contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor") != null && usereditor.equals(preferencePage.FCKEDITOR))
-		                {
-		                contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor").setRendered(shouldRenderEditor);
-		                 setFCKCollectionAttrib();
-		                }
-
-		           if(contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView") != null && usereditor.equals(preferencePage.SFERYX))
-		           		{
-		           		preferencePage.setDisplaySferyx(true);
-		           		contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView").setRendered(shouldRenderEditor);
-		           		}
-	            }
-
-            if(contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm") != null)
             {
-            	expandAllFlag=true;
-            	section.setContentType((String)contentTypeRadio.getValue());
-                getCurrSiteResourcesList();
-              contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm").setRendered(shouldRenderResources);
+            	contentTypeRadio.findComponent(getFormName()).findComponent("ContentLTIView").setRendered(shouldRenderLTI);
             }
-            ValueBinding binding = Util.getBinding("#{licensePage}");
 
+            this.contentEditor = new String("Compose content here");
+            if(contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor") != null)
+            {
+            	setFCKCollectionAttrib();
+            	contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor").setRendered(shouldRenderEditor && preferencePage.FCKEDITOR.equals(usereditor));		                
+            }
+
+            if(contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView") != null)
+            {
+            	preferencePage.setDisplaySferyx(shouldRenderEditor && preferencePage.SFERYX.equals(usereditor));
+            	contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView").setRendered(shouldRenderEditor && preferencePage.SFERYX.equals(usereditor));
+            }
+
+           if(contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm") != null)
+            {
+            	section.setContentType((String)contentTypeRadio.getValue());
+              contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm").setRendered(false);
+            }
+
+            //Upon changing content type, license is set by the selected resource, if there is one,
+            //or via User preferences
+            binding = Util.getBinding("#{licensePage}");
             LicensePage lPage = (LicensePage)binding.getValue(context);
             lPage.setFormName(this.formName);
-
-            if(lPage.getLicenseCodes() == null)
-            {
-                    if (getMeleteResource().getResourceId() != null)
-                    {
-                    	lPage.setInitialValues(this.formName, getMeleteResource());
-                    }
-                    else
-                    {
-                    	ValueBinding binding2 = Util.getBinding("#{authorPreferences}");
-         	    		AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding2.getValue(context);
-         	    		MeleteUserPreference mup = preferencePage.getMup();
-         	    		lPage.setInitialValues(this.formName, mup);
-                    }
-
-            }
-
+            lPage.resetValues();
+            
+         	MeleteUserPreference mup = preferencePage.getMup();
+         	lPage.setInitialValues(this.formName, mup);
+         	
+            //The code below is required because the setter for the license code kicks in by default
+            //and we need to actually set the component with the values determined above.(ME-1071)         	   
+            UIComponent licComp = (UIComponent)contentTypeRadio.findComponent(getFormName());
+            if(licComp != null && licComp.findComponent("ResourcePropertiesPanel") != null && licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm") != null
+            	&& licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView") != null)
+            	{
+            		licComp = licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView");
+            		UIInput uiInp = (UIInput)licComp.findComponent("licenseCodes");
+            		uiInp.setValue(lPage.getLicenseCodes());
+            	}          
     }
 
     /**
@@ -617,6 +568,16 @@ public abstract class SectionPage implements Serializable {
 	fixDescriptor();
     }
 
+    public String getLTIKey()
+    {
+	return currLTIKey;
+    }
+    public void setLTIKey(String LTIKey)
+    {
+	currLTIKey = LTIKey;
+	fixDescriptor();
+    }
+
     public String getLTIPassword()
     {
 	return currLTIPassword;
@@ -633,14 +594,20 @@ public abstract class SectionPage implements Serializable {
          if ( currLTIUrl == null ) return;
          String desc =
 		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-		"<toolInstance xmlns=\"http://www.imsglobal.org/services/cc/imsti_ptdd_v1p0\" \n" +
-		"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> \n" +
+		"<basic_lti_link\n" +
+		"     xmlns=\"http://www.imsglobal.org/xsd/imsbasiclti_v1p0\"\n" +
+		"     xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
 		"  <melete-basic>true</melete-basic> \n" +
-		"  <launchurl>"+currLTIUrl+"</launchurl> \n" ;
-         if ( currLTIPassword != null && currLTIPassword.trim().length() > 0 ) {
-		desc = desc + "  <lti_secret>"+currLTIPassword+"</lti_secret> \n" ;
+		"  <launch_url>"+currLTIUrl+"</launch_url> \n" +
+		"  <x-secure>\n" ;
+         if ( currLTIKey != null && currLTIKey.trim().length() > 0 ) {
+		desc = desc + "    <launch_key>"+currLTIKey+"</launch_key> \n" ;
          }
-	desc = desc + "</toolInstance>\n";
+         if ( currLTIPassword != null && currLTIPassword.trim().length() > 0 ) {
+		desc = desc + "    <launch_secret>"+currLTIPassword+"</launch_secret> \n" ;
+         }
+	desc = desc + "  </x-secure>\n";
+	desc = desc + "</basic_lti_link>\n";
 	setLTIDescriptor(desc);
     }
 
@@ -680,7 +647,7 @@ public abstract class SectionPage implements Serializable {
     			secContentData = new byte[contentEditor.length()];
     			secContentData = contentEditor.getBytes();
     			encodingFlag = true;
-    			secResourceName = "Section_" + section.getSectionId().toString();
+    			secResourceName = getMeleteCHService().getTypeEditorSectionName(section.getSectionId());
     			secResourceDescription="compose content";
     		}
 
@@ -699,7 +666,8 @@ public abstract class SectionPage implements Serializable {
     			if (ltiDescriptor == null || ltiDescriptor.trim().length() == 0) {
     				throw new MeleteException("add_section_empty_lti");
     			}
-    			if (!SimpleLTIUtil.validateDescriptor(ltiDescriptor)) {
+    			if (! ( SimpleLTIUtil.validateDescriptor(ltiDescriptor)
+			      || BasicLTIUtil.validateDescriptor(ltiDescriptor) != null ) ) {
     				throw new MeleteException("add_section_bad_lti");
     			}
     			res_mime_type = getMeleteCHService().MIME_TYPE_LTI;
@@ -797,7 +765,7 @@ public abstract class SectionPage implements Serializable {
      */
     public boolean getRenderInstr()
     {
-            if (this.section.getInstr()== null ||this.section.getInstr().length() == 0 )
+            if (this.section == null || this.section.getInstr()== null ||this.section.getInstr().length() == 0 )
                     renderInstr=false;
             else renderInstr=true;
             return renderInstr;
@@ -820,18 +788,16 @@ public abstract class SectionPage implements Serializable {
     secResourceName = null;
     secResourceDescription=null;
     secContentData=null;
-    currSiteResourcesList = null;
     selResourceIdFromList = null;
     meleteResource = null;
     setLicenseCodes(null);
     linkUrl = null;
     ltiDescriptor = null;
     FCK_CollId = null;
-    listNav = null;
-    displayResourcesList = null;
-    currLinkUrl = null;
+   currLinkUrl = null;
     currLTIDescriptor = null;
     currLTIUrl = null;
+    currLTIKey = null;
     currLTIPassword = null;
     displayCurrLink = null;
     FacesContext ctx = FacesContext.getCurrentInstance();
@@ -847,10 +813,10 @@ public abstract class SectionPage implements Serializable {
 	shouldRenderLink=false;
 	shouldRenderLTI=false;
 	shouldRenderUpload=false;
-	shouldRenderResources=false;
 	shouldRenderNotype = false;
 	allContentTypes = null;
 	oldType = null;
+	contentWithHtml = null;
     if (logger.isDebugEnabled()) logger.debug("!!!!!!!!!reseting section values done !!!!!!!");
     }
 
@@ -862,6 +828,7 @@ public abstract class SectionPage implements Serializable {
 		currLinkUrl = null;
 		currLTIDescriptor = null;
 		currLTIUrl = null;
+		currLTIKey = null;
 		currLTIPassword = null;
 		displayCurrLink = null;
 		secResourceName = null;
@@ -869,7 +836,36 @@ public abstract class SectionPage implements Serializable {
 		uploadFileName = null;
 		setLicenseCodes(null);
 	}
+	  protected void processSelectedResource(String selResourceIdFromList)
+	  {
+		  FacesContext ctx = FacesContext.getCurrentInstance();
+		  try{
+			    currLinkUrl = getLinkContent(selResourceIdFromList);
+  				ContentResource cr= getMeleteCHService().getResource(selResourceIdFromList);
+		    	this.secResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
+		    	this.secResourceDescription = cr.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION);
 
+  		   //get resource object
+		    	selectedResource = (MeleteResource)sectionService.getMeleteResource(selResourceIdFromList);
+		    	//just take resource properties from this object as its assoc with another section
+		    	if(selectedResource != null)
+		    	{
+					meleteResource = selectedResource;
+					ValueBinding binding = Util.getBinding("#{licensePage}");
+
+					LicensePage lPage = (LicensePage)binding.getValue(ctx);
+					lPage.setInitialValues(formName, selectedResource);
+
+				// render selected file name
+		    		selectedResourceName = secResourceName;
+		    		if (logger.isDebugEnabled()) logger.debug("values changed in resource action for res name and desc" + secResourceName + secResourceDescription);
+		    	}
+  	    }
+  	    catch(Exception ex)
+		 {
+  		logger.debug("error while accessing content resource" + ex.toString());
+		 }
+	  }
     /**
      * @return remove values from session before closing
      */
@@ -964,7 +960,7 @@ public abstract class SectionPage implements Serializable {
 
     public void setLicenseCodes(String licenseCodes)
     {
-    	FacesContext context = FacesContext.getCurrentInstance();
+		FacesContext context = FacesContext.getCurrentInstance();
     	ValueBinding binding = Util.getBinding("#{licensePage}");
   		LicensePage lPage = (LicensePage)binding.getValue(context);
   		lPage.setFormName(formName);
@@ -1125,154 +1121,6 @@ public abstract class SectionPage implements Serializable {
 		return nullString;
 	}
 
-	/**
-	 * @return Returns the renderSelectedResource.
-	 */
-	public boolean isRenderSelectedResource() {
-		return renderSelectedResource;
-	}
-
-/**
-	 * @return Returns the renderSelectedResource.
-	 */
-	public boolean isExpandAllFlag() {
-		return expandAllFlag;
-	}
-
-	public void refreshCurrSiteResourcesList(){
-		currSiteResourcesList = null;
-		getCurrSiteResourcesList();
-		return;
-	}
-
-	/**
-	 * @return Returns the currSiteResourcesList.
-	 */
-	public List<DisplaySecResources> getCurrSiteResourcesList() {
-		try{
-		if(currSiteResourcesList ==null)
-		{
-			logger.debug("from getCurrSiteResourcesList - i am null");
-			// get current site upload collection
-			String uploadCollId = getMeleteCHService().getUploadCollectionId();
-
-			// get list of all resources for upload type for the current site
-			currSiteResourcesList = new ArrayList<DisplaySecResources>();
-
-			List<ContentResource> allmembers = null;
-			if(section == null || section.getContentType() == null) return null;
-
-			//to create list of resource whose type is typeUpload
-				if(section.getContentType().equals("typeUpload") || section.getContentType().equals("typeExistUpload"))
-				{
-					allmembers = getMeleteCHService().getListofFilesFromCollection(uploadCollId);
-				}
-
-				if(section.getContentType().equals("typeLink") || section.getContentType().equals("typeExistLink"))
-				{
-					allmembers = getMeleteCHService().getListofLinksFromCollection(uploadCollId);
-				}
-
-                if(section.getContentType().equals("typeLTI"))
-                {
-                        allmembers = getMeleteCHService().getListFromCollection(uploadCollId, getMeleteCHService().MIME_TYPE_LTI);
-                }
-
-			if(allmembers == null) return null;
-			Iterator<ContentResource> allmembers_iter = allmembers.iterator();
-			String serverUrl = serverConfigurationService.getServerUrl();
-			while(allmembers_iter != null && allmembers_iter.hasNext())
-			{
-				ContentResource cr = allmembers_iter.next();
-				String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
-//							 duplicate listing
-				if (displayName.length() > 50) displayName = displayName.substring(0,50) + "...";
-				String rUrl = cr.getUrl().replaceAll(" ", "%20");
-				String rgif=  serverUrl + "/library/image/sakai/url.gif";
-				if(section.getContentType().equals("typeUpload"))
-				{
-				String contentextension = cr.getContentType();
-		 		rgif = ContentTypeImageService.getContentTypeImage(contentextension);
-		 		if(rgif.startsWith("sakai"))
-		 			rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
-		 		else if (rgif.startsWith("/sakai"))
-		 			rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));
-				}
-				if(section.getContentType().equals("typeLTI"))
-				{
-					rgif=  "images/web_service.png";
-				}
-				currSiteResourcesList.add(new DisplaySecResources(displayName, cr.getId(),rUrl, rgif));
-			}
-			java.util.Collections.sort(currSiteResourcesList);
-			getListNav().setTotalSize(currSiteResourcesList.size()+1);
-		}
-		} catch (Exception e){logger.warn("error in creating list for server residing files" + e.toString());}
-		return currSiteResourcesList;
-	}
-
-	/*
-	 *  to display listing in chunks
-	 */
-	public List getDisplayResourcesList()
-	{
-		try{
-		if(currSiteResourcesList == null) getCurrSiteResourcesList();
-		if(currSiteResourcesList != null)
-		{
-			int fromIndex = getListNav().getCurrIndex();
-			int toIndex = getListNav().getEndIndex();
-
-			logger.debug("from and to index and total size" + fromIndex + "," +toIndex +"," +currSiteResourcesList.size());
-			displayResourcesList = null;
-			if(fromIndex >= 0 && toIndex > fromIndex && toIndex <= currSiteResourcesList.size())
-			{
-				displayResourcesList = (List)currSiteResourcesList.subList(fromIndex,toIndex);
-				logger.debug("displayResourcesList" + displayResourcesList.size());
-			}
-		}
-		} catch (Exception e){logger.warn("error in creating displayList for server residing files" + e.toString());}
-		return displayResourcesList;
-	}
-
-	 //Mallika - 10/13/06 - new method to check if uploads directory exists
-    public void checkUploadExists()
-    {
-	  FacesContext context = FacesContext.getCurrentInstance();
-	  String uploadDir = context.getExternalContext().getInitParameter("uploadDir");
-	  if (logger.isDebugEnabled()) logger.debug("In checkUploadExists "+uploadDir);
-      File uploadsDir = new File(uploadDir);
-      if (uploadsDir.exists()) return;
-      if (!(uploadsDir.exists()))
-      {
-		  boolean res = uploadsDir.mkdirs();
-		  if (logger.isDebugEnabled()) logger.debug("Uploads directory was created "+res);
-
-
-		  Map sessionMap = context.getExternalContext().getSessionMap();
-          String str = "User ID: "+sessionMap.get("userId")+"| Course ID: "+sessionMap.get("courseId");
-          try { // Longsight edit
-                str = "User ID: "+sessionMap.get("userId")+"| Course ID: "+sessionMap.get("courseId")+"| Module ID: "+getModule().getModuleId().intValue()+"\n";
-          } catch(Exception ee) {
-                logger.error("Longsight: null getModule: " + ee.toString());
-          }
-
-		  File logFile = new File(uploadDir+File.separator+"uploads_missing_log.txt");
-
-          try
-          {
-		    FileOutputStream fos = new FileOutputStream(logFile, true);
-		    fos.write(str.getBytes());
-		    fos.close();
-	      }
-	      catch (Exception e)
-	      {
-		    logger.error("Could not create log file "+e.toString());
-	      }
-      }
-
-    }
-
     /**
      * @return Returns the secResourceDescription.
      */
@@ -1402,27 +1250,15 @@ public abstract class SectionPage implements Serializable {
 		return FCK_CollId;
 	}
 
-	/**
-	 * @return Returns the listNav.
-	 */
-	public RemoteFilesListingNav getListNav() {
-		if(listNav == null)
-		{
-			listNav = new RemoteFilesListingNav(0,0,30);
-		}
 
-		return listNav;
-	}
-	/**
-	 * @param listNav The listNav to set.
-	 */
-	public void setListNav(RemoteFilesListingNav listNav) {
-		this.listNav = listNav;
-	}
 	/**
 	 * @return Returns the selResourceIdFromList.
 	 */
 	public String getSelResourceIdFromList() {
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ValueBinding binding =Util.getBinding("#{listResourcesPage}");
+		ListResourcesPage listResPage = (ListResourcesPage) binding.getValue(ctx);
+		selResourceIdFromList = listResPage.getSelResourceIdFromList();
 		return selResourceIdFromList;
 	}
 
@@ -1475,12 +1311,11 @@ public abstract class SectionPage implements Serializable {
 
 	public String getCurrLTIUrl()
 	{
-		if ( meleteResource != null )
+		if ( meleteResource != null && meleteResource.getResourceId() != null)
 		{
 			try
 			{
-                		ContentResource cr = getMeleteCHService().getResource(meleteResource.getResourceId());
-                                String rUrl = cr.getUrl().replaceAll(" ", "%20");
+				String rUrl = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
 				return rUrl;
 			}
 			catch (Exception e)
@@ -1570,6 +1405,7 @@ public abstract class SectionPage implements Serializable {
 		this.selectedResourceName = selectedResourceName;
 	}
 
+
 	/**
 	 * @return the newURLTitle
 	 */
@@ -1635,95 +1471,10 @@ public abstract class SectionPage implements Serializable {
 		{
 		 return getMeleteCHService().getDisplayName(resourceId);
 		}
-	/*
-	 *
-	 * inner class to set required content resource values for display
-	 *
-	 */
-	public class DisplaySecResources implements Comparable<DisplaySecResources>
-	{
-		String resource_title;
-		String resource_id;
-		String resource_url;
-		String resource_gif;
 
-		public DisplaySecResources(String resource_title,String resource_id, String resource_url)
-		{
-			this.resource_title = resource_title;
-			this.resource_id = resource_id;
-			this.resource_url = resource_url;
-			this.resource_gif = "";
-		}
-
-		public DisplaySecResources(String resource_title,String resource_id, String resource_url, String resource_gif)
-		{
-			this.resource_title = resource_title;
-			this.resource_id = resource_id;
-			this.resource_url = resource_url;
-			this.resource_gif = resource_gif;
-		}
-		/**
-		 * @return Returns the resource_id.
-		 */
-		public String getResource_id() {
-			return resource_id;
-		}
-		/**
-		 * @param resource_id The resource_id to set.
-		 */
-		public void setResource_id(String resource_id) {
-			this.resource_id = resource_id;
-		}
-		/**
-		 * @return Returns the resource_title.
-		 */
-		public String getResource_title() {
-			return resource_title;
-		}
-		/**
-		 * @param resource_title The resource_title to set.
-		 */
-		public void setResource_title(String resource_title) {
-			this.resource_title = resource_title;
-		}
-		/**
-		 * @return Returns the resource_url.
-		 */
-		public String getResource_url() {
-			return resource_url;
-		}
-		/**
-		 * @param resource_url The resource_url to set.
-		 */
-		public void setResource_url(String resource_url) {
-			this.resource_url = resource_url;
-		}
-
-		public int compareTo(DisplaySecResources n) {
-			int res = resource_title.compareToIgnoreCase(n.getResource_title());
-			return res;
-		}
-
-		public String toString() {
-			return resource_title;
-		}
-
-		/**
-		 * @return the resource_gif
-		 */
-		public String getResource_gif()
-		{
-			return this.resource_gif;
-		}
-
-		/**
-		 * @param resource_gif the resource_gif to set
-		 */
-		public void setResource_gif(String resource_gif)
-		{
-			this.resource_gif = resource_gif;
-		}
-	}
-
+	 protected String getLinkContent(String resourceId)
+	 	 {
+	 		 return getMeleteCHService().getLinkContent(resourceId);
+	 	 }
 
 }

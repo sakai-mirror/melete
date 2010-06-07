@@ -146,9 +146,7 @@ public class AddModulePage extends ModulePage implements Serializable{
         AddSectionPage addPage = (AddSectionPage) binding.getValue(context);
         addPage.resetSectionValues();
         addPage.setModule(module);
-
-        //Mallika - 10/18/06 - adding reference to checkUploadExists
-        checkUploadExists();
+       
        return "addmodulesections";
     }
  }

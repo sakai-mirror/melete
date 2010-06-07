@@ -128,6 +128,8 @@ public class ListAuthModulesPage implements Serializable
 	int selectedSecIndex;
 
 	boolean sectionSelected;
+	
+	boolean selectAllFlag;
 
 	private ModuleService moduleService;
 
@@ -136,6 +138,8 @@ public class ListAuthModulesPage implements Serializable
 	private List nullList = null;
 
 	private Integer printModuleId;
+	
+	int listSize;
 
 	// added by rashmi on apr 8
 	private String isNull = null;
@@ -181,6 +185,7 @@ public class ListAuthModulesPage implements Serializable
 		{
 			expandAllFlag = false;
 		}
+		selectAllFlag = false;
 	}
 
 	public void resetValues()
@@ -203,7 +208,7 @@ public class ListAuthModulesPage implements Serializable
 		dmPage.setModuleSelected(false);
 		dmPage.setSection(null);
 		dmPage.setSectionSelected(false);
-		dmPage.setModuleDateBeans(null);
+		dmPage.setModules(null);
 		dmPage.setSectionBeans(null);
 
 		binding = Util.getBinding("#{authorPreferences}");
@@ -222,7 +227,8 @@ public class ListAuthModulesPage implements Serializable
 		{  autonumber = true;
 		} else {
 		   autonumber = false;
-		};
+		}
+		selectAllFlag = false;
 	}
 
 	public boolean isAutonumber()
@@ -282,6 +288,9 @@ public class ListAuthModulesPage implements Serializable
 	 */
 	public void selectedModuleSection(ValueChangeEvent event) throws AbortProcessingException
 	{
+		if (selectAllFlag == false)
+		{	
+		
 		FacesContext context = FacesContext.getCurrentInstance();
 		UIInput mod_Selected = (UIInput) event.getComponent();
 		if (((Boolean) mod_Selected.getValue()).booleanValue() == true)
@@ -302,6 +311,7 @@ public class ListAuthModulesPage implements Serializable
 		}
 		selectedModIndices.add(new Integer(selectedModIndex));
 		moduleSelected = true;
+		}
 		return;
 	}
 
@@ -333,11 +343,33 @@ public class ListAuthModulesPage implements Serializable
 
 		return;
 	}
+	
+	public void selectAllModules(ValueChangeEvent event) throws AbortProcessingException
+	{
+		selectAllFlag= true;
+		int k = 0;
+		if (selectedModIndices == null)
+		{
+			selectedModIndices = new ArrayList();
+		}
+		for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();)
+		{
+			ModuleDateBean mdbean = (ModuleDateBean) i.next();
+			mdbean.setSelected(true);
+			selectedModIndices.add(new Integer(k));
+			k++;
+		}
+		count = moduleDateBeans.size();
+		if (count == 1) selectedModIndex = 0;
+		moduleSelected = true;
+		return;
+	}	
 
 	public void resetSelectedLists()
 	{
 		selectedModIndices = null;
 		selectedSecModIndices = null;
+		selectAllFlag = false;
 	}
 
 	public List getModuleDateBeans()
@@ -351,6 +383,7 @@ public class ListAuthModulesPage implements Serializable
 		{
 			ModuleService modServ = getModuleService();
 			moduleDateBeans = modServ.getModuleDateBeans(userId, courseId);
+			listSize = moduleDateBeans.size();
 			Iterator itr = context.getMessages();
 			while (itr.hasNext())
 			{
@@ -464,58 +497,71 @@ public class ListAuthModulesPage implements Serializable
 	{
 		this.expandAllFlag = expandAllFlag;
 	}
-
-	public String showAuthSections()
+	
+	public boolean getSelectAllFlag()
 	{
-		resetSelectedLists();
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIViewRoot root = ctx.getViewRoot();
-		UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
-		ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
-		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
-		ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(ctx);
-
-		lamPage.setShowModuleId(mdbean.getModuleId());
-
-		return "list_auth_modules";
+		return selectAllFlag;
 	}
 
-	public String hideAuthSections()
+	public void setSelectAllFlag(boolean selectAllFlag)
+	{
+		this.selectAllFlag = selectAllFlag;
+	}	
+
+	public int getListSize()
+	{
+		return listSize;
+	}
+	
+	public void setListSize(int listSize)
+	{
+		this.listSize = listSize;
+	}
+	
+	public String showHideSections()
 	{
 		resetSelectedLists();
-		setShowModuleId(-1);
-		setExpandAllFlag(false);
+		if (getExpandAllFlag() == true)
+		{
+			setShowModuleId(-1);
+			setExpandAllFlag(false);
+		}
+		else
+		{
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			UIViewRoot root = ctx.getViewRoot();
+			UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
+			ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
+			if (getShowModuleId() != mdbean.getModuleId())
+			{	
+			   setShowModuleId(mdbean.getModuleId());
+			}
+			else
+			{
+				setShowModuleId(-1);
+				setExpandAllFlag(false);
+			}
+		}
 		return "list_auth_modules";
 	}
-
-	// Mallika - 6/6/06 - adding this method to expand all modules
-	public String expandAllAction()
+	
+	public String expandCollapseAction()
 	{
-
 		resetSelectedLists();
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
-		ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(ctx);
-
-		lamPage.setExpandAllFlag(true);
-
-		return "list_auth_modules";
+	
+		if (getExpandAllFlag() == false)
+		{		
+		  setExpandAllFlag(true);
+		}
+		else
+		{	
+		  setExpandAllFlag(false);
+		  setShowModuleId(-1);
+		}  
+		return "list_auth_modules";		
 	}
-
-	public String collapseAllAction()
-	{
-		resetSelectedLists();
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
-		ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(ctx);
-		lamPage.setExpandAllFlag(false);
-		lamPage.setShowModuleId(-1);
-
-		return "list_auth_modules";
-	}
-
-	// Mallika - new code end
-
+	
+	
 	/*
 	 * Revised by Rashmi to include module number Revised by Rashmi to point to editmodulesections.jsp page instead of edit_section nav rule.
 	 */
@@ -539,7 +585,7 @@ public class ListAuthModulesPage implements Serializable
 		// module selected
 		if (moduleSelected)
 		{
-			if (moduleDateBeans != null)
+			if (moduleDateBeans != null && selectedModIndex > -1)
 			{
 			ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selectedModIndex);
 			ValueBinding binding = Util.getBinding("#{editModulePage}");
@@ -557,7 +603,7 @@ public class ListAuthModulesPage implements Serializable
 		}
 		if (sectionSelected)
 		{
-			if (moduleDateBeans != null)
+			if (moduleDateBeans != null && selectedModIndex > -1 && selectedSecIndex > -1)
 			{
 			ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selectedModIndex);
 			SectionBean secBean = (SectionBean) mdbean.getSectionBeans().get(selectedSecIndex);
@@ -617,6 +663,7 @@ public class ListAuthModulesPage implements Serializable
 		// module selected
 		if (moduleSelected || sectionSelected)
 		{
+			if(selectedModIndex <= -1) selectedModIndex = 0;
 			ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selectedModIndex);
 
 			ValueBinding binding = Util.getBinding("#{addSectionPage}");
@@ -664,7 +711,7 @@ public class ListAuthModulesPage implements Serializable
 		}
 
 		// module selected
-		if (moduleSelected)
+		if (moduleSelected && selectedModIndices != null)
 		{
 
 			if (selModBeans == null)
@@ -680,7 +727,7 @@ public class ListAuthModulesPage implements Serializable
 			try
 			{
 				int origSeqNo = mdbean.getCmod().getSeqNo();
-				getModuleService().archiveModules(selModBeans,moduleDateBeans);
+				getModuleService().archiveModules(selModBeans,moduleDateBeans,courseId);
 				StringBuffer modTitles = new StringBuffer();
 				mdbean = null;
 				for (ListIterator i = selModBeans.listIterator(); i.hasNext();)
@@ -766,7 +813,7 @@ public class ListAuthModulesPage implements Serializable
 	{
 
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		List delModBeans = null;
+		List delMods = null;
 		List delSecBeans = null;
 
 		count = 0;
@@ -783,22 +830,22 @@ public class ListAuthModulesPage implements Serializable
 		if (moduleSelected)
 		{
 			ModuleDateBean mdbean = null;
-			if (delModBeans == null)
+			if (delMods == null)
 			{
-				delModBeans = new ArrayList();
+				delMods = new ArrayList();
 			}
 			if (selectedModIndices != null)
 			{
 			  for (ListIterator i = selectedModIndices.listIterator(); i.hasNext();)
 			  {
 				mdbean = (ModuleDateBean) moduleDateBeans.get(((Integer) i.next()).intValue());
-				delModBeans.add(mdbean);
+				delMods.add(mdbean.getModule());
 			  }
 			}
 			ValueBinding binding = Util.getBinding("#{deleteModulePage}");
 			DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
 			// dmPage.setMdbean(mdbean);
-			dmPage.setModuleDateBeans(delModBeans);
+			dmPage.setModules(delMods);
 		//	List <> allActivenArchvModules = moduleService.getAllActivenArchvModules();
 			dmPage.setModuleSelected(true);
 			count = 0;
@@ -914,7 +961,7 @@ public class ListAuthModulesPage implements Serializable
 					  errModuleIds.add(mdbean);
 				  }
 			}
-			  getModuleService().updateProperties(moduleDateBeans);
+			  getModuleService().updateProperties(moduleDateBeans, courseId);
 
 
 			if ((yearTooBigFlag == true)||(dateErrFlag == true))
@@ -1062,6 +1109,11 @@ public class ListAuthModulesPage implements Serializable
 				indentSecBeans = new ArrayList();
 			}
 
+			if (selectedSecModIndices == null) 
+			{
+				resetSubSectionValues();
+				return "list_auth_modules";
+			}
 			// If one section is selected, we check if its the first section
 			// or if it is too deep to indent
 			// If multiple sections are selected, we indent those that we can
@@ -1187,6 +1239,12 @@ public class ListAuthModulesPage implements Serializable
 			if (indentSecBeans == null)
 			{
 				indentSecBeans = new ArrayList();
+			}
+			
+			if (selectedSecModIndices == null) 
+			{
+				resetSubSectionValues();
+				return "list_auth_modules";
 			}
 			// If one section is selected, we check if its the top level section
 			// If multiple sections are selected, we indent those that we can
@@ -1430,7 +1488,7 @@ public class ListAuthModulesPage implements Serializable
 				return "list_auth_modules";
 			}
 
-			if (sectionSelected)
+			if (sectionSelected && selectedSecModIndices != null)
 			{
 				ModuleDateBean mdbean = null;
 				SectionBean secBean = null;

@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
  * Copyright (c) 2008, 2009 Etudes, Inc.
@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import org.sakaiproject.util.ResourceLoader;
 
@@ -44,6 +45,8 @@ import javax.faces.model.SelectItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.component.app.melete.SectionBean;
+import org.etudes.component.app.melete.CourseModule;
+import org.etudes.component.app.melete.Module;
 //import org.sakaiproject.jsf.ToolBean;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.ModuleService;
@@ -69,24 +72,8 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 	private boolean shouldRenderEmptyList;
 	private boolean falseBool = false;
 
-	//sort
-	private String formName;
-	private int showSize;
-	private String newSelectedModule = "1";
-	private List currModulesList;
-	private List currList;
-	private List newModulesList;
-	private List newList;
-
-	// sort sections
-	private List allModulesList;
-	private List allModules;
-	private String currModule;
-	private List currSectionsList;
-	private List currSecList;
-	private List newSectionsList;
-	private List newSecList;
-	private String newSelectedSection;
+	boolean selectAllFlag;
+	int listSize;
 
 	/** Dependency:  The logging service. */
 	 protected Log logger = LogFactory.getLog(ManageModulesPage.class);
@@ -100,6 +87,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		restoreModulesList = new ArrayList();
 		shouldRenderEmptyList=false;
 		archiveModulesList = null;
+		selectAllFlag = false;
 	}
 
 	/**
@@ -122,6 +110,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		{
 			logger.debug("getting archived modules list "+e.toString());
 		}
+		listSize = archiveModulesList.size();
 		return archiveModulesList;
 	}
 
@@ -189,8 +178,8 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 
 		if(count <=0)
 		{
-			String errMsg = bundle.getString("no_module_selected");
-			context.addMessage (null, new FacesMessage(errMsg));
+			String msg = bundle.getString("no_module_selected");
+			addMessage(context, "Select  One", msg, FacesMessage.SEVERITY_ERROR);
 			return "restore_modules";
 		}
 		// 1. restore modules
@@ -210,8 +199,46 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		// 2. clear archivelist
 			archiveModulesList = null;
 
-	  	return "confirm_restore_modules";
+		String confMsg = bundle.getString("restore_modules_msg");
+		addMessage(context, "Info", confMsg, FacesMessage.SEVERITY_INFO);
+		return "list_auth_modules";
 	  }
+
+	public String deleteModules()
+	  {
+		List<Module> delModules = new ArrayList<Module>(0);
+
+		FacesContext context = FacesContext.getCurrentInstance();
+	   ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+	   Map sessionMap = context.getExternalContext().getSessionMap();
+
+		if(count <=0)
+		{
+			String msg = bundle.getString("no_module_delete_selected");
+			addMessage(context, "Select  One", msg, FacesMessage.SEVERITY_ERROR);
+			return "restore_modules";
+		}
+
+        for (ListIterator i = restoreModulesList.listIterator(); i.hasNext(); )
+         {
+	       CourseModule cmod  = (CourseModule)i.next();
+	      delModules.add((Module)cmod.getModule());
+         }
+
+
+			ValueBinding binding = Util.getBinding("#{deleteModulePage}");
+			DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(context);
+			dmPage.setModules(delModules);
+			dmPage.setModuleSelected(true);
+			count=0;
+
+
+		// 2. clear archivelist
+			archiveModulesList = null;
+
+	  	return "delete_module";
+	  }
+
 
 	/**
 	 * clear lists on cancel
@@ -260,16 +287,10 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		ValueBinding binding = Util.getBinding("#{manageResourcesPage}");
 		ManageResourcesPage managePage = (ManageResourcesPage) binding.getValue(context);
 		managePage.resetValues();
-		java.util.Collections.sort(managePage.getAllResourcesList());
 		return "manage_content";
 	}
 
-	/*
-	 * navigation rule for Return
-	 */
-	public String returnToModules(){
-		return "list_auth_modules";
-	}
+	
 
 	/**
 	 * gets navigation page to import export modules
@@ -290,566 +311,46 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 	{
 		archiveModulesList = null;
 		restoreModulesList= null;
-		count=0;
-		currModulesList = null;
-		currList= null;
-		showSize = 6;
-		newModulesList= null;
-		newList= null;
-		newSelectedModule="1";
-		currSectionsList = null;
-		currSecList= null;
-		newSectionsList= null;
-		newSecList= null;
-		allModules = null;
-		allModulesList = null;
-		currModule = null;
-	}
-
-	/* sort pages */
-
-	/*
-	 * get the current seq of modules
-	 */
-	public List getCurrList()
-	{
-		try{
-			if(currModulesList == null)
-			{
-			FacesContext context = FacesContext.getCurrentInstance();
-			Map sessionMap = context.getExternalContext().getSessionMap();
-
-			String courseId = (String)sessionMap.get("courseId");
-			currModulesList = new ArrayList();
-			currModulesList = getModuleService().getModules(courseId);
-			currList  = forSelectItemsList(currModulesList);
-			}
-		} catch(Exception e)
-		{
-			logger.debug("error in getting currList "+e.toString());
-		}
-		return currList;
-	}
-
-	/**
-	 * @return Returns the newList.
-	 */
-	public List getNewList() {
-		try{
-			if(newModulesList == null)
-			{
-				newModulesList = currModulesList;
-				newList  = forSelectItemsList(newModulesList);
-			}
-
-		} catch(Exception e)
-		{
-			logger.debug("error in getting currList "+e.toString());
-		}
-		return newList;
-	}
-	/**
-	 * @param newList The newList to set.
-	 */
-	public void setNewList(List newList) {
-		this.newList = newList;
-	}
-
-	/*
-	 * converts the coursemodule list to selectItems for displaying at
-	 * the list boxes in the JSF page
-	 */
-	private List forSelectItemsList(List list)
-	{
-		List selectList = new ArrayList();
-		   // Adding available list to select box
-	      if(list == null || list.size()==0)
-	      {
-	      	selectList.add(new SelectItem("0", "No Items"));
-	      	 return selectList;
-	      }
-
-	      Iterator itr = list.iterator();
-	 	  	  while (itr.hasNext()) {
-		  	  		ModuleObjService  mod = (ModuleObjService) itr.next();
-		  	  		int seq = mod.getCoursemodule().getSeqNo();
-			  	  	String value = new Integer(seq).toString();
-			  	  	String label = seq + ". " + mod.getTitle();
-			  	  	selectList.add(new SelectItem(value, label));
-		  		}
-
-	   	return selectList;
-	}
-
-	private List forSelectSectionsItemsList(List list)
-	{
-		List selectList = new ArrayList();
-		   // Adding available list to select box
-	      if(list == null || list.size()==0)
-	      {
-	      	selectList.add(new SelectItem("0", "No Items"));
-	      	 return selectList;
-	      }
-
-	      Iterator itr = list.iterator();
-	      int countidx = 0;
-	          	while (itr.hasNext()) {
-	         		SectionBean secBean= (SectionBean) itr.next();
-	         		if (secBean != null)
-	         		{
-		  	  		String value = new Integer(countidx++).toString();
-		  	  		String label = secBean.getDisplaySequence() +" "+ secBean.getSection().getTitle();
-		  	 		selectList.add(new SelectItem(value, label));
-	         		}
-		  		}
-
-	   	return selectList;
-	}
-	/**
-	 * @return Returns the newSelectedModule.
-	 */
-	public String getNewSelectedModule() {
-		return newSelectedModule;
-	}
-	/**
-	 * @param newSelectedModule The newSelectedModule to set.
-	 */
-	public void setNewSelectedModule(String newSelectedModule) {
-		this.newSelectedModule = newSelectedModule;
-	}
-
-
-	public int getShowSize()
-	{
-		showSize = 6;
-		if(formName != null && formName.equals("SortSectionForm"))
-		{
-			if (currSecList !=null && currSecList.size() >6)
-			showSize = currSecList.size();
-		}
-		else
-		{
-			if(currList !=null && currList.size() > 6)
-				showSize = currList.size();
-		}
-		return showSize;
-	}
-
-
-	public String MoveItemAllUpAction()
-	  {
-	  	FacesContext ctx = FacesContext.getCurrentInstance();
-	  	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
-	  	// if module is selected then throw message
-	  	logger.debug("values" + newSelectedModule );
-
-		  try{
-		   	if(newSelectedModule != null)
-		   		{
-		   		int selIndex = (new Integer(newSelectedModule).intValue()) -1;
-
-		   		if(newModulesList.size() < 2 || selIndex == 0)
-		   		{
-		   			logger.debug("first module selected to move up");
-					return "modules_sort";
-		   		}
-		   		ModuleObjService  mod  = (ModuleObjService) newModulesList.get(selIndex);
-	  	  		logger.debug("calling sort for " + mod.getTitle());
-		   		moduleService.sortModule(mod,courseId,"allUp");
-		   		newModulesList = getModuleService().getModules(courseId);
-				newList  = forSelectItemsList(newModulesList);
-				newSelectedModule = new Integer(selIndex).toString();
-		   		}
-		  	}
-		  catch (MeleteException me)
-		  	{
-			logger.debug(me.toString());
-		//	me.printStackTrace();
-	  		String ErrMsg = bundle.getString("sort_fail");
-	  		FacesMessage msg =new FacesMessage(ErrMsg);
-		  	msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			ctx.addMessage (null, msg);
-		  	}
-	 	  return "modules_sort";
-	  }
-
-
-	  public String MoveItemUpAction()
-	  {
-	  	FacesContext ctx = FacesContext.getCurrentInstance();
-	  	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
-	  	// if module is selected then throw message
-	  	logger.debug("values" + newSelectedModule );
-
-		  try{
-		   	if(newSelectedModule != null)
-		   		{
-		   		int selIndex = (new Integer(newSelectedModule).intValue()) -1;
-
-		   		if(newModulesList.size() < 2 || selIndex == 0)
-		   		{
-		   			logger.debug("first module selected to move up");
-					return "modules_sort";
-		   		}
-		   		ModuleObjService  mod  = (ModuleObjService) newModulesList.get(selIndex);
-	  	  		logger.debug("calling sort for " + mod.getTitle());
-		   		moduleService.sortModule(mod,courseId,"up");
-		   		newModulesList = getModuleService().getModules(courseId);
-				newList  = forSelectItemsList(newModulesList);
-				newSelectedModule = new Integer(selIndex).toString();
-		   		}
-		  	}
-		  catch (MeleteException me)
-		  	{
-			logger.debug(me.toString());
-			//me.printStackTrace();
-	  		String ErrMsg = bundle.getString("sort_fail");
-	  		FacesMessage msg =new FacesMessage(ErrMsg);
-		  	msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			ctx.addMessage (null, msg);
-		  	}
-	 	  return "modules_sort";
-	  }
-
-	  public String MoveItemDownAction()
-	  {
+		count=0;		
+		selectAllFlag = false;
 		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
-
-	  	try{
-			 	if(newSelectedModule != null)
-		   		{
-		   		int selIndex = (new Integer(newSelectedModule).intValue()) -1;
-
-		   		if(newModulesList.size() < 2 || (selIndex == newModulesList.size()-1))
-		   		{
-		   			logger.debug("last module selected to move down");
-					return "modules_sort";
-		   		}
-		   		ModuleObjService  mod  = (ModuleObjService) newModulesList.get(selIndex);
-	  	  		logger.debug("calling sort for " + mod.getTitle());
-		   		moduleService.sortModule(mod,courseId,"down");
-		   		newModulesList = getModuleService().getModules(courseId);
-				newList  = forSelectItemsList(newModulesList);
-				newSelectedModule = new Integer(selIndex+1).toString();
-		   		}
-		  	}
-		  catch (MeleteException me)
-		  	{
-			logger.debug(me.toString());
-			String ErrMsg = bundle.getString("sort_fail");
-	  		FacesMessage msg =new FacesMessage(ErrMsg);
-		  	msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			ctx.addMessage (null, msg);
-		  	}
-         return "modules_sort";
-	  }
-
-	  public String MoveItemAllDownAction()
-	  {
-		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
-
-	  	try{
-			 	if(newSelectedModule != null)
-		   		{
-		   		int selIndex = (new Integer(newSelectedModule).intValue()) -1;
-
-		   		if(newModulesList.size() < 2 || (selIndex == newModulesList.size()-1))
-		   		{
-		   			logger.debug("last module selected to move down");
-					return "modules_sort";
-		   		}
-		   		ModuleObjService  mod  = (ModuleObjService) newModulesList.get(selIndex);
-	  	  		logger.debug("calling sort for " + mod.getTitle());
-		   		moduleService.sortModule(mod,courseId,"allDown");
-		   		newModulesList = getModuleService().getModules(courseId);
-				newList  = forSelectItemsList(newModulesList);
-				newSelectedModule = new Integer(selIndex+1).toString();
-		   		}
-		  	}
-		  catch (MeleteException me)
-		  	{
-			logger.debug(me.toString());
-			String ErrMsg = bundle.getString("sort_fail");
-	  		FacesMessage msg =new FacesMessage(ErrMsg);
-		  	msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			ctx.addMessage (null, msg);
-		  	}
-         return "modules_sort";
-	  }
-
-	public String gotoSortSections()
+		ValueBinding binding = Util.getBinding("#{deleteModulePage}");
+		DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
+		dmPage.setMdbean(null);
+		dmPage.setModuleSelected(false);
+		dmPage.setSection(null);
+		dmPage.setSectionSelected(false);
+		dmPage.setModules(null);
+		dmPage.setSectionBeans(null);
+	}
+	
+	private void addMessage(FacesContext ctx, String msgName, String msgDetail, FacesMessage.Severity severity)
 	{
-			resetValues();
-			//fetch the first module and its sections
-			setFormName("SortSectionForm");
-			return "sections_sort";
-	}
+		FacesMessage msg = new FacesMessage(msgName, msgDetail);
+		msg.setSeverity(severity);
+		ctx.addMessage(null, msg);
+	}	
 
-	/**
-	 * @return navigation for sort modules
-	 */
-	public String goToSortModules(){
-		  resetValues();
-		   setFormName("");
-		   return "modules_sort";
-
-	}
-	/**
-	 * @return Returns the formName.
-	 */
-	public String getFormName() {
-		return formName;
-	}
-	/**
-	 * @param formName The formName to set.
-	 */
-	public void setFormName(String formName) {
-		this.formName = formName;
-	}
-
-	public List getAllModulesList()
+  public boolean getSelectAllFlag()
 	{
-		if(allModules == null || allModulesList == null )
-		{
-		FacesContext context = FacesContext.getCurrentInstance();
-		Map sessionMap = context.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
-		allModules = new ArrayList();
-		allModules = moduleService.getModules(courseId);
-		 if (allModules.size() > 0)
-	      {
-	        if(currModule == null || currModule.length()==0)
-			{
-			  currModule = "1";
-			}
-	      }
-		}
-		allModulesList = forSelectItemsList(allModules);
-		return allModulesList;
-	}
-	/**
-	 * @return Returns the currModule.
-	 */
-	public String getCurrModule() {
-
-		if(currModule == null)
-		{
-			getAllModulesList();
-		}
-		return currModule;
-	}
-	/**
-	 * @param currModule The currModule to set.
-	 */
-	public void setCurrModule(String currModule) {
-		this.currModule = currModule;
+		return selectAllFlag;
 	}
 
-	public void nextModuleSections(ValueChangeEvent event)throws AbortProcessingException
+	public void setSelectAllFlag(boolean selectAllFlag)
 	{
-		UIInput moduleSelect = (UIInput)event.getComponent();
-		String selModId = (String)moduleSelect.getValue();
-
-		currSecList = null;
-		currSectionsList = null;
-		int modId= new Integer(selModId).intValue()-1;
-		if(modId > 0)
-		{
-		ModuleObjService  mod = (ModuleObjService) allModules.get(modId);
-		currSectionsList = new ArrayList();
-		currSectionsList = getSectionService().getSortSections(mod);
-		currSecList  = forSelectSectionsItemsList(currSectionsList);
-		}
-		newSectionsList = null;
-		newSecList = null;
+		this.selectAllFlag = selectAllFlag;
 	}
 
-	public List getCurrSecList()
+	public int getListSize()
 	{
-		try{
-			if(currSectionsList == null)
-			{
-				if(allModules != null && allModules.size() > 0 )
-				{
-					if(currModule == null)	currModule = "1";
-					ModuleObjService  mod  = (ModuleObjService) allModules.get(new Integer(currModule).intValue() -1);
-					currSectionsList = new ArrayList();
-					currSectionsList = getSectionService().getSortSections(mod);
-				}
-			}
-			currSecList  = forSelectSectionsItemsList(currSectionsList);
-		} catch(Exception e)
-		{
-			logger.debug("error in getting currSecList "+e.toString());
-		}
-		return currSecList;
+		return listSize;
 	}
 
-	/**
-	 * @return Returns the newList.
-	 */
-	public List getNewSecList() {
-		try{
-			if(newSectionsList == null)
-			{
-				newSectionsList = currSectionsList;
-				newSecList  = forSelectSectionsItemsList(newSectionsList);
-			}
-
-		} catch(Exception e)
-		{
-			if (logger.isDebugEnabled()) {
-			logger.debug("error in getting newSecList "+e.toString());
-			e.printStackTrace();
-			}
-		}
-		return newSecList;
-	}
-
-	public String MoveSectionItemAllUpAction()
-	  {
-		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-
-	  	try{
-	  		if(newSelectedSection != null)
-				{
-				int selIndex = new Integer(newSelectedSection).intValue();
-				if((selIndex == 0) || newSectionsList == null || newSectionsList.size() < 2 )
-				{
-					logger.debug("one item in the list or first section is selected to move all up");
-			  		return "sections_sort";
-				}
-				ModuleObjService  mod  = (ModuleObjService) allModules.get(new Integer(currModule).intValue() -1);
-				String sort_sec_id = ((SectionBean)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
-				moduleService.sortSectionItem(mod,sort_sec_id, "allUp");
-				newSectionsList = sectionService.getSortSections(mod);
-				newSecList = forSelectSectionsItemsList(newSectionsList);
-				newSelectedSection = new Integer(0).toString();
-				}
-		}
-	catch (MeleteException me)
-		{
-		logger.debug(me.toString());
-		String ErrMsg = bundle.getString("sort_fail");
-		FacesMessage msg =new FacesMessage(ErrMsg);
-		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-		ctx.addMessage (null, msg);
-		}
-return "sections_sort";
-}
-	 public String MoveSectionItemUpAction()
-	  {
-		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-
-	  	try{
-	  		logger.debug("new selected value is" + newSelectedSection);
-			if(newSelectedSection != null)
-				{
-				int selIndex = new Integer(newSelectedSection).intValue();
-				if((selIndex == 0) || newSectionsList == null || newSectionsList.size() < 2 )
-				{
-					logger.debug("one item in the list or first section is selected to move up");
-			  		return "sections_sort";
-				}
-				ModuleObjService  mod  = (ModuleObjService) allModules.get(new Integer(currModule).intValue() -1);
-				String sort_sec_id = ((SectionBean)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
-				moduleService.sortSectionItem(mod,sort_sec_id, "up");
-				newSectionsList = sectionService.getSortSections(mod);
-				newSecList = forSelectSectionsItemsList(newSectionsList);
-				newSelectedSection = new Integer(selIndex - 1).toString();
-				}
-		}
-	catch (MeleteException me)
-		{
-		logger.debug(me.toString());
-		String ErrMsg = bundle.getString("sort_fail");
-		FacesMessage msg =new FacesMessage(ErrMsg);
-		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-		ctx.addMessage (null, msg);
-		}
-return "sections_sort";
-}
-
-  public String MoveSectionItemDownAction()
-	  {
-		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-
-	  	try{
-
-			if(newSelectedSection != null)
-				{
-				int selIndex = new Integer(newSelectedSection).intValue();
-				if(newSectionsList == null || newSectionsList.size() < 2 || (selIndex == newSectionsList.size()-1))
-				{
-					logger.debug("one item in the list or last section is selected to move down");
-			  		return "sections_sort";
-				}
-				ModuleObjService  mod  = (ModuleObjService) allModules.get(new Integer(currModule).intValue() -1);
-				String sort_sec_id = ((SectionBean)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
-				moduleService.sortSectionItem(mod,sort_sec_id, "down");
-				newSectionsList = sectionService.getSortSections(mod);
-				newSecList = forSelectSectionsItemsList(newSectionsList);
-				newSelectedSection = new Integer(selIndex + 1).toString();
-				}
-		}
-	catch (MeleteException me)
-		{
-		logger.debug(me.toString());
-		String ErrMsg = bundle.getString("sort_fail");
-		FacesMessage msg =new FacesMessage(ErrMsg);
-		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-		ctx.addMessage (null, msg);
-		}
-return "sections_sort";
-}
-
-  public String MoveSectionItemAllDownAction()
-  {
-	FacesContext ctx = FacesContext.getCurrentInstance();
-  	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-
-  	try{
-
-		if(newSelectedSection != null)
-			{
-			int selIndex = new Integer(newSelectedSection).intValue();
-			if(newSectionsList == null || newSectionsList.size() < 2 || (selIndex == newSectionsList.size()-1))
-			{
-				logger.debug("one item in the list or last section is selected to move down");
-		  		return "sections_sort";
-			}
-			ModuleObjService  mod  = (ModuleObjService) allModules.get(new Integer(currModule).intValue() -1);
-			String sort_sec_id = ((SectionBean)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
-			moduleService.sortSectionItem(mod,sort_sec_id, "allDown");
-			newSectionsList = sectionService.getSortSections(mod);
-			newSecList = forSelectSectionsItemsList(newSectionsList);
-			newSelectedSection = new Integer(newSectionsList.size()-1).toString();
-			}
-	}
-catch (MeleteException me)
+	public void setListSize(int listSize)
 	{
-	logger.debug(me.toString());
-	String ErrMsg = bundle.getString("sort_fail");
-	FacesMessage msg =new FacesMessage(ErrMsg);
-	msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-	ctx.addMessage (null, msg);
+		this.listSize = listSize;
 	}
-return "sections_sort";
-}
-	// end sort code
+
 	/**
 	 * @return Returns the ModuleService.
 	 */
@@ -879,17 +380,5 @@ return "sections_sort";
 	 */
 	public void setSectionService(SectionService sectionService) {
 		this.sectionService = sectionService;
-	}
-	/**
-	 * @return Returns the newSelectedSection.
-	 */
-	public String getNewSelectedSection() {
-		return newSelectedSection;
-	}
-	/**
-	 * @param newSelectedSection The newSelectedSection to set.
-	 */
-	public void setNewSelectedSection(String newSelectedSection) {
-		this.newSelectedSection = newSelectedSection;
-	}
+	}	
 }

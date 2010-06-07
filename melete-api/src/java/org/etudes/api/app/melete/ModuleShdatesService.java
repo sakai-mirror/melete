@@ -46,11 +46,24 @@ public interface ModuleShdatesService {
 
 	public abstract void setVersion(int version);
 
+	public abstract void setAddtoSchedule(Boolean addtoSchedule);
+	
+	public abstract Boolean getAddtoSchedule();
+	
+	public abstract String getStartEventId();
+
+	public abstract void setStartEventId(String startEventId);
+	
+	public abstract String getEndEventId();
+
+	public abstract void setEndEventId(String endEventId);
+
 	public abstract org.etudes.api.app.melete.ModuleObjService getModule();
 
 	public abstract void setModule(
 			org.etudes.api.app.melete.ModuleObjService module);
 
+	public boolean isVisibleFlag();
 
 	public abstract String toString();
 
