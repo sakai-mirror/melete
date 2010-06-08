@@ -326,6 +326,11 @@ public abstract class SectionPage implements Serializable {
               this.section.setCreatedByFname((String)sessionMap.get("firstName"));
               this.section.setCreatedByLname((String)sessionMap.get("lastName"));
               this.section.setTextualContent(true);
+          	shouldRenderEditor=false;
+        	shouldRenderLink=false;
+        	shouldRenderLTI=false;
+        	shouldRenderUpload=false;
+        	shouldRenderNotype = true;
             }
 
 
