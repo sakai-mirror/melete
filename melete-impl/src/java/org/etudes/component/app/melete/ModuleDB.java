@@ -3021,13 +3021,16 @@ public class ModuleDB implements Serializable {
 		//logger.debug("delete everything for " + delCourseId + allModuleIds);
 		String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId like '%" + delCourseId + "%'";
 		String delSectionResourceStr = "delete SectionResource sr where sr.resource.resourceId like '%" + delCourseId + "%'";
+		String delBookmarksStr = "delete Bookmark bm where bm.siteId like '%" + delCourseId + "%'";
 		String delSectionStr = "delete Section s where s.moduleId in " + allModuleIds;
 		String delCourseModuleStr = "delete CourseModule cm where cm.courseId= '" + delCourseId + "'";
 		String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId in " +  allModuleIds;
 		String delModuleStr = "delete Module m where m.moduleId in " + allModuleIds;
 
-		int deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
+	    int deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
 		//logger.debug("deleted sr " + deletedEntities);
+		deletedEntities = session.createQuery(delBookmarksStr).executeUpdate();
+		//logger.debug("deleted bookmarks " + deletedEntities);
 		deletedEntities = session.createQuery(delSectionStr).executeUpdate();
 		//logger.debug("deleted section " + deletedEntities);
 		deletedEntities = session.createQuery(delModuleshDatesStr).executeUpdate();
