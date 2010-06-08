@@ -211,10 +211,16 @@ public class AddSectionPage extends SectionPage implements Serializable{
 					sectionService.deleteSection(section,(String)sessionMap.get("courseId"), null);
 				} catch (Exception e){}
 			String errMsg = bundle.getString(mex.getMessage());
-			if(mex.getMessage().equals("embed_image_size_exceed"))
+			// uncomment it after sferyx brings uploadfile limit param
+			/*if(mex.getMessage().equals("embed_image_size_exceed"))
 			{				
 				errMsg = errMsg.concat(ServerConfigurationService.getString("content.upload.max", "0"));
 				errMsg = errMsg.concat(bundle.getString("embed_image_size_exceed1"));
+			}*/
+			if(mex.getMessage().equals("embed_image_size_exceed2"))
+			{				
+				errMsg = errMsg.concat(ServerConfigurationService.getString("content.upload.max", "0"));
+				errMsg = errMsg.concat(bundle.getString("embed_image_size_exceed2-1"));
 			}
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
 			return "failure";
