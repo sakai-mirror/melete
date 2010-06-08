@@ -270,6 +270,18 @@ public abstract class SectionPage implements Serializable {
         }
 		return shouldRenderNotype;
 	}
+	
+	/**
+	 * @return Returns true if user pref is FCK editor and the content type is editor.
+	 */
+	public boolean getRenderOtherEditor() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{authorPreferences}");
+		AuthorPreferencePage authPage = (AuthorPreferencePage) binding.getValue(context);
+		authPage.setEditorFlags();
+		return authPage.isShouldRenderFCK() && shouldRenderEditor;		
+	}
+	
     public Boolean getContentWithHtml() {
 		return contentWithHtml;
 	}

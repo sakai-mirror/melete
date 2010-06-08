@@ -259,7 +259,7 @@ function saveSection()
 												 <h:inputHidden id="contentTextArea" value="#{editSectionPage.contentEditor}" />
 												 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>
-											<sakai:inputRichText id="otherMeletecontentEditor" value="#{editSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{editSectionPage.FCK_CollId}" />											
+											<sakai:inputRichText id="otherMeletecontentEditor" value="#{editSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{editSectionPage.renderOtherEditor}" collectionBase="#{editSectionPage.FCK_CollId}" />											
 											</td>
 									  </tr>	
 								  <tr>
