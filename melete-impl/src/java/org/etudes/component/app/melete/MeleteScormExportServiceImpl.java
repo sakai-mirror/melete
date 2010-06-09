@@ -392,6 +392,7 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
 		  if ((meleteResourceList != null)&&(meleteResourceList.size() > 0))
 		  {
 			  fromContextList.removeAll(meleteResourceList);
+		  }	  
 		  if ((fromContextList != null)&&(fromContextList.size() > 0))
 		  {
 			  ListIterator repIt = fromContextList.listIterator();
@@ -454,7 +455,6 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
 					item_ref_num++;
 
 				}//End while repIt
-		  }
 		  }
 		}
 		return resources;
