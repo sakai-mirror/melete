@@ -494,7 +494,7 @@ public abstract class SectionPage implements Serializable {
 
             ValueBinding binding = Util.getBinding("#{authorPreferences}");
             AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
-            String usereditor = preferencePage.getUserEditor();
+            preferencePage.setEditorFlags();
             preferencePage.setDisplaySferyx(false);
 
             if(contentTypeRadio.findComponent(getFormName()).findComponent("uploadPath") != null)
@@ -517,13 +517,13 @@ public abstract class SectionPage implements Serializable {
             if(contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor") != null)
             {
             	setFCKCollectionAttrib();
-            	contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor").setRendered(shouldRenderEditor && preferencePage.FCKEDITOR.equals(usereditor));		                
+            	contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor").setRendered(shouldRenderEditor && preferencePage.isShouldRenderFCK());		                
             }
 
             if(contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView") != null)
             {
-            	preferencePage.setDisplaySferyx(shouldRenderEditor && preferencePage.SFERYX.equals(usereditor));
-            	contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView").setRendered(shouldRenderEditor && preferencePage.SFERYX.equals(usereditor));
+            	preferencePage.setDisplaySferyx(shouldRenderEditor && preferencePage.isShouldRenderSferyx());
+            	contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView").setRendered(shouldRenderEditor && preferencePage.isShouldRenderSferyx());
             }
 
            if(contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm") != null)

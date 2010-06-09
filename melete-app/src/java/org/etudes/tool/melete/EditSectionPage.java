@@ -82,18 +82,21 @@ public class EditSectionPage extends SectionPage implements Serializable
 		setFormName("EditSectionForm");
 	}
 
-	public String setEditInfo(SectionObjService section)
+	public String setEditInfo(SectionObjService section1)
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 
 		resetSectionValues();
-		setModule(section.getModule());
-		setSection(section);
-		setSecResource(section.getSectionResource());
-		if (secResource != null && secResource.getResource() != null)
+		setSection(section1);
+		setFormName("EditSectionForm");
+		
+		setModule(this.section.getModule());		
+		setSecResource(this.section.getSectionResource());
+		
+		if (this.secResource != null && this.secResource.getResource() != null)
 		{
-			setMeleteResource((MeleteResource) secResource.getResource());
-			setContentResourceData(meleteResource.getResourceId());
+			setMeleteResource((MeleteResource) this.secResource.getResource());
+			setContentResourceData(this.meleteResource.getResourceId());
 	    	ValueBinding binding = Util.getBinding("#{licensePage}");
 	  		LicensePage lPage = (LicensePage)binding.getValue(context);
 	  		lPage.setInitialValues(this.formName, getMeleteResource());
@@ -104,16 +107,17 @@ public class EditSectionPage extends SectionPage implements Serializable
 			setLicenseCodes(null);
 		}
 		setSuccess(false);
-
+				
 		ValueBinding binding = Util.getBinding("#{authorPreferences}");
 		AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
-		String usereditor = preferencePage.getUserEditor();
+		preferencePage.setEditorFlags();
+	
 		// if fck editor then push advisors and other config values
-		if (section.getContentType().equals("typeEditor") && usereditor.equals(preferencePage.FCKEDITOR))
-		{
-			setFCKCollectionAttrib();
+		if (this.section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderFCK())
+		{		
+			setFCKCollectionAttrib();				
 		}
-		if (section.getContentType().equals("typeEditor") && usereditor.equals(preferencePage.SFERYX)) preferencePage.setDisplaySferyx(true);
+		if (this.section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx()) preferencePage.setDisplaySferyx(true);
 
 		return "success";
 	}
