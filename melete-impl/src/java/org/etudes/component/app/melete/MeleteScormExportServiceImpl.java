@@ -388,7 +388,7 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
 		List fromContextList = meleteCHService.getMemberNamesCollection(fromUploadsColl);
 		if ((fromContextList != null)&&(fromContextList.size() > 0))
 		{
-		  List meleteResourceList = sectionDB.getAllMeleteResourcesOfCourse(courseId);
+		  List meleteResourceList = sectionDB.getUploadMeleteResourcesOfCourse(courseId);
 		  if ((meleteResourceList != null)&&(meleteResourceList.size() > 0))
 		  {
 			  fromContextList.removeAll(meleteResourceList);
