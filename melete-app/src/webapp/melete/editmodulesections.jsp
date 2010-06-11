@@ -51,39 +51,17 @@ function fillupload()
 function showupload()
 {
 	defaultStatus = "Done";
+	// just for the display of fckeditor ME-1232
 	var str=document.getElementById("EditSectionForm:contentType").value;
-	var sferyxdisplay = document.getElementById("EditSectionForm:contentEditorView:sferyxDisplay");  
 	
-	if(str.match("notype"))
-		{		
-			if(document.htmleditor != undefined && document.htmleditor != null)
-			{
-			document.htmleditor.style.visibility="hidden";
-			document.htmleditor.style.display="none";
-			}
-			if (document.getElementById("EditSectionForm:contentEditorView") != undefined && 
-			document.getElementById("EditSectionForm:contentEditorView") != null)
-			  {
-			     document.getElementById("EditSectionForm:contentEditorView").style.visibility="hidden";
-			     document.getElementById("EditSectionForm:contentEditorView").style.display="none";
-			  }
-				
-	}
-
-	if(!str.match("typeEditor"))
-	{		
-		if(document.htmleditor != undefined && document.htmleditor != null)
-			{
-				document.htmleditor.style.visibility="hidden";
-				document.htmleditor.style.display="none";
-			}
-			if (document.getElementById("EditSectionForm:contentEditorView") != undefined && 
-			document.getElementById("EditSectionForm:contentEditorView") != null)
-            {
-                  document.getElementById("EditSectionForm:contentEditorView").style.visibility="hidden";
-                  document.getElementById("EditSectionForm:contentEditorView").style.display="none";
-            }		
-	}
+	if(str.match("notype") || !str.match("typeEditor") )
+	{
+		if(document.getElementById("othereditor") != undefined && document.getElementById("othereditor") != null)
+		  {
+		      document.getElementById("othereditor").style.visibility="hidden";
+		      document.getElementById("othereditor").style.display="none";
+		  }
+	}	
 }	
 
 function transferEditordata()
@@ -253,13 +231,13 @@ function saveSection()
 										</f:subview>	
 									</td></tr>	
 									<tr> 
-										 <td colspan="2"> 										
+										 <td colspan="2">																					 									
 											 <f:subview id="contentEditorView" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
 												<jsp:include page="contentSferyxEditor.jsp?mode=Edit"/>
 												 <h:inputHidden id="contentTextArea" value="#{editSectionPage.contentEditor}" />
 												 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>
-											<sakai:inputRichText id="otherMeletecontentEditor" value="#{editSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{editSectionPage.renderOtherEditor}" collectionBase="#{editSectionPage.FCK_CollId}" />											
+											<div id="othereditor"><sakai:inputRichText id="otherMeletecontentEditor" value="#{editSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{editSectionPage.renderOtherEditor}" collectionBase="#{editSectionPage.FCK_CollId}" /></div>										
 											</td>
 									  </tr>	
 								  <tr>
@@ -304,5 +282,8 @@ function saveSection()
 
   <!-- This Ends -->
 </sakai:view>
+<script type="text/javascript">
+ 		 showupload();	
+</script>
 </f:view>
 
