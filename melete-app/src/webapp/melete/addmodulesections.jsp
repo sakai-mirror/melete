@@ -50,38 +50,17 @@
 function showupload()
 {
 	var str=document.getElementById("AddSectionForm:contentType").value;
-	var sferyxdisplay = document.getElementById("AddSectionForm:contentEditorView:sferyxDisplay");
-	if(str.match("notype"))
+	// for fckeditor display ME-1232
+	if(str.match("notype") || !str.match("typeEditor"))
 	{		
-		if(document.htmleditor != undefined && document.htmleditor != null )
-		{
-		document.htmleditor.style.visibility="hidden";
-		document.htmleditor.style.display="none";
-		}
-		if (document.getElementById("AddSectionForm:contentEditorView:EditorPanel") != undefined &&
-		    document.getElementById("AddSectionForm:contentEditorView:EditorPanel") != null)
+
+		if(document.getElementById("othereditor") != undefined && document.getElementById("othereditor") != null)
 		  {
-		     document.getElementById("AddSectionForm:contentEditorView:EditorPanel").style.visibility="hidden";
-		     document.getElementById("AddSectionForm:contentEditorView:EditorPanel").style.display="none";
+		      document.getElementById("othereditor").style.visibility="hidden";
+		      document.getElementById("othereditor").style.display="none";
 		  }
 	}
-	
-		
-	if(!str.match("typeEditor"))
-	{	
-	// avoid js error if sferyx is not available	
-		if(document.htmleditor != undefined && document.htmleditor != null)
-		{
-			document.htmleditor.style.visibility="hidden";
-			document.htmleditor.style.display="none";
-		}
-		if (document.getElementById("AddSectionForm:contentEditorView") != undefined && 
-		document.getElementById("AddSectionForm:contentEditorView") != null)
-            {
-                  document.getElementById("AddSectionForm:contentEditorView").style.visibility="hidden";
-                  document.getElementById("AddSectionForm:contentEditorView").style.display="none";
-            }
-	}	
+		  
  }	
 
 function transferEditordata()
@@ -216,7 +195,7 @@ function contentChangeSubmit()
 													
 													 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>																																
-											<sakai:inputRichText  id="otherMeletecontentEditor" value="#{addSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{addSectionPage.renderOtherEditor}" collectionBase="#{addSectionPage.FCK_CollId}" />
+											<div id="othereditor"><sakai:inputRichText  id="otherMeletecontentEditor" value="#{addSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{addSectionPage.renderOtherEditor}" collectionBase="#{addSectionPage.FCK_CollId}" /></div>
 										</td>
 										</tr>
 										<tr>
@@ -241,5 +220,8 @@ function contentChangeSubmit()
 	
 </h:form>
 </sakai:view>
+<script type="text/javascript">
+ 		 showupload();	
+</script>
 </f:view>
 
