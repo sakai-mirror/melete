@@ -34,7 +34,7 @@ final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)faces
 final AuthorPreferencePage authorPreferencePage = (AuthorPreferencePage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "authorPreferences");
 
 String data_t = "typeEditor";
-String data = "Compose content here";
+String data = null;
 
 if(request.getParameter("mode")!= null && request.getParameter("mode").equals("Edit"))
 {
@@ -53,7 +53,9 @@ else
 	else data_t="notype";
 	}
 }
-
+if(data != null){
+	data = java.net.URLEncoder.encode(data);
+}
 String browseloca = meleteSiteAndUserInfo.getRemoteBrowseLocation() ;
 String browselinkloca = meleteSiteAndUserInfo.getRemoteLinkBrowseLocation() ;
 String docloca =  meleteSiteAndUserInfo.getMeleteDocsLocation() ;
@@ -90,13 +92,9 @@ document.writeln('<PARAM NAME="scriptable" VALUE="true">');
               	document.writeln('<PARAM NAME = "boxbgcolor" VALUE = "#FFFFFF">');
 		        document.writeln('<PARAM NAME="scriptable" VALUE="true">');
 				document.writeln('<PARAM NAME = "variableName" VALUE="html_content">');
-			<%
-				if(data != null){
-				%>
-					document.writeln('<PARAM name="initialURLEncodedContent" VALUE="<%=java.net.URLEncoder.encode(data)%>">');
-				<%	} else { %>
-				document.writeln('<PARAM name="initialURLEncodedContent" VALUE="">');
-				<%	} %>
+				<%if(data != null) {%>	
+					document.writeln('<PARAM name="initialURLEncodedContent" VALUE="<%=data%>">');
+				<%}%>
 				document.writeln('<PARAM name="saveURL" VALUE="<%=saveloca%>">');
 				document.writeln('<PARAM NAME = "uploadContentAsMultipartFormData" VALUE="true">');
 				document.writeln('<PARAM NAME="saveEntireFile" VALUE="false">');
@@ -113,7 +111,7 @@ document.writeln('<PARAM NAME="scriptable" VALUE="true">');
 				document.writeln('<PARAM NAME ="menuItemsToRemove" VALUE="insertFormFieldTextBoxMenuItem, insertFormFieldTextAreaMenuItem, insertFormFieldCheckBoxMenuItem, insertFormFieldRadioButtonMenuItem,insertFormFieldDropDownMenuItem, insertFormFieldPushButtonMenuItem,insertFormFieldImageButtonMenuItem,pagePropertiesMainMenuItem">');
 				document.writeln('<PARAM NAME ="toolbarItemsToRemove" VALUE="saveFileButton,openFileButton,newFileButton">');
 				document.writeln('<PARAM NAME ="useFlowToolbarLayout" VALUE="true">');
-
+				
 if(!_ie)
 {	
 	document.writeln('</applet>');
