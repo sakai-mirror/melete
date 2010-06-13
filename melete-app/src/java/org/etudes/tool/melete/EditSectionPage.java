@@ -1081,4 +1081,28 @@ public class EditSectionPage extends SectionPage implements Serializable
 		setSizeWarning(false);
 		return cancel();
 	}
+	
+	public String getDataUrl()
+	{
+
+		String rUrl = null;
+		if (this.section == null) return null;
+		SectionResource secRes = (SectionResource)this.section.getSectionResource();
+		String resourceId = null;
+		if (secRes != null && (secRes.getResource() != null))
+		{
+			resourceId = secRes.getResource().getResourceId();
+		}
+
+		if (resourceId != null)
+		{
+			try
+			{
+					rUrl = getMeleteCHService().getResourceUrl(resourceId);
+			}catch(Exception e) {
+				// do nothing
+			}
+		}
+	  return rUrl;
+	}
 }

@@ -304,11 +304,11 @@ public abstract class SectionPage implements Serializable {
             if(sessionMap.containsKey("currModule"))
             {
                     nextModule= (ModuleObjService)sessionMap.get("currModule");
-                  if (logger.isDebugEnabled()) logger.debug("contains currModule in sessionMap and next curr module and module" + nextModule + module);
+              //    if (logger.isDebugEnabled()) logger.debug("contains currModule in sessionMap and next curr module and module" + nextModule + module);
             }
             if(module == null || (nextModule!=null && nextModule.getModuleId() != module.getModuleId()))
             {
-          if (logger.isDebugEnabled()) logger.debug("get module of add section page called and module is null");
+      //    if (logger.isDebugEnabled()) logger.debug("get module of add section page called and module is null");
             module = (ModuleObjService)sessionMap.get("currModule");
             }
             return module;
@@ -394,7 +394,7 @@ public abstract class SectionPage implements Serializable {
 
 
              int sz = Integer.parseInt((String)sessionMap.get("maxSize"));
-              if (logger.isDebugEnabled()) logger.debug("Size is "+sz);
+    //          if (logger.isDebugEnabled()) logger.debug("Size is "+sz);
 
 
             return sz;
@@ -693,16 +693,16 @@ public abstract class SectionPage implements Serializable {
     		}
     		if (section.getContentType().equals("typeUpload")) {
     			res_mime_type = uploadSectionContent("file1");
-    			if (logger.isDebugEnabled())
+    	/*		if (logger.isDebugEnabled())
     				logger.debug("new names for upload content is"
-    						+ res_mime_type + "," + secResourceName);
+    						+ res_mime_type + "," + secResourceName);*/
     			if (res_mime_type == null)
     				throw new MeleteException("select_or_cancel");
     		}
     		ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag,
     				secResourceName, secResourceDescription);
-    		if (logger.isDebugEnabled())
-    			logger.debug("add resource now " + secResourceName);
+    /*		if (logger.isDebugEnabled())
+    			logger.debug("add resource now " + secResourceName);*/
 
     		String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type, addCollId, secContentData,res);
     		return newResourceId;
@@ -731,19 +731,29 @@ public abstract class SectionPage implements Serializable {
 	 */
 	public void editMeleteCollectionResource(String uploadHomeDir,String resourceId) throws MeleteException
 	{
-			if (logger.isDebugEnabled()) logger.debug("edit resource function");
+	//		if (logger.isDebugEnabled()) logger.debug("edit resource function");
             String res_mime_type=null;
             boolean encodingFlag = false;
 
             try
 			{
-				 if (logger.isDebugEnabled()) logger.debug("editing properties for " + resourceId);
+	//			 if (logger.isDebugEnabled()) logger.debug("editing properties for " + resourceId);
 
-	            if(section.getContentType().equals("typeEditor"))
-	            {
-            		contentEditor =  getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir,contentEditor);
+            	if(section.getContentType().equals("typeEditor"))
+            	{
+            		try
+            		{
+            			String contentData =  getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir,contentEditor);
+            			if(contentData != null) contentEditor = contentData;
+            		}
+            		catch(MeleteException me)
+            		{
+            			//save section contents before throwing exception
+            			getMeleteCHService().editResource(resourceId, contentEditor);
+            			throw me;
+            		}
             		getMeleteCHService().editResource(resourceId, contentEditor);
-	            }
+            	}
 
 	            if(resourceId != null && (section.getContentType().equals("typeLink") || section.getContentType().equals("typeUpload") || section.getContentType().equals("typeLTI")))
 	            {
@@ -878,7 +888,7 @@ public abstract class SectionPage implements Serializable {
 
 				// render selected file name
 		    		selectedResourceName = secResourceName;
-		    		if (logger.isDebugEnabled()) logger.debug("values changed in resource action for res name and desc" + secResourceName + secResourceDescription);
+	//	    		if (logger.isDebugEnabled()) logger.debug("values changed in resource action for res name and desc" + secResourceName + secResourceDescription);
 		    	}
   	    }
   	    catch(Exception ex)
@@ -908,7 +918,7 @@ public abstract class SectionPage implements Serializable {
      */
     public String getContentLink()
     {
-       if (logger.isDebugEnabled()) logger.debug("getContentLink fn is called");
+   //    if (logger.isDebugEnabled()) logger.debug("getContentLink fn is called");
        return "#";
     }
 
