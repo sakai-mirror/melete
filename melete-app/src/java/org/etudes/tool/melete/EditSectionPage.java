@@ -491,62 +491,32 @@ public class EditSectionPage extends SectionPage implements Serializable
 	 */
 	public String getPreviewPage()
 	{
-	   ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-	   FacesContext context = FacesContext.getCurrentInstance();
-
-
-	   if(meleteResource != null && meleteResource.getResourceId() != null)
-	   {
-		   ValueBinding binding = Util.getBinding("#{licensePage}");
-		   LicensePage lPage = (LicensePage)binding.getValue(context);
-		     lPage.setFormName(getFormName());
-			meleteResource = lPage.processLicenseInformation(meleteResource);
-	   }
-	   contentWithHtml = false;
-		try
+		setSuccess(false);
+		if(!saveHere().equals("failure"))
 		{
-			if (!section.getContentType().equals("notype"))
-			{
-				if (this.section.getContentType().equals("typeEditor"))
-				{
-					String uploadHomeDir = ServerConfigurationService.getString("melete.uploadDir", "");
-					try
-					{
-					  this.previewContentData = getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir, contentEditor);
-					  contentEditor = previewContentData;
-						if(Util.FindNestedHTMLTags(contentEditor))
-						{
-							this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
-							contentWithHtml = true;
-						}
-	
-						return "editpreview";
-					}
-					catch (MeleteException mex)
-					{
-						logger.debug("error in editing section "+ mex.toString());
-						String errMsg = bundle.getString(mex.getMessage());
-						context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
-						return "failure";
-					}
-					
-				}
-				this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
-			}
-			else
-			{
-				this.previewContentData = null;
-			}
+			setSuccess(true);
 		}
-
-		catch (Exception e)
-		{
-			logger.error(e.toString());
-		}
+		else return "editmodulesections";
+		 
+		contentWithHtml = false;
+		this.previewContentData = null;
+		
+		if (!section.getContentType().equals("notype"))
+		   {
+			   if (this.section.getContentType().equals("typeEditor"))
+			   {
+				   this.previewContentData = contentEditor;
+				   if(Util.FindNestedHTMLTags(contentEditor))
+				   {
+					   this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
+					   contentWithHtml = true;
+				   }   
+			   }
+			   else this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
+		   }
 		return "editpreview";
-
 	}
-
+	
 	public String cancelFromPreview()
 	{
 		return "editmodulesections";
