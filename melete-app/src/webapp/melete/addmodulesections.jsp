@@ -50,6 +50,8 @@
 function showupload()
 {
 	var str=document.getElementById("AddSectionForm:contentType").value;
+	var sferyxdisplay = document.getElementById("AddSectionForm:contentEditorView:sferyxDisplay");
+	
 	// for fckeditor display ME-1232
 	if(str.match("notype") || !str.match("typeEditor"))
 	{		
@@ -60,7 +62,11 @@ function showupload()
 		      document.getElementById("othereditor").style.display="none";
 		  }
 	}
-		  
+	if(sferyxdisplay != undefined && str.match("typeEditor"))	
+	 {	
+		 var k1=document.getElementById("AddSectionForm:contentEditorView:contentTextArea").value;     
+		 if(k1 != undefined && k1 != null) document.htmleditor.setContent(k1); //May use initialURLEncodedContent param instead
+	 }		  
  }	
 
 function transferEditordata()

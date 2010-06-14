@@ -53,6 +53,7 @@ function showupload()
 	defaultStatus = "Done";
 	// just for the display of fckeditor ME-1232
 	var str=document.getElementById("EditSectionForm:contentType").value;
+	var sferyxdisplay = document.getElementById("EditSectionForm:contentEditorView:sferyxDisplay");  
 	
 	if(str.match("notype") || !str.match("typeEditor") )
 	{
@@ -61,7 +62,16 @@ function showupload()
 		      document.getElementById("othereditor").style.visibility="hidden";
 		      document.getElementById("othereditor").style.display="none";
 		  }
-	}	
+	}
+	
+	if(sferyxdisplay != undefined && str.match("typeEditor"))
+	{	
+	 var k1=document.getElementById("EditSectionForm:contentEditorView:contentTextArea").value;     
+	 if(k1 != undefined && k1 !=null)
+		{
+		 document.htmleditor.setContent(k1); //May use initialURLEncodedContent param instead
+       	}
+	}		
 }	
 
 function transferEditordata()
@@ -231,7 +241,8 @@ function saveSection()
 										</f:subview>	
 									</td></tr>	
 									<tr> 
-										 <td colspan="2">																					 									
+										 <td colspan="2">
+										 													 									
 											 <f:subview id="contentEditorView" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
 												<jsp:include page="contentSferyxEditor.jsp?mode=Edit"/>
 												 <h:inputHidden id="contentTextArea" value="#{editSectionPage.contentEditor}" />

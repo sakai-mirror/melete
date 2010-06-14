@@ -33,31 +33,7 @@ final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)faces
 
 final AuthorPreferencePage authorPreferencePage = (AuthorPreferencePage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "authorPreferences");
 
-String data_t = "typeEditor";
-String data = null;
-String dataUrl = null;
 
-if(request.getParameter("mode")!= null && request.getParameter("mode").equals("Edit"))
-{
-	final EditSectionPage eSectionPage = (EditSectionPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "editSectionPage");
-	//data = eSectionPage.getContentEditor();
-	dataUrl = eSectionPage.getDataUrl();
-	if(eSectionPage.getSection() != null) data_t=eSectionPage.getSection().getContentType();
-	else data_t="notype";
-}
-else
-{
-	final AddSectionPage aSectionPage = (AddSectionPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "addSectionPage");
-	if(aSectionPage != null)
-	{
-	data = aSectionPage.getContentEditor();	
-	if(aSectionPage.getSection() != null && aSectionPage.getSection().getContentType() != null) data_t=aSectionPage.getSection().getContentType();
-	else data_t="notype";
-	}
-}
-if(data != null){
-	data = java.net.URLEncoder.encode(data);
-}
 String browseloca = meleteSiteAndUserInfo.getRemoteBrowseLocation() ;
 String browselinkloca = meleteSiteAndUserInfo.getRemoteLinkBrowseLocation() ;
 String docloca =  meleteSiteAndUserInfo.getMeleteDocsLocation() ;
@@ -94,16 +70,9 @@ document.writeln('<PARAM NAME="scriptable" VALUE="true">');
               	document.writeln('<PARAM NAME = "boxbgcolor" VALUE = "#FFFFFF">');
 		        document.writeln('<PARAM NAME="scriptable" VALUE="true">');
 				document.writeln('<PARAM NAME = "variableName" VALUE="html_content">');
-				<%if(dataUrl != null) {%>
-					document.writeln('<PARAM name="initialURL" VALUE="<%=dataUrl%>">');
-				<%}%>
-				<%if(data != null) {%>	
-					document.writeln('<PARAM name="initialURLEncodedContent" VALUE="<%=data%>">');
-				<%}%>
 				document.writeln('<PARAM name="saveURL" VALUE="<%=saveloca%>">');
 				document.writeln('<PARAM NAME = "uploadContentAsMultipartFormData" VALUE="true">');
 				document.writeln('<PARAM NAME="saveEntireFile" VALUE="false">');
-				
 				document.writeln('<PARAM NAME="useSaveAsSaveRemote" VALUE="true">');
 				document.writeln('<PARAM NAME ="supressRemoteFileDialog" VALUE="false">');
 				document.writeln('<PARAM NAME ="supressLocalFileDialog" VALUE="false">');
