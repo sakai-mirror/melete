@@ -1,4 +1,3 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!--
  ***********************************************************************************
  * $URL$
@@ -151,7 +150,7 @@
 			   //assign this new link the href of the parent one
 		       link.setAttribute("href", document.styleSheets[i].href);
 			   oDoc.body.appendChild(link); 
-		    }
+		    }		    
 		    						
 		  }
 
