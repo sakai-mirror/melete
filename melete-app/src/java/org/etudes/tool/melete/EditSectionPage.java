@@ -517,7 +517,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editpreview";
 	}
 	
-	public String cancelFromPreview()
+	public String returnBack()
 	{
 		return "editmodulesections";
 	}

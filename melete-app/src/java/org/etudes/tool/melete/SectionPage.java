@@ -748,8 +748,8 @@ public abstract class SectionPage implements Serializable {
             		}
             		catch(MeleteException me)
             		{
-            			//save section contents before throwing exception
-            			getMeleteCHService().editResource(resourceId, contentEditor);
+            			//uncomment if we want to save section contents before throwing exception
+            			//getMeleteCHService().editResource(resourceId, contentEditor);
             			throw me;
             		}
             		getMeleteCHService().editResource(resourceId, contentEditor);
