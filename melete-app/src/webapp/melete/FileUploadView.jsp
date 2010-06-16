@@ -412,6 +412,9 @@ function validateFileName(divID, sourceID)
 </h:form>
 <!-- This Ends the Main Text Area -->
 </sakai:view>
+<script type="text/javascript">
+ 		 loadInputs();	
+</script>
 </f:view>
 
 

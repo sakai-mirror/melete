@@ -36,7 +36,7 @@
  	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>		
-	<div class="meletePortletToolBarMessage"><img src="images/note_view.gif" alt="" width="24" height="24" align="absmiddle"><h:outputText value="#{msgs.edit_preview_previewing_section}" /></div>
+	<div class="meletePortletToolBarMessage"><img src="images/note_view.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.edit_preview_previewing_section}" /></div>
      <table class="maintableCollapseWithBorder">          
 		  <tr>
 		    <td colspan="2" height="20"> <div  class="maintabledata5">&nbsp;</div>
@@ -82,21 +82,10 @@
 	       
 			<tr><td>
 				<div class="actionBar" align="left">
-						<h:commandButton id="submitsave" action="#{editSectionPage.save}" onclick="transferEditordata()" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
-						<h:commandButton id="cancelButton" immediate="true" action="#{editSectionPage.cancelFromPreview}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>	
-		   	        </div></td>
+						<h:commandButton id="return" action="#{editSectionPage.returnBack}" value="#{msgs.im_return}" accesskey="#{msgs.return_access}" title="#{msgs.im_return_text}" styleClass="BottomImgReturn"/>
+	   	        </div></td>
               </tr>
-              <tr>
-                <td height="20" bgcolor="#FFFFFF">&nbsp;
-				</td>
-              </tr>
-              <tr>
-                <td>
-                    <div class="actionBar" align="left">  	
-                  	  <h:commandButton id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd"/>
-					  <h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgFinish"/>
-					 </div>				
-  			</td></tr>			
+              			
          	 <tr><td>
          		 <table width="100%" border="0" cellpadding="3" cellspacing="0" >
    	         <tr>

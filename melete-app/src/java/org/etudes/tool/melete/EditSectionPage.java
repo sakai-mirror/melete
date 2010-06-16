@@ -82,18 +82,21 @@ public class EditSectionPage extends SectionPage implements Serializable
 		setFormName("EditSectionForm");
 	}
 
-	public String setEditInfo(SectionObjService section)
+	public String setEditInfo(SectionObjService section1)
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 
 		resetSectionValues();
-		setModule(section.getModule());
-		setSection(section);
-		setSecResource(section.getSectionResource());
-		if (secResource != null && secResource.getResource() != null)
+		setSection(section1);
+		setFormName("EditSectionForm");
+		
+		setModule(this.section.getModule());		
+		setSecResource(this.section.getSectionResource());
+		
+		if (this.secResource != null && this.secResource.getResource() != null)
 		{
-			setMeleteResource((MeleteResource) secResource.getResource());
-			setContentResourceData(meleteResource.getResourceId());
+			setMeleteResource((MeleteResource) this.secResource.getResource());
+			setContentResourceData(this.meleteResource.getResourceId());
 	    	ValueBinding binding = Util.getBinding("#{licensePage}");
 	  		LicensePage lPage = (LicensePage)binding.getValue(context);
 	  		lPage.setInitialValues(this.formName, getMeleteResource());
@@ -104,16 +107,17 @@ public class EditSectionPage extends SectionPage implements Serializable
 			setLicenseCodes(null);
 		}
 		setSuccess(false);
-
+				
 		ValueBinding binding = Util.getBinding("#{authorPreferences}");
 		AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
-		String usereditor = preferencePage.getUserEditor();
+		preferencePage.setEditorFlags();
+	
 		// if fck editor then push advisors and other config values
-		if (section.getContentType().equals("typeEditor") && usereditor.equals(preferencePage.FCKEDITOR))
-		{
-			setFCKCollectionAttrib();
+		if (this.section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderFCK())
+		{		
+			setFCKCollectionAttrib();				
 		}
-		if (section.getContentType().equals("typeEditor") && usereditor.equals(preferencePage.SFERYX)) preferencePage.setDisplaySferyx(true);
+		if (this.section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx()) preferencePage.setDisplaySferyx(true);
 
 		return "success";
 	}
@@ -382,10 +386,16 @@ public class EditSectionPage extends SectionPage implements Serializable
 		{
 			logger.debug("error in updating section " + mex.toString());
 			String errMsg = bundle.getString(mex.getMessage());
-			if(mex.getMessage().equals("embed_image_size_exceed"))
-			{
+			// uncomment it after sferyx brings uploadfile limit param
+			/*if(mex.getMessage().equals("embed_image_size_exceed"))
+			{				
 				errMsg = errMsg.concat(ServerConfigurationService.getString("content.upload.max", "0"));
 				errMsg = errMsg.concat(bundle.getString("embed_image_size_exceed1"));
+			}*/
+			if(mex.getMessage().equals("embed_image_size_exceed2"))
+			{				
+				errMsg = errMsg.concat(ServerConfigurationService.getString("content.upload.max", "0"));
+				errMsg = errMsg.concat(bundle.getString("embed_image_size_exceed2-1"));
 			}
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, mex.getMessage(), errMsg));
 			return "failure";
@@ -481,63 +491,33 @@ public class EditSectionPage extends SectionPage implements Serializable
 	 */
 	public String getPreviewPage()
 	{
-	   ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-	   FacesContext context = FacesContext.getCurrentInstance();
-
-
-	   if(meleteResource != null && meleteResource.getResourceId() != null)
-	   {
-		   ValueBinding binding = Util.getBinding("#{licensePage}");
-		   LicensePage lPage = (LicensePage)binding.getValue(context);
-		     lPage.setFormName(getFormName());
-			meleteResource = lPage.processLicenseInformation(meleteResource);
-	   }
-	   contentWithHtml = false;
-		try
+		setSuccess(false);
+		if(!saveHere().equals("failure"))
 		{
-			if (!section.getContentType().equals("notype"))
-			{
-				if (this.section.getContentType().equals("typeEditor"))
-				{
-					String uploadHomeDir = ServerConfigurationService.getString("melete.uploadDir", "");
-					try
-					{
-					  this.previewContentData = getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir, contentEditor);
-					  contentEditor = previewContentData;
-						if(Util.FindNestedHTMLTags(contentEditor))
-						{
-							this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
-							contentWithHtml = true;
-						}
-	
-						return "editpreview";
-					}
-					catch (MeleteException mex)
-					{
-						logger.debug("error in editing section "+ mex.toString());
-						String errMsg = bundle.getString(mex.getMessage());
-						context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
-						return "failure";
-					}
-					
-				}
-				this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
-			}
-			else
-			{
-				this.previewContentData = null;
-			}
+			setSuccess(true);
 		}
-
-		catch (Exception e)
-		{
-			logger.error(e.toString());
-		}
+		else return "editmodulesections";
+		 
+		contentWithHtml = false;
+		this.previewContentData = null;
+		
+		if (!section.getContentType().equals("notype"))
+		   {
+			   if (this.section.getContentType().equals("typeEditor"))
+			   {
+				   this.previewContentData = contentEditor;
+				   if(Util.FindNestedHTMLTags(contentEditor))
+				   {
+					   this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
+					   contentWithHtml = true;
+				   }   
+			   }
+			   else this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
+		   }
 		return "editpreview";
-
 	}
-
-	public String cancelFromPreview()
+	
+	public String returnBack()
 	{
 		return "editmodulesections";
 	}
@@ -1070,5 +1050,29 @@ public class EditSectionPage extends SectionPage implements Serializable
 		resetSectionValues();
 		setSizeWarning(false);
 		return cancel();
+	}
+	
+	public String getDataUrl()
+	{
+
+		String rUrl = null;
+		if (this.section == null) return null;
+		SectionResource secRes = (SectionResource)this.section.getSectionResource();
+		String resourceId = null;
+		if (secRes != null && (secRes.getResource() != null))
+		{
+			resourceId = secRes.getResource().getResourceId();
+		}
+
+		if (resourceId != null)
+		{
+			try
+			{
+					rUrl = getMeleteCHService().getResourceUrl(resourceId);
+			}catch(Exception e) {
+				// do nothing
+			}
+		}
+	  return rUrl;
 	}
 }

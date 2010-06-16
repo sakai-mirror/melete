@@ -91,11 +91,15 @@ public class Util {
     	}
     }
 
+    // Pattern is restricted to form tags so that their action can take place.
+    // For html tag etc, the sferyx content for fonts test doc which had double quotes and
+    // single quote renders bad characters. 
     public static boolean FindNestedHTMLTags(String str)
     {
     	if(str == null) return false;
     	// look for html or form tags in the content
-    	Pattern pForm = Pattern.compile("<\\s*[hH][tT][mM][lL]\\s*| <\\s*[hH][eE][aA][dD]\\s*| <\\s*[bB][oO][dD][yY]\\s*| <\\s*[fF][oO][rR][mM]\\s*");
+ //   	Pattern pForm = Pattern.compile("<\\s*[hH][tT][mM][lL]\\s*| <\\s*[hH][eE][aA][dD]\\s*| <\\s*[bB][oO][dD][yY]\\s*| <\\s*[fF][oO][rR][mM]\\s*");
+       	Pattern pForm = Pattern.compile("<\\s*[fF][oO][rR][mM]\\s*");
     	Matcher m = pForm.matcher(str);
     	if (m.find()) return true;	
     

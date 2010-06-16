@@ -51,39 +51,27 @@ function fillupload()
 function showupload()
 {
 	defaultStatus = "Done";
+	// just for the display of fckeditor ME-1232
 	var str=document.getElementById("EditSectionForm:contentType").value;
 	var sferyxdisplay = document.getElementById("EditSectionForm:contentEditorView:sferyxDisplay");  
 	
-	if(str.match("notype"))
-		{		
-			if(document.htmleditor != undefined && document.htmleditor != null)
-			{
-			document.htmleditor.style.visibility="hidden";
-			document.htmleditor.style.display="none";
-			}
-			if (document.getElementById("EditSectionForm:contentEditorView") != undefined && 
-			document.getElementById("EditSectionForm:contentEditorView") != null)
-			  {
-			     document.getElementById("EditSectionForm:contentEditorView").style.visibility="hidden";
-			     document.getElementById("EditSectionForm:contentEditorView").style.display="none";
-			  }
-				
+	if(str.match("notype") || !str.match("typeEditor") )
+	{
+		if(document.getElementById("othereditor") != undefined && document.getElementById("othereditor") != null)
+		  {
+		      document.getElementById("othereditor").style.visibility="hidden";
+		      document.getElementById("othereditor").style.display="none";
+		  }
 	}
-
-	if(!str.match("typeEditor"))
-	{		
-		if(document.htmleditor != undefined && document.htmleditor != null)
-			{
-				document.htmleditor.style.visibility="hidden";
-				document.htmleditor.style.display="none";
-			}
-			if (document.getElementById("EditSectionForm:contentEditorView") != undefined && 
-			document.getElementById("EditSectionForm:contentEditorView") != null)
-            {
-                  document.getElementById("EditSectionForm:contentEditorView").style.visibility="hidden";
-                  document.getElementById("EditSectionForm:contentEditorView").style.display="none";
-            }		
-	}
+	
+	if(sferyxdisplay != undefined && str.match("typeEditor"))
+	{	
+	 var k1=document.getElementById("EditSectionForm:contentEditorView:contentTextArea").value;     
+	 if(k1 != undefined && k1 !=null)
+		{
+		 document.htmleditor.setContent(k1); //May use initialURLEncodedContent param instead
+       	}
+	}		
 }	
 
 function transferEditordata()
@@ -140,9 +128,8 @@ function saveSection()
 		<div class="meletePortletToolBarMessage"><img src="images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.editmodulesections_editing_section}" /> </div>
 		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
         <div class="right">
-          <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="saveSection();var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},'#{editSectionPage.section.title}','Melete Bookmark Window');w.focus();">
+          <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="saveSection();var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},'Melete Bookmark Window');w.focus();">
 	         <f:param id="sectionId" name="sectionId" value="#{editSectionPage.section.sectionId}" />
-	         <f:param id="sectionTitle" name="sectionTitle" value="#{editSectionPage.section.title}" />
 	         <h:graphicImage id="bul_gif" value="images/bookmark-it.png" alt="" styleClass="AuthImgClass"/>
 	         <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
            </h:outputLink>		
@@ -253,13 +240,14 @@ function saveSection()
 										</f:subview>	
 									</td></tr>	
 									<tr> 
-										 <td colspan="2"> 										
+										 <td colspan="2">
+										 													 									
 											 <f:subview id="contentEditorView" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
 												<jsp:include page="contentSferyxEditor.jsp?mode=Edit"/>
 												 <h:inputHidden id="contentTextArea" value="#{editSectionPage.contentEditor}" />
 												 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>
-											<sakai:inputRichText id="otherMeletecontentEditor" value="#{editSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{editSectionPage.FCK_CollId}" />											
+											<div id="othereditor"><sakai:inputRichText id="otherMeletecontentEditor" value="#{editSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{editSectionPage.renderOtherEditor}" collectionBase="#{editSectionPage.FCK_CollId}" /></div>										
 											</td>
 									  </tr>	
 								  <tr>
@@ -280,21 +268,13 @@ function saveSection()
 					<h:commandButton id="submitsave2" action="#{editSectionPage.save}" rendered="#{!editSectionPage.shouldRenderEditor && !editSectionPage.shouldRenderUpload}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
 					<h:commandButton id="previewEditor" action="#{editSectionPage.getPreviewPage}" onclick="transferEditordata()"  rendered="#{editSectionPage.shouldRenderEditor}" value="#{msgs.im_preview}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgPreview"/>
 					<h:commandButton id="preview" action="#{editSectionPage.getPreviewPage}" rendered="#{editSectionPage.shouldRenderEditor == false}" value="#{msgs.im_preview}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgPreview"/>
-					<h:commandButton id="cancelButton" immediate="true" action="#{editSectionPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
-       			 </div></td>
-              </tr>
-              <tr>
-                <td height="20">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>
-                    <div class="actionBar" align="left">
-                		<h:commandButton id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" onclick="transferEditordata()" styleClass="BottomImgAdd"/>
+					
+					<h:commandButton id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" onclick="transferEditordata()" styleClass="BottomImgAdd"/>
 						<h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" onclick="transferEditordata()" styleClass="BottomImgFinish"/>
 						<h:commandButton id="saveForBookmarkbutton"  action="#{editSectionPage.save}" onclick="transferEditordata()" style="display: none; visibility: hidden;"/>
-								
-					</div></td>
-		          </tr>
+       			 </div></td>
+              </tr>
+              
             </table>
 			
 			
@@ -304,5 +284,19 @@ function saveSection()
 
   <!-- This Ends -->
 </sakai:view>
+<script type="text/javascript">
+		 var meta = document.createElement("meta");
+	     meta.setAttribute("HTTP-EQUIV", "CACHE-CONTROL");
+         meta.setAttribute("CONTENT", "NO-CACHE");
+       
+       	 var meta1 = document.createElement("meta");
+         meta1.setAttribute("HTTP-EQUIV", "Pragma");
+         meta1.setAttribute("CONTENT", "NO-CACHE");
+	     document.getElementsByTagName('head').item(0).appendChild(meta);
+	     document.getElementsByTagName('head').item(0).appendChild(meta1);
+
+ 		 showupload();	
+ 
+</script>
 </f:view>
 

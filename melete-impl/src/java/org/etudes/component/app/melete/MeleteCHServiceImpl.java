@@ -1197,7 +1197,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		             catch(FileNotFoundException ff)
 					 {
 		             	logger.debug(ff.toString() + fileName);
-		             	throw new MeleteException("embed_image_size_exceed");
+		             	throw new MeleteException("embed_image_size_exceed2");
 /*		             	ignore if file is missing and throw exceed message if request filter upload.status says so
 		             	//throw new MeleteException("embed_image_size_exceed");
 		             	if(endSrc > 0 && endSrc <= checkforimgs.length())

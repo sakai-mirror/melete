@@ -35,7 +35,7 @@
 	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>		
-	<div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="24" height="24" align="absmiddle"><h:outputText value="#{msgs.add_preview_previewing_section}" /></div>
+	<div class="meletePortletToolBarMessage"><img src="images/preview.png" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.add_preview_previewing_section}" /></div>
     
      <table class="maintableCollapseWithBorder">
 		<tr><td colspan="2" height="20"> <div  class="maintabledata5">&nbsp;</div></td></tr>	
@@ -77,7 +77,6 @@
 			
 			<tr><td> 
 				 <div class="actionBar" align="left">
-		   			<h:commandButton id="saveAddAnotherbutton"  action="#{addSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd"/>
 					<h:commandButton id="FinishButton" action="list_auth_modules" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgFinish"/>							
 				</div></td>
               </tr>

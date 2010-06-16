@@ -643,6 +643,37 @@ public class SectionDB implements Serializable {
 		    return sec;
 		 }
 
+	 public String getSectionTitle(int sectionId) throws HibernateException {
+		 	String secTitle = null;
+		 	try
+			{
+
+		 		Session session = hibernateUtil.currentSession();
+
+		 		String queryString = "select title from Section  where sectionId = :sectionId";
+		 		Query query=  session.createQuery(queryString);
+		 		query.setParameter("sectionId", new Integer(sectionId));
+		 		secTitle = (String)query.uniqueResult();
+		    }
+		    catch (HibernateException he)
+		    {
+			  logger.error(he.toString());
+		    }
+		    finally
+			{
+		    	try
+				  {
+			      	hibernateUtil.closeSession();
+				  }
+			      catch (HibernateException he)
+				  {
+					  logger.error(he.toString());
+				  }
+			}
+		    return secTitle;
+		 }
+	 
+	 
 	 //This method returns all typeEditor sections in a course
 	 private List getEditorSections(String courseId) throws HibernateException {
 		 List secList = new ArrayList();
@@ -1004,6 +1035,20 @@ public class SectionDB implements Serializable {
 			}
 	}
 
+    public List getUploadMeleteResourcesOfCourse(String courseId)
+    {
+            try{
+                 Session session = hibernateUtil.currentSession();
+                 String queryString = "select meleteresource.resourceId from MeleteResource meleteresource where meleteresource.resourceId like '%" + courseId + "/uploads%'";
+                 Query query = session.createQuery(queryString);
+                 List result_list = query.list();
+                 return result_list;
+                }
+            catch(Exception ex){
+                    logger.error(ex.toString());
+                    return null;
+                    }
+    }
 
 
 

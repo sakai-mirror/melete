@@ -193,6 +193,17 @@ public class SectionServiceImpl implements Serializable, SectionService{
 		    }
         return section;
   }
+	
+	public String getSectionTitle(int sectionId) {
+		String secTitle = null;
+        try {
+                secTitle = sectiondb.getSectionTitle(sectionId);
+		    }catch (Exception e)
+		    {
+		           logger.debug(e.toString());
+		    }
+        return secTitle;
+  }	
 
 // Mallika's methods
 	  public void setSection(SectionObjService sec) {

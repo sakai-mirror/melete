@@ -33,26 +33,6 @@ final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)faces
 
 final AuthorPreferencePage authorPreferencePage = (AuthorPreferencePage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "authorPreferences");
 
-String data_t = "typeEditor";
-String data = "Compose content here";
-
-if(request.getParameter("mode")!= null && request.getParameter("mode").equals("Edit"))
-{
-	final EditSectionPage eSectionPage = (EditSectionPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "editSectionPage");
-	data = eSectionPage.getContentEditor();
-	if(eSectionPage.getSection() != null) data_t=eSectionPage.getSection().getContentType();
-	else data_t="notype";
-}
-else
-{
-	final AddSectionPage aSectionPage = (AddSectionPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "addSectionPage");
-	if(aSectionPage != null)
-	{
-	data = aSectionPage.getContentEditor();	
-	if(aSectionPage.getSection() != null && aSectionPage.getSection().getContentType() != null) data_t=aSectionPage.getSection().getContentType();
-	else data_t="notype";
-	}
-}
 
 String browseloca = meleteSiteAndUserInfo.getRemoteBrowseLocation() ;
 String browselinkloca = meleteSiteAndUserInfo.getRemoteLinkBrowseLocation() ;
@@ -62,14 +42,13 @@ String editorloca =  meleteSiteAndUserInfo.getEditorArchiveLocation() ;
 String absloca = meleteSiteAndUserInfo.getAbsoluteTranslationLocation();
 boolean renderSferyx = authorPreferencePage.isShouldRenderSferyx();
 boolean dispSferyx = authorPreferencePage.isDisplaySferyx();
-boolean showSferyx = renderSferyx && dispSferyx && (data_t.equals("notype") || data_t.equals("typeEditor"));
 %>
 
 <SCRIPT type="text/javascript" LANGUAGE="JavaScript">
 <!--
     var _info = navigator.userAgent;
     var _ie = (_info.indexOf("MSIE") > 0 && _info.indexOf("Win") > 0 && _info.indexOf("Windows 3.1") < 0);
-if(<%=showSferyx %>){
+if(<%=dispSferyx %>){
      if(!_ie)
 		{
 				document.writeln('<applet code="sferyx.administration.editors.HTMLEditor" archive="<%=editorloca%>"  id="editor" WIDTH = "90%" HEIGHT = "600" name="htmleditor">');
@@ -91,13 +70,6 @@ document.writeln('<PARAM NAME="scriptable" VALUE="true">');
               	document.writeln('<PARAM NAME = "boxbgcolor" VALUE = "#FFFFFF">');
 		        document.writeln('<PARAM NAME="scriptable" VALUE="true">');
 				document.writeln('<PARAM NAME = "variableName" VALUE="html_content">');
-			<%
-				if(data != null){
-				%>
-					document.writeln('<PARAM name="initialURLEncodedContent" VALUE="<%=java.net.URLEncoder.encode(data)%>">');
-				<%	} else { %>
-				document.writeln('<PARAM name="initialURLEncodedContent" VALUE="">');
-				<%	} %>
 				document.writeln('<PARAM name="saveURL" VALUE="<%=saveloca%>">');
 				document.writeln('<PARAM NAME = "uploadContentAsMultipartFormData" VALUE="true">');
 				document.writeln('<PARAM NAME="saveEntireFile" VALUE="false">');
@@ -114,7 +86,7 @@ document.writeln('<PARAM NAME="scriptable" VALUE="true">');
 				document.writeln('<PARAM NAME ="menuItemsToRemove" VALUE="insertFormFieldTextBoxMenuItem, insertFormFieldTextAreaMenuItem, insertFormFieldCheckBoxMenuItem, insertFormFieldRadioButtonMenuItem,insertFormFieldDropDownMenuItem, insertFormFieldPushButtonMenuItem,insertFormFieldImageButtonMenuItem,pagePropertiesMainMenuItem">');
 				document.writeln('<PARAM NAME ="toolbarItemsToRemove" VALUE="saveFileButton,openFileButton,newFileButton">');
 				document.writeln('<PARAM NAME ="useFlowToolbarLayout" VALUE="true">');
-
+				
 if(!_ie)
 {	
 	document.writeln('</applet>');
