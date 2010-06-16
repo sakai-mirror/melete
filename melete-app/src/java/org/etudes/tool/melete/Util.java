@@ -91,6 +91,9 @@ public class Util {
     	}
     }
 
+    // Pattern is restricted to form tags so that their action can take place.
+    // For html tag etc, the sferyx content for fonts test doc which had double quotes and
+    // single quote renders bad characters. 
     public static boolean FindNestedHTMLTags(String str)
     {
     	if(str == null) return false;
