@@ -71,7 +71,6 @@ public class BookmarkPage implements Serializable
 
 	private String sectionId;
 
-	private String sectionTitle;
 
 	private List bmList;
 
@@ -84,7 +83,7 @@ public class BookmarkPage implements Serializable
 	private boolean nobmsFlag;
 
 	private String fromPage;
-	
+
 	private boolean trueFlag = true;
 
 	/** Dependency:  The logging service. */
@@ -287,7 +286,7 @@ public class BookmarkPage implements Serializable
 		}
 
 	}
-	
+
 
 	public String redirectExportNotes()
 	{
@@ -307,7 +306,7 @@ public class BookmarkPage implements Serializable
 		resetValues();
 		return "list_bookmarks";
 	}
-	
+
 	public String returnAction()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -461,8 +460,8 @@ public class BookmarkPage implements Serializable
           if (bookmark == null)
           {
         	  bookmark = new Bookmark();
-        	  bookmark.setTitle(getSectionTitle());
-          }
+        	  bookmark.setTitle(getSectionTitle(Integer.parseInt(this.sectionId)));
+           }
 	  }
 	return bookmark;
     }
@@ -471,7 +470,7 @@ public class BookmarkPage implements Serializable
     this.bookmark = bookmark;
   }
 
-   
+
    public List getBmList()
    {
 	   FacesContext context = FacesContext.getCurrentInstance();
@@ -485,7 +484,7 @@ public class BookmarkPage implements Serializable
 	 		 {
 	 			 Bookmark bmark = (Bookmark)i.next();
 	 			 if (bmark.getNotes() != null)
-	 			 {	 
+	 			 {
 	 			   if (bmark.getNotes().length() > 70)
 	 			   {
 	 				 bmark.setBriefNotes(bmark.getNotes().substring(0,69)+"...");
@@ -500,7 +499,7 @@ public class BookmarkPage implements Serializable
 	 				 bmark.setBriefNotes("");
 	 			 }
 	 			 bmark.setSectionVisibleFlag(bmark.getSection().getModule().getModuleshdate().isVisibleFlag());
-	 		 }	 
+	 		 }
 	     }
 	     if ((bmList != null)&&(bmList.size() > 0))
 	     {
@@ -527,14 +526,11 @@ public class BookmarkPage implements Serializable
      this.sectionId = sectionId;
    }
 
-   public String getSectionTitle() {
-	      return sectionTitle;
+   public String getSectionTitle(int sectionId) {
+	   return sectionService.getSectionTitle(sectionId);
    }
 
-   public void setSectionTitle(String sectionTitle) {
-	     this.sectionTitle = sectionTitle;
-   }
-   
+
    public boolean  getTrueFlag() {
 	  	return true;
    }

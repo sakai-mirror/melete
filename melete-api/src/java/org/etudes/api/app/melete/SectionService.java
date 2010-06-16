@@ -40,6 +40,7 @@ public interface SectionService{
 	public void editSection(SectionObjService section, MeleteResourceService melResource) throws Exception;
 	public void editSection(SectionObjService section ) throws Exception;
 	public SectionObjService getSection(int sectionId);
+	public String getSectionTitle(int sectionId);
 
 	/* this method inserts the association in between section and resource and updates melete resource object*/
 	public void insertSectionResource(SectionObjService section, MeleteResourceService melResource) throws Exception;

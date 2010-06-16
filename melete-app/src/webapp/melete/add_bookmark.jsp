@@ -61,17 +61,15 @@ final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesC
 final BookmarkPage bookmarkPage = (BookmarkPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "bookmarkPage");
 bookmarkPage.setBookmark(null);
 String sectionId = (String)request.getParameter("sectionId");
-String sectionTitle = (String)request.getParameter("sectionTitle");
+
 if (sectionId != null)
 {
   bookmarkPage.setSectionId(sectionId);
-  bookmarkPage.setSectionTitle(sectionTitle);
 }  
 %>
 
 <h:form id="AddBookmarkForm">
 <h:inputHidden id="sectionId" value="#{bookmarkPage.sectionId}"/>
-<h:inputHidden id="sectionTitle" value="#{bookmarkPage.sectionTitle}"/>
 <h:messages id="addbookmarkerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 <table cellspacing="0" cellpadding="10" width="100%" border="0" align="center">
 	<tr>
@@ -110,7 +108,6 @@ if (sectionId != null)
 					<div class="actionBar" align="left">
 				
 				    <h:inputHidden id="sectionId" value="#{bookmarkPage.sectionId}"/>
-				    <h:inputHidden id="sectionTitle" value="#{bookmarkPage.sectionTitle}"/>
 				    
           	        <h:commandButton action="#{bookmarkPage.addBookmark}" value="#{msgs.im_done}" accesskey="#{msgs.done_access}" title="#{msgs.im_done_text}" styleClass="BottomImgReturn"  onclick="return validate_form();" />
           	        

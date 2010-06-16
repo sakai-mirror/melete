@@ -643,6 +643,37 @@ public class SectionDB implements Serializable {
 		    return sec;
 		 }
 
+	 public String getSectionTitle(int sectionId) throws HibernateException {
+		 	String secTitle = null;
+		 	try
+			{
+
+		 		Session session = hibernateUtil.currentSession();
+
+		 		String queryString = "select title from Section  where sectionId = :sectionId";
+		 		Query query=  session.createQuery(queryString);
+		 		query.setParameter("sectionId", new Integer(sectionId));
+		 		secTitle = (String)query.uniqueResult();
+		    }
+		    catch (HibernateException he)
+		    {
+			  logger.error(he.toString());
+		    }
+		    finally
+			{
+		    	try
+				  {
+			      	hibernateUtil.closeSession();
+				  }
+			      catch (HibernateException he)
+				  {
+					  logger.error(he.toString());
+				  }
+			}
+		    return secTitle;
+		 }
+	 
+	 
 	 //This method returns all typeEditor sections in a course
 	 private List getEditorSections(String courseId) throws HibernateException {
 		 List secList = new ArrayList();
