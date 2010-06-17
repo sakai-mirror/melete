@@ -227,18 +227,7 @@ function contentChangeSubmit()
 </h:form>
 </sakai:view>
 <script type="text/javascript">
-		 var meta = document.createElement("meta");
-	     meta.setAttribute("HTTP-EQUIV", "CACHE-CONTROL");
-         meta.setAttribute("CONTENT", "NO-CACHE");
-       
-       	 var meta1 = document.createElement("meta");
-         meta1.setAttribute("HTTP-EQUIV", "Pragma");
-         meta1.setAttribute("CONTENT", "NO-CACHE");
-	     document.getElementsByTagName('head').item(0).appendChild(meta);
-	     document.getElementsByTagName('head').item(0).appendChild(meta1);
-
- 		 showupload();	
- 
+	 showupload();	
 </script>
 </f:view>
 
