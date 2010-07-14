@@ -165,7 +165,7 @@ public abstract class SectionPage implements Serializable {
 
  	protected String oldType;
 
-    public SectionPage()
+   public SectionPage()
             {
             module=null;
             section=null;
@@ -223,6 +223,7 @@ public abstract class SectionPage implements Serializable {
     {
             if(this.section != null && this.section.getContentType() != null)
             {
+            	
             shouldRenderEditor = this.section.getContentType().equals("typeEditor");
             }
             return shouldRenderEditor;
@@ -270,17 +271,7 @@ public abstract class SectionPage implements Serializable {
         }
 		return shouldRenderNotype;
 	}
-	
-	/**
-	 * @return Returns true if user pref is FCK editor and the content type is editor.
-	 */
-	public boolean getRenderOtherEditor() {
-		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{authorPreferences}");
-		AuthorPreferencePage authPage = (AuthorPreferencePage) binding.getValue(context);
-		authPage.setEditorFlags();
-		return authPage.isShouldRenderFCK() && shouldRenderEditor;		
-	}
+
 	
     public Boolean getContentWithHtml() {
 		return contentWithHtml;
@@ -847,7 +838,7 @@ public abstract class SectionPage implements Serializable {
 	allContentTypes = null;
 	oldType = null;
 	contentWithHtml = null;
-    if (logger.isDebugEnabled()) logger.debug("!!!!!!!!!reseting section values done !!!!!!!");
+	 if (logger.isDebugEnabled()) logger.debug("!!!!!!!!!reseting section values done !!!!!!!");
     }
 
     /*

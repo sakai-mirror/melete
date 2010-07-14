@@ -201,7 +201,7 @@ function contentChangeSubmit()
 													
 													 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>																																
-											<div id="othereditor"><sakai:inputRichText  id="otherMeletecontentEditor" value="#{addSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{addSectionPage.renderOtherEditor}" collectionBase="#{addSectionPage.FCK_CollId}" /></div>
+											<f:subview id="othereditor" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}"><sakai:inputRichText  id="otherMeletecontentEditor" value="#{addSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{addSectionPage.FCK_CollId}" /></f:subview>
 										</td>
 										</tr>
 										<tr>
