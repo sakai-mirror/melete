@@ -50,6 +50,7 @@ function fillupload()
 
 function showupload()
 {
+
 	defaultStatus = "Done";
 	// just for the display of fckeditor ME-1232
 	var str=document.getElementById("EditSectionForm:contentType").value;
@@ -65,13 +66,18 @@ function showupload()
 	}
 	
 	if(sferyxdisplay != undefined && str.match("typeEditor"))
-	{	
-	 var k1=document.getElementById("EditSectionForm:contentEditorView:contentTextArea").value;     
-	 if(k1 != undefined && k1 !=null)
-		{
-		 document.htmleditor.setContent(k1); //May use initialURLEncodedContent param instead
-       	}
-	}		
+		{	
+		 if(document.getElementById("EditSectionForm:contentEditorView:contentTextArea") != undefined && 
+	  	 document.getElementById("EditSectionForm:contentEditorView:contentTextArea") != null)
+			 {
+			 var k1=document.getElementById("EditSectionForm:contentEditorView:contentTextArea").value;     
+			 if(document.htmleditor != undefined && document.htmleditor != null && k1 != undefined && k1 !=null)
+				{					
+					 document.htmleditor.setContent(k1); 
+		       	}
+			}	
+		}
+		
 }	
 
 function transferEditordata()
@@ -147,21 +153,21 @@ function saveSection()
                    <!-- table header -->
 	                   <tr>
 			            <td colspan="2" height="20" class="maintabledata2">            	   
-				     		<h:commandLink id="editPrevButton" onmousedown="transferEditordata();" action="#{editSectionPage.editPrevSection}" rendered="#{editSectionPage.hasPrev}">
+				     		<h:commandLink id="editPrevButton" action="#{editSectionPage.editPrevSection}" rendered="#{editSectionPage.hasPrev}">
 			 					 <h:outputText id="text4_4" value="#{msgs.editmodulesections_edit_prev}"/>
 							</h:commandLink> 
 							<h:outputText id="text4_5" value="#{msgs.editmodulesections_edit_prev}" rendered="#{!editSectionPage.hasPrev}"/>
 							&laquo;
-			     			<h:commandLink id="TOCButton"  onmousedown="transferEditordata();" action="#{editSectionPage.goTOC}">
+			     			<h:commandLink id="TOCButton"  action="#{editSectionPage.goTOC}">
 									<h:outputText id="toc" value="#{msgs.editmodulesections_TOC}" />
 								</h:commandLink>
 							&raquo;   
-				     		<h:commandLink id="editNextButton" onmousedown="transferEditordata();" action="#{editSectionPage.editNextSection}" rendered="#{editSectionPage.hasNext}">
+				     		<h:commandLink id="editNextButton" action="#{editSectionPage.editNextSection}" rendered="#{editSectionPage.hasNext}">
 			 					 <h:outputText id="text4_2" value="#{msgs.editmodulesections_edit_next}"/>
 							</h:commandLink>
 							<h:outputText id="text4_6" value="#{msgs.editmodulesections_edit_next}" rendered="#{!editSectionPage.hasNext}"/>
 							  <h:outputText id="text4_3" value=" / "/>				
-				     		<h:commandLink onmousedown="transferEditordata();" action="#{editSectionPage.saveAndAddAnotherSection}">
+				     		<h:commandLink action="#{editSectionPage.saveAndAddAnotherSection}">
 			 					 <h:outputText id="text5" value="#{msgs.editmodulesections_add_new}"/>
 							</h:commandLink> 						   	
 						</td>
@@ -247,7 +253,9 @@ function saveSection()
 												 <h:inputHidden id="contentTextArea" value="#{editSectionPage.contentEditor}" />
 												 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>
-											<div id="othereditor"><sakai:inputRichText id="otherMeletecontentEditor" value="#{editSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{editSectionPage.renderOtherEditor}" collectionBase="#{editSectionPage.FCK_CollId}" /></div>										
+											<f:subview id="othereditor" rendered="#{editSectionPage.renderOtherEditor}">
+												<sakai:inputRichText id="otherMeletecontentEditor" value="#{editSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{editSectionPage.renderOtherEditor}" collectionBase="#{editSectionPage.FCK_CollId}" />										
+											</f:subview>
 											</td>
 									  </tr>	
 								  <tr>
@@ -263,15 +271,15 @@ function saveSection()
               <tr>
                 <td>
                   <div class="actionBar" align="left">
-              		<h:commandButton id="submitsave" action="#{editSectionPage.save}" rendered="#{editSectionPage.shouldRenderEditor}" onclick="transferEditordata()" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
+              		<h:commandButton id="submitsave" action="#{editSectionPage.save}" rendered="#{editSectionPage.shouldRenderEditor}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
 					<h:commandButton id="submitsave1" action="#{editSectionPage.save}" rendered="#{editSectionPage.shouldRenderUpload}" onclick="showmessage()" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
 					<h:commandButton id="submitsave2" action="#{editSectionPage.save}" rendered="#{!editSectionPage.shouldRenderEditor && !editSectionPage.shouldRenderUpload}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
-					<h:commandButton id="previewEditor" action="#{editSectionPage.getPreviewPage}" onclick="transferEditordata()"  rendered="#{editSectionPage.shouldRenderEditor}" value="#{msgs.im_preview}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgPreview"/>
+					<h:commandButton id="previewEditor" action="#{editSectionPage.getPreviewPage}" rendered="#{editSectionPage.shouldRenderEditor}" value="#{msgs.im_preview}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgPreview"/>
 					<h:commandButton id="preview" action="#{editSectionPage.getPreviewPage}" rendered="#{editSectionPage.shouldRenderEditor == false}" value="#{msgs.im_preview}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgPreview"/>
 					
-					<h:commandButton id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" onclick="transferEditordata()" styleClass="BottomImgAdd"/>
-						<h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" onclick="transferEditordata()" styleClass="BottomImgFinish"/>
-						<h:commandButton id="saveForBookmarkbutton"  action="#{editSectionPage.save}" onclick="transferEditordata()" style="display: none; visibility: hidden;"/>
+					<h:commandButton id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd"/>
+						<h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgFinish"/>
+						<h:commandButton id="saveForBookmarkbutton"  action="#{editSectionPage.save}" style="display: none; visibility: hidden;"/>
        			 </div></td>
               </tr>
               
@@ -284,8 +292,5 @@ function saveSection()
 
   <!-- This Ends -->
 </sakai:view>
-<script type="text/javascript">
-	 showupload();	
-</script>
 </f:view>
 

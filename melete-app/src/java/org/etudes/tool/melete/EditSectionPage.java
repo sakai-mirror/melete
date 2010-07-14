@@ -87,9 +87,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 		FacesContext context = FacesContext.getCurrentInstance();
 
 		resetSectionValues();
-		setSection(section1);
+		logger.debug("setting EDIT INFO");
 		setFormName("EditSectionForm");
-		
+		setSection(section1);
 		setModule(this.section.getModule());		
 		setSecResource(this.section.getSectionResource());
 		
@@ -141,6 +141,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 	private void setContentResourceData(String resourceId)
 	{
+	   logger.debug("set contyent resource data for: " + resourceId);
 		try
 		{
 			if (resourceId != null)

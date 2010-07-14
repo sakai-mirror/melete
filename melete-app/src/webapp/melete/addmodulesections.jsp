@@ -64,8 +64,15 @@ function showupload()
 	}
 	if(sferyxdisplay != undefined && str.match("typeEditor"))	
 	 {	
-		 var k1=document.getElementById("AddSectionForm:contentEditorView:contentTextArea").value;     
-		 if(k1 != undefined && k1 != null) document.htmleditor.setContent(k1); //May use initialURLEncodedContent param instead
+	  if(document.getElementById("AddSectionForm:contentEditorView:contentTextArea") !=undefined &&
+	  		   document.getElementById("AddSectionForm:contentEditorView:contentTextArea") != null)
+			 {
+			 var k1=document.getElementById("AddSectionForm:contentEditorView:contentTextArea").value;     
+			 if(document.htmleditor!= undefined && document.htmleditor!= null && k1 != undefined && k1 != null) 
+			 {
+			 document.htmleditor.setContent(k1); 
+			 }
+		 }
 	 }		  
  }	
 
@@ -201,7 +208,10 @@ function contentChangeSubmit()
 													
 													 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>																																
-											<div id="othereditor"><sakai:inputRichText  id="otherMeletecontentEditor" value="#{addSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{addSectionPage.renderOtherEditor}" collectionBase="#{addSectionPage.FCK_CollId}" /></div>
+											<f:subview id="othereditor" rendered="#{addSectionPage.renderOtherEditor}">
+												<sakai:inputRichText  id="otherMeletecontentEditor" value="#{addSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{addSectionPage.renderOtherEditor}" collectionBase="#{addSectionPage.FCK_CollId}" />
+											</f:subview>
+											
 										</td>
 										</tr>
 										<tr>
@@ -226,8 +236,5 @@ function contentChangeSubmit()
 	
 </h:form>
 </sakai:view>
-<script type="text/javascript">
-	 showupload();	
-</script>
 </f:view>
 

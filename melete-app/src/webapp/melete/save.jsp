@@ -3,6 +3,7 @@
 <%@ page import="java.util.*"%>
 <%@ page import="java.io.*"%>
 <%@page import="org.sakaiproject.component.cover.ServerConfigurationService"%>
+<%@ page import="org.etudes.tool.melete.EditSectionPage"%>
 <!--
  ***********************************************************************************
  * $URL$
@@ -32,6 +33,7 @@
 			for (Enumeration e = request.getAttributeNames(); e.hasMoreElements();)
 				{
 					String oneKey = (String) e.nextElement();
+			
 					if(oneKey.startsWith("sferyx"))
 					{
 							// store the image at uploads directory
@@ -67,5 +69,17 @@
 							// do nothing
 						}
 					} // if end
-				} // for end			
+				} // for end	
+				
+			// save file now
+			if(request.getParameter("html_content") != null)
+			{
+				System.out.println("save has html_content");
+				
+				// need to check for edit mode
+				final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
+				final EditSectionPage eSectionPage = (EditSectionPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "editSectionPage");
+				eSectionPage.setContentEditor(request.getParameter("html_content"));
+				eSectionPage.save();
+			}							
 %>

@@ -359,12 +359,13 @@ public abstract class SectionPage implements Serializable {
      */
     public void setSection(SectionObjService sec)
     {
+    	logger.debug("setSection called and setting it to " + sec);
         try
 			{
             this.section = null;
             if(sec !=null)
             {
-                    if (logger.isDebugEnabled()) logger.debug("setSection called and section is not null");
+                    if (logger.isDebugEnabled()) logger.debug("setSection called and section is not null" + sec.getSectionId());
                     this.module = (Module)sec.getModule();
                     this.section = sec;
             }
@@ -726,6 +727,25 @@ public abstract class SectionPage implements Serializable {
     	}
     }
 
+    public void saveEditorContents(String uploadHomeDir,String resourceId, String data) throws Exception
+    {
+    	if(section.getContentType().equals("typeEditor"))
+    	{
+    		try
+    		{
+    			String contentData =  getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir,data);
+    			if(contentData != null) contentEditor = contentData;
+    		}
+    		catch(MeleteException me)
+    		{
+    			//uncomment if we want to save section contents before throwing exception
+    			//getMeleteCHService().editResource(resourceId, contentEditor);
+    			throw me;
+    		}
+    		getMeleteCHService().editResource(resourceId, contentEditor);
+    	}
+    }
+    
 	/*
 	 *  adds resource to specified melete module or uploads collection.
 	 */
