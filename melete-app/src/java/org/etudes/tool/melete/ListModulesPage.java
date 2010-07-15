@@ -48,6 +48,7 @@ import org.sakaiproject.util.ResourceLoader;
 //import com.sun.faces.util.Util;
 import java.sql.Timestamp;
 import org.etudes.api.app.melete.ModuleService;
+import org.etudes.api.app.melete.MeleteSecurityService;
 import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzGroup;
 import javax.faces.event.*;
@@ -69,8 +70,6 @@ public class ListModulesPage implements Serializable{
       private int showModuleId;
 
       private String formName;
-      private String role;
-      private boolean instRole;
       private String typeEditor;
       private String typeLink;
       private String typeUpload;
@@ -101,6 +100,10 @@ public class ListModulesPage implements Serializable{
 	  private ListDataModel modDataModel;
 
 	  private int bookmarkSectionId;
+	  
+	  /** Dependency: The Melete Security service. */
+	  protected MeleteSecurityService meleteSecurityService;
+
 
 
 	  public ListDataModel getModDataModel()
@@ -119,13 +122,12 @@ public class ListModulesPage implements Serializable{
 	  	FacesContext context = FacesContext.getCurrentInstance();
 //	  	context.getViewRoot().setTransient(true);
 	  	Map sessionMap = context.getExternalContext().getSessionMap();
-	  	role = (String)sessionMap.get("role");
-	  	courseId = null;
+	    courseId = null;
 	  	userId = null;
 	  	nomodsFlag = false;
 	  	closedModulesFlag = false;
 	  	setShowModuleId(-1);
-	  	if (getRole()!= null)
+	  	if (isUserAuthor() || isUserStudent())
 		{
 	  		 ValueBinding binding = Util.getBinding("#{authorPreferences}");
 	 		AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
@@ -155,7 +157,7 @@ public class ListModulesPage implements Serializable{
 	  	autonumberMaterial = null;
 	  	FacesContext context = FacesContext.getCurrentInstance();
 //	  	context.getViewRoot().setTransient(true);
-		if (getRole()!= null)
+		if (isUserAuthor() || isUserStudent())
 		{
 	  		 ValueBinding binding = Util.getBinding("#{authorPreferences}");
 	 		AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
@@ -178,22 +180,7 @@ public class ListModulesPage implements Serializable{
 	  	setBookmarkSectionId(-1);
 	  }
 
-	  public boolean getInstRole()
-	    {
-	    	FacesContext context = FacesContext.getCurrentInstance();
-		  	Map sessionMap = context.getExternalContext().getSessionMap();
-		  	if ((String)sessionMap.get("role") !=null)
-		  		this.instRole = ((String)sessionMap.get("role")).equals("INSTRUCTOR");
-		  	else this.instRole = false;
-	    	return instRole;
-	    }
-
-	    public void setInstRole(boolean instRole)
-	    {
-	    	this.instRole = instRole;
-	    }
-
- /**
+      /**
 	   * @return Returns the ModuleService.
 	   */
 	  public ModuleService getModuleService() {
@@ -222,15 +209,6 @@ public class ListModulesPage implements Serializable{
 		{
 			this.bookmarkService = bookmarkService;
 		}
-
-	  public String getRole() {
-	  	return role;
-	  }
-
-	  public void setRole(String role) {
-	  	this.role = role;
-	  }
-
 
 	  public List  getNullList() {
 	  	return nullList;
@@ -372,11 +350,11 @@ public class ListModulesPage implements Serializable{
 				FacesContext ctx = FacesContext.getCurrentInstance();
 				UIViewRoot root = ctx.getViewRoot();
 			    UIData table = null;
-			    if (getRole()!= null && getRole().equals("INSTRUCTOR")){
+			    if (isUserAuthor()){
 			       table = (UIData)
 			        root.findComponent("listmodulesform").findComponent("StudentTable");
 			    }
-			    if (getRole()!= null && getRole().equals("STUDENT")){
+			    if (isUserStudent()){
 			        table = (UIData)
 		            root.findComponent("listmodulesStudentform").findComponent("table");
 			     }
@@ -391,12 +369,7 @@ public class ListModulesPage implements Serializable{
 					setExpandAllFlag(false);
 				}
 			}
-			String retVal = "list_modules_student";
-		   if (getRole()!= null && getRole().equals("INSTRUCTOR"))
-		    {
-		    	retVal = "list_modules_inst";
-		    }
-			  	return retVal;
+			return listViewAction();
 		}
 
 	  public String expandCollapseAction()
@@ -410,12 +383,7 @@ public class ListModulesPage implements Serializable{
 			  setExpandAllFlag(false);
 			  setShowModuleId(-1);
 			}
-			 String retVal = "list_modules_student";
-		    if (getRole()!= null && getRole().equals("INSTRUCTOR"))
-			{
-			   	retVal = "list_modules_inst";
-			}
-		   return retVal;
+			return listViewAction();
 		}
 
 
@@ -458,7 +426,7 @@ public class ListModulesPage implements Serializable{
     	  ViewModulesPage vmPage = (ViewModulesPage)
     	  binding.getValue(ctx);
     	  vmPage.setPrintable(null);
-    	  if (getRole()!= null && (getRole().equals("INSTRUCTOR") || getRole().equals("STUDENT"))){
+    	  if (isUserAuthor() || isUserStudent()){
     		  if ((viewModuleBeans != null)&&(viewModuleBeans.size() > 0))
     		  {
     			  vmbean = (ViewModBean) viewModuleBeans.get(selModIndex);
@@ -528,7 +496,7 @@ public class ListModulesPage implements Serializable{
 		ViewModBean vmBean = null;
 		int modSeqNo = 0;
 
-		if (getRole()!= null && (getRole().equals("INSTRUCTOR") || getRole().equals("STUDENT"))) {
+		if (isUserAuthor() || isUserStudent()) {
 			if ((viewModuleBeans != null)&&(viewModuleBeans.size() > 0))
 			{
 		    	vmBean = (ViewModBean) viewModuleBeans.get(selModIndex);
@@ -561,6 +529,7 @@ public class ListModulesPage implements Serializable{
       {
         ViewModBean vmBean = null;
     	FacesContext ctx = FacesContext.getCurrentInstance();
+    			
     	Map params = ctx.getExternalContext().getRequestParameterMap();
     	int selModIndex=0,modSeqNo=-1;
 
@@ -591,15 +560,15 @@ public class ListModulesPage implements Serializable{
               Util.getBinding("#{viewNextStepsPage}");
             ViewNextStepsPage vnPage = (ViewNextStepsPage)
               binding.getValue(ctx);
-    	  if (getRole()!= null && (getRole().equals("INSTRUCTOR") || getRole().equals("STUDENT")))
+    	  if (isUserAuthor() || isUserStudent())
     	  {
   			if ((viewModuleBeans != null)&&(viewModuleBeans.size() > 0))
   			{
   		    	vmBean = (ViewModBean) viewModuleBeans.get(selModIndex);
   			}
   		}
-      	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNo),getInstRole());
-      	vnPage.setNextSeqNo(nextSeqNo);
+        int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNo));
+        vnPage.setNextSeqNo(nextSeqNo);
       	//vnPage.setModule(getModuleService().getModule(vmBean.getModuleId()));
       	if ((vmBean.getVsBeans() == null)||(vmBean.getVsBeans().size() == 0))
       	{
@@ -631,7 +600,7 @@ public class ListModulesPage implements Serializable{
 			{
 				UIViewRoot root = ctx.getViewRoot();
 				UIData table;
-				if (getRole() != null && getRole().equals("INSTRUCTOR"))
+				if (isUserAuthor())
 				{
 					table = (UIData) root.findComponent("listmodulesform").findComponent("StudentTable");
 				}
@@ -743,4 +712,54 @@ public class ListModulesPage implements Serializable{
 	{
 		this.autonumberMaterial = autonumberMaterial;
 	}
+	
+	public String listViewAction()
+	{
+		if (isUserAuthor()) return "list_modules_inst";
+		if (isUserStudent()) return "list_modules_student";
+		return "list_modules_student";
+	}
+	/**
+	 * @param meleteSecurityService The meleteSecurityService to set.
+	 */
+	public void setMeleteSecurityService(
+			MeleteSecurityService meleteSecurityService) {
+		this.meleteSecurityService = meleteSecurityService;
+	}
+
+	/**
+	 * Check if the current user has permission as author.
+	 * @return true if the current user has permission to perform this action, false if not.
+	 */
+	public boolean isUserAuthor(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		
+		try {
+			return meleteSecurityService.allowAuthor();
+		} catch (Exception e) {
+			String errMsg = bundle.getString("auth_failed");
+			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"auth_failed",errMsg));
+			logger.warn(e.toString());
+		}
+		return false;
+	}
+
+	/**
+	 * Check if the current user has permission as student.
+	 * @return true if the current user has permission to perform this action, false if not.
+	 */
+	public boolean isUserStudent(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		
+		try {
+			return meleteSecurityService.allowStudent();
+		} catch (Exception e) {
+			String errMsg = bundle.getString("auth_failed");
+			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"auth_failed",errMsg));
+			logger.warn(e.toString());
+		}
+		return false;
+	}		
 }

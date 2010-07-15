@@ -107,7 +107,14 @@
 			<description>Service Dependency: Bookmark service</description>
 			<property-name>bookmarkService</property-name>
 			<value>#{Components["org.etudes.api.app.melete.BookmarkService"]}</value>
-		</managed-property>                          
+		</managed-property>   
+		<!-- a service dependency property - for the MeleteSecurityService -->
+		<managed-property>
+			<description>Service Dependency: MeleteSecurityService</description>
+			<property-name>meleteSecurityService</property-name>
+			<value> 
+				#{Components["org.etudes.api.app.melete.MeleteSecurityService"]}</value>
+		</managed-property>                        
         </managed-bean>
 
  <managed-bean>
@@ -323,6 +330,13 @@
           <managed-bean-name>navPage</managed-bean-name>
           <managed-bean-class>org.etudes.tool.melete.NavPage</managed-bean-class>
           <managed-bean-scope>session</managed-bean-scope>
+          <!-- a service dependency property - for the MeleteSecurityService -->
+		  <managed-property>
+			<description>Service Dependency: MeleteSecurityService</description>
+			<property-name>meleteSecurityService</property-name>
+			<value> 
+				#{Components["org.etudes.api.app.melete.MeleteSecurityService"]}</value>
+		  </managed-property>          
     </managed-bean> 
 
  <managed-bean>

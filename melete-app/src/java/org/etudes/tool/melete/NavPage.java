@@ -28,11 +28,14 @@ import java.io.Serializable;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
+import javax.faces.application.FacesMessage;
 import javax.faces.el.ValueBinding;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.sakaiproject.util.ResourceLoader;
+import org.etudes.api.app.melete.MeleteSecurityService;
 
 /**
  * @author Faculty
@@ -49,12 +52,13 @@ public class NavPage implements Serializable {
 
 /** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(NavPage.class);
-	private String role;
-	private boolean isInstructor;
 	private boolean shouldRenderPreferences=false;
 	private boolean shouldRenderAuthor;
 	private boolean shouldRenderView;
 	private boolean shouldRenderManage;
+	private boolean isInstructor;
+	/** Dependency: The Melete Security service. */
+	protected MeleteSecurityService meleteSecurityService;
 
 	  public NavPage() { }
      public String viewAction()
@@ -66,15 +70,7 @@ public class NavPage implements Serializable {
    	    ListModulesPage lmPage = (ListModulesPage) binding.getValue(ctx);
    	    lmPage.resetValues();
    	    lmPage.setViewModuleBeans(null);
-   	    role = (String)sessionMap.get("role");
-   	    if (role.equals("INSTRUCTOR"))
-   	    {
-   	    	return "list_modules_inst";
-   	    }
-   	    else
-   	    {
-   	       	return "list_modules_student";
-   	    }
+   	    return lmPage.listViewAction();
      }
      public String authAction()
      {
@@ -104,8 +100,7 @@ public class NavPage implements Serializable {
      {
  		FacesContext ctx = FacesContext.getCurrentInstance();
 	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
-		role = (String)sessionMap.get("role");
-		if (role.equals("INSTRUCTOR"))
+		if (getIsInstructor())
 		{
 			 ValueBinding binding =
 			       Util.getBinding("#{licensePage}");
@@ -140,19 +135,6 @@ public class NavPage implements Serializable {
 		this.shouldRenderPreferences = shouldRenderPreferences;
 	}
 
-	public boolean getIsInstructor()
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
-		role = (String)sessionMap.get("role");
-		if ((role != null)&&(role.length() > 0))
-		{
-		  if (role.equals("INSTRUCTOR")) return true;
-		  else return false;
-		}
-		else return false;
-	}
-
 	public boolean isShouldRenderAuthor() {
 		FacesContext ctx = FacesContext.getCurrentInstance();
 	  	String usrMode = (String)ctx.getExternalContext().getRequestParameterMap().get("myMode");
@@ -176,4 +158,47 @@ public class NavPage implements Serializable {
 	  	shouldRenderManage = !("Manage".equals(usrMode));
 		return shouldRenderManage;
 	}
+	/**
+	 * @param meleteSecurityService The meleteSecurityService to set.
+	 */
+	public void setMeleteSecurityService(
+			MeleteSecurityService meleteSecurityService) {
+		this.meleteSecurityService = meleteSecurityService;
+	}
+
+	/**
+	 * Check if the current user has permission as author.
+	 * @return true if the current user has permission to perform this action, false if not.
+	 */
+	public boolean getIsInstructor(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		
+		try {
+			return meleteSecurityService.allowAuthor();
+		} catch (Exception e) {
+			String errMsg = bundle.getString("auth_failed");
+			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"auth_failed",errMsg));
+			logger.warn(e.toString());
+		}
+		return false;
+	}
+
+	/**
+	 * Check if the current user has permission as student.
+	 * @return true if the current user has permission to perform this action, false if not.
+	 */
+	public boolean isUserStudent(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		
+		try {
+			return meleteSecurityService.allowStudent();
+		} catch (Exception e) {
+			String errMsg = bundle.getString("auth_failed");
+			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"auth_failed",errMsg));
+			logger.warn(e.toString());
+		}
+		return false;
+	}			
 }

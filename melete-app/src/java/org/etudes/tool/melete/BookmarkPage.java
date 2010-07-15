@@ -424,12 +424,17 @@ public class BookmarkPage implements Serializable
 
 	public boolean getInstRole()
     {
-    	FacesContext context = FacesContext.getCurrentInstance();
-	  	Map sessionMap = context.getExternalContext().getSessionMap();
-	  	if ((String)sessionMap.get("role") !=null)
-	  		this.instRole = ((String)sessionMap.get("role")).equals("INSTRUCTOR");
-	  	else this.instRole = false;
-    	return instRole;
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		
+		try {
+			return getMeleteSiteAndUserInfo().isUserAuthor();
+		} catch (Exception e) {
+			String errMsg = bundle.getString("auth_failed");
+			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"auth_failed",errMsg));
+			logger.warn(e.toString());
+		}
+    	return false;
     }
 
 	public boolean getNobmsFlag()

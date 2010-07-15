@@ -35,6 +35,7 @@ import java.io.Serializable;
 import javax.faces.event.ActionEvent;
 
 import javax.faces.context.FacesContext;
+import javax.faces.application.FacesMessage;
 import javax.faces.el.ValueBinding;
 //import com.sun.faces.util.Util;
 import org.etudes.api.app.melete.ModuleService;
@@ -64,10 +65,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
       private int moduleSeqNo;
       public ModuleDateBeanService mdbean;
       private ModuleDateBeanService prevMdbean;
-
-      private boolean instRole;
       private int sectionSize;
-      private String role;
       private String nullString = null;
       private String emptyString = "";
       private ModuleDateBeanService nullMdbean = null;
@@ -186,9 +184,9 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     	  }
     	  if (this.mdbean != null)
     	  {
-    	  this.moduleSeqNo = this.mdbean.getModule().getCoursemodule().getSeqNo();
-  	  	  this.prevSeqNo = getModuleService().getPrevSeqNo(courseId,this.moduleSeqNo,getInstRole());
-  	  	  this.nextSeqNo = getModuleService().getNextSeqNo(courseId,this.moduleSeqNo,getInstRole());
+    	    this.moduleSeqNo = this.mdbean.getModule().getCoursemodule().getSeqNo();
+    	    this.prevSeqNo = getModuleService().getPrevSeqNo(courseId,this.moduleSeqNo);
+  	  	    this.nextSeqNo = getModuleService().getNextSeqNo(courseId,this.moduleSeqNo);
     	  }
   	  	  this.prevSectionSize = 0;
   	  	  if ((this.prevSeqNo > 0)&&(this.prevSeqNo != this.moduleSeqNo))
@@ -237,21 +235,6 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
         return this.sectionSize;
     }
 
-    public boolean getInstRole()
-    {
-    	FacesContext context = FacesContext.getCurrentInstance();
-	  	Map sessionMap = context.getExternalContext().getSessionMap();
-	  	if ((String)sessionMap.get("role") !=null)
-	  		this.instRole = ((String)sessionMap.get("role")).equals("INSTRUCTOR");
-	  	else this.instRole = false;
-    	return instRole;
-    }
-
-    public void setInstRole(boolean instRole)
-    {
-    	this.instRole = instRole;
-    }
-
     private String getCourseId()
     {
     	if (courseId == null)
@@ -286,8 +269,6 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		UIViewRoot root = ctx.getViewRoot();
 		UIData table = null;
-		boolean isAuthor = getInstRole();
-
 		table = (UIData) root.findComponent("viewmoduleform").findComponent("tablesec");
 		ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
 
@@ -321,8 +302,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
             binding.getValue(context);
     	listPage.setViewModuleBeans(null);
     	listPage.setAutonumberMaterial(null);
-		if (getInstRole()) return "list_modules_inst";
-		else return "list_modules_student";
+		return listPage.listViewAction();
 	}
 
     public String goNextSection()
@@ -407,8 +387,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     public String goWhatsNext()
     {
     	FacesContext context = FacesContext.getCurrentInstance();
-    	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(((String)context.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue(),getInstRole());
-
+    
     	ValueBinding binding =
             Util.getBinding("#{viewNextStepsPage}");
           ViewNextStepsPage vnPage = (ViewNextStepsPage)

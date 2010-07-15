@@ -229,13 +229,6 @@ public class MeleteSiteAndUserInfo {
         //    logger.debug("Is Author is "+ isUserAuthor());
             logger.debug("tool id: " + ToolManager.getCurrentPlacement().getToolId());
 
-			if (isUserAuthor()){
-				sessionMap.put("role", "INSTRUCTOR");
-
-			}
-			else if (isUserStudent()){
-				sessionMap.put("role", "STUDENT");
-			}
 		}catch (Exception e) {
 				logger.error(e.toString());
 		}

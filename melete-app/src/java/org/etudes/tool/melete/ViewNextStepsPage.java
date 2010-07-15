@@ -51,8 +51,6 @@ import org.etudes.api.app.melete.SectionService;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
-//Adding to test
-import org.etudes.api.app.melete.MeleteSecurityService;
 
 
 import org.w3c.dom.Document;
@@ -77,9 +75,9 @@ public class ViewNextStepsPage implements Serializable/*,ToolBean */{
 	  private int nextSeqNo;
 	  private ModuleObjService module;
 	  private ModuleService moduleService;
+	  
 	  String courseId;
 	  String userId;
-	  private boolean instRole;
 	  public HtmlPanelGroup secpgroup;
 
 
@@ -91,47 +89,18 @@ public class ViewNextStepsPage implements Serializable/*,ToolBean */{
 
 	  	FacesContext context = FacesContext.getCurrentInstance();
 	  	Map sessionMap = context.getExternalContext().getSessionMap();
-	  	courseId = (String)sessionMap.get("courseId");
-
-		String role = (String)sessionMap.get("role");
-
-		if (role != null && role.equals("INSTRUCTOR"))
-		{
-
-			setInstRole(true);
-		}
-		else
-		{
-
-			setInstRole(false);
-		}
-		courseId = null;
+	  	courseId = null;
 	  	userId = null;
 	  }
-
-
-
-
-
-
-    public boolean getInstRole()
-    {
-    	return instRole;
-    }
-
-    public void setInstRole(boolean instRole)
-    {
-    	this.instRole = instRole;
-    }
-
-
 
 
 public String goPrevItem()
 {
 	FacesContext context = FacesContext.getCurrentInstance();
 	courseId = getCourseId();
-	int prevSeqNo = getModuleService().getPrevSeqNo(courseId,this.nextSeqNo,getInstRole());
+	int prevSeqNo;
+    prevSeqNo = getModuleService().getPrevSeqNo(courseId,this.nextSeqNo);
+
 	if (this.prevSecId == 0)
 	{
 	  ValueBinding binding =
@@ -183,7 +152,6 @@ public String goNextModule()
 	FacesContext context = FacesContext.getCurrentInstance();
 	//this.module = null;
 	int nextSeqNo = new Integer(((String)context.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue();
-//	ModuleDateBean nextMdBean = (ModuleDateBean) getModuleService().getModuleDateBeanBySeq(getUserId(), getCourseId(),nextSeqNo);
 	this.module = null;
 	ValueBinding binding =
         Util.getBinding("#{viewModulesPage}");
@@ -274,8 +242,7 @@ public String goTOC()
         binding.getValue(context);
 	listPage.setViewModuleBeans(null);
 	listPage.setAutonumberMaterial(null);
-	if (instRole) return "list_modules_inst";
-	else return "list_modules_student";
+	return listPage.listViewAction();
 }
 public int getNextSeqNo() {
 	return nextSeqNo;

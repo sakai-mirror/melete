@@ -464,23 +464,20 @@ public void restoreModules(List modules, String courseId) throws Exception
 
 
 
-	 public int getNextSeqNo(String courseId, int currSeqNo, boolean instRole)
+	 public int getNextSeqNo(String courseId, int currSeqNo)
 	  {
 	  	int nextseq=0;
-
-	  	nextseq=moduledb.getNextSeqNo(courseId, currSeqNo, instRole);
-
+	  	nextseq=moduledb.getNextSeqNo(courseId, currSeqNo);
 	  	return nextseq;
 	  }
 
-	 public int getPrevSeqNo(String courseId, int currSeqNo, boolean instRole)
+	 public int getPrevSeqNo(String courseId, int currSeqNo)
 	  {
 	  	int prevseq=0;
-
-	  	prevseq=moduledb.getPrevSeqNo(courseId, currSeqNo, instRole);
-
+        prevseq=moduledb.getPrevSeqNo(courseId, currSeqNo);
 	  	return prevseq;
 	  }
+	 
 	public org.w3c.dom.Document getSubSectionW3CDOM(String sectionsSeqXML)
 	{
 		SubSectionUtilImpl ssuImpl = new SubSectionUtilImpl();

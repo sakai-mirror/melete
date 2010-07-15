@@ -34,11 +34,7 @@
 <h:form id="viewNSsectionform">   
 	<f:subview id="top">
 	  <jsp:include page="topnavbar.jsp?myMode=View"/> 
-	</f:subview>
-	<div class="meletePortletToolBarMessage">
-		<h:graphicImage id="previewtopimg" value="images/preview.png" styleClass="AuthImgClass" rendered="#{viewNextStepsPage.instRole == true}"/>
-		<h:outputText value="#{msgs.view_whats_next_viewing}" rendered="#{viewNextStepsPage.instRole == true}"/>
-	</div>	    
+	</f:subview> 
 	<table class="maintableCollapseWithNoBorder" >
 	<!--Page Content-->
 

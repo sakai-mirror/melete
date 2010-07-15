@@ -94,8 +94,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 
       public SectionObjService section;
       public ModuleObjService module;
-      private boolean instRole;
-
+   
       private String typeEditor;
       private String typeLink;
       private String typeUpload;
@@ -455,21 +454,6 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     	return nextSeqNo;
     }
 
-    public boolean getInstRole()
-    {
-    	FacesContext context = FacesContext.getCurrentInstance();
-	  	Map sessionMap = context.getExternalContext().getSessionMap();
-		if ((String)sessionMap.get("role") !=null)
-	  		this.instRole = ((String)sessionMap.get("role")).equals("INSTRUCTOR");
-	  	else this.instRole = false;
-		return instRole;
-    }
-
-    public void setInstRole(boolean instRole)
-    {
-    	this.instRole = instRole;
-    }
-
     public ModuleObjService getModule()
     {
     	Element secElement;
@@ -498,7 +482,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     	try {
     		if(courseId == null) courseId = getCourseId();
     	  this.module = (ModuleObjService) getModuleService().getModule(this.moduleId);
-  	  	  this.nextSeqNo = getModuleService().getNextSeqNo(courseId, this.moduleSeqNo, getInstRole());
+    	  this.nextSeqNo = getModuleService().getNextSeqNo(courseId, this.moduleSeqNo);
   	  	  this.subSectionW3CDom = getModuleService().getSubSectionW3CDOM(this.module.getSeqXml());
   	  	  secElement = subSectionW3CDom.getElementById(String.valueOf(this.sectionId));
   	  	  prevNode = getPreviousNode(secElement);
@@ -682,8 +666,7 @@ public String goTOC()
         binding.getValue(context);
 	listPage.setViewModuleBeans(null);
 	listPage.setAutonumberMaterial(null);
-	if (getInstRole()) return "list_modules_inst";
-	else return "list_modules_student";
+	return listPage.listViewAction();
 }
 
 public String goPrevNext()
@@ -769,8 +752,6 @@ public String goNextModule()
 	//this.module = null;
 	String modSeqNoStr = (String)context.getExternalContext().getRequestParameterMap().get("modseqno");
 	if ((modSeqNoStr == null)||(modSeqNoStr.length() == 0)) modSeqNoStr = "0";
-	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNoStr).intValue(),getInstRole());
-	//ModuleDateBean nextMdBean = (ModuleDateBean) getModuleService().getModuleDateBeanBySeq(getUserId(),getCourseId(),nextSeqNo);
 	this.module = null;
 	ValueBinding binding =
         Util.getBinding("#{viewModulesPage}");
