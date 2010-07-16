@@ -34,6 +34,7 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import java.util.List;
+import java.util.Map;
 /*
  * Created on Sep 18, 2006 by rashmi
  *
@@ -80,5 +81,8 @@ public interface MeleteCHService{
 	  public String getDisplayName(String resourceId);
 	  public String getLinkContent(String resourceId);
 	  public String getTypeEditorSectionName(Integer sectionId);
+	  public void editResource(String courseId,String resourceId, String contentEditor) throws Exception;
+	  public void addToMeleteResource(String resourceId) throws Exception;
+	  public String processSferyxSectionHtmlFile(String UploadCollId, String courseId, Map newEmbeddedResources, String contentEditor) throws Exception;
 }
 

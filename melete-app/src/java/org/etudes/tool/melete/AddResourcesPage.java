@@ -316,13 +316,13 @@ public class AddResourcesPage {
       }
 
 
-  private void addItem(String secResourceName, String secContentMimeType,String addCollId, byte[] secContentData) throws MeleteException
+  public String addItem(String secResourceName, String secContentMimeType,String addCollId, byte[] secContentData) throws MeleteException
   {
 	  ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false,secResourceName,"");
       if (logger.isDebugEnabled()) logger.debug("add resource now " + secContentData );
       try
       {
-        String newResourceId = getMeleteCHService().addResourceItem(secResourceName,secContentMimeType, addCollId, secContentData,res );
+        return getMeleteCHService().addResourceItem(secResourceName,secContentMimeType, addCollId, secContentData,res );
       }
       catch(MeleteException me)
 	  {
@@ -521,5 +521,20 @@ public ArrayList<String> getSuccess_fields()
 	return this.success_fields;
 }
 
+public String getCollectionId(String courseId)
+{
+	return getMeleteCHService().getUploadCollectionId(courseId);
+}
+
+public void addtoMeleteResource(String resourceId) throws Exception
+{
+	getMeleteCHService().addToMeleteResource(resourceId);
+}
+
+public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, Map newEmbeddedResources, String htmlContentData) throws Exception
+{
+	String revisedData = getMeleteCHService().processSferyxSectionHtmlFile(UploadCollId, courseId, newEmbeddedResources, htmlContentData);
+	getMeleteCHService().editResource(courseId, resourceId, revisedData);
+}
 }
 

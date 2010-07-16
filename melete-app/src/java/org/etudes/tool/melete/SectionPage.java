@@ -749,21 +749,33 @@ public abstract class SectionPage implements Serializable {
 			{
 	//			 if (logger.isDebugEnabled()) logger.debug("editing properties for " + resourceId);
 
-            	if(section.getContentType().equals("typeEditor"))
-            	{
-            		try
-            		{
-            			String contentData =  getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir,contentEditor);
-            			if(contentData != null) contentEditor = contentData;
-            		}
-            		catch(MeleteException me)
-            		{
-            			//uncomment if we want to save section contents before throwing exception
-            			//getMeleteCHService().editResource(resourceId, contentEditor);
-            			throw me;
-            		}
-            		getMeleteCHService().editResource(resourceId, contentEditor);
-            	}
+            	FacesContext context = FacesContext.getCurrentInstance();
+        		ValueBinding binding = Util.getBinding("#{authorPreferences}");
+        		AuthorPreferencePage authPage = (AuthorPreferencePage) binding.getValue(context);
+        		authPage.setEditorFlags();
+        		//for fck editor normal processing
+        		if(section.getContentType().equals("typeEditor") && authPage.isShouldRenderFCK())
+        		{
+        			try
+        			{
+        				String contentData =  getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir,contentEditor);
+        				if(contentData != null) contentEditor = contentData;
+        			}
+        			catch(MeleteException me)
+        			{
+        				//uncomment if we want to save section contents before throwing exception
+        				//getMeleteCHService().editResource(resourceId, contentEditor);
+        				throw me;
+        			}
+        			getMeleteCHService().editResource(resourceId, contentEditor);
+        		}
+        		// sferyx saves thru save.jsp
+        		else if(section.getContentType().equals("typeEditor") && authPage.isShouldRenderSferyx())
+        		{
+        			ContentResource cr = getMeleteCHService().getResource(resourceId);
+        			if (cr != null) 
+        				this.contentEditor = new String(cr.getContent());
+        		}
 
 	            if(resourceId != null && (section.getContentType().equals("typeLink") || section.getContentType().equals("typeUpload") || section.getContentType().equals("typeLTI")))
 	            {

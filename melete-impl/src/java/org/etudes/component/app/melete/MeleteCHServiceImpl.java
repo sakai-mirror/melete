@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.net.URLDecoder;
@@ -1043,7 +1044,220 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 			meleteSecurityService.popAdvisor();
 		  }
 	 }
+	 
+	 public void editResource(String courseId,String resourceId, String contentEditor) throws Exception
+	 {
+		 ContentResourceEdit edit = null;
+	 	try
+	    {
+        	if (!isUserAuthor(courseId))
+        		{
+        		logger.info("User is not authorized to access meleteDocs collection");
+        		return;
+        		}
+   			//          setup a security advisor
+        		meleteSecurityService.pushAdvisor();
+        		if (resourceId != null)
+        		{
+    			  try
+        		  {
+    				 resourceId = beforeDecode(resourceId);
+        			 resourceId = URLDecoder.decode(resourceId,"UTF-8");
+        		  }catch(Exception decodex){}
+        		  edit = getContentservice().editResource(resourceId);
+        		  edit.setContent(contentEditor.getBytes());
+        		  edit.setContentLength(contentEditor.length());
+        		  getContentservice().commitResource(edit);
+        		  edit = null;
+        		}
+        		return;
+	    }
+	 	catch(Exception e)
+		{
+			logger.error("error saving editor content "+e.toString());
+			throw e;
+		}
+		finally
+		  {
+			if(edit != null) getContentservice().cancelResource(edit);
+			// clear the security advisor
+			meleteSecurityService.popAdvisor();
+		  }
+	 }
+	 
+	 public void addToMeleteResource(String resourceId) throws Exception
+	 {
+		//add in melete resource database table
+         MeleteResource meleteResource = new MeleteResource();
+    	 meleteResource.setResourceId(resourceId);
+    	 //set default license info to "I have not determined copyright yet" option
+    	 meleteResource.setLicenseCode(0);
+    	 sectiondb.insertResource(meleteResource);
+	 }
+	 /*
+	     *  before saving editor content, look for embedded images from local system
+	     *  and add them to collection
+	     * if filename has # sign then throw error
+	     *  Do see diego's fix to paste from word works
+	     */
+	    public String processSferyxSectionHtmlFile(String UploadCollId, String courseId, Map newEmbeddedResources, String contentEditor) throws Exception
+	    {
+	    	 String checkforimgs = contentEditor;
+	         String fileName;
+			 int startSrc =0;
+			 int endSrc = 0;
+			 String foundLink = null;
+          // look for local embedded images
+	         try
+			 {
+	         	  if (!isUserAuthor(courseId))
+	             	{
+	         		  logger.info("User is not authorized to access meleteDocs");
+	         		  return null;
+	             	}
+	         	//  remove MSword comments
+	      	  	int wordcommentIdx = -1;
+	      	  	while (checkforimgs != null && (wordcommentIdx = checkforimgs.indexOf("<!--[if gte vml 1]>")) != -1)
+	    		{
+	    			String pre = checkforimgs.substring(0,wordcommentIdx);
+	    			checkforimgs = checkforimgs.substring(wordcommentIdx+19);
+	    			int endcommentIdx = checkforimgs.indexOf("<![endif]-->");
+	    			checkforimgs = checkforimgs.substring(endcommentIdx+12);
+	    			checkforimgs= pre + checkforimgs;
+	    			wordcommentIdx = -1;
+	    		}
+	   
+	      	//strip all other MS word comments
+	      	checkforimgs = HtmlHelper.stripComments(checkforimgs);
+	      	//strip bad link and meta tags
+	      	checkforimgs = HtmlHelper.stripLinks(checkforimgs);
 
+	      	contentEditor = checkforimgs;	    		
+	      	// remove word comments code end	      	
+
+	          while(checkforimgs !=null)
+		         {
+		           // look for a href and img tag
+		        	ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
+
+	    			checkforimgs = (String)embedData.get(0);
+	    			if (embedData.size() > 1)
+	    			{
+	    				startSrc = ((Integer)embedData.get(1)).intValue();
+	    				endSrc = ((Integer)embedData.get(2)).intValue();
+	    				logger.debug("reading embeddata "+ endSrc);
+	    				foundLink = (String) embedData.get(3);
+	    			}
+	    			if (endSrc <= 0) break;
+	    			// find filename
+	    			fileName = checkforimgs.substring(startSrc, endSrc);
+	    			 String patternStr = fileName;
+	    			logger.debug("processing embed src" + fileName + endSrc);
+	    			String key = fileName.substring(fileName.lastIndexOf("/")+1);
+	    			//process for local uploaded files
+					if(fileName != null && fileName.trim().length() > 0&& (!(fileName.equals(File.separator)))
+						&& newEmbeddedResources.containsKey(key))
+					{
+		              // word paste fix
+		             patternStr= meleteUtil.replace(patternStr,"\\","/");
+		             contentEditor = meleteUtil.replace(contentEditor,fileName,patternStr);
+		             checkforimgs =  meleteUtil.replace(checkforimgs,fileName,patternStr);
+
+		             fileName = patternStr;
+		  	  	     fileName = fileName.substring(fileName.lastIndexOf("/")+1);
+
+		  	  	     String newEmbedResourceId = (String)newEmbeddedResources.get(fileName);
+		         	// in content editor replace the file found with resource reference url
+		         	 String replaceStr = getResourceUrl(newEmbedResourceId);
+		         	 replaceStr = meleteUtil.replace(replaceStr,ServerConfigurationService.getServerUrl(),"");
+		         	 logger.debug("repl;acestr in embedimage processing is " + replaceStr);
+
+		         	 // Replace all occurrences of pattern in input
+		            Pattern pattern = Pattern.compile(patternStr);
+
+		            //Rashmi's change to fix infinite loop on uploading images
+		            contentEditor = meleteUtil.replacePath(contentEditor,patternStr,replaceStr);
+		            checkforimgs = meleteUtil.replacePath(checkforimgs,patternStr,replaceStr);
+		             
+				}
+				// for internal links to make it relative
+				else
+				{
+					// add target if not provided
+	    			if(foundLink != null && foundLink.equals("link") && endSrc > 0 && checkforimgs.indexOf(">") > endSrc)
+	    			{
+	    				logger.debug("embedded link so looking for target value" + endSrc + checkforimgs.length() + checkforimgs.indexOf(">"));
+	    				String soFar =  checkforimgs.substring(0,endSrc);
+	    				String checkTarget = checkforimgs.substring(endSrc , checkforimgs.indexOf(">")+1);
+	    				String laterPart = checkforimgs.substring(checkforimgs.indexOf(">")+2);
+	    				Pattern pa = Pattern.compile("\\s[tT][aA][rR][gG][eE][tT]\\s*=");
+	    				Matcher m = pa.matcher(checkTarget);
+	    				if(!m.find())
+	    				{
+	    					String newTarget = meleteUtil.replace(checkTarget, ">", " target=_blank >");
+	    					checkforimgs = soFar + newTarget + laterPart;
+	    					contentEditor = meleteUtil.replace(contentEditor, soFar + checkTarget, soFar+newTarget);
+	    				}
+	    			}
+
+					if (fileName.startsWith(ServerConfigurationService.getServerUrl()))
+					{
+						if (fileName.indexOf("/meleteDocs") != -1)
+						{
+							String findEntity = fileName.substring(fileName.indexOf("/access") + 7);
+							Reference ref = EntityManager.newReference(findEntity);
+							logger.debug("ref properties" + ref.getType() + "," + ref.getId());
+							String newEmbedResourceId = ref.getId();
+							newEmbedResourceId = newEmbedResourceId.replaceFirst("/content", "");
+							sectiondb.getMeleteResource(newEmbedResourceId);
+						}
+						String replaceStr = meleteUtil.replace(fileName, ServerConfigurationService.getServerUrl(), "");
+						contentEditor = meleteUtil.replacePath(contentEditor, patternStr, replaceStr);
+						checkforimgs = meleteUtil.replacePath(checkforimgs, patternStr, replaceStr);
+					}
+					// process links and append http:// protocol if not provided
+					else if (!(fileName.startsWith("/") || fileName.startsWith("./") || fileName.startsWith("../") || fileName.startsWith("#"))
+							&& foundLink != null && foundLink.equals("link")
+							&& !(fileName.startsWith("http://") || fileName.startsWith("https://") || fileName.startsWith("mailto:")))
+					{
+						logger.debug("processing embed link src for appending protocol");
+						String replaceLinkStr = "http://" + fileName;
+						contentEditor = meleteUtil.replacePath(contentEditor, fileName, replaceLinkStr);
+						checkforimgs = meleteUtil.replacePath(checkforimgs, fileName, replaceLinkStr);
+					}
+					// FCK editor word paste puts bad ../../..'s in the src so remove them
+					else if(fileName.startsWith("../") && fileName.indexOf("/access/") != -1)
+					{
+						logger.debug("paste in FCK puts extra ../..");
+						String replaceStr = fileName.substring(fileName.indexOf("/access/"));
+						contentEditor = meleteUtil.replacePath(contentEditor, fileName, replaceStr);
+						checkforimgs = meleteUtil.replacePath(checkforimgs, fileName, replaceStr);
+					}
+					// convert relative paths to full urls
+					else if(fileName.indexOf("://") == -1 && fileName.indexOf("/") == -1)
+					{
+						String replaceStr = getResourceUrl(UploadCollId + fileName);
+						replaceStr = meleteUtil.replace(replaceStr, ServerConfigurationService.getServerUrl(), "");
+						contentEditor = meleteUtil.replacePath(contentEditor, fileName, replaceStr);
+						checkforimgs = meleteUtil.replacePath(checkforimgs, fileName, replaceStr);
+					}
+				}
+		            // iterate next
+ 				if(endSrc > 0 && endSrc <= checkforimgs.length())
+ 					checkforimgs =checkforimgs.substring(endSrc);
+ 				else checkforimgs = null;
+		            startSrc=0; endSrc = 0; foundLink = null;
+		         }
+			 }
+	         catch(MeleteException me) {throw me;}
+	         catch(Exception e){
+				 if(logger.isDebugEnabled()) {
+					 logger.debug(e.toString());
+					 e.printStackTrace();}
+			}
+	    	return contentEditor;
+	    }
+	    
 	 /*
 	     *  before saving editor content, look for embedded images from local system
 	     *  and add them to collection

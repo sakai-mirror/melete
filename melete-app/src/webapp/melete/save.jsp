@@ -3,7 +3,7 @@
 <%@ page import="java.util.*"%>
 <%@ page import="java.io.*"%>
 <%@page import="org.sakaiproject.component.cover.ServerConfigurationService"%>
-<%@ page import="org.etudes.tool.melete.EditSectionPage"%>
+<%@ page import="javax.faces.context.FacesContext,org.etudes.tool.melete.AddResourcesPage"%>
 <!--
  ***********************************************************************************
  * $URL$
@@ -29,7 +29,10 @@
  **********************************************************************************
 -->
 <%
-			String uploadTempDir = ServerConfigurationService.getString("melete.uploadDir", "");
+			final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
+			final AddResourcesPage aResourcePage = (AddResourcesPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "addResourcesPage");
+			String collId = aResourcePage.getCollectionId(request.getParameter("courseId"));
+			Map newEmbeddedResources = new HashMap();
 			for (Enumeration e = request.getAttributeNames(); e.hasMoreElements();)
 				{
 					String oneKey = (String) e.nextElement();
@@ -39,47 +42,51 @@
 							// store the image at uploads directory
 						try {
 							org.apache.commons.fileupload.disk.DiskFileItem item = (org.apache.commons.fileupload.disk.DiskFileItem)request.getAttribute(oneKey);
-							int lastSlash = item.getName().lastIndexOf("/");
-							String fileName = item.getName().substring(lastSlash);
-							lastSlash = fileName.lastIndexOf("\\");
-							if (lastSlash > -1 ) {
-								fileName = fileName.substring(lastSlash).replace('\\', '/');
+							String fileName = item.getName();
+							int lastSlash = fileName.lastIndexOf("/");
+							fileName = fileName.substring(lastSlash + 1);
+							
+							/* bad characters in name throw error
+							// if filename contains pound char then throw error
+							if(fileName.indexOf("#") != -1)
+					  	  	{
+					  	  	logger.debug("embedded FILE contains hash or other characters " + fileName);
+			  	  		    throw new MeleteException("embed_img_bad_filename");
+					  	  	}
+							// if filename contains percentage sign then throw error
+							if(fileName.indexOf("%") != -1)
+							{
+								try
+								{
+									String cName = URLDecoder.decode(fileName,"UTF-8");
+								}catch(Exception decodex){
+									logger.debug("embedded FILE contains percentage or other characters " + fileName);
+									throw new MeleteException("embed_img_bad_filename1");
+								}						
 							}
+							*/
 							
 							InputStream in = item.getInputStream();
-							FileOutputStream fout = null;
-							if (uploadTempDir!= null && uploadTempDir.length() > 0)	
-							{
-								fout = new FileOutputStream(uploadTempDir + fileName);
-								
-								// Transfer bytes from in to out
-								byte[] buf = new byte[1024];
-								int len;
-								while ((len = in.read(buf)) > 0) {
-								    fout.write(buf, 0, len);
-								}
-								in.close();
-								fout.close();
-							}
-							else {
-								System.out.println("melete upload directory property is not set. temp item place is:" + item.getStoreLocation());
-							}
+							byte[] buf = new byte[(int)item.getSize()];
+							in.read(buf);
+							
+							String embed_ResId = aResourcePage.addItem(fileName,(String)item.getContentType(),collId , buf);
+							in.close();
+							aResourcePage.addtoMeleteResource(embed_ResId);
+							newEmbeddedResources.put(fileName, embed_ResId);
 							
 						}  catch (Exception ex) {
 							// do nothing
 						}
 					} // if end
 				} // for end	
-				
-			// save file now
+		
+		try
+		{
 			if(request.getParameter("html_content") != null)
-			{
-				System.out.println("save has html_content");
-				
-				// need to check for edit mode
-				final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
-				final EditSectionPage eSectionPage = (EditSectionPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "editSectionPage");
-				eSectionPage.setContentEditor(request.getParameter("html_content"));
-				eSectionPage.save();
-			}							
+				aResourcePage.saveSectionHtmlItem(collId, request.getParameter("courseId"), request.getParameter("resourceId"), newEmbeddedResources, request.getParameter("html_content") );				
+		}  catch (Exception ex) {
+							// do nothing
+							ex.printStackTrace();
+						}
 %>

@@ -95,6 +95,15 @@ function transferEditordata()
 	}	
 }
 
+function saveEditor()
+{
+	var sferyxdisplay = document.getElementById("EditSectionForm:contentEditorView:sferyxDisplay");
+	if ((sferyxdisplay != undefined )&&(document.htmleditor!=undefined && document.htmleditor!= null))
+	{	  	
+		document.htmleditor.saveToDefaultLocation();         	
+	}	
+}
+
 function showmessage()
 {
 		if (document.getElementById("file1").value.length  >  0)
@@ -125,7 +134,7 @@ function saveSection()
 </script>
 
       <!-- This Begins the Main Text Area -->
-	<h:form id="EditSectionForm" enctype="multipart/form-data">	
+	<h:form id="EditSectionForm" enctype="multipart/form-data" onsubmit="saveEditor()">	
 			  <h:inputHidden id="formName" value="EditSectionForm"/>  
 		<!-- top nav bar -->
 		<f:subview id="top">
@@ -250,8 +259,7 @@ function saveSection()
 										 													 									
 											 <f:subview id="contentEditorView" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
 												<jsp:include page="contentSferyxEditor.jsp?mode=Edit"/>
-												 <h:inputHidden id="contentTextArea" value="#{editSectionPage.contentEditor}" />
-												 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
+													 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>
 											<f:subview id="othereditor" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}"><sakai:inputRichText id="otherMeletecontentEditor" value="#{editSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{editSectionPage.FCK_CollId}" /></f:subview>										
 											</td>
