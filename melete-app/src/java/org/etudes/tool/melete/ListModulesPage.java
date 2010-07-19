@@ -127,25 +127,18 @@ public class ListModulesPage implements Serializable{
 	  	nomodsFlag = false;
 	  	closedModulesFlag = false;
 	  	setShowModuleId(-1);
-	  	if (isUserAuthor() || isUserStudent())
-		{
-	  		 ValueBinding binding = Util.getBinding("#{authorPreferences}");
-	 		AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
-	 		String expFlag = preferencePage.getUserView();
-	 		if (expFlag.equals("true"))
-	 		{
-	 	      expandAllFlag = true;
-	 		}
-	 		else
-	 		{
-	 		  expandAllFlag = false;
-	 		}
-		}
-	  	else
-	  	{
-
-	  	  expandAllFlag = true;
-	  	}
+	  	expandAllFlag = false;
+	    ValueBinding binding = Util.getBinding("#{authorPreferences}");
+	 	AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
+	 	String expFlag = preferencePage.getUserView();
+	 	if (expFlag.equals("true"))
+	 	{
+	 	     expandAllFlag = true;
+	 	}
+	 	else
+	 	{
+	 	   expandAllFlag = false;
+	 	}
 	  	setBookmarkSectionId(-1);
 	  }
 
@@ -157,25 +150,19 @@ public class ListModulesPage implements Serializable{
 	  	autonumberMaterial = null;
 	  	FacesContext context = FacesContext.getCurrentInstance();
 //	  	context.getViewRoot().setTransient(true);
-		if (isUserAuthor() || isUserStudent())
-		{
-	  		 ValueBinding binding = Util.getBinding("#{authorPreferences}");
-	 		AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
-	 		String expFlag = preferencePage.getUserView();
-
-	 		if (expFlag.equals("true"))
-	 		{
-	 	      expandAllFlag = true;
-	 		}
-	 		else
-	 		{
-	 		  expandAllFlag = false;
-	 		}
-		}
-	  	else
-	  	{
-	  	  expandAllFlag = true;
-	  	}
+	  	expandAllFlag = false;
+	    ValueBinding binding = Util.getBinding("#{authorPreferences}");
+	 	AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(context);
+	 	String expFlag = preferencePage.getUserView();
+		if (expFlag.equals("true"))
+ 		{
+ 	      expandAllFlag = true;
+ 		}
+ 		else
+ 		{
+ 		  expandAllFlag = false;
+ 		}
+	
 	  	setShowModuleId(-1);
 	  	setBookmarkSectionId(-1);
 	  }
