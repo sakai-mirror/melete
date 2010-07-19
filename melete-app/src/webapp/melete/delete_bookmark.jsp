@@ -29,7 +29,7 @@
 
 <f:view>
 <sakai:view title="Modules: Delete bookmarks" toolCssHref="rtbc004.css">
-
+<%@include file="meleterightscheck.jsp" %>
  <h:form id="DeleteBookmarkForm">
  	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 

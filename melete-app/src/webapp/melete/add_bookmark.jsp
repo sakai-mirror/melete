@@ -30,6 +30,7 @@
 
 <f:view>
 <sakai:view title="Modules: Bookmark It" toolCssHref="rtbc004.css">
+<%@include file="meleterightscheck.jsp" %>
 
 <script type="text/javascript" language="javascript">
 function validate_required(value,alerttxt)

@@ -29,6 +29,7 @@
 
 <f:view>
 <sakai:view title="Modules: Print Module" toolCssHref="rtbc004.css">
+<%@include file="meleterightscheck.jsp" %>
 <form id="printModuleForm" >
      <table class="maintableCollapseWithBorder">
           <tr>

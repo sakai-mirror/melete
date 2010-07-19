@@ -212,6 +212,25 @@ public class MeleteSiteAndUserInfo {
 	    }
 	    return false;
 	}
+	
+	public boolean checkMeleteRights()
+	{
+		try
+	    {
+		  if (isSuperUser() || isUserAuthor() || isUserStudent())
+		  {
+			return true;
+		  }
+		  else
+		  {
+			return false;
+		  }
+	    }
+	    catch (Exception e) {
+			logger.error(e.toString());
+	    }
+	    return false;
+	}	
 
 	public void populateMeleteSession()
 	{
