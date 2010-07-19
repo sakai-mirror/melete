@@ -189,7 +189,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
      */
     public String deleteAction()
     {
-          if(moduleService == null)
+    	if(moduleService == null)
         	moduleService = getModuleService();
         FacesContext context = FacesContext.getCurrentInstance();
         ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
@@ -242,6 +242,10 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		FacesMessage msg = new FacesMessage("Delete Confirmation",deleteMsg);
 		msg.setSeverity(FacesMessage.SEVERITY_INFO);
 		context.addMessage(null,msg);
+		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage listAuthPage = (ListAuthModulesPage)
+	        binding.getValue(context);
+		listAuthPage.resetValues();		
 		 return "list_auth_modules";
     }
 
@@ -250,7 +254,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
      */
     public String reConfirmedDeleteAction()
     {
-          if(moduleService == null)
+    	if(moduleService == null)
         	moduleService = getModuleService();
         FacesContext context = FacesContext.getCurrentInstance();
         ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
@@ -277,6 +281,10 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			return "delete_module";
 		}
 		setSuccess(true);
+		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage listAuthPage = (ListAuthModulesPage)
+	        binding.getValue(context);
+		listAuthPage.resetValues();
 		return "list_auth_modules";
     }
 
