@@ -46,55 +46,6 @@
 </style>
 
 <script language="javascript1.2">
-
-function showupload()
-{
-	var str=document.getElementById("AddSectionForm:contentType").value;
-	var sferyxdisplay = document.getElementById("AddSectionForm:contentEditorView:sferyxDisplay");
-	
-	// for fckeditor display ME-1232
-	if(str.match("notype") || !str.match("typeEditor"))
-	{		
-
-		if(document.getElementById("othereditor") != undefined && document.getElementById("othereditor") != null)
-		  {
-		      document.getElementById("othereditor").style.visibility="hidden";
-		      document.getElementById("othereditor").style.display="none";
-		  }
-	}
-	if(sferyxdisplay != undefined && str.match("typeEditor"))	
-	 {	
-	  if(document.getElementById("AddSectionForm:contentEditorView:contentTextArea") !=undefined &&
-	  		   document.getElementById("AddSectionForm:contentEditorView:contentTextArea") != null)
-			 {
-			 var k1=document.getElementById("AddSectionForm:contentEditorView:contentTextArea").value;     
-			 if(document.htmleditor!= undefined && document.htmleditor!= null && k1 != undefined && k1 != null) 
-			 {
-			 document.htmleditor.setContent(k1); 
-			 }
-		 }
-	 }		  
- }	
-
-function transferEditordata()
-{
-    var str=document.getElementById("AddSectionForm:contentType").value;
-    if (str == "typeEditor")
-    {
-	if(document.htmleditor!= undefined && document.htmleditor!= null)
-	{
-	  window.defaultStatus="Adding content....";
-	  	var k =document.htmleditor.getContent();
-	  		 if(document.getElementById("AddSectionForm:contentEditorView:contentTextArea") !=undefined &&
-	  		   document.getElementById("AddSectionForm:contentEditorView:contentTextArea") != null)
-			 {
-				document.getElementById("AddSectionForm:contentEditorView:contentTextArea").value=k;
-			}
-		document.htmleditor.uploadMultipartContent(true);     
-	}
-	}
-			
-}
   
   function clearmessage()
  {
@@ -106,10 +57,33 @@ function contentChangeSubmit()
 {
 	   document.getElementById("AddSectionForm:contentChange").value = "true";
 }
+
+function saveEditor()
+{
+	var result;
+	var sferyxdisplay = document.getElementById("AddSectionForm:contentEditorView:sferyxDisplay");
+	if ((sferyxdisplay != undefined )&&(document.htmleditor!=undefined && document.htmleditor!= null))
+	{	  	
+		// document.htmleditor.saveToDefaultLocation();  
+		document.htmleditor.addAdditionalDynamicParameter('mode',document.getElementById("AddSectionForm:mode").value);
+        document.htmleditor.addAdditionalDynamicParameter('mId',document.getElementById("AddSectionForm:mId").value);
+        document.htmleditor.addAdditionalDynamicParameter('sId',document.getElementById("AddSectionForm:sId").value);
+        if(document.getElementById("AddSectionForm:rId") != undefined || document.getElementById("AddSectionForm:rId") != null)
+      	  document.htmleditor.addAdditionalDynamicParameter('resourceId',document.getElementById("AddSectionForm:rId").value);
+       		  
+		result = document.htmleditor.uploadMultipartContent(true);		    	
+	}	
+	return result;	
+}
 </script>
 
       <!-- This Begins the Main Text Area -->
-	<h:form id="AddSectionForm" enctype="multipart/form-data">	
+	<h:form id="AddSectionForm" enctype="multipart/form-data" onsubmit="saveEditor()">	
+	  <h:inputHidden id="mode" value="Add"/>
+	  <h:inputHidden id="mId" value="#{addSectionPage.module.moduleId}"/>
+	  <h:inputHidden id="sId" value="#{addSectionPage.section.sectionId}"/>
+	  <h:inputHidden id="rId" value="#{addSectionPage.meleteResource.resourceId}" rendered="#{addSectionPage.meleteResource !=null}"/>
+
 	<!-- top nav bar -->
 		<f:subview id="top">
 			<jsp:include page="topnavbar.jsp"/> 
@@ -203,12 +177,13 @@ function contentChangeSubmit()
 										 <td colspan="2"> 
 												
 											<f:subview id="contentEditorView" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
-														<jsp:include page="contentSferyxEditor.jsp?mode=Add"/> 
-													<h:inputHidden id="contentTextArea" value="#{addSectionPage.contentEditor}" />
+														<jsp:include page="contentSferyxEditor.jsp?mode=Add"/> 								
 													
 													 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>																																
-											<f:subview id="othereditor" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}"><sakai:inputRichText  id="otherMeletecontentEditor" value="#{addSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{addSectionPage.FCK_CollId}" /></f:subview>
+											<f:subview id="othereditor" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}">
+												<sakai:inputRichText  id="otherMeletecontentEditor" value="#{addSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{addSectionPage.FCK_CollId}" />
+											</f:subview>
 										</td>
 										</tr>
 										<tr>
@@ -221,7 +196,7 @@ function contentChangeSubmit()
 									</table>	 
 									
 	          <div class="actionBar" align="left">	
-				<h:commandButton id="submitsave" action="#{addSectionPage.save}" rendered="#{addSectionPage.shouldRenderEditor}" onclick="transferEditordata()" value="#{msgs.im_add_button}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
+				<h:commandButton id="submitsave" action="#{addSectionPage.save}" rendered="#{addSectionPage.shouldRenderEditor}" value="#{msgs.im_add_button}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
 				<h:commandButton id="submitsave1" action="#{addSectionPage.save}" rendered="#{addSectionPage.shouldRenderUpload}" onclick="clearmessage()" value="#{msgs.im_add_button}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
 				<h:commandButton id="submitsave2" action="#{addSectionPage.save}" rendered="#{!addSectionPage.shouldRenderEditor && !addSectionPage.shouldRenderUpload}" value="#{msgs.im_add_button}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
 				<h:commandButton id="cancelButton" immediate="true" action="#{addSectionPage.cancel}" value="#{msgs.im_cancel}"  onclick="clearmessage()" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>

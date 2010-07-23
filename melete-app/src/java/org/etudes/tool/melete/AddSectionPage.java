@@ -155,13 +155,11 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	 		}
 	   //   save section
 		    if (logger.isDebugEnabled()) logger.debug("AddSectionpage:inserting section");
-		     String uploadHomeDir = ServerConfigurationService.getString("melete.uploadDir", "");
+		
 		    String addCollId = getMeleteCHService().getCollectionId( section.getContentType(), module.getModuleId());
 
-			// step 1: insert section
-			Integer newSectionId = sectionService.insertSection(module,section);
-			section.setSectionId(newSectionId);
-			section.setModule(module);
+			// step 1: insert section is moved at the click of add button
+		
 
 //			Step2: if section has content then only create section resource and resource
 			if(!section.getContentType().equals("notype"))
@@ -183,7 +181,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 					selResourceIdFromList = null;
 					if(section.getContentType().equals("typeEditor"))
 					{
-						   String newResourceId = addResourceToMeleteCollection(uploadHomeDir,addCollId);
+						   String newResourceId = addResourceToMeleteCollection(addCollId);
 						   meleteResource.setResourceId(newResourceId);
 					}
 					else getMeleteCHService().editResourceProperties(meleteResource.getResourceId(), secResourceName, secResourceDescription);
@@ -192,7 +190,15 @@ public class AddSectionPage extends SectionPage implements Serializable{
 
 			//step 3: insert section resource in melete table i.e. if new resource then insert in melete resource table
 			//	otherwise just insert in sectionResource table
-				if(selResourceIdFromList == null) sectionService.insertMeleteResource(section, meleteResource);
+				binding = Util.getBinding("#{authorPreferences}");
+    			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
+				if(selResourceIdFromList == null && section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx())
+				{
+					logger.debug("updating resources for sferyx compose add: " + meleteResource.getResourceId());
+					sectionService.updateResource(meleteResource);
+					sectionService.insertSectionResource(section, meleteResource);
+				}
+				else if(selResourceIdFromList == null) sectionService.insertMeleteResource(section, meleteResource);
 				else
 				{
 					sectionService.updateResource(meleteResource);
@@ -205,11 +211,10 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			{
 			logger.debug("error in inserting section "+ mex.toString());
 			//rollback and delete section
-			try{
-				if(selResourceIdFromList != null) sectionService.deleteResource(meleteResource);
-				if(section.getSectionId()!= null && section.getSectionId().intValue() != 0)
-					sectionService.deleteSection(section,(String)sessionMap.get("courseId"), null);
-				} catch (Exception e){}
+			try
+			{
+				deleteSection(sessionMap);
+			} catch (Exception e){}
 			String errMsg = bundle.getString(mex.getMessage());
 			// uncomment it after sferyx brings uploadfile limit param
 			/*if(mex.getMessage().equals("embed_image_size_exceed"))
@@ -229,9 +234,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			{
 			logger.debug("error in inserting section "+ ex.toString());
 			try{
-			if(selResourceIdFromList != null) sectionService.deleteResource(meleteResource);
-			if(section.getSectionId()!= null && section.getSectionId().intValue() != 0)
-					sectionService.deleteSection(section,(String)sessionMap.get("courseId"), null);
+				deleteSection(sessionMap);
 			} catch (Exception e){}
 			String errMsg = bundle.getString("add_section_fail");
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"add_section_fail",errMsg));
@@ -277,7 +280,8 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	     // create new instance of section model
 	     resetSectionValues();
 	     setSizeWarning(false);
-
+	     addBlankSection();
+	     
 		return "addmodulesections";
 	}
 
@@ -341,9 +345,8 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	  		// local file is selected so create a resource to move on
 	  	  if(selResourceIdFromList == null)
 	  		{
-            	   String addCollectionId = getMeleteCHService().getUploadCollectionId();
-            	   String uploadHomeDir = ServerConfigurationService.getString("melete.uploadDir", "");
-            	   String newResourceId = addResourceToMeleteCollection(uploadHomeDir,addCollectionId);
+            	   String addCollectionId = getMeleteCHService().getUploadCollectionId();            	
+            	   String newResourceId = addResourceToMeleteCollection(addCollectionId);
 				   getMeleteResource().setResourceId(newResourceId);
             	   secResourceName = getDisplayName(newResourceId);
 				   logger.debug("sec name after reading from display name prop" + secResourceName);
@@ -447,7 +450,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 
 				secResourceName = newURLTitle;
 				String addCollectionId = getMeleteCHService().getUploadCollectionId();
-				String newResourceId = addResourceToMeleteCollection(null, addCollectionId);
+				String newResourceId = addResourceToMeleteCollection(addCollectionId);
 				getMeleteResource().setResourceId(newResourceId);
 				//currLinkUrl = getLinkUrl();
 				currLinkUrl = getLinkContent(newResourceId);				
@@ -512,7 +515,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 
 				secResourceName = newURLTitle;
 				String addCollectionId = getMeleteCHService().getUploadCollectionId();
-				String newResourceId = addResourceToMeleteCollection(null, addCollectionId);
+				String newResourceId = addResourceToMeleteCollection( addCollectionId);
 				getMeleteResource().setResourceId(newResourceId);
 				currLinkUrl = getLTIDescriptor();
 			}
@@ -585,4 +588,50 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		  shouldRenderNotype = true;
 		  if(section != null) section = null;
 	    }
+	  
+	  /*
+	   *  click of add creates a blank section
+	   */
+	  public void addBlankSection()
+	  {
+		  try
+		  {	
+			getSection();  
+			Integer newSectionId = sectionService.insertSection(module,section);
+			section.setSectionId(newSectionId);
+			section.setModule(module);
+		  }
+		  catch(Exception ex)
+		  {
+			  // do nothing
+		  }
+	  }
+	  
+	  /*
+	   * Deletes section 
+	   */
+	  private void deleteSection(Map sessionMap) throws Exception
+	  {
+		  if(selResourceIdFromList != null) sectionService.deleteResource(meleteResource);
+		  if(section.getSectionId()!= null && section.getSectionId().intValue() != 0)
+			  sectionService.deleteSection(section,(String)sessionMap.get("courseId"), null);
+	  }
+	 /*
+	  * Add section cancel deletes the blank section
+	  */
+	  public String cancel()
+	  {
+		  FacesContext context = FacesContext.getCurrentInstance();
+		  Map sessionMap = context.getExternalContext().getSessionMap();
+		  try
+		  {
+			  deleteSection(sessionMap);
+		  }
+		  catch(Exception ex)
+		  {
+			  // do nothing
+		  }
+
+		  return super.cancel();
+	  }
 }

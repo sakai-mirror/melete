@@ -672,7 +672,8 @@ public class ListAuthModulesPage implements Serializable
 			addPage.setSection(null);
 			addPage.resetSectionValues();
 			addPage.setModule(mdbean.getModule());
-
+			addPage.addBlankSection();
+			
 			Map sessionMap = context.getExternalContext().getSessionMap();
 			sessionMap.put("currModule", mdbean.getModule());
 			count = 0;
