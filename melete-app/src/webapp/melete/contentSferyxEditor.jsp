@@ -35,14 +35,13 @@ final AuthorPreferencePage authorPreferencePage = (AuthorPreferencePage)facesCon
 
 
 String data = null;
-String rId = null;
 
 if(request.getParameter("mode")!= null && request.getParameter("mode").equals("Edit"))
 {
 	final EditSectionPage eSectionPage = (EditSectionPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "editSectionPage");
-	data = eSectionPage.getContentEditor();	
+	
 	if(eSectionPage.getMeleteResource() != null)
-		rId = eSectionPage.getMeleteResource().getResourceId();		
+		data = eSectionPage.getResourceContentsForSection(eSectionPage.getMeleteResource().getResourceId());				
 }
 else
 {
@@ -58,7 +57,7 @@ if(data != null){
 String browseloca = meleteSiteAndUserInfo.getRemoteBrowseLocation() ;
 String browselinkloca = meleteSiteAndUserInfo.getRemoteLinkBrowseLocation() ;
 String docloca =  meleteSiteAndUserInfo.getMeleteDocsLocation() ;
-String saveloca =  meleteSiteAndUserInfo.getMeleteDocsSaveLocation() + "?mode=" + request.getParameter("mode") + "&resourceId="+rId + "&courseId="+meleteSiteAndUserInfo.getCourse_id();
+String saveloca =  meleteSiteAndUserInfo.getMeleteDocsSaveLocation() ;
 String editorloca =  meleteSiteAndUserInfo.getEditorArchiveLocation() ;
 String absloca = meleteSiteAndUserInfo.getAbsoluteTranslationLocation();
 boolean renderSferyx = authorPreferencePage.isShouldRenderSferyx();
@@ -98,6 +97,7 @@ document.writeln('<PARAM NAME="scriptable" VALUE="true">');
 				<%if(data != null) {%>	
 					document.writeln('<PARAM name="initialURLEncodedContent" VALUE="<%=data%>">');
 				<%}%>
+				document.writeln('<PARAM name="parametersToSend" VALUE="courseId=<%=meleteSiteAndUserInfo.getCourse_id()%>">');
 				document.writeln('<PARAM name="saveURL" VALUE="<%=saveloca%>">');
 				document.writeln('<PARAM NAME = "uploadContentAsMultipartFormData" VALUE="true">');
 				document.writeln('<PARAM NAME="saveEntireFile" VALUE="true">');
@@ -108,7 +108,7 @@ document.writeln('<PARAM NAME="scriptable" VALUE="true">');
 				document.writeln('<PARAM NAME ="remoteBrowseLocation" VALUE="<%=browseloca%>">');
 				document.writeln('<PARAM NAME ="remoteLinksBrowseLocation" VALUE="<%=browselinkloca%>">');
 				document.writeln('<PARAM NAME ="absoluteDocumentTranslationURL" VALUE="<%=docloca%>">');
-				document.writeln('<PARAM NAME ="uploadedObjectsTranslationPath" VALUE="<%=docloca%>">');
+				
 				document.writeln('<PARAM NAME ="variableName" VALUE="html_content">');
 				document.writeln('<PARAM NAME ="menusToRemove" VALUE="menuFile,menuForm">');
 				document.writeln('<PARAM NAME ="statusbarVisible" VALUE="false">');

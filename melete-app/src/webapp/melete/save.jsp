@@ -2,15 +2,14 @@
 <%@ page import="org.apache.commons.fileupload.disk.DiskFileItem"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.io.*"%>
-<%@page import="org.sakaiproject.component.cover.ServerConfigurationService"%>
-<%@ page import="javax.faces.context.FacesContext,org.etudes.tool.melete.AddResourcesPage"%>
+<%@ page import="javax.faces.context.FacesContext,  org.etudes.tool.melete.AddResourcesPage"%>
 <!--
  ***********************************************************************************
  * $URL$
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -29,10 +28,13 @@
  **********************************************************************************
 -->
 <%
+			System.out.println("SAVE PAGE CALLED !!!!");
 			final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 			final AddResourcesPage aResourcePage = (AddResourcesPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "addResourcesPage");
+						
 			String collId = aResourcePage.getCollectionId(request.getParameter("courseId"));
 			Map newEmbeddedResources = new HashMap();
+			int count = 1;
 			for (Enumeration e = request.getAttributeNames(); e.hasMoreElements();)
 				{
 					String oneKey = (String) e.nextElement();
@@ -45,6 +47,11 @@
 							String fileName = item.getName();
 							int lastSlash = fileName.lastIndexOf("/");
 							fileName = fileName.substring(lastSlash + 1);
+							
+							// for word paste files
+							lastSlash = fileName.lastIndexOf("\\");
+							if(lastSlash != -1)
+								fileName = fileName.substring(lastSlash + 1);
 							
 							/* bad characters in name throw error
 							// if filename contains pound char then throw error
@@ -73,8 +80,9 @@
 							String embed_ResId = aResourcePage.addItem(fileName,(String)item.getContentType(),collId , buf);
 							in.close();
 							aResourcePage.addtoMeleteResource(embed_ResId);
-							newEmbeddedResources.put(fileName, embed_ResId);
 							
+							newEmbeddedResources.put((count + fileName), embed_ResId);
+							count++;
 						}  catch (Exception ex) {
 							// do nothing
 						}
@@ -84,7 +92,9 @@
 		try
 		{
 			if(request.getParameter("html_content") != null)
-				aResourcePage.saveSectionHtmlItem(collId, request.getParameter("courseId"), request.getParameter("resourceId"), newEmbeddedResources, request.getParameter("html_content") );				
+			{			
+				aResourcePage.saveSectionHtmlItem(collId, request.getParameter("courseId"), request.getParameter("resourceId"), request.getParameter("mId"), request.getParameter("sId"), newEmbeddedResources, request.getParameter("html_content") );
+			}				
 		}  catch (Exception ex) {
 							// do nothing
 							ex.printStackTrace();

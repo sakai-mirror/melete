@@ -36,72 +36,30 @@
 <%@ page import="org.sakaiproject.util.ResourceLoader"%>
 
 <% 
+	
 	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 	String mensaje=bundle .getString("editmodulesections_uploading");
-	
+		
 %>
 
 <script type="text/javascript" language="javascript1.2">
-function fillupload()
-{
-		var k =document.getElementById("file1").value;
-		document.getElementById("EditSectionForm:filename").value=k;
-}
-
-function showupload()
-{
-
-	defaultStatus = "Done";
-	// just for the display of fckeditor ME-1232
-	var str=document.getElementById("EditSectionForm:contentType").value;
-	var sferyxdisplay = document.getElementById("EditSectionForm:contentEditorView:sferyxDisplay");  
-	
-	if(str.match("notype") || !str.match("typeEditor") )
-	{
-		if(document.getElementById("othereditor") != undefined && document.getElementById("othereditor") != null)
-		  {
-		      document.getElementById("othereditor").style.visibility="hidden";
-		      document.getElementById("othereditor").style.display="none";
-		  }
-	}
-	
-	if(sferyxdisplay != undefined && str.match("typeEditor"))
-		{	
-		 if(document.getElementById("EditSectionForm:contentEditorView:contentTextArea") != undefined && 
-	  	 document.getElementById("EditSectionForm:contentEditorView:contentTextArea") != null)
-			 {
-			 var k1=document.getElementById("EditSectionForm:contentEditorView:contentTextArea").value;     
-			 if(document.htmleditor != undefined && document.htmleditor != null && k1 != undefined && k1 !=null)
-				{					
-					 document.htmleditor.setContent(k1); 
-		       	}
-			}	
-		}
-		
-}	
-
-function transferEditordata()
-{
-	var sferyxdisplay = document.getElementById("EditSectionForm:contentEditorView:sferyxDisplay");
-	if ((sferyxdisplay != undefined )&&(document.htmleditor!=undefined && document.htmleditor!= null))
-	{
-	  	var k = document.htmleditor.getContent();
-	  	 if(document.getElementById("EditSectionForm:contentEditorView:contentTextArea") != undefined && 
-	  	 document.getElementById("EditSectionForm:contentEditorView:contentTextArea") != null)
-			 {
-                document.getElementById("EditSectionForm:contentEditorView:contentTextArea").value=k;
-		document.htmleditor.uploadMultipartContent(true);
-         	}
-	}	
-}
 
 function saveEditor()
 {
+	var result;
 	var sferyxdisplay = document.getElementById("EditSectionForm:contentEditorView:sferyxDisplay");
 	if ((sferyxdisplay != undefined )&&(document.htmleditor!=undefined && document.htmleditor!= null))
 	{	  	
-		document.htmleditor.saveToDefaultLocation();         	
+		// document.htmleditor.saveToDefaultLocation();  
+		document.htmleditor.addAdditionalDynamicParameter('mode',document.getElementById("EditSectionForm:mode").value);
+        document.htmleditor.addAdditionalDynamicParameter('mId',document.getElementById("EditSectionForm:mId").value);
+        document.htmleditor.addAdditionalDynamicParameter('sId',document.getElementById("EditSectionForm:sId").value);
+        if(document.getElementById("EditSectionForm:rId") != undefined || document.getElementById("EditSectionForm:rId") != null)
+      	  document.htmleditor.addAdditionalDynamicParameter('resourceId',document.getElementById("EditSectionForm:rId").value);
+       		  
+		result = document.htmleditor.uploadMultipartContent(true);		    	
 	}	
+	return result;	
 }
 
 function showmessage()
@@ -112,11 +70,7 @@ function showmessage()
 		   } 
   }
 
-function previewSec()
-{
-transferEditordata();
-window.open('editpreviewEditor.jsf');
-}
+
 function saveSection()
 {
 	var elementToGet = "EditSectionForm"+ ":" + "saveForBookmarkbutton";  
@@ -136,6 +90,11 @@ function saveSection()
       <!-- This Begins the Main Text Area -->
 	<h:form id="EditSectionForm" enctype="multipart/form-data" onsubmit="saveEditor()">	
 			  <h:inputHidden id="formName" value="EditSectionForm"/>  
+			  <h:inputHidden id="mode" value="Edit"/>
+			  <h:inputHidden id="mId" value="#{editSectionPage.module.moduleId}"/>
+			  <h:inputHidden id="sId" value="#{editSectionPage.section.sectionId}"/>
+			  <h:inputHidden id="rId" value="#{editSectionPage.meleteResource.resourceId}" rendered="#{editSectionPage.meleteResource !=null}"/>
+		
 		<!-- top nav bar -->
 		<f:subview id="top">
 			<jsp:include page="topnavbar.jsp"/> 
@@ -162,21 +121,21 @@ function saveSection()
                    <!-- table header -->
 	                   <tr>
 			            <td colspan="2" height="20" class="maintabledata2">            	   
-				     		<h:commandLink id="editPrevButton" action="#{editSectionPage.editPrevSection}" rendered="#{editSectionPage.hasPrev}">
+				     		<h:commandLink id="editPrevButton" onmousedown="saveEditor();" action="#{editSectionPage.editPrevSection}" rendered="#{editSectionPage.hasPrev}">
 			 					 <h:outputText id="text4_4" value="#{msgs.editmodulesections_edit_prev}"/>
 							</h:commandLink> 
 							<h:outputText id="text4_5" value="#{msgs.editmodulesections_edit_prev}" rendered="#{!editSectionPage.hasPrev}"/>
 							&laquo;
-			     			<h:commandLink id="TOCButton"  action="#{editSectionPage.goTOC}">
+			     			<h:commandLink id="TOCButton"  onmousedown="saveEditor();" action="#{editSectionPage.goTOC}">
 									<h:outputText id="toc" value="#{msgs.editmodulesections_TOC}" />
 								</h:commandLink>
 							&raquo;   
-				     		<h:commandLink id="editNextButton" action="#{editSectionPage.editNextSection}" rendered="#{editSectionPage.hasNext}">
+				     		<h:commandLink id="editNextButton" onmousedown="saveEditor();" action="#{editSectionPage.editNextSection}" rendered="#{editSectionPage.hasNext}">
 			 					 <h:outputText id="text4_2" value="#{msgs.editmodulesections_edit_next}"/>
 							</h:commandLink>
 							<h:outputText id="text4_6" value="#{msgs.editmodulesections_edit_next}" rendered="#{!editSectionPage.hasNext}"/>
 							  <h:outputText id="text4_3" value=" / "/>				
-				     		<h:commandLink action="#{editSectionPage.saveAndAddAnotherSection}">
+				     		<h:commandLink onmousedown="saveEditor();" action="#{editSectionPage.saveAndAddAnotherSection}">
 			 					 <h:outputText id="text5" value="#{msgs.editmodulesections_add_new}"/>
 							</h:commandLink> 						   	
 						</td>
@@ -258,16 +217,18 @@ function saveSection()
 										 <td colspan="2">
 										 													 									
 											 <f:subview id="contentEditorView" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
-												<jsp:include page="contentSferyxEditor.jsp?mode=Edit"/>
+												<jsp:include page="contentSferyxEditor.jsp?mode=Edit" flush="true"/>
 													 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>
-											<f:subview id="othereditor" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}"><sakai:inputRichText id="otherMeletecontentEditor" value="#{editSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{editSectionPage.FCK_CollId}" /></f:subview>										
+											<f:subview id="othereditor" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}">
+												<sakai:inputRichText id="otherMeletecontentEditor" value="#{editSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{editSectionPage.FCK_CollId}" />
+											</f:subview>										
 											</td>
 									  </tr>	
 								  <tr>
 								   <td colspan="2">
 												<f:subview id="ResourcePropertiesPanel" rendered="#{editSectionPage.meleteResource !=null && !editSectionPage.shouldRenderNotype}">
-													<jsp:include page="edit_sec_resourcePropertiesPanel.jsp"/>
+													<jsp:include page="edit_sec_resourcePropertiesPanel.jsp" flush="true"/>
 												</f:subview>
 									</td>	
 									</tr>																									

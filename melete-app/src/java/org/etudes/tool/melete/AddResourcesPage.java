@@ -65,7 +65,7 @@ public class AddResourcesPage {
   private ArrayList<String> success_fields = null;
   /** Dependency:  The logging service. */
   protected Log logger = LogFactory.getLog(AddResourcesPage.class);
-
+    
   public AddResourcesPage()
   {
   }
@@ -521,20 +521,49 @@ public ArrayList<String> getSuccess_fields()
 	return this.success_fields;
 }
 
+/*
+ * Entry point to get collection so that save.jsp knows where to upload items. 
+ */
 public String getCollectionId(String courseId)
 {
 	return getMeleteCHService().getUploadCollectionId(courseId);
 }
 
+/*
+ *  Adds the resource to melete resource table
+ */
 public void addtoMeleteResource(String resourceId) throws Exception
 {
 	getMeleteCHService().addToMeleteResource(resourceId);
 }
 
-public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, Map newEmbeddedResources, String htmlContentData) throws Exception
+/*
+ *  Saves/creates the section_xxx.html file for sferyx editor.
+ *  If Section_xxx.html resource doesn't exist for add section or when content is added to a notype section
+ *  then this method creates the resource item and adds to melete resource table.
+ */
+public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, String moduleId, String sectionId, Map newEmbeddedResources, String htmlContentData) throws Exception
 {
-	String revisedData = getMeleteCHService().processSferyxSectionHtmlFile(UploadCollId, courseId, newEmbeddedResources, htmlContentData);
-	getMeleteCHService().editResource(courseId, resourceId, revisedData);
+	String revisedData = getMeleteCHService().findLocalImagesEmbeddedInEditor(courseId, newEmbeddedResources, htmlContentData);
+	logger.debug("resource id in save section html method:" + resourceId + moduleId + sectionId);
+	try{	
+		// in case of add and edit from notype to compose section 
+		if (resourceId == null || resourceId.length() == 0) throw new MeleteException("resource_null");
+		getMeleteCHService().editResource(courseId, resourceId, revisedData);
+	}
+	catch (Exception ex)
+	{		
+		byte[] secContentData = new byte[revisedData.length()];
+		secContentData = revisedData.getBytes();
+
+		String secResourceName = getMeleteCHService().getTypeEditorSectionName(new Integer(sectionId));
+		ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true,
+				secResourceName, "compose content");
+		String newResourceId = getMeleteCHService().addResourceItem(secResourceName, getMeleteCHService().MIME_TYPE_EDITOR,
+				getMeleteCHService().getCollectionId(courseId, "typeEditor", new Integer(moduleId)), secContentData,res);
+		addtoMeleteResource(newResourceId);
+	}
 }
+
 }
 

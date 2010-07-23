@@ -32,7 +32,7 @@
  <h:outputText value="#{msgs.licenseform_resources_proper_pan_cstatus}" />	 
  </h:column>
  <h:column>
- <h:selectOneMenu id="licenseCodes" value="#{licensePage.licenseCodes}" valueChangeListener="#{licensePage.hideLicense}" onchange="transferEditordata(); this.form.submit();" >
+ <h:selectOneMenu id="licenseCodes" value="#{licensePage.licenseCodes}" valueChangeListener="#{licensePage.hideLicense}" onchange="saveEditor(); this.form.submit();" >
 	 <f:selectItems value="#{licensePage.licenseTypes}" />							
  </h:selectOneMenu>
  <h:outputText value="          " styleClass="ExtraPaddingClass" />

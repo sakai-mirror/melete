@@ -335,6 +335,34 @@ public class MeleteUtil {
 			return s;
 		}
 		
+	public String replaceaPath(String s, String one, String another)
+		{
+			if (s.equals("")) return "";
+			if ((one == null)||(one.length() == 0)) return s;
+			String checkOne = "=\""+one+"\"";
+			another = "=\""+another+"\"";
+
+			if(s.indexOf(checkOne) != -1)
+			{
+				s=replace(s,checkOne, another);
+				return s;
+			}
+			checkOne = "='"+one+"'";
+			if(s.indexOf(checkOne) != -1)
+			{
+				s=replace(s,checkOne, another);
+				return s;
+			}
+			checkOne = "="+one;
+			if(s.indexOf(checkOne) != -1)
+			{
+				s=replace(s,checkOne, another);
+				return s;
+			}
+
+			return s;
+		}
+		
 		public void deleteFiles(File delfile){
 
 			if (delfile.isDirectory()){

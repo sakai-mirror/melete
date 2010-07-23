@@ -65,7 +65,7 @@ public interface MeleteCHService{
 	 public List getListofMediaFromCollection(String collId);
 	 public List getListofFilesFromCollection(String collId);
 	 public List getMemberNamesCollection(String collId);
-	 public String findLocalImagesEmbeddedInEditor(String uploadHomeDir, String contentEditor)throws MeleteException;
+	 public String findLocalImagesEmbeddedInEditor(String courseId, Map newEmbeddedResources, String contentEditor)throws MeleteException;
 	 public ContentResource getResource(String resourceId) throws Exception;
 	 public void checkResource(String resourceId) throws Exception;
 	 public void editResource(String resourceId, String contentEditor) throws Exception;
@@ -83,6 +83,5 @@ public interface MeleteCHService{
 	  public String getTypeEditorSectionName(Integer sectionId);
 	  public void editResource(String courseId,String resourceId, String contentEditor) throws Exception;
 	  public void addToMeleteResource(String resourceId) throws Exception;
-	  public String processSferyxSectionHtmlFile(String UploadCollId, String courseId, Map newEmbeddedResources, String contentEditor) throws Exception;
 }
 

@@ -117,7 +117,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		{		
 			setFCKCollectionAttrib();				
 		}
-		if (this.section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx()) preferencePage.setDisplaySferyx(true);
+		if (this.section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx()) 
+			preferencePage.setDisplaySferyx(true);
 
 		return "success";
 	}
@@ -316,8 +317,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 			// save section
 			if (logger.isDebugEnabled()) logger.debug("EditSectionpage:save section" + section.getContentType());
-			String uploadHomeDir = ServerConfigurationService.getString("melete.uploadDir", "");
-
+			
 			if (section.getContentType().equals("notype"))
 			{
 				meleteResource = null;
@@ -333,16 +333,20 @@ public class EditSectionPage extends SectionPage implements Serializable
 					{
 						if (logger.isDebugEnabled()) logger.debug("Ist step of edit - check meleteResource" + meleteResource.getResourceId());
 					  getMeleteCHService().checkResource(meleteResource.getResourceId());
-					  editMeleteCollectionResource(uploadHomeDir, meleteResource.getResourceId());
+					  editMeleteCollectionResource(meleteResource.getResourceId());
 					}
-					else
+					else if (meleteResource != null && meleteResource.getResourceId() == null)
 					{
-						logger.debug("old type is " + oldType + meleteResource);
-						if (oldType != null && oldType.equals("notype"))  throw new Exception();
-
+						throw new MeleteException("resource_null");
+					}
+					else	
+					{
+/*						logger.debug("old type is " + oldType + meleteResource);
+						if (oldType != null && oldType.equals("notype"))  throw new Exception();*/
+						
 						//resource is removed
 						if (logger.isDebugEnabled()) logger.debug("Resource ID is null i.e resource is removed");
-						editMeleteCollectionResource(uploadHomeDir, null);
+						editMeleteCollectionResource( null);
 						meleteResource = null;
 						//throw new Exception();
 					}
@@ -352,7 +356,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 					// resource is not there when no content type is choosen
 					if (logger.isDebugEnabled()) logger.debug("resource is new i.e. coming from notype content");
 					String addCollId = getMeleteCHService().getCollectionId(section.getContentType(), module.getModuleId());
-					String newResourceId = addResourceToMeleteCollection(uploadHomeDir, addCollId);
+					String newResourceId = addResourceToMeleteCollection(addCollId);
 					meleteResource.setResourceId(newResourceId);
 					if (logger.isDebugEnabled()) logger.debug("new resource id" + newResourceId + meleteResource);
 					/* here create association and insert new resource */
@@ -459,6 +463,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		aPage.setSection(null);
 		aPage.resetSectionValues();
 		aPage.setModule(module);
+		aPage.addBlankSection();
+		
 		logger.debug("render flags:" + aPage.getShouldRenderEditor() + authPage.isShouldRenderFCK());
 		return "addmodulesections";
 	}
