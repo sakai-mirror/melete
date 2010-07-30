@@ -31,7 +31,12 @@
 			System.out.println("SAVE PAGE CALLED !!!!");
 			final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 			final AddResourcesPage aResourcePage = (AddResourcesPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "addResourcesPage");
-						
+	//	    AddResourcesPage aResourcePage = (AddResourcesPage) facesContext.getExternalContext().getSessionMap().get("addResourcesPage");
+			
+			String status = (String)request.getAttribute("upload.status");
+		
+			if( status != null && status.equalsIgnoreCase("ok"))
+			{	
 			String collId = aResourcePage.getCollectionId(request.getParameter("courseId"));
 			Map newEmbeddedResources = new HashMap();
 			int count = 1;
@@ -52,34 +57,14 @@
 							lastSlash = fileName.lastIndexOf("\\");
 							if(lastSlash != -1)
 								fileName = fileName.substring(lastSlash + 1);
-							
-							/* bad characters in name throw error
-							// if filename contains pound char then throw error
-							if(fileName.indexOf("#") != -1)
-					  	  	{
-					  	  	logger.debug("embedded FILE contains hash or other characters " + fileName);
-			  	  		    throw new MeleteException("embed_img_bad_filename");
-					  	  	}
-							// if filename contains percentage sign then throw error
-							if(fileName.indexOf("%") != -1)
-							{
-								try
-								{
-									String cName = URLDecoder.decode(fileName,"UTF-8");
-								}catch(Exception decodex){
-									logger.debug("embedded FILE contains percentage or other characters " + fileName);
-									throw new MeleteException("embed_img_bad_filename1");
-								}						
-							}
-							*/
-							
+																			
 							InputStream in = item.getInputStream();
 							byte[] buf = new byte[(int)item.getSize()];
 							in.read(buf);
 							
 							String embed_ResId = aResourcePage.addItem(fileName,(String)item.getContentType(),collId , buf);
 							in.close();
-							aResourcePage.addtoMeleteResource(embed_ResId);
+							aResourcePage.addtoMeleteResource(null,embed_ResId);
 							
 							newEmbeddedResources.put((count + fileName), embed_ResId);
 							count++;
@@ -96,7 +81,7 @@
 				aResourcePage.saveSectionHtmlItem(collId, request.getParameter("courseId"), request.getParameter("resourceId"), request.getParameter("mId"), request.getParameter("sId"), newEmbeddedResources, request.getParameter("html_content") );
 			}				
 		}  catch (Exception ex) {
-							// do nothing
-							ex.printStackTrace();
-						}
+			aResourcePage.addToHm_Msgs(request.getParameter("sId"),"add_section_fail");
+			}
+		}					
 %>

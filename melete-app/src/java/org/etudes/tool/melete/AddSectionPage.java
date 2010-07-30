@@ -97,7 +97,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
           if(this.contentEditor == null || this.contentEditor.length()== 0)
           {
-                  this.contentEditor = new String("Compose content here");
+                  this.contentEditor = bundle.getString("compose_content");
           }
           return this.contentEditor;
     }
@@ -144,6 +144,26 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			return "failure";
 		   }
 	    //validation 3: if upload a new file check fileName format - moved to uploadSerctionContent()
+		
+		// validation 3-1: if typeEditor and saved by sferyx then check for error messages
+		if (section.getContentType().equals("typeEditor"))
+		{
+			binding = Util.getBinding("#{addResourcesPage}");
+			AddResourcesPage resourcesPage = (AddResourcesPage) binding.getValue(context);
+			HashMap<String,ArrayList<String>> save_err = resourcesPage.getHm_msgs();
+			logger.debug("hashmap in addsectionpage is " + save_err);
+			if(save_err != null && !save_err.isEmpty() && save_err.containsKey(section.getSectionId().toString()))
+			{
+				ArrayList<String> errs = save_err.get(section.getSectionId().toString());
+				for(String err:errs)
+				{
+				String errMsg = resourcesPage.getMessageText(err);
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, err, errMsg));
+				}
+				resourcesPage.removeFromHm_Msgs(section.getSectionId().toString());	
+				return "failure";
+			}
+		}
 	  	// validation 4: check link url - moved to addresourcetoMeleteCollection()
 	  	 try
 		 {
@@ -168,6 +188,9 @@ public class AddSectionPage extends SectionPage implements Serializable{
 				selResourceIdFromList = getSelResourceIdFromList();
 
 			//	step 2.1:existing resource is selected for section content
+				binding = Util.getBinding("#{authorPreferences}");
+    			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
+    			
 				if(!section.getContentType().equals("typeEditor") && selResourceIdFromList != null)
 					{
 					if (logger.isDebugEnabled()) logger.debug("existing resource is selected");
@@ -179,37 +202,51 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			//	Step 2.2: add the new resource to course site module /uploads collection
 				// in case of upload and link, resource is added on clicking Continue
 					selResourceIdFromList = null;
-					if(section.getContentType().equals("typeEditor"))
+					if(section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderFCK())
 					{
 						   String newResourceId = addResourceToMeleteCollection(addCollId);
 						   meleteResource.setResourceId(newResourceId);
 					}
+					else if (section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx())
+					{
+						// get secResource object
+						secResource = sectionService.getSectionResourcebyId(section.getSectionId().toString());
+						logger.debug("after fetching section resource object is:" + secResource.getResource() + secResource.getSectionId());
+						meleteResource.setResourceId(secResource.getResource().getResourceId());						
+						section.setSectionResource(secResource);
+						// refresh contentEditor 
+						ContentResource cr = getMeleteCHService().getResource(secResource.getResource().getResourceId());
+						if (cr != null) this.contentEditor = new String(cr.getContent());					
+					}
 					else getMeleteCHService().editResourceProperties(meleteResource.getResourceId(), secResourceName, secResourceDescription);
-
 					}
 
 			//step 3: insert section resource in melete table i.e. if new resource then insert in melete resource table
 			//	otherwise just insert in sectionResource table
-				binding = Util.getBinding("#{authorPreferences}");
-    			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
-				if(selResourceIdFromList == null && section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx())
+				
+				if(selResourceIdFromList == null)
 				{
-					logger.debug("updating resources for sferyx compose add: " + meleteResource.getResourceId());
-					sectionService.updateResource(meleteResource);
-					sectionService.insertSectionResource(section, meleteResource);
+					if(section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx())
+					{
+						logger.debug("save editor type section");
+						sectionService.updateResource(meleteResource);
+						sectionService.insertSectionResource(section, meleteResource);
+					}
+					else sectionService.insertMeleteResource(section,meleteResource);
 				}
-				else if(selResourceIdFromList == null) sectionService.insertMeleteResource(section, meleteResource);
 				else
 				{
-					sectionService.updateResource(meleteResource);
-					sectionService.insertSectionResource(section, meleteResource);
+				sectionService.updateResource(meleteResource);
+				sectionService.insertSectionResource(section, meleteResource);
 				}
 			}
-
+			// blank section
+			else sectionService.editSection(section);
 		}
 	     catch(MeleteException mex)
 			{
 			logger.debug("error in inserting section "+ mex.toString());
+			mex.printStackTrace();
 			//rollback and delete section
 			try
 			{
@@ -238,7 +275,7 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			} catch (Exception e){}
 			String errMsg = bundle.getString("add_section_fail");
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"add_section_fail",errMsg));
-			//ex.printStackTrace();
+			ex.printStackTrace();
 			return "failure";
 			}
 
@@ -260,15 +297,23 @@ public class AddSectionPage extends SectionPage implements Serializable{
 	}
 
 	/*
+	 *  Save button for typeeditor content 
+	 *  To save contents in between and stays on add screen  
+	 */
+	public String saveIntermediate()
+	{
+		setSuccess(false);
+		saveHere();
+		return "addmodulesections";
+	}
+
+	/*
 	 *  on clicking link 2 me the page navigates back to add module section
 	 */
 	public String redirectLink()
 	{
 		return "ContentLinkServerView";
 	}
-
-
-
 
 	/**
 	 * save the section, if not saved yet and then refresh the page to
@@ -634,4 +679,5 @@ public class AddSectionPage extends SectionPage implements Serializable{
 
 		  return super.cancel();
 	  }
+
 }

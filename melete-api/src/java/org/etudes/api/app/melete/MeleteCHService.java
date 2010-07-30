@@ -33,6 +33,8 @@ import org.etudes.api.app.melete.exception.MeleteException;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 /*
@@ -65,7 +67,7 @@ public interface MeleteCHService{
 	 public List getListofMediaFromCollection(String collId);
 	 public List getListofFilesFromCollection(String collId);
 	 public List getMemberNamesCollection(String collId);
-	 public String findLocalImagesEmbeddedInEditor(String courseId, Map newEmbeddedResources, String contentEditor)throws MeleteException;
+	 public String findLocalImagesEmbeddedInEditor(String courseId, ArrayList<String> errs,Map newEmbeddedResources, String contentEditor)throws MeleteException;
 	 public ContentResource getResource(String resourceId) throws Exception;
 	 public void checkResource(String resourceId) throws Exception;
 	 public void editResource(String resourceId, String contentEditor) throws Exception;
@@ -82,6 +84,8 @@ public interface MeleteCHService{
 	  public String getLinkContent(String resourceId);
 	  public String getTypeEditorSectionName(Integer sectionId);
 	  public void editResource(String courseId,String resourceId, String contentEditor) throws Exception;
-	  public void addToMeleteResource(String resourceId) throws Exception;
+	  public void addToMeleteResource(String sectionId, String resourceId) throws Exception;
+	  public ContentResource getResource(String courseId, String resourceId) throws Exception;
+	  public String getSectionResource(String sectionId) throws Exception;
 }
 

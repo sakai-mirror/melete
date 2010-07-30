@@ -30,13 +30,16 @@
 <sakai:view title="Modules: Add Module Sections" toolCssHref="rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
-<%@ page import="javax.faces.application.FacesMessage, org.sakaiproject.util.ResourceLoader"%>
+<%@ page import="javax.faces.application.FacesMessage, org.sakaiproject.util.ResourceLoader, org.etudes.tool.melete.AddSectionPage"%>
 
 <% 
 	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 	String mensaje=bundle .getString("addmodulesections_uploading");
 	String mensaje2=bundle .getString("addmodulesections_done");
 
+	final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
+	AddSectionPage aSectionPage = (AddSectionPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "addSectionPage");
+	request.setAttribute("attr_sId",aSectionPage.getSection().getSectionId().toString());
 %>
 
 <style type="text/css">
@@ -46,7 +49,14 @@
 </style>
 
 <script language="javascript1.2">
-  
+  var XMLHttpRequestObject = false;
+
+if(window.XMLHttpRequest) {
+	XMLHttpRequestObject = new XMLHttpRequest();
+} else if(window.ActiveXObject) {
+	XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+}
+
   function clearmessage()
  {
 		   window.defaultStatus="<%=mensaje2%>";
@@ -71,14 +81,31 @@ function saveEditor()
         if(document.getElementById("AddSectionForm:rId") != undefined || document.getElementById("AddSectionForm:rId") != null)
       	  document.htmleditor.addAdditionalDynamicParameter('resourceId',document.getElementById("AddSectionForm:rId").value);
        		  
-		result = document.htmleditor.uploadMultipartContent(true);		    	
+		result = document.htmleditor.uploadMultipartContent(true);		 
+		
+		// show large file error message to the user as form submit fails now.
+		if(!result)
+			{
+			if(XMLHttpRequestObject){
+				var obj = document.getElementById("errMsg1");
+				var sourceobj = escape(document.getElementById("AddSectionForm:sId").value);
+				XMLHttpRequestObject.open("GET", '/etudes-melete-tool/melete/addErrorMessage.jsf'+ '?sId='+ sourceobj + '&msg=embed_image_size_exceed');
+				XMLHttpRequestObject.onreadystatechange = function()
+				{
+				  if(XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200)
+					  obj.innerHTML = XMLHttpRequestObject.responseText;
+				}
+				XMLHttpRequestObject.send(null);
+			  }
+			} 		
 	}	
 	return result;	
 }
+
 </script>
 
       <!-- This Begins the Main Text Area -->
-	<h:form id="AddSectionForm" enctype="multipart/form-data" onsubmit="saveEditor()">	
+	<h:form id="AddSectionForm" enctype="multipart/form-data" onsubmit=" return saveEditor();">	
 	  <h:inputHidden id="mode" value="Add"/>
 	  <h:inputHidden id="mId" value="#{addSectionPage.module.moduleId}"/>
 	  <h:inputHidden id="sId" value="#{addSectionPage.section.sectionId}"/>
@@ -90,7 +117,8 @@ function saveEditor()
 		</f:subview>
 		<div class="meletePortletToolBarMessage"><img src="images/document_add.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.addmodulesections_adding_section}" /> </div>	
 		<h:messages id="addsectionerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-
+		<div id="errMsg1" style="color:red"><p> </p></div>
+		
         <table class="maintableCollapseWithBorder">
           <tr>
             <td>
@@ -177,8 +205,8 @@ function saveEditor()
 										 <td colspan="2"> 
 												
 											<f:subview id="contentEditorView" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
-														<jsp:include page="contentSferyxEditor.jsp?mode=Add"/> 								
-													
+														<jsp:include page="contentSferyxEditor.jsp"/> 	
+																										
 													 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>																																
 											<f:subview id="othereditor" rendered="#{addSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}">
@@ -199,7 +227,9 @@ function saveEditor()
 				<h:commandButton id="submitsave" action="#{addSectionPage.save}" rendered="#{addSectionPage.shouldRenderEditor}" value="#{msgs.im_add_button}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
 				<h:commandButton id="submitsave1" action="#{addSectionPage.save}" rendered="#{addSectionPage.shouldRenderUpload}" onclick="clearmessage()" value="#{msgs.im_add_button}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
 				<h:commandButton id="submitsave2" action="#{addSectionPage.save}" rendered="#{!addSectionPage.shouldRenderEditor && !addSectionPage.shouldRenderUpload}" value="#{msgs.im_add_button}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
+				<h:commandButton id="submitsave3" action="#{addSectionPage.saveIntermediate}" rendered="#{addSectionPage.shouldRenderEditor}" value="#{msgs.im_save}"  accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
 				<h:commandButton id="cancelButton" immediate="true" action="#{addSectionPage.cancel}" value="#{msgs.im_cancel}"  onclick="clearmessage()" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+			
 			 </div>
 			</td>
           </tr>

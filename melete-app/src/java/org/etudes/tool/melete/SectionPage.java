@@ -84,6 +84,7 @@ import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.cover.ContentTypeImageService;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.tool.cover.SessionManager;
+import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.util.ResourceLoader;
 import javax.faces.model.SelectItem;
 /**
@@ -164,7 +165,7 @@ public abstract class SectionPage implements Serializable {
  	protected Boolean contentWithHtml;
 
  	protected String oldType;
-
+ 	
     public SectionPage()
             {
             module=null;
@@ -639,35 +640,6 @@ public abstract class SectionPage implements Serializable {
             return true;
     }
 
-    /*
-     * get the contents of section_xxx.html 
-     */
-    public String getResourceContentsForSection(String resourceId)
-    {
-    	String data = null;
-    	try
-    	{
-    	if(resourceId == null || resourceId.length() == 0) return data;	
-    	ContentResource cr = getMeleteCHService().getResource(resourceId);
-		if (cr != null) 
-			data = new String(cr.getContent());
-    	}catch(Exception e)
-    	{
-    		e.printStackTrace();
-    	}
-    	return data;
-    }
-    
-    /*
-     * generates the resource_id created by sferyx save for this section
-     */
-    private String getResourceForSection(String addCollId)
-    {
-    	
-    	String sec_res_id = addCollId + getMeleteCHService().getTypeEditorSectionName(section.getSectionId());
-    	return sec_res_id;
-    }
-    
 	/*
 	 *  adds resource to specified melete module or uploads collection.
 	 */
@@ -679,32 +651,14 @@ public abstract class SectionPage implements Serializable {
 
     		if(section.getContentType().equals("typeEditor") )
     		{
-    			FacesContext context = FacesContext.getCurrentInstance();
-    			ValueBinding binding = Util.getBinding("#{authorPreferences}");
-    			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
-    			preferencePage.setEditorFlags();
+    			contentEditor =  getMeleteCHService().findLocalImagesEmbeddedInEditor(ToolManager.getCurrentPlacement().getContext(),new ArrayList<String>(),null,contentEditor);
 
-    			if(preferencePage.isShouldRenderSferyx())
-    			{
-    				String editor_res_id = getResourceForSection(addCollId);
-    				getMeleteCHService().checkResource(editor_res_id);
-    				// refresh the contents
-    				ContentResource cr = getMeleteCHService().getResource(editor_res_id);
-        			if (cr != null) 
-        				this.contentEditor = new String(cr.getContent());
-    				return editor_res_id;
-    			}
-    			else
-    			{
-    				contentEditor =  getMeleteCHService().findLocalImagesEmbeddedInEditor(ToolManager.getCurrentPlacement().getContext(),null,contentEditor);
-
-    				res_mime_type= getMeleteCHService().MIME_TYPE_EDITOR;
-    				secContentData = new byte[contentEditor.length()];
-    				secContentData = contentEditor.getBytes();
-    				encodingFlag = true;
-    				secResourceName = getMeleteCHService().getTypeEditorSectionName(section.getSectionId());
-    				secResourceDescription="compose content";
-    			}
+    			res_mime_type= getMeleteCHService().MIME_TYPE_EDITOR;
+    			secContentData = new byte[contentEditor.length()];
+    			secContentData = contentEditor.getBytes();
+    			encodingFlag = true;
+    			secResourceName = getMeleteCHService().getTypeEditorSectionName(section.getSectionId());
+    			secResourceDescription="compose content";
     		}
 
     		if (section.getContentType().equals("typeLink")) {
@@ -788,7 +742,7 @@ public abstract class SectionPage implements Serializable {
         		{
         			try
         			{
-        				String contentData =  getMeleteCHService().findLocalImagesEmbeddedInEditor(ToolManager.getCurrentPlacement().getContext(),null,contentEditor);
+        				String contentData =  getMeleteCHService().findLocalImagesEmbeddedInEditor(ToolManager.getCurrentPlacement().getContext(),new ArrayList<String>(),null,contentEditor);
         				if(contentData != null) contentEditor = contentData;
         			}
         			catch(MeleteException me)
@@ -1270,7 +1224,7 @@ public abstract class SectionPage implements Serializable {
 	 * @return Returns the meleteResource.
 	 */
 	public MeleteResource getMeleteResource() {
-		logger.debug("check meleteResource" + meleteResource + secResource);
+		//logger.debug("check meleteResource" + meleteResource + secResource);
 
 		if(formName.equals("AddSectionForm") && meleteResource == null)
 		{

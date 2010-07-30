@@ -24,6 +24,7 @@
 package org.etudes.tool.melete;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
@@ -51,6 +52,7 @@ import org.etudes.api.app.melete.exception.MeleteException;
 import org.etudes.api.app.melete.exception.UserErrorException;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 
 public class AddResourcesPage {
@@ -65,7 +67,8 @@ public class AddResourcesPage {
   private ArrayList<String> success_fields = null;
   /** Dependency:  The logging service. */
   protected Log logger = LogFactory.getLog(AddResourcesPage.class);
-    
+  private HashMap<String, ArrayList<String>> hm_msgs;
+  
   public AddResourcesPage()
   {
   }
@@ -532,9 +535,9 @@ public String getCollectionId(String courseId)
 /*
  *  Adds the resource to melete resource table
  */
-public void addtoMeleteResource(String resourceId) throws Exception
+public void addtoMeleteResource(String sectionId, String resourceId) throws Exception
 {
-	getMeleteCHService().addToMeleteResource(resourceId);
+	getMeleteCHService().addToMeleteResource(sectionId, resourceId);
 }
 
 /*
@@ -544,11 +547,25 @@ public void addtoMeleteResource(String resourceId) throws Exception
  */
 public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, String moduleId, String sectionId, Map newEmbeddedResources, String htmlContentData) throws Exception
 {
-	String revisedData = getMeleteCHService().findLocalImagesEmbeddedInEditor(courseId, newEmbeddedResources, htmlContentData);
+	ArrayList<String> errs = new ArrayList<String>();
+	String revisedData = getMeleteCHService().findLocalImagesEmbeddedInEditor(courseId, errs, newEmbeddedResources, htmlContentData);
 	logger.debug("resource id in save section html method:" + resourceId + moduleId + sectionId);
+	//add messages to hashmap
+	if(errs.size() > 0)
+	{
+		for(String err:errs)
+		{
+			addToHm_Msgs(sectionId,err);
+		}
+	}
 	try{	
 		// in case of add and edit from notype to compose section 
-		if (resourceId == null || resourceId.length() == 0) throw new MeleteException("resource_null");
+		if (resourceId == null || resourceId.length() == 0 )
+			{
+			// for license change or adding bookmarks resource Id is created now
+			resourceId = getMeleteCHService().getSectionResource(sectionId);
+			if (resourceId == null )throw new MeleteException("resource_null");
+			}
 		getMeleteCHService().editResource(courseId, resourceId, revisedData);
 	}
 	catch (Exception ex)
@@ -561,9 +578,77 @@ public void saveSectionHtmlItem(String UploadCollId, String courseId, String res
 				secResourceName, "compose content");
 		String newResourceId = getMeleteCHService().addResourceItem(secResourceName, getMeleteCHService().MIME_TYPE_EDITOR,
 				getMeleteCHService().getCollectionId(courseId, "typeEditor", new Integer(moduleId)), secContentData,res);
-		addtoMeleteResource(newResourceId);
+		addtoMeleteResource(sectionId,newResourceId);
 	}
 }
 
+public String getResourceData(String sectionId)
+{
+	String data = null;
+	try
+	{
+		String resourceId = getMeleteCHService().getSectionResource(sectionId);
+		logger.debug("resource id in AddResource getdata method:" + resourceId );
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		data = bundle.getString("compose_content") ; 
+		
+		if(resourceId == null || resourceId.length() == 0) return data;	
+		ContentResource cr = getMeleteCHService().getResource(resourceId);
+		if (cr != null) 
+			data = new String(cr.getContent());
+		data = java.net.URLEncoder.encode(data,"UTF-8");
+	}catch(Exception e)
+	{
+		e.printStackTrace();
+	}
+	return data;
+}
+
+public HashMap<String, ArrayList<String>> getHm_msgs() {
+	return hm_msgs;
+}
+
+public void setHm_msgs(HashMap<String, ArrayList<String>> hm_msgs) {
+	this.hm_msgs = hm_msgs;
+}
+
+public void addToHm_Msgs(String k, String o)
+{
+	logger.debug("add to messages" + k + o);
+	if(hm_msgs == null) hm_msgs = new HashMap<String,ArrayList<String>>();
+	
+	ArrayList<String> v = new ArrayList<String>();	
+	if(hm_msgs.containsKey(k))
+	{
+		v = hm_msgs.get(k);		
+	}
+	
+	v.add(o);
+	hm_msgs.put(k, v);
+}
+
+public void removeFromHm_Msgs(String k)
+{
+	logger.debug("remove from messages" + k);
+
+	if(hm_msgs != null && hm_msgs.containsKey(k))
+	{
+		hm_msgs.remove(k);		
+	}
+}
+
+public String getMessageText(String errcode)
+{
+	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+	String msg = "";
+	if(("embed_image_size_exceed").equals(errcode))
+	{
+		msg = bundle.getString("embed_image_size_exceed");
+		msg= msg.concat(ServerConfigurationService.getString("content.upload.max", "0"));
+		msg = msg.concat(bundle.getString("embed_image_size_exceed1"));
+	}
+	else msg = bundle.getString(errcode);
+	return msg;
+}
 }
 

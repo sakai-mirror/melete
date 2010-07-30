@@ -129,7 +129,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	  String meleteCollectionRef = Entity.SEPARATOR+"private"+ REFERENCE_ROOT;
 	  String groupCollectionRef = Entity.SEPARATOR+"group";
 	  org.sakaiproject.entity.api.Reference ref1 = null;
-
+	 
 	  if ((inputStr != null)&&(inputStr.length() > 0))
 	  {
 		  if (inputStr.startsWith(meleteCollectionRef))
@@ -910,6 +910,55 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		 processed = processed.replaceAll("\\+", "%2b");
 		 return processed;
 	 }
+	 
+	 /*
+	  *  args : courseId and resourceId
+	  *  no need to reverse engineer the courseId
+	  */
+	 public ContentResource getResource(String courseId, String resourceId) throws Exception
+	 {
+		if (resourceId == null) return null;
+		
+	 	try
+	    {
+        	if (!isUserAuthor(courseId) && !isUserStudent(courseId))
+        		{
+        		logger.info("User is not authorized to access meleteDocs collection");
+        		return null;
+        		}
+        	String originalResourceId = resourceId;
+   			//          setup a security advisor
+        		meleteSecurityService.pushAdvisor();
+        		// absolute reqd otherwise import from site creates desert Landscape.jpg and desert%20Landscape-1.jpg
+        		try
+        		{
+        			resourceId = beforeDecode(resourceId);
+        			resourceId = URLDecoder.decode(resourceId,"UTF-8");
+        		} catch(Exception decodeEx)
+        		{
+        			logger.debug("get resource fails while decoding " + resourceId);
+        		}
+        		
+        		try
+        		{
+        			return (getContentservice().getResource(resourceId));
+        		}
+        		catch(Exception getResourceEx)
+        		{
+        			return (getContentservice().getResource(originalResourceId));	
+        		}
+	    }
+		catch(Exception e)
+		{
+			logger.error("getResource error:" + e.toString());
+			throw e;
+		}
+		finally
+		  {
+			// clear the security advisor
+			meleteSecurityService.popAdvisor();
+		  }
+	 }
 	 /*
 	  *
 	  */
@@ -1085,7 +1134,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		  }
 	 }
 	 
-	 public void addToMeleteResource(String resourceId) throws Exception
+	 public void addToMeleteResource(String sectionId, String resourceId) throws Exception
 	 {
 		//add in melete resource database table
          MeleteResource meleteResource = new MeleteResource();
@@ -1093,16 +1142,30 @@ public class MeleteCHServiceImpl implements MeleteCHService {
     	 //set default license info to "I have not determined copyright yet" option
     	 meleteResource.setLicenseCode(0);
     	 sectiondb.insertResource(meleteResource);
+    	 if(sectionId != null)
+    	 {
+    		sectiondb.insertSectionResource(sectionId, resourceId); 
+    	 }
     	 
 	 }
-		
+/*
+ *  get resource id associated with the section
+ */
+	 public String getSectionResource(String sectionId) throws Exception
+	 {
+		 SectionResource sr = sectiondb.getSectionResourcebyId(sectionId);
+		 if(sr != null && sr.getResource() != null)
+			 return sr.getResource().getResourceId();
+		 else return null;
+	 }
+	 
 	 /*
 	     *  before saving editor content, look for embedded images from local system
 	     *  and add them to collection
 	     * if filename has # sign then throw error
 	     *  Do see diego's fix to paste from word works
 	     */
-	    public String findLocalImagesEmbeddedInEditor(String courseId, Map newEmbeddedResources,String contentEditor) throws MeleteException
+	    public String findLocalImagesEmbeddedInEditor(String courseId, ArrayList<String> errs, Map newEmbeddedResources,String contentEditor) throws MeleteException
 	    {
 	    	 String checkforimgs = contentEditor;
 	         // get collection id where the embedded files will go
@@ -1183,8 +1246,29 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    			}
 	    			System.out.println("key is:" + key);
 	    			//process for local uploaded files for sferyx
-	    			// fck editor puts relative url for embedded images
 	    			
+	    			// bad character files are not uploaded so send error message
+	    			if (fileName != null && fileName.trim().length() > 0 && !fileName.equals(File.separator) && fileName.startsWith("file:"))
+	    			{
+	    				// if filename contains pound char then throw error
+	    				if(fileName.indexOf("#") != -1)
+	    				{
+	    					System.out.println("embedded FILE contains hash or other characters " + fileName);
+	    					errs.add("embed_img_bad_filename");
+	    				}
+
+	    				// if filename contains percentage sign then throw error
+	    				if(fileName.indexOf("%") != -1)
+	    				{
+	    					try
+	    					{
+	    						String cName = java.net.URLDecoder.decode(fileName,"UTF-8");
+	    					}catch(Exception decodex){
+	    						System.out.println("embedded FILE contains percentage or other characters " + fileName);
+	    						errs.add("embed_img_bad_filename1");
+	    					}						
+	    				}
+	    			}
 					if(fileName != null && fileName.trim().length() > 0&& (!(fileName.equals(File.separator)))
 						&& key != null && newEmbeddedResources != null && newEmbeddedResources.containsKey(key))
 					{

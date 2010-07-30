@@ -33,17 +33,28 @@
 <%@include file="accesscheck.jsp" %>
 <script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
 
-<%@ page import="org.sakaiproject.util.ResourceLoader"%>
+<%@ page import="org.sakaiproject.util.ResourceLoader, javax.faces.application.FacesMessage,org.etudes.tool.melete.AddResourcesPage, org.etudes.tool.melete.EditSectionPage"%>
 
 <% 
-	
 	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-	String mensaje=bundle .getString("editmodulesections_uploading");
-		
+	String mensaje=bundle.getString("editmodulesections_uploading");
+
+	final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
+	final EditSectionPage eSectionPage = (EditSectionPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "editSectionPage");
+	if(eSectionPage.getSection() != null && eSectionPage.getSection().getSectionId() != null)
+	{
+		request.setAttribute("attr_sId",eSectionPage.getSection().getSectionId().toString());	
+	}
 %>
 
 <script type="text/javascript" language="javascript1.2">
+var XMLHttpRequestObject = false;
 
+if(window.XMLHttpRequest) {
+	XMLHttpRequestObject = new XMLHttpRequest();
+} else if(window.ActiveXObject) {
+	XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+}
 function saveEditor()
 {
 	var result;
@@ -57,7 +68,23 @@ function saveEditor()
         if(document.getElementById("EditSectionForm:rId") != undefined || document.getElementById("EditSectionForm:rId") != null)
       	  document.htmleditor.addAdditionalDynamicParameter('resourceId',document.getElementById("EditSectionForm:rId").value);
        		  
-		result = document.htmleditor.uploadMultipartContent(true);		    	
+		result = document.htmleditor.uploadMultipartContent(true);	
+		
+		// show large file error message to the user as form submit fails now.
+		if(!result)
+			{
+			if(XMLHttpRequestObject){
+				var obj = document.getElementById("errMsg1");
+				var sourceobj = escape(document.getElementById("EditSectionForm:sId").value);
+				XMLHttpRequestObject.open("GET", '/etudes-melete-tool/melete/addErrorMessage.jsf'+ '?sId='+ sourceobj + '&msg=embed_image_size_exceed');
+				XMLHttpRequestObject.onreadystatechange = function()
+				{
+				  if(XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200)
+					  obj.innerHTML = XMLHttpRequestObject.responseText;
+				}
+				XMLHttpRequestObject.send(null);
+			  }
+			} 	    	
 	}	
 	return result;	
 }
@@ -88,7 +115,7 @@ function saveSection()
 </script>
 
       <!-- This Begins the Main Text Area -->
-	<h:form id="EditSectionForm" enctype="multipart/form-data" onsubmit="saveEditor()">	
+	<h:form id="EditSectionForm" enctype="multipart/form-data" onsubmit="return saveEditor()">	
 			  <h:inputHidden id="formName" value="EditSectionForm"/>  
 			  <h:inputHidden id="mode" value="Edit"/>
 			  <h:inputHidden id="mId" value="#{editSectionPage.module.moduleId}"/>
@@ -101,6 +128,7 @@ function saveSection()
 		</f:subview>
 		<div class="meletePortletToolBarMessage"><img src="images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.editmodulesections_editing_section}" /> </div>
 		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
+        <div id="errMsg1" style="color:red"><p> </p></div>
         <div class="right">
           <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="saveSection();var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},'Melete Bookmark Window');w.focus();">
 	         <f:param id="sectionId" name="sectionId" value="#{editSectionPage.section.sectionId}" />
@@ -121,21 +149,21 @@ function saveSection()
                    <!-- table header -->
 	                   <tr>
 			            <td colspan="2" height="20" class="maintabledata2">            	   
-				     		<h:commandLink id="editPrevButton" onmousedown="saveEditor();" action="#{editSectionPage.editPrevSection}" rendered="#{editSectionPage.hasPrev}">
+				     		<h:commandLink id="editPrevButton" onmousedown="return saveEditor();" action="#{editSectionPage.editPrevSection}" rendered="#{editSectionPage.hasPrev}">
 			 					 <h:outputText id="text4_4" value="#{msgs.editmodulesections_edit_prev}"/>
 							</h:commandLink> 
 							<h:outputText id="text4_5" value="#{msgs.editmodulesections_edit_prev}" rendered="#{!editSectionPage.hasPrev}"/>
 							&laquo;
-			     			<h:commandLink id="TOCButton"  onmousedown="saveEditor();" action="#{editSectionPage.goTOC}">
+			     			<h:commandLink id="TOCButton"  onmousedown="return saveEditor();" action="#{editSectionPage.goTOC}">
 									<h:outputText id="toc" value="#{msgs.editmodulesections_TOC}" />
 								</h:commandLink>
 							&raquo;   
-				     		<h:commandLink id="editNextButton" onmousedown="saveEditor();" action="#{editSectionPage.editNextSection}" rendered="#{editSectionPage.hasNext}">
+				     		<h:commandLink id="editNextButton" onmousedown="return saveEditor();" action="#{editSectionPage.editNextSection}" rendered="#{editSectionPage.hasNext}">
 			 					 <h:outputText id="text4_2" value="#{msgs.editmodulesections_edit_next}"/>
 							</h:commandLink>
 							<h:outputText id="text4_6" value="#{msgs.editmodulesections_edit_next}" rendered="#{!editSectionPage.hasNext}"/>
 							  <h:outputText id="text4_3" value=" / "/>				
-				     		<h:commandLink onmousedown="saveEditor();" action="#{editSectionPage.saveAndAddAnotherSection}">
+				     		<h:commandLink onmousedown="return saveEditor();" action="#{editSectionPage.saveAndAddAnotherSection}">
 			 					 <h:outputText id="text5" value="#{msgs.editmodulesections_add_new}"/>
 							</h:commandLink> 						   	
 						</td>
@@ -215,10 +243,10 @@ function saveSection()
 									</td></tr>	
 									<tr> 
 										 <td colspan="2">
-										 													 									
+						 									
 											 <f:subview id="contentEditorView" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
-												<jsp:include page="contentSferyxEditor.jsp?mode=Edit" flush="true"/>
-													 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
+												<jsp:include page="contentSferyxEditor.jsp" />
+     											 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>
 											<f:subview id="othereditor" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}">
 												<sakai:inputRichText id="otherMeletecontentEditor" value="#{editSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{editSectionPage.FCK_CollId}" />
@@ -228,7 +256,7 @@ function saveSection()
 								  <tr>
 								   <td colspan="2">
 												<f:subview id="ResourcePropertiesPanel" rendered="#{editSectionPage.meleteResource !=null && !editSectionPage.shouldRenderNotype}">
-													<jsp:include page="edit_sec_resourcePropertiesPanel.jsp" flush="true"/>
+													<jsp:include page="edit_sec_resourcePropertiesPanel.jsp"/>
 												</f:subview>
 									</td>	
 									</tr>																									

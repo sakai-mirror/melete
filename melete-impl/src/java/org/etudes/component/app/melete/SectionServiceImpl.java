@@ -415,6 +415,21 @@ public class SectionServiceImpl implements Serializable, SectionService{
 		return sr;
 	  }
 
+	  /*
+	   * get section resource object
+	   */
+	  public SectionResourceService getSectionResourcebyId(String sectionId)
+	  {
+	  	SectionResource sr = null;
+	  	try{
+			 sr = sectiondb.getSectionResourcebyId(sectionId);
+			}catch(Exception ex)
+			{
+				logger.debug("AddSectionPage --add section resource failed");
+			}
+		return sr;
+	  }
+	  
 	  public MeleteResourceService getMeleteResource(String selResourceId)
 	  {
 	  	MeleteResource mr = null;
