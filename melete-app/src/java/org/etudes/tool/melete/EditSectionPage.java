@@ -501,7 +501,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		contentWithHtml = false;
 		this.previewContentData = null;
 		
-		if (!section.getContentType().equals("notype"))
+		if (meleteResource != null && meleteResource.getResourceId() != null)
 		   {
 			   if (this.section.getContentType().equals("typeEditor"))
 			   {
