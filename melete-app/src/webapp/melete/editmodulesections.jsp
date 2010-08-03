@@ -67,7 +67,8 @@ function saveEditor()
         document.htmleditor.addAdditionalDynamicParameter('sId',document.getElementById("EditSectionForm:sId").value);
         if(document.getElementById("EditSectionForm:rId") != undefined || document.getElementById("EditSectionForm:rId") != null)
       	  document.htmleditor.addAdditionalDynamicParameter('resourceId',document.getElementById("EditSectionForm:rId").value);
-       		  
+       document.htmleditor.addAdditionalDynamicParameter('uId',document.getElementById("EditSectionForm:uId").value);		  
+		
 		result = document.htmleditor.uploadMultipartContent(true);	
 		
 		// show large file error message to the user as form submit fails now.
@@ -75,8 +76,14 @@ function saveEditor()
 			{
 			if(XMLHttpRequestObject){
 				var obj = document.getElementById("errMsg1");
-				var sourceobj = escape(document.getElementById("EditSectionForm:sId").value);
-				XMLHttpRequestObject.open("GET", '/etudes-melete-tool/melete/addErrorMessage.jsf'+ '?sId='+ sourceobj + '&msg=embed_image_size_exceed');
+				var sourceobj="";
+				var sourceobj1="";
+			    if(document.getElementById("EditSectionForm:sId") != undefined || document.getElementById("EditSectionForm:sId") != null)
+					sourceobj = escape(document.getElementById('EditSectionForm:sId').value);
+				 if(document.getElementById("EditSectionForm:uId") != undefined || document.getElementById("EditSectionForm:uId") != null)	
+					sourceobj1 = escape(document.getElementById('EditSectionForm:uId').value);
+					
+				XMLHttpRequestObject.open("GET", '/etudes-melete-tool/melete/addErrorMessage.jsf'+ '?sId='+ sourceobj + '&uId='+sourceobj1 +'&msg=embed_image_size_exceed');
 				XMLHttpRequestObject.onreadystatechange = function()
 				{
 				  if(XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200)
@@ -121,7 +128,7 @@ function saveSection()
 			  <h:inputHidden id="mId" value="#{editSectionPage.module.moduleId}"/>
 			  <h:inputHidden id="sId" value="#{editSectionPage.section.sectionId}"/>
 			  <h:inputHidden id="rId" value="#{editSectionPage.meleteResource.resourceId}" rendered="#{editSectionPage.meleteResource !=null}"/>
-		
+			  <h:inputHidden id="uId" value="#{editSectionPage.currUserId}"/>
 		<!-- top nav bar -->
 		<f:subview id="top">
 			<jsp:include page="topnavbar.jsp"/> 

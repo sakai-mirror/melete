@@ -31,15 +31,14 @@
 			System.out.println("SAVE PAGE CALLED !!!!");
 			final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 			final AddResourcesPage aResourcePage = (AddResourcesPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "addResourcesPage");
-	//	    AddResourcesPage aResourcePage = (AddResourcesPage) facesContext.getExternalContext().getSessionMap().get("addResourcesPage");
-			
+				
 			String status = (String)request.getAttribute("upload.status");
 		
 			if( status != null && status.equalsIgnoreCase("ok"))
 			{	
 			String collId = aResourcePage.getCollectionId(request.getParameter("courseId"));
 			Map newEmbeddedResources = new HashMap();
-			int count = 1;
+			
 			for (Enumeration e = request.getAttributeNames(); e.hasMoreElements();)
 				{
 					String oneKey = (String) e.nextElement();
@@ -65,9 +64,9 @@
 							String embed_ResId = aResourcePage.addItem(fileName,(String)item.getContentType(),collId , buf);
 							in.close();
 							aResourcePage.addtoMeleteResource(null,embed_ResId);
+								
+							newEmbeddedResources.put(fileName, embed_ResId);
 							
-							newEmbeddedResources.put((count + fileName), embed_ResId);
-							count++;
 						}  catch (Exception ex) {
 							// do nothing
 						}
@@ -78,10 +77,22 @@
 		{
 			if(request.getParameter("html_content") != null)
 			{			
-				aResourcePage.saveSectionHtmlItem(collId, request.getParameter("courseId"), request.getParameter("resourceId"), request.getParameter("mId"), request.getParameter("sId"), newEmbeddedResources, request.getParameter("html_content") );
+				aResourcePage.saveSectionHtmlItem(collId, request.getParameter("courseId"), request.getParameter("resourceId"), request.getParameter("mId"), request.getParameter("sId"), request.getParameter("uId"),newEmbeddedResources, request.getParameter("html_content") );
 			}				
 		}  catch (Exception ex) {
-			aResourcePage.addToHm_Msgs(request.getParameter("sId"),"add_section_fail");
+			String exKey = request.getParameter("sId") + "-"+ request.getParameter("uId"); 
+			aResourcePage.addToHm_Msgs(exKey,"add_section_fail");
 			}
-		}					
+		}	
+		else
+		{
+			System.out.println("status is not ok" + request.getParameter("html_content"));
+			System.out.println("request attributes");
+			   Enumeration enames = request.getAttributeNames();
+			   while (enames.hasMoreElements()) {
+			      String name = (String) enames.nextElement();
+			      String value = (String)request.getAttribute(name);      
+			      System.out.println("request attributes print:" + name + value);
+ 				  }
+		}				
 %>

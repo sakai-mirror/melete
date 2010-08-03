@@ -44,6 +44,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.event.*;
 import javax.faces.el.ValueBinding;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,7 +57,8 @@ import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 
-public class AddResourcesPage {
+public class AddResourcesPage implements ServletContextListener {
+
   private String fileType;
   private String numberItems;
   private int maxUploadSize;
@@ -68,7 +71,7 @@ public class AddResourcesPage {
   /** Dependency:  The logging service. */
   protected Log logger = LogFactory.getLog(AddResourcesPage.class);
   private HashMap<String, ArrayList<String>> hm_msgs;
-  
+ 
   public AddResourcesPage()
   {
   }
@@ -545,7 +548,7 @@ public void addtoMeleteResource(String sectionId, String resourceId) throws Exce
  *  If Section_xxx.html resource doesn't exist for add section or when content is added to a notype section
  *  then this method creates the resource item and adds to melete resource table.
  */
-public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, String moduleId, String sectionId, Map newEmbeddedResources, String htmlContentData) throws Exception
+public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, String moduleId, String sectionId, String userId, Map newEmbeddedResources, String htmlContentData) throws Exception
 {
 	ArrayList<String> errs = new ArrayList<String>();
 	String revisedData = getMeleteCHService().findLocalImagesEmbeddedInEditor(courseId, errs, newEmbeddedResources, htmlContentData);
@@ -555,7 +558,8 @@ public void saveSectionHtmlItem(String UploadCollId, String courseId, String res
 	{
 		for(String err:errs)
 		{
-			addToHm_Msgs(sectionId,err);
+			String k = sectionId + "-" + userId;
+			addToHm_Msgs(k,err);
 		}
 	}
 	try{	
@@ -650,5 +654,14 @@ public String getMessageText(String errcode)
 	else msg = bundle.getString(errcode);
 	return msg;
 }
+
+public void contextInitialized(ServletContextEvent event) {
+	hm_msgs = new HashMap<String,ArrayList<String>>(); 
+}
+
+public void contextDestroyed(ServletContextEvent event) {
+	hm_msgs = null;
+}
+
 }
 

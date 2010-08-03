@@ -29,8 +29,14 @@
 	
 	String forSection = request.getParameter("sId");
 	String msg= request.getParameter("msg");
-	    	
-   	addPage.addToHm_Msgs(forSection,msg);	
+	System.out.println("in add error page sid and uid is:" + request.getParameter("sId") + request.getParameter("uId") );
+	if(forSection != null && request.getParameter("uId") != null)
+	{
+		forSection= forSection + "-";
+		forSection= forSection + request.getParameter("uId");  
+		  	
+   		addPage.addToHm_Msgs(forSection,msg);	
+   	}
    	String m  = addPage.getMessageText(msg);  	
    	response.getWriter().write(m);	
 %>

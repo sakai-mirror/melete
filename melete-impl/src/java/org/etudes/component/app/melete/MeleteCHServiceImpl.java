@@ -1216,7 +1216,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    	//	checkforimgs = meleteUtil.findFormPattern(checkforimgs);
 	    	//	logger.debug("after find form pattern "+ endSrc);
 			//	contentEditor = checkforimgs;
-	      	int count = 1;
+	      
 		         while(checkforimgs !=null)
 		         {
 		           // look for a href and img tag
@@ -1241,10 +1241,10 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    			String key = null;
 	    			if (fileName.lastIndexOf("/") != -1)
 	    			{
-	    				key = count + (fileName.substring(fileName.lastIndexOf("/")+1));
+	    				key = fileName.substring(fileName.lastIndexOf("/")+1);
 	    				
 	    			}
-	    			System.out.println("key is:" + key);
+	    			logger.debug("key is:" + key);
 	    			//process for local uploaded files for sferyx
 	    			
 	    			// bad character files are not uploaded so send error message
@@ -1252,8 +1252,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    			{
 	    				// if filename contains pound char then throw error
 	    				if(fileName.indexOf("#") != -1)
-	    				{
-	    					System.out.println("embedded FILE contains hash or other characters " + fileName);
+	    				{	    					
 	    					errs.add("embed_img_bad_filename");
 	    				}
 
@@ -1263,8 +1262,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    					try
 	    					{
 	    						String cName = java.net.URLDecoder.decode(fileName,"UTF-8");
-	    					}catch(Exception decodex){
-	    						System.out.println("embedded FILE contains percentage or other characters " + fileName);
+	    					}catch(Exception decodex){	    						
 	    						errs.add("embed_img_bad_filename1");
 	    					}						
 	    				}
@@ -1274,7 +1272,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 					{
 		           
 		  	  	     String newEmbedResourceId = (String)newEmbeddedResources.get(key);
-		  	  	     count ++;
+		  	  	   
 		         	// in content editor replace the file found with resource reference url
 		         	 String replaceStr = getResourceUrl(newEmbedResourceId);
 		         	 replaceStr = meleteUtil.replace(replaceStr,ServerConfigurationService.getServerUrl(),"");

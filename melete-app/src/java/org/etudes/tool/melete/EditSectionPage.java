@@ -317,15 +317,16 @@ public class EditSectionPage extends SectionPage implements Serializable
 				AddResourcesPage resourcesPage = (AddResourcesPage) binding.getValue(context);
 				HashMap<String,ArrayList<String>> save_err = resourcesPage.getHm_msgs();
 				logger.debug("hashmap in editsectionpage is " + save_err);
-				if(save_err != null && !save_err.isEmpty() && save_err.containsKey(section.getSectionId().toString()))
+				String errKey = section.getSectionId().toString() + "-" + getCurrUserId();
+				if(save_err != null && !save_err.isEmpty() && save_err.containsKey(errKey))
 				{
-					ArrayList<String> errs = save_err.get(section.getSectionId().toString());
+					ArrayList<String> errs = save_err.get(errKey);
 					for(String err:errs)
 					{
 					String errMsg = resourcesPage.getMessageText(err);
 					context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, err, errMsg));
 					}
-					resourcesPage.removeFromHm_Msgs(section.getSectionId().toString());	
+					resourcesPage.removeFromHm_Msgs(errKey);	
 					return "failure";
 				}
 			}

@@ -80,7 +80,7 @@ function saveEditor()
         document.htmleditor.addAdditionalDynamicParameter('sId',document.getElementById("AddSectionForm:sId").value);
         if(document.getElementById("AddSectionForm:rId") != undefined || document.getElementById("AddSectionForm:rId") != null)
       	  document.htmleditor.addAdditionalDynamicParameter('resourceId',document.getElementById("AddSectionForm:rId").value);
-       		  
+         document.htmleditor.addAdditionalDynamicParameter('uId',document.getElementById("AddSectionForm:uId").value);		  
 		result = document.htmleditor.uploadMultipartContent(true);		 
 		
 		// show large file error message to the user as form submit fails now.
@@ -89,7 +89,9 @@ function saveEditor()
 			if(XMLHttpRequestObject){
 				var obj = document.getElementById("errMsg1");
 				var sourceobj = escape(document.getElementById("AddSectionForm:sId").value);
-				XMLHttpRequestObject.open("GET", '/etudes-melete-tool/melete/addErrorMessage.jsf'+ '?sId='+ sourceobj + '&msg=embed_image_size_exceed');
+				var sourceobj1 = escape(document.getElementById("AddSectionForm:uId").value);
+				XMLHttpRequestObject.open("GET", '/etudes-melete-tool/melete/addErrorMessage.jsf'+ '?sId='+ sourceobj + '&uId='+sourceobj1 +'&msg=embed_image_size_exceed');
+				
 				XMLHttpRequestObject.onreadystatechange = function()
 				{
 				  if(XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200)
@@ -110,7 +112,8 @@ function saveEditor()
 	  <h:inputHidden id="mId" value="#{addSectionPage.module.moduleId}"/>
 	  <h:inputHidden id="sId" value="#{addSectionPage.section.sectionId}"/>
 	  <h:inputHidden id="rId" value="#{addSectionPage.meleteResource.resourceId}" rendered="#{addSectionPage.meleteResource !=null}"/>
-
+	  <h:inputHidden id="uId" value="#{addSectionPage.currUserId}"/>
+	  
 	<!-- top nav bar -->
 		<f:subview id="top">
 			<jsp:include page="topnavbar.jsp"/> 
@@ -125,7 +128,7 @@ function saveEditor()
                      <table class="maintableCollapseWithNoBorder">
                                 <tr>
 						            <td colspan="2" height="20" class="maintabledata5">
-											<h:commandLink id="TOCButton"  action="#{addSectionPage.cancel}"  immediate="true">
+											<h:commandLink id="TOCButton"  onmousedown="return saveEditor();" action="#{addSectionPage.goTOC}" >
 												<h:outputText id="toc" value="#{msgs.addmodulesections_TOC}" />
 											</h:commandLink> &raquo; <h:outputText id="text11" value="#{addSectionPage.module.title}" />  &raquo; <h:outputText id="add_new_section" value="#{msgs.addmodulesections_add_new_section}" />
 									</td>

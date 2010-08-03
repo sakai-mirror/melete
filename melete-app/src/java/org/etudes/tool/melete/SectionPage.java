@@ -165,6 +165,7 @@ public abstract class SectionPage implements Serializable {
  	protected Boolean contentWithHtml;
 
  	protected String oldType;
+ 	private String currUserId;
  	
     public SectionPage()
             {
@@ -1513,5 +1514,25 @@ public abstract class SectionPage implements Serializable {
 	 	 {
 	 		 return getMeleteCHService().getLinkContent(resourceId);
 	 	 }
+
+
+	public String getCurrUserId() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map sessionMap = context.getExternalContext().getSessionMap();
+		if(sessionMap != null && sessionMap.containsKey("userId"))
+			currUserId = (String) sessionMap.get("userId");
+		else
+		{
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo meleteSiteAndUser = (MeleteSiteAndUserInfo) binding.getValue(context);
+			currUserId = meleteSiteAndUser.getCurrentUser().getId();
+		}
+		return currUserId;
+	}
+
+
+	public void setCurrUserId(String currUserId) {
+		this.currUserId = currUserId;
+	}
 
 }

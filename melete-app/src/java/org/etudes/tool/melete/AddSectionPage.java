@@ -152,15 +152,16 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			AddResourcesPage resourcesPage = (AddResourcesPage) binding.getValue(context);
 			HashMap<String,ArrayList<String>> save_err = resourcesPage.getHm_msgs();
 			logger.debug("hashmap in addsectionpage is " + save_err);
-			if(save_err != null && !save_err.isEmpty() && save_err.containsKey(section.getSectionId().toString()))
+			String errKey = section.getSectionId().toString() + "-" + getCurrUserId();
+			if(save_err != null && !save_err.isEmpty() && save_err.containsKey(errKey))
 			{
-				ArrayList<String> errs = save_err.get(section.getSectionId().toString());
+				ArrayList<String> errs = save_err.get(errKey);
 				for(String err:errs)
 				{
 				String errMsg = resourcesPage.getMessageText(err);
 				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, err, errMsg));
 				}
-				resourcesPage.removeFromHm_Msgs(section.getSectionId().toString());	
+				resourcesPage.removeFromHm_Msgs(errKey);	
 				return "failure";
 			}
 		}
@@ -248,10 +249,10 @@ public class AddSectionPage extends SectionPage implements Serializable{
 			logger.debug("error in inserting section "+ mex.toString());
 			mex.printStackTrace();
 			//rollback and delete section
-			try
+	/*		try
 			{
 				deleteSection(sessionMap);
-			} catch (Exception e){}
+			} catch (Exception e){}*/
 			String errMsg = bundle.getString(mex.getMessage());
 			// uncomment it after sferyx brings uploadfile limit param
 			/*if(mex.getMessage().equals("embed_image_size_exceed"))
@@ -270,9 +271,9 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		catch(Exception ex)
 			{
 			logger.debug("error in inserting section "+ ex.toString());
-			try{
+		/*	try{
 				deleteSection(sessionMap);
-			} catch (Exception e){}
+			} catch (Exception e){}*/
 			String errMsg = bundle.getString("add_section_fail");
 			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"add_section_fail",errMsg));
 			ex.printStackTrace();
@@ -307,6 +308,17 @@ public class AddSectionPage extends SectionPage implements Serializable{
 		return "addmodulesections";
 	}
 
+	public String goTOC()
+	{
+		setSuccess(false);
+		if(!saveHere().equals("failure"))
+		{
+		setSuccess(true);
+		return "list_auth_modules";
+		}
+		else return "addmodulesections";
+	}
+	
 	/*
 	 *  on clicking link 2 me the page navigates back to add module section
 	 */
