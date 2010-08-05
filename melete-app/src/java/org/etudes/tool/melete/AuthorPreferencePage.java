@@ -136,7 +136,7 @@ public class AuthorPreferencePage {
  			showLTI = "false";
  		else
  		{
- 			logger.debug("mup LTi choice is:" + mup.isShowLTIChoice());
+ 		//	logger.debug("mup LTi choice is:" + mup.isShowLTIChoice());
   			showLTI = mup.isShowLTIChoice().toString();
  		}
   		if(msp != null && msp.isPrintable())

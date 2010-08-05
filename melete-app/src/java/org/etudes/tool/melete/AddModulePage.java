@@ -146,7 +146,8 @@ public class AddModulePage extends ModulePage implements Serializable{
         AddSectionPage addPage = (AddSectionPage) binding.getValue(context);
         addPage.resetSectionValues();
         addPage.setModule(module);
-       
+        addPage.addBlankSection();
+        
        return "addmodulesections";
     }
  }

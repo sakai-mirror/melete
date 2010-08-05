@@ -87,9 +87,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 		FacesContext context = FacesContext.getCurrentInstance();
 
 		resetSectionValues();
-		setSection(section1);
+		logger.debug("setting EDIT INFO");
 		setFormName("EditSectionForm");
-		
+		setSection(section1);
 		setModule(this.section.getModule());		
 		setSecResource(this.section.getSectionResource());
 		
@@ -117,8 +117,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 		{		
 			setFCKCollectionAttrib();				
 		}
-		if (this.section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx()) preferencePage.setDisplaySferyx(true);
-
+		if (this.section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx()) 
+			preferencePage.setDisplaySferyx(true);
+		
 		return "success";
 	}
 
@@ -141,6 +142,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 	private void setContentResourceData(String resourceId)
 	{
+	   logger.debug("set contyent resource data for: " + resourceId);
 		try
 		{
 			if (resourceId != null)
@@ -308,15 +310,33 @@ public class EditSectionPage extends SectionPage implements Serializable
 			}
 
 			// validation 3: if upload a new file check fileName format -- move to uploadSectionContent()
-
+			// validation 3-1: if typeEditor and saved by sferyx then check for error messages
+			if (section.getContentType().equals("typeEditor"))
+			{
+				binding = Util.getBinding("#{addResourcesPage}");
+				AddResourcesPage resourcesPage = (AddResourcesPage) binding.getValue(context);
+				HashMap<String,ArrayList<String>> save_err = resourcesPage.getHm_msgs();
+				logger.debug("hashmap in editsectionpage is " + save_err);
+				String errKey = section.getSectionId().toString() + "-" + getCurrUserId();
+				if(save_err != null && !save_err.isEmpty() && save_err.containsKey(errKey))
+				{
+					ArrayList<String> errs = save_err.get(errKey);
+					for(String err:errs)
+					{
+					String errMsg = resourcesPage.getMessageText(err);
+					context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, err, errMsg));
+					}
+					resourcesPage.removeFromHm_Msgs(errKey);	
+					return "failure";
+				}
+			}
 			// validation 4: check link url title
 			if (section.getContentType().equals("typeLink") && meleteResource != null && meleteResource.getResourceId() != null && (secResourceName == null || secResourceName.trim().length() == 0))
 				throw new UserErrorException("URL_title_reqd");
 
 			// save section
 			if (logger.isDebugEnabled()) logger.debug("EditSectionpage:save section" + section.getContentType());
-			String uploadHomeDir = ServerConfigurationService.getString("melete.uploadDir", "");
-
+			
 			if (section.getContentType().equals("notype"))
 			{
 				meleteResource = null;
@@ -327,31 +347,49 @@ public class EditSectionPage extends SectionPage implements Serializable
 				// step 1: check if new resource content or existing resource is edited
 				try
 				{
-					//The condition below was put in to handle ME-639
-					if (meleteResource != null && meleteResource.getResourceId() != null)
-					{
-						if (logger.isDebugEnabled()) logger.debug("Ist step of edit - check meleteResource" + meleteResource.getResourceId());
-					  getMeleteCHService().checkResource(meleteResource.getResourceId());
-					  editMeleteCollectionResource(uploadHomeDir, meleteResource.getResourceId());
-					}
-					else
-					{
-						logger.debug("old type is " + oldType + meleteResource);
-						if (oldType != null && oldType.equals("notype"))  throw new Exception();
+					binding = Util.getBinding("#{authorPreferences}");
+	    			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
+	    			
+	    			if (section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx())
+	    			{
+	    				// get secResource object
+	    				secResource = sectionService.getSectionResourcebyId(section.getSectionId().toString());
+	    				logger.debug("after fetching section resource object is:" + secResource.getResource() + secResource.getSectionId());
+	    				meleteResource.setResourceId(secResource.getResource().getResourceId());						
+	    				section.setSectionResource(secResource);
+	    				// refresh contentEditor 
+	    				ContentResource cr = getMeleteCHService().getResource(secResource.getResource().getResourceId());
+	    				if (cr != null) this.contentEditor = new String(cr.getContent());					
+	    			}
+	    			//The condition below was put in to handle ME-639
+	    			else 
+	    			{
+	    				if (meleteResource != null && meleteResource.getResourceId() != null)
+	    				{
+	    					if (logger.isDebugEnabled()) logger.debug("Ist step of edit - check meleteResource" + meleteResource.getResourceId());
+	    					getMeleteCHService().checkResource(meleteResource.getResourceId());
+	    					editMeleteCollectionResource(meleteResource.getResourceId());
+	    				}
+	    				else	
+	    				{
+	    					/*						logger.debug("old type is " + oldType + meleteResource);
+								if (oldType != null && oldType.equals("notype"))  throw new Exception();*/
 
-						//resource is removed
-						if (logger.isDebugEnabled()) logger.debug("Resource ID is null i.e resource is removed");
-						editMeleteCollectionResource(uploadHomeDir, null);
-						meleteResource = null;
-						//throw new Exception();
-					}
+	    					//resource is removed
+	    					if (logger.isDebugEnabled()) logger.debug("Resource ID is null i.e resource is removed");
+	    					editMeleteCollectionResource( null);
+	    					meleteResource = null;
+	    					//throw new Exception();
+	    				}
+	    			}
+					
 				}
 				catch (Exception e)
 				{
 					// resource is not there when no content type is choosen
 					if (logger.isDebugEnabled()) logger.debug("resource is new i.e. coming from notype content");
 					String addCollId = getMeleteCHService().getCollectionId(section.getContentType(), module.getModuleId());
-					String newResourceId = addResourceToMeleteCollection(uploadHomeDir, addCollId);
+					String newResourceId = addResourceToMeleteCollection(addCollId);
 					meleteResource.setResourceId(newResourceId);
 					if (logger.isDebugEnabled()) logger.debug("new resource id" + newResourceId + meleteResource);
 					/* here create association and insert new resource */
@@ -363,7 +401,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 				meleteResource = lPage.processLicenseInformation(meleteResource);
 
 				// step2: edit section properties
-				sectionService.editSection(section, meleteResource);
+				//sectionService.editSection(section, meleteResource);
+				sectionService.updateResource(meleteResource);
+				sectionService.insertSectionResource(section, meleteResource);
 			}
 
 			// uploadFileName=null;
@@ -458,6 +498,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		aPage.setSection(null);
 		aPage.resetSectionValues();
 		aPage.setModule(module);
+		aPage.addBlankSection();
+		
 		logger.debug("render flags:" + aPage.getShouldRenderEditor() + authPage.isShouldRenderFCK());
 		return "addmodulesections";
 	}
@@ -1075,4 +1117,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 	  return rUrl;
 	}
+	
+	
 }

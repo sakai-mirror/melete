@@ -232,7 +232,8 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
         addPage.setSection(null);
         addPage.resetSectionValues();
         addPage.setModule(module);
-
+        addPage.addBlankSection();
+        
        return "addmodulesections";
     }
 

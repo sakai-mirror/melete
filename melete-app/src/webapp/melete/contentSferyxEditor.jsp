@@ -25,7 +25,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 
-<%@ page import="org.etudes.tool.melete.MeleteSiteAndUserInfo,org.etudes.tool.melete.SectionPage, org.etudes.tool.melete.EditSectionPage, org.etudes.tool.melete.AddSectionPage, org.etudes.tool.melete.AuthorPreferencePage"%>
+<%@ page import="org.etudes.tool.melete.MeleteSiteAndUserInfo,org.etudes.tool.melete.AddResourcesPage, org.etudes.tool.melete.AuthorPreferencePage"%>
 <%
 final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 
@@ -33,15 +33,19 @@ final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)faces
 
 final AuthorPreferencePage authorPreferencePage = (AuthorPreferencePage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "authorPreferences");
 
+final AddResourcesPage aResourcePage = (AddResourcesPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "addResourcesPage");
+
+String sId = (String)request.getAttribute("attr_sId");
 
 String browseloca = meleteSiteAndUserInfo.getRemoteBrowseLocation() ;
 String browselinkloca = meleteSiteAndUserInfo.getRemoteLinkBrowseLocation() ;
 String docloca =  meleteSiteAndUserInfo.getMeleteDocsLocation() ;
-String saveloca =  meleteSiteAndUserInfo.getMeleteDocsSaveLocation() ;
+String saveloca =  meleteSiteAndUserInfo.getMeleteDocsSaveLocation();
 String editorloca =  meleteSiteAndUserInfo.getEditorArchiveLocation() ;
 String absloca = meleteSiteAndUserInfo.getAbsoluteTranslationLocation();
 boolean renderSferyx = authorPreferencePage.isShouldRenderSferyx();
 boolean dispSferyx = authorPreferencePage.isDisplaySferyx();
+String maxSize = meleteSiteAndUserInfo.getMaxUploadSize() +"M";
 %>
 
 <SCRIPT type="text/javascript" LANGUAGE="JavaScript">
@@ -70,16 +74,24 @@ document.writeln('<PARAM NAME="scriptable" VALUE="true">');
               	document.writeln('<PARAM NAME = "boxbgcolor" VALUE = "#FFFFFF">');
 		        document.writeln('<PARAM NAME="scriptable" VALUE="true">');
 				document.writeln('<PARAM NAME = "variableName" VALUE="html_content">');
+				document.writeln('<PARAM NAME = "dontConvertCharacters" VALUE="true">');
+				document.writeln('<PARAM NAME = "maxFileUploadSize" VALUE="<%=maxSize%>">');
+
+				document.writeln('<PARAM name="initialURLEncodedContent" VALUE="<%=aResourcePage.getResourceData(sId)%>">');
+
+				document.writeln('<PARAM name="parametersToSend" VALUE="courseId=<%=meleteSiteAndUserInfo.getCourse_id()%>">');
 				document.writeln('<PARAM name="saveURL" VALUE="<%=saveloca%>">');
+	
 				document.writeln('<PARAM NAME = "uploadContentAsMultipartFormData" VALUE="true">');
-				document.writeln('<PARAM NAME="saveEntireFile" VALUE="false">');
+				document.writeln('<PARAM NAME="saveEntireFile" VALUE="true">');
+				
 				document.writeln('<PARAM NAME="useSaveAsSaveRemote" VALUE="true">');
 				document.writeln('<PARAM NAME ="supressRemoteFileDialog" VALUE="false">');
 				document.writeln('<PARAM NAME ="supressLocalFileDialog" VALUE="false">');
 				document.writeln('<PARAM NAME ="remoteBrowseLocation" VALUE="<%=browseloca%>">');
 				document.writeln('<PARAM NAME ="remoteLinksBrowseLocation" VALUE="<%=browselinkloca%>">');
 				document.writeln('<PARAM NAME ="absoluteDocumentTranslationURL" VALUE="<%=docloca%>">');
-				document.writeln('<PARAM NAME ="uploadedObjectsTranslationPath" VALUE="<%=docloca%>">');
+				
 				document.writeln('<PARAM NAME ="variableName" VALUE="html_content">');
 				document.writeln('<PARAM NAME ="menusToRemove" VALUE="menuFile,menuForm">');
 				document.writeln('<PARAM NAME ="statusbarVisible" VALUE="false">');

@@ -166,19 +166,27 @@ public class SectionDB implements Serializable {
 		try{
 		     Session session = hibernateUtil.currentSession();
 	         Transaction tx = null;
-			try
-			{
-			  // set default values for not-null fields
-			  section.setCreationDate(new java.util.Date());
-			  section.setModificationDate(new java.util.Date());
-
-			  hibernateUtil.ensureSectionHasNonNull(section);
+	         try
+	         {
+	        	 // refresh section object
+	        	 Section findSection = getSection(section.getSectionId().intValue());				
+	        	 findSection.setAudioContent(section.isAudioContent());
+	        	 findSection.setContentType(section.getContentType());
+	        	 findSection.setInstr(section.getInstr())	;
+	        	 findSection.setModifiedByFname(section.getModifiedByFname());
+	        	 findSection.setModifiedByLname(section.getModifiedByLname());
+	        	 findSection.setOpenWindow(section.isOpenWindow());
+	        	 findSection.setTextualContent(section.isTextualContent());
+	        	 findSection.setTitle(section.getTitle());
+	        	 findSection.setVideoContent(section.isVideoContent());
+	        	 findSection.setModificationDate(new java.util.Date());
+	        	 
+	        	 hibernateUtil.ensureSectionHasNonNull(findSection);
 
 	 	  	  // save object
 	 	  	  if (!session.isOpen()) session = hibernateUtil.currentSession();
-			  session.evict(section);
 			  tx = session.beginTransaction();
-			  session.saveOrUpdate(section);
+			  session.saveOrUpdate(findSection);
 			  session.flush();
  		  	  tx.commit();
 
@@ -220,6 +228,7 @@ public class SectionDB implements Serializable {
 	public void editSection(Section section, MeleteResource melResource) throws Exception
 	{
 		try{
+			SectionResource secResource = getSectionResourcebyId(section.getSectionId().toString());
 		     Session session = hibernateUtil.currentSession();
 	         Transaction tx = null;
 			try
@@ -227,7 +236,7 @@ public class SectionDB implements Serializable {
 			  hibernateUtil.ensureSectionHasNonNull(section);
 
 				// set default values for not-null fields
-				SectionResource secResource = (SectionResource)section.getSectionResource();
+		//		SectionResource secResource = (SectionResource)section.getSectionResource();
 				if(secResource == null)
 					secResource = new SectionResource();
 
@@ -900,22 +909,26 @@ public class SectionDB implements Serializable {
 	}
 
 	/*
-	 *  add resource associated with section
+	 *  add the intermediate association to save new section_xxx.html file added by save.jsp
 	 */
-	public void insertSectionResource(Section section, MeleteResource melResource) throws Exception
+	public void insertSectionResource(String sectionId, String melResourceId) throws Exception
 	{
 		try{
 			boolean existFlag = true;
-	        if (melResource != null && melResource.getResourceId() != null)
-	        	melResource = getMeleteResource(melResource.getResourceId());
-							
-		     Session session = hibernateUtil.currentSession();
+			MeleteResource melResource = null;
+	        if (melResourceId != null )
+	        	melResource = getMeleteResource(melResourceId);
+	
+	        // refresh section object
+	         Section section = getSection(new Integer(sectionId).intValue());				
+	     	 SectionResource secResource = getSectionResourcebyId(sectionId);
+	     	
+	         Session session = hibernateUtil.currentSession();
 	         Transaction tx = null;	         
 			try
 			{
 				hibernateUtil.ensureSectionHasNonNull(section);
-
-				SectionResource secResource = (SectionResource)section.getSectionResource();
+			
 				if (secResource == null) 
 					{
 					secResource = new  SectionResource();
@@ -923,7 +936,7 @@ public class SectionDB implements Serializable {
 					}
 				// set secResource fields
 				secResource.setSection(section);
-				secResource.setSectionId(section.getSectionId());
+				secResource.setSectionId(new Integer(sectionId));
 				// update Section
 				tx = session.beginTransaction();
 				if(melResource != null && melResource.getResourceId() != null)
@@ -936,6 +949,85 @@ public class SectionDB implements Serializable {
 					section.setSectionResource(secResource);
 				}
 				session.saveOrUpdate(section);							 
+
+			  // complete transaction
+				tx.commit();
+
+		 	  if (logger.isDebugEnabled()) logger.debug("section resource is added" );
+			}
+			catch(StaleObjectStateException sose)
+		     {
+				logger.error("stale object exception" + sose.toString());
+		     }
+			catch(HibernateException he)
+				     {
+						if(tx !=null) tx.rollback();
+						logger.error(he.toString());
+						he.printStackTrace();
+						throw he;
+				     }
+	        	finally{
+				hibernateUtil.closeSession();
+				 }
+		}catch(Exception ex){
+				// Throw application specific error
+			ex.printStackTrace();
+			throw new MeleteException("add_section_fail");
+			}
+	}
+
+	/*
+	 *  add resource associated with section
+	 */
+	public void insertSectionResource(Section section, MeleteResource melResource) throws Exception
+	{
+		try{
+			boolean existFlag = true;
+	        if (melResource != null && melResource.getResourceId() != null)
+	        	melResource = getMeleteResource(melResource.getResourceId());
+	
+	        // refresh section object
+	         Section findSection = getSection(section.getSectionId().intValue());				
+	         findSection.setAudioContent(section.isAudioContent());
+	         findSection.setContentType(section.getContentType());
+	         findSection.setInstr(section.getInstr())	;
+	         findSection.setModifiedByFname(section.getModifiedByFname());
+	         findSection.setModifiedByLname(section.getModifiedByLname());
+	         findSection.setOpenWindow(section.isOpenWindow());
+	         findSection.setTextualContent(section.isTextualContent());
+	         findSection.setTitle(section.getTitle());
+	         findSection.setVideoContent(section.isVideoContent());
+	         findSection.setModificationDate(new java.util.Date());
+	         
+	     	 SectionResource secResource = getSectionResourcebyId(section.getSectionId().toString());
+	     	
+	         Session session = hibernateUtil.currentSession();
+	         Transaction tx = null;	         
+			try
+			{
+				hibernateUtil.ensureSectionHasNonNull(findSection);
+
+			//	SectionResource secResource = (SectionResource)section.getSectionResource();
+					if (secResource == null) 
+					{
+					secResource = new  SectionResource();
+					existFlag = false;
+					}
+				// set secResource fields
+				secResource.setSection(findSection);
+				secResource.setSectionId(section.getSectionId());
+				// update Section
+				tx = session.beginTransaction();
+				if(melResource != null && melResource.getResourceId() != null)
+				{
+					secResource.setResource(melResource);									
+					//	save sectionResource
+					if (existFlag)session.update(secResource);
+					else session.save(secResource);
+					// update Section
+					findSection.setSectionResource(secResource);
+				}
+				session.saveOrUpdate(findSection);							 
 
 			  // complete transaction
 				tx.commit();
@@ -1019,6 +1111,7 @@ public class SectionDB implements Serializable {
 			hibernateUtil.closeSession();
 			 }
 	}
+
 	
 	public List getAllMeleteResourcesOfCourse(String courseId)
 	{
@@ -1071,8 +1164,34 @@ public class SectionDB implements Serializable {
 			logger.error(ex.toString());
 			return null;
 			}
+	
 	}
 
+	/*
+	 *  get the section resource based on section id.
+	 */
+	public SectionResource getSectionResourcebyId(String sectionId)
+	{
+		try{
+		     Session session = hibernateUtil.currentSession();
+		     String queryString = "from SectionResource sectionresource where sectionresource.sectionId=:sectionId";
+		     Query query = session.createQuery(queryString);
+		     query.setParameter("sectionId",new Integer(sectionId));
+		     List result_list = query.list();
+		     if(result_list != null && result_list.size() > 0)
+		     	return (SectionResource)result_list.get(0);
+		    else return null;
+		}
+		catch(Exception ex){
+			logger.error(ex.toString());
+			ex.printStackTrace();
+			return null;
+			}
+		finally{
+			hibernateUtil.closeSession();
+			 }
+	}
+	
 	public void deassociateSectionResource(Section section, SectionResource secResource) throws Exception
 	{
 		try{
