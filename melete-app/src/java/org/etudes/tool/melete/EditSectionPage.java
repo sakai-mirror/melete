@@ -91,8 +91,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		setFormName("EditSectionForm");
 		setSection(section1);
 		setModule(this.section.getModule());		
-		setSecResource(this.section.getSectionResource());
-		
+	//	setSecResource(this.section.getSectionResource());
+		setSecResource(sectionService.getSectionResourcebyId(this.section.getSectionId().toString()));
 		if (this.secResource != null && this.secResource.getResource() != null)
 		{
 			setMeleteResource((MeleteResource) this.secResource.getResource());
@@ -100,6 +100,18 @@ public class EditSectionPage extends SectionPage implements Serializable
 	    	ValueBinding binding = Util.getBinding("#{licensePage}");
 	  		LicensePage lPage = (LicensePage)binding.getValue(context);
 	  		lPage.setInitialValues(this.formName, getMeleteResource());
+	  		
+	  		// for incomplete add action and resource file is saved through intermediate save
+	  		try
+	  		{
+	  			if(("notype").equals(this.section.getContentType()) && this.meleteResource != null && this.meleteResource.getResourceId() != null)
+	  			{
+	  				if(this.meleteResource.getResourceId().indexOf("Section_")!= -1)	
+	  					this.section.setContentType("typeEditor");
+	  				else this.section.setContentType("typeUpload");
+	  				sectionService.insertSectionResource(this.section, this.meleteResource);
+	  			}
+	  		} catch(Exception ex) {}
 		}
 		else
 		{
