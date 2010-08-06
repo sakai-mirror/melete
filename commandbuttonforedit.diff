@@ -1,0 +1,241 @@
+Index: melete-app/src/bundle/org/etudes/tool/melete/bundle/Messages.properties
+===================================================================
+--- melete-app/src/bundle/org/etudes/tool/melete/bundle/Messages.properties	(revision 69614)
++++ melete-app/src/bundle/org/etudes/tool/melete/bundle/Messages.properties	(working copy)
+@@ -154,7 +154,9 @@
+ set_access=s
+ return_access=r
+ done_access=d
+-
++prev_access=p
++next_access=n
++toc_access=t
+ #action buttons
+ 
+ im_add_another_section=Add Another Section
+@@ -212,7 +214,15 @@
+ im_return=Return
+ im_return_text=Return [Access Key + r]
+ 
++im_next=Next
++im_next_text=Edit Next Section [Access Key + n]
+ 
++im_prev=Prev
++im_prev_text=Edit Prev Section [Access Key + p]
++
++im_toc=TOC
++im_toc_text=Table of Contents [Access Key + t]
++
+ JS_date=Date is in an invalid format. Enter data in this format MM/DD/YYYY HH:MM AM/PM
+ processMsg=Processing...
+ 
+@@ -233,7 +243,7 @@
+ #addmodulesections
+ 
+ addmodulesections_adding_section=Adding section...
+-addmodulesections_TOC=Table of Contents
++addmodulesections_TOC=TOC
+ addmodulesections_add_new_section=Add New Section
+ addmodulesections_section_title=Section Title
+ addmodulesections_author=Added by
+@@ -487,7 +497,7 @@
+ 
+ #editmodulesections
+ editmodulesections_editing_section=Editing section... 
+-editmodulesections_TOC=Table of Contents
++editmodulesections_TOC=TOC
+ editmodulesections_add_new=Add New Section
+ editmodulesections_section_title=Section Title
+ editmodulesections_author=Added by
+@@ -505,8 +515,8 @@
+ editmodulesections_link_url_server=Link to URL resource on server
+ editmodulesections_required= Required
+ editmodulesections_back_to_top=Back to Top
+-editmodulesections_edit_next=Edit Next
+-editmodulesections_edit_prev=Edit Prev Section 
++editmodulesections_edit_next=Next
++editmodulesections_edit_prev=Prev 
+ editmodulesections_uploading=Uploading file in progress...
+ 
+ 
+Index: melete-app/src/java/org/etudes/tool/melete/AddResourcesPage.java
+===================================================================
+--- melete-app/src/java/org/etudes/tool/melete/AddResourcesPage.java	(revision 69614)
++++ melete-app/src/java/org/etudes/tool/melete/AddResourcesPage.java	(working copy)
+@@ -649,6 +649,11 @@
+ 		msg = bundle.getString("embed_image_size_exceed");
+ 		msg= msg.concat(ServerConfigurationService.getString("content.upload.max", "0"));
+ 		msg = msg.concat(bundle.getString("embed_image_size_exceed1"));
++	} else if(("embed_image_size_exceed2").equals(errcode))
++	{
++		msg = bundle.getString("embed_image_size_exceed2");
++		msg= msg.concat(ServerConfigurationService.getString("content.upload.max", "0"));
++		msg = msg.concat(bundle.getString("embed_image_size_exceed2-1"));
+ 	}
+ 	else msg = bundle.getString(errcode);
+ 	return msg;
+Index: melete-app/src/webapp/melete/addmodulesections.jsp
+===================================================================
+--- melete-app/src/webapp/melete/addmodulesections.jsp	(revision 69614)
++++ melete-app/src/webapp/melete/addmodulesections.jsp	(working copy)
+@@ -50,12 +50,14 @@
+ 
+ <script language="javascript1.2">
+   var XMLHttpRequestObject = false;
+-
++try
++{
+ if(window.XMLHttpRequest) {
+ 	XMLHttpRequestObject = new XMLHttpRequest();
+ } else if(window.ActiveXObject) {
+ 	XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+ }
++}catch(e){XMLHttpRequestObject = false;}
+ 
+   function clearmessage()
+  {
+@@ -86,19 +88,21 @@
+ 		// show large file error message to the user as form submit fails now.
+ 		if(!result)
+ 			{
+-			if(XMLHttpRequestObject){
+-				var obj = document.getElementById("errMsg1");
+-				var sourceobj = escape(document.getElementById("AddSectionForm:sId").value);
+-				var sourceobj1 = escape(document.getElementById("AddSectionForm:uId").value);
+-				XMLHttpRequestObject.open("GET", '/etudes-melete-tool/melete/addErrorMessage.jsf'+ '?sId='+ sourceobj + '&uId='+sourceobj1 +'&msg=embed_image_size_exceed');
+-				
+-				XMLHttpRequestObject.onreadystatechange = function()
+-				{
+-				  if(XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200)
+-					  obj.innerHTML = XMLHttpRequestObject.responseText;
+-				}
+-				XMLHttpRequestObject.send(null);
+-			  }
++			try{
++				if(XMLHttpRequestObject){
++					var obj = document.getElementById("errMsg1");
++					var sourceobj = escape(document.getElementById("AddSectionForm:sId").value);
++					var sourceobj1 = escape(document.getElementById("AddSectionForm:uId").value);
++					XMLHttpRequestObject.open("GET", '/etudes-melete-tool/melete/addErrorMessage.jsf'+ '?sId='+ sourceobj + '&uId='+sourceobj1 +'&msg=embed_image_size_exceed');
++					
++					XMLHttpRequestObject.onreadystatechange = function()
++					{
++					  if(XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200)
++						  obj.innerHTML = XMLHttpRequestObject.responseText;
++					}
++					XMLHttpRequestObject.send(null);
++				  }
++			  }catch(e){result = false;}
+ 			} 		
+ 	}	
+ 	return result;	
+@@ -128,9 +132,8 @@
+                      <table class="maintableCollapseWithNoBorder">
+                                 <tr>
+ 						            <td colspan="2" height="20" class="maintabledata5">
+-											<h:commandLink id="TOCButton"  onmousedown="return saveEditor();" action="#{addSectionPage.goTOC}" >
+-												<h:outputText id="toc" value="#{msgs.addmodulesections_TOC}" />
+-											</h:commandLink> &raquo; <h:outputText id="text11" value="#{addSectionPage.module.title}" />  &raquo; <h:outputText id="add_new_section" value="#{msgs.addmodulesections_add_new_section}" />
++						            	<h:commandButton id="TOCButton" action="#{addSectionPage.goTOC}" value="#{msgs.addmodulesections_TOC}"  accesskey="#{msgs.toc_access}" title="#{msgs.im_toc_text}" styleClass="BottomImgTOC"/>
++										 &raquo; <h:outputText id="text11" value="#{addSectionPage.module.title}" />  &raquo; <h:outputText id="add_new_section" value="#{msgs.addmodulesections_add_new_section}" />
+ 									</td>
+ 						          </tr>
+                                   <tr>
+Index: melete-app/src/webapp/melete/editmodulesections.jsp
+===================================================================
+--- melete-app/src/webapp/melete/editmodulesections.jsp	(revision 69614)
++++ melete-app/src/webapp/melete/editmodulesections.jsp	(working copy)
+@@ -144,7 +144,7 @@
+ 		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
+         <div id="errMsg1" style="color:red"><p> </p></div>
+         <div class="right">
+-          <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="saveSection();var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},'Melete Bookmark Window');w.focus();">
++          <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},'Melete Bookmark Window');w.focus();return false;">
+ 	         <f:param id="sectionId" name="sectionId" value="#{editSectionPage.section.sectionId}" />
+ 	         <h:graphicImage id="bul_gif" value="images/bookmark-it.png" alt="" styleClass="AuthImgClass"/>
+ 	         <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
+@@ -162,24 +162,17 @@
+ 				  <table class="maintableCollapseWithNoBorder">
+                    <!-- table header -->
+ 	                   <tr>
+-			            <td colspan="2" height="20" class="maintabledata2">            	   
+-				     		<h:commandLink id="editPrevButton" onmousedown="return saveEditor();" action="#{editSectionPage.editPrevSection}" rendered="#{editSectionPage.hasPrev}">
+-			 					 <h:outputText id="text4_4" value="#{msgs.editmodulesections_edit_prev}"/>
+-							</h:commandLink> 
++			            <td colspan="2" height="20" class="maintabledata2">  
++			            	<h:commandButton id="editPrevButton" action="#{editSectionPage.editPrevSection}" rendered="#{editSectionPage.hasPrev}" value="#{msgs.editmodulesections_edit_prev}" accesskey="#{msgs.prev_access}" title="#{msgs.im_prev_text}" styleClass="BottomImgPrev"/>          	   
+ 							<h:outputText id="text4_5" value="#{msgs.editmodulesections_edit_prev}" rendered="#{!editSectionPage.hasPrev}"/>
+-							&laquo;
+-			     			<h:commandLink id="TOCButton"  onmousedown="return saveEditor();" action="#{editSectionPage.goTOC}">
+-									<h:outputText id="toc" value="#{msgs.editmodulesections_TOC}" />
+-								</h:commandLink>
+-							&raquo;   
+-				     		<h:commandLink id="editNextButton" onmousedown="return saveEditor();" action="#{editSectionPage.editNextSection}" rendered="#{editSectionPage.hasNext}">
+-			 					 <h:outputText id="text4_2" value="#{msgs.editmodulesections_edit_next}"/>
+-							</h:commandLink>
+-							<h:outputText id="text4_6" value="#{msgs.editmodulesections_edit_next}" rendered="#{!editSectionPage.hasNext}"/>
+-							  <h:outputText id="text4_3" value=" / "/>				
+-				     		<h:commandLink onmousedown="return saveEditor();" action="#{editSectionPage.saveAndAddAnotherSection}">
+-			 					 <h:outputText id="text5" value="#{msgs.editmodulesections_add_new}"/>
+-							</h:commandLink> 						   	
++							
++							<h:commandButton id="TOCButton" action="#{editSectionPage.goTOC}" value="#{msgs.editmodulesections_TOC}" accesskey="#{msgs.toc_access}" title="#{msgs.im_toc_text}" styleClass="BottomImgTOC"/>
++			     			
++			     			<h:commandButton id="editNextButton" action="#{editSectionPage.editNextSection}" rendered="#{editSectionPage.hasNext}" value="#{msgs.editmodulesections_edit_next}" accesskey="#{msgs.next_access}" title="#{msgs.im_next_text}" styleClass="BottomImgNext"/>
++				     		<h:outputText id="text4_6" value="#{msgs.editmodulesections_edit_next}" rendered="#{!editSectionPage.hasNext}"/>
++							  <h:outputText id="text4_3" value=" / "/>	
++							<h:commandButton id="editAddNewButton" action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.editmodulesections_add_new}" accesskey="#{msgs.add_access}" title="#{msgs.im_save_text}" styleClass="BottomImgAdd"/>  			
++				     								   	
+ 						</td>
+ 			          </tr>	
+ 			          <tr>
+Index: melete-app/src/webapp/melete/save.jsp
+===================================================================
+--- melete-app/src/webapp/melete/save.jsp	(revision 69614)
++++ melete-app/src/webapp/melete/save.jsp	(working copy)
+@@ -84,15 +84,5 @@
+ 			aResourcePage.addToHm_Msgs(exKey,"add_section_fail");
+ 			}
+ 		}	
+-		else
+-		{
+-			System.out.println("status is not ok" + request.getParameter("html_content"));
+-			System.out.println("request attributes");
+-			   Enumeration enames = request.getAttributeNames();
+-			   while (enames.hasMoreElements()) {
+-			      String name = (String) enames.nextElement();
+-			      String value = (String)request.getAttribute(name);      
+-			      System.out.println("request attributes print:" + name + value);
+- 				  }
+-		}				
++		
+ %>
+\ No newline at end of file
+Index: melete-app/src/webapp/rtbc004.css
+===================================================================
+--- melete-app/src/webapp/rtbc004.css	(revision 69614)
++++ melete-app/src/webapp/rtbc004.css	(working copy)
+@@ -283,7 +283,7 @@
+ .BottomImgAdd		{  	padding-left:2em;
+ 						background: #eee url('images/add.png') .2em no-repeat;
+ 					}	
+-.BottomImgReturn	{  	padding-left:2em;
++.BottomImgReturn,.BottomImgTOC	{  	padding-left:2em;
+ 						background: #eee url('images/return_sm.png') .2em no-repeat;
+ 					}	
+ .BottomImgCancel	{  	padding-left:2em;
+@@ -311,7 +311,13 @@
+ .BottomImgRestore	{  	padding-left:2em;
+ 						background: #eee url('images/restore.png') .2em no-repeat;
+ 					}																																												
+-
++.BottomImgPrev		{  	padding-left:2em;
++						background: #eee url('images/resultset_previous.png') .2em no-repeat;
++					}
++.BottomImgNext		{  	padding-left:2em;
++						background: #eee url('images/resultset_next.png') .2em no-repeat;
++					}
++										
+  /* list resources page styles */
+ 
+ .TitleWid3 {   width:75%; }
