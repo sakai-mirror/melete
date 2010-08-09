@@ -143,45 +143,34 @@ function saveSection()
 		<div class="meletePortletToolBarMessage"><img src="images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.editmodulesections_editing_section}" /> </div>
 		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
         <div id="errMsg1" style="color:red"><p> </p></div>
-        <div class="right">
-          <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="saveSection();var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},'Melete Bookmark Window');w.focus();">
-	         <f:param id="sectionId" name="sectionId" value="#{editSectionPage.section.sectionId}" />
-	         <h:graphicImage id="bul_gif" value="images/bookmark-it.png" alt="" styleClass="AuthImgClass"/>
-	         <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
-           </h:outputLink>		
-            <h:outputText value="|"/> 
-           <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
-             <h:graphicImage id="mybook_gif" value="images/my-bookmarks.png" alt="" styleClass="AuthImgClass"/>
-             <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
-             <f:param name="fromPage" value="editmodulesections" /> 
-           </h:commandLink>
-        </div>
         <table class="maintableCollapseWithBorder">
      	   <tr>
             <td class="maintabledata3">
 				  <table class="maintableCollapseWithNoBorder">
                    <!-- table header -->
-	                   <tr>
-			            <td colspan="2" height="20" class="maintabledata2">            	   
-				     		<h:commandLink id="editPrevButton" onmousedown="return saveEditor();" action="#{editSectionPage.editPrevSection}" rendered="#{editSectionPage.hasPrev}">
-			 					 <h:outputText id="text4_4" value="#{msgs.editmodulesections_edit_prev}"/>
-							</h:commandLink> 
-							<h:outputText id="text4_5" value="#{msgs.editmodulesections_edit_prev}" rendered="#{!editSectionPage.hasPrev}"/>
-							&laquo;
-			     			<h:commandLink id="TOCButton"  onmousedown="return saveEditor();" action="#{editSectionPage.goTOC}">
-									<h:outputText id="toc" value="#{msgs.editmodulesections_TOC}" />
-								</h:commandLink>
-							&raquo;   
-				     		<h:commandLink id="editNextButton" onmousedown="return saveEditor();" action="#{editSectionPage.editNextSection}" rendered="#{editSectionPage.hasNext}">
-			 					 <h:outputText id="text4_2" value="#{msgs.editmodulesections_edit_next}"/>
-							</h:commandLink>
-							<h:outputText id="text4_6" value="#{msgs.editmodulesections_edit_next}" rendered="#{!editSectionPage.hasNext}"/>
-							  <h:outputText id="text4_3" value=" / "/>				
-				     		<h:commandLink onmousedown="return saveEditor();" action="#{editSectionPage.saveAndAddAnotherSection}">
-			 					 <h:outputText id="text5" value="#{msgs.editmodulesections_add_new}"/>
-							</h:commandLink> 						   	
-						</td>
-			          </tr>	
+                   <tr>
+			            <td width="100%" colspan="2" height="20" class="maintabledata2"> 
+				            <table> 
+			                   <tr >
+					            <td width="62%" >  
+					            	<h:commandButton id="editPrevButton" action="#{editSectionPage.editPrevSection}" disabled="#{!editSectionPage.hasPrev}" value="#{msgs.editmodulesections_edit_prev}" accesskey="#{msgs.prev_access}" title="#{msgs.im_prev_text}" styleClass="BottomImgPrev"/>          	   
+									<h:commandButton id="TOCButton" action="#{editSectionPage.goTOC}" value="#{msgs.editmodulesections_TOC}" accesskey="#{msgs.toc_access}" title="#{msgs.im_toc_text}" styleClass="BottomImgTOC"/>
+					       			<h:commandButton id="editNextButton" action="#{editSectionPage.editNextSection}" disabled="#{!editSectionPage.hasNext}" value="#{msgs.editmodulesections_edit_next}" accesskey="#{msgs.next_access}" title="#{msgs.im_next_text}" styleClass="BottomImgNext"/>
+						     	
+						            <h:outputText id="text4_3" value="  " styleClass="ExtraPaddingClass"/>	
+									<h:commandButton id="editAddNewButton" action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.editmodulesections_add_new}" accesskey="#{msgs.add_access}" title="#{msgs.im_save_text}" styleClass="BottomImgAdd"/>  			
+						        </td>
+						        <td  width="38%" align="right">    
+									 <h:commandButton id="bookmarkSectionLink" action="#{editSectionPage.saveAndAddBookmark}" value="#{msgs.bookmark_text}" 
+										 onclick="var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},'Melete Bookmark Window');"
+										  accesskey="#{msgs.bookmark_access}" title="#{msgs.im_bmrk_text}" styleClass="BottomImgBookmarkIt">
+									</h:commandButton>
+						     		<h:commandButton id="myBookmarksLink" action="#{editSectionPage.gotoMyBookmarks}" value="#{msgs.my_bookmarks}" accesskey="#{msgs.mybookmarks_access}" title="#{msgs.im_mybmrks_text}" styleClass="BottomImgMyBookmarks"/>
+								</td>
+					          </tr>
+				          </table>
+			          </td>
+			          </tr>		
 			          <tr>
 			          	<td colspan="2" class="maintabledata9" >
 			     			<h:outputText id="text4" value="#{editSectionPage.module.title}" /> &raquo; <h:outputText id="text4_1" value="#{editSectionPage.section.title}" />
@@ -290,7 +279,7 @@ function saveSection()
 					
 					<h:commandButton id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd"/>
 						<h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgFinish"/>
-						<h:commandButton id="saveForBookmarkbutton"  action="#{editSectionPage.save}" style="display: none; visibility: hidden;"/>
+						<h:commandButton id="saveForBookmarkbutton"  action="#{editSectionPage.saveAndAddBookmark}" style="display: none; visibility: hidden;"/>
        			 </div></td>
               </tr>
               

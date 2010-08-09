@@ -50,12 +50,14 @@
 
 <script language="javascript1.2">
   var XMLHttpRequestObject = false;
-
+try
+{
 if(window.XMLHttpRequest) {
 	XMLHttpRequestObject = new XMLHttpRequest();
 } else if(window.ActiveXObject) {
 	XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
 }
+}catch(e){XMLHttpRequestObject = false;}
 
   function clearmessage()
  {
@@ -86,19 +88,21 @@ function saveEditor()
 		// show large file error message to the user as form submit fails now.
 		if(!result)
 			{
-			if(XMLHttpRequestObject){
-				var obj = document.getElementById("errMsg1");
-				var sourceobj = escape(document.getElementById("AddSectionForm:sId").value);
-				var sourceobj1 = escape(document.getElementById("AddSectionForm:uId").value);
-				XMLHttpRequestObject.open("GET", '/etudes-melete-tool/melete/addErrorMessage.jsf'+ '?sId='+ sourceobj + '&uId='+sourceobj1 +'&msg=embed_image_size_exceed');
-				
-				XMLHttpRequestObject.onreadystatechange = function()
-				{
-				  if(XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200)
-					  obj.innerHTML = XMLHttpRequestObject.responseText;
-				}
-				XMLHttpRequestObject.send(null);
-			  }
+			try{
+				if(XMLHttpRequestObject){
+					var obj = document.getElementById("errMsg1");
+					var sourceobj = escape(document.getElementById("AddSectionForm:sId").value);
+					var sourceobj1 = escape(document.getElementById("AddSectionForm:uId").value);
+					XMLHttpRequestObject.open("GET", '/etudes-melete-tool/melete/addErrorMessage.jsf'+ '?sId='+ sourceobj + '&uId='+sourceobj1 +'&msg=embed_image_size_exceed');
+					
+					XMLHttpRequestObject.onreadystatechange = function()
+					{
+					  if(XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200)
+						  obj.innerHTML = XMLHttpRequestObject.responseText;
+					}
+					XMLHttpRequestObject.send(null);
+				  }
+			  }catch(e){result = false;}
 			} 		
 	}	
 	return result;	
@@ -128,9 +132,8 @@ function saveEditor()
                      <table class="maintableCollapseWithNoBorder">
                                 <tr>
 						            <td colspan="2" height="20" class="maintabledata5">
-											<h:commandLink id="TOCButton"  onmousedown="return saveEditor();" action="#{addSectionPage.goTOC}" >
-												<h:outputText id="toc" value="#{msgs.addmodulesections_TOC}" />
-											</h:commandLink> &raquo; <h:outputText id="text11" value="#{addSectionPage.module.title}" />  &raquo; <h:outputText id="add_new_section" value="#{msgs.addmodulesections_add_new_section}" />
+						            	<h:commandButton id="TOCButton" action="#{addSectionPage.goTOC}" value="#{msgs.addmodulesections_TOC}"  accesskey="#{msgs.toc_access}" title="#{msgs.im_toc_text}" styleClass="BottomImgTOC"/>
+										 &raquo; <h:outputText id="text11" value="#{addSectionPage.module.title}" />  &raquo; <h:outputText id="add_new_section" value="#{msgs.addmodulesections_add_new_section}" />
 									</td>
 						          </tr>
                                   <tr>

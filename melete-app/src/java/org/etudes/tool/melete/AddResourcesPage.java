@@ -649,6 +649,11 @@ public String getMessageText(String errcode)
 		msg = bundle.getString("embed_image_size_exceed");
 		msg= msg.concat(ServerConfigurationService.getString("content.upload.max", "0"));
 		msg = msg.concat(bundle.getString("embed_image_size_exceed1"));
+	} else if(("embed_image_size_exceed2").equals(errcode))
+	{
+		msg = bundle.getString("embed_image_size_exceed2");
+		msg= msg.concat(ServerConfigurationService.getString("content.upload.max", "0"));
+		msg = msg.concat(bundle.getString("embed_image_size_exceed2-1"));
 	}
 	else msg = bundle.getString(errcode);
 	return msg;

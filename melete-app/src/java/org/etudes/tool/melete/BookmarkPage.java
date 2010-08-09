@@ -301,6 +301,13 @@ public class BookmarkPage implements Serializable
 		return "list_bookmarks";
 	}
 
+	public String gotoMyBookmarks(String from)
+	{
+		resetValues();
+		setFromPage(from);
+		return "list_bookmarks";
+	}
+	
 	public String refreshAction()
 	{
 		resetValues();

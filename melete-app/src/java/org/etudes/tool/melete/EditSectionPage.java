@@ -1130,5 +1130,36 @@ public class EditSectionPage extends SectionPage implements Serializable
 	  return rUrl;
 	}
 	
+	public String gotoMyBookmarks()
+	{
+		
+		setSuccess(false);
+		if(!saveHere().equals("failure"))
+		{
+			setSuccess(true);
+		}
+		else return "editmodulesections";
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{bookmarkPage}");
+		BookmarkPage bmrkPage = (BookmarkPage) binding.getValue(context);
+		
+		return bmrkPage.gotoMyBookmarks("editmodulesections");		
+	}
 	
+	public String saveAndAddBookmark()
+	{
+		
+		setSuccess(false);
+		if(!saveHere().equals("failure"))
+		{
+			setSuccess(true);
+			FacesContext context = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{bookmarkPage}");
+			BookmarkPage bmrkPage = (BookmarkPage) binding.getValue(context);
+			bmrkPage.setSectionId(this.section.getSectionId().toString());
+		}
+		return "editmodulesections";
+		
+	}
 }

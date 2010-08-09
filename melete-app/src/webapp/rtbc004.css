@@ -311,7 +311,21 @@ td.MainTableClass     { white-space: nowrap;}
 .BottomImgRestore	{  	padding-left:2em;
 						background: #eee url('images/restore.png') .2em no-repeat;
 					}																																												
-
+.BottomImgPrev		{  	padding-left:2em;
+						background: #eee url('images/resultset_previous.png') .2em no-repeat;
+					}
+.BottomImgNext		{  	padding-left:2em;
+						background: #eee url('images/resultset_next.png') .2em no-repeat;
+					}
+.BottomImgTOC		{  	padding-left:2em;
+						background: #eee url('images/text_list_numbers.png') .2em no-repeat;
+					}	
+.BottomImgBookmarkIt	{  	padding-left:2em;
+						background: #eee url('images/bookmark-it.png') .2em no-repeat;
+					}
+.BottomImgMyBookmarks{  	padding-left:2em;
+						background: #eee url('images/bookmark.png') .2em no-repeat;
+					}										
  /* list resources page styles */
 
 .TitleWid3 {   width:75%; }

@@ -84,15 +84,5 @@
 			aResourcePage.addToHm_Msgs(exKey,"add_section_fail");
 			}
 		}	
-		else
-		{
-			System.out.println("status is not ok" + request.getParameter("html_content"));
-			System.out.println("request attributes");
-			   Enumeration enames = request.getAttributeNames();
-			   while (enames.hasMoreElements()) {
-			      String name = (String) enames.nextElement();
-			      String value = (String)request.getAttribute(name);      
-			      System.out.println("request attributes print:" + name + value);
- 				  }
-		}				
+		
 %>
