@@ -48,20 +48,24 @@
 %>
 
 <script type="text/javascript" language="javascript1.2">
-var XMLHttpRequestObject = false;
-
-try
-{
-	if(window.XMLHttpRequest) {
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} else if(window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-}catch(e){XMLHttpRequestObject = false;}
+  var XMLHttpRequestObject = false;
+	try
+	{
+		if(window.XMLHttpRequest) {
+			XMLHttpRequestObject = new XMLHttpRequest();
+		} else if(window.ActiveXObject) {
+			try
+			{	
+			XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+			} catch (e) {
+				try{ XMLHttpRequestObject = new ActiveXObject("Msxml2.XMLHTTP");}catch(e){XMLHttpRequestObject = false;}
+				}
+			} // else end
+	}catch(e){XMLHttpRequestObject = false;}
 
 function saveEditor()
 {
-	var result;
+	var result = true;
 	var sferyxdisplay = document.getElementById("EditSectionForm:contentEditorView:sferyxDisplay");
 	if ((sferyxdisplay != undefined )&&(document.htmleditor!=undefined && document.htmleditor!= null))
 	{	  	
@@ -81,14 +85,8 @@ function saveEditor()
 			try{
 			if(XMLHttpRequestObject){
 				var obj = document.getElementById("errMsg1");
-				var sourceobj="";
-				var sourceobj1="";
-			    if(document.getElementById("EditSectionForm:sId") != undefined || document.getElementById("EditSectionForm:sId") != null)
-					sourceobj = escape(document.getElementById('EditSectionForm:sId').value);
-				 if(document.getElementById("EditSectionForm:uId") != undefined || document.getElementById("EditSectionForm:uId") != null)	
-					sourceobj1 = escape(document.getElementById('EditSectionForm:uId').value);
 					
-				XMLHttpRequestObject.open("GET", '/etudes-melete-tool/melete/addErrorMessage.jsf'+ '?sId='+ sourceobj + '&uId='+sourceobj1 +'&msg=embed_image_size_exceed');
+				XMLHttpRequestObject.open("GET", '/etudes-melete-tool/melete/addErrorMessage.jsf'+ '?&msg=embed_image_size_exceed');
 				XMLHttpRequestObject.onreadystatechange = function()
 				{
 				  if(XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200)
@@ -110,26 +108,10 @@ function showmessage()
 		   window.defaultStatus="<%=mensaje%>";
 		   } 
   }
-
-
-function saveSection()
-{
-	var elementToGet = "EditSectionForm"+ ":" + "saveForBookmarkbutton";  
-	var form = document.forms['EditSectionForm'];  
-	if (form != null)
-	{
-	   var button = form.elements[elementToGet];  
-	   button.click();
-	 }
-	 else
-	 {
-	   //Do nothing
-	 }  
-}
 </script>
 
       <!-- This Begins the Main Text Area -->
-	<h:form id="EditSectionForm" enctype="multipart/form-data" onsubmit="return saveEditor()">	
+	<h:form id="EditSectionForm" enctype="multipart/form-data" onsubmit="if (saveEditor()){ return true;}else {return false;}"> 	
 			  <h:inputHidden id="formName" value="EditSectionForm"/>  
 			  <h:inputHidden id="mode" value="Edit"/>
 			  <h:inputHidden id="mId" value="#{editSectionPage.module.moduleId}"/>
@@ -150,9 +132,9 @@ function saveSection()
                    <!-- table header -->
                    <tr>
 			            <td width="100%" colspan="2" height="20" class="maintabledata2"> 
-				            <table> 
+				            <table  width="100%"> 
 			                   <tr >
-					            <td width="62%" >  
+					            <td width="70%" >  
 					            	<h:commandButton id="editPrevButton" action="#{editSectionPage.editPrevSection}" disabled="#{!editSectionPage.hasPrev}" value="#{msgs.editmodulesections_edit_prev}" accesskey="#{msgs.prev_access}" title="#{msgs.im_prev_text}" styleClass="BottomImgPrev"/>          	   
 									<h:commandButton id="TOCButton" action="#{editSectionPage.goTOC}" value="#{msgs.editmodulesections_TOC}" accesskey="#{msgs.toc_access}" title="#{msgs.im_toc_text}" styleClass="BottomImgTOC"/>
 					       			<h:commandButton id="editNextButton" action="#{editSectionPage.editNextSection}" disabled="#{!editSectionPage.hasNext}" value="#{msgs.editmodulesections_edit_next}" accesskey="#{msgs.next_access}" title="#{msgs.im_next_text}" styleClass="BottomImgNext"/>
@@ -160,7 +142,7 @@ function saveSection()
 						            <h:outputText id="text4_3" value="  " styleClass="ExtraPaddingClass"/>	
 									<h:commandButton id="editAddNewButton" action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.editmodulesections_add_new}" accesskey="#{msgs.add_access}" title="#{msgs.im_save_text}" styleClass="BottomImgAdd"/>  			
 						        </td>
-						        <td  width="38%" align="right">    
+						        <td class="right" width="30%" >    
 									 <h:commandButton id="bookmarkSectionLink" action="#{editSectionPage.saveAndAddBookmark}" value="#{msgs.bookmark_text}" 
 										 onclick="var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},'Melete Bookmark Window');"
 										  accesskey="#{msgs.bookmark_access}" title="#{msgs.im_bmrk_text}" styleClass="BottomImgBookmarkIt">
@@ -278,8 +260,7 @@ function saveSection()
 					<h:commandButton id="preview" action="#{editSectionPage.getPreviewPage}" rendered="#{editSectionPage.shouldRenderEditor == false}" value="#{msgs.im_preview}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgPreview"/>
 					
 					<h:commandButton id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd"/>
-						<h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgFinish"/>
-						<h:commandButton id="saveForBookmarkbutton"  action="#{editSectionPage.saveAndAddBookmark}" style="display: none; visibility: hidden;"/>
+					<h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgFinish"/>
        			 </div></td>
               </tr>
               

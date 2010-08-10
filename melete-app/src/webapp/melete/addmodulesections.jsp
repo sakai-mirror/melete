@@ -50,14 +50,19 @@
 
 <script language="javascript1.2">
   var XMLHttpRequestObject = false;
-try
-{
-if(window.XMLHttpRequest) {
-	XMLHttpRequestObject = new XMLHttpRequest();
-} else if(window.ActiveXObject) {
-	XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-}
-}catch(e){XMLHttpRequestObject = false;}
+	try
+	{
+		if(window.XMLHttpRequest) {
+			XMLHttpRequestObject = new XMLHttpRequest();
+		} else if(window.ActiveXObject) {
+			try
+			{	
+			XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+			} catch (e) {
+				try{ XMLHttpRequestObject = new ActiveXObject("Msxml2.XMLHTTP");}catch(e){XMLHttpRequestObject = false;}
+				}
+			} // else end
+	}catch(e){XMLHttpRequestObject = false;}
 
   function clearmessage()
  {
@@ -72,7 +77,7 @@ function contentChangeSubmit()
 
 function saveEditor()
 {
-	var result;
+	var result = true;
 	var sferyxdisplay = document.getElementById("AddSectionForm:contentEditorView:sferyxDisplay");
 	if ((sferyxdisplay != undefined )&&(document.htmleditor!=undefined && document.htmleditor!= null))
 	{	  	
@@ -91,9 +96,8 @@ function saveEditor()
 			try{
 				if(XMLHttpRequestObject){
 					var obj = document.getElementById("errMsg1");
-					var sourceobj = escape(document.getElementById("AddSectionForm:sId").value);
-					var sourceobj1 = escape(document.getElementById("AddSectionForm:uId").value);
-					XMLHttpRequestObject.open("GET", '/etudes-melete-tool/melete/addErrorMessage.jsf'+ '?sId='+ sourceobj + '&uId='+sourceobj1 +'&msg=embed_image_size_exceed');
+					
+					XMLHttpRequestObject.open("GET", '/etudes-melete-tool/melete/addErrorMessage.jsf'+ '?msg=embed_image_size_exceed');
 					
 					XMLHttpRequestObject.onreadystatechange = function()
 					{
@@ -111,7 +115,7 @@ function saveEditor()
 </script>
 
       <!-- This Begins the Main Text Area -->
-	<h:form id="AddSectionForm" enctype="multipart/form-data" onsubmit=" return saveEditor();">	
+	<h:form id="AddSectionForm" enctype="multipart/form-data" onsubmit="if (saveEditor()){ return true;}else {return false;}"> 
 	  <h:inputHidden id="mode" value="Add"/>
 	  <h:inputHidden id="mId" value="#{addSectionPage.module.moduleId}"/>
 	  <h:inputHidden id="sId" value="#{addSectionPage.section.sectionId}"/>
