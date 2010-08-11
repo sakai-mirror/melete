@@ -528,7 +528,7 @@ public ArrayList<String> getSuccess_fields()
 }
 
 /*
- * Entry point to get collection so that save.jsp knows where to upload items. 
+ *Get uploads collection so that save.jsp knows where to upload items. 
  */
 public String getCollectionId(String courseId)
 {
@@ -536,7 +536,7 @@ public String getCollectionId(String courseId)
 }
 
 /*
- *  Adds the resource to melete resource table
+ *  Records Sferyx embedded resource to melete resource table
  */
 public void addtoMeleteResource(String sectionId, String resourceId) throws Exception
 {
@@ -565,11 +565,10 @@ public void saveSectionHtmlItem(String UploadCollId, String courseId, String res
 	try{	
 		// in case of add and edit from notype to compose section 
 		if (resourceId == null || resourceId.length() == 0 )
-			{
-			// for license change or adding bookmarks resource Id is created now
+		{
 			resourceId = getMeleteCHService().getSectionResource(sectionId);
 			if (resourceId == null )throw new MeleteException("resource_null");
-			}
+		}
 		getMeleteCHService().editResource(courseId, resourceId, revisedData);
 	}
 	catch (Exception ex)
@@ -578,14 +577,16 @@ public void saveSectionHtmlItem(String UploadCollId, String courseId, String res
 		secContentData = revisedData.getBytes();
 
 		String secResourceName = getMeleteCHService().getTypeEditorSectionName(new Integer(sectionId));
-		ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true,
-				secResourceName, "compose content");
+		ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true,secResourceName, "compose content");
 		String newResourceId = getMeleteCHService().addResourceItem(secResourceName, getMeleteCHService().MIME_TYPE_EDITOR,
 				getMeleteCHService().getCollectionId(courseId, "typeEditor", new Integer(moduleId)), secContentData,res);
 		addtoMeleteResource(sectionId,newResourceId);
 	}
 }
 
+/*
+ * Fetch section's data to show in Sferyx editor 
+ */
 public String getResourceData(String sectionId)
 {
 	String data = null;
@@ -598,9 +599,13 @@ public String getResourceData(String sectionId)
 		
 		if(resourceId == null || resourceId.length() == 0) return data;	
 		ContentResource cr = getMeleteCHService().getResource(resourceId);
-		if (cr != null) 
+		
+		if (cr != null && "text/html".equals(cr.getContentType())) 
+		{	
 			data = new String(cr.getContent());
-		data = java.net.URLEncoder.encode(data,"UTF-8");
+			data = java.net.URLEncoder.encode(data,"UTF-8");
+		}
+		
 	}catch(Exception e)
 	{
 		e.printStackTrace();
@@ -616,6 +621,11 @@ public void setHm_msgs(HashMap<String, ArrayList<String>> hm_msgs) {
 	this.hm_msgs = hm_msgs;
 }
 
+/*
+ * Add a message.
+ * This records the bad file, large file messages when processing the composed data.
+ * Key is section_id-user-id and value is the error message 
+ */
 public void addToHm_Msgs(String k, String o)
 {
 	logger.debug("add to messages" + k + o);
@@ -629,17 +639,20 @@ public void addToHm_Msgs(String k, String o)
 	if(!v.contains(o))	v.add(o);
 	hm_msgs.put(k, v);
 }
-
+/*
+ * After displaying the error message remove it.
+ */
 public void removeFromHm_Msgs(String k)
 {
-	logger.debug("remove from messages" + k);
-
 	if(hm_msgs != null && hm_msgs.containsKey(k))
 	{
 		hm_msgs.remove(k);		
 	}
 }
 
+/*
+ * Get internationalized message to display through addMessageError page
+ */
 public String getMessageText(String errcode)
 {
 	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
@@ -659,10 +672,16 @@ public String getMessageText(String errcode)
 	return msg;
 }
 
+/*
+ * create error map
+ */
 public void contextInitialized(ServletContextEvent event) {
 	hm_msgs = new HashMap<String,ArrayList<String>>(); 
 }
 
+/*
+ * Delete the map
+ */
 public void contextDestroyed(ServletContextEvent event) {
 	hm_msgs = null;
 }

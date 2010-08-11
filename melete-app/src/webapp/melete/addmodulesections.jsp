@@ -69,6 +69,11 @@
 		   window.defaultStatus="<%=mensaje2%>";
   }
 
+function cancel()
+ {
+	window.defaultStatus="<%=mensaje2%>";
+	document.getElementById("AddSectionForm:skipCancel").value = "true";
+ }
 
 function contentChangeSubmit()
 {
@@ -76,8 +81,11 @@ function contentChangeSubmit()
 }
 
 function saveEditor()
-{
+{	 
 	var result = true;
+	var skip = new String(document.getElementById("AddSectionForm:skipCancel").value);
+	if(skip != undefined && skip.match("true")) return result;
+	 
 	var sferyxdisplay = document.getElementById("AddSectionForm:contentEditorView:sferyxDisplay");
 	if ((sferyxdisplay != undefined )&&(document.htmleditor!=undefined && document.htmleditor!= null))
 	{	  	
@@ -121,7 +129,7 @@ function saveEditor()
 	  <h:inputHidden id="sId" value="#{addSectionPage.section.sectionId}"/>
 	  <h:inputHidden id="rId" value="#{addSectionPage.meleteResource.resourceId}" rendered="#{addSectionPage.meleteResource !=null}"/>
 	  <h:inputHidden id="uId" value="#{addSectionPage.currUserId}"/>
-	  
+	  <h:inputHidden id="skipCancel" value=""/>
 	<!-- top nav bar -->
 		<f:subview id="top">
 			<jsp:include page="topnavbar.jsp"/> 
@@ -240,7 +248,7 @@ function saveEditor()
 				<h:commandButton id="submitsave1" action="#{addSectionPage.save}" rendered="#{addSectionPage.shouldRenderUpload}" onclick="clearmessage()" value="#{msgs.im_add_button}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
 				<h:commandButton id="submitsave2" action="#{addSectionPage.save}" rendered="#{!addSectionPage.shouldRenderEditor && !addSectionPage.shouldRenderUpload}" value="#{msgs.im_add_button}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
 				<h:commandButton id="submitsave3" action="#{addSectionPage.saveIntermediate}" rendered="#{addSectionPage.shouldRenderEditor}" value="#{msgs.im_save}"  accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
-				<h:commandButton id="cancelButton" immediate="true" action="#{addSectionPage.cancel}" value="#{msgs.im_cancel}"  onclick="clearmessage()" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+				<h:commandButton id="cancelButton" immediate="true" action="#{addSectionPage.cancel}" value="#{msgs.im_cancel}"  onclick="cancel()" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
 			
 			 </div>
 			</td>

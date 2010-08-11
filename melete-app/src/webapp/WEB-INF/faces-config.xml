@@ -839,8 +839,7 @@
     <navigation-case>
       <from-outcome>addmodulesections</from-outcome>
       <to-view-id>/melete/addmodulesections.jsp</to-view-id>
-      <redirect/>
-      </navigation-case>
+     </navigation-case>
      <navigation-case>
       <from-outcome>list_auth_modules</from-outcome>
       <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
