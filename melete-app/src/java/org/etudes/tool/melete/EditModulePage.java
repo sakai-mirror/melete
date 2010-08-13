@@ -227,14 +227,17 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
         }
         //Revision -- 12/20 - to remove retaintion of values
         FacesContext context = FacesContext.getCurrentInstance();
-        ValueBinding binding =Util.getBinding("#{addSectionPage}");
-        AddSectionPage addPage = (AddSectionPage) binding.getValue(context);
-        addPage.setSection(null);
-        addPage.resetSectionValues();
-        addPage.setModule(module);
-        addPage.addBlankSection();
+        Map sessionMap = context.getExternalContext().getSessionMap();
+		sessionMap.put("currModule", module);
+		
+        ValueBinding binding =Util.getBinding("#{editSectionPage}");
+        EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
+        editPage.setSection(null);
+        editPage.resetSectionValues();
+        editPage.setModule(module);
+        editPage.addBlankSection();
         
-       return "addmodulesections";
+       return "editmodulesections";
     }
 
     public String gotoTOC()

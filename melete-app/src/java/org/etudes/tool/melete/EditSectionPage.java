@@ -493,7 +493,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 
 		// create new instance of section model
-	setSection(null);
+		setSection(null);
 		resetSectionValues();
 		setSizeWarning(false);
 
@@ -505,15 +505,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		AuthorPreferencePage authPage = (AuthorPreferencePage) binding.getValue(context);
 		authPage.setEditorFlags();
 		
-		binding = Util.getBinding("#{addSectionPage}");
-		AddSectionPage aPage = (AddSectionPage) binding.getValue(context);
-		aPage.setSection(null);
-		aPage.resetSectionValues();
-		aPage.setModule(module);
-		aPage.addBlankSection();
+		// create new section
+		addBlankSection();
 		
-		logger.debug("render flags:" + aPage.getShouldRenderEditor() + authPage.isShouldRenderFCK());
-		return "addmodulesections";
+		return "editmodulesections";
 	}
 
 	/**
@@ -708,7 +703,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 					setLicenseCodes(null);
 					ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, secResourceDescription);
 
-					if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId();
+					if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
 
 					String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type, containCollectionId,
 							getSecContentData(), res);
@@ -730,7 +725,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 				/*secResourceName = selectedResourceName;
 				secResourceDescription = selectedResourceDescription;*/
 				processSelectedResource(selResourceIdFromList);
-				logger.debug("assigned selected disp name and properties properly to current");
 				//setLicenseCodes(m_selected_license);
 			}
 			meleteResource = selectedResource;
@@ -829,7 +823,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				createLinkUrl();
 				String res_mime_type = getMeleteCHService().MIME_TYPE_LINK;
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, secResourceDescription);
-				if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId();
+				if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
 				String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type, containCollectionId, getSecContentData(),
 						res);
 				selectedResource = new MeleteResource();
@@ -904,7 +898,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				createLTIDescriptor();
 				String res_mime_type = getMeleteCHService().MIME_TYPE_LTI;
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, secResourceDescription);
-				if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId();
+				if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
 				String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type, containCollectionId, getSecContentData(),
 						res);
 				selectedResource = new MeleteResource();
@@ -998,8 +992,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				if (nextSection != null) hasNext = true;
 			}
 			catch (Exception e)
-			{
-
+			{	
 			}
 		}
 		return hasNext.booleanValue();
@@ -1050,8 +1043,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				if(prevSection != null)hasPrev = true;
 			}
 			catch (Exception e)
-			{
-
+			{	
 			}
 		}
 		return hasPrev.booleanValue();
@@ -1161,5 +1153,64 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		return "editmodulesections";
 		
+	}
+	
+	/*
+	 *  click of add creates a blank section
+	 */
+	public void addBlankSection()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map sessionMap = context.getExternalContext().getSessionMap();
+		try
+		{	
+			Section s = new Section();
+			s.setContentType("notype");
+			// user info from session
+			s.setCreatedByFname((String)sessionMap.get("firstName"));
+			s.setCreatedByLname((String)sessionMap.get("lastName"));
+			s.setTextualContent(true);
+			//reset flags
+			shouldRenderEditor=false;
+			shouldRenderLink=false;
+			shouldRenderLTI=false;
+			shouldRenderUpload=false;
+			shouldRenderNotype = true;
+			int mId = module.getModuleId().intValue();
+			logger.debug("mId in blank section" + mId);
+			Integer newSectionId = sectionService.insertSection(module,s);
+			s.setSectionId(newSectionId);
+
+			// refresh module
+			this.module = moduleService.getModule(mId);
+			sessionMap.put("currModule",module);
+			s.setModule(module);
+
+			// set edit page for this section
+			setEditInfo(s);
+		}
+		catch(Exception ex)
+		{
+			// do nothing
+		}
+	}
+	
+	/*
+	 * get the current course id 
+	 * Pass it to getuploads collection method
+	 */
+	private String getCurrentCourseId()
+	{
+		String currId = "";
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map sessionMap = context.getExternalContext().getSessionMap();
+		currId = (String)sessionMap.get("course_id");
+		if(currId == null || currId.length() == 0)
+		{
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo info = (MeleteSiteAndUserInfo) binding.getValue(context);
+			currId = info.getCourse_id();
+		}
+		return currId;
 	}
 }

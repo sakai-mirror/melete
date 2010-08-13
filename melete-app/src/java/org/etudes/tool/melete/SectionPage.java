@@ -182,6 +182,7 @@ public abstract class SectionPage implements Serializable {
             meleteResource = null;
             allContentTypes = null;
             contentWithHtml = null;
+            uploadFileName = null;
             }
 
 
@@ -437,17 +438,20 @@ public abstract class SectionPage implements Serializable {
     public String getHiddenUpload()
     {
     	try{
-
-            if(section!=null && hiddenUpload == null && meleteResource != null)
+            if(section!=null && hiddenUpload == null && meleteResource != null && meleteResource.getResourceId() != null)
             {
             	ContentResource cr = getMeleteCHService().getResource(meleteResource.getResourceId());
-            	 hiddenUpload =cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
+            	if(cr != null)
+            	{
+            	  hiddenUpload =cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
                   checkUploadChange = hiddenUpload;
+            	}
             }
             else if(hiddenUpload !=null)
             {
                     hiddenUpload = hiddenUpload.substring(hiddenUpload.lastIndexOf(File.separator)+1);
             }
+            
     	}catch(Exception ex){
     		logger.debug("error accessing hidden upload field");}
             return hiddenUpload;
@@ -459,7 +463,7 @@ public abstract class SectionPage implements Serializable {
      */
     public void setHiddenUpload(String hiddenUpload)
     {
-            this.hiddenUpload = hiddenUpload;
+    	this.hiddenUpload = hiddenUpload;
     }
 
     /**
@@ -1065,7 +1069,7 @@ public abstract class SectionPage implements Serializable {
     {
      try{
      	FacesContext context = FacesContext.getCurrentInstance();
-         org.apache.commons.fileupload.FileItem fi = (org.apache.commons.fileupload.FileItem) context.getExternalContext().getRequestMap().get(fieldname);
+        org.apache.commons.fileupload.FileItem fi = (org.apache.commons.fileupload.FileItem) context.getExternalContext().getRequestMap().get(fieldname);
 
          if(fi !=null && fi.getName() != null && fi.getName().length() !=0)
              {
@@ -1228,17 +1232,11 @@ public abstract class SectionPage implements Serializable {
 	public MeleteResource getMeleteResource() {
 		//logger.debug("check meleteResource" + meleteResource + secResource);
 
-		if(formName.equals("AddSectionForm") && meleteResource == null)
-		{
-		    this.meleteResource = new MeleteResource();
-		}
-
        if(formName.equals("EditSectionForm") && meleteResource == null)
        {
        		if(secResource != null)	this.meleteResource = (MeleteResource)this.secResource.getResource();
        		if(meleteResource == null) this.meleteResource = new MeleteResource();
        }
-
 
 		return meleteResource;
 	}

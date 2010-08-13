@@ -666,21 +666,23 @@ public class ListAuthModulesPage implements Serializable
 			if(selectedModIndex <= -1) selectedModIndex = 0;
 			ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selectedModIndex);
 
-			ValueBinding binding = Util.getBinding("#{addSectionPage}");
+			ValueBinding binding = Util.getBinding("#{editSectionPage}");
 			FacesContext context = FacesContext.getCurrentInstance();
-			AddSectionPage addPage = (AddSectionPage) binding.getValue(context);
-			addPage.setSection(null);
-			addPage.resetSectionValues();
-			addPage.setModule(mdbean.getModule());
-			addPage.addBlankSection();
+			EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
+			editPage.setSection(null);
+			editPage.resetSectionValues();
+			editPage.setModule(mdbean.getModule());
 			
 			Map sessionMap = context.getExternalContext().getSessionMap();
 			sessionMap.put("currModule", mdbean.getModule());
+			
+			editPage.addBlankSection();
+
 			count = 0;
 			moduleSelected = false;
 			// Mallika -3/24/05
 			sectionSelected = false;
-			return "addmodulesections";
+			return "editmodulesections";
 		}
 		if ((moduleSelected == false) && (sectionSelected == false))
 		{
