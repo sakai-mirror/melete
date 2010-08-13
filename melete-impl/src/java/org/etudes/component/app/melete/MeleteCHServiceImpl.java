@@ -271,7 +271,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         return uploadCollId;
 		}catch(Exception e)
 		{
-			logger.error("error accessing uploads directory");
+			logger.info("error accessing uploads directory");
 			return null;
 		}
     }
@@ -303,7 +303,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        return uploadCollId;
 			}catch(Exception e)
 			{
-				logger.error("error accessing uploads directory");
+				logger.info("error accessing uploads directory");
 				return null;
 			}
 	    }
@@ -830,7 +830,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				if((!check.startsWith("/access/")) && check.indexOf("/access/") != -1)
 				{
 					check = check.substring(check.indexOf("/access/"));
-					cr.setContent(check.getBytes());
+					byte[] data = check.getBytes();
+					cr.setContent(data);
+					cr.setContentLength(data.length);
 					linkData = check;
 					getContentservice().commitResource(cr);
 					cr= null;
@@ -1074,8 +1076,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         			 resourceId = URLDecoder.decode(resourceId,"UTF-8");
         		  }catch(Exception decodex){}
         		  edit = getContentservice().editResource(resourceId);
-        		  edit.setContent(contentEditor.getBytes());
-        		  edit.setContentLength(contentEditor.length());
+        		  byte[] data = contentEditor.getBytes();
+        		  edit.setContent(data);
+        		  edit.setContentLength(data.length);
         		  getContentservice().commitResource(edit);
         		  edit = null;
         		}
@@ -1114,8 +1117,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         			 resourceId = URLDecoder.decode(resourceId,"UTF-8");
         		  }catch(Exception decodex){}
         		  edit = getContentservice().editResource(resourceId);
-        		  edit.setContent(contentEditor.getBytes());
-        		  edit.setContentLength(contentEditor.length());
+        		  byte[] data = contentEditor.getBytes();
+        		  edit.setContent(data);
+        		  edit.setContentLength(data.length);
         		  getContentservice().commitResource(edit);
         		  edit = null;
         		}

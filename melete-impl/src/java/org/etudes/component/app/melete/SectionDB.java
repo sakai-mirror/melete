@@ -771,14 +771,24 @@ public class SectionDB implements Serializable {
 	 */
 	public void updateResource(MeleteResource melResource) throws Exception
 	{
-		try{
+		try{		     
+		     // to avoid stale object exception
+		     MeleteResource mr = findMeleteResource(melResource.getResourceId());
+		     mr.setAllowCmrcl(melResource.isAllowCmrcl());
+		     mr.setAllowMod(melResource.getAllowMod());
+		     mr.setCcLicenseUrl(melResource.getCcLicenseUrl());
+		     mr.setCopyrightOwner(melResource.getCopyrightOwner());
+		     mr.setCopyrightYear(melResource.getCopyrightYear());
+		     mr.setLicenseCode(melResource.getLicenseCode());
+		     mr.setReqAttr(melResource.isReqAttr());
+		     
 		     Session session = hibernateUtil.currentSession();
-	         Transaction tx = null;
+		    Transaction tx = null;
 			try
 			{
 				tx = session.beginTransaction();
 			//save resource
-				session.saveOrUpdate(melResource);
+				session.saveOrUpdate(mr);
 			  // complete transaction
 				tx.commit();
 

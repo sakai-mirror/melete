@@ -409,13 +409,16 @@ public class EditSectionPage extends SectionPage implements Serializable
 				}
 
 				// step 3: edit license information
-				if(meleteResource != null && meleteResource.getResourceId() != null)
+				if(meleteResource != null && meleteResource.getResourceId() != null && meleteResource.getResourceId().length() != 0)
+				{					
 				meleteResource = lPage.processLicenseInformation(meleteResource);
-
-				// step2: edit section properties
-				//sectionService.editSection(section, meleteResource);
 				sectionService.updateResource(meleteResource);
 				sectionService.insertSectionResource(section, meleteResource);
+				}
+				else sectionService.editSection(section);
+				// step2: edit section properties
+				//sectionService.editSection(section, meleteResource);
+				
 			}
 
 			// uploadFileName=null;
