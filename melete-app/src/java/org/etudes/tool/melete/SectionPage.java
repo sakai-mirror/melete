@@ -530,26 +530,33 @@ public abstract class SectionPage implements Serializable {
               contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm").setRendered(false);
             }
 
-            //Upon changing content type, license is set by the selected resource, if there is one,
-            //or via User preferences
-            binding = Util.getBinding("#{licensePage}");
-            LicensePage lPage = (LicensePage)binding.getValue(context);
-            lPage.setFormName(this.formName);
-            lPage.resetValues();
-            
-         	MeleteUserPreference mup = preferencePage.getMup();
-         	lPage.setInitialValues(this.formName, mup);
-         	
-            //The code below is required because the setter for the license code kicks in by default
-            //and we need to actually set the component with the values determined above.(ME-1071)         	   
-            UIComponent licComp = (UIComponent)contentTypeRadio.findComponent(getFormName());
-            if(licComp != null && licComp.findComponent("ResourcePropertiesPanel") != null && licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm") != null
-            	&& licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView") != null)
-            	{
-            		licComp = licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView");
-            		UIInput uiInp = (UIInput)licComp.findComponent("licenseCodes");
-            		uiInp.setValue(lPage.getLicenseCodes());
-            	}          
+            setLicenseInfo(); 
+    }
+    
+    protected void setLicenseInfo()
+    {
+    	FacesContext context = FacesContext.getCurrentInstance();
+
+    	 ValueBinding licBinding = Util.getBinding("#{licensePage}");
+         LicensePage lPage = (LicensePage)licBinding.getValue(context);
+         lPage.setFormName(this.formName);
+         lPage.resetValues();
+         
+         ValueBinding authBinding = Util.getBinding("#{authorPreferences}");
+         AuthorPreferencePage preferencePage = (AuthorPreferencePage)authBinding.getValue(context);    
+        MeleteUserPreference mup = preferencePage.getMup();
+      	lPage.setInitialValues(this.formName, mup);
+      	
+      	  //The code below is required because the setter for the license code kicks in by default
+         //and we need to actually set the component with the values determined above.(ME-1071)         	   
+         UIComponent licComp = context.getViewRoot().findComponent("EditSectionForm");
+         if(licComp != null && licComp.findComponent("ResourcePropertiesPanel") != null && licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm") != null
+         	&& licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView") != null)
+         	{
+         		licComp = licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView");
+         		UIInput uiInp = (UIInput)licComp.findComponent("licenseCodes");
+         		uiInp.setValue(lPage.getLicenseCodes());
+         	}            	
     }
 
     /**

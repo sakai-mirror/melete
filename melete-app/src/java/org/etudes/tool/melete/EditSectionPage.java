@@ -702,8 +702,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				if (res_mime_type != null)
 				{
 					secResourceDescription = "";
-
-					setLicenseCodes(null);
+                    setLicenseInfo();
 					ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, secResourceDescription);
 
 					if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
@@ -815,7 +814,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				 */
 				/*secResourceName = "";
 				secResourceDescription = "";*/
-				setLicenseCodes(null);
+				setLicenseInfo();
 				if(newURLTitle == null || newURLTitle.length() == 0)
 				{
 					errMsg = bundle.getString("URL_title_reqd");
@@ -890,7 +889,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "select_or_cancel", errMsg));
 					return "editContentLTIServerView";
 				}
-				setLicenseCodes(null);
+				setLicenseInfo();
 				if(newURLTitle == null || newURLTitle.length() == 0)
 				{
 					errMsg = bundle.getString("URL_title_reqd");
