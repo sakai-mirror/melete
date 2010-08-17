@@ -96,8 +96,8 @@ document.writeln('<PARAM NAME="scriptable" VALUE="true">');
 				document.writeln('<PARAM NAME ="menusToRemove" VALUE="menuFile,menuForm">');
 				document.writeln('<PARAM NAME ="statusbarVisible" VALUE="false">');
 				document.writeln('<PARAM NAME ="menuItemsToRemove" VALUE="insertFormFieldTextBoxMenuItem, insertFormFieldTextAreaMenuItem, insertFormFieldCheckBoxMenuItem, insertFormFieldRadioButtonMenuItem,insertFormFieldDropDownMenuItem, insertFormFieldPushButtonMenuItem,insertFormFieldImageButtonMenuItem,pagePropertiesMainMenuItem">');
-				document.writeln('<PARAM NAME ="toolbarItemsToRemove" VALUE="saveFileButton,openFileButton,newFileButton">');
-				document.writeln('<PARAM NAME ="useFlowToolbarLayout" VALUE="true">');
+				document.writeln('<PARAM NAME ="toolbarItemsToRemove" VALUE="saveFileButton,openFileButton,newFileButton,styleClasses">');
+				document.writeln('<PARAM NAME ="useFlowToolbarLayout" VALUE="true">');							
 				
 if(!_ie)
 {	
