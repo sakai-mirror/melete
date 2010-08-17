@@ -569,19 +569,21 @@ public void saveSectionHtmlItem(String UploadCollId, String courseId, String res
 			resourceId = getMeleteCHService().getSectionResource(sectionId);
 			if (resourceId == null )throw new MeleteException("resource_null");
 		}
+		// In case type is change from typelink or typeUploads to compose
+		// for sections collection is module_id		
+		if (resourceId.indexOf("/private/meleteDocs/")!= -1 && resourceId.indexOf("/uploads/") != -1) throw new MeleteException("section_html_null");
 		getMeleteCHService().editResource(courseId, resourceId, revisedData);
 	}
 	catch (Exception ex)
-	{		
-		byte[] secContentData = new byte[revisedData.length()];
-		secContentData = revisedData.getBytes();
+	{	
+		byte[] secContentData = revisedData.getBytes();
 
 		String secResourceName = getMeleteCHService().getTypeEditorSectionName(new Integer(sectionId));
 		ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true,secResourceName, "compose content");
 		String newResourceId = getMeleteCHService().addResourceItem(secResourceName, getMeleteCHService().MIME_TYPE_EDITOR,
 				getMeleteCHService().getCollectionId(courseId, "typeEditor", new Integer(moduleId)), secContentData,res);
 		addtoMeleteResource(sectionId,newResourceId);
-	}
+	}	
 }
 
 /*

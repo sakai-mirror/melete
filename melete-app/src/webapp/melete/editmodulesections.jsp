@@ -48,20 +48,6 @@
 %>
 
 <script type="text/javascript" language="javascript1.2">
-  var XMLHttpRequestObject = false;
-	try
-	{
-		if(window.XMLHttpRequest) {
-			XMLHttpRequestObject = new XMLHttpRequest();
-		} else if(window.ActiveXObject) {
-			try
-			{	
-			XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-			} catch (e) {
-				try{ XMLHttpRequestObject = new ActiveXObject("Msxml2.XMLHTTP");}catch(e){XMLHttpRequestObject = false;}
-				}
-			} // else end
-	}catch(e){XMLHttpRequestObject = false;}
 
 function saveEditor()
 {
@@ -77,25 +63,7 @@ function saveEditor()
       	  document.htmleditor.addAdditionalDynamicParameter('resourceId',document.getElementById("EditSectionForm:rId").value);
        document.htmleditor.addAdditionalDynamicParameter('uId',document.getElementById("EditSectionForm:uId").value);		  
 		
-		result = document.htmleditor.uploadMultipartContent(true);	
-		
-		// show large file error message to the user as form submit fails now.
-		if(!result)
-			{
-			try{
-			if(XMLHttpRequestObject){
-				var obj = document.getElementById("errMsg1");
-				XMLHttpRequestObject.open("GET", '/etudes-melete-tool/melete/addErrorMessage.jsf'+ '?&msg=embed_image_size_exceed');
-				XMLHttpRequestObject.onreadystatechange = function()
-				{
-				  if(XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200)
-					  obj.innerHTML = XMLHttpRequestObject.responseText;
-				}
-				XMLHttpRequestObject.send(null);
-			  }
-			  }catch(e){result = false;}
-			  
-			} 	    	
+		result = document.htmleditor.uploadMultipartContent(true);			    	
 	}	
 	return result;	
 }

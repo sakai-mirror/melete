@@ -362,7 +362,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 					binding = Util.getBinding("#{authorPreferences}");
 	    			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
 	    			
-	    			if (section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx())
+	    			if ("typeEditor".equals(section.getContentType()) && preferencePage.isShouldRenderSferyx())
 	    			{
 	    				// get secResource object
 	    				secResource = sectionService.getSectionResourcebyId(section.getSectionId().toString());
@@ -371,7 +371,21 @@ public class EditSectionPage extends SectionPage implements Serializable
 	    				section.setSectionResource(secResource);
 	    				// refresh contentEditor 
 	    				ContentResource cr = getMeleteCHService().getResource(secResource.getResource().getResourceId());
-	    				if (cr != null) this.contentEditor = new String(cr.getContent());					
+	    				if (cr != null) this.contentEditor = new String(cr.getContent());		    				
+	    			}
+	    			else if ("typeEditor".equals(section.getContentType()) && preferencePage.isShouldRenderFCK())
+	    			{
+	       				// type change from type upload or typeLink to compose then create section xxx.html file
+	    				if (meleteResource != null && meleteResource.getResourceId() != null && meleteResource.getResourceId().length() != 0 &&
+	    					meleteResource.getResourceId().indexOf("/private/meleteDocs/") != -1 && meleteResource.getResourceId().indexOf("/uploads/") != -1)
+	    				{
+		   					throw new MeleteException("section_html_null"); 
+	    				}
+	    				// no type to editor
+	    				if (meleteResource != null && meleteResource.getResourceId() != null && meleteResource.getResourceId().length() == 0)
+	    				{
+	      					throw new MeleteException("section_html_null"); 
+	    				}
 	    			}
 	    			//The condition below was put in to handle ME-639
 	    			else 
@@ -400,12 +414,18 @@ public class EditSectionPage extends SectionPage implements Serializable
 				{
 					// resource is not there when no content type is choosen
 					if (logger.isDebugEnabled()) logger.debug("resource is new i.e. coming from notype content");
-					String addCollId = getMeleteCHService().getCollectionId(section.getContentType(), module.getModuleId());
+					
+					String addCollId = null;
+					if("typeEditor".equals(section.getContentType()))
+						addCollId = getMeleteCHService().getCollectionId(section.getContentType(), module.getModuleId());
+					else addCollId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
+					
+					logger.debug("addCollId is:" + addCollId);
 					String newResourceId = addResourceToMeleteCollection(addCollId);
 					meleteResource.setResourceId(newResourceId);
 					if (logger.isDebugEnabled()) logger.debug("new resource id" + newResourceId + meleteResource);
 					/* here create association and insert new resource */
-					sectionService.insertMeleteResource(section, meleteResource);
+					sectionService.insertSectionResource(section, meleteResource);
 				}
 
 				// step 3: edit license information
@@ -413,18 +433,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 				{					
 				meleteResource = lPage.processLicenseInformation(meleteResource);
 				sectionService.updateResource(meleteResource);
-				sectionService.insertSectionResource(section, meleteResource);
 				}
-				else sectionService.editSection(section);
-				// step2: edit section properties
-				//sectionService.editSection(section, meleteResource);
-				
+				sectionService.insertSectionResource(section, meleteResource);
 			}
-
-			// uploadFileName=null;
-			//un-comment if want to show success message on save.
-			//String successMsg = bundle.getString("add_section_success");
-			//context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "add_section_success", successMsg));
 
 			//Track the event
 			EventTrackingService.post(EventTrackingService.newEvent("melete.section.edit", ToolManager.getCurrentPlacement().getContext(), true));
