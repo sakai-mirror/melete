@@ -84,6 +84,7 @@ import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.cover.ContentTypeImageService;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.tool.cover.SessionManager;
+import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.util.ResourceLoader;
 import javax.faces.model.SelectItem;
 /**
@@ -160,10 +161,11 @@ public abstract class SectionPage implements Serializable {
      protected String selectedResourceDescription;
 
  	protected MeleteResource selectedResource;
- 	
+
  	protected Boolean contentWithHtml;
 
  	protected String oldType;
+ 	private String currUserId;
 
    public SectionPage()
             {
@@ -180,6 +182,7 @@ public abstract class SectionPage implements Serializable {
             meleteResource = null;
             allContentTypes = null;
             contentWithHtml = null;
+            uploadFileName = null;
             }
 
 
@@ -223,7 +226,7 @@ public abstract class SectionPage implements Serializable {
     {
             if(this.section != null && this.section.getContentType() != null)
             {
-            	
+
             shouldRenderEditor = this.section.getContentType().equals("typeEditor");
             }
             return shouldRenderEditor;
@@ -272,7 +275,7 @@ public abstract class SectionPage implements Serializable {
 		return shouldRenderNotype;
 	}
 
-	
+
     public Boolean getContentWithHtml() {
 		return contentWithHtml;
 	}
@@ -350,12 +353,12 @@ public abstract class SectionPage implements Serializable {
      */
     public void setSection(SectionObjService sec)
     {
-        try
+         try
 			{
             this.section = null;
             if(sec !=null)
             {
-                    if (logger.isDebugEnabled()) logger.debug("setSection called and section is not null");
+                    if (logger.isDebugEnabled()) logger.debug("setSection called and section is not null" + sec.getSectionId());
                     this.module = (Module)sec.getModule();
                     this.section = sec;
             }
@@ -424,7 +427,7 @@ public abstract class SectionPage implements Serializable {
      * @param contentEditor
      *
      */
-    public void setContentEditor(String contentEditor){		
+    public void setContentEditor(String contentEditor){
                     this.contentEditor = contentEditor;
             }
 
@@ -434,17 +437,20 @@ public abstract class SectionPage implements Serializable {
     public String getHiddenUpload()
     {
     	try{
-
-            if(section!=null && hiddenUpload == null && meleteResource != null)
+            if(section!=null && hiddenUpload == null && meleteResource != null && meleteResource.getResourceId() != null)
             {
             	ContentResource cr = getMeleteCHService().getResource(meleteResource.getResourceId());
-            	 hiddenUpload =cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
+            	if(cr != null)
+            	{
+            	  hiddenUpload =cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
                   checkUploadChange = hiddenUpload;
+            	}
             }
             else if(hiddenUpload !=null)
             {
                     hiddenUpload = hiddenUpload.substring(hiddenUpload.lastIndexOf(File.separator)+1);
             }
+
     	}catch(Exception ex){
     		logger.debug("error accessing hidden upload field");}
             return hiddenUpload;
@@ -456,7 +462,7 @@ public abstract class SectionPage implements Serializable {
      */
     public void setHiddenUpload(String hiddenUpload)
     {
-            this.hiddenUpload = hiddenUpload;
+    	this.hiddenUpload = hiddenUpload;
     }
 
     /**
@@ -508,7 +514,7 @@ public abstract class SectionPage implements Serializable {
             if(contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor") != null)
             {
             	setFCKCollectionAttrib();
-            	contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor").setRendered(shouldRenderEditor && preferencePage.isShouldRenderFCK());		                
+            	contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor").setRendered(shouldRenderEditor && preferencePage.isShouldRenderFCK());
             }
 
             if(contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView") != null)
@@ -523,26 +529,33 @@ public abstract class SectionPage implements Serializable {
               contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm").setRendered(false);
             }
 
-            //Upon changing content type, license is set by the selected resource, if there is one,
-            //or via User preferences
-            binding = Util.getBinding("#{licensePage}");
-            LicensePage lPage = (LicensePage)binding.getValue(context);
-            lPage.setFormName(this.formName);
-            lPage.resetValues();
-            
-         	MeleteUserPreference mup = preferencePage.getMup();
-         	lPage.setInitialValues(this.formName, mup);
-         	
-            //The code below is required because the setter for the license code kicks in by default
-            //and we need to actually set the component with the values determined above.(ME-1071)         	   
-            UIComponent licComp = (UIComponent)contentTypeRadio.findComponent(getFormName());
-            if(licComp != null && licComp.findComponent("ResourcePropertiesPanel") != null && licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm") != null
-            	&& licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView") != null)
-            	{
-            		licComp = licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView");
-            		UIInput uiInp = (UIInput)licComp.findComponent("licenseCodes");
-            		uiInp.setValue(lPage.getLicenseCodes());
-            	}          
+            setLicenseInfo();
+    }
+
+    protected void setLicenseInfo()
+    {
+    	FacesContext context = FacesContext.getCurrentInstance();
+
+    	 ValueBinding licBinding = Util.getBinding("#{licensePage}");
+         LicensePage lPage = (LicensePage)licBinding.getValue(context);
+         lPage.setFormName(this.formName);
+         lPage.resetValues();
+
+         ValueBinding authBinding = Util.getBinding("#{authorPreferences}");
+         AuthorPreferencePage preferencePage = (AuthorPreferencePage)authBinding.getValue(context);
+        MeleteUserPreference mup = preferencePage.getMup();
+      	lPage.setInitialValues(this.formName, mup);
+
+      	  //The code below is required because the setter for the license code kicks in by default
+         //and we need to actually set the component with the values determined above.(ME-1071)
+         UIComponent licComp = context.getViewRoot().findComponent("EditSectionForm");
+         if(licComp != null && licComp.findComponent("ResourcePropertiesPanel") != null && licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm") != null
+         	&& licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView") != null)
+         	{
+         		licComp = licComp.findComponent("ResourcePropertiesPanel").findComponent("LicenseForm").findComponent("SectionView");
+         		UIInput uiInp = (UIInput)licComp.findComponent("licenseCodes");
+         		uiInp.setValue(lPage.getLicenseCodes());
+         	}
     }
 
     /**
@@ -642,15 +655,16 @@ public abstract class SectionPage implements Serializable {
 	/*
 	 *  adds resource to specified melete module or uploads collection.
 	 */
-    public String addResourceToMeleteCollection(String uploadHomeDir, String addCollId) throws UserErrorException,MeleteException
+    public String addResourceToMeleteCollection(String addCollId) throws UserErrorException,MeleteException
     {
     	try{
     		String res_mime_type=getMeleteCHService().MIME_TYPE_EDITOR;
     		boolean encodingFlag = false;
 
-    		if(section.getContentType().equals("typeEditor"))
+    		if(section.getContentType().equals("typeEditor") )
     		{
-    			contentEditor =  getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir,contentEditor);
+    			contentEditor =  getMeleteCHService().findLocalImagesEmbeddedInEditor(ToolManager.getCurrentPlacement().getContext(),new ArrayList<String>(),null,contentEditor);
+
     			res_mime_type= getMeleteCHService().MIME_TYPE_EDITOR;
     			secContentData = new byte[contentEditor.length()];
     			secContentData = contentEditor.getBytes();
@@ -719,8 +733,9 @@ public abstract class SectionPage implements Serializable {
 
 	/*
 	 *  adds resource to specified melete module or uploads collection.
+	 *  For sferyx, refreshes the editor contents by reading from sectionxxx.html file.
 	 */
-	public void editMeleteCollectionResource(String uploadHomeDir,String resourceId) throws MeleteException
+	public void editMeleteCollectionResource(String resourceId) throws MeleteException
 	{
 	//		if (logger.isDebugEnabled()) logger.debug("edit resource function");
             String res_mime_type=null;
@@ -730,21 +745,34 @@ public abstract class SectionPage implements Serializable {
 			{
 	//			 if (logger.isDebugEnabled()) logger.debug("editing properties for " + resourceId);
 
-            	if(section.getContentType().equals("typeEditor"))
-            	{
-            		try
-            		{
-            			String contentData =  getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir,contentEditor);
-            			if(contentData != null) contentEditor = contentData;
-            		}
-            		catch(MeleteException me)
-            		{
-            			//uncomment if we want to save section contents before throwing exception
-            			//getMeleteCHService().editResource(resourceId, contentEditor);
-            			throw me;
-            		}
-            		getMeleteCHService().editResource(resourceId, contentEditor);
-            	}
+            	FacesContext context = FacesContext.getCurrentInstance();
+        		ValueBinding binding = Util.getBinding("#{authorPreferences}");
+        		AuthorPreferencePage authPage = (AuthorPreferencePage) binding.getValue(context);
+        		authPage.setEditorFlags();
+        		//for fck editor normal processing
+        		if(section.getContentType().equals("typeEditor") && authPage.isShouldRenderFCK())
+        		{
+        			try
+        			{
+        				String contentData =  getMeleteCHService().findLocalImagesEmbeddedInEditor(ToolManager.getCurrentPlacement().getContext(),new ArrayList<String>(),null,contentEditor);
+        				if(contentData != null) contentEditor = contentData;
+        			}
+        			catch(MeleteException me)
+        			{
+        				//uncomment if we want to save section contents before throwing exception
+        				//getMeleteCHService().editResource(resourceId, contentEditor);
+        				throw me;
+        			}
+        			getMeleteCHService().editResource(resourceId, contentEditor);
+        		}
+        		// sferyx saves thru save.jsp
+        		else if(section.getContentType().equals("typeEditor") && authPage.isShouldRenderSferyx())
+        		{
+        			if(resourceId == null ) throw new MeleteException("resource_null");
+        			ContentResource cr = getMeleteCHService().getResource(resourceId);
+        			if (cr != null)
+        				this.contentEditor = new String(cr.getContent());
+        		}
 
 	            if(resourceId != null && (section.getContentType().equals("typeLink") || section.getContentType().equals("typeUpload") || section.getContentType().equals("typeLTI")))
 	            {
@@ -1047,7 +1075,7 @@ public abstract class SectionPage implements Serializable {
     {
      try{
      	FacesContext context = FacesContext.getCurrentInstance();
-         org.apache.commons.fileupload.FileItem fi = (org.apache.commons.fileupload.FileItem) context.getExternalContext().getRequestMap().get(fieldname);
+        org.apache.commons.fileupload.FileItem fi = (org.apache.commons.fileupload.FileItem) context.getExternalContext().getRequestMap().get(fieldname);
 
          if(fi !=null && fi.getName() != null && fi.getName().length() !=0)
              {
@@ -1208,19 +1236,13 @@ public abstract class SectionPage implements Serializable {
 	 * @return Returns the meleteResource.
 	 */
 	public MeleteResource getMeleteResource() {
-		logger.debug("check meleteResource" + meleteResource + secResource);
-
-		if(formName.equals("AddSectionForm") && meleteResource == null)
-		{
-		    this.meleteResource = new MeleteResource();
-		}
+		//logger.debug("check meleteResource" + meleteResource + secResource);
 
        if(formName.equals("EditSectionForm") && meleteResource == null)
        {
        		if(secResource != null)	this.meleteResource = (MeleteResource)this.secResource.getResource();
        		if(meleteResource == null) this.meleteResource = new MeleteResource();
        }
-
 
 		return meleteResource;
 	}
@@ -1497,5 +1519,25 @@ public abstract class SectionPage implements Serializable {
 	 	 {
 	 		 return getMeleteCHService().getLinkContent(resourceId);
 	 	 }
+
+
+	public String getCurrUserId() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map sessionMap = context.getExternalContext().getSessionMap();
+		if(sessionMap != null && sessionMap.containsKey("userId"))
+			currUserId = (String) sessionMap.get("userId");
+		else
+		{
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo meleteSiteAndUser = (MeleteSiteAndUserInfo) binding.getValue(context);
+			currUserId = meleteSiteAndUser.getCurrentUser().getId();
+		}
+		return currUserId;
+	}
+
+
+	public void setCurrUserId(String currUserId) {
+		this.currUserId = currUserId;
+	}
 
 }

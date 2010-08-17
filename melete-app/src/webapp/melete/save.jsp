@@ -2,14 +2,14 @@
 <%@ page import="org.apache.commons.fileupload.disk.DiskFileItem"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.io.*"%>
-<%@page import="org.sakaiproject.component.cover.ServerConfigurationService"%>
+<%@ page import="javax.faces.context.FacesContext,  org.etudes.tool.melete.AddResourcesPage"%>
 <!--
  ***********************************************************************************
  * $URL$
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,44 +28,61 @@
  **********************************************************************************
 -->
 <%
-			String uploadTempDir = ServerConfigurationService.getString("melete.uploadDir", "");
+			System.out.println("SAVE PAGE CALLED !!!!");
+			final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
+			final AddResourcesPage aResourcePage = (AddResourcesPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "addResourcesPage");
+				
+			String status = (String)request.getAttribute("upload.status");
+		
+			if( status != null && status.equalsIgnoreCase("ok"))
+			{	
+			String collId = aResourcePage.getCollectionId(request.getParameter("courseId"));
+			Map newEmbeddedResources = new HashMap();
+			
 			for (Enumeration e = request.getAttributeNames(); e.hasMoreElements();)
 				{
 					String oneKey = (String) e.nextElement();
+			
 					if(oneKey.startsWith("sferyx"))
 					{
 							// store the image at uploads directory
 						try {
 							org.apache.commons.fileupload.disk.DiskFileItem item = (org.apache.commons.fileupload.disk.DiskFileItem)request.getAttribute(oneKey);
-							int lastSlash = item.getName().lastIndexOf("/");
-							String fileName = item.getName().substring(lastSlash);
-							lastSlash = fileName.lastIndexOf("\\");
-							if (lastSlash > -1 ) {
-								fileName = fileName.substring(lastSlash).replace('\\', '/');
-							}
+							String fileName = item.getName();
+							int lastSlash = fileName.lastIndexOf("/");
+							fileName = fileName.substring(lastSlash + 1);
 							
+							// for word paste files
+							lastSlash = fileName.lastIndexOf("\\");
+							if(lastSlash != -1)
+								fileName = fileName.substring(lastSlash + 1);
+																			
 							InputStream in = item.getInputStream();
-							FileOutputStream fout = null;
-							if (uploadTempDir!= null && uploadTempDir.length() > 0)	
-							{
-								fout = new FileOutputStream(uploadTempDir + fileName);
+							byte[] buf = new byte[(int)item.getSize()];
+							in.read(buf);
+							
+							String embed_ResId = aResourcePage.addItem(fileName,(String)item.getContentType(),collId , buf);
+							in.close();
+							aResourcePage.addtoMeleteResource(null,embed_ResId);
 								
-								// Transfer bytes from in to out
-								byte[] buf = new byte[1024];
-								int len;
-								while ((len = in.read(buf)) > 0) {
-								    fout.write(buf, 0, len);
-								}
-								in.close();
-								fout.close();
-							}
-							else {
-								System.out.println("melete upload directory property is not set. temp item place is:" + item.getStoreLocation());
-							}
+							newEmbeddedResources.put(fileName, embed_ResId);
 							
 						}  catch (Exception ex) {
 							// do nothing
 						}
 					} // if end
-				} // for end			
+				} // for end	
+		
+		try
+		{
+			if(request.getParameter("html_content") != null)
+			{			
+				aResourcePage.saveSectionHtmlItem(collId, request.getParameter("courseId"), request.getParameter("resourceId"), request.getParameter("mId"), request.getParameter("sId"), request.getParameter("uId"),newEmbeddedResources, request.getParameter("html_content") );
+			}				
+		}  catch (Exception ex) {
+			String exKey = request.getParameter("sId") + "-"+ request.getParameter("uId"); 
+			aResourcePage.addToHm_Msgs(exKey,"add_section_fail");
+			}
+		}	
+		
 %>

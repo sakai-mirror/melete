@@ -41,15 +41,18 @@
 			String infoMsg = bundle.getString("file_too_large");
 			FacesMessage msg = new FacesMessage(null, infoMsg);
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			facesContext.addMessage(null, msg);		
+			facesContext.addMessage(null, msg);				
 	   }
 %>
 
 <script language="javascript1.2">
 function fillupload()
 {
-		var k =document.getElementById("file1").value;
-		document.getElementById("ServerViewForm:filename").value=k;
+	if(document.getElementById("file1") != undefined)
+	{
+		var k = document.getElementById("file1").value;
+		document.getElementById("EditUploadServerViewForm:filename").value=k;
+	}
 }
 
 </script>
@@ -72,7 +75,8 @@ function fillupload()
 																			<INPUT TYPE="FILE" id="file1" NAME="file1" style="visibility:visible" onChange="javascript:fillupload()"/>
 						</td></tr>	
 						<tr><td  colspan="2"> 
-							<h:outputText id="note" value="#{msgs.editcontentuploadserverview_note} #{editSectionPage.maxUploadSize}MB."  styleClass="comment red"/>							<h:inputHidden id="filename" value="#{editSectionPage.hiddenUpload}" />
+							<h:outputText id="note" value="#{msgs.editcontentuploadserverview_note} #{editSectionPage.maxUploadSize}MB."  styleClass="comment red"/>				
+							<h:inputHidden id="filename" value="#{editSectionPage.hiddenUpload}" />
 							<h:outputText id="brval" value="<BR>" escape="false"/>
 							<h:outputText id="somespaces1" value=" " styleClass="MediumPaddingClass" />
 							<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{editSectionPage.section.openWindow}" rendered="#{editSectionPage.shouldRenderUpload}">

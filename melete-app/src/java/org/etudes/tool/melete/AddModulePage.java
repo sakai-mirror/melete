@@ -142,11 +142,12 @@ public class AddModulePage extends ModulePage implements Serializable{
     public String addContentSections()
     {
         FacesContext context = FacesContext.getCurrentInstance();
-        ValueBinding binding =Util.getBinding("#{addSectionPage}");
-        AddSectionPage addPage = (AddSectionPage) binding.getValue(context);
-        addPage.resetSectionValues();
-        addPage.setModule(module);
-       
-       return "addmodulesections";
+        ValueBinding binding =Util.getBinding("#{editSectionPage}");
+        EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
+        editPage.resetSectionValues();
+        editPage.setModule(module);
+        editPage.addBlankSection();
+        
+       return "editmodulesections";
     }
  }

@@ -126,18 +126,7 @@ public class DeleteResourcePage implements Serializable{
   				ManageResourcesPage managePage = (ManageResourcesPage) binding.getValue(context);
   				refreshCurrSiteResourcesList();
   			}
-  			else
-  			{
-  				ValueBinding binding = Util.getBinding("#{addSectionPage}");
-  				AddSectionPage addPage = (AddSectionPage) binding.getValue(context);
-  				if(addPage.meleteResource == null || addPage.meleteResource.getResourceId() == null
-					|| delResourceId.equals(addPage.meleteResource.getResourceId()))
-  				{
-  					addPage.resetMeleteResourceValues();
-  					addPage.meleteResource = null;
-  				}
-  				refreshCurrSiteResourcesList();
-  			}
+  			
   			return fromPage;
   		}
 		catch (Exception e)

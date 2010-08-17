@@ -339,7 +339,7 @@ public class ListResourcesPage {
 						{
 						String contentextension = cr.getContentType();
 				 		rgif = ContentTypeImageService.getContentTypeImage(contentextension);
-				 		logger.debug("image provided for" + displayName +" is " +rgif);
+				 	//	logger.debug("image provided for" + displayName +" is " +rgif);
 				 		if(rgif.startsWith("sakai"))
 				 			rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
 				 		else if (rgif.startsWith("/sakai"))

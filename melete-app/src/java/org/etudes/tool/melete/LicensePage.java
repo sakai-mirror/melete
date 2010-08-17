@@ -347,11 +347,6 @@ public class LicensePage {
 
 			public String getLicenseCodes()
 			{
-				// in case of edit section find from secResource object
-		       /*	if (licenseCodes == null)
-		       	{
-		   			setLicensePreference();
-		       	}*/
 				return licenseCodes;
 			}
 

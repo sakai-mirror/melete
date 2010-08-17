@@ -24,6 +24,7 @@
 package org.etudes.tool.melete;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
@@ -43,6 +44,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.event.*;
 import javax.faces.el.ValueBinding;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,9 +54,11 @@ import org.etudes.api.app.melete.exception.MeleteException;
 import org.etudes.api.app.melete.exception.UserErrorException;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 
-public class AddResourcesPage {
+public class AddResourcesPage implements ServletContextListener {
+
   private String fileType;
   private String numberItems;
   private int maxUploadSize;
@@ -65,7 +70,8 @@ public class AddResourcesPage {
   private ArrayList<String> success_fields = null;
   /** Dependency:  The logging service. */
   protected Log logger = LogFactory.getLog(AddResourcesPage.class);
-
+  private HashMap<String, ArrayList<String>> hm_msgs;
+ 
   public AddResourcesPage()
   {
   }
@@ -316,13 +322,13 @@ public class AddResourcesPage {
       }
 
 
-  private void addItem(String secResourceName, String secContentMimeType,String addCollId, byte[] secContentData) throws MeleteException
+  public String addItem(String secResourceName, String secContentMimeType,String addCollId, byte[] secContentData) throws MeleteException
   {
 	  ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false,secResourceName,"");
       if (logger.isDebugEnabled()) logger.debug("add resource now " + secContentData );
       try
       {
-        String newResourceId = getMeleteCHService().addResourceItem(secResourceName,secContentMimeType, addCollId, secContentData,res );
+        return getMeleteCHService().addResourceItem(secResourceName,secContentMimeType, addCollId, secContentData,res );
       }
       catch(MeleteException me)
 	  {
@@ -519,6 +525,167 @@ public ArrayList<String> getErr_fields()
 public ArrayList<String> getSuccess_fields()
 {
 	return this.success_fields;
+}
+
+/*
+ *Get uploads collection so that save.jsp knows where to upload items. 
+ */
+public String getCollectionId(String courseId)
+{
+	return getMeleteCHService().getUploadCollectionId(courseId);
+}
+
+/*
+ *  Records Sferyx embedded resource to melete resource table
+ */
+public void addtoMeleteResource(String sectionId, String resourceId) throws Exception
+{
+	getMeleteCHService().addToMeleteResource(sectionId, resourceId);
+}
+
+/*
+ *  Saves/creates the section_xxx.html file for sferyx editor.
+ *  If Section_xxx.html resource doesn't exist for add section or when content is added to a notype section
+ *  then this method creates the resource item and adds to melete resource table.
+ */
+public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, String moduleId, String sectionId, String userId, Map newEmbeddedResources, String htmlContentData) throws Exception
+{
+	ArrayList<String> errs = new ArrayList<String>();
+	String revisedData = getMeleteCHService().findLocalImagesEmbeddedInEditor(courseId, errs, newEmbeddedResources, htmlContentData);
+	logger.debug("resource id in save section html method:" + resourceId + moduleId + sectionId);
+	//add messages to hashmap
+	if(errs.size() > 0)
+	{
+		for(String err:errs)
+		{
+			String k = sectionId + "-" + userId;
+			addToHm_Msgs(k,err);
+		}
+	}
+	try{	
+		// in case of add and edit from notype to compose section 
+		if (resourceId == null || resourceId.length() == 0 )
+		{
+			resourceId = getMeleteCHService().getSectionResource(sectionId);
+			if (resourceId == null )throw new MeleteException("resource_null");
+		}
+		// In case type is change from typelink or typeUploads to compose
+		// for sections collection is module_id		
+		if (resourceId.indexOf("/private/meleteDocs/")!= -1 && resourceId.indexOf("/uploads/") != -1) throw new MeleteException("section_html_null");
+		getMeleteCHService().editResource(courseId, resourceId, revisedData);
+	}
+	catch (Exception ex)
+	{	
+		byte[] secContentData = revisedData.getBytes();
+
+		String secResourceName = getMeleteCHService().getTypeEditorSectionName(new Integer(sectionId));
+		ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true,secResourceName, "compose content");
+		String newResourceId = getMeleteCHService().addResourceItem(secResourceName, getMeleteCHService().MIME_TYPE_EDITOR,
+				getMeleteCHService().getCollectionId(courseId, "typeEditor", new Integer(moduleId)), secContentData,res);
+		addtoMeleteResource(sectionId,newResourceId);
+	}	
+}
+
+/*
+ * Fetch section's data to show in Sferyx editor 
+ */
+public String getResourceData(String sectionId)
+{
+	String data = null;
+	try
+	{
+		String resourceId = getMeleteCHService().getSectionResource(sectionId);
+		logger.debug("resource id in AddResource getdata method:" + resourceId );
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		data = bundle.getString("compose_content") ; 
+		
+		if(resourceId == null || resourceId.length() == 0) return data;	
+		ContentResource cr = getMeleteCHService().getResource(resourceId);
+		
+		if (cr != null && "text/html".equals(cr.getContentType())) 
+		{	
+			data = new String(cr.getContent());
+			data = java.net.URLEncoder.encode(data,"UTF-8");
+		}
+		
+	}catch(Exception e)
+	{
+		e.printStackTrace();
+	}
+	return data;
+}
+
+public HashMap<String, ArrayList<String>> getHm_msgs() {
+	return hm_msgs;
+}
+
+public void setHm_msgs(HashMap<String, ArrayList<String>> hm_msgs) {
+	this.hm_msgs = hm_msgs;
+}
+
+/*
+ * Add a message.
+ * This records the bad file, large file messages when processing the composed data.
+ * Key is section_id-user-id and value is the error message 
+ */
+public void addToHm_Msgs(String k, String o)
+{
+	logger.debug("add to messages" + k + o);
+	if(hm_msgs == null) hm_msgs = new HashMap<String,ArrayList<String>>();
+	
+	ArrayList<String> v = new ArrayList<String>();	
+	if(hm_msgs.containsKey(k))
+	{
+		v = hm_msgs.get(k);		
+	}
+	if(!v.contains(o))	v.add(o);
+	hm_msgs.put(k, v);
+}
+/*
+ * After displaying the error message remove it.
+ */
+public void removeFromHm_Msgs(String k)
+{
+	if(hm_msgs != null && hm_msgs.containsKey(k))
+	{
+		hm_msgs.remove(k);		
+	}
+}
+
+/*
+ * Get internationalized message to display through addMessageError page
+ */
+public String getMessageText(String errcode)
+{
+	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+	String msg = "";
+	if(("embed_image_size_exceed").equals(errcode))
+	{
+		msg = bundle.getString("embed_image_size_exceed");
+		msg= msg.concat(ServerConfigurationService.getString("content.upload.max", "0"));
+		msg = msg.concat(bundle.getString("embed_image_size_exceed1"));
+	} else if(("embed_image_size_exceed2").equals(errcode))
+	{
+		msg = bundle.getString("embed_image_size_exceed2");
+		msg= msg.concat(ServerConfigurationService.getString("content.upload.max", "0"));
+		msg = msg.concat(bundle.getString("embed_image_size_exceed2-1"));
+	}
+	else msg = bundle.getString(errcode);
+	return msg;
+}
+
+/*
+ * create error map
+ */
+public void contextInitialized(ServletContextEvent event) {
+	hm_msgs = new HashMap<String,ArrayList<String>>(); 
+}
+
+/*
+ * Delete the map
+ */
+public void contextDestroyed(ServletContextEvent event) {
+	hm_msgs = null;
 }
 
 }

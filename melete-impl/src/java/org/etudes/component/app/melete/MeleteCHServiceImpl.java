@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.net.URLDecoder;
@@ -128,7 +129,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	  String meleteCollectionRef = Entity.SEPARATOR+"private"+ REFERENCE_ROOT;
 	  String groupCollectionRef = Entity.SEPARATOR+"group";
 	  org.sakaiproject.entity.api.Reference ref1 = null;
-
+	 
 	  if ((inputStr != null)&&(inputStr.length() > 0))
 	  {
 		  if (inputStr.startsWith(meleteCollectionRef))
@@ -270,7 +271,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         return uploadCollId;
 		}catch(Exception e)
 		{
-			logger.error("error accessing uploads directory");
+			logger.info("error accessing uploads directory");
 			return null;
 		}
     }
@@ -302,7 +303,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	        return uploadCollId;
 			}catch(Exception e)
 			{
-				logger.error("error accessing uploads directory");
+				logger.info("error accessing uploads directory");
 				return null;
 			}
 	    }
@@ -829,7 +830,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 				if((!check.startsWith("/access/")) && check.indexOf("/access/") != -1)
 				{
 					check = check.substring(check.indexOf("/access/"));
-					cr.setContent(check.getBytes());
+					byte[] data = check.getBytes();
+					cr.setContent(data);
+					cr.setContentLength(data.length);
 					linkData = check;
 					getContentservice().commitResource(cr);
 					cr= null;
@@ -908,6 +911,55 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 		 // if a browser sees a plus, it sends a plus (URLDecoder will change it to a space)
 		 processed = processed.replaceAll("\\+", "%2b");
 		 return processed;
+	 }
+	 
+	 /*
+	  *  args : courseId and resourceId
+	  *  no need to reverse engineer the courseId
+	  */
+	 public ContentResource getResource(String courseId, String resourceId) throws Exception
+	 {
+		if (resourceId == null) return null;
+		
+	 	try
+	    {
+        	if (!isUserAuthor(courseId) && !isUserStudent(courseId))
+        		{
+        		logger.info("User is not authorized to access meleteDocs collection");
+        		return null;
+        		}
+        	String originalResourceId = resourceId;
+   			//          setup a security advisor
+        		meleteSecurityService.pushAdvisor();
+        		// absolute reqd otherwise import from site creates desert Landscape.jpg and desert%20Landscape-1.jpg
+        		try
+        		{
+        			resourceId = beforeDecode(resourceId);
+        			resourceId = URLDecoder.decode(resourceId,"UTF-8");
+        		} catch(Exception decodeEx)
+        		{
+        			logger.debug("get resource fails while decoding " + resourceId);
+        		}
+        		
+        		try
+        		{
+        			return (getContentservice().getResource(resourceId));
+        		}
+        		catch(Exception getResourceEx)
+        		{
+        			return (getContentservice().getResource(originalResourceId));	
+        		}
+	    }
+		catch(Exception e)
+		{
+			logger.error("getResource error:" + e.toString());
+			throw e;
+		}
+		finally
+		  {
+			// clear the security advisor
+			meleteSecurityService.popAdvisor();
+		  }
 	 }
 	 /*
 	  *
@@ -1024,8 +1076,9 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         			 resourceId = URLDecoder.decode(resourceId,"UTF-8");
         		  }catch(Exception decodex){}
         		  edit = getContentservice().editResource(resourceId);
-        		  edit.setContent(contentEditor.getBytes());
-        		  edit.setContentLength(contentEditor.length());
+        		  byte[] data = contentEditor.getBytes();
+        		  edit.setContent(data);
+        		  edit.setContentLength(data.length);
         		  getContentservice().commitResource(edit);
         		  edit = null;
         		}
@@ -1043,18 +1096,84 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 			meleteSecurityService.popAdvisor();
 		  }
 	 }
-
+	 
+	 public void editResource(String courseId,String resourceId, String contentEditor) throws Exception
+	 {
+		 ContentResourceEdit edit = null;
+	 	try
+	    {
+        	if (!isUserAuthor(courseId))
+        		{
+        		logger.info("User is not authorized to access meleteDocs collection");
+        		return;
+        		}
+   			//          setup a security advisor
+        		meleteSecurityService.pushAdvisor();
+        		if (resourceId != null)
+        		{
+    			  try
+        		  {
+    				 resourceId = beforeDecode(resourceId);
+        			 resourceId = URLDecoder.decode(resourceId,"UTF-8");
+        		  }catch(Exception decodex){}
+        		  edit = getContentservice().editResource(resourceId);
+        		  byte[] data = contentEditor.getBytes();
+        		  edit.setContent(data);
+        		  edit.setContentLength(data.length);
+        		  getContentservice().commitResource(edit);
+        		  edit = null;
+        		}
+        		return;
+	    }
+	 	catch(Exception e)
+		{
+			logger.error("error saving editor content "+e.toString());
+			throw e;
+		}
+		finally
+		  {
+			if(edit != null) getContentservice().cancelResource(edit);
+			// clear the security advisor
+			meleteSecurityService.popAdvisor();
+		  }
+	 }
+	 
+	 public void addToMeleteResource(String sectionId, String resourceId) throws Exception
+	 {
+		//add in melete resource database table
+         MeleteResource meleteResource = new MeleteResource();
+    	 meleteResource.setResourceId(resourceId);
+    	 //set default license info to "I have not determined copyright yet" option
+    	 meleteResource.setLicenseCode(0);
+    	 sectiondb.insertResource(meleteResource);
+    	 if(sectionId != null)
+    	 {
+    		sectiondb.insertSectionResource(sectionId, resourceId); 
+    	 }
+    	 
+	 }
+/*
+ *  get resource id associated with the section
+ */
+	 public String getSectionResource(String sectionId) throws Exception
+	 {
+		 SectionResource sr = sectiondb.getSectionResourcebyId(sectionId);
+		 if(sr != null && sr.getResource() != null)
+			 return sr.getResource().getResourceId();
+		 else return null;
+	 }
+	 
 	 /*
 	     *  before saving editor content, look for embedded images from local system
 	     *  and add them to collection
 	     * if filename has # sign then throw error
 	     *  Do see diego's fix to paste from word works
 	     */
-	    public String findLocalImagesEmbeddedInEditor(String uploadHomeDir, String contentEditor) throws MeleteException
+	    public String findLocalImagesEmbeddedInEditor(String courseId, ArrayList<String> errs, Map newEmbeddedResources,String contentEditor) throws MeleteException
 	    {
 	    	 String checkforimgs = contentEditor;
 	         // get collection id where the embedded files will go
-	         String UploadCollId = getUploadCollectionId();
+	         String UploadCollId = getUploadCollectionId(courseId);
 	         String fileName;
 			 int startSrc =0;
 			 int endSrc = 0;
@@ -1062,7 +1181,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
              // look for local embedded images
 	         try
 			 {
-	         	  if (!isUserAuthor())
+	         	  if (!isUserAuthor(courseId))
 	             	{
 	         		  logger.info("User is not authorized to access meleteDocs");
 	         		  return null;
@@ -1100,8 +1219,8 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    		//check for form tag and remove it
 	    	//	checkforimgs = meleteUtil.findFormPattern(checkforimgs);
 	    	//	logger.debug("after find form pattern "+ endSrc);
-				contentEditor = checkforimgs;
-
+			//	contentEditor = checkforimgs;
+	      
 		         while(checkforimgs !=null)
 		         {
 		           // look for a href and img tag
@@ -1119,93 +1238,54 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	    			// find filename
 	    			fileName = checkforimgs.substring(startSrc, endSrc);
 	    			 String patternStr = fileName;
+	    			 
+	    			 // word paste 
+	    			 fileName = meleteUtil.replace(fileName,"\\","/");
 	    			logger.debug("processing embed src" + fileName + endSrc);
+	    			String key = null;
+	    			if (fileName.lastIndexOf("/") != -1)
+	    			{
+	    				key = fileName.substring(fileName.lastIndexOf("/")+1);
+	    				
+	    			}
+	    			logger.debug("key is:" + key);
+	    			//process for local uploaded files for sferyx
+	    			
+	    			// bad character files are not uploaded so send error message
+	    			if (fileName != null && fileName.trim().length() > 0 && !fileName.equals(File.separator) && fileName.startsWith("file:"))
+	    			{
+	    				// if filename contains pound char then throw error
+	    				if(fileName.indexOf("#") != -1)
+	    				{	    					
+	    					errs.add("embed_img_bad_filename");
+	    				}
 
-	    			//process for local uploaded files
+	    				// if filename contains percentage sign then throw error
+	    				if(fileName.indexOf("%") != -1)
+	    				{
+	    					try
+	    					{
+	    						String cName = java.net.URLDecoder.decode(fileName,"UTF-8");
+	    					}catch(Exception decodex){	    						
+	    						errs.add("embed_img_bad_filename1");
+	    					}						
+	    				}
+	    			}
 					if(fileName != null && fileName.trim().length() > 0&& (!(fileName.equals(File.separator)))
-						&& fileName.startsWith("file:/") )
+						&& key != null && newEmbeddedResources != null && newEmbeddedResources.containsKey(key))
 					{
-		              // word paste fix
-		             patternStr= meleteUtil.replace(patternStr,"\\","/");
-		             contentEditor = meleteUtil.replace(contentEditor,fileName,patternStr);
-		             checkforimgs =  meleteUtil.replace(checkforimgs,fileName,patternStr);
-
-		             fileName = patternStr;
-		  	  	    fileName = fileName.substring(fileName.lastIndexOf("/")+1);
-
-//			  	  	 if filename contains pound char then throw error
-					if(fileName.indexOf("#") != -1)
-			  	  	{
-			  	  	logger.debug("embedded FILE contains hash or other characters " + fileName);
-	  	  		    throw new MeleteException("embed_img_bad_filename");
-			  	  	}
-					// if filename contains percentage sign then throw error
-					if(fileName.indexOf("%") != -1)
-					{
-						try
-						{
-							String cName = URLDecoder.decode(fileName,"UTF-8");
-						}catch(Exception decodex){
-							logger.debug("embedded FILE contains percentage or other characters " + fileName);
-							throw new MeleteException("embed_img_bad_filename1");
-						}						
-					}
-		             // add the file to collection and move from uploads directory
-		             // read data
-		             try{
-		            	 File re = null;
-		            	 if (uploadHomeDir != null && uploadHomeDir.length() > 0) 
-		            		 re = new File(uploadHomeDir+File.separator+fileName);
-		            	 else 
-		            	 {
-		            		 logger.warn("Melete Upload directory property is not set. Please check.");
-		            		 break;
-		            	 }
-		             byte[] data = new byte[(int)re.length()];
-		             FileInputStream fis = new FileInputStream(re);
-		             fis.read(data);
-		             fis.close();
-		             re.delete();
-
-		             // add as a resource to uploads collection
-		             String file_mime_type = fileName.substring(fileName.lastIndexOf(".")+1);
-		             file_mime_type = ContentTypeImageService.getContentType(file_mime_type);
-
-		            String newEmbedResourceId = null;
-		            ResourcePropertiesEdit res =fillEmbeddedImagesResourceProperties(fileName);
-                	newEmbedResourceId = addResourceItem(fileName,file_mime_type,UploadCollId,data,res );
-
-		            //add in melete resource database table also
-		             MeleteResource meleteResource = new MeleteResource();
-	            	 meleteResource.setResourceId(newEmbedResourceId);
-	            	 //set default license info to "I have not determined copyright yet" option
-	            	 meleteResource.setLicenseCode(0);
-	            	 sectiondb.insertResource(meleteResource);
-
+		           
+		  	  	     String newEmbedResourceId = (String)newEmbeddedResources.get(key);
+		  	  	   
 		         	// in content editor replace the file found with resource reference url
 		         	 String replaceStr = getResourceUrl(newEmbedResourceId);
 		         	 replaceStr = meleteUtil.replace(replaceStr,ServerConfigurationService.getServerUrl(),"");
-		         	 logger.debug("repl;acestr in embedimage processing is " + replaceStr);
-
-		         	 // Replace all occurrences of pattern in input
-		            Pattern pattern = Pattern.compile(patternStr);
+		         	 logger.debug("repl;acestr" + patternStr +" in embedimage processing is " + replaceStr);
 
 		            //Rashmi's change to fix infinite loop on uploading images
-		            contentEditor = meleteUtil.replacePath(contentEditor,patternStr,replaceStr);
-		            checkforimgs = meleteUtil.replacePath(checkforimgs,patternStr,replaceStr);
-		             }
-		             catch(FileNotFoundException ff)
-					 {
-		             	logger.debug(ff.toString() + fileName);
-		             	throw new MeleteException("embed_image_size_exceed2");
-/*		             	ignore if file is missing and throw exceed message if request filter upload.status says so
-		             	//throw new MeleteException("embed_image_size_exceed");
-		             	if(endSrc > 0 && endSrc <= checkforimgs.length())
-	    					checkforimgs =checkforimgs.substring(endSrc);
-	    				else checkforimgs = null;
-			            startSrc=0; endSrc = 0; foundLink = null;
-		             	continue;*/
-					 }
+		            contentEditor = meleteUtil.replaceaPath(contentEditor,patternStr,replaceStr);
+		            checkforimgs = meleteUtil.replaceaPath(checkforimgs,patternStr,replaceStr);  
+		             
 				}
 				// for internal links to make it relative
 				else

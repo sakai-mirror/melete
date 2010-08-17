@@ -2761,8 +2761,8 @@ public class ModuleDB implements Serializable {
 								if(data != null && data.length != 0)
 									printText.append("<p>" + new String(data) + "</p>");
 							}
-							if (sec.getContentType().equals("typeLink") || sec.getContentType().equals("typeUpload") ||
-							    sec.getContentType().equals("typeLTI") )
+							if (resource != null && (sec.getContentType().equals("typeLink") || sec.getContentType().equals("typeUpload") ||
+							    sec.getContentType().equals("typeLTI")) )
 							{
 								String url = resource.getUrl();
 								url = url.replaceAll(" ", "%20");
