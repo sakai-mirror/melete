@@ -28,7 +28,7 @@
  **********************************************************************************
 -->
 <%
-			System.out.println("SAVE PAGE CALLED !!!!");
+	
 			final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 			final AddResourcesPage aResourcePage = (AddResourcesPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "addResourcesPage");
 				
