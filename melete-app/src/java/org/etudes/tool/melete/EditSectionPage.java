@@ -385,6 +385,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 	    				if (meleteResource != null && meleteResource.getResourceId() != null && meleteResource.getResourceId().length() == 0)
 	    				{
 	      					throw new MeleteException("section_html_null");
+	      					getMeleteCHService().checkResource(meleteResource.getResourceId());
+	    					editMeleteCollectionResource(meleteResource.getResourceId());
 	    				}
 	    			}
 	    			//The condition below was put in to handle ME-639
