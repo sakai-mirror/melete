@@ -874,7 +874,13 @@ public class ModuleDB implements Serializable {
 		    				vmBean.setTitle(rs.getString("modTitle"));
 		    				vmBean.setWhatsNext(rs.getString("whats_next"));
 		    				vmBean.setSeqXml(seqXml);
-
+		    				SubSectionUtilImpl ssuImpl1 = new SubSectionUtilImpl();
+		    				int top = ssuImpl1.noOfTopLevelSections(seqXml);
+		    				top = top + 1;
+		    				String ns_number= new String(seqNo+".");
+		    				ns_number = ns_number.concat(Integer.toString(top));
+		    				vmBean.setNextStepsNumber(ns_number);
+		    				
 		    				startTimestamp = rs.getTimestamp("start_date");
 		    				endTimestamp = rs.getTimestamp("end_date");
 
