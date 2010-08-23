@@ -35,14 +35,14 @@ public class MeleteSitePreference implements Serializable,MeleteSitePreferenceSe
     private String prefSiteId;
 
     /** nullable persistent field */
-    private boolean printable;   
+    private Boolean printable;   
     private boolean autonumber;   
    
 	/** full constructor
 	 * @param userId
 	 * @param editorChoice
 	 */
-	public MeleteSitePreference(String prefSiteId, boolean printable) {
+	public MeleteSitePreference(String prefSiteId, Boolean printable) {
 		this.prefSiteId = prefSiteId;		
 		this.printable = printable;
 	}
@@ -76,7 +76,7 @@ public class MeleteSitePreference implements Serializable,MeleteSitePreferenceSe
 	/**
 	 * @return the printable
 	 */
-	public boolean isPrintable()
+	public Boolean isPrintable()
 	{
 		return this.printable;
 	}
@@ -84,7 +84,7 @@ public class MeleteSitePreference implements Serializable,MeleteSitePreferenceSe
 	/**
 	 * @param printable the printable to set
 	 */
-	public void setPrintable(boolean printable)
+	public void setPrintable(Boolean printable)
 	{
 		this.printable = printable;
 	}
