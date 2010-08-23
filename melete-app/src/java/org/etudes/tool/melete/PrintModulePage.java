@@ -71,7 +71,7 @@ public class PrintModulePage implements Serializable
 
 	public void processModule(Integer moduleId)
 	{
-		logger.debug("print process called");
+//		logger.debug("print process called");
 		printText = null;
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
