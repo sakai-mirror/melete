@@ -271,6 +271,10 @@ if (msg != null)
 			   <h:graphicImage id="vns_gif" value="images/add.gif" alt="#{msgs.list_auth_modules_alt_add_steps}" title="#{msgs.list_auth_modules_alt_add_steps}" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext == listAuthModulesPage.isNull}"/>      
 			   <h:graphicImage id="vns1_gif" value="images/view_next.gif" alt="#{msgs.list_auth_modules_alt_next_steps}" title="#{msgs.list_auth_modules_alt_next_steps}" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext != listAuthModulesPage.isNull}"/>        		   
            </h:commandLink>
+          <h:outputText id="emp_space8" value="  " styleClass="ExtraPaddingClass" />
+           <h:commandLink id="specialAccess" action="#{listAuthModulesPage.specialAccessAction}" >
+			   <h:graphicImage id="acc_gif" value="images/access_add.png" alt="#{msgs.list_auth_modules_alt_add_steps}" title="#{msgs.list_auth_modules_alt_add_access}" styleClass="AddImgClass" />      
+			 </h:commandLink>           
            <h:outputText id="emp_space4" value="  " styleClass="ExtraPaddingClass" />
 		  <h:commandLink id="duplicateModule" action="#{listAuthModulesPage.duplicateAction}">
 		  	  <h:graphicImage id="duplicateImg" value="images/page_copy.png" alt="#{msgs.list_auth_modules_alt_duplicate}" title="#{msgs.list_auth_modules_alt_duplicate}" styleClass="AuthImgClass"/>

@@ -99,7 +99,7 @@ public String goPrevItem()
 	FacesContext context = FacesContext.getCurrentInstance();
 	courseId = getCourseId();
 	int prevSeqNo;
-    prevSeqNo = getModuleService().getPrevSeqNo(courseId,this.nextSeqNo);
+    prevSeqNo = getModuleService().getPrevSeqNo(getUserId(), courseId,this.nextSeqNo);
 
 	if (this.prevSecId == 0)
 	{

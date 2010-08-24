@@ -74,8 +74,8 @@ public interface ModuleService{
 
 	public void deleteModules(List delModules, String courseId, String userId) throws Exception;
 	public boolean checkCalendar();
-	public int getNextSeqNo(String courseId, int currSeqNo);
-	public int getPrevSeqNo(String courseId, int currSeqNo);
+	public int getNextSeqNo(String userId, String courseId, int currSeqNo);
+	public int getPrevSeqNo(String userId, String courseId, int currSeqNo);
 
 	public org.w3c.dom.Document getSubSectionW3CDOM(String sectionsSeqXML);
 

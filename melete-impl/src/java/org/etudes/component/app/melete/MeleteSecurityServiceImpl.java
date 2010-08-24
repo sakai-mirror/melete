@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,6 +53,7 @@ import org.dom4j.Namespace;
 import org.dom4j.QName;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.cover.SecurityService;
+import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.Entity;
@@ -625,6 +627,21 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 			return "error archiving modules";
 		}
 		return "archiving modules: (" +count + ") modules archived successfully. \n";
+	}
+
+	public Set<String> getUsersIsAllowed(String context)
+	{
+		// check the cache
+		String key = SECURE_STUDENT + "@" + context;
+		
+		// form the azGroups for a context-as-implemented-by-site
+		Collection azGroups = new Vector(2);
+		azGroups.add(SiteService.siteReference(context));
+		azGroups.add("!site.helper");
+
+		// get the user ids who can
+		Set userIds = AuthzGroupService.getUsersIsAllowed(SECURE_STUDENT, azGroups);
+		return userIds;
 	}
 
 	/**

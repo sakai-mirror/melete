@@ -316,7 +316,7 @@ public class ListModulesPage implements Serializable{
 	  }
 
 	  public int getBookmarkSectionId() {
-		    this.bookmarkSectionId = bookmarkService.getLastVisitSectionId(getUserId(), getCourseId());
+		    this.bookmarkSectionId = bookmarkService.getLastVisitSectionId(isUserAuthor(), getUserId(), getCourseId());
 	        return this.bookmarkSectionId;
 	  }
 
@@ -554,7 +554,7 @@ public class ListModulesPage implements Serializable{
   		    	vmBean = (ViewModBean) viewModuleBeans.get(selModIndex);
   			}
   		}
-        int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(modSeqNo));
+        int nextSeqNo = getModuleService().getNextSeqNo(getUserId(),getCourseId(),new Integer(modSeqNo));
         vnPage.setNextSeqNo(nextSeqNo);
       	//vnPage.setModule(getModuleService().getModule(vmBean.getModuleId()));
       	if ((vmBean.getVsBeans() == null)||(vmBean.getVsBeans().size() == 0))

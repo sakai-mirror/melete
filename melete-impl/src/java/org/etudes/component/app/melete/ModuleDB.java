@@ -170,12 +170,11 @@ public class ModuleDB implements Serializable {
 
 
 
-	public int getNextSeqNo(String courseId, int currSeqNo)
+	public int getNextSeqNo(String userId, String courseId, int currSeqNo)
 		{
 		 int nextSeqNo = -1;
 		  String queryStr = null; 
-		  boolean allowStudent = false;
-             try
+		    try
              {
                if (meleteSecurityService.allowAuthor())
                {
@@ -183,9 +182,8 @@ public class ModuleDB implements Serializable {
                }
                if (meleteSecurityService.allowStudent())
                {
-            	 allowStudent = true;  
-              	 queryStr = "select min(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId=ms.moduleId and ((ms.startDate < :currDate and ms.endDate > :currDate) or (ms.startDate is null and ms.endDate is null) or (ms.startDate is null and ms.endDate > :currDate) or (ms.startDate < :currDate and ms.endDate is null))";
-               }
+            	return getStudentNavSeqNo(userId, courseId, currSeqNo, false);
+            	}
              }
              catch (Exception e)
              {
@@ -198,7 +196,6 @@ public class ModuleDB implements Serializable {
 			   Query q=session.createQuery(queryStr);
 			   q.setParameter("courseId",courseId);
 			   q.setParameter("currSeqNo", currSeqNo);
-			   if (allowStudent)q.setParameter("currDate", new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
 			   Integer minsequence = (Integer)q.uniqueResult();
 
 
@@ -223,7 +220,8 @@ public class ModuleDB implements Serializable {
 
 	}
 
-	public int getPrevSeqNo(String courseId, int currSeqNo)
+
+	public int getPrevSeqNo(String userId, String courseId, int currSeqNo)
 	{
 	 int prevSeqNo = -1;
 	 String queryStr = null;
@@ -236,8 +234,7 @@ public class ModuleDB implements Serializable {
         }
         if (meleteSecurityService.allowStudent())
         {
-         allowStudent = true;	
-  	     queryStr = "select max(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId=ms.moduleId and ((ms.startDate < :currDate and ms.endDate > :currDate) or (ms.startDate is null and ms.endDate is null) or (ms.startDate is null and ms.endDate > :currDate) or (ms.startDate < :currDate and ms.endDate is null))";
+         return getStudentNavSeqNo(userId, courseId, currSeqNo, true);
         }
      }   
 	 catch (Exception e)
@@ -251,9 +248,7 @@ public class ModuleDB implements Serializable {
 		   Query q=session.createQuery(queryStr);
 		   q.setParameter("courseId",courseId);
 		   q.setParameter("currSeqNo", currSeqNo);
-		   if (allowStudent) q.setParameter("currDate", new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis()));
-		   Integer maxsequence = (Integer)q.uniqueResult();
-
+		  Integer maxsequence = (Integer)q.uniqueResult();
 
 		   // if no sequence is found then there is no module before this one
 		  if(maxsequence == null || maxsequence.intValue() <= 0)
@@ -274,7 +269,129 @@ public class ModuleDB implements Serializable {
 	 	 }
 	    return prevSeqNo ;
 }
+	private int getStudentNavSeqNo(String userId, String courseId, int currSeqNo, boolean prevFlag)
+	{
+		Connection dbConnection = null;
+		 	List resList = new ArrayList();
+		 	java.sql.Timestamp currentTimestamp = null;
+		 	int navSeqNo = -1;
+		 	String sql;
 
+		 	try {
+				dbConnection = SqlService.borrowConnection();
+				ResultSet rs, accRs = null;
+				//First get all sequence numbers after this one from course module table
+				if (prevFlag)
+				{
+					sql = "select cm.seq_no from melete_course_module cm,melete_module_shdates msh where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) order by cm.seq_no desc";
+				}
+				else
+				{
+					sql = "select cm.seq_no from melete_course_module cm,melete_module_shdates msh where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) order by cm.seq_no";
+				}
+				PreparedStatement pstmt = dbConnection.prepareStatement(sql);
+		        pstmt.setString(1,courseId);
+		        pstmt.setInt(2,currSeqNo);
+		        currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+		        pstmt.setTimestamp(3, currentTimestamp);
+                pstmt.setTimestamp(4, currentTimestamp);
+                rs = pstmt.executeQuery();
+                if (rs != null)
+                {
+                	//Add them to resList
+                	while (rs.next())
+                	{
+                		resList.add(rs.getInt("seq_no"));
+                	}
+                } 	
+               	//Get all access entries for user	
+                if (prevFlag)
+                {	
+                  sql = "select cm.seq_no, sa.start_date, sa.end_date from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = sa.module_id and sa.users like ? order by cm.seq_no desc";
+                }
+                else
+                {
+                  sql = "select cm.seq_no, sa.start_date, sa.end_date from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = sa.module_id and sa.users like ? order by cm.seq_no";	
+                }
+		    	PreparedStatement accPstmt = dbConnection.prepareStatement(sql);
+		    	accPstmt.setString(1,courseId);
+		    	accPstmt.setInt(2,currSeqNo);
+		    	accPstmt.setString(3,"%"+userId+"%");
+		    	accRs = accPstmt.executeQuery();
+			    Map accMap = new HashMap();
+			    if (accRs != null)
+		    	{
+			      	//Add them to accMap  
+			        while (accRs.next())
+		    	    {
+			   	      AccessDates ad = new AccessDates(accRs.getTimestamp("start_date"),accRs.getTimestamp("end_date"));
+		    		  accMap.put(accRs.getInt("seq_no"),ad);
+		    	    }
+		    	 }
+			     accRs.close();
+			     accPstmt.close();
+			    //If there are no access entries, return the first entry in resList
+			    if ((accMap == null)||(accMap.size() == 0))
+			    {
+			       	if (resList.size() == 0) navSeqNo = -1;
+			       	else navSeqNo = ((Integer)resList.get(0)).intValue(); 
+			    }
+			    else
+			    {
+			      	List removeList = new ArrayList();  
+			       	Iterator it = accMap.entrySet().iterator();
+			       	//Check to see if there are any blocked entries in accMap. If so, add them to removeList
+			  		while (it.hasNext())
+			  		{
+			  		  Map.Entry pairs = (Map.Entry)it.next();
+			  		  Integer seq = (Integer)pairs.getKey();
+			  		  AccessDates ad = (AccessDates)pairs.getValue();
+			  		  currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+	 			      java.sql.Timestamp startTimestamp = ad.getAccStartTimestamp();
+	 			      java.sql.Timestamp endTimestamp = ad.getAccEndTimestamp();
+	        		  if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
+	        		  {
+	        			  continue;
+	        		  }
+	        		  else
+	        		  {
+	        			  removeList.add(seq);
+	        		  }
+			  	 }
+			  	//If there are blocked entries, remove them from both resList and accMap
+			  	 if (removeList.size() > 0)
+			  	 {	
+			  		  for (Iterator itr = removeList.listIterator(); itr.hasNext();)
+			  		  {
+			  			  Integer seq = (Integer)itr.next();
+			  			  if (resList.size() > 0)
+			  			  {	  
+			  			    if (resList.indexOf(seq) != -1) resList.remove(seq);
+			  			  }  
+			  			  accMap.remove(seq);
+			  		  }
+			  	 }
+			  	//Return sequence number appropriately
+			  	if ((resList.size() == 0)&&(accMap.size() == 0)) {navSeqNo = -1;}
+			  	if ((resList.size() == 0)&&(accMap.size() > 0)) navSeqNo = ((Integer)((Map.Entry)accMap.entrySet().iterator().next()).getKey()).intValue();
+			  	if ((resList.size() > 0)&&(accMap.size() == 0)) navSeqNo = ((Integer)resList.get(0)).intValue();
+			  	if ((resList.size() > 0)&&(accMap.size() > 0)) navSeqNo = Math.max(((Integer)((Map.Entry)accMap.entrySet().iterator().next()).getKey()).intValue(),((Integer)resList.get(0)).intValue());
+			    }
+		    	rs.close();
+		    	pstmt.close();
+		    	} catch (Exception e) {
+					if (logger.isErrorEnabled()) logger.error(e.toString());
+				} finally{
+					try{
+						if (dbConnection != null)
+							SqlService.returnConnection(dbConnection);
+					}catch (Exception e1){
+						if (logger.isErrorEnabled()) logger.error(e1.toString());
+					}
+				}
+		 return navSeqNo;
+	}
+	
 	private void assignSeqs(Session session, List courseModuleBeans)
 	{
 		int seqNo = 1;
@@ -692,8 +809,6 @@ public class ModuleDB implements Serializable {
 		    moduleDateBeansList.add(mdBean);
 	      	mod = null;
 	      }
-	      //moduleDateBeansList = populateModuleDateBeansList(modList);
-
 
 	    }
 	    catch (Exception he)
@@ -716,23 +831,6 @@ public class ModuleDB implements Serializable {
 	    return moduleDateBeansList;
 
 	  }
-
-	 /*public List populateModuleBeansList(List modList) throws Exception
-	 {
-		 List moduleDateBeansList = new ArrayList();
-		  Iterator i = modList.iterator();
-
-	      while (i.hasNext()) {
-	      	ModuleDateBean mdBean = new ModuleDateBean();
-	      	Module mod = (Module) i.next();
-
-	      	populateModuleBean(mod, mdBean);
-
-		    moduleDateBeansList.add(mdBean);
-	      	mod = null;
-	      }
-	 }*/
-
 
 	 public List getModules(String courseId) throws HibernateException {
 	 	List modList = new ArrayList();
@@ -781,7 +879,7 @@ public class ModuleDB implements Serializable {
 
 	        try
 			{
-		       modList = getViewModules(courseId);
+		       modList = getViewModules(userId, courseId);
 		    }
 		    catch (Exception e)
 		    {
@@ -792,7 +890,7 @@ public class ModuleDB implements Serializable {
 
 		  }
 
-	 public List getViewModules(String courseId) throws Exception {
+	 public List getViewModules(String userId, String courseId) throws Exception {
 		 Connection dbConnection = null;
 		 	List resList = new ArrayList();
 		 	List courseIdList = new ArrayList();
@@ -802,9 +900,26 @@ public class ModuleDB implements Serializable {
 
 			try {
 				dbConnection = SqlService.borrowConnection();
-		    	ResultSet rs = null;
-
-	            String sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
+				//Check the special access table to see if there are any records
+				//for this user in this course
+		    	ResultSet accRs,rs = null;
+		    	String sql = "select a.module_id,a.start_date,a.end_date from melete_special_access a,melete_course_module c where a.users like ? and a.module_id=c.module_id and c.course_id = ?";
+		    	PreparedStatement accPstmt = dbConnection.prepareStatement(sql);
+		    	accPstmt.setString(1,"%"+userId+"%");
+		    	accPstmt.setString(2,courseId);
+			    accRs = accPstmt.executeQuery();
+			    Map accMap = new HashMap();
+			    if (accRs != null)
+		    	{
+			    	int accModuleId;
+		    		while (accRs.next())
+		    		{
+		    			accModuleId = accRs.getInt("module_id");
+		    			AccessDates ad = new AccessDates(accRs.getTimestamp("start_date"),accRs.getTimestamp("end_date"));
+		    			accMap.put(accModuleId,ad);
+		    		}
+		    	}
+	            sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
 	            PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 	            pstmt.setString(1,courseId);
 		    	rs = pstmt.executeQuery();
@@ -874,16 +989,31 @@ public class ModuleDB implements Serializable {
 		    				vmBean.setTitle(rs.getString("modTitle"));
 		    				vmBean.setWhatsNext(rs.getString("whats_next"));
 		    				vmBean.setSeqXml(seqXml);
-		    				// what's next display seq number is number of top level sections + 1
-		    				SubSectionUtilImpl ssuImpl1 = new SubSectionUtilImpl();
-		    				int top = ssuImpl1.noOfTopLevelSections(seqXml);
-		    				top = top + 1;
-		    				String ns_number= new String(seqNo+".");
-		    				ns_number = ns_number.concat(Integer.toString(top));
-		    				vmBean.setNextStepsNumber(ns_number);
-		    				
-		    				startTimestamp = rs.getTimestamp("start_date");
-		    				endTimestamp = rs.getTimestamp("end_date");
+		    				startTimestamp = null;
+	    					endTimestamp = null;
+	    					
+	    					//If special access is set up, use those dates; otherwise,
+	    					//use module dates
+		    				if (accMap.size() > 0)
+		    				{
+		    					AccessDates ad = (AccessDates)accMap.get(moduleId);
+		    					if (ad == null)
+		    					{
+		    						startTimestamp = rs.getTimestamp("start_date");
+				    				endTimestamp = rs.getTimestamp("end_date");
+		    					}
+		    					else
+		    					{
+		    						startTimestamp = ad.getAccStartTimestamp();
+				    				endTimestamp = ad.getAccEndTimestamp();
+		    					}
+		    				}
+		    				else
+		    				{
+		    					startTimestamp = rs.getTimestamp("start_date");
+			    				endTimestamp = rs.getTimestamp("end_date");		    					
+		    				}
+
 
 		    				java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
 
@@ -932,6 +1062,8 @@ public class ModuleDB implements Serializable {
 	   				      vmBean.setRowClasses(rowClassesBuf.toString());
 	   				    }
 	   				   }
+		    		accRs.close();
+		    		accPstmt.close();
 		    		rs.close();
 		    		pstmt.close();
 		    	}
@@ -1727,6 +1859,7 @@ public class ModuleDB implements Serializable {
 			String delSectionStr = "delete Section s where s.moduleId in " + delModuleIds;
 			String delCourseModuleStr = "delete CourseModule cm where cm.moduleId in " + delModuleIds;
 			String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId in " + delModuleIds;
+			String delSpecialAccStr = "delete SpecialAccess sa where sa.moduleId in " + delModuleIds;
 			String delModuleStr = "delete Module m where m.moduleId in " + delModuleIds;
 
 
@@ -1749,6 +1882,8 @@ public class ModuleDB implements Serializable {
 				deletedEntities = session.createQuery(delCourseModuleStr).executeUpdate();
 				logger.debug("course module deleted" + deletedEntities);
 				deletedEntities = session.createQuery(delModuleshDatesStr).executeUpdate();
+				deletedEntities = session.createQuery(delSpecialAccStr).executeUpdate();
+				logger.debug("special access deleted" + deletedEntities);
 				deletedEntities = session.createQuery(delModuleStr).executeUpdate();
 				logger.debug("module deleted" + deletedEntities);
 			}
@@ -3313,5 +3448,31 @@ public class ModuleDB implements Serializable {
         {
                this.userPrefdb=userPrefdb;
         }
+}
+class AccessDates
+{
+	java.sql.Timestamp accStartTimestamp;
+	java.sql.Timestamp accEndTimestamp;
+
+	AccessDates(java.sql.Timestamp accStartTimestamp,java.sql.Timestamp accEndTimestamp)
+	{
+		this.accStartTimestamp = accStartTimestamp;
+		this.accEndTimestamp = accEndTimestamp;
+	}
+
+	public java.sql.Timestamp getAccStartTimestamp() {
+	    return this.accStartTimestamp;
+	}
+
+	public void setAccStartTimestamp(java.sql.Timestamp accStartTimestamp) {
+	    this.accStartTimestamp = accStartTimestamp;
+	}
+	public java.sql.Timestamp getAccEndTimestamp() {
+	    return this.accEndTimestamp;
+	}
+
+	public void setAccEndTimestamp(java.sql.Timestamp accEndTimestamp) {
+	    this.accEndTimestamp = accEndTimestamp;
+	}
 }
 

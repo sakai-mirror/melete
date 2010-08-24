@@ -464,17 +464,17 @@ public void restoreModules(List modules, String courseId) throws Exception
 
 
 
-	 public int getNextSeqNo(String courseId, int currSeqNo)
+	 public int getNextSeqNo(String userId, String courseId, int currSeqNo)
 	  {
 	  	int nextseq=0;
-	  	nextseq=moduledb.getNextSeqNo(courseId, currSeqNo);
+	  	nextseq=moduledb.getNextSeqNo(userId, courseId, currSeqNo);
 	  	return nextseq;
 	  }
 
-	 public int getPrevSeqNo(String courseId, int currSeqNo)
+	 public int getPrevSeqNo(String userId, String courseId, int currSeqNo)
 	  {
 	  	int prevseq=0;
-        prevseq=moduledb.getPrevSeqNo(courseId, currSeqNo);
+        prevseq=moduledb.getPrevSeqNo(userId, courseId, currSeqNo);
 	  	return prevseq;
 	  }
 	 

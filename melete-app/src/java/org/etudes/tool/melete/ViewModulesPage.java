@@ -186,8 +186,8 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     	  if (this.mdbean != null)
     	  {
     	    this.moduleSeqNo = this.mdbean.getModule().getCoursemodule().getSeqNo();
-    	    this.prevSeqNo = getModuleService().getPrevSeqNo(courseId,this.moduleSeqNo);
-  	  	    this.nextSeqNo = getModuleService().getNextSeqNo(courseId,this.moduleSeqNo);
+    	    this.prevSeqNo = getModuleService().getPrevSeqNo(userId, courseId,this.moduleSeqNo);
+  	  	    this.nextSeqNo = getModuleService().getNextSeqNo(userId, courseId,this.moduleSeqNo);
     	  }
   	  	  this.prevSectionSize = 0;
   	  	  if ((this.prevSeqNo > 0)&&(this.prevSeqNo != this.moduleSeqNo))

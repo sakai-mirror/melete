@@ -481,7 +481,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     	try {
     		if(courseId == null) courseId = getCourseId();
     	  this.module = (ModuleObjService) getModuleService().getModule(this.moduleId);
-    	  this.nextSeqNo = getModuleService().getNextSeqNo(courseId, this.moduleSeqNo);
+    	  this.nextSeqNo = getModuleService().getNextSeqNo(getUserId(), courseId, this.moduleSeqNo);
   	  	  this.subSectionW3CDom = getModuleService().getSubSectionW3CDOM(this.module.getSeqXml());
   	  	  secElement = subSectionW3CDom.getElementById(String.valueOf(this.sectionId));
   	  	  prevNode = getPreviousNode(secElement);

@@ -1,11 +1,9 @@
 /**********************************************************************************
  *
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-api/src/java/org/etudes/api/app/melete/BookmarkService.java $
+ * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-api/src/java/org/etudes/api/app/melete/SpecialAccessService.java $
  *
  ***********************************************************************************
  * Copyright (c) 2010 Etudes, Inc.
- *
- * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you
  * may not use this file except in compliance with the License. You may
@@ -30,12 +28,9 @@ import java.io.File;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public interface BookmarkService {
-	public void insertBookmark(BookmarkObjService mb) throws Exception;
-	public BookmarkObjService getBookmark(String userId, String siteId, int sectionId);
-	public List getBookmarks(String userId, String siteId);
-	 public int getLastVisitSectionId(boolean isAuthor, String userId, String siteId);
-	public void deleteBookmark(int bookmarkId) throws Exception;
-	public void deleteFiles(File delfile);
-	public void createFile(List bmList, String fileName) throws Exception;
+public interface SpecialAccessService {
+	public void insertSpecialAccess(List saList, SpecialAccessObjService mb, ModuleObjService mod) throws Exception;
+	public List getSpecialAccess(int moduleId);
+	//public SpecialAccessObjService getSpecialAccess(String userId, int moduleId);
+	public void deleteSpecialAccess(List saList) throws Exception;
 }
