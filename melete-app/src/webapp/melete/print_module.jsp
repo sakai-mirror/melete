@@ -41,7 +41,7 @@
 				String closeMsg = msg.getString("print_module_close_msg");
 				
 %>			
-				<div class="meletePortletToolBarMessage">
+				<div class="noprint">
 				 <a href="#" onclick="javascript:window.print()">
 				 <img src="images/printer.png" alt="" width="16" height="16" border="0" align="absmiddle">
 				 <%=printMsg%></a>
