@@ -158,15 +158,17 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
  	  {
     	try {
     		FacesContext ctx = FacesContext.getCurrentInstance();
-        	logger.debug("get mdbean found req param value" + ctx.getExternalContext().getRequestParameterMap().get("vm_id"));
-
         	ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 
         	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
         	String courseId = "";
         	String userId = mPage.getCurrentUser().getId();
         	String directvm_id = (String)ctx.getExternalContext().getRequestParameterMap().get("vm_id");
-        	if(directvm_id != null) this.moduleId=new Integer(directvm_id).intValue();
+        	if(directvm_id != null) 
+        		{
+        		logger.debug("get mdbean found req param value" + ctx.getExternalContext().getRequestParameterMap().get("vm_id"));
+        		this.moduleId=new Integer(directvm_id).intValue();
+        		}
         	String direct_cid = (String)ctx.getExternalContext().getRequestParameterMap().get("c_id");
         	if(direct_cid != null) courseId = direct_cid;
         	else courseId = getCourseId();
