@@ -708,7 +708,7 @@ public String goWhatsNext()
 	vnPage.setPrevModId(this.moduleId);
 	vnPage.setNextSeqNo(this.nextSeqNo);
 	vnPage.setModuleSeqNo(this.moduleSeqNo);
-
+    vnPage.setModule(null);
     //vnPage.setModule(this.module);
 
 	return "view_whats_next";

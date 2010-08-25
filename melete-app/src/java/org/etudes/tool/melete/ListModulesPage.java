@@ -547,6 +547,7 @@ public class ListModulesPage implements Serializable{
               Util.getBinding("#{viewNextStepsPage}");
             ViewNextStepsPage vnPage = (ViewNextStepsPage)
               binding.getValue(ctx);
+          vnPage.setModule(null);  
     	  if (isUserAuthor() || isUserStudent())
     	  {
   			if ((viewModuleBeans != null)&&(viewModuleBeans.size() > 0))
@@ -554,7 +555,7 @@ public class ListModulesPage implements Serializable{
   		    	vmBean = (ViewModBean) viewModuleBeans.get(selModIndex);
   			}
   		}
-        int nextSeqNo = getModuleService().getNextSeqNo(getUserId(),getCourseId(),new Integer(modSeqNo));
+    	 int nextSeqNo = getModuleService().getNextSeqNo(getUserId(),getCourseId(),new Integer(modSeqNo));
         vnPage.setNextSeqNo(nextSeqNo);
       	//vnPage.setModule(getModuleService().getModule(vmBean.getModuleId()));
       	if ((vmBean.getVsBeans() == null)||(vmBean.getVsBeans().size() == 0))

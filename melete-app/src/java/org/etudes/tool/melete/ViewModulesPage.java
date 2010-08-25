@@ -397,6 +397,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     	vnPage.setPrevModId(this.moduleId);
 
     	vnPage.setNextSeqNo(this.nextSeqNo);
+    	vnPage.setModule(null);
 
         //if (this.mdbean != null) vnPage.setModule(this.mdbean.getModule());
 
