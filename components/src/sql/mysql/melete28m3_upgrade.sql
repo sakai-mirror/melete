@@ -7,3 +7,5 @@ CREATE TABLE `melete_special_access` (
   PRIMARY KEY  (`ACCESS_ID`),
   CONSTRAINT `FK_MSA_MM` FOREIGN KEY(`MODULE_ID`) REFERENCES `melete_module`(`MODULE_ID`)
 ); 
+alter table melete_resource modify column COPYRIGHT_YEAR varchar(255);
+alter table melete_user_preference modify column COPYRIGHT_YEAR varchar(255);
