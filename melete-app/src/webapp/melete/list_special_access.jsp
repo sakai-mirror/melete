@@ -138,25 +138,24 @@ function resetAllAcc()
              <h:outputText id="t4" value="#{msgs.list_special_access_start_date}" />
              </f:facet>             
              <h:outputText id="startDate0" 
-                           value="-"    rendered="#{((saObj.startDate == null))}">
+                           value="-"    rendered="#{((saObj.startDate == null)||(saObj.startDate == saObj.module.moduleshdate.startDate))}">
             </h:outputText>
                   <h:outputText id="startDate" 
-                           value="#{saObj.startDate}"    rendered="#{((saObj.startDate != null))}">
+                           value="#{saObj.startDate}"    rendered="#{((saObj.startDate != null)&&(saObj.startDate != saObj.module.moduleshdate.startDate))}">
               <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>
-         </h:column>         
+              </h:column>         
         <h:column>
                <f:facet name="header">
 				 <h:outputText id="t6" value="#{msgs.list_special_access_end_date}" />
              </f:facet>
              
              <h:outputText id="endDate0" 
-                           value="-"    rendered="#{((saObj.endDate == null))}">
-              <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
-            </h:outputText>
+                           value="-"    rendered="#{((saObj.endDate == null)||(saObj.endDate == saObj.module.moduleshdate.endDate))}">
+             </h:outputText>
               <h:outputText id="endDate"
                            value="#{saObj.endDate}"
-                              rendered="#{((saObj.endDate != null))}">
+                              rendered="#{((saObj.endDate != null)&&(saObj.endDate != saObj.module.moduleshdate.endDate))}">
                <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>
          </h:column>         
