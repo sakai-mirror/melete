@@ -34,7 +34,7 @@ public interface BookmarkService {
 	public void insertBookmark(BookmarkObjService mb) throws Exception;
 	public BookmarkObjService getBookmark(String userId, String siteId, int sectionId);
 	public List getBookmarks(String userId, String siteId);
-	 public int getLastVisitSectionId(boolean isAuthor, String userId, String siteId);
+	 public int getLastVisitSectionId(String userId, String siteId);
 	public void deleteBookmark(int bookmarkId) throws Exception;
 	public void deleteFiles(File delfile);
 	public void createFile(List bmList, String fileName) throws Exception;

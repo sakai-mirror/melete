@@ -359,15 +359,7 @@ public class LicensePage {
 					throw new UserErrorException("copyright_info_required");
 			}
 
-			public void validateLicenseLengths() throws UserErrorException
-			{
-				if(copyright_owner != null && copyright_owner.trim().length() > 255)
-					throw new UserErrorException("copyright_owner_long");
 
-				if(copyright_year != null && copyright_year.trim().length() > 255)
-					throw new UserErrorException("copyright_year_long");
-			}
-			
 			public String getAllowCmrcl(){
 				return allowCmrcl;
 			}

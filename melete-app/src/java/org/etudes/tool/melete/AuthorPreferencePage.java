@@ -39,7 +39,6 @@ import org.apache.commons.logging.LogFactory;
 import org.etudes.component.app.melete.MeleteSitePreference;
 import org.etudes.component.app.melete.MeleteUserPreference;
 import org.etudes.api.app.melete.MeleteAuthorPrefService;
-import org.etudes.api.app.melete.exception.UserErrorException;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 
 
@@ -140,15 +139,8 @@ public class AuthorPreferencePage {
  		//	logger.debug("mup LTi choice is:" + mup.isShowLTIChoice());
   			showLTI = mup.isShowLTIChoice().toString();
  		}
-  		
- 		if(msp == null)
- 		{
- 			materialPrintable = ServerConfigurationService.getString("melete.print", "true");
- 		}
- 		else if(msp != null && msp.isPrintable() == null)
-  		{
-  			materialPrintable = ServerConfigurationService.getString("melete.print", "true");
-  		} else materialPrintable = msp.isPrintable().toString();
+  		if(msp != null && msp.isPrintable())
+  			materialPrintable = "true";
 
   		if(msp != null && msp.isAutonumber())
   			materialAutonumber = "true";
@@ -301,15 +293,9 @@ public String setUserChoice()
 			if (showLTI.equals("true"))	mup.setShowLTIChoice(true);
 			else mup.setShowLTIChoice(false);
 
-			
 		ValueBinding binding =
 	  	        Util.getBinding("#{licensePage}");
 		LicensePage lPage = (LicensePage)binding.getValue(context);
-		// validation: check for license and year lengths
-		if (!lPage.getLicenseCodes().equals(lPage.NO_CODE))
-		{
-			lPage.validateLicenseLengths();
-		}	
 		mup = lPage.processLicenseInformation(mup);
 		mup.setUserId((String)sessionMap.get("userId"));
 		authorPref.insertUserChoice(mup);
@@ -330,12 +316,6 @@ public String setUserChoice()
 
 		authorPref.insertUserSiteChoice(msp);
 		}
-		catch (UserErrorException uex)
-		{
-			String errMsg = bundle.getString(uex.getMessage());
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, uex.getMessage(), errMsg));
-			return "author_preference";
-		}
 		catch(Exception e)
 		{
 			String errMsg = bundle.getString("Set_prefs_fail");
@@ -353,10 +333,9 @@ public String setUserChoice()
 
 public boolean isMaterialPrintable(String site_id)
 {
-	Boolean defaultPrint = new Boolean(ServerConfigurationService.getString("melete.print", "true"));
 	MeleteSitePreference checkMsp = (MeleteSitePreference)getAuthorPref().getSiteChoice(site_id);
-	if(checkMsp != null && checkMsp.isPrintable() != null)return checkMsp.isPrintable();
-	else return defaultPrint.booleanValue();
+	if(checkMsp != null)return checkMsp.isPrintable();
+	else return false;
 }
 public boolean isMaterialAutonumber(String site_id)
 {

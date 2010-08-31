@@ -419,34 +419,6 @@
         </managed-property>
 </managed-bean>   
 
-<managed-bean>
-          <description>special access</description>
-          <managed-bean-name>specialAccessPage</managed-bean-name>
-          <managed-bean-class>org.etudes.tool.melete.SpecialAccessPage</managed-bean-class>
-          <managed-bean-scope>session</managed-bean-scope>    
-          <managed-property>
-			<description>Service Dependency: Special Access service</description>
-			<property-name>specialAccessService</property-name>
-			<value>#{Components["org.etudes.api.app.melete.SpecialAccessService"]}</value>
-		</managed-property>   
-		<managed-property>
-			<description>Service Dependency: MeleteSecurityService</description>
-			<property-name>meleteSecurityService</property-name>
-			<value> 
-				#{Components["org.etudes.api.app.melete.MeleteSecurityService"]}</value>
-		</managed-property>  
-		<managed-property>
-            <description>Service Dependency: Module service</description>
-            <property-name>moduleService</property-name>
-            <value>#{Components["org.etudes.api.app.melete.ModuleService"]}</value>
-        </managed-property>
-        <managed-property>
-            <description>Service Dependency: User Directory service</description>
-            <property-name>userDirectoryService</property-name>
-            <value>#{Components["org.sakaiproject.user.api.UserDirectoryService"]}</value>
-        </managed-property>        
-</managed-bean>  
-
  <managed-bean>
       <description>Manages the DeleteResource page</description>
       <managed-bean-name>deleteResourcePage</managed-bean-name>
@@ -1144,11 +1116,7 @@
       <navigation-case>
 		   <from-outcome>module_post_steps</from-outcome>
         <to-view-id>/melete/module_post_steps.jsp</to-view-id>
-      </navigation-case>    
-     <navigation-case>
-      <from-outcome>list_special_access</from-outcome>
-      <to-view-id>/melete/list_special_access.jsp</to-view-id>
-     </navigation-case>   
+      </navigation-case>            
      <navigation-case>
 		   <from-outcome>list_modules_inst</from-outcome>
         <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
@@ -1213,11 +1181,7 @@
        <navigation-case>
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
-     </navigation-case> 
-     <navigation-case>
-		   <from-outcome>restore_modules</from-outcome>
-        <to-view-id>/melete/restore_modules.jsp</to-view-id>
-      </navigation-case>                                                                   
+     </navigation-case>                                                                   
    </navigation-rule>   
 
 
@@ -1690,82 +1654,6 @@
       <from-outcome>student_preference</from-outcome>
       <to-view-id>/melete/student_preference.jsp</to-view-id>
      </navigation-case>                                  
- </navigation-rule>  
- 
- <navigation-rule>
-		<from-view-id>/melete/add_special_access.jsp</from-view-id> 
-     <navigation-case>
-      <from-outcome>list_special_access</from-outcome>
-      <to-view-id>/melete/list_special_access.jsp</to-view-id>
-     </navigation-case>     
-     <navigation-case>
-		   <from-outcome>list_modules_inst</from-outcome>
-        <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
-      </navigation-case>           
-      <navigation-case>
-		   <from-outcome>list_auth_modules</from-outcome>
-        <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
-      </navigation-case> 
-     <navigation-case>
-		   <from-outcome>modules_author_manage</from-outcome>
-        <to-view-id>/melete/modules_author_manage.jsp</to-view-id>
-      </navigation-case>    
-       <navigation-case>
-      <from-outcome>author_preference</from-outcome>
-      <to-view-id>/melete/author_preference.jsp</to-view-id>
-     </navigation-case>                                      
- </navigation-rule>   
- 
- <navigation-rule>
-		<from-view-id>/melete/list_special_access.jsp</from-view-id>  
-     <navigation-case>
-      <from-outcome>add_special_access</from-outcome>
-      <to-view-id>/melete/add_special_access.jsp</to-view-id>
-     </navigation-case>  		 
-      <navigation-case>
-      <from-outcome>delete_special_access</from-outcome>
-      <to-view-id>/melete/delete_special_access.jsp</to-view-id>
-     </navigation-case>   
-     <navigation-case>
-		   <from-outcome>list_modules_inst</from-outcome>
-        <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
-      </navigation-case>           
-      <navigation-case>
-		   <from-outcome>list_auth_modules</from-outcome>
-        <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
-      </navigation-case> 
-     <navigation-case>
-		   <from-outcome>modules_author_manage</from-outcome>
-        <to-view-id>/melete/modules_author_manage.jsp</to-view-id>
-      </navigation-case>    
-       <navigation-case>
-      <from-outcome>author_preference</from-outcome>
-      <to-view-id>/melete/author_preference.jsp</to-view-id>
-     </navigation-case>                             
- </navigation-rule>   
- 
- <navigation-rule>
-		<from-view-id>/melete/delete_special_access.jsp</from-view-id>
-		 <navigation-case>
-      <from-outcome>list_special_access</from-outcome>
-      <to-view-id>/melete/list_special_access.jsp</to-view-id>
-     </navigation-case>   
-     <navigation-case>
-		   <from-outcome>list_modules_inst</from-outcome>
-        <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
-      </navigation-case>           
-      <navigation-case>
-		   <from-outcome>list_auth_modules</from-outcome>
-        <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
-      </navigation-case> 
-     <navigation-case>
-		   <from-outcome>modules_author_manage</from-outcome>
-        <to-view-id>/melete/modules_author_manage.jsp</to-view-id>
-      </navigation-case>    
-       <navigation-case>
-      <from-outcome>author_preference</from-outcome>
-      <to-view-id>/melete/author_preference.jsp</to-view-id>
-     </navigation-case>                                          
  </navigation-rule>  
 <!-- remove Components and render-kit by rashmi as samigo tag is no longer used-->
  

@@ -152,8 +152,8 @@ rendered="#{((editSectionPage.meleteResource.licenseCode == 4)&&(editSectionPage
 		        var oDoc = oIframe.contentWindow || oIframe.contentDocument;
 			    if (oDoc.document) {
 				oDoc = oDoc.document;	
-				oIframe.style.height = oDoc.body.scrollHeight + 40 +"px";				       
-			    } else oIframe.height = oDoc.body.offsetHeight + 40 ; 
+				oIframe.style.height = oDoc.body.scrollHeight + 100 +"px";				       
+			    } else oIframe.height = oDoc.body.offsetHeight + 100 ; 
 			   	for (i=0; i < document.styleSheets.length; i++)
 				{
 				  var link = document.createElement("link");

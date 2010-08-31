@@ -314,12 +314,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		 LicensePage lPage = (LicensePage)binding.getValue(context);
 		 lPage.setFormName(formName);
 		try
-		{ 
-			// validation 2a: if content is provided then check for license and year lengths
-			if (!section.getContentType().equals("notype") && !lPage.getLicenseCodes().equals(lPage.NO_CODE))
-			{
-				lPage.validateLicenseLengths();
-			}
+		{
 			// validation 2: if content is provided then check for copyright license
 			if (!section.getContentType().equals("notype") && lPage.getLicenseCodes().equals(lPage.Copyright_CODE))
 			{
@@ -392,7 +387,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	      					throw new MeleteException("section_html_null");
 	    				}
 	    				getMeleteCHService().checkResource(meleteResource.getResourceId());
-    					editMeleteCollectionResource(meleteResource.getResourceId());
+	    				editMeleteCollectionResource(meleteResource.getResourceId());
 	    			}
 	    			//The condition below was put in to handle ME-639
 	    			else

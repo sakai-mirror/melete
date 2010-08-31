@@ -73,7 +73,6 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 	String courseId;
 	String userId;
 	private boolean sameModuleSectionSelected;
-	private String fromPage;
 
     public DeleteModulePage(){
        	this.mdbean = null;
@@ -83,7 +82,6 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
     	sameModuleSectionSelected = false;
     	courseId = null;
     	userId = null;
-    	fromPage = null;
     }
 
   	/*
@@ -244,26 +242,6 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		FacesMessage msg = new FacesMessage("Delete Confirmation",deleteMsg);
 		msg.setSeverity(FacesMessage.SEVERITY_INFO);
 		context.addMessage(null,msg);
-		
-		if(fromPage != null && fromPage.equals("restore"))
-		{
-			ValueBinding binding = Util.getBinding("#{manageModulesPage}");
-			ManageModulesPage managePage = (ManageModulesPage)binding.getValue(context);
-			managePage.resetValues();
-			
-			// reset delete page members
-			fromPage = null;
-			setMdbean(null);
-			setModuleSelected(false);
-			setSection(null);
-			setSectionSelected(false);
-			setModules(null);
-			setSectionBeans(null);
-			
-			// navigate back to restore page
-			return "restore_modules";
-		}
-		
 		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
 		ListAuthModulesPage listAuthPage = (ListAuthModulesPage)
 	        binding.getValue(context);
@@ -392,14 +370,6 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 	 */
 	public boolean isSameModuleSectionSelected() {
 		return sameModuleSectionSelected;
-	}
-
-	public String getFromPage() {
-		return fromPage;
-	}
-
-	public void setFromPage(String fromPage) {
-		this.fromPage = fromPage;
 	}
 
 	

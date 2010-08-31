@@ -490,7 +490,29 @@ public class BookmarkPage implements Serializable
 	   if (bmList == null)
 	   {
 		  bmList = bookmarkService.getBookmarks((String)sessionMap.get("userId"),(String)sessionMap.get("courseId"));
-	    
+	     if (bmList != null)
+	     {
+	    	 for (ListIterator i = bmList.listIterator(); i.hasNext(); )
+	 		 {
+	 			 Bookmark bmark = (Bookmark)i.next();
+	 			 if (bmark.getNotes() != null)
+	 			 {
+	 			   if (bmark.getNotes().length() > 70)
+	 			   {
+	 				 bmark.setBriefNotes(bmark.getNotes().substring(0,69)+"...");
+	 			   }
+	 			   else
+	 			   {
+	 				   bmark.setBriefNotes(bmark.getNotes());
+	 			   }
+	 			 }
+	 			 else
+	 			 {
+	 				 bmark.setBriefNotes("");
+	 			 }
+	 			 bmark.setSectionVisibleFlag(bmark.getSection().getModule().getModuleshdate().isVisibleFlag());
+	 		 }
+	     }
 	     if ((bmList != null)&&(bmList.size() > 0))
 	     {
 		   setNobmsFlag(false);

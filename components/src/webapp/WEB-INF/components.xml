@@ -39,8 +39,7 @@
 				<value>org/etudes/component/app/melete/MeleteUserPreference.hbm.xml</value>					
 				<value>org/etudes/component/app/melete/MeleteResource.hbm.xml</value>	
 				<value>org/etudes/component/app/melete/MeleteSitePreference.hbm.xml</value>
-				<value>org/etudes/component/app/melete/Bookmark.hbm.xml</value>
-                <value>org/etudes/component/app/melete/SpecialAccess.hbm.xml</value>	
+				<value>org/etudes/component/app/melete/Bookmark.hbm.xml</value>	
 	        </list>
 		</property>
 	</bean>
@@ -279,21 +278,5 @@
 			<ref local="org.etudes.component.app.melete.BookmarkDB"/>
         </property>
 	</bean>    
-	
-   <bean id="org.etudes.component.app.melete.SpecialAccessDB"
-			class="org.etudes.component.app.melete.SpecialAccessDB"
-			singleton="true">
-			<property name="hibernateUtil">
-            <ref local="org.etudes.component.app.melete.HibernateUtil" />
-        </property>        
-	</bean>
-	
-	<bean id="org.etudes.api.app.melete.SpecialAccessService"
-				class="org.etudes.component.app.melete.SpecialAccessServiceImpl"
-				singleton="true">	
-		<property name="specialAccessDb">
-			<ref local="org.etudes.component.app.melete.SpecialAccessDB"/>
-        </property>
-	</bean>    	
    
 </beans>

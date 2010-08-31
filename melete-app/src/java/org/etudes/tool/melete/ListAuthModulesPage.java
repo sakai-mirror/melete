@@ -1033,20 +1033,6 @@ public class ListAuthModulesPage implements Serializable
 		nextPage.setMdBean(mdbean);
 		return "module_post_steps";
 	}
-	
-	public String specialAccessAction()
-	{
-		resetSelectedLists();
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIViewRoot root = ctx.getViewRoot();
-		UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
-		ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
-		ValueBinding binding = Util.getBinding("#{specialAccessPage}");
-		SpecialAccessPage specialAccessPage = (SpecialAccessPage) binding.getValue(ctx);
-		specialAccessPage.setModule(mdbean.getModule());
-		specialAccessPage.setSaList(null);
-		return "list_special_access";
-	}	
 
 	/*
 	 * added by rashmi on 8 Apr returns a string whose value is null for render comparison on the page for + icon or view icon for next steps

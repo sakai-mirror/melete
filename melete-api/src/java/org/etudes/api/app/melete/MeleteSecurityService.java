@@ -23,8 +23,6 @@
  **********************************************************************************/
 package org.etudes.api.app.melete;
 
-import java.util.Set;
-
 /**
  * <p>MeleteSecurityService provides the access permissions to the melete</p>
  *
@@ -67,8 +65,6 @@ public interface MeleteSecurityService{
 	boolean allowStudent(String reference)throws Exception;
 
 	public boolean isSuperUser(String userId);
-	
-	public Set<String> getUsersIsAllowed(String context);
 
 	public void pushAdvisor();
 

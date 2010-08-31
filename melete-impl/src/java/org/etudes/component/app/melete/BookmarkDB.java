@@ -29,7 +29,6 @@ import java.util.ListIterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.Calendar;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,65 +53,14 @@ public class BookmarkDB {
 
 	public List getBookmarks(String userId, String siteId)
 	{
-		List saList = new ArrayList();
-		List bmList = new ArrayList();
+		List mbList = new ArrayList();
 		try{
 		     Session session = getHibernateUtil().currentSession();
-		     Query q=session.createQuery("select sa from SpecialAccess sa,CourseModule cm where sa.users like :userId and sa.moduleId=cm.moduleId and cm.courseId = :siteId");
-			  q.setParameter("userId","%"+userId+"%");
-			  q.setParameter("siteId", siteId);
-			  saList = q.list();
-		      q=session.createQuery("from Bookmark mb where mb.userId =:userId and mb.siteId=:siteId and mb.section.module.coursemodule.archvFlag = 0 order by mb.lastVisited desc,mb.bookmarkId asc");
+		     Query q=session.createQuery("from Bookmark mb where mb.userId =:userId and mb.siteId=:siteId and mb.section.module.coursemodule.archvFlag = 0 order by mb.lastVisited desc,mb.bookmarkId asc");
 			  q.setParameter("userId",userId);
 			  q.setParameter("siteId", siteId);
-			  bmList = q.list();
-			  if (bmList != null)
-			  {
-			   	 for (ListIterator i = bmList.listIterator(); i.hasNext(); )
-			 	 {
-			 		 Bookmark bmark = (Bookmark)i.next();
-			 		 if (bmark.getNotes() != null)
-			 		 {
-			 		   if (bmark.getNotes().length() > 70)
-			 		   {
-			 			 bmark.setBriefNotes(bmark.getNotes().substring(0,69)+"...");
-			 		   }
-			 		   else
-			 		   {
-			 			   bmark.setBriefNotes(bmark.getNotes());
-			 		   }
-			 		 }
-			 		 else
-			 		 {
-			 			 bmark.setBriefNotes("");
-			 		 }
-			 		 if ((saList == null)||(saList.size() == 0))
-			 		 {	 
-			 		   bmark.setSectionVisibleFlag(bmark.getSection().getModule().getModuleshdate().isVisibleFlag());
-			 		 }  
-			 		 else
-			 		 {
-			 			 boolean accessFound = false;
-			 			 //Iterate through special access list to see if this module has special access set
-			 			 for (ListIterator j = saList.listIterator(); j.hasNext(); )
-					 	 {
-					 		 SpecialAccess sa = (SpecialAccess)j.next();
-					 		 //If module matches, compare dates and set visible flag
-					 		 if (sa.getModuleId() == bmark.getSection().getModule().getModuleId().intValue())
-					 		 {
-					 			 accessFound = true;
-					 			 bmark.setSectionVisibleFlag(isSectionVisible(sa));
-					 		 }
-					 	 }	 
-			 			 //If access has not been set for this module, use module's dates
-			 			 if (accessFound == false)
-			 			 {
-			 				 bmark.setSectionVisibleFlag(bmark.getSection().getModule().getModuleshdate().isVisibleFlag());
-			 			 }
-					 				 			 
-			 		 }
-			 	 }
-			   }			  
+			  mbList = q.list();
+
 		}
 	    catch (HibernateException he)
 	    {
@@ -129,7 +77,7 @@ public class BookmarkDB {
 				  logger.error(he.toString());
 			  }
 		}
-		return bmList;
+		return mbList;
 
 	}
 
@@ -163,7 +111,7 @@ public class BookmarkDB {
 		return mb;
 	}
 
-	public int getLastVisitSectionId(boolean isAuthor, String userId, String siteId)
+	public int getLastVisitSectionId(String userId, String siteId)
 	{
 		int sectionId = 0;
 		try{
@@ -172,43 +120,14 @@ public class BookmarkDB {
 			  q.setParameter("userId",userId);
 			  q.setParameter("siteId", siteId);
 			  Section section = (Section)q.uniqueResult();
-			  //Always show last visited link to instructors
-			  if (isAuthor)
+			  if (section.getModule().getModuleshdate().isVisibleFlag())
 			  {
 				  sectionId = section.getSectionId().intValue();
 			  }
 			  else
-			  {	 
-				//Check to see if student has special access dates set for last visited module
-				int moduleId = section.getModule().getModuleId().intValue();
-				q=session.createQuery("from SpecialAccess sa where sa.users like :userId and sa.moduleId=:moduleId");
-				q.setParameter("userId", "%"+userId+"%");
-				q.setParameter("moduleId", moduleId);
-				SpecialAccess sa = (SpecialAccess)q.uniqueResult();
-				//If student has special access, use those dates to determine if section is visible to them
-				if (sa != null)
-				{
-				    if (isSectionVisible(sa))
-				 	{
-				    	sectionId = section.getSectionId().intValue();
-				 	}
-				 	else
-				 	{
-				 		sectionId = 0;
-				 	 }					
-				}
-				else
-				{	
-			      if (section.getModule().getModuleshdate().isVisibleFlag())
-			      {
-				    sectionId = section.getSectionId().intValue();
-			      }
-			      else
-			      {
-				    sectionId = 0;
-			      }
-				}  
-			  }  
+			  {
+				  sectionId = 0;
+			  }
 		}
 	    catch (HibernateException he)
 	    {
@@ -228,20 +147,6 @@ public class BookmarkDB {
 		return sectionId;
 	}
 
-	private boolean isSectionVisible(SpecialAccess sa)
-	{
-		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
-
-	    if (((sa.getStartDate() == null)||(sa.getStartDate().before(currentTimestamp)))&&((sa.getEndDate() == null)||(sa.getEndDate().after(currentTimestamp))))
-	 	{
-	    	return true;
-	 	}
-	 	else
-	 	{
-	 		return false;
-	 	 }				
-	}
-	
 	private void adjustLastVisited(List mbList, int sectionId) throws Exception
 	{
 		Transaction tx = null;

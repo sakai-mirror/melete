@@ -80,11 +80,11 @@ public BookmarkObjService getBookmark(String userId, String siteId, int sectionI
 		return mbList;
 	}
 
-  public int getLastVisitSectionId(boolean isAuthor, String userId, String siteId)
+  public int getLastVisitSectionId(String userId, String siteId)
   {
 	int sectionId = 0;
 	try{
-		sectionId = bookmarkDb.getLastVisitSectionId(isAuthor, userId, siteId);
+		sectionId = bookmarkDb.getLastVisitSectionId(userId, siteId);
 	}catch(Exception e)
 		{
 		  //It is ok to not have a last visited section

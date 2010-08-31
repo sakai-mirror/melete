@@ -62,8 +62,6 @@ public class ViewModBean implements Serializable, ViewModBeanService {
     protected List vsBeans;
 
     private int vsBeansSize;
-    
-    private String nextStepsNumber;
     /**
 	 * {@inheritDoc}
 	 */
@@ -302,11 +300,11 @@ public class ViewModBean implements Serializable, ViewModBeanService {
 	}
 
 	public String getNextStepsNumber() {
-		return nextStepsNumber;
+		String sz = new String("0");
+		if(this.seqNo != 0)	sz = new String(this.seqNo +"." + (this.vsBeansSize+1));
+		return sz;
 	}
 
-	public void setNextStepsNumber(String nextStepsNumber) {
-		this.nextStepsNumber = nextStepsNumber;
-	}
+	
 
 }
