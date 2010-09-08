@@ -30,8 +30,8 @@ package org.etudes.api.app.melete;
 public interface MeleteSitePreferenceService {
 	public abstract String getPrefSiteId();
 	public abstract void setPrefSiteId(String prefSiteId);
-	public abstract boolean isPrintable();
-	public abstract void setPrintable(boolean printable);
+	public abstract Boolean isPrintable();
+	public abstract void setPrintable(Boolean printable);
 	public abstract boolean isAutonumber();
 	public abstract void setAutonumber(boolean autonumber);
 	

@@ -514,6 +514,21 @@ public class SubSectionUtilImpl {
 		}
 		return returnElement;
 	}
+	
+	public int noOfTopLevelSections(String modSeqXml)
+	{
+		try
+		{
+		subSection4jDOM = DocumentHelper.parseText(modSeqXml);
+		setInternalDTD();
+		Element root = subSection4jDOM.getRootElement();
+		return root.elements().size();
+		}
+		catch(Exception e)
+		{
+			return 0;
+		}
+	}
 }
 
 

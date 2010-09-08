@@ -874,7 +874,14 @@ public class ModuleDB implements Serializable {
 		    				vmBean.setTitle(rs.getString("modTitle"));
 		    				vmBean.setWhatsNext(rs.getString("whats_next"));
 		    				vmBean.setSeqXml(seqXml);
-
+		    				// what's next display seq number is number of top level sections + 1
+		    				SubSectionUtilImpl ssuImpl1 = new SubSectionUtilImpl();
+		    				int top = ssuImpl1.noOfTopLevelSections(seqXml);
+		    				top = top + 1;
+		    				String ns_number= new String(seqNo+".");
+		    				ns_number = ns_number.concat(Integer.toString(top));
+		    				vmBean.setNextStepsNumber(ns_number);
+		    				
 		    				startTimestamp = rs.getTimestamp("start_date");
 		    				endTimestamp = rs.getTimestamp("end_date");
 
@@ -2774,6 +2781,13 @@ public class ModuleDB implements Serializable {
 						}
 		  			}
 		  		}
+				// what's next information in the end
+				if(module.getWhatsNext()!= null && module.getWhatsNext().length() > 0)
+				{
+					ResourceLoader rl = new ResourceLoader("melete_license");
+					printText.append("<h4>" + rl.getString("Next_steps") + "</h4>")	;
+					printText.append(module.getWhatsNext());
+				}
 				return 	printText.toString();
 			}
 			catch (StaleObjectStateException sose)

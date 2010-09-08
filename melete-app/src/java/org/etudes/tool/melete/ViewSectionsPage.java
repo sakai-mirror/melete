@@ -164,7 +164,6 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 	  }
 
 	public Boolean getcontentWithHtml() {
-		logger.debug("getcontentWithHtml is" + contentWithHtml);
 		if(contentWithHtml == null) getContent();
 		return contentWithHtml;
 	}
@@ -460,11 +459,11 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     	Node prevNode,nextNode;
     	String courseId = null;
     	FacesContext ctx = FacesContext.getCurrentInstance();
-    	logger.debug("get Module at viewsection java param value" + ctx.getExternalContext().getRequestParameterMap().get("vs_id"));
-
+    
     	String directvs_id = (String)ctx.getExternalContext().getRequestParameterMap().get("vs_id");
     	if(directvs_id != null)
     	{
+    		logger.debug("get Module at viewsection java param value" + ctx.getExternalContext().getRequestParameterMap().get("vs_id"));
     		int d_vs_id=new Integer(directvs_id).intValue();
     		if(d_vs_id != this.sectionId)
     		{
@@ -709,7 +708,7 @@ public String goWhatsNext()
 	vnPage.setPrevModId(this.moduleId);
 	vnPage.setNextSeqNo(this.nextSeqNo);
 	vnPage.setModuleSeqNo(this.moduleSeqNo);
-
+	vnPage.setModule(null);
     //vnPage.setModule(this.module);
 
 	return "view_whats_next";

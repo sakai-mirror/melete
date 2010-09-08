@@ -547,6 +547,7 @@ public class ListModulesPage implements Serializable{
               Util.getBinding("#{viewNextStepsPage}");
             ViewNextStepsPage vnPage = (ViewNextStepsPage)
               binding.getValue(ctx);
+          vnPage.setModule(null);
     	  if (isUserAuthor() || isUserStudent())
     	  {
   			if ((viewModuleBeans != null)&&(viewModuleBeans.size() > 0))

@@ -38,6 +38,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.component.app.melete.MeleteSitePreference;
 import org.etudes.component.app.melete.MeleteUserPreference;
+import org.etudes.api.app.melete.exception.UserErrorException;
 import org.etudes.api.app.melete.MeleteAuthorPrefService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 
@@ -296,6 +297,11 @@ public String setUserChoice()
 		ValueBinding binding =
 	  	        Util.getBinding("#{licensePage}");
 		LicensePage lPage = (LicensePage)binding.getValue(context);
+		// validation: check for license and year lengths
+		if (!lPage.getLicenseCodes().equals(lPage.NO_CODE))
+		{
+			lPage.validateLicenseLengths();
+		}	
 		mup = lPage.processLicenseInformation(mup);
 		mup.setUserId((String)sessionMap.get("userId"));
 		authorPref.insertUserChoice(mup);
@@ -315,6 +321,12 @@ public String setUserChoice()
 		else msp.setAutonumber(false);
 
 		authorPref.insertUserSiteChoice(msp);
+		}
+		catch (UserErrorException uex)
+		{
+			String errMsg = bundle.getString(uex.getMessage());
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, uex.getMessage(), errMsg));
+			return "author_preference";
 		}
 		catch(Exception e)
 		{

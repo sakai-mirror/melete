@@ -425,3 +425,5 @@ vertical-align:top;
 	width:20%;
 }
 .authBarCol {font-size:90%;white-space:nowrap;}
+
+@media print  { .noprint  { display: none; } }

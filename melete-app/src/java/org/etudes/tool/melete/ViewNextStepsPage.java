@@ -273,6 +273,7 @@ public ModuleObjService getModule()
 	  if (this.module == null)
 	  {
 		  this.module = getModuleService().getModule(this.prevModId);
+		  this.moduleSeqNo = this.module.getCoursemodule().getSeqNo();
 	  }
 	  return this.module;
 }

@@ -230,6 +230,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 			DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(context);
 			dmPage.setModules(delModules);
 			dmPage.setModuleSelected(true);
+			dmPage.setFromPage("restore");
 			count=0;
 
 
@@ -313,7 +314,8 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		restoreModulesList= null;
 		count=0;		
 		selectAllFlag = false;
-		FacesContext ctx = FacesContext.getCurrentInstance();
+		// commented as reset is done from delete page on deleting archived modules
+/*		FacesContext ctx = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{deleteModulePage}");
 		DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
 		dmPage.setMdbean(null);
@@ -321,7 +323,7 @@ public class ManageModulesPage implements Serializable/*,ToolBean*/{
 		dmPage.setSection(null);
 		dmPage.setSectionSelected(false);
 		dmPage.setModules(null);
-		dmPage.setSectionBeans(null);
+		dmPage.setSectionBeans(null);*/
 	}
 	
 	private void addMessage(FacesContext ctx, String msgName, String msgDetail, FacesMessage.Severity severity)

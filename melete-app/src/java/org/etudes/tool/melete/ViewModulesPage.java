@@ -158,15 +158,17 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
  	  {
     	try {
     		FacesContext ctx = FacesContext.getCurrentInstance();
-        	logger.debug("get mdbean found req param value" + ctx.getExternalContext().getRequestParameterMap().get("vm_id"));
-
         	ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 
         	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
         	String courseId = "";
         	String userId = mPage.getCurrentUser().getId();
         	String directvm_id = (String)ctx.getExternalContext().getRequestParameterMap().get("vm_id");
-        	if(directvm_id != null) this.moduleId=new Integer(directvm_id).intValue();
+        	if(directvm_id != null) 
+        		{
+        		logger.debug("get mdbean found req param value" + ctx.getExternalContext().getRequestParameterMap().get("vm_id"));
+        		this.moduleId=new Integer(directvm_id).intValue();
+        		}
         	String direct_cid = (String)ctx.getExternalContext().getRequestParameterMap().get("c_id");
         	if(direct_cid != null) courseId = direct_cid;
         	else courseId = getCourseId();
@@ -183,6 +185,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     	  }
     	  if (this.mdbean != null)
     	  {
+    		this.moduleId = this.mdbean.getModuleId();  
     	    this.moduleSeqNo = this.mdbean.getModule().getCoursemodule().getSeqNo();
     	    this.prevSeqNo = getModuleService().getPrevSeqNo(courseId,this.moduleSeqNo);
   	  	    this.nextSeqNo = getModuleService().getNextSeqNo(courseId,this.moduleSeqNo);
@@ -369,6 +372,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
         	vnPage.setPrevSecId(0);
           }
           vnPage.setPrevModId(this.prevMdbean.getModule().getModuleId());
+          vnPage.setModule(null);
           //vnPage.setModule(this.prevMdbean.getModule());
         }
         else
@@ -395,7 +399,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     	vnPage.setPrevModId(this.moduleId);
 
     	vnPage.setNextSeqNo(this.nextSeqNo);
-
+    	vnPage.setModule(null);
         //if (this.mdbean != null) vnPage.setModule(this.mdbean.getModule());
 
     		return "view_whats_next";

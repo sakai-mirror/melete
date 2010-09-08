@@ -313,9 +313,14 @@ public class EditSectionPage extends SectionPage implements Serializable
 		ValueBinding binding =  Util.getBinding("#{licensePage}");
 		 LicensePage lPage = (LicensePage)binding.getValue(context);
 		 lPage.setFormName(formName);
-		try
-		{
-			// validation 2: if content is provided then check for copyright license
+		 try
+		 { 
+			 // validation 2a: if content is provided then check for license and year lengths
+			 if (!section.getContentType().equals("notype") && !lPage.getLicenseCodes().equals(lPage.NO_CODE))
+			 {
+				 lPage.validateLicenseLengths();
+			 }
+			 // validation 2: if content is provided then check for copyright license
 			if (!section.getContentType().equals("notype") && lPage.getLicenseCodes().equals(lPage.Copyright_CODE))
 			{
 				lPage.checkForRequiredFields();
