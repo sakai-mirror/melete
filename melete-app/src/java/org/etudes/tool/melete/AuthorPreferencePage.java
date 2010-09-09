@@ -140,8 +140,15 @@ public class AuthorPreferencePage {
  		//	logger.debug("mup LTi choice is:" + mup.isShowLTIChoice());
   			showLTI = mup.isShowLTIChoice().toString();
  		}
-  		if(msp != null && msp.isPrintable())
-  			materialPrintable = "true";
+  		
+ 		if(msp == null)
+ 		{
+ 			materialPrintable = ServerConfigurationService.getString("melete.print", "true");
+ 		}
+ 		else if(msp != null && msp.isPrintable() == null)
+  		{
+  			materialPrintable = ServerConfigurationService.getString("melete.print", "true");
+  		} else materialPrintable = msp.isPrintable().toString();
 
   		if(msp != null && msp.isAutonumber())
   			materialAutonumber = "true";
@@ -345,9 +352,10 @@ public String setUserChoice()
 
 public boolean isMaterialPrintable(String site_id)
 {
+	Boolean defaultPrint = new Boolean(ServerConfigurationService.getString("melete.print", "true"));
 	MeleteSitePreference checkMsp = (MeleteSitePreference)getAuthorPref().getSiteChoice(site_id);
-	if(checkMsp != null)return checkMsp.isPrintable();
-	else return false;
+	if(checkMsp != null && checkMsp.isPrintable() != null)return checkMsp.isPrintable();
+	else return defaultPrint.booleanValue();
 }
 public boolean isMaterialAutonumber(String site_id)
 {
