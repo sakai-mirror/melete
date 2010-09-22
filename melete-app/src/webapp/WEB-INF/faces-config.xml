@@ -352,6 +352,11 @@
 	    	            <property-name>authorPref</property-name>
 	    	            <value>#{Components["org.etudes.api.app.melete.MeleteAuthorPrefService"]}</value>
             </managed-property>
+            <managed-property>
+            <description>Service Dependency: Section service</description>
+            <property-name>sectionService</property-name>
+            <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
+        </managed-property>
 </managed-bean>  
 
 <managed-bean>
@@ -1519,6 +1524,10 @@
       <to-view-id>/melete/author_preference.jsp</to-view-id>
      </navigation-case> 
      <navigation-case>
+			<from-outcome>confirm_license</from-outcome>
+			<to-view-id>/melete/confirm_license.jsp</to-view-id>
+	</navigation-case>
+     <navigation-case>
 			<from-outcome>modules_author_manage</from-outcome>
 			<to-view-id>/melete/modules_author_manage.jsp</to-view-id>
 		</navigation-case>
@@ -1535,6 +1544,30 @@
         <to-view-id>/melete/list_modules_student.jsp</to-view-id>
       </navigation-case>                                      
  </navigation-rule>      
+   
+ <navigation-rule>
+	<from-view-id>/melete/confirm_license.jsp</from-view-id>
+		 <navigation-case>
+      		<from-outcome>author_preference</from-outcome>
+      		<to-view-id>/melete/author_preference.jsp</to-view-id>
+     	</navigation-case> 
+        <navigation-case>
+			<from-outcome>modules_author_manage</from-outcome>
+			<to-view-id>/melete/modules_author_manage.jsp</to-view-id>
+		</navigation-case>
+		<navigation-case>
+		   <from-outcome>list_auth_modules</from-outcome>
+ 	       <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
+      </navigation-case>        
+       <navigation-case>
+		   <from-outcome>list_modules_inst</from-outcome>
+    	    <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
+      </navigation-case>   
+       <navigation-case>
+		   <from-outcome>list_modules_student</from-outcome>
+        	<to-view-id>/melete/list_modules_student.jsp</to-view-id>
+      </navigation-case>                                      
+ </navigation-rule> 
    
    <navigation-rule>
 		<from-view-id>/melete/pref_editor.jsp</from-view-id>

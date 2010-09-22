@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -39,6 +39,7 @@ import org.apache.commons.logging.LogFactory;
 import org.etudes.component.app.melete.MeleteSitePreference;
 import org.etudes.component.app.melete.MeleteUserPreference;
 import org.etudes.api.app.melete.MeleteAuthorPrefService;
+import org.etudes.api.app.melete.SectionService;
 import org.etudes.api.app.melete.exception.UserErrorException;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 
@@ -63,9 +64,15 @@ public class AuthorPreferencePage {
   private String materialPrintable="false";
   private String materialAutonumber="false";
   public String formName;
-
+  private String displayLicenseCode;
+  private String displayOwner;
+  private String displayYear;
+  private boolean displayAllowCmrcl;
+  private Integer displayAllowMod;
+  
   /** Dependency:  The logging service. */
 	protected Log logger = LogFactory.getLog(AuthorPreferencePage.class);
+	protected SectionService sectionService;
 
   public AuthorPreferencePage()
   {
@@ -372,6 +379,58 @@ public String backToPrefsPage()
 //	return "pref_editor";
 }
 
+/*
+ * overwrite all section licenses with the preferred one
+ */
+public String changeAllLicense()
+{	
+	// auto-save settings here 
+	setUserChoice();
+	// go to confirm page
+	FacesContext context = FacesContext.getCurrentInstance();
+	ValueBinding binding = Util.getBinding("#{licensePage}");
+	LicensePage lPage = (LicensePage)binding.getValue(context);
+	displayLicenseCode = lPage.getLicenseCodes();
+	displayYear = lPage.getCopyright_year();
+	displayOwner = lPage.getCopyright_owner();
+	displayAllowCmrcl = (lPage.getAllowCmrcl() != null && lPage.getAllowCmrcl().equals("true"))? true : false;
+	displayAllowMod = (lPage.getAllowMod() != null) ? new Integer(lPage.getAllowMod()) : 0;
+	
+	return "confirm_license";
+}
+
+/*
+ * Change License of all sections 
+ * On success return back to author mode
+ */
+public String changeLicenseAction()
+{
+	FacesContext context = FacesContext.getCurrentInstance();
+	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+	Map sessionMap = context.getExternalContext().getSessionMap();
+	mup = getMup((String)sessionMap.get("userId"));
+	String courseId = (String)sessionMap.get("courseId");
+	try
+	{
+		sectionService.changeLicenseForAll(courseId, mup);
+	}
+	catch(Exception e)
+	{
+		String errMsg = bundle.getString("all_license_change_fail");
+		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "all_license_change_fail", errMsg));
+		return "author_preference";
+	}
+	return "list_auth_modules";
+}
+
+/*
+ * On cancel return back to preferences page
+ */
+public String cancelLicenseAction()
+{
+	return "author_preference";
+}
+
 /**
  * @return Returns the authorPref.
  */
@@ -384,8 +443,6 @@ public MeleteAuthorPrefService getAuthorPref() {
 public void setAuthorPref(MeleteAuthorPrefService authorPref) {
 	this.authorPref = authorPref;
 }
-
-
 
 /**
  * @return Returns the displaySferyx.
@@ -466,5 +523,58 @@ public void setFormName(String formName){
     this.formName = formName;
 }
 
+public String getDisplayLicenseCode() {
+	return displayLicenseCode;
+}
+
+public void setDisplayLicenseCode(String displayLicenseCode) {
+	this.displayLicenseCode = displayLicenseCode;
+}
+
+public String getDisplayOwner() {
+	return displayOwner;
+}
+
+public void setDisplayOwner(String displayOwner) {
+	this.displayOwner = displayOwner;
+}
+
+public String getDisplayYear() {
+	return displayYear;
+}
+
+public void setDisplayYear(String displayYear) {
+	this.displayYear = displayYear;
+}
+
+public boolean isDisplayAllowCmrcl() {
+	return displayAllowCmrcl;
+}
+
+public void setDisplayAllowCmrcl(boolean displayAllowCmrcl) {
+	this.displayAllowCmrcl = displayAllowCmrcl;
+}
+
+public Integer getDisplayAllowMod() {
+	return displayAllowMod;
+}
+
+public void setDisplayAllowMod(Integer displayAllowMod) {
+	this.displayAllowMod = displayAllowMod;
+}
+
+/**
+ * @return Returns the SectionService.
+ */
+public SectionService getSectionService() {
+        return sectionService;
+}
+
+/**
+ * @param SectionService The SectionService to set.
+ */
+public void setSectionService(SectionService sectionService) {
+        this.sectionService = sectionService;
+}
 
 }

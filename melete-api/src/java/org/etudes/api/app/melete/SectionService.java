@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -25,6 +25,7 @@ package org.etudes.api.app.melete;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * Mallika - 4/20/05 - Added method to delete section
 * Revised by rashmi 4/26 add signature for sort sections
@@ -72,4 +73,5 @@ public interface SectionService{
    public int cleanUpDeletedSections() throws Exception;
    public SectionObjService getNextSection(String curr_id, String seqXML) throws Exception;
    public SectionObjService getPrevSection(String curr_id, String seqXML) throws Exception;
+   public int changeLicenseForAll(String courseId, MeleteUserPreferenceService mup) throws Exception;
 }

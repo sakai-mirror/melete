@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -36,6 +36,7 @@ import org.dom4j.Element;
 import org.hibernate.Session;
 import org.etudes.api.app.melete.MeleteResourceService;
 import org.etudes.api.app.melete.MeleteSecurityService;
+import org.etudes.api.app.melete.MeleteUserPreferenceService;
 import org.etudes.api.app.melete.SectionResourceService;
 import org.etudes.api.app.melete.SectionService;
 import org.etudes.api.app.melete.ModuleObjService;
@@ -497,6 +498,18 @@ public class SectionServiceImpl implements Serializable, SectionService{
 		  return null;
 	  }
 
+	  public int changeLicenseForAll(String courseId, MeleteUserPreferenceService mup) throws Exception
+	  {
+		  try
+		  {
+			  return sectiondb.changeLicenseForAll(courseId, (MeleteUserPreference)mup);
+		  }
+		  catch (Exception e)
+		  {
+			  throw new MeleteException("all_license_change_fail");
+		  }	
+	  }
+	  
 	/**
 	 * @return Returns the sectiondb.
 	 */

@@ -84,8 +84,12 @@
 						</h:column>
 					
 		                <h:column>
-						<jsp:include page="licenseform.jsp"/>
-						 </h:column>	
+						<jsp:include page="licenseform.jsp"/>						 						 	
+						  <h:commandLink id="allLicenseButton"  action="#{authorPreferences.changeAllLicense}" >
+							<h:graphicImage id="replaceImg2" value="images/replace2.gif" styleClass="AuthImgClass"/>
+							<h:outputText value="#{msgs.overwriteLicenseMsg}"/>
+				          </h:commandLink>
+				       </h:column> 	
 					 </h:panelGrid>
           	     </td>
           	    </tr> 

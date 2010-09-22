@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -1629,6 +1629,79 @@ public class SectionDB implements Serializable {
           int deletedEntities = session.createQuery(delMeleteResourceStr).executeUpdate();
    }
 
+	/*
+	 * Change license info for all sections of a site
+	 */
+	public int changeLicenseForAll(String courseId, MeleteUserPreference mup) throws Exception
+	{		
+		System.out.println("change license in db:courseId " + courseId);
+		try
+		{
+			Session session = hibernateUtil.currentSession();
+			Transaction tx = null;
+			try
+			{
+				// get all active section melete resource objects for this site
+				String queryString = "Select sr.resource.resourceId from SectionResource sr " +
+				"join sr.section s " +
+				"join s.module m " +
+				"join m.coursemodule cmod " +
+				"where cmod.courseId=:courseId and cmod.archvFlag = 0 and cmod.deleteFlag = 0 and sr.resource != null";
+				Query query = session.createQuery(queryString);
+				query.setParameter("courseId",courseId);
+				List result_list = query.list();
+	
+				//to bulk change, create a string with all resource ids
+				if(result_list != null && result_list.size()!= 0)
+				{
+					String res_ids = new String("(");
+					for(int i=0; i < result_list.size(); i++)
+					{
+						res_ids = res_ids.concat("\'"+ (String)result_list.get(i) +"\',");
+					}
+
+					if(res_ids.lastIndexOf(",") != -1)
+						res_ids = res_ids.substring(0, res_ids.lastIndexOf(","));
+					res_ids = res_ids.concat(")");
+					
+					//bulk update
+					String updMeleteResourceStr = "update MeleteResource mr1 set mr1.licenseCode=:lcode, mr1.ccLicenseUrl=:lurl," +
+					" mr1.reqAttr=:reqAttr, mr1.allowCmrcl=:allowCmrcl, mr1.allowMod=:allowMod, mr1.copyrightOwner=:copyrightOwner, " +
+					"mr1.copyrightYear=:copyrightYear where mr1.resourceId in " + res_ids ; 
+					int updatedEntities = 0;
+					Query query1 = session.createQuery(updMeleteResourceStr);
+					query1.setParameter("lcode",mup.getLicenseCode());
+					query1.setParameter("lurl",mup.getCcLicenseUrl());
+					query1.setParameter("reqAttr",mup.isReqAttr());
+					query1.setParameter("allowCmrcl",mup.isAllowCmrcl());
+					query1.setParameter("allowMod",mup.getAllowMod());
+					query1.setParameter("copyrightOwner",mup.getCopyrightOwner());
+					query1.setParameter("copyrightYear",mup.getCopyrightYear());
+
+					updatedEntities = query1.executeUpdate();
+					logger.debug("license updated for " + updatedEntities + "resources");
+					return updatedEntities;
+				}
+				else return 0;
+			}
+			catch (HibernateException he)
+			{
+				if (tx != null) tx.rollback();
+				logger.error(he.toString());
+				throw he;
+			}
+			finally
+			{
+				hibernateUtil.closeSession();
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new MeleteException("all_license_change_fail");
+		}		
+	}
+	
 	/**
 	 * @return Returns the hibernateUtil.
 	 */
