@@ -3,7 +3,7 @@
  * $URL$
  *
  ***********************************************************************************
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -103,7 +103,7 @@ public class ListAuthModulesPage implements Serializable
 
 	private boolean selectedSection;
 
-	private boolean nomodsFlag;
+	private Boolean nomodsFlag;
 
 	private boolean expandAllFlag;
 
@@ -164,7 +164,7 @@ public class ListAuthModulesPage implements Serializable
 		Map sessionMap = context.getExternalContext().getSessionMap();
 		courseId = (String) sessionMap.get("courseId");
 		userId = (String) sessionMap.get("userId");
-		nomodsFlag = false;
+		nomodsFlag = null;
 		setShowModuleId(-1);
 		count = 0;
 		selectedModIndex = -1;
@@ -186,13 +186,14 @@ public class ListAuthModulesPage implements Serializable
 			expandAllFlag = false;
 		}
 		selectAllFlag = false;
+		listSize = 0;
 	}
 
 	public void resetValues()
 	{
 		setShowModuleId(-1);
 		errModuleIds = null;
-		nomodsFlag = false;
+		nomodsFlag = null;
 		count = 0;
 		selectedModIndex = -1;
 		moduleSelected = false;
@@ -202,16 +203,7 @@ public class ListAuthModulesPage implements Serializable
 		selectedSecIndex = -1;
 		sectionSelected = false;
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{deleteModulePage}");
-		DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
-		dmPage.setMdbean(null);
-		dmPage.setModuleSelected(false);
-		dmPage.setSection(null);
-		dmPage.setSectionSelected(false);
-		dmPage.setModules(null);
-		dmPage.setSectionBeans(null);
-
-		binding = Util.getBinding("#{authorPreferences}");
+		ValueBinding binding = Util.getBinding("#{authorPreferences}");
 		AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
 		String expFlag = preferencePage.getUserView();
 		if (expFlag.equals("true"))
@@ -229,6 +221,8 @@ public class ListAuthModulesPage implements Serializable
 		   autonumber = false;
 		}
 		selectAllFlag = false;
+		listSize = 0;
+		moduleDateBeans = null;
 	}
 
 	public boolean isAutonumber()
@@ -382,7 +376,19 @@ public class ListAuthModulesPage implements Serializable
 		try
 		{
 			ModuleService modServ = getModuleService();
-			moduleDateBeans = modServ.getModuleDateBeans(userId, courseId);
+			// fetch beans
+			if (nomodsFlag == null || moduleDateBeans == null)
+				moduleDateBeans = modServ.getModuleDateBeans(userId, courseId);
+			
+			// for bug reports
+			if (moduleDateBeans == null || moduleDateBeans.size() == 0) 
+			{
+				listSize = 0;
+				nomodsFlag = true;
+				return moduleDateBeans;
+			}
+			// end
+			nomodsFlag = false;
 			listSize = moduleDateBeans.size();
 			Iterator itr = context.getMessages();
 			while (itr.hasNext())
@@ -431,15 +437,7 @@ public class ListAuthModulesPage implements Serializable
 		{
 			logger.debug(e.toString());
 		}
-		if (moduleDateBeans.size() == 0)
-		{
-			nomodsFlag = true;
 
-		}
-		else
-		{
-			nomodsFlag = false;
-		}
 		return moduleDateBeans;
 	}
 
@@ -480,6 +478,7 @@ public class ListAuthModulesPage implements Serializable
 
 	public boolean getNomodsFlag()
 	{
+		if(nomodsFlag == null) getModuleDateBeans();
 		return nomodsFlag;
 	}
 
@@ -1216,6 +1215,9 @@ public class ListAuthModulesPage implements Serializable
 			}
 		}
 		resetSubSectionValues();
+		int saveShowId = showModuleId;
+		resetValues();
+		setShowModuleId(saveShowId);
 		return "list_auth_modules";
 	}
 
@@ -1326,6 +1328,9 @@ public class ListAuthModulesPage implements Serializable
 			}
 		}
 		resetSubSectionValues();
+		int saveShowId = showModuleId;
+		resetValues();
+		setShowModuleId(saveShowId);
 		return "list_auth_modules";
 	}
 
@@ -1485,7 +1490,7 @@ public class ListAuthModulesPage implements Serializable
 			String msg = bundle.getString("copy_fail");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 		}
-
+		resetValues();
 		return "list_auth_modules";
 	}
 	// copy code end

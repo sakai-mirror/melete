@@ -1,10 +1,10 @@
 /**********************************************************************************
  *
  * $URL$
- * $Id$  
+ * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -29,6 +29,7 @@ import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -86,7 +87,6 @@ public class ModuleNextStepsPage implements Serializable/*,ToolBean*/ {
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		try {
 			mdBean.setDateFlag(false);
@@ -140,6 +140,10 @@ public class ModuleNextStepsPage implements Serializable/*,ToolBean*/ {
 	  		new FacesMessage("Info message",successMsg);
 	  	msg.setSeverity(FacesMessage.SEVERITY_INFO);
 	  	ctx.addMessage(null,msg);
+
+	  	ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage lPage = (ListAuthModulesPage) binding.getValue(ctx);
+		lPage.resetValues();
 	    return "list_auth_modules";
 		}
 		else return "module_post_steps";
@@ -164,6 +168,10 @@ public class ModuleNextStepsPage implements Serializable/*,ToolBean*/ {
 		  		new FacesMessage("Changes Saved", "Your changes have been saved.");
 		  	msg.setSeverity(FacesMessage.SEVERITY_INFO);
 		  	ctx.addMessage(null,msg);
+		  	ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+			ListAuthModulesPage lPage = (ListAuthModulesPage) binding.getValue(ctx);
+			lPage.resetValues();
+
 		  return "list_auth_modules";
 		}
 		else return "module_post_steps";
@@ -174,6 +182,10 @@ public class ModuleNextStepsPage implements Serializable/*,ToolBean*/ {
 	 */
 	public String cancelChanges()
 	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage lPage = (ListAuthModulesPage) binding.getValue(ctx);
+		lPage.resetValues();
 		return "list_auth_modules";
 	}
 
@@ -182,6 +194,10 @@ public class ModuleNextStepsPage implements Serializable/*,ToolBean*/ {
 	 */
 	public String returnToModules()
 	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage lPage = (ListAuthModulesPage) binding.getValue(ctx);
+		lPage.resetValues();
 		return "list_auth_modules";
 	}
 

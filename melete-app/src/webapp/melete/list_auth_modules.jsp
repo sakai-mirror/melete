@@ -186,10 +186,12 @@ if (msg != null)
  </tr>
  <tr>
    <td>
+   	<h:outputText id="nomodmsg" value="#{msgs.list_auth_modules_no_modules_available}" rendered="#{listAuthModulesPage.nomodsFlag == null || listAuthModulesPage.nomodsFlag}" styleClass="left"/>
+    
    <h:dataTable id="table" 
                   value="#{listAuthModulesPage.moduleDateBeans}"
                   var="mdbean"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass,ListActionClass" 
-                  cellpadding="3" cellspacing="0" 
+                  cellpadding="3" cellspacing="0"  rendered="#{listAuthModulesPage.nomodsFlag != null && !listAuthModulesPage.nomodsFlag}"
 				  width="100%" binding="#{listAuthModulesPage.table}" styleClass="valignStyle9" summary="#{msgs.list_auth_modules_summary}">
                       
     <h:column>
@@ -286,9 +288,8 @@ if (msg != null)
 		    <h:outputText id="emp_space7" value="  " styleClass="ExtraPaddingClass" />
         </h:column>          
     </h:dataTable>   
-    <h:inputHidden id="listSize" value="#{listAuthModulesPage.listSize}"/>   
-	<h:outputText id="nomodmsg" value="#{msgs.list_auth_modules_no_modules_available}" rendered="#{listAuthModulesPage.nomodsFlag == true}" style="text-align:left"/>
-
+      <h:inputHidden id="listSize" value="#{listAuthModulesPage.listSize}"/>
+      
 	  <div class="actionBar" align="left">
 	   <h:commandButton id="saveChanges" action="#{listAuthModulesPage.saveChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
 	   <h:commandButton id="cancelChanges" immediate="true" action="#{listAuthModulesPage.cancelChanges}" rendered="#{listAuthModulesPage.nomodsFlag == false}" value="#{msgs.im_cancel}"  accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>

@@ -5,7 +5,7 @@
  * $Id$
  ************************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -927,6 +927,10 @@ public abstract class SectionPage implements Serializable {
                     sessionMap.remove("currModule");
             }
             resetSectionValues();
+
+         	ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+			ListAuthModulesPage lPage = (ListAuthModulesPage) binding.getValue(context);
+			lPage.resetValues();
             return "list_auth_modules";
     }
 

@@ -3,7 +3,7 @@
  * $URL$
  * $Id$
  ***********************************************************************************
- * Copyright (c) 2008,2009 Etudes, Inc.
+ * Copyright (c) 2008,2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -314,7 +314,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		 LicensePage lPage = (LicensePage)binding.getValue(context);
 		 lPage.setFormName(formName);
 		try
-		{ 
+		{
 			// validation 2a: if content is provided then check for license and year lengths
 			if (!section.getContentType().equals("notype") && !lPage.getLicenseCodes().equals(lPage.NO_CODE))
 			{
@@ -552,6 +552,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		FacesMessage msg = new FacesMessage("Info message", successMsg);
 		msg.setSeverity(FacesMessage.SEVERITY_INFO);
 		context.addMessage(null, msg);*/
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding =Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
+        listPage.resetValues();
 		return "list_auth_modules";
 
 	}

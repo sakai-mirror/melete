@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -186,6 +186,18 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			if (modulekeys.containsKey(checkModId)) iter.remove();
 		}
 	}
+	
+	public void resetDeleteValues()
+	{
+		// reset delete page members
+		fromPage = null;
+		setMdbean(null);
+		setModuleSelected(false);
+		setSection(null);
+		setSectionSelected(false);
+		setModules(null);
+		setSectionBeans(null);
+	}
     /*
      * Called by the jsp page to delete the module or section and redirect to the confirmation page.
      */
@@ -243,32 +255,28 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		String deleteMsg = bundle.getString("confirm_delete_module_msg");
 		FacesMessage msg = new FacesMessage("Delete Confirmation",deleteMsg);
 		msg.setSeverity(FacesMessage.SEVERITY_INFO);
-		context.addMessage(null,msg);
+		context.addMessage(null,msg);		
 		
 		if(fromPage != null && fromPage.equals("restore"))
 		{
 			ValueBinding binding = Util.getBinding("#{manageModulesPage}");
 			ManageModulesPage managePage = (ManageModulesPage)binding.getValue(context);
 			managePage.resetValues();
-			
+
 			// reset delete page members
-			fromPage = null;
-			setMdbean(null);
-			setModuleSelected(false);
-			setSection(null);
-			setSectionSelected(false);
-			setModules(null);
-			setSectionBeans(null);
+			resetDeleteValues();
 			
 			// navigate back to restore page
 			return "restore_modules";
 		}
-		
+
 		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
 		ListAuthModulesPage listAuthPage = (ListAuthModulesPage)
 	        binding.getValue(context);
-		listAuthPage.resetValues();		
-		 return "list_auth_modules";
+		listAuthPage.resetValues();
+		// reset delete page members
+		resetDeleteValues();
+		return "list_auth_modules";
     }
 
     /*
@@ -307,23 +315,36 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		ListAuthModulesPage listAuthPage = (ListAuthModulesPage)
 	        binding.getValue(context);
 		listAuthPage.resetValues();
+		// reset delete page members
+		resetDeleteValues();
 		return "list_auth_modules";
     }
 
 	public String backToModules()
 	{
-		setMdbean(null);
-		setModuleSelected(false);
-		setSection(null);
-		setSectionSelected(false);
-		setModules(null);
-		setSectionBeans(null);
+		resetDeleteValues();
 		sameModuleSectionSelected = false;
+		
 		FacesContext context = FacesContext.getCurrentInstance();
+		if(fromPage != null && fromPage.equals("restore"))
+		{
+			ValueBinding binding = Util.getBinding("#{manageModulesPage}");
+			ManageModulesPage managePage = (ManageModulesPage)binding.getValue(context);
+			managePage.resetValues();
+
+			// navigate back to restore page
+			return "restore_modules";
+		}		
+		
 		ValueBinding binding = Util.getBinding("#{listModulesPage}");
 		ListModulesPage listPage = (ListModulesPage)
 	        binding.getValue(context);
 		listPage.setViewModuleBeans(null);
+
+		binding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage listAuthPage = (ListAuthModulesPage)
+			binding.getValue(context);
+		listAuthPage.resetValues();
 		return "list_auth_modules";
 	}
 
@@ -332,14 +353,21 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 	 */
 	public String cancel()
 	{
-		setMdbean(null);
-		setModuleSelected(false);
-		setSection(null);
-		setSectionSelected(false);
-		setModules(null);
-		setSectionBeans(null);
+		resetDeleteValues();
 		sameModuleSectionSelected = false;
-
+		FacesContext context = FacesContext.getCurrentInstance();
+		
+		// navigate back to restore page
+		if(fromPage != null && fromPage.equals("restore"))
+		{
+			ValueBinding binding = Util.getBinding("#{manageModulesPage}");
+			ManageModulesPage managePage = (ManageModulesPage)binding.getValue(context);
+			managePage.resetValues();
+			return "restore_modules";
+		}
+		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage listAuthPage = (ListAuthModulesPage)binding.getValue(context);
+		listAuthPage.resetValues();
 		return "list_auth_modules";
 	}
 	private String getCourseId()
@@ -402,5 +430,5 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 		this.fromPage = fromPage;
 	}
 
-	
+
  }

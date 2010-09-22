@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2009 Etudes, Inc.
+ * Copyright (c) 2009, 2010 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you
  * may not use this file except in compliance with the License. You may
@@ -80,6 +80,10 @@ public class SortModuleSectionPage implements Serializable{
 	 */
 	public String cancel()
 	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage lPage = (ListAuthModulesPage) binding.getValue(context);
+		lPage.resetValues();
 		return "list_auth_modules";
 	}
 
