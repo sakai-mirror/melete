@@ -281,62 +281,75 @@ public String getUserView() {
 public void setUserView(String userView) {
 	this.userView = userView;
 }
+/*
+ * 
+ */
+private void setChoices() throws Exception
+{
+	FacesContext context = FacesContext.getCurrentInstance();
+	Map sessionMap = context.getExternalContext().getSessionMap();
+	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+    if (mup == null)
+    {
+    	mup = new MeleteUserPreference();
+    }
+
+		if (userEditor != null)
+		{
+			mup.setEditorChoice(userEditor);
+		}
+		if (userView.equals("true"))
+		{
+			mup.setViewExpChoice(true);
+		}
+		else
+		{
+			mup.setViewExpChoice(false);
+		}
+
+		if (showLTI.equals("true"))	mup.setShowLTIChoice(true);
+		else mup.setShowLTIChoice(false);
+
+		
+	ValueBinding binding =
+  	        Util.getBinding("#{licensePage}");
+	LicensePage lPage = (LicensePage)binding.getValue(context);
+	// validation: check for license and year lengths
+	if (!lPage.getLicenseCodes().equals(lPage.NO_CODE))
+	{
+		lPage.validateLicenseLengths();
+	}	
+	mup = lPage.processLicenseInformation(mup);
+	mup.setUserId((String)sessionMap.get("userId"));
+	authorPref.insertUserChoice(mup);
+
+	// set Site Preferences
+	if(msp == null) {
+		msp = new MeleteSitePreference();
+		msp.setPrefSiteId((String)sessionMap.get("courseId"));
+	}
+
+	//set print preference
+	if (materialPrintable.equals("true"))msp.setPrintable(true);
+	else msp.setPrintable(false);
+
+	//set autonumber preference
+	if (materialAutonumber.equals("true"))msp.setAutonumber(true);
+	else msp.setAutonumber(false);
+
+	authorPref.insertUserSiteChoice(msp);
+
+}
+
+
 public String setUserChoice()
 {
 		FacesContext context = FacesContext.getCurrentInstance();
-		Map sessionMap = context.getExternalContext().getSessionMap();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-        if (mup == null)
+        try
         {
-        	mup = new MeleteUserPreference();
+        	setChoices();
         }
-		try
-		{
-			if (userEditor != null)
-			{
-				mup.setEditorChoice(userEditor);
-			}
-			if (userView.equals("true"))
-			{
-				mup.setViewExpChoice(true);
-			}
-			else
-			{
-				mup.setViewExpChoice(false);
-			}
-
-			if (showLTI.equals("true"))	mup.setShowLTIChoice(true);
-			else mup.setShowLTIChoice(false);
-
-			
-		ValueBinding binding =
-	  	        Util.getBinding("#{licensePage}");
-		LicensePage lPage = (LicensePage)binding.getValue(context);
-		// validation: check for license and year lengths
-		if (!lPage.getLicenseCodes().equals(lPage.NO_CODE))
-		{
-			lPage.validateLicenseLengths();
-		}	
-		mup = lPage.processLicenseInformation(mup);
-		mup.setUserId((String)sessionMap.get("userId"));
-		authorPref.insertUserChoice(mup);
-
-		// set Site Preferences
-		if(msp == null) {
-			msp = new MeleteSitePreference();
-			msp.setPrefSiteId((String)sessionMap.get("courseId"));
-		}
-
-		//set print preference
-		if (materialPrintable.equals("true"))msp.setPrintable(true);
-		else msp.setPrintable(false);
-
-		//set autonumber preference
-		if (materialAutonumber.equals("true"))msp.setAutonumber(true);
-		else msp.setAutonumber(false);
-
-		authorPref.insertUserSiteChoice(msp);
-		}
 		catch (UserErrorException uex)
 		{
 			String errMsg = bundle.getString(uex.getMessage());
@@ -384,10 +397,27 @@ public String backToPrefsPage()
  */
 public String changeAllLicense()
 {	
-	// auto-save settings here 
-	setUserChoice();
-	// go to confirm page
 	FacesContext context = FacesContext.getCurrentInstance();
+	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+	// auto-save settings here 
+    try
+    {
+    	setChoices();
+    }
+	catch (UserErrorException uex)
+	{
+		String errMsg = bundle.getString(uex.getMessage());
+		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, uex.getMessage(), errMsg));
+		return "author_preference";
+	}
+	catch(Exception e)
+	{
+		String errMsg = bundle.getString("Set_prefs_fail");
+		context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Set_prefs_fail",errMsg));
+		return "author_preference";
+	//	return "pref_editor";
+	}
+	// go to confirm page	
 	ValueBinding binding = Util.getBinding("#{licensePage}");
 	LicensePage lPage = (LicensePage)binding.getValue(context);
 	displayLicenseCode = lPage.getLicenseCodes();
