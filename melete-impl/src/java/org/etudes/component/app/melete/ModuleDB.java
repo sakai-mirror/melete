@@ -989,6 +989,15 @@ public class ModuleDB implements Serializable {
 		    				vmBean.setTitle(rs.getString("modTitle"));
 		    				vmBean.setWhatsNext(rs.getString("whats_next"));
 		    				vmBean.setSeqXml(seqXml);
+		    				
+		    				// what's next display seq number is number of top level sections + 1
+		    				SubSectionUtilImpl ssuImpl1 = new SubSectionUtilImpl();
+		    				int top = ssuImpl1.noOfTopLevelSections(seqXml);
+		    				top = top + 1;
+		    				String ns_number= new String(seqNo+".");
+		    				ns_number = ns_number.concat(Integer.toString(top));
+		    				vmBean.setNextStepsNumber(ns_number);
+		    				
 		    				startTimestamp = null;
 	    					endTimestamp = null;
 	    					
@@ -1013,7 +1022,6 @@ public class ModuleDB implements Serializable {
 		    					startTimestamp = rs.getTimestamp("start_date");
 			    				endTimestamp = rs.getTimestamp("end_date");		    					
 		    				}
-
 
 		    				java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
 
