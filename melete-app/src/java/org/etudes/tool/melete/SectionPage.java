@@ -287,25 +287,19 @@ public abstract class SectionPage implements Serializable {
      */
     public ModuleObjService getModule()
     {
-            FacesContext context = FacesContext.getCurrentInstance();
-            Map sessionMap = context.getExternalContext().getSessionMap();
-            ModuleObjService nextModule =null;
-            if(module == null && section != null && section.getModule()!= null )
-            {
-                    module=(Module)section.getModule();
-                     return module;
-            }
-            if(sessionMap.containsKey("currModule"))
-            {
-                    nextModule= (ModuleObjService)sessionMap.get("currModule");
-              //    if (logger.isDebugEnabled()) logger.debug("contains currModule in sessionMap and next curr module and module" + nextModule + module);
-            }
-            if(module == null || (nextModule!=null && nextModule.getModuleId() != module.getModuleId()))
-            {
-      //    if (logger.isDebugEnabled()) logger.debug("get module of add section page called and module is null");
-            module = (ModuleObjService)sessionMap.get("currModule");
-            }
-            return module;
+    	FacesContext context = FacesContext.getCurrentInstance();
+    	Map sessionMap = context.getExternalContext().getSessionMap();
+
+    	if(module == null && section != null && section.getModule()!= null )
+    	{
+    		module=(Module)section.getModule(); 
+    	}
+    	else if(module == null && sessionMap.containsKey("currModule"))
+    	{
+    		module = (ModuleObjService)sessionMap.get("currModule");   
+    	}
+
+    	return module;
     }
 
     public void setModule(ModuleObjService module)
