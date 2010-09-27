@@ -53,9 +53,9 @@
 </h:commandLink>	
 </div>
 <h:messages showDetail="true" showSummary="false"/>
-
+ <h:outputText id="nomodstext" value="#{msgs.no_modules}" rendered="#{listModulesPage.nomodsFlag == null || listModulesPage.nomodsFlag}" style="text-align:left"/>
  <h:dataTable id="StudentTable"  
-                  value="#{listModulesPage.viewModuleBeans}" 
+                  value="#{listModulesPage.viewModuleBeans}" rendered="#{listModulesPage.nomodsFlag != null && !listModulesPage.nomodsFlag}" 
                   var="vmbean"  rowClasses="row1,row2" columnClasses="StudentListTitleClass,ListClosedClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
                   border="0" cellpadding="3" cellspacing="0" width="100%" styleClass="valignStyle9" binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_inst_summary}">
         <h:column>      
@@ -191,7 +191,7 @@
 	    
 	    </h:column>	     
       </h:dataTable> 
-       	 <h:outputText id="nomodstext" value="#{msgs.no_modules}" rendered="#{listModulesPage.nomodsFlag == true}" style="text-align:left"/>
+  
 	    <div class="actionBar" align="left">&nbsp;</div> 	
 
 <!--End Content-->

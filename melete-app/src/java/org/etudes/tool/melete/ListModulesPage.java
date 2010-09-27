@@ -73,7 +73,7 @@ public class ListModulesPage implements Serializable{
       private String typeEditor;
       private String typeLink;
       private String typeUpload;
-      private boolean nomodsFlag;
+      private Boolean nomodsFlag;
       private boolean expandAllFlag;
       private boolean closedModulesFlag;
       private boolean trueFlag = true;
@@ -124,7 +124,7 @@ public class ListModulesPage implements Serializable{
 	  	Map sessionMap = context.getExternalContext().getSessionMap();
 	    courseId = null;
 	  	userId = null;
-	  	nomodsFlag = false;
+	  	nomodsFlag = null;
 	  	closedModulesFlag = false;
 	  	setShowModuleId(-1);
 	  	expandAllFlag = false;
@@ -144,7 +144,7 @@ public class ListModulesPage implements Serializable{
 
 	  public void resetValues()
 	  {
-	  	nomodsFlag = false;
+	  	nomodsFlag = null;
 	  	closedModulesFlag = false;
 	  	printMaterial = null;
 	  	autonumberMaterial = null;
@@ -214,6 +214,7 @@ public class ListModulesPage implements Serializable{
       }
 
 	  public boolean getNomodsFlag() {
+		if(nomodsFlag == null) getViewModuleBeans();
 	  	return nomodsFlag;
 	  }
 
@@ -268,7 +269,7 @@ public class ListModulesPage implements Serializable{
 	  public List getViewModuleBeans() {
 
 	  	    try {
-	  	    if(viewModuleBeans == null)
+	  	    if(nomodsFlag == null || viewModuleBeans == null)
 	  	    	viewModuleBeans = getModuleService().getViewModules(getUserId(), getCourseId());
 
 	  	    }
@@ -288,6 +289,7 @@ public class ListModulesPage implements Serializable{
 	  	    }
 	  	    else
 	  	    {
+	  	    	nomodsFlag = false;
 	  	    	for (ListIterator i = viewModuleBeans.listIterator(); i.hasNext();)
 				{
 					ViewModBean vmbean = (ViewModBean) i.next();
