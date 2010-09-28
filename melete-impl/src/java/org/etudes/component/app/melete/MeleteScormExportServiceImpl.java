@@ -384,7 +384,7 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
 
     public Element transferManageItems(Element resources, String courseId, File resoucesDir, int item_ref_num) throws Exception
 	{
-		String fromUploadsColl = Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR;
+		String fromUploadsColl = meleteCHService.getUploadCollectionId(courseId);
 		List fromContextList = meleteCHService.getMemberNamesCollection(fromUploadsColl);
 		if ((fromContextList != null)&&(fromContextList.size() > 0))
 		{

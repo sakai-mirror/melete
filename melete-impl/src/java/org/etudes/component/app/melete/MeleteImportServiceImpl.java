@@ -573,7 +573,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 									String filename = imgActualPath.substring( imgActualPath.lastIndexOf('/') + 1);
 									try
 									{
-										String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+filename;
+										String checkResourceId = getMeleteCHService().getUploadCollectionId(courseId)+filename;
 										getMeleteCHService().checkResource(checkResourceId);
 									}catch (IdUnusedException ex)
 									{
@@ -622,7 +622,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			// filename read is PostcardStPatricksDay (1).jpg
 			if (filename != null && filename.trim().length() > 0){
 				try{
-					String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+Validator.escapeResourceName(filename);
+					String checkResourceId = getMeleteCHService().getUploadCollectionId(courseId)+Validator.escapeResourceName(filename);
 					getMeleteCHService().checkResource(checkResourceId);
 
 					// 	found it so return it
