@@ -190,7 +190,6 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 	public void resetDeleteValues()
 	{
 		// reset delete page members
-		fromPage = null;
 		setMdbean(null);
 		setModuleSelected(false);
 		setSection(null);
@@ -265,7 +264,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 
 			// reset delete page members
 			resetDeleteValues();
-			
+			fromPage = null;
 			// navigate back to restore page
 			return "restore_modules";
 		}
@@ -331,7 +330,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			ValueBinding binding = Util.getBinding("#{manageModulesPage}");
 			ManageModulesPage managePage = (ManageModulesPage)binding.getValue(context);
 			managePage.resetValues();
-
+			fromPage = null;
 			// navigate back to restore page
 			return "restore_modules";
 		}		
@@ -363,6 +362,7 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 			ValueBinding binding = Util.getBinding("#{manageModulesPage}");
 			ManageModulesPage managePage = (ManageModulesPage)binding.getValue(context);
 			managePage.resetValues();
+			fromPage = null;
 			return "restore_modules";
 		}
 		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
