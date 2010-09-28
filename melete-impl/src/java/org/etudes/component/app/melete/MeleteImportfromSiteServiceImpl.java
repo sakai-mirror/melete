@@ -337,7 +337,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 						checkEmbedHTMLResources = (Set<String>)contentData.get(1);
 						try
 						{
-							String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+Validator.escapeResourceName(res_id);
+							String checkResourceId = meleteCHService.getUploadCollectionId(courseId)+Validator.escapeResourceName(res_id);
 							getMeleteCHService().checkResource(checkResourceId);
 						}catch (IdUnusedException ex)
 						{
@@ -381,8 +381,8 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				String res_id = embedResource.getId();
 				res_id = res_id.substring(res_id.lastIndexOf('/')+1);				
 				try
-				{					
-					String checkResourceId = Entity.SEPARATOR + "private" + Entity.SEPARATOR + "meleteDocs" +Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR+Validator.escapeResourceName(res_id);
+				{	
+					String checkResourceId = meleteCHService.getUploadCollectionId(courseId)+Validator.escapeResourceName(res_id);
 					getMeleteCHService().checkResource(checkResourceId);
 					//			 	found it so return it
 					return getMeleteCHService().getResourceUrl(checkResourceId);
@@ -551,10 +551,9 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 	private void transferManageItems(String fromContext, String toContext)
 	{
 		long totalstart = System.currentTimeMillis();
-
-		String fromUploadsColl = Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+fromContext+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR;
-		String toUploadsColl = Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+toContext+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR;
-
+		String fromUploadsColl = meleteCHService.getUploadCollectionId(fromContext);
+		String toUploadsColl = meleteCHService.getUploadCollectionId(toContext);
+	
 		List fromContextList = meleteCHService.getMemberNamesCollection(fromUploadsColl);
 
 		List toContextList = meleteCHService.getMemberNamesCollection(toUploadsColl);
