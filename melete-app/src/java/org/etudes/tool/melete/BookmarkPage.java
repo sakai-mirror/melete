@@ -109,7 +109,7 @@ public class BookmarkPage implements Serializable
 
 	    this.bookmark.setSiteId((String)sessionMap.get("courseId"));
 	    this.bookmark.setUserId((String)sessionMap.get("userId"));
-	    this.bookmark.setSectionId(Integer.parseInt(this.sectionId));
+	    if (null != this.sectionId) this.bookmark.setSectionId(Integer.parseInt(this.sectionId));
 	    try
 	    {
 	      bookmarkService.insertBookmark(this.bookmark);
@@ -468,12 +468,18 @@ public class BookmarkPage implements Serializable
 	  Map sessionMap = context.getExternalContext().getSessionMap();
 	  if (bookmark == null)
 	  {
-		  bookmark = bookmarkService.getBookmark((String)sessionMap.get("userId"),(String)sessionMap.get("courseId"),Integer.parseInt(this.sectionId));
-          if (bookmark == null)
-          {
+		  if (null != this.sectionId)
+		  {	  
+		    bookmark = bookmarkService.getBookmark((String)sessionMap.get("userId"),(String)sessionMap.get("courseId"),Integer.parseInt(this.sectionId));
+            if (bookmark == null)
+            {
         	  bookmark = new Bookmark();
-        	  bookmark.setTitle(getSectionTitle(Integer.parseInt(this.sectionId)));
-           }
+        	  if (null != this.sectionId)
+        	  {	  
+        	    bookmark.setTitle(getSectionTitle(Integer.parseInt(this.sectionId)));
+        	  }  
+             }
+		  }  
 	  }
 	return bookmark;
     }
