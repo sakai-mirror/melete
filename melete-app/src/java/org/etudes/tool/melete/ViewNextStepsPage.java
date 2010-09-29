@@ -273,7 +273,13 @@ public ModuleObjService getModule()
 	  if (this.module == null)
 	  {
 		  this.module = getModuleService().getModule(this.prevModId);
-		  this.moduleSeqNo = this.module.getCoursemodule().getSeqNo();
+		  if (this.module != null)
+		  {
+			  if (this.module.getCoursemodule() != null)
+			  {
+				  this.moduleSeqNo = this.module.getCoursemodule().getSeqNo();
+			  }
+		  }
 	  }
 	  return this.module;
 }
