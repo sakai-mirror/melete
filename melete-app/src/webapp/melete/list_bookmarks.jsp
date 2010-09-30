@@ -82,8 +82,9 @@
 					 <h:outputText id="bmnotes" value="#{bookmark.briefNotes}"/>					 
 					</h:column>
 					<h:column>
-					 <h:outputLink id="editBookmarkLink" value="list_bookmarks" onclick="OpenBookmarkWindow(#{bookmark.sectionId},'Melete Bookmark Window');">
+					 <h:outputLink id="editBookmarkLink" value="list_bookmarks" onclick="OpenBookmarkWindow(#{bookmark.sectionId},'#{bookmark.title}','Melete Bookmark Window');">
 		    	       <f:param id="sectionId" name="sectionId" value="#{bookmark.sectionId}" />
+		    	       <f:param id="sectionTitle" name="sectionTitle" value="#{bookmark.title}" />
 						  <h:graphicImage id="editgif" alt="" value="images/document_edit.gif" styleClass="AuthImgClass" />
 			                <h:outputText id="emp_space-20" value=" " />
 				    		<h:outputText id="deltext0" value="#{msgs.list_bookmarks_edit}"  />

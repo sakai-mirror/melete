@@ -62,10 +62,15 @@ final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesC
 final BookmarkPage bookmarkPage = (BookmarkPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "bookmarkPage");
 bookmarkPage.setBookmark(null);
 String sectionId = (String)request.getParameter("sectionId");
+String sectionTitle = (String)request.getParameter("sectionTitle");
 
 if (sectionId != null)
 {
   bookmarkPage.setSectionId(sectionId);
+}  
+if (sectionTitle != null)
+{
+  bookmarkPage.setSectionTitle(sectionTitle);
 }  
 %>
 
@@ -86,7 +91,7 @@ if (sectionId != null)
 				<tr>
 					<td class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_bookmark_title}" /> <span class="required">*</span></td>
 					<td class="col2" align="left" valign="top"><h:inputText id="title" size="45" value="#{bookmarkPage.bookmark.title}" required="true" styleClass="formtext" />
-				</td>
+					</td>
 				</tr>
                 
                 <tr>

@@ -70,7 +70,8 @@ public class BookmarkPage implements Serializable
 	protected SectionService sectionService;
 
 	private String sectionId;
-
+	
+	private String sectionTitle;
 
 	private List bmList;
 
@@ -476,7 +477,7 @@ public class BookmarkPage implements Serializable
         	  bookmark = new Bookmark();
         	  if (null != this.sectionId)
         	  {	  
-        	    bookmark.setTitle(getSectionTitle(Integer.parseInt(this.sectionId)));
+        	    bookmark.setTitle(getSectionTitle());
         	  }  
              }
 		  }  
@@ -521,8 +522,16 @@ public class BookmarkPage implements Serializable
    public void setSectionId(String sectionId) {
      this.sectionId = sectionId;
    }
+   
+   public String getSectionTitle() {
+	      return sectionTitle;
+   }
 
-   public String getSectionTitle(int sectionId) {
+   public void setSectionTitle(String sectionTitle) {
+	     this.sectionTitle = sectionTitle;
+   }   
+
+   public String getTitle(int sectionId) {
 	   return sectionService.getSectionTitle(sectionId);
    }
 
