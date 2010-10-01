@@ -50,6 +50,7 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentEntity;
+import org.sakaiproject.content.api.ResourceType;
 import org.sakaiproject.content.cover.ContentTypeImageService;
 import org.sakaiproject.entity.api.Entity;
 import org.sakaiproject.entity.api.ResourceProperties;
@@ -706,7 +707,17 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 					name = name.substring(0, name.length() - extraChars);
 				}
 				resource = getContentservice().addResource(name, addCollId, MAXIMUM_ATTEMPTS_FOR_UNIQUENESS, res_mime_type, secContentData, res, 0);
-				 if (logger.isDebugEnabled()) logger.debug("IN addResourceItem "+displayName+" resourceId "+ resource.getId());
+				if (resource != null && (res_mime_type == MIME_TYPE_LINK)) {
+					try {
+						ContentResourceEdit cre = getContentservice().editResource(resource.getId());
+						cre.setResourceType(ResourceType.TYPE_URL);
+						getContentservice().commitResource(cre);
+					} catch (Exception e1) {
+						logger.debug("melete tried to set Resource Type of web link and failed", e1);
+					}
+				}
+				
+				if (logger.isDebugEnabled()) logger.debug("IN addResourceItem "+displayName+" resourceId "+ resource.getId());
 				 
 				// check if its duplicate file and edit the resource name if it is
 				String checkDup = resource.getUrl().substring(resource.getUrl().lastIndexOf("/") + 1);
@@ -832,7 +843,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 					check = check.substring(check.indexOf("/access/"));
 					byte[] data = check.getBytes();
 					cr.setContent(data);
-					cr.setContentLength(data.length);
+					cr.setContentLength((long)data.length);
 					linkData = check;
 					getContentservice().commitResource(cr);
 					cr= null;
@@ -1078,7 +1089,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		  edit = getContentservice().editResource(resourceId);
         		  byte[] data = contentEditor.getBytes();
         		  edit.setContent(data);
-        		  edit.setContentLength(data.length);
+        		  edit.setContentLength((long)data.length);
         		  getContentservice().commitResource(edit);
         		  edit = null;
         		}
@@ -1119,7 +1130,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		  edit = getContentservice().editResource(resourceId);
         		  byte[] data = contentEditor.getBytes();
         		  edit.setContent(data);
-        		  edit.setContentLength(data.length);
+        		  edit.setContentLength((long)data.length);
         		  getContentservice().commitResource(edit);
         		  edit = null;
         		}
