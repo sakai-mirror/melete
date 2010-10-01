@@ -843,7 +843,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 					check = check.substring(check.indexOf("/access/"));
 					byte[] data = check.getBytes();
 					cr.setContent(data);
-					cr.setContentLength((long)data.length);
+				//	cr.setContentLength((long)data.length);
 					linkData = check;
 					getContentservice().commitResource(cr);
 					cr= null;
@@ -1089,7 +1089,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		  edit = getContentservice().editResource(resourceId);
         		  byte[] data = contentEditor.getBytes();
         		  edit.setContent(data);
-        		  edit.setContentLength((long)data.length);
+        		//  edit.setContentLength((long)data.length);
         		  getContentservice().commitResource(edit);
         		  edit = null;
         		}
@@ -1130,7 +1130,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
         		  edit = getContentservice().editResource(resourceId);
         		  byte[] data = contentEditor.getBytes();
         		  edit.setContent(data);
-        		  edit.setContentLength((long)data.length);
+        		//  edit.setContentLength((long)data.length);
         		  getContentservice().commitResource(edit);
         		  edit = null;
         		}
