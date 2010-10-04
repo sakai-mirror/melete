@@ -505,10 +505,10 @@ public abstract class SectionPage implements Serializable {
             }
 
             this.contentEditor = new String("Compose content here");
-            if(contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor") != null)
+            if(contentTypeRadio.findComponent(getFormName()).findComponent("othereditor:otherMeletecontentEditor") != null)
             {
             	setFCKCollectionAttrib();
-            	contentTypeRadio.findComponent(getFormName()).findComponent("otherMeletecontentEditor").setRendered(shouldRenderEditor && preferencePage.isShouldRenderFCK());
+            	contentTypeRadio.findComponent(getFormName()).findComponent("othereditor:otherMeletecontentEditor").setRendered(shouldRenderEditor && preferencePage.isShouldRenderFCK());
             }
 
             if(contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView") != null)
