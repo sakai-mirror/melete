@@ -56,7 +56,7 @@
             </table>
             <div class="actionBar" align="left">				
 				<h:commandButton id="sectionButton"  action="#{addModulePage.addContentSections}" rendered="#{addModulePage.success}" value="#{msgs.im_add_content_sections}" tabindex="" accesskey="#{msgs.add_access}" title="#{msgs.im_add_content_sections_text}" styleClass="BottomImgAdd" />
-				<h:commandButton id="returnButton"  action="#{addModulePage.backToModules}" value="#{msgs.im_finish}" tabindex="" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" styleClass="BottomImgReturn" />
+				<h:commandButton id="returnButton"  action="#{addModulePage.backToModules}" value="#{msgs.im_done}" tabindex="" accesskey="#{msgs.done_access}" title="#{msgs.im_done_text}" styleClass="BottomImgReturn" />
 			</div>
           </td>
         </tr>
