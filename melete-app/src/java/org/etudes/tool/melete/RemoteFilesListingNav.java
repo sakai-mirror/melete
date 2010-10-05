@@ -81,10 +81,7 @@ public class RemoteFilesListingNav {
 		this.chunkSize = Integer.parseInt((String)chunkSelect.getValue());
 		//-1 implies all resources need to be displayed
 		if (this.chunkSize == -1) this.chunkSize = totalSize-1;
-		this.currIndex = 0;
-		this.endIndex = currIndex + chunkSize;
-		if (endIndex >= totalSize-1) this.endIndex = totalSize-1;
-
+		resetCurrIndex();
 	}
 
 
@@ -102,6 +99,8 @@ public class RemoteFilesListingNav {
 	{
 		this.currIndex  = 0;
 		this.endIndex = currIndex + chunkSize;
+		if (endIndex >= totalSize-1) this.endIndex = totalSize-1;
+
 		displayPrev = false;
 		displayNext = false;
 	}

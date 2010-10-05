@@ -352,7 +352,8 @@ public class ListResourcesPage {
 						currSiteResourcesList.add(new DisplaySecResources(displayName, cr.getId(),rUrl,rType,rgif,rTypeLTI));
 					}
 					java.util.Collections.sort(currSiteResourcesList);
-					getListNav().setTotalSize(currSiteResourcesList.size()+1);
+					getListNav().setTotalSize(currSiteResourcesList.size()+1);	
+					getListNav().resetCurrIndex();
 				}
 				} catch (Exception e){logger.warn("error in creating list for server residing files" + e.toString());}
 				return currSiteResourcesList;
@@ -372,11 +373,11 @@ public class ListResourcesPage {
 
 					logger.debug("from and to index and total size" + fromIndex + "," +toIndex +"," +currSiteResourcesList.size());
 					displayResourcesList = null;
-					if(fromIndex >= 0 && toIndex > fromIndex && toIndex <= currSiteResourcesList.size())
+					if(fromIndex >= 0 && toIndex > fromIndex && fromIndex <= currSiteResourcesList.size() && toIndex <= currSiteResourcesList.size())
 					{
 						displayResourcesList = (List)currSiteResourcesList.subList(fromIndex,toIndex);
 						logger.debug("displayResourcesList" + displayResourcesList.size());
-					}
+					}	
 				}
 				} catch (Exception e){logger.warn("error in creating displayList for server residing files" + e.toString());}
 				return displayResourcesList;
