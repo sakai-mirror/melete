@@ -106,6 +106,7 @@ public class ModuleDB implements Serializable {
 	private HibernateUtil hibernateUtil;
 	private List xmlSecList;
 	private SectionDB sectionDB;
+	private SpecialAccessDB saDB;
 	private MeleteCHService meleteCHService;
 	private MeleteSecurityService meleteSecurityService;
 
@@ -791,6 +792,7 @@ public class ModuleDB implements Serializable {
 	 public List getShownModulesAndDatesForInstructor(String userId, String courseId) throws HibernateException {
 	 	List moduleDateBeansList = new ArrayList();
 	 	List modList = null;
+	 	List saModList = null;
 	 	ModuleDateBean mdBean = null;
 	 	Module mod = null;
 
@@ -798,6 +800,8 @@ public class ModuleDB implements Serializable {
 		{
 	 	  Session session = hibernateUtil.currentSession();
 	      modList = getModules(courseId);
+	      saModList = saDB.getSpecialAccessModuleIds(courseId);
+	     
 	      Iterator i = modList.iterator();
 
 	      while (i.hasNext()) {
@@ -805,7 +809,19 @@ public class ModuleDB implements Serializable {
 	      	mod = (Module) i.next();
 
 	      	populateModuleBean(mod, mdBean);
-
+	      	
+	      	mdBean.setSaFlag(false);
+	      	if (saModList != null)
+	      	{
+	      		if (saModList.size() > 0)
+	      		{
+	      			if (saModList.contains(mod.getModuleId()))
+	      			{
+	      			  mdBean.setSaFlag(true);
+	      			}  
+	      		}
+	      	}
+	      
 		    moduleDateBeansList.add(mdBean);
 	      	mod = null;
 	      }
@@ -3408,6 +3424,14 @@ public class ModuleDB implements Serializable {
 	public void setSectionDB(SectionDB sectionDB)
 	{
 		this.sectionDB = sectionDB;
+	}
+	
+	/**
+	 * @param saDB the saDB to set
+	 */
+	public void setSaDB(SpecialAccessDB saDB)
+	{
+		this.saDB = saDB;
 	}
 
 	/**

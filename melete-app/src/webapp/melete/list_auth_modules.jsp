@@ -275,7 +275,8 @@ if (msg != null)
            </h:commandLink>
           <h:outputText id="emp_space8" value="  " styleClass="ExtraPaddingClass" />
            <h:commandLink id="specialAccess" action="#{listAuthModulesPage.specialAccessAction}" >
-			   <h:graphicImage id="acc_gif" value="images/access_add.png" alt="#{msgs.list_auth_modules_alt_add_steps}" title="#{msgs.list_auth_modules_alt_add_access}" styleClass="AddImgClass" />      
+			   <h:graphicImage id="acc_gif" value="images/access_add.png" alt="#{msgs.list_auth_modules_alt_add_access}" title="#{msgs.list_auth_modules_alt_add_access}" styleClass="AddImgClass" rendered="#{mdbean.saFlag == false}"/>
+			   <h:graphicImage id="acc_view_gif" value="images/access_view.png" alt="#{msgs.list_auth_modules_alt_view_access}" title="#{msgs.list_auth_modules_alt_view_access}" styleClass="AddImgClass" rendered="#{mdbean.saFlag == true}"/>            
 			 </h:commandLink>           
            <h:outputText id="emp_space4" value="  " styleClass="ExtraPaddingClass" />
 		  <h:commandLink id="duplicateModule" action="#{listAuthModulesPage.duplicateAction}">

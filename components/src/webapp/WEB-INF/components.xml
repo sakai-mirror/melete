@@ -107,7 +107,9 @@
         <property name="sectionDB">
             <ref local="org.etudes.component.app.melete.SectionDB" />
         </property>
-              
+        <property name="saDB">
+            <ref local="org.etudes.component.app.melete.SpecialAccessDB" />
+        </property>
          <property name="meleteCHService">
             <ref local="org.etudes.api.app.melete.MeleteCHService" />
         </property>

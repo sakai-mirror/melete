@@ -79,6 +79,35 @@ public class SpecialAccessDB {
 
 	}
 	
+	public List getSpecialAccessModuleIds(String courseId)
+	{
+		List saList = new ArrayList();
+		try{
+		     Session session = getHibernateUtil().currentSession();
+		     Query q=session.createQuery("select sa.moduleId from SpecialAccess sa where sa.module.coursemodule.courseId =:courseId");
+			  q.setParameter("courseId",courseId);
+			  saList = q.list();
+
+		}
+	    catch (HibernateException he)
+	    {
+		  logger.error(he.toString());
+	    }
+	    finally
+		{
+	    	try
+			  {
+		      	hibernateUtil.closeSession();
+			  }
+		      catch (HibernateException he)
+			  {
+				  logger.error(he.toString());
+			  }
+		}
+		return saList;
+
+	}	
+	
 	 public void deleteSpecialAccess(List saList) throws Exception
      {
        Transaction tx = null;
