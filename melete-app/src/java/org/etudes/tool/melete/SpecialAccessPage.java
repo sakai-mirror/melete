@@ -304,7 +304,15 @@ public class SpecialAccessPage implements Serializable
 		resetValues();
   		return "list_special_access";
   	}
-
+	
+	public String returnAction()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+	    ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(context);
+        lamPage.resetValues();
+        return "list_auth_modules";
+	}
 
 
 	public void resetValues()

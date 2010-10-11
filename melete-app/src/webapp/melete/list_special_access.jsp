@@ -89,7 +89,7 @@ function resetAllAcc()
   <tr>
    <td>
  	<f:subview id="authtop">
-    <h:panelGrid columns="2" columnClasses="authBarCol" cellspacing="5" width="64%">
+    <h:panelGrid columns="2" columnClasses="authBarCol" cellspacing="5" width="32%">
 	<h:column>
 		<h:commandLink id="addAction" action="#{specialAccessPage.addAccessAction}" immediate="true">
 		    <h:graphicImage id="addAccessImg" value="images/document_add.gif" styleClass="AuthImgClass"/>
@@ -161,7 +161,9 @@ function resetAllAcc()
          </h:column>         
     </h:dataTable>   
    <h:inputHidden id="listSize" value="#{specialAccessPage.listSize}"/>   
-	
+   <div class="actionBar" align="left">				
+	<h:commandButton id="returnButton"  immediate="true" action="#{specialAccessPage.returnAction}" value="#{msgs.im_return}" tabindex="" accesskey="#{msgs.return_access}" title="#{msgs.im_return_text}" styleClass="BottomImgReturn" />
+   </div>	
 	
 <!--End Content-->
    </td>
