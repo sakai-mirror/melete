@@ -53,10 +53,10 @@ private SpecialAccessDB specialAccessDb;
 public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleObjService mod) throws Exception
 	{
 	  if (moduleDatesDiffer(sa, mod) == true)
-	  {  
+	  {
 		//If the module has no other accesses, no checking is needed
 	    if ((saList == null)||saList.size() == 0)
-	    {	  
+	    {
 		setSpecialAccess(sa);
 	    }
 	    else
@@ -68,7 +68,7 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 			  //Perform checks on accesses that aren't the current one
 			  //sa is the current object
 			  if (saObj != sa)
-			  {	  
+			  {
 				 String[] userIds = SqlHelper.decodeStringArray(saObj.getUsers());
 			    if (userIds.length > 0)
 			    {
@@ -81,7 +81,7 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 					  //user list
 					  userIdsColl.removeAll(targetUserIdsColl);
 					  if (userIdsColl != null)
-					  {	  
+					  {
 						userIds = (String[])userIdsColl.toArray(new String[userIdsColl.size()]);
 					  }
 					  //If there are still userids remaining, update the special access
@@ -100,8 +100,8 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 					  }
 				  }
 			    }
-			  } 
-			}	
+			  }
+			}
 		    //Finally, insert or update the current special access
 		    setSpecialAccess(sa);
 	    }
@@ -112,7 +112,7 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
   private boolean moduleDatesDiffer(SpecialAccessObjService sa, ModuleObjService mod) throws Exception
   {
 	//Compare special access dates to module dates
-	//If they are the same, no need to add this access and if it exists delete it  
+	//If they are the same, no need to add this access and if it exists delete it
 	//if ((sa.getStartDate().equals(mod.getModuleshdate().getStartDate()))&&(sa.getEndDate().equals(mod.getModuleshdate().getEndDate())))
 	if ((!Different.different(sa.getStartDate(), mod.getModuleshdate().getStartDate()))&&(!Different.different(sa.getEndDate(), mod.getModuleshdate().getEndDate())))
 	{
@@ -126,7 +126,7 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 			//Existing access, delete it
 			List delList = new ArrayList();
 			delList.add(sa.getAccessId());
-			deleteSpecialAccess(delList);			
+			deleteSpecialAccess(delList);
 			return false;
 		}
 	}
@@ -136,7 +136,7 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 		return true;
 	}
   }
-  
+
   private void setSpecialAccess(SpecialAccessObjService sa) throws Exception
   {
 	  try{
@@ -144,9 +144,9 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 		}catch(Exception e)
 			{
 			logger.debug("melete specialAccess business --add specialAccess failed");
-			 throw new MeleteException("add_specialAccess_fail");
+			 throw new MeleteException("add_special_access_fail");
 
-			}	  
+			}
   }
 
 public List getSpecialAccess(int moduleId)
@@ -173,7 +173,7 @@ public List getSpecialAccess(int moduleId)
 		return mbList;
 	}*/
 
- 
+
   public void deleteSpecialAccess(List saList) throws Exception
   {
 	  try{
@@ -184,7 +184,7 @@ public List getSpecialAccess(int moduleId)
 			throw new MeleteException("delete_special_access_fail");
 			}
   }
-  
+
 
 	/**
 	 * @return Returns the specialAccessDb
