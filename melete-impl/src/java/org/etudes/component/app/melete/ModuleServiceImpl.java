@@ -548,9 +548,9 @@ public void restoreModules(List modules, String courseId) throws Exception
 			return moduledb.getMinStartDate(course_id);
 		}
 
-		public void applyBaseDateTx(String course_id, int time_diff)
+		public void applyBaseDateTx(String course_id, int days_diff)
 		{
-			moduledb.applyBaseDateTx(course_id, time_diff);
+			moduledb.applyBaseDateTx(course_id, days_diff);
 		}
 	/**
 	 * @return Returns the moduledb.

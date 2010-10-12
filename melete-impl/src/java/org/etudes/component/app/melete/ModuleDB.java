@@ -3383,25 +3383,25 @@ public class ModuleDB implements Serializable {
 	  return minStartDate;
     }
 
-	public void applyBaseDateTx(String course_id, int time_diff)
+	public void applyBaseDateTx(String course_id, int days_diff)
 	{
 		if (course_id == null)
 		{
 			throw new IllegalArgumentException("applyBaseDateTx: course_id is null");
 		}
-		if (time_diff == 0)
+		if (days_diff == 0)
 		{
 			return;
 		}		
 		StringBuilder sql = new StringBuilder();
 		sql.append("UPDATE MELETE_MODULE_SHDATES MSH,MELETE_COURSE_MODULE MCM SET");
-		sql.append(" MSH.START_DATE=DATE_ADD(MSH.START_DATE,INTERVAL ? SECOND), MSH.END_DATE=DATE_ADD(MSH.END_DATE,INTERVAL ? SECOND)");
+		sql.append(" MSH.START_DATE=DATE_ADD(MSH.START_DATE,INTERVAL ? DAY), MSH.END_DATE=DATE_ADD(MSH.END_DATE,INTERVAL ? DAY)");
 		sql.append(" WHERE MSH.MODULE_ID=MCM.MODULE_ID AND MCM.COURSE_ID =?");
 
 		Object[] fields = new Object[3];
 		int i = 0;
-		fields[i++] = time_diff;
-		fields[i++] = time_diff;
+		fields[i++] = days_diff;
+		fields[i++] = days_diff;
 		fields[i++] = course_id;
 
 		if (!SqlService.dbWrite(sql.toString(), fields)) {
