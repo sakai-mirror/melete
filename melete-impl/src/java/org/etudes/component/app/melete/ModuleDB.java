@@ -3218,6 +3218,7 @@ public class ModuleDB implements Serializable {
 		String delSectionStr = "delete Section s where s.moduleId in " + allModuleIds;
 		String delCourseModuleStr = "delete CourseModule cm where cm.courseId= '" + delCourseId + "'";
 		String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId in " +  allModuleIds;
+		String delSpecialAccStr = "delete SpecialAccess sa where sa.moduleId in " + allModuleIds;
 		String delModuleStr = "delete Module m where m.moduleId in " + allModuleIds;
 
 	    int deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
@@ -3228,6 +3229,8 @@ public class ModuleDB implements Serializable {
 		//logger.debug("deleted section " + deletedEntities);
 		deletedEntities = session.createQuery(delModuleshDatesStr).executeUpdate();
 		//logger.debug("deleted msh " + deletedEntities);
+		deletedEntities = session.createQuery(delSpecialAccStr).executeUpdate();
+		//logger.debug("deleted sa " + deletedEntities);
 		deletedEntities = session.createQuery(delCourseModuleStr).executeUpdate();
 		//logger.debug("deleted cm " + deletedEntities);
 		deletedEntities = session.createQuery(delModuleStr).executeUpdate();
