@@ -450,6 +450,11 @@ public String changeLicenseAction()
 		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "all_license_change_fail", errMsg));
 		return "author_preference";
 	}
+	
+	// refresh list page
+	ValueBinding binding =Util.getBinding("#{listAuthModulesPage}");
+	ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
+    listPage.resetValues();
 	return "list_auth_modules";
 }
 
