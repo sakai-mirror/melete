@@ -89,7 +89,7 @@ function resetAllAcc()
   <tr>
    <td>
  	<f:subview id="authtop">
-    <h:panelGrid columns="2" columnClasses="authBarCol" cellspacing="5" width="32%">
+    <h:panelGrid columns="2" columnClasses="authBarCol" cellspacing="5" width="16%">
 	<h:column>
 		<h:commandLink id="addAction" action="#{specialAccessPage.addAccessAction}" immediate="true">
 		    <h:graphicImage id="addAccessImg" value="images/document_add.gif" styleClass="AuthImgClass"/>

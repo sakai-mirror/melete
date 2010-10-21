@@ -141,7 +141,7 @@ function showEdateCal()
              	
 		</table>
   		<div class="actionBar" align="left">
-          	<h:commandButton action="#{specialAccessPage.addSpecialAccess}" value="#{msgs.im_add_button}" accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
+          	<h:commandButton action="#{specialAccessPage.addSpecialAccess}" value="#{msgs.im_done}" accesskey="#{msgs.done_access}" title="#{msgs.im_done_text}" styleClass="BottomImgReturn"/>
 			<h:commandButton id="cancelButton" immediate="true" action="#{specialAccessPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
 	       </div>
         </td></tr>		
