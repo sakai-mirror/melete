@@ -2902,15 +2902,20 @@ public class ModuleDB implements Serializable {
 							} else {
 		  		   			   printText.append("<h4>" + sec.getTitle()+"</h4> <hr style=\"border-bottom:3px solid #000;\">")	;
 							};
+							SectionResource secRes = null;
+							MeleteResource melRes = null;
 		  		   			if(sec.getSectionResource() != null)
-		  		   				printText.append("<p><i>" +getLicenseInformation((MeleteResource)sec.getSectionResource().getResource())+"</i></p>");
-
+		  		   			{
+		  		   				secRes = sectionDB.getSectionResourcebyId(sec.getSectionId().toString());
+		  		   				melRes = sectionDB.getMeleteResource(secRes.getResource().getResourceId());
+		  		   				printText.append("<p><i>" +getLicenseInformation(melRes)+"</i></p>");
+		  		   			}	
 		  		   			if (sec.getInstr() != null && sec.getInstr().length() !=0 ) printText.append("<p> <i>Instructions:</i> " + sec.getInstr() + "</p>");
-							if (sec.getContentType() == null || sec.getContentType().equals("notype") || sec.getSectionResource() == null || sec.getSectionResource().getResource() == null)
+							if (sec.getContentType() == null || sec.getContentType().equals("notype") || secRes == null || melRes == null)
 							{
 								continue;
 							}
-							String resourceId = sec.getSectionResource().getResource().getResourceId();
+							String resourceId = melRes.getResourceId();
 							ContentResource resource = null;
 							try
 							{
