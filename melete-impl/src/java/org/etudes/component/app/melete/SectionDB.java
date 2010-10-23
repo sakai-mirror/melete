@@ -1654,6 +1654,7 @@ public class SectionDB implements Serializable {
 				if(result_list != null && result_list.size()!= 0)
 				{
 					logger.debug("found items for changing license" + result_list.size());
+			        tx = session.beginTransaction();
 					for(int i=0; i < result_list.size(); i++)
 					{
 						Section sec = (Section)result_list.get(i);
@@ -1674,16 +1675,17 @@ public class SectionDB implements Serializable {
 						m.setCopyrightOwner(mup.getCopyrightOwner());
 						m.setCopyrightYear(mup.getCopyrightYear());
 						session.saveOrUpdate(m);
-						session.refresh(m);
+				
 						// refresh sec resource object
 						secResource.setResource(m);
 						session.saveOrUpdate(secResource);
-						session.refresh(secResource);	
-						
+										
 						sec.setSectionResource(secResource);
 						session.saveOrUpdate(sec);
-					}
-					session.flush();
+						if(i % 20 == 0)session.flush();
+                    }
+                    session.flush();
+                    tx.commit();
 					return result_list.size();
 				}
 				else return 0;
