@@ -1641,8 +1641,8 @@ public class SectionDB implements Serializable {
 			try
 			{
 				// get all active section melete resource objects for this site
-				String queryString = "Select sr from SectionResource sr " +
-				"join sr.section s " +
+				String queryString = "Select s from Section s " +
+				"join s.sectionResource sr " +
 				"join s.module m " +
 				"join m.coursemodule cmod " +
 				"where cmod.courseId=:courseId and cmod.archvFlag = 0 and cmod.deleteFlag = 0 and sr.resource != null";
@@ -1656,7 +1656,10 @@ public class SectionDB implements Serializable {
 					logger.debug("found items for changing license" + result_list.size());
 					for(int i=0; i < result_list.size(); i++)
 					{
-						SectionResource secResource = (SectionResource)result_list.get(i);
+						Section sec = (Section)result_list.get(i);
+						List sr_list= session.createQuery("from SectionResource secresource where secresource.sectionId=:sectionId")
+						.setParameter("sectionId",sec.getSectionId()).list();
+						SectionResource secResource = (SectionResource)sr_list.get(0) ;
 						List mr_list = session.createQuery("from MeleteResource meleteresource where meleteresource.resourceId=:resourceId")
 											.setParameter("resourceId",secResource.getResource().getResourceId()).list();
 			
@@ -1671,10 +1674,14 @@ public class SectionDB implements Serializable {
 						m.setCopyrightOwner(mup.getCopyrightOwner());
 						m.setCopyrightYear(mup.getCopyrightYear());
 						session.saveOrUpdate(m);
+						session.refresh(m);
 						// refresh sec resource object
 						secResource.setResource(m);
 						session.saveOrUpdate(secResource);
-						session.refresh(secResource);					
+						session.refresh(secResource);	
+						
+						sec.setSectionResource(secResource);
+						session.saveOrUpdate(sec);
 					}
 					session.flush();
 					return result_list.size();
