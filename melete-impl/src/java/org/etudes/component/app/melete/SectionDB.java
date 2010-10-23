@@ -1665,6 +1665,7 @@ public class SectionDB implements Serializable {
 					res_ids = res_ids.concat(")");
 					
 					//bulk update
+					tx=session.beginTransaction();
 					String updMeleteResourceStr = "update MeleteResource mr1 set mr1.licenseCode=:lcode, mr1.ccLicenseUrl=:lurl," +
 					" mr1.reqAttr=:reqAttr, mr1.allowCmrcl=:allowCmrcl, mr1.allowMod=:allowMod, mr1.copyrightOwner=:copyrightOwner, " +
 					"mr1.copyrightYear=:copyrightYear where mr1.resourceId in " + res_ids ; 
@@ -1679,6 +1680,7 @@ public class SectionDB implements Serializable {
 					query1.setParameter("copyrightYear",mup.getCopyrightYear());
 
 					updatedEntities = query1.executeUpdate();
+					tx.commit();
 					logger.debug("license updated for " + updatedEntities + "resources");
 					return updatedEntities;
 				}
