@@ -3219,6 +3219,9 @@ public class ModuleDB implements Serializable {
 		//logger.debug("delete everything for " + delCourseId + allModuleIds);
 		String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId like '%" + delCourseId + "%'";
 		String delSectionResourceStr = "delete SectionResource sr where sr.resource.resourceId like '%" + delCourseId + "%'";
+		//DelSectionNullResourceStr was added for ME-1300, some entries in the MELETE_SECTION_RESOURCE may have null resource ids
+		//The delSectionResourceStr query would not clear these.
+		 String delSectionNullResourceStr = "delete SectionResource sr where sr.section.sectionId in (select s.sectionId from Section s where s.moduleId in " + allModuleIds +")";
 		String delBookmarksStr = "delete Bookmark bm where bm.siteId like '%" + delCourseId + "%'";
 		String delSectionStr = "delete Section s where s.moduleId in " + allModuleIds;
 		String delCourseModuleStr = "delete CourseModule cm where cm.courseId= '" + delCourseId + "'";
@@ -3228,6 +3231,8 @@ public class ModuleDB implements Serializable {
 
 	    int deletedEntities = session.createQuery(delSectionResourceStr).executeUpdate();
 		//logger.debug("deleted sr " + deletedEntities);
+	    deletedEntities = session.createQuery(delSectionNullResourceStr).executeUpdate();
+		//logger.debug("deleted sr null " + deletedEntities);
 		deletedEntities = session.createQuery(delBookmarksStr).executeUpdate();
 		//logger.debug("deleted bookmarks " + deletedEntities);
 		deletedEntities = session.createQuery(delSectionStr).executeUpdate();
