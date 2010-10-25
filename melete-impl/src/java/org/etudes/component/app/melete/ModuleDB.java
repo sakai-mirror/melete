@@ -3216,8 +3216,8 @@ public class ModuleDB implements Serializable {
 		String delSectionResourceStr = "delete SectionResource sr where sr.resource.resourceId like '%" + delCourseId + "%'";
 		//DelSectionNullResourceStr was added for ME-1300, some entries in the MELETE_SECTION_RESOURCE may have null resource ids
 		//The delSectionResourceStr query would not clear these.
-		String delSectionNullResourceStr = "delete SectionResource sr where sr.section.moduleId in " + allModuleIds;
-		String delBookmarksStr = "delete Bookmark bm where bm.siteId like '%" + delCourseId + "%'";
+		 String delSectionNullResourceStr = "delete SectionResource sr where sr.section.sectionId in (select s.sectionId from Section s where s.moduleId in " + allModuleIds +")";
+		 String delBookmarksStr = "delete Bookmark bm where bm.siteId like '%" + delCourseId + "%'";
 		String delSectionStr = "delete Section s where s.moduleId in " + allModuleIds;
 		String delCourseModuleStr = "delete CourseModule cm where cm.courseId= '" + delCourseId + "'";
 		String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId in " +  allModuleIds;
