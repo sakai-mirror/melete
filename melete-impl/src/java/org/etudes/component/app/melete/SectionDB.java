@@ -1634,7 +1634,6 @@ public class SectionDB implements Serializable {
 	 */
 	public int changeLicenseForAll(String courseId, MeleteUserPreference mup) throws Exception
 	{		
-		System.out.println("change license in db:courseId " + courseId);
 		try
 		{
 			Session session = hibernateUtil.currentSession();
