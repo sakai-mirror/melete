@@ -1633,7 +1633,7 @@ public class SectionDB implements Serializable {
 	 * Change license info for all sections of a site
 	 */
 	public int changeLicenseForAll(String courseId, MeleteUserPreference mup) throws Exception
-	{			
+	{		
 		try
 		{
 			Session session = hibernateUtil.currentSession();
@@ -1641,52 +1641,47 @@ public class SectionDB implements Serializable {
 			try
 			{
 				// get all active section melete resource objects for this site
-				String queryString = "Select s from Section s " +
-				"join s.sectionResource sr " +
+				String queryString = "Select sr.resource.resourceId from SectionResource sr " +
+				"join sr.section s " +
 				"join s.module m " +
 				"join m.coursemodule cmod " +
 				"where cmod.courseId=:courseId and cmod.archvFlag = 0 and cmod.deleteFlag = 0 and sr.resource != null";
 				Query query = session.createQuery(queryString);
 				query.setParameter("courseId",courseId);
 				List result_list = query.list();
-	
+
 				//to bulk change, create a string with all resource ids
 				if(result_list != null && result_list.size()!= 0)
 				{
-					logger.debug("found items for changing license" + result_list.size());
-			        tx = session.beginTransaction();
+					String res_ids = new String("(");
 					for(int i=0; i < result_list.size(); i++)
 					{
-						Section sec = (Section)result_list.get(i);
-						List sr_list= session.createQuery("from SectionResource secresource where secresource.sectionId=:sectionId")
-						.setParameter("sectionId",sec.getSectionId()).list();
-						SectionResource secResource = (SectionResource)sr_list.get(0) ;
-						List mr_list = session.createQuery("from MeleteResource meleteresource where meleteresource.resourceId=:resourceId")
-											.setParameter("resourceId",secResource.getResource().getResourceId()).list();
-			
-					    if(mr_list == null || mr_list.size()== 0) continue;
-					    MeleteResource m = (MeleteResource)mr_list.get(0);
-					    logger.debug("setting m for save" + m.getResourceId()); 
-						m.setLicenseCode(mup.getLicenseCode());
-						m.setCcLicenseUrl(mup.getCcLicenseUrl());
-						m.setReqAttr(mup.isReqAttr());
-						m.setAllowCmrcl(mup.isAllowCmrcl());
-						m.setAllowMod(mup.getAllowMod());
-						m.setCopyrightOwner(mup.getCopyrightOwner());
-						m.setCopyrightYear(mup.getCopyrightYear());
-						session.saveOrUpdate(m);
-				
-						// refresh sec resource object
-						secResource.setResource(m);
-						session.saveOrUpdate(secResource);
-										
-						sec.setSectionResource(secResource);
-						session.saveOrUpdate(sec);
-						if(i % 20 == 0)session.flush();
-                    }
-                    session.flush();
-                    tx.commit();
-					return result_list.size();
+						res_ids = res_ids.concat("\'"+ (String)result_list.get(i) +"\',");
+					}
+
+					if(res_ids.lastIndexOf(",") != -1)
+						res_ids = res_ids.substring(0, res_ids.lastIndexOf(","));
+					res_ids = res_ids.concat(")");
+
+					//bulk update
+					tx=session.beginTransaction();
+					String updMeleteResourceStr = "update MeleteResource mr1 set mr1.licenseCode=:lcode, mr1.ccLicenseUrl=:lurl," +
+					" mr1.reqAttr=:reqAttr, mr1.allowCmrcl=:allowCmrcl, mr1.allowMod=:allowMod, mr1.copyrightOwner=:copyrightOwner, " +
+					"mr1.copyrightYear=:copyrightYear where mr1.resourceId in " + res_ids ; 
+					int updatedEntities = 0;
+					Query query1 = session.createQuery(updMeleteResourceStr);
+					query1.setParameter("lcode",mup.getLicenseCode());
+					query1.setParameter("lurl",mup.getCcLicenseUrl());
+					query1.setParameter("reqAttr",mup.isReqAttr());
+					query1.setParameter("allowCmrcl",mup.isAllowCmrcl());
+					query1.setParameter("allowMod",mup.getAllowMod());
+					query1.setParameter("copyrightOwner",mup.getCopyrightOwner());
+					query1.setParameter("copyrightYear",mup.getCopyrightYear());
+
+					updatedEntities = query1.executeUpdate();
+					tx.commit();
+					logger.debug("license updated for " + updatedEntities + "resources");
+					return updatedEntities;
 				}
 				else return 0;
 			}
@@ -1694,7 +1689,6 @@ public class SectionDB implements Serializable {
 			{
 				if (tx != null) tx.rollback();
 				logger.error(he.toString());
-				he.printStackTrace();
 				throw he;
 			}
 			finally
