@@ -99,7 +99,17 @@ public interface ModuleService{
 	
 	public int getCourseModuleSize(String courseId);
 	
+	/**
+	 * Gets the earliest start date(if defined) of all the modules 
+	 * @param course_id		Course id
+	 * @return If start date exists for the modules gets the earliest start date of all modules else returns null
+	 */
 	public Date getMinStartDate(String course_id);
 	
-	public void applyBaseDateTx(String course_id, int time_diff);
+	/**
+	 * Apply base date to all module start and end dates
+	 * @param course_id		Course id
+	 * @param days_diff		Time difference in days
+	 */	
+	public void applyBaseDateTx(String course_id, int days_diff);
 }
