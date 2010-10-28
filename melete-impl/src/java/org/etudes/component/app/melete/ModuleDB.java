@@ -3214,7 +3214,7 @@ public class ModuleDB implements Serializable {
 		return delCount;
 	}
 
-	private void deleteEverything(String delCourseId, Session session, String allModuleIds)
+	private void deleteEverything(String delCourseId, Session session, String allModuleIds) throws Exception
 	{
 		//logger.debug("delete everything for " + delCourseId + allModuleIds);
 		String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId like '%" + delCourseId + "%'";
