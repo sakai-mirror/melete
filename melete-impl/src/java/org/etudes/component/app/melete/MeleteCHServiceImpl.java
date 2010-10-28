@@ -930,7 +930,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	  */
 	 public ContentResource getResource(String courseId, String resourceId) throws Exception
 	 {
-		if (resourceId == null) return null;
+		if (resourceId == null || resourceId.length() ==0) return null;
 		
 	 	try
 	    {
@@ -977,7 +977,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 	  */
 	 public ContentResource getResource(String resourceId) throws Exception
 	 {
-		if (resourceId == null) return null;
+		if (resourceId == null || resourceId.length()== 0) return null;
 		String courseId = getCourseId(resourceId);
 	 	try
 	    {
@@ -1022,7 +1022,7 @@ public class MeleteCHServiceImpl implements MeleteCHService {
 
 	 public void checkResource(String resourceId) throws Exception
 	 {
-		if (resourceId == null) return;
+		if (resourceId == null || resourceId.length() == 0) return;
 		String courseId = getCourseId(resourceId);
 	 	try
 	    {

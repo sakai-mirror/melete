@@ -729,8 +729,10 @@ public class SectionDB implements Serializable {
 		try{
 		     Session session = hibernateUtil.currentSession();
 	         Transaction tx = null;
-			try
-			{
+	         if(melResource == null || melResource.getResourceId() == null || melResource.getResourceId().length() == 0) return;
+			
+	         try
+	         {
 				String queryString = "from MeleteResource meleteresource where meleteresource.resourceId=:resourceId";
 				Query query = session.createQuery(queryString);
 				query.setParameter("resourceId",melResource.getResourceId());
