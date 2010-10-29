@@ -97,7 +97,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		{
 		//	setMeleteResource((MeleteResource) this.secResource.getResource());
 			setMeleteResource((MeleteResource)sectionService.getMeleteResource(secResource.getResource().getResourceId()));
-			setContentResourceData(this.meleteResource.getResourceId());
+			if(this.meleteResource.getResourceId() != null)
+				setContentResourceData(this.meleteResource.getResourceId());
 	    	ValueBinding binding = Util.getBinding("#{licensePage}");
 	  		LicensePage lPage = (LicensePage)binding.getValue(context);
 	  		lPage.setInitialValues(this.formName, getMeleteResource());
