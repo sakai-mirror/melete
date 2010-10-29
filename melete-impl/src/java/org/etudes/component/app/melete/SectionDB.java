@@ -729,8 +729,10 @@ public class SectionDB implements Serializable {
 		try{
 		     Session session = hibernateUtil.currentSession();
 	         Transaction tx = null;
-			try
-			{
+	         if(melResource == null || melResource.getResourceId() == null || melResource.getResourceId().length() == 0) return;
+			
+	         try
+	         {
 				String queryString = "from MeleteResource meleteresource where meleteresource.resourceId=:resourceId";
 				Query query = session.createQuery(queryString);
 				query.setParameter("resourceId",melResource.getResourceId());
@@ -1071,6 +1073,7 @@ public class SectionDB implements Serializable {
 	public MeleteResource getMeleteResource(String selResourceId)
 	{
 		Session session = null;
+		if (selResourceId == null || (selResourceId = selResourceId.trim()).length() == 0) return null;
 		try{
 		     session = hibernateUtil.currentSession();
 		     String queryString = "from MeleteResource meleteresource where meleteresource.resourceId=:resourceId";
@@ -1196,6 +1199,36 @@ public class SectionDB implements Serializable {
 			logger.error(ex.toString());
 			ex.printStackTrace();
 			return null;
+			}
+		finally{
+			hibernateUtil.closeSession();
+			 }
+	}
+	
+	/*
+	 *  delete section resource if typeupload sections are linked to no file.
+	 */
+	public void deleteSectionResourcebyId(String sectionId)
+	{
+		Transaction tx = null;
+		try{
+		     Session session = hibernateUtil.currentSession();
+		     tx = session.beginTransaction();
+		     String queryString = "from SectionResource sectionresource where sectionresource.sectionId=:sectionId";
+		     Query query = session.createQuery(queryString);
+		     query.setParameter("sectionId",new Integer(sectionId));
+		     List result_list = query.list();
+		     if(result_list != null && result_list.size() > 0)
+		     {		    	 
+		     	SectionResource sr = (SectionResource)result_list.get(0);
+		     	session.delete(sr);		   
+		     }
+		    tx.commit();
+		}
+		catch(Exception ex){
+			tx.rollback();
+			logger.error(ex.toString());
+			ex.printStackTrace();		
 			}
 		finally{
 			hibernateUtil.closeSession();
@@ -1649,7 +1682,7 @@ public class SectionDB implements Serializable {
 				Query query = session.createQuery(queryString);
 				query.setParameter("courseId",courseId);
 				List result_list = query.list();
-	
+
 				//to bulk change, create a string with all resource ids
 				if(result_list != null && result_list.size()!= 0)
 				{
@@ -1662,7 +1695,7 @@ public class SectionDB implements Serializable {
 					if(res_ids.lastIndexOf(",") != -1)
 						res_ids = res_ids.substring(0, res_ids.lastIndexOf(","));
 					res_ids = res_ids.concat(")");
-					
+
 					//bulk update
 					tx=session.beginTransaction();
 					String updMeleteResourceStr = "update MeleteResource mr1 set mr1.licenseCode=:lcode, mr1.ccLicenseUrl=:lurl," +

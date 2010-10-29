@@ -175,7 +175,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 		if ( secRes == null ) return null;
 		if ( secRes.getResource() == null ) return null;
 		String resourceId = secRes.getResource().getResourceId();
-		if ( resourceId == null ) return null;
+		if ( resourceId == null || resourceId.length() ==0 ) return null;
 		try
 		{
 			ContentResource resource = getMeleteCHService().getResource(resourceId);
@@ -340,11 +340,11 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
 			}
 	    ContentResource resource = null;
 
-	    if (resourceId != null)
+	    if (resourceId != null && resourceId.length() != 0)
     	{
     	    try
     	    {
-              resource = getMeleteCHService().getResource(resourceId);
+               resource = getMeleteCHService().getResource(resourceId);
               setLinkName(resource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
 
               url = getMeleteCHService().getResourceUrl(resourceId);
@@ -357,6 +357,12 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
               contentLinkUrl = null;
         	  logger.debug(e.toString());
               }
+    	}
+	    // when typeUpload or typeLink resource are not selected
+	    else
+    	{
+    		url = null;
+    		contentLinkUrl = null;
     	}
 		}
 		logger.debug("content link value send is" + contentLinkUrl);

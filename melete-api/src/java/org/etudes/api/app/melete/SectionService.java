@@ -65,6 +65,7 @@ public interface SectionService{
    public String[] getCCLicenseURL(boolean reqAttr, boolean allowCmrcl, int allowMod);
    public SectionResourceService getSectionResource(String secResourceId);
    public SectionResourceService getSectionResourcebyId(String sectionId);
+   public void deleteSectionResourcebyId(String sectionId);   
    public MeleteResourceService getMeleteResource(String selResourceId);
    public void deassociateSectionResource(SectionObjService section, SectionResourceService secResource) throws Exception;
    public void updateSectionResource(SectionObjService section, SectionResourceService secResource) throws Exception;
