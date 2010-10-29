@@ -95,7 +95,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		setSecResource(sectionService.getSectionResourcebyId(this.section.getSectionId().toString()));
 		if (this.secResource != null && this.secResource.getResource() != null)
 		{
-			setMeleteResource((MeleteResource) this.secResource.getResource());
+		//	setMeleteResource((MeleteResource) this.secResource.getResource());
+			setMeleteResource((MeleteResource)sectionService.getMeleteResource(secResource.getResource().getResourceId()));
 			setContentResourceData(this.meleteResource.getResourceId());
 	    	ValueBinding binding = Util.getBinding("#{licensePage}");
 	  		LicensePage lPage = (LicensePage)binding.getValue(context);
@@ -347,9 +348,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 					return "failure";
 				}
 			}
-			// validation 4: check link url title
-			if (section.getContentType().equals("typeLink") && meleteResource != null && meleteResource.getResourceId() != null && (secResourceName == null || secResourceName.trim().length() == 0))
-				throw new UserErrorException("URL_title_reqd");
 
 			// save section
 			if (logger.isDebugEnabled()) logger.debug("EditSectionpage:save section" + section.getContentType());
@@ -397,22 +395,32 @@ public class EditSectionPage extends SectionPage implements Serializable
 	    			//The condition below was put in to handle ME-639
 	    			else
 	    			{
-	    				if (meleteResource != null && meleteResource.getResourceId() != null)
+	    				if (meleteResource != null && meleteResource.getResourceId() != null && meleteResource.getResourceId().trim().length() != 0)
 	    				{
 	    					if (logger.isDebugEnabled()) logger.debug("Ist step of edit - check meleteResource" + meleteResource.getResourceId());
+	    					// validation 4: check link url title
+	    					if (section.getContentType().equals("typeLink") && (secResourceName == null || secResourceName.trim().length() == 0))
+	    						throw new UserErrorException("URL_title_reqd");
 	    					getMeleteCHService().checkResource(meleteResource.getResourceId());
 	    					editMeleteCollectionResource(meleteResource.getResourceId());
 	    				}
 	    				else
 	    				{
-	    					/*						logger.debug("old type is " + oldType + meleteResource);
-								if (oldType != null && oldType.equals("notype"))  throw new Exception();*/
-
 	    					//resource is removed
 	    					if (logger.isDebugEnabled()) logger.debug("Resource ID is null i.e resource is removed");
 	    					editMeleteCollectionResource( null);
 	    					meleteResource = null;
-	    					//throw new Exception();
+	    					    					
+	    					// delete existing record from section_resource table
+	    					sectionService.deleteSectionResourcebyId(section.getSectionId().toString());
+	    					//change section type to notype
+	    					section.setContentType("notype");
+	    					//insert just into section table	    					
+	    					sectionService.editSection(section);
+	    					//Track the event
+	    					EventTrackingService.post(EventTrackingService.newEvent("melete.section.edit", ToolManager.getCurrentPlacement().getContext(), true));
+
+	    					return "success";
 	    				}
 	    			}
 

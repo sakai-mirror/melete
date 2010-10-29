@@ -1073,6 +1073,7 @@ public class SectionDB implements Serializable {
 	public MeleteResource getMeleteResource(String selResourceId)
 	{
 		Session session = null;
+		if (selResourceId == null || (selResourceId = selResourceId.trim()).length() == 0) return null;
 		try{
 		     session = hibernateUtil.currentSession();
 		     String queryString = "from MeleteResource meleteresource where meleteresource.resourceId=:resourceId";
@@ -1198,6 +1199,36 @@ public class SectionDB implements Serializable {
 			logger.error(ex.toString());
 			ex.printStackTrace();
 			return null;
+			}
+		finally{
+			hibernateUtil.closeSession();
+			 }
+	}
+	
+	/*
+	 *  delete section resource if typeupload sections are linked to no file.
+	 */
+	public void deleteSectionResourcebyId(String sectionId)
+	{
+		Transaction tx = null;
+		try{
+		     Session session = hibernateUtil.currentSession();
+		     tx = session.beginTransaction();
+		     String queryString = "from SectionResource sectionresource where sectionresource.sectionId=:sectionId";
+		     Query query = session.createQuery(queryString);
+		     query.setParameter("sectionId",new Integer(sectionId));
+		     List result_list = query.list();
+		     if(result_list != null && result_list.size() > 0)
+		     {		    	 
+		     	SectionResource sr = (SectionResource)result_list.get(0);
+		     	session.delete(sr);		   
+		     }
+		    tx.commit();
+		}
+		catch(Exception ex){
+			tx.rollback();
+			logger.error(ex.toString());
+			ex.printStackTrace();		
 			}
 		finally{
 			hibernateUtil.closeSession();

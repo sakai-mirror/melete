@@ -431,6 +431,20 @@ public class SectionServiceImpl implements Serializable, SectionService{
 		return sr;
 	  }
 	  
+	  /*
+	   * delete section resource object
+	   */
+	  public void deleteSectionResourcebyId(String sectionId)
+	  {
+		  try
+		  {
+			  sectiondb.deleteSectionResourcebyId(sectionId);
+		  }catch(Exception ex)
+		  {
+			  logger.debug("editSectionPage --delete section resource failed");
+		  }
+	  }
+	  
 	  public MeleteResourceService getMeleteResource(String selResourceId)
 	  {
 	  	MeleteResource mr = null;
