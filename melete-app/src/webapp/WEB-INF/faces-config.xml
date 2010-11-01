@@ -561,7 +561,6 @@
      <navigation-case>
       <from-outcome>editmodulesections</from-outcome>
       <to-view-id>/melete/editmodulesections.jsp</to-view-id>
-      <redirect/>
     </navigation-case>
      <navigation-case>
       <from-outcome>list_auth_modules</from-outcome>
