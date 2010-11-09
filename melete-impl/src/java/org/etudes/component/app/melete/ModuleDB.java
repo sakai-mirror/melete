@@ -3378,6 +3378,10 @@ public class ModuleDB implements Serializable {
 		    		  {
 		    			  dateList.add(mod.getModuleshdate().getStartDate());
 		    		  }
+		    		  if (mod.getModuleshdate().getEndDate() != null)
+		    		  {
+		    			  dateList.add(mod.getModuleshdate().getEndDate());
+		    		  }
 		    	  }
 		      }
 
