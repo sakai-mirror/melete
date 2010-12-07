@@ -27,8 +27,7 @@
  *
  **********************************************************************************
 -->
-<%
-			System.out.println("SAVE PAGE CALLED !!!!");
+<%		
 			final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 			final AddResourcesPage aResourcePage = (AddResourcesPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "addResourcesPage");
 				
@@ -49,6 +48,10 @@
 						try {
 							org.apache.commons.fileupload.disk.DiskFileItem item = (org.apache.commons.fileupload.disk.DiskFileItem)request.getAttribute(oneKey);
 							String fileName = item.getName();
+							
+							//no processing on selecting remote files
+							if (!fileName.startsWith("file:")) continue;
+							
 							int lastSlash = fileName.lastIndexOf("/");
 							fileName = fileName.substring(lastSlash + 1);
 							
