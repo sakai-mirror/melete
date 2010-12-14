@@ -26,7 +26,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
-<sakai:tool_bar id="topbar">
+<sakai:tool_bar>
   <h:graphicImage url="/images/preview.png" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
   <sakai:tool_bar_item disabled="#{!navPage.shouldRenderView}" immediate="true" value="#{msgs.topnavbar_view}" action="#{navPage.viewAction}"/>	 
   <h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />

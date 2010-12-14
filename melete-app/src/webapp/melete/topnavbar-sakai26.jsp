@@ -26,7 +26,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
-<sakai:tool_bar id="topbar">
+<sakai:tool_bar>
   <sakai:tool_bar_item disabled="#{!navPage.shouldRenderView}" immediate="true" value="#{msgs.topnavbar_view}" action="#{navPage.viewAction}"/>	 
   
   <sakai:tool_bar_item disabled="#{!navPage.shouldRenderAuthor}" immediate="true" value="#{msgs.topnavbar_author}" action="#{navPage.authAction}" rendered="#{navPage.isInstructor}" />
