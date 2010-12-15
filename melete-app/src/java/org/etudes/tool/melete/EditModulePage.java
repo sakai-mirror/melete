@@ -35,11 +35,13 @@ import javax.faces.el.ValueBinding;
 import org.sakaiproject.util.ResourceLoader;
 
 import org.etudes.component.app.melete.ModuleDateBean;
+import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
 //import org.sakaiproject.jsf.ToolBean;
 
 import org.sakaiproject.event.cover.EventTrackingService;
+import org.sakaiproject.tool.api.Placement;
 import org.sakaiproject.tool.cover.ToolManager;
 
 /**
@@ -265,7 +267,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
         listPage.setModuleDateBeans(null);
 		return "list_auth_modules";
 	}
-
+    
     /*
      * Revised by Rashmi -- 12/21 to fix bug#189
      * reset values
@@ -324,5 +326,32 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 	public void setFirstSection(SectionObjService firstSection)
 	{
 		this.firstSection = firstSection;
+	}
+	
+	/*
+	 * check if edit is called from coursemap
+	 */
+	public void checkCallFrom()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		String e_id = (String)ctx.getExternalContext().getRequestParameterMap().get("e_id");
+		if(e_id != null) 
+		{
+			logger.debug("get call from found req param value" + ctx.getExternalContext().getRequestParameterMap().get("e_id"));
+			Placement placement = ToolManager.getCurrentPlacement();
+			String currentSiteId = placement.getContext();
+
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+			String userId = mPage.getCurrentUser().getId();
+
+			this.mdBean = (ModuleDateBean)moduleService.getModuleDateBean(userId, currentSiteId, new Integer(e_id).intValue());
+			setEditInfo(mdBean);
+		}
+	}
+	
+	public ModuleObjService getModule() {
+		checkCallFrom();
+		return super.getModule();
 	}
  }
