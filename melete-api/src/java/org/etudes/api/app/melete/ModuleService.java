@@ -112,4 +112,14 @@ public interface ModuleService{
 	 * @param days_diff		Time difference in days
 	 */	
 	public void applyBaseDateTx(String course_id, int days_diff);
+	
+	/*
+	 * Update module's dates from Coursemap
+	 */
+	public void updateModuleDates(ModuleShdatesService modShdates) throws Exception;
+	 
+	/*
+	 * Check if user has edit access
+	 */
+	public boolean checkEditAccess(String user_id, String course_id);
 }

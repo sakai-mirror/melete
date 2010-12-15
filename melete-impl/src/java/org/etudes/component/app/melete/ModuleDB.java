@@ -3439,7 +3439,15 @@ public class ModuleDB implements Serializable {
 		}		
 	}
 	
-
+	public boolean checkEditAccess(String user_id, String course_id)
+	{
+		try
+		{	
+			return meleteSecurityService.allowAuthor(course_id);
+		}
+		catch (Exception e) {return false;}
+	}
+	
 // end clean up deleted stuff code
 	 /**
 	 * @param meleteSecurityService The meleteSecurityService to set.

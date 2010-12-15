@@ -552,6 +552,16 @@ public void restoreModules(List modules, String courseId) throws Exception
 		{
 			moduledb.applyBaseDateTx(course_id, days_diff);
 		}
+		
+		 public void updateModuleDates(ModuleShdatesService modShdates) throws Exception
+		 {
+			 moduledb.updateModuleShdates((ModuleShdates)modShdates);
+		 }
+		 
+		 public boolean checkEditAccess(String user_id, String course_id)
+		 {
+			 return moduledb.checkEditAccess(user_id, course_id);
+		 }
 	/**
 	 * @return Returns the moduledb.
 	 */
