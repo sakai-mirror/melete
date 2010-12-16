@@ -110,7 +110,7 @@
               rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />	
 </h:column>
 </h:panelGrid>
-
+<h:inputHidden id="trackSection" value="#{viewSectionsPage.sectionTrack}" />
 </td>
 
 </tr>    

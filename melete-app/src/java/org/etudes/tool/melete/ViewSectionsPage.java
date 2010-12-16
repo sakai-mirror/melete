@@ -106,6 +106,9 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
       private SectionService sectionService;
 
   	  private MeleteCHService meleteCHService;
+  	/** Dependency: The Melete Security service. */
+	  protected MeleteSecurityService meleteSecurityService;
+
 
 	  private String sectionDisplaySequence;
 
@@ -122,6 +125,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
       // added to reduce queries
       private String contentLinkUrl;
       private Boolean contentWithHtml;
+      private String sectionTrack;
       
 	  public ViewSectionsPage(){
 	  	courseId = null;
@@ -912,5 +916,47 @@ public void setMeleteCHService(MeleteCHService meleteCHService) {
 			EventTrackingService.post(EventTrackingService.newEvent(readEvent, ToolManager.getCurrentPlacement().getContext(), true));
 		}
     }
+    
+    public String getSectionTrack() {
+    	if (isUserStudent())
+    	{	
+    		FacesContext context = FacesContext.getCurrentInstance();
+    		Map sessionMap = context.getExternalContext().getSessionMap();
+
+    		SectionTrackView stv = new SectionTrackView();
+    		stv.setSectionId(this.sectionId);
+    		stv.setUserId((String)sessionMap.get("userId"));
+    		stv.setViewDate(new java.util.Date());
+    		getSectionService().insertSectionTrack(stv);
+    	}
+    	return "";  
+
+    }
+    
+    /**
+	 * @param meleteSecurityService The meleteSecurityService to set.
+	 */
+	public void setMeleteSecurityService(
+			MeleteSecurityService meleteSecurityService) {
+		this.meleteSecurityService = meleteSecurityService;
+	}
+	
+    /**
+	 * Check if the current user has permission as student.
+	 * @return true if the current user has permission to perform this action, false if not.
+	 */
+    public boolean isUserStudent(){
+    	FacesContext context = FacesContext.getCurrentInstance();
+    	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+
+    	try {
+    		return meleteSecurityService.allowStudent();
+    	} catch (Exception e) {
+    		String errMsg = bundle.getString("auth_failed");
+    		context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"auth_failed",errMsg));
+    		logger.warn(e.toString());
+    	}
+    	return false;
+    }		    
 }
 

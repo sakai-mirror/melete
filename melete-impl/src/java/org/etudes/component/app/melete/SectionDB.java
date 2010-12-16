@@ -42,6 +42,7 @@ import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.MeleteSecurityService;
+import org.etudes.api.app.melete.SectionTrackViewObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.entity.cover.EntityManager;
@@ -718,7 +719,53 @@ public class SectionDB implements Serializable {
 
 		 }
 
+	 public void insertSectionTrack(SectionTrackViewObjService stv) throws Exception
+	 {
+		 Transaction tx = null;
+		 try
+		 {
+			 Session session = hibernateUtil.currentSession();
+			 tx = session.beginTransaction();
 
+			 Query q=session.createQuery("select sv from SectionTrackView as sv where sv.sectionId = :sectionId and sv.userId =:userId");
+			 q.setParameter("sectionId", stv.getSectionId());
+			 q.setParameter("userId", stv.getUserId());
+			 SectionTrackView find_sv = (SectionTrackView)q.uniqueResult();
+
+			 if(find_sv == null)
+				 session.save(stv);
+			 tx.commit();
+		 }
+		 catch(StaleObjectStateException sose)
+		 {
+			 if(tx !=null) tx.rollback();
+			 logger.error("stale object exception" + sose.toString());
+			 throw sose;
+		 }
+		 catch (HibernateException he)
+		 {
+			 logger.error(he.toString());
+			 he.printStackTrace();
+			 throw he;
+		 }
+		 catch (Exception e) {
+			 if (tx!=null) tx.rollback();
+			 logger.error(e.toString());
+			 throw e;
+		 }
+		 finally
+		 {
+			 try
+			 {
+				 hibernateUtil.closeSession();
+			 }
+			 catch (HibernateException he)
+			 {
+				 logger.error(he.toString());
+				 throw he;
+			 }
+		 }
+	 }
 
 
 	/*

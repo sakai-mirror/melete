@@ -41,6 +41,7 @@ import org.etudes.api.app.melete.SectionResourceService;
 import org.etudes.api.app.melete.SectionService;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.SectionObjService;
+import org.etudes.api.app.melete.SectionTrackViewObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.etudes.api.app.melete.MeleteCHService;
 
@@ -271,6 +272,15 @@ public class SectionServiceImpl implements Serializable, SectionService{
 	  	return null;
 	  }
 
+	  public void insertSectionTrack(SectionTrackViewObjService stv)
+	  {
+	  	try{
+			sectiondb.insertSectionTrack(stv);
+			}catch(Exception ex)
+			{
+				logger.error("ViewSectionPage --add section track failed for user "+stv.getUserId()+" for section "+stv.getSectionId());
+			}
+	  }
 
 	  /*
 	   * add resource object
