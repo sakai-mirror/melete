@@ -3236,6 +3236,7 @@ public class ModuleDB implements Serializable {
 		//The delSectionResourceStr query would not clear these.
 		 String delSectionNullResourceStr = "delete SectionResource sr where sr.section.sectionId in (select s.sectionId from Section s where s.moduleId in " + allModuleIds +")";
 		String delBookmarksStr = "delete Bookmark bm where bm.siteId like '%" + delCourseId + "%'";
+		String delSectionViewStr = "delete SectionTrackView stv where stv.section.sectionId in (select s.sectionId from Section s where s.moduleId in " + allModuleIds +")";
 		String delSectionStr = "delete Section s where s.moduleId in " + allModuleIds;
 		String delCourseModuleStr = "delete CourseModule cm where cm.courseId= '" + delCourseId + "'";
 		String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId in " +  allModuleIds;
@@ -3248,6 +3249,8 @@ public class ModuleDB implements Serializable {
 		//logger.debug("deleted sr null " + deletedEntities);
 		deletedEntities = session.createQuery(delBookmarksStr).executeUpdate();
 		//logger.debug("deleted bookmarks " + deletedEntities);
+		deletedEntities = session.createQuery(delSectionViewStr).executeUpdate();
+		//logger.debug("deleted section views " + deletedEntities);
 		deletedEntities = session.createQuery(delSectionStr).executeUpdate();
 		//logger.debug("deleted section " + deletedEntities);
 		deletedEntities = session.createQuery(delModuleshDatesStr).executeUpdate();
