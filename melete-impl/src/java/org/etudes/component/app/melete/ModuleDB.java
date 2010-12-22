@@ -68,6 +68,7 @@ import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.hibernate.criterion.Restrictions;
 
+import org.sakaiproject.component.cover.ComponentManager;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.user.cover.UserDirectoryService;
@@ -76,6 +77,7 @@ import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.util.ResourceLoader;
 import org.dom4j.Element;
 import org.etudes.component.app.melete.MeleteUserPreferenceDB;
+import org.etudes.util.api.AccessAdvisor;
 
 import org.sakaiproject.db.cover.SqlService;
 
@@ -92,6 +94,7 @@ import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.IdUnusedException;
 
 import org.sakaiproject.site.api.Site;
+import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.tool.cover.ToolManager;
 
 /* Mallika - 4/17/07 - added code to support subsections on list pages
@@ -112,6 +115,9 @@ public class ModuleDB implements Serializable {
 
 	private MeleteUserPreferenceDB userPrefdb;
 	private int MAX_IN_CLAUSES = 500;
+	
+	/** Dependency (optional, self-injected): AccessAdvisor. */
+	protected transient AccessAdvisor accessAdvisor = null;  
 
 	/** Dependency:  The logging service. */
 	private Log logger = LogFactory.getLog(ModuleDB.class);
@@ -1017,38 +1023,85 @@ public class ModuleDB implements Serializable {
 		    				startTimestamp = null;
 	    					endTimestamp = null;
 	    					
-	    					//If special access is set up, use those dates; otherwise,
-	    					//use module dates
-		    				if (accMap.size() > 0)
-		    				{
-		    					AccessDates ad = (AccessDates)accMap.get(moduleId);
-		    					if (ad == null)
-		    					{
-		    						startTimestamp = rs.getTimestamp("start_date");
-				    				endTimestamp = rs.getTimestamp("end_date");
-		    					}
-		    					else
-		    					{
-		    						startTimestamp = ad.getAccStartTimestamp();
-				    				endTimestamp = ad.getAccEndTimestamp();
-		    					}
-		    				}
-		    				else
-		    				{
-		    					startTimestamp = rs.getTimestamp("start_date");
-			    				endTimestamp = rs.getTimestamp("end_date");		    					
-		    				}
+	    					this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
+	    					if (this.accessAdvisor != null)
+	    					{	
+	    						if (this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId()))
+	    						{
+	    							vmBean.setVisibleFlag(false);
+	    						}
+	    						else
+	    						{	
+	    							//If special access is set up, use those dates; otherwise,
+	    							//use module dates
+	    							if (accMap.size() > 0)
+	    							{
+	    								AccessDates ad = (AccessDates)accMap.get(moduleId);
+	    								if (ad == null)
+	    								{
+	    									startTimestamp = rs.getTimestamp("start_date");
+	    									endTimestamp = rs.getTimestamp("end_date");
+	    								}
+	    								else
+	    								{
+	    									startTimestamp = ad.getAccStartTimestamp();
+	    									endTimestamp = ad.getAccEndTimestamp();
+	    								}
+	    							}
+	    							else
+	    							{
+	    								startTimestamp = rs.getTimestamp("start_date");
+	    								endTimestamp = rs.getTimestamp("end_date");		    					
+	    							}
 
-		    				java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+	    							java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
 
-		 				    if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
-		 				    {
-		 					   vmBean.setVisibleFlag(true);
-		 				    }
-		 				    else
-		 				    {
-		 					   vmBean.setVisibleFlag(false);
-		 				    }
+	    							if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
+	    							{
+	    								vmBean.setVisibleFlag(true);
+	    							}
+	    							else
+	    							{
+	    								vmBean.setVisibleFlag(false);
+	    							}
+	    						}
+	    					}	
+	    					else
+	    					{
+	    						//If special access is set up, use those dates; otherwise,
+	    						//use module dates
+	    						if (accMap.size() > 0)
+	    						{
+	    							AccessDates ad = (AccessDates)accMap.get(moduleId);
+	    							if (ad == null)
+	    							{
+	    								startTimestamp = rs.getTimestamp("start_date");
+	    								endTimestamp = rs.getTimestamp("end_date");
+	    							}
+	    							else
+	    							{
+	    								startTimestamp = ad.getAccStartTimestamp();
+	    								endTimestamp = ad.getAccEndTimestamp();
+	    							}
+	    						}
+	    						else
+	    						{
+	    							startTimestamp = rs.getTimestamp("start_date");
+	    							endTimestamp = rs.getTimestamp("end_date");		    					
+	    						}
+
+	    						java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+
+	    						if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
+	    						{
+	    							vmBean.setVisibleFlag(true);
+	    						}
+	    						else
+	    						{
+	    							vmBean.setVisibleFlag(false);
+	    						}	
+	    					}
+	    			    			
 		 				    if (startTimestamp != null)
 		 				    {
 		 				    	vmBean.setStartDate(new java.util.Date(startTimestamp.getTime() + (startTimestamp.getNanos()/1000000)));

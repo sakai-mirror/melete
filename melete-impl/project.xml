@@ -154,6 +154,16 @@
 			<artifactId>etudes-util</artifactId>
 			<version>1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>etudes</groupId>
+			<artifactId>etudes-util-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>sakaiproject</groupId>
+			<artifactId>sakai-component</artifactId>
+			<version>${sakai.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<sourceDirectory>src/java</sourceDirectory>
