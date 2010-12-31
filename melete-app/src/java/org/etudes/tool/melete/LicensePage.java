@@ -84,16 +84,16 @@ public class LicensePage {
 		  public LicensePage()
 		  {
 		  }
-		  
+
 		  public void resetFlags()
-		  {				
+		  {
 				// reset flags
 				shouldRenderCC = licenseCodes.equals(CC_CODE);
 				shouldRenderCopyright = licenseCodes.equals(Copyright_CODE);
 				shouldRenderPublicDomain = licenseCodes.equals(PD_CODE);
 				shouldRenderFairUse = licenseCodes.equals(FU_CODE);
 		  }
-		  
+
 		  public void setInitialValues(String formName, MeleteResource melResource)
 		  {
 		  	this.formName = formName;
@@ -305,6 +305,9 @@ public class LicensePage {
 				 {
 				 	mup.setCcLicenseUrl("Copyright (c) " + copyright_owner+", " + copyright_year);
 				 	mup.setLicenseCode(new Integer(Copyright_CODE).intValue());
+				 	mup.setReqAttr(false);
+					mup.setAllowCmrcl(false);
+				 	mup.setAllowMod(0);
 				 	mup.setCopyrightOwner(copyright_owner);
 				 	mup.setCopyrightYear(copyright_year);
 				 }
@@ -312,6 +315,9 @@ public class LicensePage {
 				 {
 				 	mup.setCcLicenseUrl("Copyrighted Material - subject to fair use exception");
 				 	mup.setLicenseCode(new Integer(FU_CODE).intValue());
+				 	mup.setReqAttr(false);
+					mup.setAllowCmrcl(false);
+				 	mup.setAllowMod(0);
 				 	mup.setCopyrightOwner(copyright_owner);
 				 	mup.setCopyrightYear(copyright_year);
 				 }
@@ -367,7 +373,7 @@ public class LicensePage {
 				if(copyright_year != null && copyright_year.trim().length() > 255)
 					throw new UserErrorException("copyright_year_long");
 			}
-			
+
 			public String getAllowCmrcl(){
 				return allowCmrcl;
 			}
@@ -379,7 +385,7 @@ public class LicensePage {
 			  	this.allowCmrcl = allowCmrcl;
 			   }
 
-			public String getAllowMod(){				
+			public String getAllowMod(){
 				return allowMod;
 			}
 
