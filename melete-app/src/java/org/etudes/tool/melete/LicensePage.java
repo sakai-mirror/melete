@@ -305,6 +305,9 @@ public class LicensePage {
 				 {
 				 	mup.setCcLicenseUrl("Copyright (c) " + copyright_owner+", " + copyright_year);
 				 	mup.setLicenseCode(new Integer(Copyright_CODE).intValue());
+				 	mup.setReqAttr(false);
+					mup.setAllowCmrcl(false);
+				 	mup.setAllowMod(0);
 				 	mup.setCopyrightOwner(copyright_owner);
 				 	mup.setCopyrightYear(copyright_year);
 				 }
@@ -312,6 +315,9 @@ public class LicensePage {
 				 {
 				 	mup.setCcLicenseUrl("Copyrighted Material - subject to fair use exception");
 				 	mup.setLicenseCode(new Integer(FU_CODE).intValue());
+				 	mup.setReqAttr(false);
+					mup.setAllowCmrcl(false);
+				 	mup.setAllowMod(0);
 				 	mup.setCopyrightOwner(copyright_owner);
 				 	mup.setCopyrightYear(copyright_year);
 				 }
