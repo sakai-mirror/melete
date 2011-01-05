@@ -175,34 +175,20 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     	java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
     	// check if there is an access advisor - if not, that's ok.
     	this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
-    	if (this.accessAdvisor != null)
-    	{		
-    		if (this.accessAdvisor.denyAccess("sakai.melete", getModule().getCoursemodule().getCourseId(), String.valueOf(getModuleId()), SessionManager.getCurrentSessionUserId()))
-    		{
-    			return false;
-    		}
-    		else
-    		{	
-    			if (((getStartDate() == null)||(getStartDate().before(currentTimestamp)))&&((getEndDate() == null)||(getEndDate().after(currentTimestamp))))
-    			{
-    				return true;
-    			}
-    			else
-    			{
-    				return false;
-    			}
-    		}
+    	if ((this.accessAdvisor != null)&&(this.accessAdvisor.denyAccess("sakai.melete", getModule().getCoursemodule().getCourseId(), String.valueOf(getModuleId()), SessionManager.getCurrentSessionUserId())))
+    	{	
+    		return false;
     	}
     	else
     	{
     		if (((getStartDate() == null)||(getStartDate().before(currentTimestamp)))&&((getEndDate() == null)||(getEndDate().after(currentTimestamp))))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+    		{
+    			return true;
+    		}
+    		else
+    		{
+    			return false;
+    		}
     	}
     }	
 
