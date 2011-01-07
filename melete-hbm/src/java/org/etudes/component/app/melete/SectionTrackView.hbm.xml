@@ -31,6 +31,7 @@
       <generator class="hilo"/>
     </id> 
      <property name="sectionId" column="SECTION_ID"  type="int"  not-null="true"/>
+     <property name="moduleId" column="MODULE_ID"  type="int"  not-null="true"/>
      <property name="userId" column="USER_ID" type="string" length="99" />
      <property name="viewDate"  column="VIEW_DATE"  type="timestamp"  />
      <many-to-one name="section" class="org.etudes.component.app.melete.Section" insert="false" update="false" column="SECTION_ID" lazy="false"/>  				

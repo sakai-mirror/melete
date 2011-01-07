@@ -36,6 +36,9 @@ public class SectionTrackView implements Serializable, SectionTrackViewObjServic
 	/** nullable persistent field */
     private int sectionId;
     
+    /** nullable persistent field */
+    private int moduleId;
+    
     private String userId;
 
     private Date viewDate;
@@ -78,6 +81,14 @@ public class SectionTrackView implements Serializable, SectionTrackViewObjServic
 	public void setSectionId(int sectionId) {
 	     this.sectionId = sectionId;
 	}
+	
+	public int getModuleId() {
+		return this.moduleId;
+	}
+
+	public void setModuleId(int moduleId) {
+		this.moduleId = moduleId;
+	}	
 	    
 	/* (non-Javadoc)
 	 * @see org.etudes.component.app.melete.SectionTrackViewObjService#getUserId()

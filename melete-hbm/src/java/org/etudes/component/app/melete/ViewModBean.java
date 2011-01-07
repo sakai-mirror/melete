@@ -58,6 +58,8 @@ public class ViewModBean implements Serializable, ViewModBeanService {
     protected int seqNo;
     
     protected String seqXml;
+    
+    protected Date readDate;
 
     protected List vsBeans;
 
@@ -300,6 +302,23 @@ public class ViewModBean implements Serializable, ViewModBeanService {
 	{
 		this.seqXml = seqXml;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getReadDate()
+	{
+		return this.readDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setReadDate(Date readDate)
+	{
+		this.readDate = readDate;
+	}
+	
 
 	public String getNextStepsNumber() {
 		return nextStepsNumber;

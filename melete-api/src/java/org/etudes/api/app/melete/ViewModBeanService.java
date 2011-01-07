@@ -81,5 +81,9 @@ public interface ViewModBeanService
 	public abstract String getSeqXml();
 
 	public abstract void setSeqXml(String seqXml);
+	
+	public abstract Date getReadDate();
+
+	public abstract void setReadDate(Date readDate);
 
 }

@@ -36,6 +36,10 @@ public interface SectionTrackViewObjService {
 	public abstract int getSectionId();
 	
 	public abstract void setSectionId(int sectionId);
+	
+	public abstract int getModuleId();
+
+	public abstract void setModuleId(int moduleId);
 	/**
 	 * @return the userId
 	 */

@@ -983,6 +983,7 @@ public class ModuleDB implements Serializable {
 		   				      processViewSections(vsBeanMap, vsBeanList,xmlSecList,rowClassesBuf);
 		   				      vmBean.setVsBeans(vsBeanList);
 		   				       vmBean.setRowClasses(rowClassesBuf.toString());
+		   				      vmBean.setReadDate(null); 
 		   				    }
 		   				   }
 		    			   vsBeanMap = null;
@@ -1074,8 +1075,6 @@ public class ModuleDB implements Serializable {
 		 				    }
 		 				   resList.add(vmBean);
 		    			}
-
-
 		    			prevModId = moduleId;
 		    			prevSeqNo = seqNo;
 		    			prevSeqXml = seqXml;
@@ -1099,6 +1098,7 @@ public class ModuleDB implements Serializable {
 	   				      processViewSections(vsBeanMap, vsBeanList,xmlSecList,rowClassesBuf);
 	   				      vmBean.setVsBeans(vsBeanList);
 	   				      vmBean.setRowClasses(rowClassesBuf.toString());
+	   				      vmBean.setReadDate(null);
 	   				    }
 	   				   }
 		    		accRs.close();
