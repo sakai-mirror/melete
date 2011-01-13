@@ -267,10 +267,9 @@ public class ListModulesPage implements Serializable{
 	  }
 
 	  public List getViewModuleBeans() {
-
 	  	    try {
 	  	    if(nomodsFlag == null || viewModuleBeans == null)
-	  	    	viewModuleBeans = getModuleService().getViewModules(getUserId(), getCourseId());
+	  	    	viewModuleBeans = getModuleService().getViewModules(getUserId(), getCourseId(), false);
 
 	  	    }
 	  	    catch (Exception e)

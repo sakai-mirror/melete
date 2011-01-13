@@ -895,13 +895,13 @@ public class ModuleDB implements Serializable {
 	    return modList;
 	  }
 
-	 public List getViewModulesAndDates(String userId, String courseId) throws HibernateException {
+	 public List getViewModulesAndDates(String userId, String courseId, boolean fromCourseMap) throws HibernateException {
 		 	List modList = null;
 		 	Module mod = null;
 
 	        try
 			{
-		       modList = getViewModules(userId, courseId);
+		       modList = getViewModules(userId, courseId, fromCourseMap);
 		    }
 		    catch (Exception e)
 		    {
@@ -912,14 +912,15 @@ public class ModuleDB implements Serializable {
 
 		  }
 
-	 public List getViewModules(String userId, String courseId) throws Exception {
+	 public List getViewModules(String userId, String courseId, boolean fromCourseMap) throws Exception {
 		 Connection dbConnection = null;
 		 	List resList = new ArrayList();
 		 	List courseIdList = new ArrayList();
 		 	List sectionsList = null;
 		 	Module mod = null;
 		 	Query sectionQuery = null;
-
+		 	
+		 	
 			try {
 				dbConnection = SqlService.borrowConnection();
 				//Check the special access table to see if there are any records
@@ -951,7 +952,7 @@ public class ModuleDB implements Serializable {
 				StringBuffer rowClassesBuf;
 				List vsBeanList = null;
 		    	int prevModId =0,prevSeqNo = 0;
-		    	int moduleId,seqNo;
+		    	int moduleId = 0,seqNo;
 		    	ViewModBean vmBean = null;
 		    	String seqXml,prevSeqXml = null;
 		    	java.sql.Timestamp startTimestamp,endTimestamp;
@@ -982,10 +983,14 @@ public class ModuleDB implements Serializable {
 		   				      vsBeanList = new ArrayList();
 		   				      processViewSections(vsBeanMap, vsBeanList,xmlSecList,rowClassesBuf);
 		   				      vmBean.setVsBeans(vsBeanList);
-		   				       vmBean.setRowClasses(rowClassesBuf.toString());
-		   				      vmBean.setReadDate(null); 
+		   				      vmBean.setRowClasses(rowClassesBuf.toString());
+		   				      if (fromCourseMap) vmBean.setReadDate(getReadDate(moduleId, vsBeanMap, userId, dbConnection)); 
 		   				    }
 		   				   }
+		    			  else
+		    			  {
+		    				  if (fromCourseMap) vmBean.setReadDate(new java.util.Date());
+		    			  }
 		    			   vsBeanMap = null;
 		    			 }
 
@@ -1026,7 +1031,7 @@ public class ModuleDB implements Serializable {
 	    					
 	    					this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
 	    					if ((this.accessAdvisor != null)&&(this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId())))
-	    					{	
+	    					{
 	    						vmBean.setVisibleFlag(false);
 	    					}	
 	    					else
@@ -1098,9 +1103,14 @@ public class ModuleDB implements Serializable {
 	   				      processViewSections(vsBeanMap, vsBeanList,xmlSecList,rowClassesBuf);
 	   				      vmBean.setVsBeans(vsBeanList);
 	   				      vmBean.setRowClasses(rowClassesBuf.toString());
-	   				      vmBean.setReadDate(null);
+	   				      if (fromCourseMap) vmBean.setReadDate(getReadDate(moduleId, vsBeanMap, userId, dbConnection)); 
+	   				 
 	   				    }
 	   				   }
+		    		 else
+	    			  {
+	    				  if (fromCourseMap) vmBean.setReadDate(new java.util.Date());
+	    			  }
 		    		accRs.close();
 		    		accPstmt.close();
 		    		rs.close();
@@ -1166,7 +1176,53 @@ public class ModuleDB implements Serializable {
 		}
 	 }
 
+     private Date getReadDate(int moduleId, Map sectionMap, String userId, Connection dbConnection) throws SQLException
+     {
+    	 Date viewDate = null;
+    	 if (sectionMap == null || sectionMap.size() == 0) 
+    	 {
+    		return new java.util.Date();
+    	 }
 
+		 if (sectionMap != null)
+		 {
+             //Find all entries that are in sectionMap but not in
+			 //xmlSecList
+			 Set secKeySet = sectionMap.keySet();
+			 List secList = new ArrayList();
+			 Iterator it = secKeySet.iterator();
+			 while (it.hasNext())
+			 {
+				 secList.add((Integer)it.next());
+			 }
+			 ResultSet rs = null;
+		     String sql = "select sv.section_id,sv.view_date from melete_section_track_view sv where sv.module_id = ? and sv.user_id = ? order by view_date";
+		     PreparedStatement pstmt = dbConnection.prepareStatement(sql);
+		     pstmt.setInt(1,moduleId);
+		     pstmt.setString(2,userId);
+		     rs = pstmt.executeQuery();
+		     List trackSecList = new ArrayList();
+		     
+			 if (rs != null)
+		     {
+			   	int sectionId;
+		    	while (rs.next())
+		    	{
+		    	  sectionId = rs.getInt("section_id");
+		    	  trackSecList.add(new Integer(sectionId));
+		    	  viewDate = rs.getDate("view_date");
+		    	}
+		     }
+			 rs.close();
+			 pstmt.close();
+			 secList.removeAll(trackSecList);
+			 if (secList.size() != 0) 
+			 {
+				 viewDate = null;
+			 }					 
+		 }	 
+		 return viewDate;
+     }
 
 
 	 public List getActivenArchiveModules(String courseId) throws HibernateException {

@@ -225,11 +225,11 @@ public List getModuleDateBeans(String userId, String courseId) {
   	return moduleDateBeans;
   }
 
-public List getViewModules(String userId, String courseId) {
+public List getViewModules(String userId, String courseId, boolean fromCourseMap) {
   	if (moduledb == null) moduledb = ModuleDB.getModuleDB();
 
   	try {
-  		viewModuleBeans = moduledb.getViewModulesAndDates(userId, courseId);
+  		viewModuleBeans = moduledb.getViewModulesAndDates(userId, courseId, fromCourseMap);
   	}catch (HibernateException e)
 	{
   		//e.printStackTrace();
