@@ -8,3 +8,4 @@ CREATE TABLE `melete_section_track_view` (
   CONSTRAINT `FK_MSTV_MS` FOREIGN KEY(`SECTION_ID`) REFERENCES `melete_section`(`SECTION_ID`),
   CONSTRAINT `FK_MSTV_MM` FOREIGN KEY(`MODULE_ID`) REFERENCES `melete_module`(`MODULE_ID`)
 );
+CREATE INDEX MODULE_ID_USER_ID_IDX ON `melete_section_track_view` (MODULE_ID,USER_ID); 
