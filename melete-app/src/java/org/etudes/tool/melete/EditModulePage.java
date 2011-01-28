@@ -35,12 +35,14 @@ import javax.faces.el.ValueBinding;
 import org.sakaiproject.util.ResourceLoader;
 
 import org.etudes.component.app.melete.ModuleDateBean;
+import org.etudes.api.app.melete.ModuleDateBeanService;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
 //import org.sakaiproject.jsf.ToolBean;
 
 import org.sakaiproject.event.cover.EventTrackingService;
+import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.tool.api.Placement;
 import org.sakaiproject.tool.cover.ToolManager;
 
@@ -64,7 +66,9 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
    private boolean showLicenseFlag = true;
    private boolean hasSections = false;
    private SectionObjService firstSection = null;
-
+   
+   protected ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
+   
     public EditModulePage(){
       setFormName("EditModuleForm");
       setSuccess(false);
@@ -327,31 +331,34 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 	{
 		this.firstSection = firstSection;
 	}
-	
-	/*
-	 * check if edit is called from coursemap
-	 */
-	public void checkCallFrom()
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		String e_id = (String)ctx.getExternalContext().getRequestParameterMap().get("e_id");
-		if(e_id != null) 
-		{
-			logger.debug("get call from found req param value" + ctx.getExternalContext().getRequestParameterMap().get("e_id"));
-			Placement placement = ToolManager.getCurrentPlacement();
-			String currentSiteId = placement.getContext();
 
-			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
-			String userId = mPage.getCurrentUser().getId();
 
-			this.mdBean = (ModuleDateBean)moduleService.getModuleDateBean(userId, currentSiteId, new Integer(e_id).intValue());
-			setEditInfo(mdBean);
-		}
-	}
-	
 	public ModuleObjService getModule() {
-		checkCallFrom();
+		
+		FacesContext ctx = FacesContext.getCurrentInstance();
+    	ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+    	String courseId = mPage.getCurrentSiteId();
+    	String userId = mPage.getCurrentUser().getId();
+    	
+		String moduleIdfromOutside = (String)threadLocalManager.get("MELETE_MODULE_ID");
+    	if (moduleIdfromOutside != null) 
+    	{
+    		logger.debug("reading module id from thread local :" + moduleIdfromOutside);
+    		this.mdBean = (ModuleDateBean)moduleService.getModuleDateBean(userId, courseId, new Integer(moduleIdfromOutside).intValue());
+    		setEditInfo(mdBean);
+    		threadLocalManager.set("MELETE_MODULE_ID", null);
+    	}
+		
 		return super.getModule();
 	}
+	
+	public void setMdBean(String userId, String siteId, String id)
+	{
+		if (id == null) return;
+		this.mdBean = (ModuleDateBean)moduleService.getModuleDateBean(userId, siteId, new Integer(id).intValue());
+		setEditInfo(mdBean);
+	}
+
  }
