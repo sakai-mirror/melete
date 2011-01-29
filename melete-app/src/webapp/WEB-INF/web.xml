@@ -74,7 +74,7 @@
 	</servlet>
 	<servlet>
 		<servlet-name>sakai.melete</servlet-name>
-		<servlet-class>org.sakaiproject.jsf.util.JsfTool</servlet-class>
+		<servlet-class>org.etudes.tool.melete.MeleteJsfTool</servlet-class>
 		<init-param>
 			<param-name>default</param-name>
 			<param-value>main</param-value>
