@@ -84,9 +84,11 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 	public void setModification()
 	{
 		  FacesContext context = FacesContext.getCurrentInstance();
-	      Map sessionMap = context.getExternalContext().getSessionMap();
-	      module.setModifiedByFname((String)sessionMap.get("firstName"));
-	      module.setModifiedByLname((String)sessionMap.get("lastName"));
+	      ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+	      MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+	
+	      module.setModifiedByFname(mPage.getCurrentUser().getFirstName());
+	      module.setModifiedByLname(mPage.getCurrentUser().getLastName());
 	      module.setModificationDate(new Date());
 	}
 	 public boolean  getShowLicenseFlag() {

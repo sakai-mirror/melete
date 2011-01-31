@@ -469,23 +469,7 @@ public class ViewSectionsPage implements Serializable/*,ToolBean */{
     	Node prevNode,nextNode;
     	String courseId = null;
     	FacesContext ctx = FacesContext.getCurrentInstance();
-    
-    	String directvs_id = (String)ctx.getExternalContext().getRequestParameterMap().get("vs_id");
-    	if(directvs_id != null)
-    	{
-    		logger.debug("get Module at viewsection java param value" + ctx.getExternalContext().getRequestParameterMap().get("vs_id"));
-    		int d_vs_id=new Integer(directvs_id).intValue();
-    		if(d_vs_id != this.sectionId)
-    		{
-    			this.sectionId=d_vs_id;
-    			this.moduleId = getSectionService().getSection(sectionId).getModuleId();
-    			this.module = null;
-    			this.section= null;
-    		}
-    		String direct_cid = (String)ctx.getExternalContext().getRequestParameterMap().get("c_id");
-        	if(direct_cid != null) courseId = direct_cid;
-    	}
-
+        	
     	if (this.module == null)
     	{
     	try {
@@ -855,9 +839,10 @@ private String getCourseId()
 {
 	if (courseId == null)
 	{
-	FacesContext context = FacesContext.getCurrentInstance();
-  	Map sessionMap = context.getExternalContext().getSessionMap();
-	courseId = (String)sessionMap.get("courseId");
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+    	courseId = mPage.getCurrentSiteId();
 	}
 	return courseId;
 }
@@ -865,9 +850,10 @@ private String getUserId()
 {
 	if (userId == null)
 	{
-	FacesContext context = FacesContext.getCurrentInstance();
-  	Map sessionMap = context.getExternalContext().getSessionMap();
-	userId = (String)sessionMap.get("userId");
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+    	userId = mPage.getCurrentUser().getId();
 	}
 	return userId;
 }
@@ -921,12 +907,13 @@ public void setMeleteCHService(MeleteCHService meleteCHService) {
     	if (isUserStudent())
     	{	
     		FacesContext context = FacesContext.getCurrentInstance();
-    		Map sessionMap = context.getExternalContext().getSessionMap();
-
+       		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+        	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+        
     		SectionTrackView stv = new SectionTrackView();
     		stv.setSectionId(this.sectionId);
     		stv.setModuleId(this.moduleId);
-    		stv.setUserId((String)sessionMap.get("userId"));
+    		stv.setUserId(mPage.getCurrentUser().getId());
     		stv.setViewDate(new java.util.Date());
     		getSectionService().insertSectionTrack(stv);
     	}

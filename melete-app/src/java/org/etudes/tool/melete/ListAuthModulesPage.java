@@ -371,8 +371,12 @@ public class ListAuthModulesPage implements Serializable
 		resetSelectedLists();
 		setCurrentDate(Calendar.getInstance().getTime());
 		FacesContext context = FacesContext.getCurrentInstance();
+		// reset courseid. Its getting lost when edit_module called from coursemap calls TOC
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+    	courseId = mPage.getCurrentSiteId();
 
-		boolean flagsReset = false;
+    	boolean flagsReset = false;
 		try
 		{
 			ModuleService modServ = getModuleService();

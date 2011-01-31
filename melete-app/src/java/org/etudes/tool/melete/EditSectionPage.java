@@ -272,9 +272,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 	public void selectedResourceDeleteAction(ActionEvent evt)
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
-
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+     	
 		UICommand cmdLink = (UICommand)evt.getComponent();
 
 		List cList = cmdLink.getChildren();
@@ -282,7 +282,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		UIParameter param1 = (UIParameter) cList.get(0);
 	   	UIParameter param2 = (UIParameter) cList.get(1);
 
-		ValueBinding binding =Util.getBinding("#{deleteResourcePage}");
+		binding =Util.getBinding("#{deleteResourcePage}");
 		DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
 		delResPage.resetValues();
 		if(section.getContentType().equals("typeUpload"))
@@ -293,7 +293,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			delResPage.setFromPage("editContentLTIServerView");
 
 		delResPage.setResourceName((String)param2.getValue());
-		delResPage.processDeletion((String)param1.getValue(), courseId);
+		delResPage.processDeletion((String)param1.getValue(), mPage.getCurrentUser().getId());
 		return;
 	}
 
@@ -1197,14 +1197,16 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		Map sessionMap = context.getExternalContext().getSessionMap();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo info = (MeleteSiteAndUserInfo) binding.getValue(context);
+		
 		try
 		{
 			Section s = new Section();
 			s.setContentType("notype");
 			// user info from session
-			s.setCreatedByFname((String)sessionMap.get("firstName"));
-			s.setCreatedByLname((String)sessionMap.get("lastName"));
-			s.setTextualContent(true);
+			s.setCreatedByFname(info.getCurrentUser().getFirstName());
+			s.setCreatedByLname(info.getCurrentUser().getLastName());
 			//reset flags
 			shouldRenderEditor=false;
 			shouldRenderLink=false;
