@@ -28,7 +28,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Print Module" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Print Module" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
 <form id="printModuleForm" >
      <table class="maintableCollapseWithBorder">

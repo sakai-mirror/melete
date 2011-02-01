@@ -28,7 +28,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Manage View" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Manage View" toolCssHref="/etudes-melete-tool/rtbc004.css">
 
 <%@include file="accesscheck.jsp" %>
 <h:form id="ManageModuleForm">

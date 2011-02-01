@@ -27,7 +27,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Select Resource Item" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Select Resource Item" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
 <%@ page import="javax.faces.application.FacesMessage, java.util.ResourceBundle"%>

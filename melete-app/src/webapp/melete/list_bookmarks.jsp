@@ -30,7 +30,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: List of bookmarks" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: List of bookmarks" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
 <script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
 

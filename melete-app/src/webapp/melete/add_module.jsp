@@ -28,7 +28,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Add Module" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Add Module" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
 
@@ -93,7 +93,7 @@ function showEdateCal()
 	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
-	<div class="meletePortletToolBarMessage"><img src="images/document_add.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.add_module_adding_module}" /> </div>
+	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/document_add.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.add_module_adding_module}" /> </div>
     <h:messages id="addmoduleerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 	
 	<table id="AutoNumber1" class="maintableCollapseWithBorder">

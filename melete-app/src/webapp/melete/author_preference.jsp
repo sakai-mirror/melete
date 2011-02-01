@@ -29,7 +29,7 @@
 
 
 <f:view>
-<sakai:view title="Modules: User Preference" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: User Preference" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
  <h:form id="UserPreferenceForm">

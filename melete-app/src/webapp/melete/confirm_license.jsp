@@ -27,7 +27,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <f:view>
-<sakai:view title="Modules: Change License Confirmation" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Change License Confirmation" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
  <h:form id="changeLicenseForm">

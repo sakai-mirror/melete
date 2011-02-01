@@ -28,7 +28,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Delete Special Accesss" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Delete Special Accesss" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
  <h:form id="DeleteSpecialAccessForm">
  	<f:subview id="top">
