@@ -920,7 +920,6 @@ public class ModuleDB implements Serializable {
 		 	Module mod = null;
 		 	Query sectionQuery = null;
 		 	
-		 	
 			try {
 				dbConnection = SqlService.borrowConnection();
 				//Check the special access table to see if there are any records
@@ -942,6 +941,7 @@ public class ModuleDB implements Serializable {
 		    			accMap.put(accModuleId,ad);
 		    		}
 		    	}
+			    //Select all undeleted modules in this course
 	            sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
 	            PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 	            pstmt.setString(1,courseId);
@@ -960,13 +960,13 @@ public class ModuleDB implements Serializable {
 		    	{
 		    		while (rs.next())
 		    		{
-
 		    			moduleId = rs.getInt("module_id");
 		    			seqNo = rs.getInt("seq_no");
 		    			seqXml = rs.getString("seq_xml");
 
 //		    			Associate vsBeans to vmBean
 		    			//This means its a new module
+		    			//Does not execute for the first module
 		    			if ((prevModId != 0)&&(moduleId != prevModId))
 		    			{
 		    			  if (vsBeanMap != null)
@@ -984,7 +984,7 @@ public class ModuleDB implements Serializable {
 		   				      processViewSections(vsBeanMap, vsBeanList,xmlSecList,rowClassesBuf);
 		   				      vmBean.setVsBeans(vsBeanList);
 		   				      vmBean.setRowClasses(rowClassesBuf.toString());
-		   				      if (fromCourseMap) vmBean.setReadDate(getReadDate(moduleId, vsBeanMap, userId, dbConnection)); 
+		   				      if (fromCourseMap) vmBean.setReadDate(getReadDate(prevModId, vsBeanMap, userId, dbConnection)); 
 		   				    }
 		   				   }
 		    			  else
@@ -992,7 +992,7 @@ public class ModuleDB implements Serializable {
 		    				  if (fromCourseMap) vmBean.setReadDate(new java.util.Date());
 		    			  }
 		    			   vsBeanMap = null;
-		    			 }
+		    			 }//End if ((prevModId != 0)&&(moduleId != prevModId))
 
 		    			//Populate each vsBean and add to vsBeanMap
 		    			int sectionId = rs.getInt("section_id");
@@ -1079,7 +1079,7 @@ public class ModuleDB implements Serializable {
 		 				    	vmBean.setEndDate(new java.util.Date(endTimestamp.getTime() + (endTimestamp.getNanos()/1000000)));
 		 				    }
 		 				   resList.add(vmBean);
-		    			}
+		    			}//end if ((prevModId == 0)||(moduleId != prevModId))
 		    			prevModId = moduleId;
 		    			prevSeqNo = seqNo;
 		    			prevSeqXml = seqXml;
@@ -1104,7 +1104,6 @@ public class ModuleDB implements Serializable {
 	   				      vmBean.setVsBeans(vsBeanList);
 	   				      vmBean.setRowClasses(rowClassesBuf.toString());
 	   				      if (fromCourseMap) vmBean.setReadDate(getReadDate(moduleId, vsBeanMap, userId, dbConnection)); 
-	   				 
 	   				    }
 	   				   }
 		    		 else
@@ -1181,7 +1180,7 @@ public class ModuleDB implements Serializable {
     	 Date viewDate = null;
     	 if (sectionMap == null || sectionMap.size() == 0) 
     	 {
-    		return new java.util.Date();
+    		 return new java.util.Date();
     	 }
 
 		 if (sectionMap != null)
@@ -1202,11 +1201,10 @@ public class ModuleDB implements Serializable {
 		     pstmt.setString(2,userId);
 		     rs = pstmt.executeQuery();
 		     List trackSecList = new ArrayList();
-		     
-			 if (rs != null)
+		     if (rs != null)
 		     {
 			   	int sectionId;
-		    	while (rs.next())
+			   	while (rs.next())
 		    	{
 		    	  sectionId = rs.getInt("section_id");
 		    	  trackSecList.add(new Integer(sectionId));
