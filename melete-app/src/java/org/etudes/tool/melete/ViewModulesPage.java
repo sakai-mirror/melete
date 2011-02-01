@@ -173,6 +173,7 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
         		logger.debug("reading module id in view page from thread local :" + moduleIdfromOutside);
         		this.moduleId = new Integer(moduleIdfromOutside).intValue();	
         		this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBean(userId, courseId,this.moduleId);
+        		mPage.populateMeleteSession();
         		threadLocalManager.set("MELETE_MODULE_ID", null);
         	}
         	else

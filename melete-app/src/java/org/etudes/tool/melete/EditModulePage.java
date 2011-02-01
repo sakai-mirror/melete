@@ -66,7 +66,6 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
    private boolean showLicenseFlag = true;
    private boolean hasSections = false;
    private SectionObjService firstSection = null;
-   
    protected ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
    
     public EditModulePage(){
@@ -350,6 +349,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
     		logger.debug("reading module id from thread local :" + moduleIdfromOutside);
     		this.mdBean = (ModuleDateBean)moduleService.getModuleDateBean(userId, courseId, new Integer(moduleIdfromOutside).intValue());
     		setEditInfo(mdBean);
+    		mPage.populateMeleteSession();
     		threadLocalManager.set("MELETE_MODULE_ID", null);
     	}
 		
