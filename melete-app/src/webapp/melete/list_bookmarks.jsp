@@ -39,13 +39,13 @@
 		<f:subview id="top">
 				<jsp:include page="topnavbar.jsp"/> 
 		</f:subview>
-		<div class="meletePortletToolBarMessage"><img src="images/my-bookmarks.png" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.list_bookmarks_headtitle}" /></div>				
+		<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/my-bookmarks.png" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.list_bookmarks_headtitle}" /></div>				
 	  	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 		
     	<div class="right">
     	      <h:inputHidden id="bmlistflag" value="#{bookmarkPage.nobmsFlag}"/>
                  <h:commandLink id="exportNotesLink" actionListener="#{bookmarkPage.exportNotes}" action="#{bookmarkPage.redirectExportNotes}" rendered="#{bookmarkPage.nobmsFlag == false}">
-                 	<h:graphicImage id="image0" alt="" url="images/export.png" styleClass="AuthImgClass"/>
+                 	<h:graphicImage id="image0" alt="" url="/images/export.png" styleClass="AuthImgClass"/>
                    <h:outputText id="exportnotes" value="#{msgs.list_bookmarks_export_notes}" />									
                  </h:commandLink>
           </div>
@@ -85,7 +85,7 @@
 					 <h:outputLink id="editBookmarkLink" value="list_bookmarks" onclick="OpenBookmarkWindow(#{bookmark.sectionId},'#{bookmark.title}','Melete Bookmark Window');">
 		    	       <f:param id="sectionId" name="sectionId" value="#{bookmark.sectionId}" />
 		    	       <f:param id="sectionTitle" name="sectionTitle" value="#{bookmark.title}" />
-						  <h:graphicImage id="editgif" alt="" value="images/document_edit.gif" styleClass="AuthImgClass" />
+						  <h:graphicImage id="editgif" alt="" value="/images/document_edit.gif" styleClass="AuthImgClass" />
 			                <h:outputText id="emp_space-20" value=" " />
 				    		<h:outputText id="deltext0" value="#{msgs.list_bookmarks_edit}"  />
 					 </h:outputLink>						
@@ -94,7 +94,7 @@
 					  <h:commandLink id="deleteaction" actionListener="#{bookmarkPage.deleteAction}"  action="#{bookmarkPage.redirectDeleteLink}" immediate="true" >
 				    		<f:param name="bookmarkId" value="#{bookmark.bookmarkId}" />
 				    		<f:param name="bookmarkTitle" value="#{bookmark.title}" />
-				    		<h:graphicImage id="delgif" alt="" value="images/delete.gif" styleClass="AuthImgClass" />
+				    		<h:graphicImage id="delgif" alt="" value="/images/delete.gif" styleClass="AuthImgClass" />
 							<h:outputText id="emp_space-2" value=" " />
 				    		<h:outputText id="deltext" value="#{msgs.list_bookmarks_delete}"  />
 					 </h:commandLink>	

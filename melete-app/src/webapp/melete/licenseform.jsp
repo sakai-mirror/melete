@@ -36,7 +36,7 @@
 	 <f:selectItems value="#{licensePage.licenseTypes}" />							
  </h:selectOneMenu>
  <h:outputText value="          " styleClass="ExtraPaddingClass" />
-<h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
+<h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="/images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
  </h:column>
 </h:panelGrid> 
  
@@ -50,7 +50,7 @@
 	 <f:selectItems value="#{licensePage.licenseTypes}" />							
    </h:selectOneMenu>
    <h:outputText value="          " styleClass="ExtraPaddingClass" />
-  <h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
+  <h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="/images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
  </h:column>  
 </h:panelGrid>
 

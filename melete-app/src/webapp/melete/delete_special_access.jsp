@@ -34,7 +34,7 @@
  	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
-	<div class="meletePortletToolBarMessage"><img src="images/Warning.gif" width="16" height="16" align="absbottom" border="0">
+	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/Warning.gif" width="16" height="16" align="absbottom" border="0">
 		     <h:outputText value="#{msgs.delete_special_access_deletion_warning}" /></div>				
 		     		
   <table class="maintableCollapseWithBorder">
@@ -49,7 +49,7 @@
            <h:messages id="deletespecial_accessError" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
            <table class="deleteConfirmTable">
         	<tr>
-        		<td> <img src="images/Warning.gif" border="0">
+        		<td> <img src="/etudes-melete-tool/images/Warning.gif" border="0">
         		</td>
         		<td> 
         			<h:outputText value="#{msgs.delete_special_access_message1}" />

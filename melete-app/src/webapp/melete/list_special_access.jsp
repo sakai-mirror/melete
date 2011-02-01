@@ -81,7 +81,7 @@ function resetAllAcc()
     <f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
-	<div class="meletePortletToolBarMessage"><img src="images/access.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_special_access}" /> </div>
+	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/access.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_special_access}" /> </div>
     <h:outputText id="title" value="#{specialAccessPage.module.title}"/>
 	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 	
@@ -92,13 +92,13 @@ function resetAllAcc()
     <h:panelGrid columns="2" columnClasses="authBarCol" cellspacing="5" width="16%">
 	<h:column>
 		<h:commandLink id="addAction" action="#{specialAccessPage.addAccessAction}" immediate="true">
-		    <h:graphicImage id="addAccessImg" value="images/document_add.gif" styleClass="AuthImgClass"/>
+		    <h:graphicImage id="addAccessImg" value="/images/document_add.gif" styleClass="AuthImgClass"/>
 	  		<h:outputText  value="#{msgs.list_special_access_add}"/>
 		</h:commandLink>
 	</h:column>
 	<h:column>
 		<h:commandLink id="delAction" action="#{specialAccessPage.deleteAction}">
-	        <h:graphicImage id="deleteImg" value="images/delete.gif" styleClass="AuthImgClass"/>
+	        <h:graphicImage id="deleteImg" value="/images/delete.gif" styleClass="AuthImgClass"/>
 	        <h:outputText  id="del" value="#{msgs.list_special_access_delete}"></h:outputText>
 	     </h:commandLink>
 	</h:column>

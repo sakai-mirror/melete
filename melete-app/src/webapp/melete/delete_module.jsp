@@ -41,7 +41,7 @@ function showProcessMessage()
 	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
-	  <div class="meletePortletToolBarMessage"><img src="images/Warning.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.delete_module_module}" rendered="#{deleteModulePage.moduleSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion1}" rendered="#{deleteModulePage.sectionSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion2}" /></div>
+	  <div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/Warning.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.delete_module_module}" rendered="#{deleteModulePage.moduleSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion1}" rendered="#{deleteModulePage.sectionSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion2}" /></div>
       <!-- This Begins the Main Text Area -->
       <h:messages id="deletemoduleerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
   <table class="maintableCollapseWithBorder">
@@ -52,7 +52,7 @@ function showProcessMessage()
           <td>
             <table class="deleteConfirmTable" border="1">
                <tr class="maintabledata3">
-                  <td valign="top"><h:graphicImage id="warngif" value="images/Warning.gif" width="24" height="24" alt="#{msgs.delete_module_deletion_warning}" title="#{msgs.delete_module_deletion_warning}"/></td>
+                  <td valign="top"><h:graphicImage id="warngif" value="/images/Warning.gif" width="24" height="24" alt="#{msgs.delete_module_deletion_warning}" title="#{msgs.delete_module_deletion_warning}"/></td>
                   <td align="left"><h:outputText value="#{msgs.delete_module_message1}" /><br>
                    <br><h:outputText value="#{msgs.delete_module_module2}" styleClass="bold"  rendered="#{deleteModulePage.moduleSelected}"/>  
 		     	   <h:outputText value=": " styleClass="bold"   rendered="#{deleteModulePage.moduleSelected}"/>

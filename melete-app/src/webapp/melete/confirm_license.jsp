@@ -35,7 +35,7 @@
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
 	  <div class="meletePortletToolBarMessage">
-	  	<img src="images/user1_preferences.gif" alt="" width="16" height="16" align="absbottom" border="0">	  	
+	  	<img src="/etudes-melete-tool/images/user1_preferences.gif" alt="" width="16" height="16" align="absbottom" border="0">	  	
 	  	<h:outputText value="#{msgs.confirm_license_caption}"/>
 	 </div>
       <!-- This Begins the Main Text Area -->
@@ -82,7 +82,7 @@
 	      <tr><td>&nbsp;</td></tr> 
     	  <tr>
 	          <td>	                  
-					<img src="images/Warning.gif" alt="" width="16" height="16" align="absbottom" border="0">
+					<img src="/etudes-melete-tool/images/Warning.gif" alt="" width="16" height="16" align="absbottom" border="0">
 					<h:outputText value="#{msgs.confirm_license_disclaimer}" /> <h:outputText value="#{msgs.confirm_license_disclaimer_1}" styleClass="bold"/>
 					<h:outputText value="#{msgs.confirm_license_disclaimer_2}" /> <h:outputText value="#{msgs.confirm_license_disclaimer_3}" styleClass="bold" /> <h:outputText value="#{msgs.confirm_license_disclaimer_4}" />
 			  </td>

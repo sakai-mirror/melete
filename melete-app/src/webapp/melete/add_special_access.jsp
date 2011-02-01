@@ -92,7 +92,7 @@ function showEdateCal()
 	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
-	<div class="meletePortletToolBarMessage"><img src="images/access.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.add_special_access}" /> </div>
+	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/access.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.add_special_access}" /> </div>
     <h:outputText id="title" value="#{specialAccessPage.module.title}"/>
     <h:messages id="addspecialaccesserror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 	
@@ -121,7 +121,7 @@ function showEdateCal()
 		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
         		    </h:inputText>
 		            <h:outputLink id="viewsdateCal" onclick="showSdateCal()" value="#startCalender" >
-        	    		<h:graphicImage id="sdateCal"  value="images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
+        	    		<h:graphicImage id="sdateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            			</h:outputLink>
 					 </td>
               </tr>
@@ -134,7 +134,7 @@ function showEdateCal()
              			  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
           		 </h:inputText>
           <h:outputLink id="viewedateCal" onclick="showEdateCal()" value="#endCalender">
-            <h:graphicImage id="edateCal"  value="images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
+            <h:graphicImage id="edateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            </h:outputLink>
 					 </td>
               </tr>			  

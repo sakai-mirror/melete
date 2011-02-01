@@ -33,7 +33,7 @@
 	</h:column>
 	<h:column>			
 		<h:commandLink id="serverViewButton"  action="#{editSectionPage.gotoServerView}" >
-			<h:graphicImage id="replaceImg2" value="images/replace2.gif" styleClass="AuthImgClass"/>
+			<h:graphicImage id="replaceImg2" value="/images/replace2.gif" styleClass="AuthImgClass"/>
 			<h:outputText value="#{msgs.editcontentuploadview_replace}"/>
         </h:commandLink>		
 	</h:column>

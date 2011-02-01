@@ -26,7 +26,7 @@
 	</h:column>
 	<h:column>					
 		<h:commandLink id="serverViewButton"  action="#{editSectionPage.gotoServerLTIView}" styleClass="a1">
-			<h:graphicImage id="replaceImg2" value="images/replace2.gif" styleClass="AuthImgClass"/>
+			<h:graphicImage id="replaceImg2" value="/images/replace2.gif" styleClass="AuthImgClass"/>
 			<h:outputText value="#{msgs.editcontentltiview_replace}"/>
                 </h:commandLink>		
   </h:column>

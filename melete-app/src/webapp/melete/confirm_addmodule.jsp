@@ -35,7 +35,7 @@
 	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
-	<div class="meletePortletToolBarMessage"><img src="images/check.gif" alt="" width="16" height="16" align="absbottom" border="0"> <h:outputText value="#{msgs.confirm_addmodule_confirming_module_addition}" /> </div>
+	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/check.gif" alt="" width="16" height="16" align="absbottom" border="0"> <h:outputText value="#{msgs.confirm_addmodule_confirming_module_addition}" /> </div>
     <table class="maintableCollapseWithBorder">
         <tr>
           <td class="maintabledata3">
@@ -46,7 +46,7 @@
                 <td width="100%">
                     <table class="deleteConfirmTable" border="1">
                     <tr class="maintabledata3">
-                      <td valign="top"><img src="images/right_check.gif" width="24" height="24" align="absbottom" alt="#{msgs.confirm_addmodule_confirmation_signal}" border="0"></td>
+                      <td valign="top"><img src="/etudes-melete-tool/images/right_check.gif" width="24" height="24" align="absbottom" alt="#{msgs.confirm_addmodule_confirmation_signal}" border="0"></td>
                       <td align="left"><h:outputText value="#{msgs.confirm_addmodule_you_have_succes}" /><br>
                         <br><h:outputText value="#{addModulePage.module.title}" styleClass="bold"  />
                         <p align="left"><h:outputText value="#{msgs.confirm_addmodule_continue_adding}" /></p></td>

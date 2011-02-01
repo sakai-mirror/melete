@@ -52,7 +52,7 @@ function resetModuleSelection() {
 		<f:subview id="top">
 				<jsp:include page="topnavbar.jsp"/> 
 		</f:subview>
-		<div class="meletePortletToolBarMessage"><img src="images/document_exchange.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.sort_sections_top_message}" /></div>
+		<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/document_exchange.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.sort_sections_top_message}" /></div>
 
 <!-- This Begins the Main Text Area -->
        	<table class="maintableCollapseWithBorder">
@@ -106,16 +106,16 @@ function resetModuleSelection() {
 									</td>                        
 									<td width="3%" align="center">
 					                        <h:commandLink id="up_end"  action="#{sortModuleSectionPage.MoveSectionItemAllUpAction}">	
-											 <h:graphicImage id="upImg1" value="images/up_end.gif" alt="#{msgs.sort_all_Up}" title="#{msgs.sort_all_Up}" width="20" height="20" style="border:0" />
+											 <h:graphicImage id="upImg1" value="/images/up_end.gif" alt="#{msgs.sort_all_Up}" title="#{msgs.sort_all_Up}" width="20" height="20" style="border:0" />
 									   </h:commandLink>	
 					                    <h:commandLink id="up_one"  action="#{sortModuleSectionPage.MoveSectionItemUpAction}">	
-											 <h:graphicImage id="upImg" value="images/up.gif" alt="#{msgs.sort_Up}" title="#{msgs.sort_Up}" width="20" height="20" style="border:0" />
+											 <h:graphicImage id="upImg" value="/images/up.gif" alt="#{msgs.sort_Up}" title="#{msgs.sort_Up}" width="20" height="20" style="border:0" />
 									   </h:commandLink>		 
 	 									<h:commandLink id="down_one"  action="#{sortModuleSectionPage.MoveSectionItemDownAction}">		 
-											 <h:graphicImage id="downImg" value="images/down.gif" alt="#{msgs.sort_Down}" title="#{msgs.sort_Down}" width="20" height="20" style="border:0" />
+											 <h:graphicImage id="downImg" value="/images/down.gif" alt="#{msgs.sort_Down}" title="#{msgs.sort_Down}" width="20" height="20" style="border:0" />
 	 									   </h:commandLink>	  
 	 									   <h:commandLink id="down_end"  action="#{sortModuleSectionPage.MoveSectionItemAllDownAction}">		 
-											 <h:graphicImage id="downImg_end" value="images/down_end.gif" alt="#{msgs.sort_all_Down}" title="#{msgs.sort_all_Down}" width="20" height="20" style="border:0" />
+											 <h:graphicImage id="downImg_end" value="/images/down_end.gif" alt="#{msgs.sort_all_Down}" title="#{msgs.sort_all_Down}" width="20" height="20" style="border:0" />
 	 									   </h:commandLink>	 										 
 										  </td>
 					                     </tr>

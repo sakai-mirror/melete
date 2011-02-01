@@ -35,7 +35,7 @@
 	<f:subview id="top">
 			<jsp:include page="topnavbar.jsp?myMode=Preferences"/> 
 	</f:subview>
-    <div class="meletePortletToolBarMessage"><img src="images/user1_preferences.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.student_preference_user_preference}" /></div>				
+    <div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/user1_preferences.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.student_preference_user_preference}" /></div>				
 	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
      <table  class="maintableCollapseWithBorder">
 		     <tr>

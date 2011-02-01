@@ -57,7 +57,7 @@ function showprocessMsg()
 	<f:subview id="top">
 			<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
-	<div class="meletePortletToolBarMessage"><img src="images/import1.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.importexportmodules_importing_or_exporting}" /></div>
+	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/import1.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.importexportmodules_importing_or_exporting}" /></div>
 <!-- This Begins the Main Text Area -->
 	
                 <table class="maintableCollapseWithBorder">

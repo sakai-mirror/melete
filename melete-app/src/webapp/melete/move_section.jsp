@@ -35,7 +35,7 @@
 	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
-	<div class="meletePortletToolBarMessage"><img src="images/page_go.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.move_sections_msg}" /> </div>
+	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/page_go.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.move_sections_msg}" /> </div>
 
 
 		  <table class="maintableCollapseWithBorder">
