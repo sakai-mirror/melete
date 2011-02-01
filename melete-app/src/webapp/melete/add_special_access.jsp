@@ -39,7 +39,7 @@
 	
 %>
 
-<script language="JavaScript" src="js/calendar2.js"></script>
+<script language="JavaScript" src="/etudes-melete-tool/js/calendar2.js"></script>
 <script language="javascript">
 function newWindow(newContent){
   winContent = window.open(newContent, 'nextWin', 'right=0, top=20,width=750,height=600, toolbar=no,scrollbars=yes, resizable=no') }

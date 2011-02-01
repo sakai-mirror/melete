@@ -31,7 +31,7 @@
 <f:view>
 <sakai:view title="Modules: Edit Module Sections" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
-<script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
+<script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
 
 <%@ page import="org.sakaiproject.util.ResourceLoader, javax.faces.application.FacesMessage,org.etudes.tool.melete.AddResourcesPage, org.etudes.tool.melete.EditSectionPage"%>
 

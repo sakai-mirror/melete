@@ -49,8 +49,8 @@ if (request.getAttribute("msg") != null)
 	
 %>
 
-<script type="text/javascript" language="JavaScript" src="js/calendar2.js"></script>
-<script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
+<script type="text/javascript" language="JavaScript" src="/etudes-melete-tool/js/calendar2.js"></script>
+<script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
 
 <script type="text/javascript" language="javascript">
 

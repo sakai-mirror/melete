@@ -30,7 +30,7 @@
 <f:view>
 <sakai:view title="Modules: Student View" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
-<script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
+<script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
 
 <h:form id="viewsectionform"> 
 	<f:subview id="top">
