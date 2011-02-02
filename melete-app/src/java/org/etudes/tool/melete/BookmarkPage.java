@@ -99,8 +99,7 @@ public class BookmarkPage implements Serializable
 	public String addBookmark()
 	{
 		  FacesContext context = FacesContext.getCurrentInstance();
-	  Map sessionMap = context.getExternalContext().getSessionMap();
-	  ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		  ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 
 	  if (bookmarkService == null)
 	    bookmarkService = getBookmarkService();
@@ -108,8 +107,8 @@ public class BookmarkPage implements Serializable
 	  /*if (bookmark == null)
 	    bookmark = new Bookmark();*/
 
-	    this.bookmark.setSiteId((String)sessionMap.get("courseId"));
-	    this.bookmark.setUserId((String)sessionMap.get("userId"));
+	    this.bookmark.setSiteId(getMeleteSiteAndUserInfo().getCurrentSiteId());
+	    this.bookmark.setUserId(getMeleteSiteAndUserInfo().getCurrentUser().getId());
 	    if (null != this.sectionId) this.bookmark.setSectionId(Integer.parseInt(this.sectionId));
 	    try
 	    {
@@ -232,7 +231,6 @@ public class BookmarkPage implements Serializable
 	{
 		String packagingdirpath = ServerConfigurationService.getString("melete.packagingDir", "");
 		FacesContext context = FacesContext.getCurrentInstance();
-		Map sessionMap = context.getExternalContext().getSessionMap();
 
 		File packagedir = null;
 		ResourceLoader bundle = new ResourceLoader(
@@ -250,8 +248,8 @@ public class BookmarkPage implements Serializable
 			String title = getMeleteSiteAndUserInfo().getCourseTitle();
 			title = title.trim();
 
-			String courseId = (String)sessionMap.get("courseId");
-			String userId = (String)sessionMap.get("userId");
+			String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
+			String userId = getMeleteSiteAndUserInfo().getCurrentUser().getId();
 
 			packagedir = new File(basePackDir.getAbsolutePath()
 					+ File.separator + courseId + "_" + userId + File.separator + title.replace(' ', '_'));
@@ -466,12 +464,11 @@ public class BookmarkPage implements Serializable
 
     public BookmarkObjService getBookmark() {
  	  FacesContext context = FacesContext.getCurrentInstance();
-	  Map sessionMap = context.getExternalContext().getSessionMap();
 	  if (bookmark == null)
 	  {
 		  if (null != this.sectionId)
 		  {	  
-		    bookmark = bookmarkService.getBookmark((String)sessionMap.get("userId"),(String)sessionMap.get("courseId"),Integer.parseInt(this.sectionId));
+		    bookmark = bookmarkService.getBookmark(getMeleteSiteAndUserInfo().getCurrentUser().getId(),getMeleteSiteAndUserInfo().getCurrentSiteId(),Integer.parseInt(this.sectionId));
             if (bookmark == null)
             {
         	  bookmark = new Bookmark();
@@ -493,19 +490,17 @@ public class BookmarkPage implements Serializable
    public List getBmList()
    {
 	   FacesContext context = FacesContext.getCurrentInstance();
-	   Map sessionMap = context.getExternalContext().getSessionMap();
+	   
 	   if (bmList == null)
 	   {
-		  bmList = bookmarkService.getBookmarks((String)sessionMap.get("userId"),(String)sessionMap.get("courseId"));
+		  setNobmsFlag(true);
+		  bmList = bookmarkService.getBookmarks(getMeleteSiteAndUserInfo().getCurrentUser().getId(),getMeleteSiteAndUserInfo().getCurrentSiteId());
 	    
 	     if ((bmList != null)&&(bmList.size() > 0))
 	     {
 		   setNobmsFlag(false);
 	     }
-	     else
-	     {
-		   setNobmsFlag(true);
-	     }
+	     
 	   }
 	   return bmList;
    }
@@ -578,12 +573,9 @@ public class BookmarkPage implements Serializable
 		if (meleteSiteAndUserInfo == null) {
 			FacesContext context = FacesContext.getCurrentInstance();
 			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-			meleteSiteAndUserInfo = (MeleteSiteAndUserInfo) binding
-					.getValue(context);
-
-			return meleteSiteAndUserInfo;
-		} else
-			return meleteSiteAndUserInfo;
+			meleteSiteAndUserInfo = (MeleteSiteAndUserInfo) binding.getValue(context);
+		}
+		return meleteSiteAndUserInfo;		
 	}
 
 

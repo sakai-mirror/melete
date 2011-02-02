@@ -1204,6 +1204,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		{
 			Section s = new Section();
 			s.setContentType("notype");
+			s.setTextualContent(true);
 			// user info from session
 			s.setCreatedByFname(info.getCurrentUser().getFirstName());
 			s.setCreatedByLname(info.getCurrentUser().getLastName());

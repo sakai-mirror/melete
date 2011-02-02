@@ -765,11 +765,38 @@ public String goNextModule()
     return "view_module";
 }
 
+public String goCurrentModule()
+{	
+	int currModuleId = this.moduleId;
+	resetValues();
+	FacesContext context = FacesContext.getCurrentInstance();
+	ValueBinding binding = Util.getBinding("#{viewModulesPage}");
+	ViewModulesPage vmPage = (ViewModulesPage)binding.getValue(context);
+	vmPage.setMdbean(null);
+	vmPage.setPrevMdbean(null);
+	vmPage.setModuleId(currModuleId);
+	vmPage.setModuleSeqNo(0);
+	vmPage.setPrintable(null);
+	vmPage.setAutonumber(null);
+
+	return "view_module";
+}
+
 public String gotoAddBookmark()
 {
 	return "add_bookmark";
 }
 
+public String gotoMyBookmarks()
+{
+	FacesContext context = FacesContext.getCurrentInstance();
+	ValueBinding binding = Util.getBinding("#{bookmarkPage}");
+	BookmarkPage bPage = (BookmarkPage)binding.getValue(context);
+	
+	bPage.resetValues();
+	bPage.setFromPage("view_section");
+	return "list_bookmarks";
+}
 
 /*
  * section breadcrumps in format module title >> section title
