@@ -157,6 +157,18 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 
     public ModuleDateBeanService getMdbean()
     {
+      //refresh the bean
+	  String moduleIdfromOutside = (String)threadLocalManager.get("MELETE_MODULE_ID");
+	  if (moduleIdfromOutside != null && new Integer(moduleIdfromOutside).intValue() != this.moduleId) 
+	  {
+		setMdbean(null);
+		setPrevMdbean(null);
+		setModuleId(new Integer(moduleIdfromOutside).intValue());
+		setModuleSeqNo(0);
+		setPrintable(null);
+		setAutonumber(null);	  
+	  }
+	  
       if (this.mdbean == null)
  	  {
     	try {
@@ -166,9 +178,8 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
         	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
         	String courseId = mPage.getCurrentSiteId();
         	String userId = mPage.getCurrentUser().getId();
-        	
-        	String moduleIdfromOutside = (String)threadLocalManager.get("MELETE_MODULE_ID");
-        	if (moduleIdfromOutside != null) 
+    	
+         	if (moduleIdfromOutside != null) 
         	{
         		logger.debug("reading module id in view page from thread local :" + moduleIdfromOutside);
         		this.moduleId = new Integer(moduleIdfromOutside).intValue();	
