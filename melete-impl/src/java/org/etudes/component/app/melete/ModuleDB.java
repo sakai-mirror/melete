@@ -1025,60 +1025,60 @@ public class ModuleDB implements Serializable {
 		    				String ns_number= new String(seqNo+".");
 		    				ns_number = ns_number.concat(Integer.toString(top));
 		    				vmBean.setNextStepsNumber(ns_number);
-		    				
+
 		    				startTimestamp = null;
-	    					endTimestamp = null;
-	    					
-	    					this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
-	    					if ((this.accessAdvisor != null)&&(this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId())))
-	    					{
-	    						vmBean.setVisibleFlag(false);
-	    					}	
-	    					else
-	    					{
-	    						//If special access is set up, use those dates; otherwise,
-	    						//use module dates
-	    						if (accMap.size() > 0)
-	    						{
-	    							AccessDates ad = (AccessDates)accMap.get(moduleId);
-	    							if (ad == null)
-	    							{
-	    								startTimestamp = rs.getTimestamp("start_date");
-	    								endTimestamp = rs.getTimestamp("end_date");
-	    							}
-	    							else
-	    							{
-	    								startTimestamp = ad.getAccStartTimestamp();
-	    								endTimestamp = ad.getAccEndTimestamp();
-	    							}
-	    						}
-	    						else
-	    						{
-	    							startTimestamp = rs.getTimestamp("start_date");
-	    							endTimestamp = rs.getTimestamp("end_date");		    					
-	    						}
+		    				endTimestamp = null;
 
-	    						java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+		    				//If special access is set up, use those dates; otherwise,
+		    				//use module dates
+		    				if (accMap.size() > 0)
+		    				{
+		    					AccessDates ad = (AccessDates)accMap.get(moduleId);
+		    					if (ad == null)
+		    					{
+		    						startTimestamp = rs.getTimestamp("start_date");
+		    						endTimestamp = rs.getTimestamp("end_date");
+		    					}
+		    					else
+		    					{
+		    						startTimestamp = ad.getAccStartTimestamp();
+		    						endTimestamp = ad.getAccEndTimestamp();
+		    					}
+		    				}
+		    				else
+		    				{
+		    					startTimestamp = rs.getTimestamp("start_date");
+		    					endTimestamp = rs.getTimestamp("end_date");		    					
+		    				}
 
-	    						if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
-	    						{
-	    							vmBean.setVisibleFlag(true);
-	    						}
-	    						else
-	    						{
-	    							vmBean.setVisibleFlag(false);
-	    						}	
-	    					}
-	    			    			
-		 				    if (startTimestamp != null)
-		 				    {
-		 				    	vmBean.setStartDate(new java.util.Date(startTimestamp.getTime() + (startTimestamp.getNanos()/1000000)));
-		 				    }
-		 				   if (endTimestamp != null)
-		 				    {
-		 				    	vmBean.setEndDate(new java.util.Date(endTimestamp.getTime() + (endTimestamp.getNanos()/1000000)));
-		 				    }
-		 				   resList.add(vmBean);
+		    				java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+
+		    				this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
+		    				if ((this.accessAdvisor != null)&&(this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId())))
+		    				{
+		    					vmBean.setVisibleFlag(false);
+		    				}	
+		    				else
+		    				{
+		    					if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
+		    					{
+		    						vmBean.setVisibleFlag(true);
+		    					}
+		    					else
+		    					{
+		    						vmBean.setVisibleFlag(false);
+		    					}
+		    				}	
+
+		    				if (startTimestamp != null)
+		    				{
+		    					vmBean.setStartDate(new java.util.Date(startTimestamp.getTime() + (startTimestamp.getNanos()/1000000)));
+		    				}
+		    				if (endTimestamp != null)
+		    				{
+		    					vmBean.setEndDate(new java.util.Date(endTimestamp.getTime() + (endTimestamp.getNanos()/1000000)));
+		    				}
+		    				resList.add(vmBean);
 		    			}//end if ((prevModId == 0)||(moduleId != prevModId))
 		    			prevModId = moduleId;
 		    			prevSeqNo = seqNo;
