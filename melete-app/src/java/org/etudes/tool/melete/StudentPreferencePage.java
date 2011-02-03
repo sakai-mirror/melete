@@ -3,7 +3,7 @@
  * $URL$
  *
  ***************************************************************************************
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,6 +28,7 @@ import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.logging.Log;
@@ -52,9 +53,10 @@ public class StudentPreferencePage {
   private void getUserChoice()
   {
    		FacesContext context = FacesContext.getCurrentInstance();
-  		Map sessionMap = context.getExternalContext().getSessionMap();
-
-  		mup = (MeleteUserPreference) getAuthorPref().getUserChoice((String)sessionMap.get("userId"));
+   		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+    	
+  		mup = (MeleteUserPreference) getAuthorPref().getUserChoice(mPage.getCurrentUser().getId());
 
   		if (mup==null)
   		{
@@ -90,8 +92,9 @@ public void setUserView(String userView) {
 public String setUserChoice()
 {
 		FacesContext context = FacesContext.getCurrentInstance();
-		Map sessionMap = context.getExternalContext().getSessionMap();
-		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+    	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
         if (mup == null)
         {
         	mup = new MeleteUserPreference();
@@ -106,7 +109,7 @@ public String setUserChoice()
 			{
 				mup.setViewExpChoice(false);
 			}
-		mup.setUserId((String)sessionMap.get("userId"));
+		mup.setUserId(mPage.getCurrentUser().getId());
 		authorPref.insertUserChoice(mup);
 		}
 		catch(Exception e)

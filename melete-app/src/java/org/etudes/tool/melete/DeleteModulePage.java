@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -374,9 +374,10 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 	{
 		if (courseId == null)
 		{
-		FacesContext context = FacesContext.getCurrentInstance();
-	  	Map sessionMap = context.getExternalContext().getSessionMap();
-		courseId = (String)sessionMap.get("courseId");
+			FacesContext context = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+			courseId = mPage.getCurrentSiteId();
 		}
 		return courseId;
 	}
@@ -384,9 +385,10 @@ public class DeleteModulePage implements Serializable/*,ToolBean*/{
 	{
 		if (userId == null)
 		{
-		FacesContext context = FacesContext.getCurrentInstance();
-	  	Map sessionMap = context.getExternalContext().getSessionMap();
-		userId = (String)sessionMap.get("userId");
+			FacesContext context = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+			userId = mPage.getCurrentUser().getId();
 		}
 		return userId;
 	}

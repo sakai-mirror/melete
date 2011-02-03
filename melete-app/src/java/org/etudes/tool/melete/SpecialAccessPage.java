@@ -3,7 +3,7 @@
  * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/java/org/etudes/tool/melete/SpecialAccessPage.java $
  * $Id: SpecialAccessPage.java 56408 2008-12-19 21:16:52Z mallika@etudes.org $
  ***********************************************************************************
- * Copyright (c) 2010 Etudes, Inc.
+ * Copyright (c) 2010, 2011 Etudes, Inc.
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you
@@ -392,8 +392,10 @@ public class SpecialAccessPage implements Serializable
    public List<String> getUsersList()
 	{
 	   FacesContext context = FacesContext.getCurrentInstance();
-	    Map sessionMap = context.getExternalContext().getSessionMap();
-	    String courseId = (String)sessionMap.get("courseId");
+	   ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+   	   MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+   	   String courseId = mPage.getCurrentSiteId();
+   	
 		// get the ids
 		Set<String> ids = this.meleteSecurityService.getUsersIsAllowed(courseId);
 

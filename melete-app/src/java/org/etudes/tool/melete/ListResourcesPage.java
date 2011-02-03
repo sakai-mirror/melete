@@ -4,7 +4,7 @@
  * $Id: LicensePage.java 60573 2009-05-19 20:17:20Z mallika@etudes.org $
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -224,8 +224,10 @@ public class ListResourcesPage {
 		 	  public void selectedResourceDeleteAction(ActionEvent evt)
 				{
 					FacesContext ctx = FacesContext.getCurrentInstance();
-					Map sessionMap = ctx.getExternalContext().getSessionMap();
-					String courseId = (String)sessionMap.get("courseId");
+					ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+
+					String courseId = mPage.getCurrentSiteId();
 					UIViewRoot root = ctx.getViewRoot();
 			/*		UIData table = (UIData) root.findComponent("ServerViewForm:ResourceListingForm").findComponent("table");
 					DisplaySecResources selectedDr = (DisplaySecResources) table.getRowData();
@@ -239,7 +241,7 @@ public class ListResourcesPage {
 			    	UIParameter param1 = (UIParameter) cList.get(0);
 			    	UIParameter param2 = (UIParameter) cList.get(1);
 
-					ValueBinding binding =Util.getBinding("#{deleteResourcePage}");
+					binding =Util.getBinding("#{deleteResourcePage}");
 					DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
 					delResPage.resetValues();
 					delResPage.setFromPage(this.fromPage);

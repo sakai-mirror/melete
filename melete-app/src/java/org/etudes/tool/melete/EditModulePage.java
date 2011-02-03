@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -111,7 +111,9 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 	     FacesContext context = FacesContext.getCurrentInstance();
      	 ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
      	 Map sessionMap = context.getExternalContext().getSessionMap();
-
+     	 ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	 MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+     	 
 	    // rashmi added validations start
 //     	validation
       	module.setTitle(module.getTitle().trim());
@@ -158,7 +160,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 			mdbean.setDateFlag(false);
 			ArrayList mdbeanList = new ArrayList();
 			mdbeanList.add(mdbean);
-			moduleService.updateProperties(mdbeanList, (String)sessionMap.get("courseId"));
+			moduleService.updateProperties(mdbeanList, mPage.getCurrentSiteId());
 
 			// add module to session
 			sessionMap.put("currModule",module);
