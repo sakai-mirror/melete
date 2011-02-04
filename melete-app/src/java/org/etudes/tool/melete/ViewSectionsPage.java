@@ -939,7 +939,6 @@ public void setMeleteCHService(MeleteCHService meleteCHService) {
         
     		SectionTrackView stv = new SectionTrackView();
     		stv.setSectionId(this.sectionId);
-    		stv.setModuleId(this.moduleId);
     		stv.setUserId(mPage.getCurrentUser().getId());
     		stv.setViewDate(new java.util.Date());
     		getSectionService().insertSectionTrack(stv);

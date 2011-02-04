@@ -26,13 +26,11 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-  <class name="org.etudes.component.app.melete.SectionTrackView" table="melete_section_track_view">
-  <id name="trackId" column="TRACK_ID" type="int" unsaved-value="null">
-      <generator class="hilo"/>
-    </id> 
-     <property name="sectionId" column="SECTION_ID"  type="int"  not-null="true"/>
-     <property name="moduleId" column="MODULE_ID"  type="int"  not-null="true"/>
-     <property name="userId" column="USER_ID" type="string" length="99" />
+  <class name="org.etudes.component.app.melete.SectionTrackView" table="melete_section_track_view"> 
+     <composite-id>
+     <key-property name="sectionId" column="SECTION_ID"  type="int" />
+     <key-property name="userId" column="USER_ID" type="string" length="99" />
+     </composite-id>
      <property name="viewDate"  column="VIEW_DATE"  type="timestamp"  />
      <many-to-one name="section" class="org.etudes.component.app.melete.Section" insert="false" update="false" column="SECTION_ID" lazy="false"/>  				
   </class>

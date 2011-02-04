@@ -31,13 +31,8 @@ import org.etudes.api.app.melete.SectionTrackViewObjService;
 /** @author Hibernate CodeGenerator */
 public class SectionTrackView implements Serializable, SectionTrackViewObjService {
 
-	private int trackId;
-	
 	/** nullable persistent field */
     private int sectionId;
-    
-    /** nullable persistent field */
-    private int moduleId;
     
     private String userId;
 
@@ -53,21 +48,6 @@ public class SectionTrackView implements Serializable, SectionTrackViewObjServic
     	this.section = null;
     }
 	
-
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.SectionTrackViewObjService#getTrackId()
-	 */
-	public int getTrackId() {
-		return trackId;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.SectionTrackViewObjService#setTrackId(int)
-	 */
-	public void setTrackId(int trackId) {
-		this.trackId = trackId;
-	}
-
 	/* (non-Javadoc)
 	 * @see org.etudes.component.app.melete.SectionTrackViewObjService#getSectionId()
 	 */
@@ -82,14 +62,6 @@ public class SectionTrackView implements Serializable, SectionTrackViewObjServic
 	     this.sectionId = sectionId;
 	}
 	
-	public int getModuleId() {
-		return this.moduleId;
-	}
-
-	public void setModuleId(int moduleId) {
-		this.moduleId = moduleId;
-	}	
-	    
 	/* (non-Javadoc)
 	 * @see org.etudes.component.app.melete.SectionTrackViewObjService#getUserId()
 	 */

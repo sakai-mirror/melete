@@ -1195,10 +1195,11 @@ public class ModuleDB implements Serializable {
 				 secList.add((Integer)it.next());
 			 }
 			 ResultSet rs = null;
-		     String sql = "select sv.section_id,sv.view_date from melete_section_track_view sv where sv.module_id = ? and sv.user_id = ? order by view_date";
+			 
+		     String sql = "select sv.section_id,sv.view_date from melete_section_track_view sv,melete_section ms where sv.user_id = ? and sv.section_id = ms.section_id and ms.module_id = ? order by sv.view_date";
 		     PreparedStatement pstmt = dbConnection.prepareStatement(sql);
-		     pstmt.setInt(1,moduleId);
-		     pstmt.setString(2,userId);
+		     pstmt.setString(1,userId);
+		     pstmt.setInt(2,moduleId);
 		     rs = pstmt.executeQuery();
 		     List trackSecList = new ArrayList();
 		     if (rs != null)
@@ -1947,6 +1948,7 @@ public class ModuleDB implements Serializable {
 			String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in ";
 			String delSectionResourceStr = "delete SectionResource sr where sr.section in ";
 			String delBookmarksStr = "delete Bookmark bm where bm.sectionId in ";
+			String delSectionTrackStr = "delete SectionTrackView stv where stv.sectionId in ";
 			String delSectionStr = "delete Section s where s.moduleId in " + delModuleIds;
 			String delCourseModuleStr = "delete CourseModule cm where cm.moduleId in " + delModuleIds;
 			String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId in " + delModuleIds;
@@ -1963,6 +1965,8 @@ public class ModuleDB implements Serializable {
 					 logger.debug("section resource deleted" + deletedEntities);
 					 deletedEntities = session.createQuery(delBookmarksStr + allSectionIds.toString()).executeUpdate();
 					 logger.debug("Boomkarks deleted "+deletedEntities);
+					 deletedEntities = session.createQuery(delSectionTrackStr + allSectionIds.toString()).executeUpdate();
+					 logger.debug("Section track records deleted "+deletedEntities);
 				}
 			}
 
@@ -2895,6 +2899,8 @@ public class ModuleDB implements Serializable {
 
 				// save object
 				tx = session.beginTransaction();
+				String delSectionTrackStr = "delete SectionTrackView stv where stv.sectionId = ";
+				int deletedEntities = session.createQuery(delSectionTrackStr + section.getSectionId()).executeUpdate();
 				session.saveOrUpdate(section);
 				session.saveOrUpdate(prev_module);
 				session.saveOrUpdate(selectedModule);

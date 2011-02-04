@@ -23,23 +23,10 @@ import java.util.Date;
 
 public interface SectionTrackViewObjService {
 
-	/**
-	 * @return the trackId
-	 */
-	public abstract int getTrackId();
-
-	/**
-	 * @param trackId the trackId to set
-	 */
-	public abstract void setTrackId(int trackId);
-
 	public abstract int getSectionId();
 	
 	public abstract void setSectionId(int sectionId);
 	
-	public abstract int getModuleId();
-
-	public abstract void setModuleId(int moduleId);
 	/**
 	 * @return the userId
 	 */
