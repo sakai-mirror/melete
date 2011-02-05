@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -1055,20 +1055,18 @@ public class ModuleDB implements Serializable {
 
 		    				this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
 		    				if ((this.accessAdvisor != null)&&(this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId())))
-		    				{
-		    					vmBean.setVisibleFlag(false);
+		    				{		    		  					
+	    						vmBean.setBlockedBy(this.accessAdvisor.message("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId()));
 		    				}	
-		    				else
-		    				{
-		    					if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
-		    					{
-		    						vmBean.setVisibleFlag(true);
-		    					}
-		    					else
-		    					{
-		    						vmBean.setVisibleFlag(false);
-		    					}
-		    				}	
+		    				
+	    					if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
+	    					{
+	    						vmBean.setVisibleFlag(true);
+	    					}
+	    					else
+	    					{
+	    						vmBean.setVisibleFlag(false);
+	    					}		    					
 
 		    				if (startTimestamp != null)
 		    				{
