@@ -177,6 +177,6 @@ CREATE TABLE `melete_section_track_view` (
   `USER_ID` varchar(99) default NULL,
   `VIEW_DATE` datetime default NULL,
   PRIMARY KEY  (`SECTION_ID`,`USER_ID`),
-  CONSTRAINT `FK_MSTV_MS` FOREIGN KEY(`SECTION_ID`) REFERENCES `melete_section`(`SECTION_ID`),
+  CONSTRAINT `FK_MSTV_MS` FOREIGN KEY(`SECTION_ID`) REFERENCES `melete_section`(`SECTION_ID`)
 );
 
