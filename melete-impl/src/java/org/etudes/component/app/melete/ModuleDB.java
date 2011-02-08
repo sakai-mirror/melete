@@ -989,7 +989,7 @@ public class ModuleDB implements Serializable {
 		   				   }
 		    			  else
 		    			  {
-		    				  if (fromCourseMap && vmBean != null) vmBean.setReadDate(new java.util.Date());
+		    				  if (fromCourseMap && vmBean != null) vmBean.setReadDate(null);
 		    			  }
 		    			   vsBeanMap = null;
 		    			 }//End if ((prevModId != 0)&&(moduleId != prevModId))
@@ -1106,7 +1106,7 @@ public class ModuleDB implements Serializable {
 	   				   }
 		    		 else
 	    			  {
-	    				  if (fromCourseMap && vmBean != null) vmBean.setReadDate(new java.util.Date());
+	    				  if (fromCourseMap && vmBean != null) vmBean.setReadDate(null);
 	    			  }
 		    		accRs.close();
 		    		accPstmt.close();
