@@ -1057,16 +1057,19 @@ public class ModuleDB implements Serializable {
 		    				if ((this.accessAdvisor != null)&&(this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId())))
 		    				{		    		  					
 	    						vmBean.setBlockedBy(this.accessAdvisor.message("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId()));
-		    				}	
-		    				
-	    					if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
-	    					{
-	    						vmBean.setVisibleFlag(true);
-	    					}
-	    					else
-	    					{
 	    						vmBean.setVisibleFlag(false);
-	    					}		    					
+		    				}	
+		    				else
+		    				{	
+		    					if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
+		    					{
+		    						vmBean.setVisibleFlag(true);
+		    					}
+		    					else
+		    					{
+		    						vmBean.setVisibleFlag(false);
+		    					}
+		    				}
 
 		    				if (startTimestamp != null)
 		    				{
@@ -1176,6 +1179,7 @@ public class ModuleDB implements Serializable {
      private Date getReadDate(int moduleId, Map sectionMap, String userId, Connection dbConnection) throws SQLException
      {
     	 Date viewDate = null;
+    	 java.sql.Timestamp viewTimestamp = null;
     	 if (sectionMap == null || sectionMap.size() == 0) 
     	 {
     		 return new java.util.Date();
@@ -1200,6 +1204,7 @@ public class ModuleDB implements Serializable {
 		     pstmt.setInt(2,moduleId);
 		     rs = pstmt.executeQuery();
 		     List trackSecList = new ArrayList();
+		     
 		     if (rs != null)
 		     {
 			   	int sectionId;
@@ -1207,7 +1212,7 @@ public class ModuleDB implements Serializable {
 		    	{
 		    	  sectionId = rs.getInt("section_id");
 		    	  trackSecList.add(new Integer(sectionId));
-		    	  viewDate = rs.getDate("view_date");
+		    	  viewTimestamp = rs.getTimestamp("view_date");
 		    	}
 		     }
 			 rs.close();
@@ -1217,7 +1222,8 @@ public class ModuleDB implements Serializable {
 			 {
 				 viewDate = null;
 			 }					 
-		 }	 
+		 }	
+		 if (viewTimestamp != null) viewDate = new java.util.Date(viewTimestamp.getTime() + (viewTimestamp.getNanos()/1000000));
 		 return viewDate;
      }
 

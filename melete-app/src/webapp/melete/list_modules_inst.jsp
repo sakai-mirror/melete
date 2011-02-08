@@ -76,9 +76,9 @@
        <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}" immediate="true">
           <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
               <h:outputText id="title"
-                           value="#{vmbean.title}" rendered="#{vmbean.visibleFlag == true && vmbean.blockedBy == null}"/>
+                           value="#{vmbean.title}" rendered="#{vmbean.visibleFlag == true}"/>
               <h:outputText id="title2"
-                           value="#{vmbean.title}" styleClass="italics" rendered="#{vmbean.visibleFlag == false || vmbean.blockedBy != null}" />             
+                           value="#{vmbean.title}" styleClass="italics" rendered="#{vmbean.visibleFlag == false}" />             
                     
        </h:commandLink>
                 
@@ -91,15 +91,15 @@
            <h:commandLink id="viewSectionEditor"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{vsbean.contentType == listModulesPage.typeLink}" immediate="true">
                   <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
                <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
-               <h:outputText id="sectitleEditor" value="#{vsbean.title}" rendered="#{vmbean.visibleFlag == true && vmbean.blockedBy == null}" />
-               <h:outputText id="sectitleEditor2" value="#{vsbean.title}" styleClass="italics" rendered="#{vmbean.visibleFlag == false || vmbean.blockedBy != null}" />
+               <h:outputText id="sectitleEditor" value="#{vsbean.title}" rendered="#{vmbean.visibleFlag == true}" />
+               <h:outputText id="sectitleEditor2" value="#{vsbean.title}" styleClass="italics" rendered="#{vmbean.visibleFlag == false}" />
              </h:commandLink>
                        
            <h:commandLink id="viewSectionLink"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}" rendered="#{vsbean.contentType != listModulesPage.typeLink}" immediate="true">
                   <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
                <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
-               <h:outputText id="sectitleLink" value="#{vsbean.title}" rendered="#{vmbean.visibleFlag == true && vmbean.blockedBy == null}" />
-               <h:outputText id="sectitleLink2" value="#{vsbean.title}" styleClass="italics" rendered="#{vmbean.visibleFlag == false || vmbean.blockedBy != null}"/>
+               <h:outputText id="sectitleLink" value="#{vsbean.title}" rendered="#{vmbean.visibleFlag == true}" />
+               <h:outputText id="sectitleLink2" value="#{vsbean.title}" styleClass="italics" rendered="#{vmbean.visibleFlag == false}"/>
              </h:commandLink>   
            
             </h:column>
@@ -111,8 +111,8 @@
 		          <h:graphicImage id="bul_gif1" value="/images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}" style="border:0"/>
 		          
 		          <h:commandLink id="whatsNext" action="#{listModulesPage.goWhatsNext}" immediate="true">
-				    <h:outputText  id="whatsNextMsg" value="#{msgs.list_modules_stud_next_steps}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag && vmbean.blockedBy == null}"/>
-				    <h:outputText  id="whatsNextMsg2" value="#{msgs.list_modules_stud_next_steps}" styleClass="italics" rendered="#{vmbean.visibleFlag == false || vmbean.blockedBy != null}"/>
+				    <h:outputText  id="whatsNextMsg" value="#{msgs.list_modules_stud_next_steps}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}"/>
+				    <h:outputText  id="whatsNextMsg2" value="#{msgs.list_modules_stud_next_steps}" styleClass="italics" rendered="#{vmbean.visibleFlag == false}"/>
 				    <f:param name="modidx2" value="#{listModulesPage.modTable.rowIndex}" />
 				    <f:param name="modseqno" value="#{vmbean.seqNo}" />
 		          </h:commandLink>  
@@ -139,7 +139,7 @@
            <f:facet name="header">
                <h:outputText value="&nbsp;" escape="false"/>
              </f:facet>
-               <h:graphicImage id="closed_gif" value="/images/view_closed.png" alt="#{msgs.list_modules_inst_closed}" title="#{msgs.list_modules_inst_closed}" rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag}" styleClass="ExpClass"/>
+               <h:graphicImage id="closed_gif" value="/images/view_closed.png" alt="#{msgs.list_modules_inst_closed}" title="#{msgs.list_modules_inst_closed}" rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag && vmbean.blockedBy == null}" styleClass="ExpClass"/>
            </h:column>
            <h:column>
              <f:facet name="header">
@@ -149,11 +149,11 @@
                            value="-"    rendered="#{((vmbean.startDate == listModulesPage.nullDate))}">
             </h:outputText>
                   <h:outputText id="startDate" 
-                           value="#{vmbean.startDate}"    rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag && vmbean.blockedBy == null}">
+                           value="#{vmbean.startDate}"    rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}">
               <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>
             <h:outputText id="startDate2" styleClass="italics" 
-                           value="#{vmbean.startDate}"     rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag || vmbean.blockedBy != null}">      
+                           value="#{vmbean.startDate}"     rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag}">      
               <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>            
            </h:column>
@@ -167,12 +167,12 @@
             </h:outputText>
               <h:outputText id="endDate"
                            value="#{vmbean.endDate}"
-                              rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag && vmbean.blockedBy == null}">
+                              rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}">
                <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>
             <h:outputText id="endDate2" styleClass="italics" 
                            value="#{vmbean.endDate}"
-                             rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag || vmbean.blockedBy != null}">      
+                             rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag}">      
                <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>            
    	 </h:column>   
@@ -180,7 +180,7 @@
       		<f:facet name="header">
                <h:outputText value="&nbsp;" escape="false"/>
              </f:facet>
-         <h:outputLink id="printModuleLink" value="list_modules_inst" onclick="OpenPrintWindow(#{listModulesPage.printModuleId},'Melete Print Window');" rendered="#{listModulesPage.printable && vmbean.visibleFlag && vmbean.blockedBy == null}">
+         <h:outputLink id="printModuleLink" value="list_modules_inst" onclick="OpenPrintWindow(#{listModulesPage.printModuleId},'Melete Print Window');" rendered="#{listModulesPage.printable && vmbean.visibleFlag}">
 	  	    	<h:graphicImage id="printImgLink" value="/images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 	 	 </h:outputLink>
 	    
