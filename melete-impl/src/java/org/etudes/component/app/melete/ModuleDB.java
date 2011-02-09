@@ -1221,6 +1221,7 @@ public class ModuleDB implements Serializable {
 			 if (secList.size() != 0) 
 			 {
 				 viewDate = null;
+				 return viewDate;
 			 }					 
 		 }	
 		 if (viewTimestamp != null) viewDate = new java.util.Date(viewTimestamp.getTime() + (viewTimestamp.getNanos()/1000000));
