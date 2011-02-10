@@ -40,6 +40,7 @@
 <table   class="maintableCollapseWithNoBorder">
 <tr>
 <td colspan="2" align="center">
+<h:inputHidden id="trackSection" value="#{viewSectionsPage.sectionTrack}" />
 <f:subview id="topmod">
  	<jsp:include page="view_navigate.jsp"/>
 </f:subview>
@@ -118,7 +119,7 @@
               rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />	
 </h:column>
 </h:panelGrid>
-<h:inputHidden id="trackSection" value="#{viewSectionsPage.sectionTrack}" />
+
 </td>
 
 </tr>    

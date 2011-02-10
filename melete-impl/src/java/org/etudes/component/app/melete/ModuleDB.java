@@ -290,11 +290,11 @@ public class ModuleDB implements Serializable {
 				//First get all sequence numbers after this one from course module table
 				if (prevFlag)
 				{
-					sql = "select cm.seq_no from melete_course_module cm,melete_module_shdates msh where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) order by cm.seq_no desc";
+					sql = "select cm.seq_no, cm.module_id from melete_course_module cm,melete_module_shdates msh where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) order by cm.seq_no desc";
 				}
 				else
 				{
-					sql = "select cm.seq_no from melete_course_module cm,melete_module_shdates msh where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) order by cm.seq_no";
+					sql = "select cm.seq_no, cm.module_id from melete_course_module cm,melete_module_shdates msh where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) order by cm.seq_no";
 				}
 				PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 		        pstmt.setString(1,courseId);
@@ -305,10 +305,20 @@ public class ModuleDB implements Serializable {
                 rs = pstmt.executeQuery();
                 if (rs != null)
                 {
+                	this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
                 	//Add them to resList
                 	while (rs.next())
                 	{
-                		resList.add(rs.getInt("seq_no"));
+                		int moduleId = rs.getInt("module_id");
+                		//Check to see if module is blocked via coursemap, only add to resList otherwise
+                		if ((this.accessAdvisor != null)&&(this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), userId)))
+                		{
+                			continue;
+                		}
+                		else
+                		{	
+                			resList.add(rs.getInt("seq_no"));
+                		}
                 	}
                 } 	
                	//Get all access entries for user	
