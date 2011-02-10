@@ -125,16 +125,27 @@
            <f:facet name="header">
                <h:outputText value="&nbsp;" escape="false"/>
              </f:facet>
-               <h:panelGrid columns="1">   
+            <h:panelGrid columns="1" style="z-index:0;" rendered="#{vmbean.blockedBy != null}">   
                	<h:column>     	  
                		<h:graphicImage id="pre-req" value="/images/lock.png" alt="#{msgs.list_modules_locked}" title="#{msgs.list_modules_locked}" rendered="#{vmbean.blockedBy != null}" styleClass="ExpClass"/>
              	</h:column>
-        	    <h:column>
-				  	<h:outputLink id="prereqLink" value="list_modules_student" onclick="OpenPreReqWindow('#{vmbean.blockedBy}','Melete Prerequisite Window');" rendered="#{vmbean.blockedBy != null}">
-	  	    			<h:outputText value="#{msgs.list_modules_prereq}" styleClass="style3"/>
-	 	 			</h:outputLink>
-	 	 		</h:column>
-	 	 	   </h:panelGrid>   
+             	<h:column>
+             		<h:commandLink id="showHidePrereqs" action="#{listModulesPage.showHidePrerequisite}" immediate="true">
+       					<h:outputText value="#{msgs.list_modules_prereq}" styleClass="style3"/>         
+       				</h:commandLink> 
+       				<h:panelGrid id="preReqMsg" columns="1" border="1" rules="cols" bgcolor="#FFFFCC" cellpadding="5" width="240px" styleClass="prereqAlert" rendered="#{vmbean.blockedBy != null && listModulesPage.showPrerequisiteFlag == true && listModulesPage.showPrereqModuleId == vmbean.moduleId}" >   
+		               	<h:column>     	  
+		               		<h:outputText value="#{msgs.prerequisite_msg}" />
+		             	</h:column>
+		             	<h:column>
+		             		  <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" /><h:outputText value="#{vmbean.blockedBy}" />
+		        	   </h:column> 	
+		        	   <h:column>
+		             		  <h:commandButton value="#{msgs.prerequisite_ok_msg}" action="#{listModulesPage.hidePrerequisite}" immediate="true" styleClass="BottomImgFinish"/>
+		        	   </h:column>
+ 	 	  			 </h:panelGrid>   
+        	   </h:column> 	
+ 	 	   </h:panelGrid>   
            </h:column>
            <h:column>
            <f:facet name="header">

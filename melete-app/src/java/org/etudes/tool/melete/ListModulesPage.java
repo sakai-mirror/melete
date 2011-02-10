@@ -68,7 +68,8 @@ public class ListModulesPage implements Serializable{
 	  private List viewModuleBeans = null;
 	  /** identifier field */
       private int showModuleId;
-
+      private int showPrereqModuleId;
+      
       private String formName;
       private String typeEditor;
       private String typeLink;
@@ -77,7 +78,8 @@ public class ListModulesPage implements Serializable{
       private boolean expandAllFlag;
       private boolean closedModulesFlag;
       private boolean trueFlag = true;
-
+      private boolean showPrerequisiteFlag;
+      
       private ModuleService moduleService;
       private BookmarkService bookmarkService;
 
@@ -165,6 +167,8 @@ public class ListModulesPage implements Serializable{
 	
 	  	setShowModuleId(-1);
 	  	setBookmarkSectionId(-1);
+	  	setShowPrereqModuleId(-1);
+	  	showPrerequisiteFlag = false;
 	  }
 
       /**
@@ -373,8 +377,39 @@ public class ListModulesPage implements Serializable{
 			}
 			return listViewAction();
 		}
+	  
+	  public String showHidePrerequisite()
+	  {
+		  ViewModBean vmbean = null;
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			UIViewRoot root = ctx.getViewRoot();
+		    UIData table = null;
+		    if (isUserAuthor()){
+		       table = (UIData)
+		        root.findComponent("listmodulesform").findComponent("StudentTable");
+		    }
+		    if (isUserStudent()){
+		        table = (UIData)
+	            root.findComponent("listmodulesStudentform").findComponent("table");
+		     }
+	        vmbean = (ViewModBean) table.getRowData();
+	        if (getShowPrereqModuleId() != vmbean.getModuleId())
+			{
+	        	setShowPrereqModuleId(vmbean.getModuleId());
+	        	showPrerequisiteFlag = true;
+			}
+			
+		  return listViewAction();
+	  }	
 
 
+	  public String hidePrerequisite()
+	  {
+		  showPrerequisiteFlag = false;
+		  setShowPrereqModuleId(-1);
+		  return listViewAction();
+	  }
+	  
       public String redirectToViewModule()
 	  {
     	String retVal = "view_module";
@@ -704,6 +739,22 @@ public class ListModulesPage implements Serializable{
 		this.autonumberMaterial = autonumberMaterial;
 	}
 	
+	public boolean isShowPrerequisiteFlag() {
+		return showPrerequisiteFlag;
+	}
+
+	public void setShowPrerequisiteFlag(boolean showPrerequisiteFlag) {
+		this.showPrerequisiteFlag = showPrerequisiteFlag;
+	}
+
+	public int getShowPrereqModuleId() {
+		return showPrereqModuleId;
+	}
+
+	public void setShowPrereqModuleId(int showPrereqModuleId) {
+		this.showPrereqModuleId = showPrereqModuleId;
+	}
+
 	public String listViewAction()
 	{
 		if (isUserAuthor()) return "list_modules_inst";

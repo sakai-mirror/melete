@@ -27,22 +27,3 @@ if (window.focus) { newWindow.focus(); } ; // force the window to the front if t
 return newWindow;
 
 }
-
-//Function that opens print window
-function OpenPreReqWindow(blockStr, windowName)
-{
-	 var _info = navigator.userAgent;
-	 var width=350;
-	 var height = 120;
-	  var left   = (screen.width  - width)/2;
- 	var top    = (screen.height - height)/2;
-	 
-  var _ie = (_info.indexOf("MSIE") > 0 && _info.indexOf("Win") > 0 && _info.indexOf("Windows 3.1") < 0);
-	var windowDefaults1 = "status=no, menubar=no, directories=no,location=no, scrollbars=no, resizeable=no, width=350, height=120, left="+left+", top=" + top +", modal=yes";
-	var newWindow1;
-	if(!_ie) newWindow1 = window.open('list_prerequisite.jsf?blockMsg='+blockStr,windowName,windowDefaults1);
-	else newWindow1 = window.open('list_prerequisite.jsf?blockMsg='+blockStr,null,windowDefaults1);
-if (window.focus) { newWindow1.focus(); } ; // force the window to the front if the browser supports it
-return newWindow1;
-}
-
