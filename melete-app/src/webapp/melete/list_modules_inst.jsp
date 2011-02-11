@@ -150,7 +150,7 @@
            <f:facet name="header">
                <h:outputText value="&nbsp;" escape="false"/>
              </f:facet>
-               <h:graphicImage id="closed_gif" value="/images/view_closed.png" alt="#{msgs.list_modules_inst_closed}" title="#{msgs.list_modules_inst_closed}" rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag && vmbean.blockedBy == null}" styleClass="ExpClass"/>
+               <h:graphicImage id="closed_gif" value="/images/view_closed.gif" alt="#{msgs.list_modules_inst_closed}" title="#{msgs.list_modules_inst_closed}" rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag && vmbean.blockedBy == null}" styleClass="ExpClass"/>
            </h:column>
            <h:column>
              <f:facet name="header">
