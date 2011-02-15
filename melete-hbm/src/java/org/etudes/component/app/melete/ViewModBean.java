@@ -68,6 +68,10 @@ public class ViewModBean implements Serializable, ViewModBeanService {
     private String nextStepsNumber;
     
     private String blockedBy;
+    
+    protected boolean closedBeforeFlag;
+    
+    protected boolean openLaterFlag; 
     /**
 	 * {@inheritDoc}
 	 */
@@ -337,5 +341,32 @@ public class ViewModBean implements Serializable, ViewModBeanService {
 	public void setBlockedBy(String blockedBy) {
 		this.blockedBy = blockedBy;
 	}
+	
+	 public boolean isClosedBeforeFlag()
+	 {
+		 if (visibleFlag == false && blockedBy == null)
+		 {
+			 Date currentDate = new java.util.Date();
+			 if ((getEndDate() != null)&&(getEndDate().before(currentDate)))
+			 {
+				 return true;
+			 }
+		 }
+		 return false;
+	 }
+	 
+	 public boolean isOpenLaterFlag()
+	 {
+		 if (visibleFlag == false && blockedBy == null)
+		 {
+			 Date currentDate = new java.util.Date();
+			 if ((getStartDate() != null)&&(getStartDate().after(currentDate)))
+			 {
+				 return true;
+			 }
+		 }
+		 return false;
+	 }
+	 
 
 }

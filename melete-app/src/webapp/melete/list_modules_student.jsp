@@ -57,7 +57,7 @@
  <h:dataTable id="table" 
                   value="#{listModulesPage.modDataModel}"
                   var="vmbean"   rowClasses="row1,row2"  rendered="#{listModulesPage.nomodsFlag != null && !listModulesPage.nomodsFlag}" 
-              columnClasses="StudentListTitleClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
+              columnClasses="StudentListTitleClass,ListClosedClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
                    border="0" cellpadding="3" cellspacing="0" width="100%" 
                    binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_stud_summary}">
       <h:column>   
@@ -146,6 +146,10 @@
  	 	  			 </h:panelGrid>   
         	   </h:column> 	
  	 	   </h:panelGrid>   
+           <h:graphicImage id="closed_gif" value="/images/view_closed.gif" alt="#{msgs.list_modules_stud_closed}" title="#{msgs.list_modules_stud_closed}" rendered="#{vmbean.closedBeforeFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
+           <h:graphicImage id="cal_gif" value="/images/cal.gif" alt="#{msgs.list_modules_stud_notyetopen}" title="#{msgs.list_modules_stud_notyetopen}" rendered="#{vmbean.openLaterFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
+           <h:outputText id="brval" value="<BR>" escape="false" rendered="#{vmbean.openLaterFlag == listModulesPage.trueFlag}"/>
+           <h:outputText value="#{msgs.notyetopen_msg}" rendered="#{vmbean.openLaterFlag == listModulesPage.trueFlag}" styleClass="style3"/> 	   
            </h:column>
            <h:column>
            <f:facet name="header">

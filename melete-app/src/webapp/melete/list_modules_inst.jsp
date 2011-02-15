@@ -56,7 +56,7 @@
  <h:outputText id="nomodstext" value="#{msgs.no_modules}" rendered="#{listModulesPage.nomodsFlag == null || listModulesPage.nomodsFlag}" style="text-align:left"/>
  <h:dataTable id="StudentTable"  
                   value="#{listModulesPage.viewModuleBeans}" rendered="#{listModulesPage.nomodsFlag != null && !listModulesPage.nomodsFlag}" 
-                  var="vmbean"  rowClasses="row1,row2" columnClasses="StudentListTitleClass,ListClosedClass,ListClosedClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
+                  var="vmbean"  rowClasses="row1,row2" columnClasses="StudentListTitleClass,ListClosedClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
                   border="0" cellpadding="3" cellspacing="0" width="100%" styleClass="valignStyle9" binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_inst_summary}">
         <h:column>      
         <f:facet name="header">
@@ -145,12 +145,10 @@
 	 	 	  			 </h:panelGrid>   
 	        	   </h:column> 	
 	 	 	   </h:panelGrid> 	 	 	 
-           </h:column>
-           <h:column>
-           <f:facet name="header">
-               <h:outputText value="&nbsp;" escape="false"/>
-             </f:facet>
-               <h:graphicImage id="closed_gif" value="/images/view_closed.gif" alt="#{msgs.list_modules_inst_closed}" title="#{msgs.list_modules_inst_closed}" rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag && vmbean.blockedBy == null}" styleClass="ExpClass"/>
+               <h:graphicImage id="closed_gif" value="/images/view_closed.gif" alt="#{msgs.list_modules_inst_closed}" title="#{msgs.list_modules_inst_closed}" rendered="#{vmbean.closedBeforeFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
+               <h:graphicImage id="cal_gif" value="/images/cal.gif" alt="#{msgs.list_modules_inst_notyetopen}" title="#{msgs.list_modules_inst_notyetopen}" rendered="#{vmbean.openLaterFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
+               <h:outputText id="brval" value="<BR>" escape="false" rendered="#{vmbean.openLaterFlag == listModulesPage.trueFlag}"/>
+               <h:outputText value="#{msgs.notyetopen_msg}" rendered="#{vmbean.openLaterFlag == listModulesPage.trueFlag}" styleClass="style3"/>
            </h:column>
            <h:column>
              <f:facet name="header">

@@ -1027,7 +1027,7 @@ public class ModuleDB implements Serializable {
 		    				vmBean.setTitle(rs.getString("modTitle"));
 		    				vmBean.setWhatsNext(rs.getString("whats_next"));
 		    				vmBean.setSeqXml(seqXml);
-		    				
+
 		    				// what's next display seq number is number of top level sections + 1
 		    				SubSectionUtilImpl ssuImpl1 = new SubSectionUtilImpl();
 		    				int top = ssuImpl1.noOfTopLevelSections(seqXml);
@@ -1062,24 +1062,24 @@ public class ModuleDB implements Serializable {
 		    				}
 
 		    				java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
-
-		    				this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
-		    				if ((this.accessAdvisor != null)&&(this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId())))
-		    				{		    		  					
-	    						vmBean.setBlockedBy(this.accessAdvisor.message("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId()));
-	    						vmBean.setVisibleFlag(false);
-		    				}	
-		    				else
-		    				{	
-		    					if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
-		    					{
+		    				if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
+		    				{
+		    					this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
+		    					if ((this.accessAdvisor != null)&&(this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId())))
+		    					{		    		  					
+		    						vmBean.setBlockedBy(this.accessAdvisor.message("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId()));
+		    						vmBean.setVisibleFlag(false);
+		    					}	
+		    					else
+		    					{	
 		    						vmBean.setVisibleFlag(true);
 		    					}
-		    					else
-		    					{
-		    						vmBean.setVisibleFlag(false);
-		    					}
 		    				}
+		    				else
+		    				{
+		    					vmBean.setVisibleFlag(false);
+		    				}
+		    				
 
 		    				if (startTimestamp != null)
 		    				{
