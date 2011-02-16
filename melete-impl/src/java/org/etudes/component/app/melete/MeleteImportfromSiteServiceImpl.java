@@ -459,7 +459,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		if (fromModuleList == null || fromModuleList.size() <= 0) return;
 
 		// Get TO SITE modules 
-		Set toSiteModules = null;
+		Set<ImportModule> toSiteModules = new LinkedHashSet<ImportModule>();
 		List<Module> toModuleList = moduleDB.getActivenArchiveModules(toContext);
 		if (toModuleList != null && toModuleList.size() > 0)
 		{
@@ -574,7 +574,8 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 
 				}
 			}
-			toSiteModules.add(new ImportModule(toMod));
+			if(toSiteModules != null && toMod != null)
+				toSiteModules.add(new ImportModule(toMod));
 		}
 	}
 
