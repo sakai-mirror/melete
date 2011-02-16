@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009,2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009,2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,7 +28,7 @@
 
 <sakai:tool_bar>
   <h:graphicImage url="/images/preview.png" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
-  <sakai:tool_bar_item disabled="#{!navPage.shouldRenderView}" immediate="true" value="#{msgs.topnavbar_view}" action="#{navPage.viewAction}"/>	 
+  <sakai:tool_bar_item disabled="#{!navPage.shouldRenderView}" value="#{msgs.topnavbar_view}" action="#{navPage.viewAction}"/>	 
   <h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
   
   <h:graphicImage url="/images/pen_red.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass" rendered="#{navPage.isInstructor}" />
@@ -36,11 +36,11 @@
   <h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
   
   <h:graphicImage url="/images/folder_document.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass" rendered="#{navPage.isInstructor}"/>
-  <sakai:tool_bar_item disabled="#{!navPage.shouldRenderManage}" immediate="true" value="#{msgs.topnavbar_manage}" action="#{navPage.manageAction}" rendered="#{navPage.isInstructor}" />
+  <sakai:tool_bar_item disabled="#{!navPage.shouldRenderManage}" value="#{msgs.topnavbar_manage}" action="#{navPage.manageAction}" rendered="#{navPage.isInstructor}" />
   <h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
   
   <h:graphicImage url="/images/user1_preferences.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
-  <sakai:tool_bar_item disabled="#{!navPage.shouldRenderPreferences}" immediate="true" value="#{msgs.topnavbar_preferences}" action="#{navPage.PreferenceAction}"/>
+  <sakai:tool_bar_item disabled="#{!navPage.shouldRenderPreferences}"  value="#{msgs.topnavbar_preferences}" action="#{navPage.PreferenceAction}"/>
    
 </sakai:tool_bar>
 <!-- End code to display images horizontally. -->

@@ -152,4 +152,14 @@ public class AddModulePage extends ModulePage implements Serializable{
         
        return "editmodulesections";
     }
+    
+    /*
+     * For top mode bar clicks, auto save add module
+     * Returns # if save is success else stay on same page to correct error
+     */
+    public String autoSave()
+    {
+    	if(save().equals("confirm_addmodule")) return "#";
+    	return "add_module";
+    }
  }

@@ -507,6 +507,21 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		return "editmodulesections";
 	}
+	
+	/*
+     * For top mode bar clicks, auto save section
+     * Returns # if save is success else stay on same page to correct error
+     */
+	public String autoSave()
+	{
+		setSuccess(false);
+		if (!saveHere().equals("failure"))
+		{
+			setSuccess(true);
+			return "#";
+		}
+		return "editmodulesections";
+	}
 
 	/**
 	 * save the section, if not saved yet and then refresh the page to add more sections. Revision on 11/15: - add code to initiate breadcrumps in add

@@ -211,6 +211,21 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 		return "edit_module";
 	}
 
+	/*
+     * For top mode bar clicks, auto save edit module
+     * Returns # if save is success else stay on same page to correct error
+     */
+	public String autoSave()
+	{
+		callFromAddContent = false;
+		if(!savehere().equals("failure"))
+		{   		
+		    setSuccess(true);
+		    return "#";
+		}
+		return "edit_module";	
+	}
+	
     /*
      * Revision by rashmi on 12/20
      * in sbcPage settings ..change from getModule() to module
@@ -284,6 +299,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
     	setModuleDateBean(mdbean);
     	setModule(mdbean.getModule());
     	setModuleShdates(mdbean.getModuleShdate());
+  
     	if((mdbean.getSectionBeans() == null)||(mdbean.getSectionBeans().isEmpty()))
     	{
     		setFirstSection(null);

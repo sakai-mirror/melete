@@ -197,6 +197,20 @@ public class MeleteJsfTool extends HttpServlet
 			}
 		}
 
+		//Add variable to autosave module and section changes
+		if (target.startsWith("/edit_module"))
+		{
+			ThreadLocalManager.set("MELETE_SAVE_FROM" , "editModule");
+		}
+		else if (target.startsWith("/add_module"))
+		{
+			ThreadLocalManager.set("MELETE_SAVE_FROM" , "addModule");
+		}
+		else if (target.startsWith("/editmodulesections"))
+		{
+			ThreadLocalManager.set("MELETE_SAVE_FROM" , "Section");
+		}
+	  	
 		// add the configured folder root and extension (if missing)		
 		target = m_path + target;
 		
