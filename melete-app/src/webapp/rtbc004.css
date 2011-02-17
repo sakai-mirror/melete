@@ -430,6 +430,7 @@ vertical-align:top;
 
 .prereqAlert {
 	position:absolute;
+	top:50px;
 	border-left:medium double black;
 	border-right:medium double black;
 	border-bottom:medium double black;

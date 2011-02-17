@@ -132,7 +132,7 @@
 	             		<h:commandLink id="showHidePrereqs" action="#{listModulesPage.showHidePrerequisite}" immediate="true">
 	       					<h:outputText value="#{msgs.list_modules_prereq}" styleClass="style3"/>         
 	       				</h:commandLink> 
-	       				<h:panelGrid id="preReqMsg" columns="1" border="1" rules="cols" bgcolor="#FFFFCC" cellpadding="5" width="240px" styleClass="prereqAlert" rendered="#{vmbean.blockedBy != null && listModulesPage.showPrerequisiteFlag == true && listModulesPage.showPrereqModuleId == vmbean.moduleId}" >   
+	       				<h:panelGrid id="preReqMsg" columns="1" border="1" rules="cols" bgcolor="#FFFFCC" cellpadding="5" width="300px" styleClass="prereqAlert" rendered="#{vmbean.blockedBy != null && listModulesPage.showPrerequisiteFlag == true && listModulesPage.showPrereqModuleId == vmbean.moduleId}" >   
 			               	<h:column>     	  
 			               		<h:outputText value="#{msgs.prerequisite_msg}" />
 			             	</h:column>
