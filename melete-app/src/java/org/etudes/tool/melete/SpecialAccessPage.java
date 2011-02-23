@@ -40,9 +40,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Collections;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Date;
 import java.io.*;
@@ -196,6 +198,12 @@ public class SpecialAccessPage implements Serializable
 	  if (specialAccessService == null)
 	    specialAccessService = getSpecialAccessService();
 
+	  Date st = this.specialAccess.getStartDate();
+      Date end = this.specialAccess.getEndDate();
+
+      boolean dateResult = validateDates(context, bundle, st, end);
+       if (dateResult == false) return "failure";
+       
 	    try
 	    {
 	      specialAccessService.insertSpecialAccess(this.saList, this.specialAccess, this.module);
@@ -210,6 +218,54 @@ public class SpecialAccessPage implements Serializable
 
 	}
 
+	private boolean validateDates(FacesContext context, ResourceLoader bundle, Date st, Date end)
+	{
+		Calendar calstart = new GregorianCalendar();
+		Calendar calend = new GregorianCalendar();
+
+		boolean errorFlag = false;
+		if ((st != null) || (end!= null))
+		{
+			if (st != null)
+			{
+				calstart.setTime(st);
+				if (calstart.get(Calendar.YEAR) > 9999)
+				{
+					String errMsg = bundle.getString("year_toobig_error");
+					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
+					errorFlag = true;
+				}
+			}
+			if (end != null)
+			{
+				calend.setTime(end);
+				if (calend.get(Calendar.YEAR) > 9999)
+				{
+					String errMsg = bundle.getString("year_toobig_error");
+					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
+					errorFlag = true;
+				}
+			}
+
+			//      validation no 4 b
+			if ((end != null)&&(st != null))
+			{
+				if(end.compareTo(st) <= 0)
+				{
+					String errMsg = "";
+					errMsg = bundle.getString("end_date_before_start");
+					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
+					errorFlag = true;
+				}
+			}
+		}
+		//If there is an error, validation fails and the method returns false
+		//If there are no errors, validation passes and the method returns true;
+		if (errorFlag == true) return false;
+		return true;
+	}
+	
+	
      public String addAccessAction()
      {
     	 this.specialAccess = null;
