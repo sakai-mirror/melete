@@ -37,6 +37,9 @@
 	    <property name="users" column="USERS" type="string" not-null="true" length="2147483647"/>
 	   <property name="startDate"  column="START_DATE"  type="timestamp"  />			
 	    <property name="endDate"  column="END_DATE"  type="timestamp"  />	
+	     <property name="overrideStart" column="OVERRIDE_START" type="boolean"/>
+         <property name="overrideEnd" column="OVERRIDE_END" type="boolean"/>
+	    
   </class>
  </hibernate-mapping>
 	 
