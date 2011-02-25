@@ -57,7 +57,7 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 		//If the module has no other accesses, no checking is needed
 	    if ((saList == null)||saList.size() == 0)
 	    {
-		setSpecialAccess(sa);
+		setSpecialAccess(sa, mod);
 	    }
 	    else
 	    {
@@ -89,7 +89,7 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 					  if (userIds.length > 0)
 					  {
 						  saObj.setUsers(SqlHelper.encodeStringArray(userIds));
-						  setSpecialAccess(saObj);
+						  setSpecialAccess(saObj, mod);
 					  }
 					  else
 					  {
@@ -103,7 +103,7 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 			  }
 			}
 		    //Finally, insert or update the current special access
-		    setSpecialAccess(sa);
+		    setSpecialAccess(sa, mod);
 	    }
 	  }
 		return;
@@ -113,7 +113,6 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
   {
 	//Compare special access dates to module dates
 	//If they are the same, no need to add this access and if it exists delete it
-	//if ((sa.getStartDate().equals(mod.getModuleshdate().getStartDate()))&&(sa.getEndDate().equals(mod.getModuleshdate().getEndDate())))
 	if ((!Different.different(sa.getStartDate(), mod.getModuleshdate().getStartDate()))&&(!Different.different(sa.getEndDate(), mod.getModuleshdate().getEndDate())))
 	{
 		//New access, so don't add it
@@ -137,9 +136,28 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 	}
   }
 
-  private void setSpecialAccess(SpecialAccessObjService sa) throws Exception
+  private void setSpecialAccess(SpecialAccessObjService sa, ModuleObjService mod) throws Exception
   {
 	  try{
+		  if (Different.different(sa.getStartDate(), mod.getModuleshdate().getStartDate()))
+		  {
+			  sa.setOverrideStart(true);
+		  }
+		  else
+		  {
+			  sa.setOverrideStart(false);
+			  sa.setStartDate(null);
+		  }
+		  if (Different.different(sa.getEndDate(), mod.getModuleshdate().getEndDate()))
+		  {
+			  sa.setOverrideEnd(true);
+		  }
+		  else
+		  {
+			  sa.setOverrideEnd(false);
+			  sa.setEndDate(null);
+		  }  
+
 			specialAccessDb.setSpecialAccess((SpecialAccess)sa);
 		}catch(Exception e)
 			{

@@ -70,4 +70,12 @@ public interface SpecialAccessObjService {
 
 	public abstract void setEndDate(Date endDate);
 
+	public abstract boolean isOverrideStart();
+ 	
+ 	public abstract void setOverrideStart(boolean overrideStart);
+ 
+ 	public abstract boolean isOverrideEnd();
+ 	
+ 	public abstract void setOverrideEnd(boolean overrideEnd);
+ 	
 }

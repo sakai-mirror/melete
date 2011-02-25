@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -101,7 +102,7 @@ public class BookmarkDB {
 					 		 if (sa.getModuleId() == bmark.getSection().getModule().getModuleId().intValue())
 					 		 {
 					 			 accessFound = true;
-					 			 bmark.setSectionVisibleFlag(isSectionVisible(sa));
+					 			 bmark.setSectionVisibleFlag(isSectionVisible(sa,(ModuleShdates)bmark.getSection().getModule().getModuleshdate()));
 					 		 }
 					 	 }	 
 			 			 //If access has not been set for this module, use module's dates
@@ -188,7 +189,7 @@ public class BookmarkDB {
 				//If student has special access, use those dates to determine if section is visible to them
 				if (sa != null)
 				{
-				    if (isSectionVisible(sa))
+				    if (isSectionVisible(sa,(ModuleShdates)section.getModule().getModuleshdate()))
 				 	{
 				    	sectionId = section.getSectionId().intValue();
 				 	}
@@ -228,11 +229,19 @@ public class BookmarkDB {
 		return sectionId;
 	}
 
-	private boolean isSectionVisible(SpecialAccess sa)
+	private boolean isSectionVisible(SpecialAccess sa,ModuleShdates mshdates)
 	{
 		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+		Date startDate;
+		Date endDate;
 
-	    if (((sa.getStartDate() == null)||(sa.getStartDate().before(currentTimestamp)))&&((sa.getEndDate() == null)||(sa.getEndDate().after(currentTimestamp))))
+		if (sa.isOverrideStart()) startDate = sa.getStartDate();
+		else startDate = mshdates.getStartDate();
+		
+		if (sa.isOverrideEnd()) endDate = sa.getEndDate();
+		else endDate = mshdates.getEndDate();
+
+	    if (((startDate == null)||(startDate.before(currentTimestamp)))&&((endDate == null)||(endDate.after(currentTimestamp))))
 	 	{
 	    	return true;
 	 	}

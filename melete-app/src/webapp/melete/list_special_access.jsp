@@ -138,13 +138,13 @@ function resetAllAcc()
              <h:outputText id="t4" value="#{msgs.list_special_access_start_date}" />
              </f:facet>             
              <h:outputText id="startDate0" 
-                           value="#{msgs.list_special_access_default}"  styleClass="italics"  rendered="#{(saObj.startDate == saObj.module.moduleshdate.startDate)}">
+                           value="#{msgs.list_special_access_default}"  styleClass="italics"  rendered="#{(saObj.overrideStart == false)}">
             </h:outputText>
              <h:outputText id="startDate1" 
-                           value="#{msgs.list_special_access_open}"  styleClass="italics"  rendered="#{((saObj.startDate == null)&&(saObj.startDate != saObj.module.moduleshdate.startDate))}">
+                           value="#{msgs.list_special_access_open}"  styleClass="italics"  rendered="#{((saObj.startDate == null)&&(saObj.overrideStart == true))}">
             </h:outputText>
                   <h:outputText id="startDate" 
-                           value="#{saObj.startDate}"    rendered="#{((saObj.startDate != null)&&(saObj.startDate != saObj.module.moduleshdate.startDate))}">
+                           value="#{saObj.startDate}"    rendered="#{((saObj.startDate != null)&&(saObj.overrideStart == true))}">
               <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>
               </h:column>         
@@ -154,14 +154,14 @@ function resetAllAcc()
              </f:facet>
              
               <h:outputText id="endDate0" 
-                           value="#{msgs.list_special_access_default}"  styleClass="italics"  rendered="#{(saObj.endDate == saObj.module.moduleshdate.endDate)}">
+                           value="#{msgs.list_special_access_default}"  styleClass="italics"  rendered="#{(saObj.overrideEnd == false)}">
             </h:outputText>
              <h:outputText id="endDate1" 
-                           value="#{msgs.list_special_access_open}" styleClass="italics"   rendered="#{((saObj.endDate == null)&&(saObj.endDate != saObj.module.moduleshdate.endDate))}">
+                           value="#{msgs.list_special_access_open}" styleClass="italics"   rendered="#{((saObj.endDate == null)&&(saObj.overrideEnd == true))}">
             </h:outputText>
               <h:outputText id="endDate"
                            value="#{saObj.endDate}"
-                              rendered="#{((saObj.endDate != null)&&(saObj.endDate != saObj.module.moduleshdate.endDate))}">
+                              rendered="#{((saObj.endDate != null)&&(saObj.overrideEnd == true))}">
                <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
             </h:outputText>
          </h:column>         

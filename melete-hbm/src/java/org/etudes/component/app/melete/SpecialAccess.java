@@ -50,6 +50,10 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService {
     
     protected boolean selected;
     
+    /** nullable persistent field */
+    private boolean overrideStart;   
+    private boolean overrideEnd;      
+    
     public SpecialAccess()
     {
     	this.moduleId = 0;
@@ -57,6 +61,8 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService {
     	this.users = null;
     	this.startDate = null;
     	this.endDate = null;
+    	this.overrideStart = false;
+		this.overrideEnd = false;
     }
 
 	/* (non-Javadoc)
@@ -150,4 +156,36 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService {
 	   	this.selected = selected;
 	 }	
 	
+     /**
+ 	 * @return the overrideStart
+ 	 */
+ 	public boolean isOverrideStart()
+ 	{
+ 		return this.overrideStart;
+ 	}
+
+ 	/**
+ 	 * @param overrideStart the overrideStart to set
+ 	 */
+ 	public void setOverrideStart(boolean overrideStart)
+ 	{
+ 		this.overrideStart = overrideStart;
+ 	}
+ 	
+ 	 /**
+ 	 * @return the overrideEnd
+ 	 */
+ 	public boolean isOverrideEnd()
+ 	{
+ 		return this.overrideEnd;
+ 	}
+
+ 	/**
+ 	 * @param overrideEnd the overrideEnd to set
+ 	 */
+ 	public void setOverrideEnd(boolean overrideEnd)
+ 	{
+ 		this.overrideEnd = overrideEnd;
+ 	}
+ 	
 }

@@ -324,11 +324,11 @@ public class ModuleDB implements Serializable {
                	//Get all access entries for user	
                 if (prevFlag)
                 {	
-                  sql = "select cm.seq_no, sa.start_date, sa.end_date from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = sa.module_id and sa.users like ? order by cm.seq_no desc";
+                  sql = "select cm.seq_no, sa.start_date, sa.end_date, sa.override_start, sa.override_end from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = sa.module_id and sa.users like ? order by cm.seq_no desc";
                 }
                 else
                 {
-                  sql = "select cm.seq_no, sa.start_date, sa.end_date from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = sa.module_id and sa.users like ? order by cm.seq_no";	
+                  sql = "select cm.seq_no, sa.start_date, sa.end_date, sa.override_start, sa.override_end from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = sa.module_id and sa.users like ? order by cm.seq_no";	
                 }
 		    	PreparedStatement accPstmt = dbConnection.prepareStatement(sql);
 		    	accPstmt.setString(1,courseId);
@@ -341,7 +341,7 @@ public class ModuleDB implements Serializable {
 			      	//Add them to accMap  
 			        while (accRs.next())
 		    	    {
-			   	      AccessDates ad = new AccessDates(accRs.getTimestamp("start_date"),accRs.getTimestamp("end_date"));
+			   	      AccessDates ad = new AccessDates(accRs.getTimestamp("start_date"),accRs.getTimestamp("end_date"),accRs.getBoolean("override_start"),accRs.getBoolean("override_end"));
 		    		  accMap.put(accRs.getInt("seq_no"),ad);
 		    	    }
 		    	 }
@@ -355,26 +355,9 @@ public class ModuleDB implements Serializable {
 			    }
 			    else
 			    {
-			      	List removeList = new ArrayList();  
-			       	Iterator it = accMap.entrySet().iterator();
-			       	//Check to see if there are any blocked entries in accMap. If so, add them to removeList
-			  		while (it.hasNext())
-			  		{
-			  		  Map.Entry pairs = (Map.Entry)it.next();
-			  		  Integer seq = (Integer)pairs.getKey();
-			  		  AccessDates ad = (AccessDates)pairs.getValue();
-			  		  currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
-	 			      java.sql.Timestamp startTimestamp = ad.getAccStartTimestamp();
-	 			      java.sql.Timestamp endTimestamp = ad.getAccEndTimestamp();
-	        		  if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
-	        		  {
-	        			  continue;
-	        		  }
-	        		  else
-	        		  {
-	        			  removeList.add(seq);
-	        		  }
-			  	 }
+			     //Check to see if user's access blocks any modules	
+			     List removeList = checkAccessBlocks(accMap);
+			     
 			  	//If there are blocked entries, remove them from both resList and accMap
 			  	 if (removeList.size() > 0)
 			  	 {	
@@ -407,6 +390,76 @@ public class ModuleDB implements Serializable {
 					}
 				}
 		 return navSeqNo;
+	}
+	
+	private boolean isVisible(java.sql.Timestamp startTimestamp, java.sql.Timestamp endTimestamp)
+	{
+		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+		if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	private List checkAccessBlocks(Map accMap)
+	{
+		List removeList = new ArrayList();  
+		Iterator it = accMap.entrySet().iterator();
+		//Check to see if there are any blocked entries in accMap. If so, add them to removeList
+		while (it.hasNext())
+		{
+			Map.Entry pairs = (Map.Entry)it.next();
+			Integer seq = (Integer)pairs.getKey();
+			AccessDates ad = (AccessDates)pairs.getValue();
+			java.sql.Timestamp startTimestamp = ad.getAccStartTimestamp();
+			java.sql.Timestamp endTimestamp = ad.getAccEndTimestamp();
+			if (ad.overrideStart && ad.overrideEnd)
+			{	  
+				if (isVisible(startTimestamp,endTimestamp))
+				{
+					continue;
+				}
+				else
+				{
+					removeList.add(seq);
+				}
+			}
+			else
+			{
+				if (ad.overrideStart)
+				{
+					java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+					if ((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))
+					{
+						continue;
+					}
+					else
+					{
+						removeList.add(seq);
+					}
+				}
+				else
+				{
+					if (ad.overrideEnd)
+					{
+						java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+						if ((endTimestamp == null)||(endTimestamp.after(currentTimestamp)))
+						{
+							continue;
+						}
+						else
+						{
+							removeList.add(seq);
+						}
+					}
+				}
+			}
+		}
+		return removeList;	
 	}
 	
 	private void assignSeqs(Session session, List courseModuleBeans)
@@ -935,7 +988,7 @@ public class ModuleDB implements Serializable {
 				//Check the special access table to see if there are any records
 				//for this user in this course
 		    	ResultSet accRs,rs = null;
-		    	String sql = "select a.module_id,a.start_date,a.end_date from melete_special_access a,melete_course_module c where a.users like ? and a.module_id=c.module_id and c.course_id = ?";
+		    	String sql = "select a.module_id,a.start_date,a.end_date,a.override_start,a.override_end from melete_special_access a,melete_course_module c where a.users like ? and a.module_id=c.module_id and c.course_id = ?";
 		    	PreparedStatement accPstmt = dbConnection.prepareStatement(sql);
 		    	accPstmt.setString(1,"%"+userId+"%");
 		    	accPstmt.setString(2,courseId);
@@ -947,7 +1000,7 @@ public class ModuleDB implements Serializable {
 		    		while (accRs.next())
 		    		{
 		    			accModuleId = accRs.getInt("module_id");
-		    			AccessDates ad = new AccessDates(accRs.getTimestamp("start_date"),accRs.getTimestamp("end_date"));
+		    			AccessDates ad = new AccessDates(accRs.getTimestamp("start_date"),accRs.getTimestamp("end_date"),accRs.getBoolean("override_start"),accRs.getBoolean("override_end"));
 		    			accMap.put(accModuleId,ad);
 		    		}
 		    	}
@@ -973,7 +1026,7 @@ public class ModuleDB implements Serializable {
 		    			moduleId = rs.getInt("module_id");
 		    			seqNo = rs.getInt("seq_no");
 		    			seqXml = rs.getString("seq_xml");
-
+		    			
 //		    			Associate vsBeans to vmBean
 		    			//This means its a new module
 		    			//Does not execute for the first module
@@ -1036,34 +1089,23 @@ public class ModuleDB implements Serializable {
 		    				ns_number = ns_number.concat(Integer.toString(top));
 		    				vmBean.setNextStepsNumber(ns_number);
 
-		    				startTimestamp = null;
-		    				endTimestamp = null;
+		    				startTimestamp = rs.getTimestamp("start_date");
+		    				endTimestamp = rs.getTimestamp("end_date");	
 
 		    				//If special access is set up, use those dates; otherwise,
 		    				//use module dates
 		    				if (accMap.size() > 0)
 		    				{
 		    					AccessDates ad = (AccessDates)accMap.get(moduleId);
-		    					if (ad == null)
+		    					if (ad != null)
 		    					{
-		    						startTimestamp = rs.getTimestamp("start_date");
-		    						endTimestamp = rs.getTimestamp("end_date");
+		    						if (ad.overrideStart) startTimestamp = ad.getAccStartTimestamp();
+		    						if (ad.overrideEnd) endTimestamp = ad.getAccEndTimestamp();
 		    					}
-		    					else
-		    					{
-		    						startTimestamp = ad.getAccStartTimestamp();
-		    						endTimestamp = ad.getAccEndTimestamp();
-		    					}
-		    				}
-		    				else
-		    				{
-		    					startTimestamp = rs.getTimestamp("start_date");
-		    					endTimestamp = rs.getTimestamp("end_date");		    					
 		    				}
 
-		    				java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
-		    				if (((startTimestamp == null)||(startTimestamp.before(currentTimestamp)))&&((endTimestamp == null)||(endTimestamp.after(currentTimestamp))))
-		    				{
+		    				if (isVisible(startTimestamp, endTimestamp))	
+                            {
 		    					this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
 		    					if ((this.accessAdvisor != null)&&(this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId())))
 		    					{		    		  					
@@ -3616,11 +3658,15 @@ class AccessDates
 {
 	java.sql.Timestamp accStartTimestamp;
 	java.sql.Timestamp accEndTimestamp;
+	boolean overrideStart;
+	boolean overrideEnd;
 
-	AccessDates(java.sql.Timestamp accStartTimestamp,java.sql.Timestamp accEndTimestamp)
+	AccessDates(java.sql.Timestamp accStartTimestamp,java.sql.Timestamp accEndTimestamp, boolean overrideStart, boolean overrideEnd)
 	{
 		this.accStartTimestamp = accStartTimestamp;
 		this.accEndTimestamp = accEndTimestamp;
+		this.overrideStart = overrideStart;
+		this.overrideEnd = overrideEnd;
 	}
 
 	public java.sql.Timestamp getAccStartTimestamp() {
@@ -3637,5 +3683,25 @@ class AccessDates
 	public void setAccEndTimestamp(java.sql.Timestamp accEndTimestamp) {
 	    this.accEndTimestamp = accEndTimestamp;
 	}
+	
+	public boolean isOverrideStart()
+ 	{
+ 		return this.overrideStart;
+ 	}
+
+ 	public void setOverrideStart(boolean overrideStart)
+ 	{
+ 		this.overrideStart = overrideStart;
+ 	}
+ 	
+ 	public boolean isOverrideEnd()
+ 	{
+ 		return this.overrideEnd;
+ 	}
+
+ 	public void setOverrideEnd(boolean overrideEnd)
+ 	{
+ 		this.overrideEnd = overrideEnd;
+ 	}
 }
 

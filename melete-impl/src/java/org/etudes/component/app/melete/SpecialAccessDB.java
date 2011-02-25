@@ -205,6 +205,8 @@ public class SpecialAccessDB {
 		    	 find_sa.setUsers(sa.getUsers()); 
 		    	 find_sa.setStartDate(sa.getStartDate());
 		    	 find_sa.setEndDate(sa.getEndDate());
+		    	 find_sa.setOverrideStart(sa.isOverrideStart());
+		    	 find_sa.setOverrideEnd(sa.isOverrideEnd());
 		    	 session.update(find_sa);
 		      }
 

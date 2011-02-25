@@ -168,6 +168,8 @@ CREATE TABLE `melete_special_access` (
   `USERS` longtext NOT NULL,
   `START_DATE` datetime default NULL,
   `END_DATE` datetime default NULL,
+  `OVERRIDE_START` tinyint(1) default '0',
+  `OVERRIDE_END` tinyint(1) default '0',
   PRIMARY KEY  (`ACCESS_ID`),
   CONSTRAINT `FK_MSA_MM` FOREIGN KEY(`MODULE_ID`) REFERENCES `melete_module`(`MODULE_ID`)
 ); 

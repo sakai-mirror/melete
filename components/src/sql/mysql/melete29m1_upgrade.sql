@@ -5,3 +5,9 @@ CREATE TABLE `melete_section_track_view` (
   PRIMARY KEY  (`SECTION_ID`,`USER_ID`),
   CONSTRAINT `FK_MSTV_MS` FOREIGN KEY(`SECTION_ID`) REFERENCES `melete_section`(`SECTION_ID`)
 );
+
+alter table melete_special_access add column OVERRIDE_START tinyint(1) default '0';
+alter table melete_special_access add column OVERRIDE_END tinyint(1) default '0';
+update melete_special_access set OVERRIDE_START = 1;
+update melete_special_access set OVERRIDE_END = 1;
+
