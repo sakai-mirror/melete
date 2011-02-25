@@ -201,7 +201,7 @@ if (msg != null)
     </h:panelGroup> 
      </f:facet>                      
       <h:selectBooleanCheckbox id="modCheck" value="#{mdbean.selected}" onclick="resetAllMod()" valueChangeListener="#{listAuthModulesPage.selectedModuleSection}" />
-         <h:graphicImage id="err_gif" value="/images/pin_red.gif" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
+         <h:graphicImage id="err_gif" value="/images/warning.png" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
     </h:column>               
    <h:column>
  	<f:facet name="header">
