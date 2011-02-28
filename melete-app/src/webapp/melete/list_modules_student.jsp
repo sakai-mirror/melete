@@ -126,8 +126,10 @@
                <h:outputText value="&nbsp;" escape="false"/>
              </f:facet>
             <h:panelGrid columns="1" style="z-index:0;" rendered="#{vmbean.blockedBy != null}">   
-               	<h:column>     	  
-               		<h:graphicImage id="pre-req" value="/images/lock.png" alt="#{msgs.list_modules_locked}" title="#{msgs.list_modules_locked}" rendered="#{vmbean.blockedBy != null}" styleClass="ExpClass"/>
+               	<h:column>    
+               		<h:commandLink id="showHidePrereqs-icon" action="#{listModulesPage.showHidePrerequisite}" immediate="true" rendered="#{vmbean.blockedBy != null}"> 	  
+               			<h:graphicImage id="pre-req" value="/images/lock.png" alt="#{msgs.list_modules_locked}" title="#{msgs.list_modules_locked}"  styleClass="ExpClass"/>
+               		</h:commandLink>	
              	</h:column>
              	<h:column>
              		<h:commandLink id="showHidePrereqs" action="#{listModulesPage.showHidePrerequisite}" immediate="true">
