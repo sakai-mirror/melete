@@ -89,7 +89,7 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 					  if (userIds.length > 0)
 					  {
 						  saObj.setUsers(SqlHelper.encodeStringArray(userIds));
-						  setSpecialAccess(saObj, mod);
+						  updateSpecialAccess(saObj);
 					  }
 					  else
 					  {
@@ -138,7 +138,6 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 
   private void setSpecialAccess(SpecialAccessObjService sa, ModuleObjService mod) throws Exception
   {
-	  try{
 		  if (Different.different(sa.getStartDate(), mod.getModuleshdate().getStartDate()))
 		  {
 			  sa.setOverrideStart(true);
@@ -158,6 +157,12 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 			  sa.setEndDate(null);
 		  }  
 
+	  updateSpecialAccess(sa);
+  }
+  
+  private void updateSpecialAccess(SpecialAccessObjService sa) throws Exception
+  {
+	  try{
 		  specialAccessDb.setSpecialAccess((SpecialAccess)sa);
 	  }catch(Exception e)
 	  {
