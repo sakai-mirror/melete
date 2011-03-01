@@ -177,14 +177,16 @@ public class SpecialAccessPage implements Serializable
     public SpecialAccessObjService getSpecialAccess() {
    	  FacesContext context = FacesContext.getCurrentInstance();
   	  Map sessionMap = context.getExternalContext().getSessionMap();
-  	 if (specialAccess == null)
-            {
-          	  specialAccess = new SpecialAccess();
-          	  specialAccess.setAccessId(0);
-          	  specialAccess.setModuleId(this.module.getModuleId().intValue());
-          	  specialAccess.setStartDate(this.module.getModuleshdate().getStartDate());
-          	  specialAccess.setEndDate(this.module.getModuleshdate().getEndDate());
-            }
+  	  if (specialAccess == null)
+  	  {
+  		  specialAccess = new SpecialAccess();
+  		  specialAccess.setAccessId(0);
+  		  specialAccess.setModuleId(this.module.getModuleId().intValue());
+  		  specialAccess.setStartDate(this.module.getModuleshdate().getStartDate());
+  		  specialAccess.setEndDate(this.module.getModuleshdate().getEndDate());
+  		  specialAccess.setOverrideStart(false);
+  		  specialAccess.setOverrideEnd(false);
+  	  }
   	  return specialAccess;
       }
     
