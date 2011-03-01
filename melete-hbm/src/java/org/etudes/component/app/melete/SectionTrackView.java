@@ -25,7 +25,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.etudes.api.app.melete.SectionTrackViewObjService;
 
 /** @author Hibernate CodeGenerator */
@@ -97,5 +98,22 @@ public class SectionTrackView implements Serializable, SectionTrackViewObjServic
 		this.section = (Section)section;
 	}	
 	
-	
+	public boolean equals(Object other) {
+        if ( (this == other ) ) return true;
+        if ( !(other instanceof SectionTrackView) ) return false;
+        SectionTrackView castOther = (SectionTrackView) other;
+        return new EqualsBuilder()
+            .append(this.getSectionId(), castOther.getSectionId())
+            .append(this.getUserId(), castOther.getUserId())
+            .append(this.getViewDate(), castOther.getViewDate())
+            .isEquals();
+    }
+
+    public int hashCode() {
+        return new HashCodeBuilder()
+            .append(getSectionId())
+            .append(getUserId())
+            .append(getViewDate())
+            .toHashCode();
+    }	
 }

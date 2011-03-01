@@ -52,5 +52,7 @@ public interface SectionTrackViewObjService {
 	 */
 	public abstract void setSection(org.etudes.api.app.melete.SectionObjService section);
 	
-	
+	public abstract boolean equals(Object other);
+
+	public abstract int hashCode();
 }
