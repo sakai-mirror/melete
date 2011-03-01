@@ -89,7 +89,7 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 					  if (userIds.length > 0)
 					  {
 						  saObj.setUsers(SqlHelper.encodeStringArray(userIds));
-						  setSpecialAccess(saObj, mod);
+						  updateSpecialAccess(saObj);
 					  }
 					  else
 					  {
@@ -138,34 +138,41 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 
   private void setSpecialAccess(SpecialAccessObjService sa, ModuleObjService mod) throws Exception
   {
-	  try{
-		  if (Different.different(sa.getStartDate(), mod.getModuleshdate().getStartDate()))
-		  {
-			  sa.setOverrideStart(true);
-		  }
-		  else
-		  {
-			  sa.setOverrideStart(false);
-			  sa.setStartDate(null);
-		  }
-		  if (Different.different(sa.getEndDate(), mod.getModuleshdate().getEndDate()))
-		  {
-			  sa.setOverrideEnd(true);
-		  }
-		  else
-		  {
-			  sa.setOverrideEnd(false);
-			  sa.setEndDate(null);
-		  }  
+	  if (Different.different(sa.getStartDate(), mod.getModuleshdate().getStartDate()))
+	  {
+		  sa.setOverrideStart(true);
+	  }
+	  else
+	  {
+		  sa.setOverrideStart(false);
+		  sa.setStartDate(null);
+	  }
+	  if (Different.different(sa.getEndDate(), mod.getModuleshdate().getEndDate()))
+	  {
+		  sa.setOverrideEnd(true);
+	  }
+	  else
+	  {
+		  sa.setOverrideEnd(false);
+		  sa.setEndDate(null);
+	  }  
 
-			specialAccessDb.setSpecialAccess((SpecialAccess)sa);
-		}catch(Exception e)
-			{
-			logger.debug("melete specialAccess business --add specialAccess failed");
-			 throw new MeleteException("add_special_access_fail");
-
-			}
+	  updateSpecialAccess(sa);
   }
+  
+  private void updateSpecialAccess(SpecialAccessObjService sa) throws Exception
+  {
+	  try{
+		  specialAccessDb.setSpecialAccess((SpecialAccess)sa);
+	  }catch(Exception e)
+	  {
+		  logger.debug("melete specialAccess business --add specialAccess failed");
+		  throw new MeleteException("add_special_access_fail");
+
+	  }
+  }
+  
+  
 
 public List getSpecialAccess(int moduleId)
 {
