@@ -116,6 +116,16 @@ function showEdateCal()
               <tr>
                 <td class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_special_access_start_date}" /></td>
                 <td>
+                      <h:inputHidden id="accessId" value="#{specialAccessPage.specialAccess.accessId}"/>
+                      <h:inputHidden id="overrideStart" value="#{specialAccessPage.specialAccess.overrideStart}"/>
+					  <h:inputHidden id="overrideEnd" value="#{specialAccessPage.specialAccess.overrideEnd}"/>
+					  <h:inputHidden id="modStartDate" value="#{specialAccessPage.startDate}">
+					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+					  </h:inputHidden>
+					  <h:inputHidden id="modEndDate" value="#{specialAccessPage.endDate}">
+					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+					  </h:inputHidden>
+					  
 					  <a name="startCalender"></a> <h:inputText id="startDate" 
                            value="#{specialAccessPage.specialAccess.startDate}" size="22" styleClass="formtext">
 		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
@@ -148,6 +158,15 @@ function showEdateCal()
 </table>
 <p ><span class="required">*</span>&nbsp;<h:outputText value="#{msgs.edit_module_required}" /></p>
 	<!-- here -->	
+	<script type="text/javascript">
+        if (document.getElementById("AddSpecialAccessForm:accessId").value != "0")
+        {
+            if (document.getElementById("AddSpecialAccessForm:overrideStart").value != "true")
+        		document.getElementById("AddSpecialAccessForm:startDate").value = document.getElementById("AddSpecialAccessForm:modStartDate").value;
+        	if (document.getElementById("AddSpecialAccessForm:overrideEnd").value != "true")
+        		document.getElementById("AddSpecialAccessForm:endDate").value = document.getElementById("AddSpecialAccessForm:modEndDate").value;
+        }              
+    </script>    
 	</h:form>
 </sakai:view>
 </f:view>
