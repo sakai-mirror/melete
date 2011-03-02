@@ -25,6 +25,8 @@ package org.etudes.component.app.melete;
 
 import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
+
+import java.util.Calendar;
 import java.util.Date;
 import org.etudes.api.app.melete.SpecialAccessObjService;
 
@@ -52,7 +54,9 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService {
     
     /** nullable persistent field */
     private boolean overrideStart;   
-    private boolean overrideEnd;      
+    private boolean overrideEnd;    
+    
+    private boolean valid;
     
     public SpecialAccess()
     {
@@ -188,4 +192,40 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService {
  		this.overrideEnd = overrideEnd;
  	}
  	
+ 	public boolean isValid()
+    {
+    	Calendar stCal = null;
+		Calendar enCal = null;
+		Date actualStartDate,actualEndDate;
+		if (overrideStart) actualStartDate = getStartDate();
+		else actualStartDate = getModule().getModuleshdate().getStartDate();
+		if (overrideEnd) actualEndDate = getEndDate();
+		else actualEndDate = getModule().getModuleshdate().getEndDate();
+    	if (actualStartDate != null)
+		{
+			stCal = Calendar.getInstance();
+			stCal.setTime(actualStartDate);
+			if (stCal.get(Calendar.YEAR) > 9999)
+			{
+			  return false;
+			}
+		}
+		if (actualEndDate != null)
+		{
+			enCal = Calendar.getInstance();
+			enCal.setTime(actualEndDate);
+			if (enCal.get(Calendar.YEAR) > 9999)
+			{
+			  return false;
+			}
+		}
+		if ((actualStartDate != null)&&(actualEndDate != null))
+		{
+		  if (actualStartDate.compareTo(actualEndDate) >= 0)
+		  {
+			return false;
+		  }
+	     }
+		return true;
+    } 	
 }

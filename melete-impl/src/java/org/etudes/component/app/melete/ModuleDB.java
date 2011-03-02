@@ -185,7 +185,7 @@ public class ModuleDB implements Serializable {
              {
                if (meleteSecurityService.allowAuthor())
                {
-            	 queryStr = "select min(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId=ms.moduleId";
+            	 queryStr = "select min(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId=ms.moduleId and (ms.startDate is null or ms.endDate is null or ms.startDate < ms.endDate)";
                }
                if (meleteSecurityService.allowStudent())
                {
@@ -237,7 +237,7 @@ public class ModuleDB implements Serializable {
      {
         if (meleteSecurityService.allowAuthor())
         {	 
-          queryStr = "select max(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId=ms.moduleId";
+          queryStr = "select max(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId=ms.moduleId and (ms.startDate is null or ms.endDate is null or ms.startDate < ms.endDate)";
         }
         if (meleteSecurityService.allowStudent())
         {
@@ -324,11 +324,11 @@ public class ModuleDB implements Serializable {
                	//Get all access entries for user	
                 if (prevFlag)
                 {	
-                  sql = "select cm.seq_no, sa.start_date, sa.end_date, sa.override_start, sa.override_end from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = sa.module_id and sa.users like ? order by cm.seq_no desc";
+                  sql = "select cm.seq_no, sa.start_date, sa.end_date, sa.override_start, sa.override_end from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = sa.module_id and sa.users like ? and (sa.start_date is null or sa.end_date is null or sa.start_date < sa.end_date) order by cm.seq_no desc";
                 }
                 else
                 {
-                  sql = "select cm.seq_no, sa.start_date, sa.end_date, sa.override_start, sa.override_end from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = sa.module_id and sa.users like ? order by cm.seq_no";	
+                  sql = "select cm.seq_no, sa.start_date, sa.end_date, sa.override_start, sa.override_end from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = sa.module_id and sa.users like ? and (sa.start_date is null or sa.end_date is null or sa.start_date < sa.end_date) order by cm.seq_no";	
                 }
 		    	PreparedStatement accPstmt = dbConnection.prepareStatement(sql);
 		    	accPstmt.setString(1,courseId);
@@ -982,30 +982,18 @@ public class ModuleDB implements Serializable {
 		 	List sectionsList = null;
 		 	Module mod = null;
 		 	Query sectionQuery = null;
+		 	Map accMap = null;
 		 	
 			try {
 				dbConnection = SqlService.borrowConnection();
-				//Check the special access table to see if there are any records
-				//for this user in this course
-		    	ResultSet accRs,rs = null;
-		    	String sql = "select a.module_id,a.start_date,a.end_date,a.override_start,a.override_end from melete_special_access a,melete_course_module c where a.users like ? and a.module_id=c.module_id and c.course_id = ?";
-		    	PreparedStatement accPstmt = dbConnection.prepareStatement(sql);
-		    	accPstmt.setString(1,"%"+userId+"%");
-		    	accPstmt.setString(2,courseId);
-			    accRs = accPstmt.executeQuery();
-			    Map accMap = new HashMap();
-			    if (accRs != null)
-		    	{
-			    	int accModuleId;
-		    		while (accRs.next())
-		    		{
-		    			accModuleId = accRs.getInt("module_id");
-		    			AccessDates ad = new AccessDates(accRs.getTimestamp("start_date"),accRs.getTimestamp("end_date"),accRs.getBoolean("override_start"),accRs.getBoolean("override_end"));
-		    			accMap.put(accModuleId,ad);
-		    		}
-		    	}
+				ResultSet rs = null;
+		    	String sql;
+		    	//Check the special access table to see if there are any records
+				//for this user in this course, do this only for students
+		    	accMap = getAccessRecords(userId, courseId, dbConnection);
+		    	
 			    //Select all undeleted modules in this course
-	            sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
+	            sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (d.start_date is NULL or d.end_date is NULL or d.start_date < d.end_date) and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
 	            PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 	            pstmt.setString(1,courseId);
 		    	rs = pstmt.executeQuery();
@@ -1047,12 +1035,12 @@ public class ModuleDB implements Serializable {
 		   				      processViewSections(vsBeanMap, vsBeanList,xmlSecList,rowClassesBuf);
 		   				      vmBean.setVsBeans(vsBeanList);
 		   				      vmBean.setRowClasses(rowClassesBuf.toString());
-		   				      if (fromCourseMap) vmBean.setReadDate(getReadDate(prevModId, vsBeanMap, userId, dbConnection)); 
+		   				      if (fromCourseMap && meleteSecurityService.allowStudent()) vmBean.setReadDate(getReadDate(prevModId, vsBeanMap, userId, dbConnection)); 
 		   				    }
 		   				   }
 		    			  else
 		    			  {
-		    				  if (fromCourseMap && vmBean != null) vmBean.setReadDate(null);
+		    				  if (fromCourseMap && meleteSecurityService.allowStudent() && vmBean != null) vmBean.setReadDate(null);
 		    			  }
 		    			   vsBeanMap = null;
 		    			 }//End if ((prevModId != 0)&&(moduleId != prevModId))
@@ -1094,7 +1082,7 @@ public class ModuleDB implements Serializable {
 
 		    				//If special access is set up, use those dates; otherwise,
 		    				//use module dates
-		    				if (accMap.size() > 0)
+		    				if ((accMap != null)&&(accMap.size() > 0))
 		    				{
 		    					AccessDates ad = (AccessDates)accMap.get(moduleId);
 		    					if (ad != null)
@@ -1156,15 +1144,13 @@ public class ModuleDB implements Serializable {
 	   				      processViewSections(vsBeanMap, vsBeanList,xmlSecList,rowClassesBuf);
 	   				      vmBean.setVsBeans(vsBeanList);
 	   				      vmBean.setRowClasses(rowClassesBuf.toString());
-	   				      if (fromCourseMap) vmBean.setReadDate(getReadDate(moduleId, vsBeanMap, userId, dbConnection)); 
+	   				      if (fromCourseMap && meleteSecurityService.allowStudent()) vmBean.setReadDate(getReadDate(moduleId, vsBeanMap, userId, dbConnection)); 
 	   				    }
 	   				   }
 		    		 else
 	    			  {
-	    				  if (fromCourseMap && vmBean != null) vmBean.setReadDate(null);
+	    				  if (fromCourseMap && meleteSecurityService.allowStudent() && vmBean != null) vmBean.setReadDate(null);
 	    			  }
-		    		accRs.close();
-		    		accPstmt.close();
 		    		rs.close();
 		    		pstmt.close();
 		    	}
@@ -1232,6 +1218,14 @@ public class ModuleDB implements Serializable {
      {
     	 Date viewDate = null;
     	 java.sql.Timestamp viewTimestamp = null;
+    	 try
+    	 {
+    		 if (meleteSecurityService.allowAuthor()) return null;
+    	 }
+    	 catch (Exception e)
+    	 {
+    		 logger.error(e.toString());
+    	 }
     	 if (sectionMap == null || sectionMap.size() == 0) 
     	 {
     		 return new java.util.Date();
@@ -1280,6 +1274,31 @@ public class ModuleDB implements Serializable {
 		 return viewDate;
      }
 
+     private Map getAccessRecords(String userId, String courseId, Connection dbConnection) throws Exception
+     {
+    	 Map accMap = new HashMap();
+    	 if (meleteSecurityService.allowStudent())
+	    	{	
+	    		String sql = "select a.module_id,a.start_date,a.end_date,a.override_start,a.override_end from melete_special_access a,melete_course_module c where a.users like ? and (a.start_date is NULL or a.end_date is NULL or a.start_date < a.end_date) and a.module_id=c.module_id and c.course_id = ?";
+	    		PreparedStatement accPstmt = dbConnection.prepareStatement(sql);
+	    		accPstmt.setString(1,"%"+userId+"%");
+	    		accPstmt.setString(2,courseId);
+	    		ResultSet accRs = accPstmt.executeQuery();
+	    		if (accRs != null)
+	    		{
+	    			int accModuleId;
+	    			while (accRs.next())
+	    			{
+	    				accModuleId = accRs.getInt("module_id");
+	    				AccessDates ad = new AccessDates(accRs.getTimestamp("start_date"),accRs.getTimestamp("end_date"),accRs.getBoolean("override_start"),accRs.getBoolean("override_end"));
+	    				accMap.put(accModuleId,ad);
+	    			}
+	    			accRs.close();
+		    		accPstmt.close();
+	    		}
+	    	}    	 
+    	 return accMap;
+     }
 
 	 public List getActivenArchiveModules(String courseId) throws HibernateException {
 		 	List modList = new ArrayList();
@@ -1442,7 +1461,9 @@ public class ModuleDB implements Serializable {
 	   java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
 
 	   if (mod == null) mod = new Module();
-	   mdBean.setVisibleFlag(mod.getModuleshdate().isVisibleFlag());
+	   ModuleShdates mshdate = (ModuleShdates)mod.getModuleshdate();
+	   mdBean.setVisibleFlag(mshdate.isVisibleFlag());
+	   mdBean.setDateFlag(!mshdate.isValid());
 	   mdBean.setModuleId(mod.getModuleId().intValue());
 	   mdBean.setModule((Module)mod);
 	   mdBean.setModuleShdate(mod.getModuleshdate());

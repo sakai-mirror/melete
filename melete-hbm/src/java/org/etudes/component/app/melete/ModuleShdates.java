@@ -62,6 +62,8 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
 
     private boolean visibleFlag;
     
+    private boolean valid;
+    
     /** Dependency (optional, self-injected): AccessAdvisor. */
 	protected transient AccessAdvisor accessAdvisor = null;    
 
@@ -193,6 +195,38 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     	}
     }	
 
+    public boolean isValid()
+    {
+    	Calendar stCal = null;
+		Calendar enCal = null;
+    	if (getStartDate() != null)
+		{
+			stCal = Calendar.getInstance();
+			stCal.setTime(getStartDate());
+			if (stCal.get(Calendar.YEAR) > 9999)
+			{
+			  return false;
+			}
+		}
+		if (getEndDate() != null)
+		{
+			enCal = Calendar.getInstance();
+			enCal.setTime(getEndDate());
+			if (enCal.get(Calendar.YEAR) > 9999)
+			{
+			  return false;
+			}
+		}
+		if ((getStartDate() != null)&&(getEndDate() != null))
+		{
+		  if (getStartDate().compareTo(getEndDate()) >= 0)
+		  {
+			return false;
+		  }
+	     }
+		return true;
+    }
+    
     public String toString() {
         return new ToStringBuilder(this)
             .append("moduleId", getModuleId())

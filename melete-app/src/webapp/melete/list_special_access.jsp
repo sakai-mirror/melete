@@ -114,14 +114,15 @@ function resetAllAcc()
                   cellpadding="3" cellspacing="0" 
 				  width="100%" binding="#{specialAccessPage.table}" styleClass="valignStyle9" summary="#{msgs.list_special_access_summary}">
                       
-    <h:column>
-    <f:facet name="header">
-    <h:panelGroup>
+   <h:column>
+     <f:facet name="header">
+      <h:panelGroup>
        <h:selectBooleanCheckbox id="allacccheck" value="#{specialAccessPage.selectAllFlag}" onclick="selectAll()" valueChangeListener="#{specialAccessPage.selectAllAccess}" rendered="#{specialAccessPage.noAccFlag == false}" />   
-    </h:panelGroup> 
+      </h:panelGroup> 
      </f:facet>                      
-      <h:selectBooleanCheckbox id="accCheck" value="#{saObj.selected}" onclick="resetAllAcc()" valueChangeListener="#{specialAccessPage.selectedAccess}" />
-        </h:column>               
+     <h:selectBooleanCheckbox id="accCheck" value="#{saObj.selected}" onclick="resetAllAcc()" valueChangeListener="#{specialAccessPage.selectedAccess}" />
+     <h:graphicImage id="err_gif" value="/images/warning.png" rendered="#{saObj.valid == false}" styleClass="ExpClass"/>
+   </h:column>               
    <h:column>
  	<f:facet name="header">
  	 <h:panelGroup>
