@@ -96,6 +96,7 @@ public class ListAuthModulesPage implements Serializable
 
 	/** identifier field */
 	private int showModuleId;
+    private int showInvalidModuleId;
 
 	private String formName;
 
@@ -108,7 +109,7 @@ public class ListAuthModulesPage implements Serializable
 	private boolean expandAllFlag;
 
 	private boolean autonumber;
-
+	
 	// This needs to be set later using Utils.getBinding
 	String courseId;
 
@@ -225,6 +226,7 @@ public class ListAuthModulesPage implements Serializable
 		selectAllFlag = false;
 		listSize = 0;
 		moduleDateBeans = null;
+		setShowInvalidModuleId(-1);
 	}
 
 	public boolean isAutonumber()
@@ -367,6 +369,32 @@ public class ListAuthModulesPage implements Serializable
 		selectedSecModIndices = null;
 		selectAllFlag = false;
 	}
+	
+	 public String showHideInvalid()
+	 {
+		 ModuleDateBean mdbean = null;
+		 FacesContext ctx = FacesContext.getCurrentInstance();
+		 UIViewRoot root = ctx.getViewRoot();
+		 UIData table = null;
+		 table = (UIData)
+		 root.findComponent("listauthmodulesform").findComponent("table");
+
+		 mdbean = (ModuleDateBean) table.getRowData();
+		 if (getShowInvalidModuleId() != mdbean.getModuleId())
+		 {
+			 setShowInvalidModuleId(mdbean.getModuleId());
+		 }
+
+		 return "list_auth_modules";
+	 }	
+
+
+	  public String hideInvalid()
+	  {
+		  setShowInvalidModuleId(-1);
+		  return "list_auth_modules";
+	  }
+	  	
 
 	public List getModuleDateBeans()
 	{
@@ -1583,7 +1611,13 @@ public class ListAuthModulesPage implements Serializable
 		ctx.addMessage(null, msg);
 	}
 
+	public int getShowInvalidModuleId() {
+		return showInvalidModuleId;
+	}
 
+	public void setShowInvalidModuleId(int showInvalidModuleId) {
+		this.showInvalidModuleId = showInvalidModuleId;
+	}
 
 	public UIData getSecTable()
 	{

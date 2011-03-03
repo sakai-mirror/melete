@@ -190,18 +190,39 @@ if (msg != null)
     
    <h:dataTable id="table" 
                   value="#{listAuthModulesPage.moduleDateBeans}"
-                  var="mdbean"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass,ListActionClass" 
+                  var="mdbean"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass,ListActionClass" 
                   cellpadding="3" cellspacing="0"  rendered="#{listAuthModulesPage.nomodsFlag != null && !listAuthModulesPage.nomodsFlag}"
 				  width="100%" binding="#{listAuthModulesPage.table}" styleClass="valignStyle9" summary="#{msgs.list_auth_modules_summary}">
-                      
+  
+     <h:column>   
+     <f:facet name="header">
+       <h:outputText value="&nbsp;" escape="false"/>
+     </f:facet>  
+     <h:panelGrid columns="1" style="z-index:0;" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag}">   
+	 <h:column>    
+     <h:commandLink id="showHideInvalid" action="#{listAuthModulesPage.showHideInvalid}" immediate="true">
+	    <h:graphicImage id="err_gif" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>                     
+     </h:commandLink> 
+	 <h:panelGrid id="invalidMsg" columns="1" border="1" rules="cols" bgcolor="#FFFFCC" cellpadding="5" width="300px" styleClass="invalidAlert" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag && listAuthModulesPage.showInvalidModuleId == mdbean.moduleId}" >   
+		<h:column>     	  
+		<h:outputText value="#{msgs.invalid_msg}" />
+		</h:column>
+		<h:column>
+		<h:commandButton value="#{msgs.invalid_ok_msg}" action="#{listAuthModulesPage.hideInvalid}" immediate="true" styleClass="BottomImgFinish"/>
+		</h:column>
+	  </h:panelGrid> 
+	  </h:column>
+	  </h:panelGrid>             
+    </h:column>                                  
     <h:column>
     <f:facet name="header">
     <h:panelGroup>
        <h:selectBooleanCheckbox id="allmodcheck" value="#{listAuthModulesPage.selectAllFlag}" onclick="selectAll()" valueChangeListener="#{listAuthModulesPage.selectAllModules}"  rendered="#{listAuthModulesPage.nomodsFlag == false}"/>   
     </h:panelGroup> 
-     </f:facet>                      
-      <h:selectBooleanCheckbox id="modCheck" value="#{mdbean.selected}" onclick="resetAllMod()" valueChangeListener="#{listAuthModulesPage.selectedModuleSection}" />
-         <h:graphicImage id="err_gif" value="/images/warning.png" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
+     </f:facet> 
+      
+	   <h:selectBooleanCheckbox id="modCheck" value="#{mdbean.selected}" onclick="resetAllMod()" valueChangeListener="#{listAuthModulesPage.selectedModuleSection}" />
+     
     </h:column>               
    <h:column>
  	<f:facet name="header">

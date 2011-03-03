@@ -110,19 +110,38 @@ function resetAllAcc()
    <td>
    <h:dataTable id="table" 
                   value="#{specialAccessPage.saList}"
-                  var="saObj"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass" 
+                  var="saObj"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass" 
                   cellpadding="3" cellspacing="0" 
 				  width="100%" binding="#{specialAccessPage.table}" styleClass="valignStyle9" summary="#{msgs.list_special_access_summary}">
                       
+    <h:column>   
+     <f:facet name="header">
+       <h:outputText value="&nbsp;" escape="false"/>
+     </f:facet>  
+     <h:panelGrid columns="1" style="z-index:0;" rendered="#{saObj.valid == false}">   
+	 <h:column>    
+     <h:commandLink id="showHideInvalid" action="#{specialAccessPage.showHideInvalid}" immediate="true">
+	    <h:graphicImage id="err_gif" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" rendered="#{saObj.valid == false}" styleClass="ExpClass"/>                     
+     </h:commandLink> 
+	 <h:panelGrid id="invalidMsg" columns="1" border="1" rules="cols" bgcolor="#FFFFCC" cellpadding="5" width="300px" styleClass="invalidAlert" rendered="#{saObj.valid == false && specialAccessPage.showInvalidAccessId == saObj.accessId}" >   
+		<h:column>     	  
+		<h:outputText value="#{msgs.invalid_access_msg}" />
+		</h:column>
+		<h:column>
+		<h:commandButton value="#{msgs.invalid_ok_msg}" action="#{specialAccessPage.hideInvalid}" immediate="true" styleClass="BottomImgFinish"/>
+		</h:column>
+	  </h:panelGrid> 
+	  </h:column>
+	  </h:panelGrid>             
+    </h:column>   
    <h:column>
      <f:facet name="header">
       <h:panelGroup>
        <h:selectBooleanCheckbox id="allacccheck" value="#{specialAccessPage.selectAllFlag}" onclick="selectAll()" valueChangeListener="#{specialAccessPage.selectAllAccess}" rendered="#{specialAccessPage.noAccFlag == false}" />   
       </h:panelGroup> 
-     </f:facet>                      
-     <h:selectBooleanCheckbox id="accCheck" value="#{saObj.selected}" onclick="resetAllAcc()" valueChangeListener="#{specialAccessPage.selectedAccess}" />
-     <h:graphicImage id="err_gif" value="/images/warning.png" rendered="#{saObj.valid == false}" styleClass="ExpClass"/>
-   </h:column>               
+     </f:facet>   
+    <h:selectBooleanCheckbox id="accCheck" value="#{saObj.selected}" onclick="resetAllAcc()" valueChangeListener="#{specialAccessPage.selectedAccess}" />
+     </h:column>               
    <h:column>
  	<f:facet name="header">
  	 <h:panelGroup>

@@ -92,6 +92,7 @@ public class SpecialAccessPage implements Serializable
 	
 	private List deleteAccessIds;
 	private String deleteAccessTitles;
+	private int showInvalidAccessId;
 	
 	int count;
 
@@ -377,9 +378,34 @@ public class SpecialAccessPage implements Serializable
 	{
        saList = null;
        noAccFlag = true;
+       setShowInvalidAccessId(-1);
    	}
 
+	 public String showHideInvalid()
+	 {
+		 ModuleDateBean mdbean = null;
+		 FacesContext ctx = FacesContext.getCurrentInstance();
+		 UIViewRoot root = ctx.getViewRoot();
+		 UIData table = null;
+		 table = (UIData)
+		 root.findComponent("listspecialaccessform").findComponent("table");
 
+		 SpecialAccess saObj = (SpecialAccess) table.getRowData();
+		 if (getShowInvalidAccessId() != saObj.getAccessId())
+		 {
+			 setShowInvalidAccessId(saObj.getAccessId());
+		 }
+
+		 return "list_special_access";
+	 }	
+
+
+	  public String hideInvalid()
+	  {
+		  setShowInvalidAccessId(-1);
+		  return "list_special_access";
+	  }
+	  
    public void setSpecialAccess(SpecialAccessObjService specialAccess) {
     this.specialAccess = specialAccess;
   }
@@ -593,7 +619,16 @@ public class SpecialAccessPage implements Serializable
 	 */
 	public void setNoAccFlag(boolean noAccFlag) {
 		this.noAccFlag = noAccFlag;
-	}    
+	}   
+	
+	public int getShowInvalidAccessId() {
+		return showInvalidAccessId;
+	}
+
+	public void setShowInvalidAccessId(int showInvalidAccessId) {
+		this.showInvalidAccessId = showInvalidAccessId;
+	}
+	
 	/**
 	 * @return Returns the SpecialAccessService.
 	 */
