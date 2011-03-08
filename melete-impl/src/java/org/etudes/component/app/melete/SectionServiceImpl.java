@@ -25,6 +25,7 @@ package org.etudes.component.app.melete;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -377,6 +378,18 @@ public class SectionServiceImpl implements Serializable, SectionService
 		return secTitle;
 	}
 
+	public Map<String, Date> getSectionViewDates(String sectionId) throws Exception
+	{
+		if (sectionId == null) return null;
+		return sectiondb.getSectionUsersViewDate(new Integer(sectionId).intValue());		
+	}
+
+	public Integer getSectionViewersCount(String sectionId)
+	{
+		if (sectionId == null) return 0;
+		return sectiondb.getSectionViewersCount(new Integer(sectionId).intValue());	
+	}
+	
 	public List getSortSections(ModuleObjService module)
 	{
 		try {
@@ -522,7 +535,6 @@ public class SectionServiceImpl implements Serializable, SectionService
 	{
 		this.meleteCHService = meleteCHService;
 	}
-
 	/**
 	 * @param meleteLicenseDB The meleteLicenseDB to set.
 	 */
@@ -530,12 +542,12 @@ public class SectionServiceImpl implements Serializable, SectionService
 	{
 		this.meleteLicenseDB = meleteLicenseDB;
 	}
+
 	// Mallika's methods
 	public void setSection(SectionObjService sec)
 	{
 		section = (Section)sec;
 	}
-
 	/**
 	 * @param sectiondb The sectiondb to set.
 	 */
@@ -543,6 +555,7 @@ public class SectionServiceImpl implements Serializable, SectionService
 	{
 		this.sectiondb = sectiondb;
 	}
+
 	/*
 	 * update resource object
 	 */
@@ -567,6 +580,4 @@ public class SectionServiceImpl implements Serializable, SectionService
 			throw new MeleteException(ex.toString());
 		}
 	}
-
-
 }

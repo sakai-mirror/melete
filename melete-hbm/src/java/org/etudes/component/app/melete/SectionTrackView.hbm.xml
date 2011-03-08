@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2010 Etudes, Inc.
+ * Copyright (c) 2010, 2011 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,13 @@
      <property name="viewDate"  column="VIEW_DATE"  type="timestamp"  />
      <many-to-one name="section" class="org.etudes.component.app.melete.Section" insert="false" update="false" column="SECTION_ID" lazy="false"/>  				
   </class>
+    <query name="trackSectionItem">
+        <![CDATA[from org.etudes.component.app.melete.SectionTrackView as item where item.sectionId = :sectionId]]>
+    </query> 
+    
+    <query name="trackSectionCount">
+        <![CDATA[select count(item.userId) from org.etudes.component.app.melete.SectionTrackView as item where item.sectionId = :sectionId]]>
+    </query>
  </hibernate-mapping>
 	 
 	 

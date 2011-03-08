@@ -25,6 +25,7 @@ package org.etudes.component.app.melete;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +35,7 @@ import java.util.ListIterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Element;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -47,6 +49,7 @@ import org.etudes.api.app.melete.exception.MeleteException;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.entity.api.Reference;
+
 
 /**
  * @author Rashmi
@@ -1789,6 +1792,54 @@ public class SectionDB implements Serializable {
 			e.printStackTrace();
 			throw new MeleteException("all_license_change_fail");
 		}		
+	}
+	
+	/*
+	 * Returns a Map<userId, ViewDate> for a section.
+	 */
+	public Map<String, Date> getSectionUsersViewDate(int sectionId)
+	{
+		 Map<String, Date> all = new HashMap<String,Date>();
+		 Session session = hibernateUtil.currentSession();
+		 Query q = session.getNamedQuery("trackSectionItem");                
+		  q.setParameter("sectionId", sectionId, Hibernate.INTEGER);
+		  
+		  List<SectionTrackView> sectionUsers = q.list();
+		  if (sectionUsers == null || sectionUsers.size() <= 0) return all;
+		  for(SectionTrackView s: sectionUsers)
+		  {
+			  if(s.getViewDate() != null)
+			  {
+				  all.put(s.getUserId(),s.getViewDate());
+			  }
+		  }
+		  hibernateUtil.closeSession();
+		  return all;			
+	}
+	
+	/**
+	 * Count of users view the section
+	 * @param sectionId
+	 * @return
+	 */
+	public Integer getSectionViewersCount(int sectionId)
+	{
+		Integer count =  0;
+		try
+		{
+		Session session = hibernateUtil.currentSession();
+		 Query q = session.getNamedQuery("trackSectionCount");                
+		 q.setParameter("sectionId", sectionId, Hibernate.INTEGER);
+		 List results = q.list();
+		 if( results != null) count = (Integer)results.get(0);
+		 
+		}catch(Exception e)
+		{
+			logger.debug("exception at getting track count " + e.getMessage());
+			count = 0;
+		}
+		hibernateUtil.closeSession();
+		return count;
 	}
 	
 	/**

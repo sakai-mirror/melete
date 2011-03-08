@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -24,17 +24,10 @@
 package org.etudes.api.app.melete;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-/**
- * Mallika - 4/20/05 - Added method to delete section
-* Revised by rashmi 4/26 add signature for sort sections
-* Mallika - 4/6/06 - Adding parameters for dirs to insertSection and editSection
-* Mallika - 8/1/06 - Adding method to delete sections
-* Rashmi - 8/10/06 - get max no of sections exisiting in a module
-* Rashmi - 8/22/06 - revised insertsection() and add insertsectionresource()
-* Rashmi - 8/23/06 - add license info methods
- */
 public interface SectionService{
 
 	public Integer insertSection(ModuleObjService module, SectionObjService section) throws Exception;
@@ -77,4 +70,6 @@ public interface SectionService{
    public SectionObjService getNextSection(String curr_id, String seqXML) throws Exception;
    public SectionObjService getPrevSection(String curr_id, String seqXML) throws Exception;
    public int changeLicenseForAll(String courseId, MeleteUserPreferenceService mup) throws Exception;
+   public Map<String, Date> getSectionViewDates(String sectionId) throws Exception;
+   public Integer getSectionViewersCount(String sectionId);
 }
