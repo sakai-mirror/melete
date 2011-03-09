@@ -72,4 +72,6 @@ public interface SectionService{
    public int changeLicenseForAll(String courseId, MeleteUserPreferenceService mup) throws Exception;
    public Map<String, Date> getSectionViewDates(String sectionId) throws Exception;
    public Integer getSectionViewersCount(String sectionId);
+   public int getAllActiveSectionsCount(String courseId);
+   public int getAllViewedSectionsCount(String courseId);
 }

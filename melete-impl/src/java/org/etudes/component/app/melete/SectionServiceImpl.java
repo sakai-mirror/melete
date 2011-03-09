@@ -205,6 +205,39 @@ public class SectionServiceImpl implements Serializable, SectionService
 	}
 
 	/**
+	 * Count of all active sections in a site
+	 * @param course_id
+	 * @return
+	 */
+	public int getAllActiveSectionsCount(String course_id)
+	{
+		try
+		{
+			return sectiondb.getAllActiveSectionsCount(course_id);
+		}
+		catch(Exception e)
+		{
+			return 0;
+		}
+	}
+
+	/**
+	 * Count of all viewed sections by students
+	 * @param course_id
+	 * @return
+	 */
+	public int getAllViewedSectionsCount(String course_id)
+	{
+		try
+		{
+			return sectiondb.getAllViewedSectionsCount(course_id);
+		}
+		catch(Exception e)
+		{
+			return 0;
+		}
+	}
+	/**
 	 * @param allowCmrcl
 	 * @param allowMod
 	 * fetches the cc license url from database based on user selected values.
@@ -248,7 +281,6 @@ public class SectionServiceImpl implements Serializable, SectionService
 		}
 
 	}
-
 	public MeleteResourceService getMeleteResource(String selResourceId)
 	{
 		MeleteResource mr = null;
@@ -260,6 +292,7 @@ public class SectionServiceImpl implements Serializable, SectionService
 		}
 		return mr;
 	}
+
 	public SectionObjService getNextSection(String curr_id, String seqXML) throws Exception
 	{
 		SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
@@ -383,13 +416,13 @@ public class SectionServiceImpl implements Serializable, SectionService
 		if (sectionId == null) return null;
 		return sectiondb.getSectionUsersViewDate(new Integer(sectionId).intValue());		
 	}
-
+	
 	public Integer getSectionViewersCount(String sectionId)
 	{
 		if (sectionId == null) return 0;
 		return sectiondb.getSectionViewersCount(new Integer(sectionId).intValue());	
 	}
-	
+
 	public List getSortSections(ModuleObjService module)
 	{
 		try {
@@ -527,7 +560,6 @@ public class SectionServiceImpl implements Serializable, SectionService
 			logger.error("ViewSectionPage --add section track failed for user "+stv.getUserId()+" for section "+stv.getSectionId());
 		}
 	}
-
 	/**
 	 * @param meleteCHService the meleteCHService to set
 	 */

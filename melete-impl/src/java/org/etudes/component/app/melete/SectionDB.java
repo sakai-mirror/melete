@@ -1842,6 +1842,61 @@ public class SectionDB implements Serializable {
 		return count;
 	}
 	
+	/** 
+	 * 
+	 * @param course_id
+	 * @return
+	 */
+	public int getAllActiveSectionsCount(String courseId)
+	{
+		int count = 0;
+		if(courseId == null) return count;
+		
+		Session session = hibernateUtil.currentSession();
+		try
+		{
+			String queryString = "select count(sec.sectionId) from CourseModule cmod,Section sec where cmod.moduleId=sec.moduleId and cmod.courseId=:courseId and cmod.archvFlag=0";
+			Query query = session.createQuery(queryString);
+			query.setParameter("courseId",courseId);
+			List res = query.list();
+			if (res != null) count = ((Integer)res.get(0)).intValue();
+		}
+		catch(Exception e)
+		{
+			logger.debug("exception at getting all sections count " + e.getMessage());
+			count = 0;
+		}
+		hibernateUtil.closeSession();
+		return count;
+	}
+	
+	/**
+	 * Count of distinct viewed sections
+	 * @param courseId
+	 * @return
+	 */
+	public int getAllViewedSectionsCount(String courseId)
+	{
+		int count = 0;
+		if(courseId == null) return count;
+		
+		Session session = hibernateUtil.currentSession();
+		try
+		{
+			String queryString = "select count(DISTINCT secTrack.sectionId) from CourseModule cmod,Section sec, SectionTrackView secTrack where cmod.moduleId=sec.moduleId and sec.sectionId = secTrack.sectionId and cmod.archvFlag=0 and cmod.courseId =:courseId";
+			Query query = session.createQuery(queryString);
+			query.setParameter("courseId",courseId);
+			List res = query.list();
+			if (res != null) count = ((Integer)res.get(0)).intValue();
+		}
+		catch(Exception e)
+		{
+			logger.debug("exception at getting viewed sections count " + e.getMessage());
+			count = 0;
+		}
+		hibernateUtil.closeSession();
+		return count;
+	}
 	/**
 	 * @return Returns the hibernateUtil.
 	 */
