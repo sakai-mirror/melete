@@ -462,7 +462,39 @@ public void restoreModules(List modules, String courseId) throws Exception
      return cMod;
     }
 
+	/**
+	 * Checks if the module is open at a given time
+	 * @param openDate
+	 * @param closeDate
+	 * @return invalid if not able to determine the status.
+	 * open if module is open and active 
+	 * closed if module is closed
+	 * later if module is not opened yet
+	 */
+	public String isSectionModuleOpen(Date startDate, Date endDate) 
+	{
+		String access = "invalid";
 
+		// check for open, close, not yet
+		Date currentDate = new java.util.Date();
+		if ((startDate == null || startDate.before(currentDate)) && (endDate == null ||endDate.after(currentDate)))
+		{
+			access="open";
+		}
+		else			 
+		{
+			if (startDate != null && startDate.after(currentDate))
+			{
+				access="later";
+			}
+
+			if (endDate != null && endDate.before(currentDate))
+			{
+				access="closed";
+			}
+		}
+		return access;
+	}	
 
 	 public int getNextSeqNo(String userId, String courseId, int currSeqNo)
 	  {
@@ -562,6 +594,7 @@ public void restoreModules(List modules, String courseId) throws Exception
 		 {
 			 return moduledb.checkEditAccess(user_id, course_id);
 		 }
+		 
 	/**
 	 * @return Returns the moduledb.
 	 */

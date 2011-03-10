@@ -122,4 +122,13 @@ public interface ModuleService{
 	 * Check if user has edit access
 	 */
 	public boolean checkEditAccess(String user_id, String course_id);
+	
+	/**
+	 *  Checks if a module is open or closed at a given time
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 * @throws Exception
+	 */
+	public String isSectionModuleOpen(Date startDate, Date endDate);
 }
