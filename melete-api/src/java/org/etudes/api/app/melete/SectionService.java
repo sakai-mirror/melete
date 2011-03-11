@@ -63,15 +63,108 @@ public interface SectionService{
    public void deleteSectionResourcebyId(String sectionId);   
    public MeleteResourceService getMeleteResource(String selResourceId);
    public void deassociateSectionResource(SectionObjService section, SectionResourceService secResource) throws Exception;
-   public void updateSectionResource(SectionObjService section, SectionResourceService secResource) throws Exception;
-   public List findResourceInUse(String selResourceId, String courseId);
-   public void deleteResourceInUse(String delResourceId) throws Exception;
-   public int cleanUpDeletedSections() throws Exception;
-   public SectionObjService getNextSection(String curr_id, String seqXML) throws Exception;
-   public SectionObjService getPrevSection(String curr_id, String seqXML) throws Exception;
-   public int changeLicenseForAll(String courseId, MeleteUserPreferenceService mup) throws Exception;
-   public Map<String, Date> getSectionViewDates(String sectionId) throws Exception;
-   public Integer getSectionViewersCount(String sectionId);
-   public int getAllActiveSectionsCount(String courseId);
-   public int getAllViewedSectionsCount(String courseId);
+	/**
+	 * Update sectionResource and change the resource associated with a section
+	 * 
+	 * @param section
+	 *        The section
+	 * @param secResource
+	 *        The section resource
+	 * @throws Exception
+	 */
+	public void updateSectionResource(SectionObjService section, SectionResourceService secResource) throws Exception;
+
+	/**
+	 * Find all sections where the resource is used.
+	 * 
+	 * @param selResourceId
+	 *        The resource id
+	 * @param courseId
+	 *        The site Id
+	 * @return a list of SectionObjService
+	 */
+	public List findResourceInUse(String selResourceId, String courseId);
+
+	/**
+	 * Delete the resource which is in use by other sections
+	 * 
+	 * @param delResourceId
+	 *        The resource id
+	 * @throws Exception
+	 */
+	public void deleteResourceInUse(String delResourceId) throws Exception;
+
+	/**
+	 * Clean up database. Removes the orphaned deleted sections. Part of the melete admin tool to cleanup deleted modules and sections before deep delete.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public int cleanUpDeletedSections() throws Exception;
+
+	/**
+	 * Get the next section. Reads section sequence xml and returns the next section.
+	 * 
+	 * @param curr_id
+	 *        The current section id
+	 * @param seqXML
+	 *        The sequence XML
+	 * @return next section or null if its the last section of a module.
+	 * @throws Exception
+	 */
+	public SectionObjService getNextSection(String curr_id, String seqXML) throws Exception;
+
+	/**
+	 * Get the previous section. Reads the section sequence xml and returns the previous section.
+	 * 
+	 * @param curr_id
+	 *        The current section id
+	 * @param seqXML
+	 *        The sequence XML
+	 * @return previous section or null if its the first section of a module.
+	 * @throws Exception
+	 */
+	public SectionObjService getPrevSection(String curr_id, String seqXML) throws Exception;
+
+	/**
+	 * Change license for all sections with the preferred one.
+	 * 
+	 * @param courseId
+	 *        The course id
+	 * @param mup
+	 *         The Preferred license
+	 * @return count of affected sections
+	 * @throws Exception
+	 */
+	public int changeLicenseForAll(String courseId, MeleteUserPreferenceService mup) throws Exception;
+
+	/**
+	 * Get all users view date information for a section.
+	 * 
+	 * @param sectionId
+	 *        the section id
+	 * @return a Map<userId, ViewDate> information for a section.
+	 * 
+	 * @throws Exception
+	 * 
+	 */
+	public Map<String, Date> getSectionViewDates(String sectionId) throws Exception;
+
+	/**
+	 * Get the total number of active sections in a site. This doesn't count sections of the archived module.
+	 * 
+	 * @param courseId
+	 *        the site Id
+	 * @return count
+	 */
+	public int getNumberOfActiveSections(String courseId);
+
+	/**
+	 * Get all sections viewed so far in the site.
+	 * 
+	 * @param courseId
+	 *        the site Id
+	 * @return Map <sectionId, List of user ids> of all viewed sections
+	 */
+	public Map<Integer, List<String>> getNumberOfViewedSections(String courseId);
 }

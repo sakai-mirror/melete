@@ -209,7 +209,7 @@ public class SectionServiceImpl implements Serializable, SectionService
 	 * @param course_id
 	 * @return
 	 */
-	public int getAllActiveSectionsCount(String course_id)
+	public int getNumberOfActiveSections(String course_id)
 	{
 		try
 		{
@@ -222,11 +222,11 @@ public class SectionServiceImpl implements Serializable, SectionService
 	}
 
 	/**
-	 * Count of all viewed sections by students
+	 * all viewed sections 
 	 * @param course_id
 	 * @return
 	 */
-	public int getAllViewedSectionsCount(String course_id)
+	public Map <Integer, List<String>> getNumberOfViewedSections(String course_id)
 	{
 		try
 		{
@@ -234,7 +234,7 @@ public class SectionServiceImpl implements Serializable, SectionService
 		}
 		catch(Exception e)
 		{
-			return 0;
+			return null;
 		}
 	}
 	/**

@@ -1871,31 +1871,46 @@ public class SectionDB implements Serializable {
 	}
 	
 	/**
-	 * Count of distinct viewed sections
+	 *all viewed sections
+	 * 
 	 * @param courseId
 	 * @return
 	 */
-	public int getAllViewedSectionsCount(String courseId)
+	public Map<Integer, List<String>> getAllViewedSectionsCount(String courseId)
 	{
-		int count = 0;
-		if(courseId == null) return count;
-		
+		if (courseId == null) return null;
+		Map<Integer, List<String>> allViewedSections = new HashMap<Integer, List<String>>();
 		Session session = hibernateUtil.currentSession();
 		try
 		{
-			String queryString = "select count(DISTINCT secTrack.sectionId) from CourseModule cmod,Section sec, SectionTrackView secTrack where cmod.moduleId=sec.moduleId and sec.sectionId = secTrack.sectionId and cmod.archvFlag=0 and cmod.courseId =:courseId";
+			String queryString = "select secTrack from CourseModule cmod,Section sec, SectionTrackView secTrack where cmod.moduleId=sec.moduleId and sec.sectionId = secTrack.sectionId and cmod.archvFlag=0 and cmod.courseId =:courseId order by secTrack.sectionId";
 			Query query = session.createQuery(queryString);
-			query.setParameter("courseId",courseId);
-			List res = query.list();
-			if (res != null) count = ((Integer)res.get(0)).intValue();
+			query.setParameter("courseId", courseId);
+			List<SectionTrackView> res = query.list();
+			if (res != null)
+			{
+				for (SectionTrackView track : res)
+				{
+					if (allViewedSections.containsKey(track.getSectionId()))
+					{
+						List<String> users = allViewedSections.get(track.getSectionId());
+						users.add(track.getUserId());
+					}
+					else
+					{
+						List<String> users = new ArrayList<String>();
+						users.add(track.getUserId());
+						allViewedSections.put(track.getSectionId(), users);
+					}
+				} // for end
+			}
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			logger.debug("exception at getting viewed sections count " + e.getMessage());
-			count = 0;
 		}
 		hibernateUtil.closeSession();
-		return count;
+		return allViewedSections;
 	}
 	/**
 	 * @return Returns the hibernateUtil.
