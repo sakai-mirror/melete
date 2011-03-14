@@ -222,6 +222,21 @@ public class SectionServiceImpl implements Serializable, SectionService
 	}
 
 	/**
+	 * Get number of sections viewed per user of a site.
+	 */
+	public Map<String, Integer> getNumberOfSectionViewedByUserId(String courseId)
+	{
+		try
+		{
+			return sectiondb.getNumberOfSectionViewedByUserId(courseId);
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
+	}
+	
+	/**
 	 * all viewed sections 
 	 * @param course_id
 	 * @return

@@ -167,4 +167,14 @@ public interface SectionService{
 	 * @return Map <sectionId, List of user ids> of all viewed sections
 	 */
 	public Map<Integer, List<String>> getNumberOfViewedSections(String courseId);
+	
+	/**
+	 * Get number of sections viewed per user of a site.
+	 * 
+	 * @param courseId
+	 *        the site Id
+	 * @return Map <userId, count of sections> of all viewed sections
+	 */
+	public Map<String, Integer> getNumberOfSectionViewedByUserId(String courseId);
+	
 }

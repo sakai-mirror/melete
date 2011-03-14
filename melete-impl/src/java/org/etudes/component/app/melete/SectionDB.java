@@ -1895,6 +1895,7 @@ public class SectionDB implements Serializable {
 					{
 						List<String> users = allViewedSections.get(track.getSectionId());
 						users.add(track.getUserId());
+						allViewedSections.put(track.getSectionId(), users);
 					}
 					else
 					{
@@ -1912,6 +1913,48 @@ public class SectionDB implements Serializable {
 		hibernateUtil.closeSession();
 		return allViewedSections;
 	}
+	
+	/**
+	 * number of sections viewed by users of a site
+	 * @param courseId
+	 * @return
+	 */
+	public Map<String, Integer> getNumberOfSectionViewedByUserId(String courseId)
+	{
+		if (courseId == null) return null;
+		Map<String, Integer> allViewedSections = new HashMap<String, Integer>();
+		Session session = hibernateUtil.currentSession();
+		try
+		{
+			String queryString = "select secTrack from CourseModule cmod,Section sec, SectionTrackView secTrack where cmod.moduleId=sec.moduleId and sec.sectionId = secTrack.sectionId and cmod.archvFlag=0 and cmod.courseId =:courseId order by secTrack.userId";
+			Query query = session.createQuery(queryString);
+			query.setParameter("courseId", courseId);
+			List<SectionTrackView> res = query.list();
+			if (res != null)
+			{
+				for (SectionTrackView track : res)
+				{
+					if (allViewedSections.containsKey(track.getUserId()))
+					{
+						Integer count = allViewedSections.get(track.getUserId());
+						count ++;
+						allViewedSections.put(track.getUserId(), count);
+					}
+					else
+					{
+						allViewedSections.put(track.getUserId(), 1);
+					}
+				} // for end
+			}
+		}
+		catch (Exception e)
+		{
+			logger.debug("exception at getting viewed sections count " + e.getMessage());
+		}
+		hibernateUtil.closeSession();
+		return allViewedSections;
+	}
+	
 	/**
 	 * @return Returns the hibernateUtil.
 	 */
