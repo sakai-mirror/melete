@@ -72,6 +72,8 @@ public class ViewModBean implements Serializable, ViewModBeanService {
     protected boolean closedBeforeFlag;
     
     protected boolean openLaterFlag; 
+    
+    protected Integer noOfSectionsRead = 0;
     /**
 	 * {@inheritDoc}
 	 */
@@ -367,6 +369,22 @@ public class ViewModBean implements Serializable, ViewModBeanService {
 		 }
 		 return false;
 	 }
+	 
+	 /**
+	 * {@inheritDoc}
+	 */
+	public Integer getNoOfSectionsRead()
+	{
+		return noOfSectionsRead;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setNoOfSectionsRead(Integer noOfSectionsRead)
+	{
+		this.noOfSectionsRead = noOfSectionsRead;
+	}
 	 
 
 }

@@ -89,5 +89,18 @@ public interface ViewModBeanService
 	public abstract String getBlockedBy();
 
 	public abstract void setBlockedBy(String blockedBy);
+	
+	/**
+	 * number of sections viewed by a user in a module
+	 * 
+	 * @return
+	 */
+	public abstract Integer getNoOfSectionsRead();
+
+	/**
+	 * set the number of sections viewed
+	 * @param noOfSectionsRead
+	 */
+	public abstract void setNoOfSectionsRead(Integer noOfSectionsRead);
 
 }

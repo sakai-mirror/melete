@@ -42,6 +42,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.Vector;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Iterator;
@@ -1035,12 +1036,18 @@ public class ModuleDB implements Serializable {
 		   				      processViewSections(vsBeanMap, vsBeanList,xmlSecList,rowClassesBuf);
 		   				      vmBean.setVsBeans(vsBeanList);
 		   				      vmBean.setRowClasses(rowClassesBuf.toString());
-		   				      if (fromCourseMap && meleteSecurityService.allowStudent()) vmBean.setReadDate(getReadDate(prevModId, vsBeanMap, userId, dbConnection)); 
+		   				      Vector<Integer> noOfSections = new Vector<Integer>();
+							  int count = 0;
+							  if (fromCourseMap && meleteSecurityService.allowStudent())
+								  vmBean.setReadDate(getReadDate(prevModId, vsBeanMap, userId, dbConnection, noOfSections));
+							  count = (noOfSections.size() > 0) ? noOfSections.get(0) : 0;
+							  vmBean.setNoOfSectionsRead(count);
 		   				    }
 		   				   }
 		    			  else
 		    			  {
 		    				  if (fromCourseMap && meleteSecurityService.allowStudent() && vmBean != null) vmBean.setReadDate(null);
+		    				  vmBean.setNoOfSectionsRead(0);
 		    			  }
 		    			   vsBeanMap = null;
 		    			 }//End if ((prevModId != 0)&&(moduleId != prevModId))
@@ -1144,12 +1151,18 @@ public class ModuleDB implements Serializable {
 	   				      processViewSections(vsBeanMap, vsBeanList,xmlSecList,rowClassesBuf);
 	   				      vmBean.setVsBeans(vsBeanList);
 	   				      vmBean.setRowClasses(rowClassesBuf.toString());
-	   				      if (fromCourseMap && meleteSecurityService.allowStudent()) vmBean.setReadDate(getReadDate(moduleId, vsBeanMap, userId, dbConnection)); 
+	   				      Vector<Integer> noOfSections = new Vector<Integer>();
+						  int count = 0;
+						  if (fromCourseMap && meleteSecurityService.allowStudent())
+							  vmBean.setReadDate(getReadDate(moduleId, vsBeanMap, userId, dbConnection, noOfSections));
+						  count = (noOfSections.size() > 0) ? noOfSections.get(0) : 0;
+						  vmBean.setNoOfSectionsRead(count);
 	   				    }
 	   				   }
 		    		 else
 	    			  {
 	    				  if (fromCourseMap && meleteSecurityService.allowStudent() && vmBean != null) vmBean.setReadDate(null);
+	    				  vmBean.setNoOfSectionsRead(0);
 	    			  }
 		    		rs.close();
 		    		pstmt.close();
@@ -1214,7 +1227,7 @@ public class ModuleDB implements Serializable {
 		}
 	 }
 
-     private Date getReadDate(int moduleId, Map sectionMap, String userId, Connection dbConnection) throws SQLException
+     private Date getReadDate(int moduleId, Map sectionMap, String userId, Connection dbConnection, Vector<Integer> noOfSections) throws SQLException
      {
     	 Date viewDate = null;
     	 java.sql.Timestamp viewTimestamp = null;
@@ -1263,6 +1276,9 @@ public class ModuleDB implements Serializable {
 		     }
 			 rs.close();
 			 pstmt.close();
+			 // the list size is the number of viewed sections from a module
+			 noOfSections.add(trackSecList.size());
+
 			 secList.removeAll(trackSecList);
 			 if (secList.size() != 0) 
 			 {
