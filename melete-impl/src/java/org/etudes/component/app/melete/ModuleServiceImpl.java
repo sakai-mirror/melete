@@ -594,7 +594,15 @@ public void restoreModules(List modules, String courseId) throws Exception
 		 {
 			 return moduledb.checkEditAccess(user_id, course_id);
 		 }
-		 
+	
+	/**
+	 *  {@inheritDoc}	 
+	 */
+	public int getNumberOfSectionsReadFromModule(String user_id, int module_id)
+	 {
+		 return moduledb.getNumberOfSectionsReadFromModule(user_id, module_id);
+	 }
+	
 	/**
 	 * @return Returns the moduledb.
 	 */

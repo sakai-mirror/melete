@@ -1290,6 +1290,46 @@ public class ModuleDB implements Serializable {
 		 return viewDate;
      }
 
+     /**
+	 * Get the number of sections read by a user in a module
+	 * 
+	 * @param user_id
+	 * @param module_id
+	 * @return
+	 */
+	public int getNumberOfSectionsReadFromModule(String user_id, int module_id)
+	{
+		int count = 0;
+		try
+		{
+			ResultSet rs = null;
+			Connection dbConnection = SqlService.borrowConnection();
+			String sql = "select sv.section_id,sv.view_date from melete_section_track_view sv,melete_section ms where sv.user_id = ? and sv.section_id = ms.section_id and ms.module_id = ? order by sv.view_date";
+			PreparedStatement pstmt = dbConnection.prepareStatement(sql);
+			pstmt.setString(1, user_id);
+			pstmt.setInt(2, module_id);
+			rs = pstmt.executeQuery();
+			List<Integer> trackSecList = new ArrayList<Integer>();
+
+			if (rs != null)
+			{
+				while (rs.next())
+				{
+					int sectionId = rs.getInt("section_id");
+					trackSecList.add(new Integer(sectionId));
+				}
+			}
+			rs.close();
+			pstmt.close();
+			count = trackSecList.size();
+		}
+		catch (Exception e)
+		{
+			// nothing
+		}
+		return count;
+	}
+     
      private Map getAccessRecords(String userId, String courseId, Connection dbConnection) throws Exception
      {
     	 Map accMap = new HashMap();

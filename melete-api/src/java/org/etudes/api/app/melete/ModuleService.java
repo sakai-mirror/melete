@@ -131,4 +131,15 @@ public interface ModuleService{
 	 * @throws Exception
 	 */
 	public String isSectionModuleOpen(Date startDate, Date endDate);
+	
+	/**
+	 * Get the number of sections read by a user from a module
+	 * 
+	 * @param user_id
+	 *        The user Id
+	 * @param module_id
+	 *        The module Id
+	 * @return
+	 */
+	public int getNumberOfSectionsReadFromModule(String user_id, int module_id);
 }
