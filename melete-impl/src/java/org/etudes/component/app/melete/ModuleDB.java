@@ -1038,7 +1038,7 @@ public class ModuleDB implements Serializable {
 		   				      vmBean.setRowClasses(rowClassesBuf.toString());
 		   				      Vector<Integer> noOfSections = new Vector<Integer>();
 							  int count = 0;
-							  if (fromCourseMap && meleteSecurityService.allowStudent())
+							  if (fromCourseMap)
 								  vmBean.setReadDate(getReadDate(prevModId, vsBeanMap, userId, dbConnection, noOfSections));
 							  count = (noOfSections.size() > 0) ? noOfSections.get(0) : 0;
 							  vmBean.setNoOfSectionsRead(count);
@@ -1046,7 +1046,7 @@ public class ModuleDB implements Serializable {
 		   				   }
 		    			  else
 		    			  {
-		    				  if (fromCourseMap && meleteSecurityService.allowStudent() && vmBean != null) vmBean.setReadDate(null);
+		    				  if (fromCourseMap && vmBean != null) vmBean.setReadDate(null);
 		    				  vmBean.setNoOfSectionsRead(0);
 		    			  }
 		    			   vsBeanMap = null;
@@ -1153,7 +1153,7 @@ public class ModuleDB implements Serializable {
 	   				      vmBean.setRowClasses(rowClassesBuf.toString());
 	   				      Vector<Integer> noOfSections = new Vector<Integer>();
 						  int count = 0;
-						  if (fromCourseMap && meleteSecurityService.allowStudent())
+						  if (fromCourseMap)
 							  vmBean.setReadDate(getReadDate(moduleId, vsBeanMap, userId, dbConnection, noOfSections));
 						  count = (noOfSections.size() > 0) ? noOfSections.get(0) : 0;
 						  vmBean.setNoOfSectionsRead(count);
@@ -1161,7 +1161,7 @@ public class ModuleDB implements Serializable {
 	   				   }
 		    		 else
 	    			  {
-	    				  if (fromCourseMap && meleteSecurityService.allowStudent() && vmBean != null) vmBean.setReadDate(null);
+	    				  if (fromCourseMap && vmBean != null) vmBean.setReadDate(null);
 	    				  vmBean.setNoOfSectionsRead(0);
 	    			  }
 		    		rs.close();
@@ -1229,16 +1229,10 @@ public class ModuleDB implements Serializable {
 
      private Date getReadDate(int moduleId, Map sectionMap, String userId, Connection dbConnection, Vector<Integer> noOfSections) throws SQLException
      {
+    	 logger.debug("ModuleDB:get Read date");
     	 Date viewDate = null;
     	 java.sql.Timestamp viewTimestamp = null;
-    	 try
-    	 {
-    		 if (meleteSecurityService.allowAuthor()) return null;
-    	 }
-    	 catch (Exception e)
-    	 {
-    		 logger.error(e.toString());
-    	 }
+    	
     	 if (sectionMap == null || sectionMap.size() == 0) 
     	 {
     		 return new java.util.Date();
@@ -1278,7 +1272,7 @@ public class ModuleDB implements Serializable {
 			 pstmt.close();
 			 // the list size is the number of viewed sections from a module
 			 noOfSections.add(trackSecList.size());
-
+			 
 			 secList.removeAll(trackSecList);
 			 if (secList.size() != 0) 
 			 {
