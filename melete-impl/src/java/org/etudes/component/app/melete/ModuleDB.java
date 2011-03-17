@@ -1047,10 +1047,13 @@ public class ModuleDB implements Serializable {
 		   				   }
 		    			  else
 		    			  {
-		    				  if (fromCourseMap && vmBean != null) vmBean.setReadDate(null);
-		    				  vmBean.setNoOfSectionsRead(0);
+		    				  if (fromCourseMap && vmBean != null)
+		    				  {
+		    					  vmBean.setReadDate(null);
+		    					  vmBean.setNoOfSectionsRead(0);
+		    				  }
 		    			  }
-		    			   vsBeanMap = null;
+		    			  vsBeanMap = null;
 		    			 }//End if ((prevModId != 0)&&(moduleId != prevModId))
 
 		    			//Populate each vsBean and add to vsBeanMap
@@ -1161,10 +1164,13 @@ public class ModuleDB implements Serializable {
 	   				    }
 	   				   }
 		    		 else
-	    			  {
-	    				  if (fromCourseMap && vmBean != null) vmBean.setReadDate(null);
-	    				  vmBean.setNoOfSectionsRead(0);
-	    			  }
+		    		 {
+		    			 if (fromCourseMap && vmBean != null)
+		    			 {
+		    				 vmBean.setReadDate(null);
+		    				 vmBean.setNoOfSectionsRead(0);
+		    			 }
+		    		 }
 		    		rs.close();
 		    		pstmt.close();
 		    	}
