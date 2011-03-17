@@ -604,6 +604,22 @@ public void restoreModules(List modules, String courseId) throws Exception
 	 }
 	
 	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isModuleCompleted(String user_id, int module_id)
+	{
+		return moduledb.isModuleCompleted(user_id, module_id);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Map<String, Integer> getNumberOfModulesCompletedByUserId(String course_id)
+	{
+		return moduledb.getNumberOfModulesCompletedByUserId(course_id);
+	}
+	
+	/**
 	 * @return Returns the moduledb.
 	 */
 	public ModuleDB getModuledb() {

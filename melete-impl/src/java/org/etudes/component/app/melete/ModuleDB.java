@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -1323,7 +1324,99 @@ public class ModuleDB implements Serializable {
 		}
 		return count;
 	}
-     
+	
+    /**
+	 * Checks if the module is completely read by the user
+	 * 
+	 * @param user_id
+	 * @param module_id
+	 * @return
+	 */
+	public boolean isModuleCompleted(String user_id, int module_id)
+	{
+		Module m = getModule(module_id);
+		if (m == null) return false;
+		Map<Integer, Section> sections = m.getSections();
+
+		// if module has no sections then its considered as completed.
+		if (sections == null || sections.size() == 0) return true;
+
+		// # of sections read by user for this module
+		int userViews = getNumberOfSectionsReadFromModule(user_id, module_id);
+
+		// if both numbers are same then user has finished the module
+		if (sections.size() == userViews)
+			return true;
+		else
+			return false;
+	}
+
+	/**
+	 * Get the number of modules completely read by all users
+	 * 
+	 * @param course_id
+	 * @return
+	 */
+	public Map<String, Integer> getNumberOfModulesCompletedByUserId(String course_id)
+	{
+		if (course_id == null) return null;
+		Map<String, Integer> allCompletedModules = new HashMap<String, Integer>();
+		Map<String, Set<Integer>> checkModules = new HashMap<String, Set<Integer>>();
+		Session session = hibernateUtil.currentSession();
+		try
+		{
+			String queryString = "select secTrack.userId as userId, cmod.moduleId as moduleId from CourseModule cmod,Section sec, SectionTrackView secTrack where cmod.moduleId=sec.moduleId and sec.sectionId = secTrack.sectionId and cmod.archvFlag=0 and cmod.courseId =:courseId order by secTrack.userId";
+			Query query = session.createQuery(queryString);
+			query.setParameter("courseId", course_id);
+			List res = query.list();
+
+			if (res != null)
+			{
+				// collect all distinct read module_ids
+				for (Iterator itr = res.listIterator(); itr.hasNext();)
+				{
+					Object pair[] = (Object[]) itr.next();
+					String userId = (String) pair[0];
+					Integer moduleId = (Integer) pair[1];
+
+					if (moduleId == null || moduleId.intValue() == 0) continue;
+					Set<Integer> mods = new HashSet<Integer>(0);
+					if (checkModules.containsKey(userId)) mods = checkModules.get(userId);
+					mods.add(moduleId);
+					checkModules.put(userId, mods);
+				}
+
+				// if no sections is read in the site return
+				if (checkModules == null || checkModules.size() == 0) return allCompletedModules;
+
+				// count completed modules by the user
+				Iterator<String> i = checkModules.keySet().iterator();
+				for (i = checkModules.keySet().iterator(); i.hasNext();)
+				{
+					String user = i.next();
+					Set<Integer> mods = checkModules.get(user);
+					for (Integer m : mods)
+					{
+						boolean complete = isModuleCompleted(user, m);
+						if (!complete) continue;
+
+						// if complete increment the count
+						Integer count = 0;
+						if (allCompletedModules.containsKey(user)) count = allCompletedModules.get(user);
+						allCompletedModules.put(user, ++count);
+					}
+				} // for end
+				checkModules = null;
+			} // if res is null end
+		}
+		catch (Exception e)
+		{
+			logger.debug("exception at getting viewed modules count " + e.getMessage());
+		}
+		hibernateUtil.closeSession();
+		return allCompletedModules;
+	}
+		
      private Map getAccessRecords(String userId, String courseId, Connection dbConnection) throws Exception
      {
     	 Map accMap = new HashMap();
