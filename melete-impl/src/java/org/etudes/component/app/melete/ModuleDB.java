@@ -1236,7 +1236,7 @@ public class ModuleDB implements Serializable {
     	
     	 if (sectionMap == null || sectionMap.size() == 0) 
     	 {
-    		 return new java.util.Date();
+    		 return null;
     	 }
 
 		 if (sectionMap != null)
