@@ -466,31 +466,37 @@ public void restoreModules(List modules, String courseId) throws Exception
 	 * Checks if the module is open at a given time
 	 * @param openDate
 	 * @param closeDate
-	 * @return invalid if not able to determine the status.
+	 * @return invalid if bad dates or not able to determine the status.
 	 * open if module is open and active 
 	 * closed if module is closed
 	 * later if module is not opened yet
 	 */
-	public String isSectionModuleOpen(Date startDate, Date endDate) 
+	public String isSectionModuleOpen(Date startDate, Date endDate)
 	{
 		String access = "invalid";
+		Date currentDate = new java.util.Date();
+
+		// check invalid
+		if (startDate != null && endDate != null && startDate.compareTo(endDate) >= 0)
+		{
+			return access;
+		}
 
 		// check for open, close, not yet
-		Date currentDate = new java.util.Date();
-		if ((startDate == null || startDate.before(currentDate)) && (endDate == null ||endDate.after(currentDate)))
+		if ((startDate == null || startDate.before(currentDate)) && (endDate == null || endDate.after(currentDate)))
 		{
-			access="open";
+			access = "open";
 		}
-		else			 
+		else
 		{
 			if (startDate != null && startDate.after(currentDate))
 			{
-				access="later";
+				access = "later";
 			}
 
 			if (endDate != null && endDate.before(currentDate))
 			{
-				access="closed";
+				access = "closed";
 			}
 		}
 		return access;
