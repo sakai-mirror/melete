@@ -930,22 +930,20 @@ public void setMeleteCHService(MeleteCHService meleteCHService) {
 		}
     }
     
-    public String getSectionTrack() {
-    	if (isUserStudent())
-    	{	
-    		FacesContext context = FacesContext.getCurrentInstance();
-       		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-        	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
-        
-    		SectionTrackView stv = new SectionTrackView();
-    		stv.setSectionId(this.sectionId);
-    		stv.setUserId(mPage.getCurrentUser().getId());
-    		stv.setViewDate(new java.util.Date());
-    		getSectionService().insertSectionTrack(stv);
-    	}
-    	return "";  
+    public String getSectionTrack()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
 
-    }
+		SectionTrackView stv = new SectionTrackView();
+		stv.setSectionId(this.sectionId);
+		stv.setUserId(mPage.getCurrentUser().getId());
+		stv.setViewDate(new java.util.Date());
+		getSectionService().insertSectionTrack(stv);
+		return "";
+
+	}
     
     /**
 	 * @param meleteSecurityService The meleteSecurityService to set.
