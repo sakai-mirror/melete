@@ -82,7 +82,7 @@ CREATE TABLE `melete_module_shdates` (
   `END_DATE` datetime default NULL,
   `START_EVENT_ID` varchar(99),
   `END_EVENT_ID` varchar(99),
-  `ADDTO_SCHEDULE` tinyint(1)),
+  `ADDTO_SCHEDULE` tinyint(1),
   PRIMARY KEY  (`MODULE_ID`),
   CONSTRAINT `FK_MMSH_MM` FOREIGN KEY(`MODULE_ID`) REFERENCES `melete_module`(`MODULE_ID`)
 );
