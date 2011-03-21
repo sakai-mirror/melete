@@ -207,14 +207,18 @@ public class SpecialAccessPage implements Serializable
       boolean dateResult = validateDates(context, bundle, st, end);
        if (dateResult == false) return "failure";
        
-	    try
-	    {
-	      specialAccessService.insertSpecialAccess(this.saList, this.specialAccess, this.module);
-	    }catch(Exception ex)
+       if (getUsers() != null)
 		{
-	    	String errMsg = bundle.getString(ex.getMessage());
-	    	context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,ex.getMessage(),errMsg));
-			return "failure";
+			try
+			{
+				specialAccessService.insertSpecialAccess(this.saList, this.specialAccess, this.module);
+			}
+			catch (Exception ex)
+			{
+				String errMsg = bundle.getString(ex.getMessage());
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), errMsg));
+				return "failure";
+			}
 		}
 	    resetValues();
 	   return "list_special_access";
