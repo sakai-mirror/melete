@@ -6,6 +6,7 @@ final MeleteSiteAndUserInfo accMeleteSiteAndUserInfo = (MeleteSiteAndUserInfo)ac
 boolean rightsCheck = accMeleteSiteAndUserInfo.checkMeleteRights();
 if (rightsCheck == false)
 {
-   response.sendError(401,"You are not authorized to view this page");
+  	String destination = "noAccess.jsf";
+    response.sendRedirect(response.encodeRedirectURL(destination));
 }   
 %>
