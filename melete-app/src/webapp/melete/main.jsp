@@ -36,21 +36,19 @@ final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)faces
 String navpage = meleteSiteAndUserInfo.processNavigate();
 
 String navpageurl = navpage +".jsf";
-Iterator it = facesContext.getMessages();
-
-if (it != null)
+if(meleteSiteAndUserInfo.checkMeleteRights())
 {
-
- while (it.hasNext())
-  {
-   FacesMessage fm = (FacesMessage)it.next();
-    request.setAttribute("msg",fm.getDetail());
- }
+	Iterator it = facesContext.getMessages();	
+	if (it != null)
+	{	
+	 while (it.hasNext())
+	  {
+	   FacesMessage fm = (FacesMessage)it.next();
+	    request.setAttribute("msg",fm.getDetail());
+	 }
+	}
 }
-else
-{
-  
-}			
+else navpageurl = "noAccess.jsf";			
 %>
 <br />
 <jsp:forward page="<%=navpageurl%>"/>
