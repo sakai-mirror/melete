@@ -3,7 +3,7 @@
  * $URL$
  *
  ***********************************************************************************
- * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -96,6 +96,7 @@ public class ListAuthModulesPage implements Serializable
 
 	/** identifier field */
 	private int showModuleId;
+    private int showInvalidModuleId;
 
 	private String formName;
 
@@ -108,7 +109,7 @@ public class ListAuthModulesPage implements Serializable
 	private boolean expandAllFlag;
 
 	private boolean autonumber;
-
+	
 	// This needs to be set later using Utils.getBinding
 	String courseId;
 
@@ -161,9 +162,11 @@ public class ListAuthModulesPage implements Serializable
 	{
 
 		FacesContext context = FacesContext.getCurrentInstance();
-		Map sessionMap = context.getExternalContext().getSessionMap();
-		courseId = (String) sessionMap.get("courseId");
-		userId = (String) sessionMap.get("userId");
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+    	
+		courseId = mPage.getCurrentSiteId();
+		userId = mPage.getCurrentUser().getId();
 		nomodsFlag = null;
 		setShowModuleId(-1);
 		count = 0;
@@ -174,7 +177,7 @@ public class ListAuthModulesPage implements Serializable
 
 		selectedSecIndex = -1;
 		sectionSelected = false;
-		ValueBinding binding = Util.getBinding("#{authorPreferences}");
+		binding = Util.getBinding("#{authorPreferences}");
 		AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
 		String expFlag = preferencePage.getUserView();
 		if (expFlag.equals("true"))
@@ -223,6 +226,7 @@ public class ListAuthModulesPage implements Serializable
 		selectAllFlag = false;
 		listSize = 0;
 		moduleDateBeans = null;
+		setShowInvalidModuleId(-1);
 	}
 
 	public boolean isAutonumber()
@@ -365,14 +369,44 @@ public class ListAuthModulesPage implements Serializable
 		selectedSecModIndices = null;
 		selectAllFlag = false;
 	}
+	
+	 public String showHideInvalid()
+	 {
+		 ModuleDateBean mdbean = null;
+		 FacesContext ctx = FacesContext.getCurrentInstance();
+		 UIViewRoot root = ctx.getViewRoot();
+		 UIData table = null;
+		 table = (UIData)
+		 root.findComponent("listauthmodulesform").findComponent("table");
+
+		 mdbean = (ModuleDateBean) table.getRowData();
+		 if (getShowInvalidModuleId() != mdbean.getModuleId())
+		 {
+			 setShowInvalidModuleId(mdbean.getModuleId());
+		 }
+
+		 return "list_auth_modules";
+	 }	
+
+
+	  public String hideInvalid()
+	  {
+		  setShowInvalidModuleId(-1);
+		  return "list_auth_modules";
+	  }
+	  	
 
 	public List getModuleDateBeans()
 	{
 		resetSelectedLists();
 		setCurrentDate(Calendar.getInstance().getTime());
 		FacesContext context = FacesContext.getCurrentInstance();
+		// reset courseid. Its getting lost when edit_module called from coursemap calls TOC
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+    	courseId = mPage.getCurrentSiteId();
 
-		boolean flagsReset = false;
+    	boolean flagsReset = false;
 		try
 		{
 			ModuleService modServ = getModuleService();
@@ -1577,7 +1611,13 @@ public class ListAuthModulesPage implements Serializable
 		ctx.addMessage(null, msg);
 	}
 
+	public int getShowInvalidModuleId() {
+		return showInvalidModuleId;
+	}
 
+	public void setShowInvalidModuleId(int showInvalidModuleId) {
+		this.showInvalidModuleId = showInvalidModuleId;
+	}
 
 	public UIData getSecTable()
 	{

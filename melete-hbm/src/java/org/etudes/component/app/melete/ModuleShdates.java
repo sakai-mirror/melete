@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,8 +28,10 @@ import java.util.Date;
 import java.util.Calendar;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-
+import org.sakaiproject.component.cover.ComponentManager;
+import org.sakaiproject.tool.cover.SessionManager;
 import org.etudes.api.app.melete.*;
+import org.etudes.util.api.AccessAdvisor;
 
 /** @author Hibernate CodeGenerator */
 public class ModuleShdates implements Serializable,ModuleShdatesService {
@@ -59,6 +61,11 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
     private org.etudes.component.app.melete.Module module;
 
     private boolean visibleFlag;
+    
+    private boolean valid;
+    
+    /** Dependency (optional, self-injected): AccessAdvisor. */
+	protected transient AccessAdvisor accessAdvisor = null;    
 
     /** full constructor */
     public ModuleShdates(Date startDate, Date endDate, int version, Boolean addtoSchedule, String startEventId, String endEventId, org.etudes.component.app.melete.Module module) {
@@ -167,18 +174,59 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
 
     public boolean isVisibleFlag()
     {
-   	   java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+    	java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+    	// check if there is an access advisor - if not, that's ok.
 
-       if (((getStartDate() == null)||(getStartDate().before(currentTimestamp)))&&((getEndDate() == null)||(getEndDate().after(currentTimestamp))))
- 	   {
- 		   return true;
- 	   }
- 	   else
- 	   {
- 		   return false;
- 	   }
+    	if (((getStartDate() == null)||(getStartDate().before(currentTimestamp)))&&((getEndDate() == null)||(getEndDate().after(currentTimestamp))))
+    	{
+    		this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
+    		if ((this.accessAdvisor != null)&&(this.accessAdvisor.denyAccess("sakai.melete", getModule().getCoursemodule().getCourseId(), String.valueOf(getModuleId()), SessionManager.getCurrentSessionUserId())))
+    		{	
+    			return false;
+    		}
+    		else
+    		{
+    			return true;
+    		}
+    	}
+    	else
+    	{
+    		return false;
+    	}
+    }	
+
+    public boolean isValid()
+    {
+    	Calendar stCal = null;
+		Calendar enCal = null;
+    	if (getStartDate() != null)
+		{
+			stCal = Calendar.getInstance();
+			stCal.setTime(getStartDate());
+			if (stCal.get(Calendar.YEAR) > 9999)
+			{
+			  return false;
+			}
+		}
+		if (getEndDate() != null)
+		{
+			enCal = Calendar.getInstance();
+			enCal.setTime(getEndDate());
+			if (enCal.get(Calendar.YEAR) > 9999)
+			{
+			  return false;
+			}
+		}
+		if ((getStartDate() != null)&&(getEndDate() != null))
+		{
+		  if (getStartDate().compareTo(getEndDate()) >= 0)
+		  {
+			return false;
+		  }
+	     }
+		return true;
     }
-
+    
     public String toString() {
         return new ToStringBuilder(this)
             .append("moduleId", getModuleId())

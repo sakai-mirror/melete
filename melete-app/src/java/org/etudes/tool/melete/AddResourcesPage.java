@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -88,19 +88,14 @@ public class AddResourcesPage implements ServletContextListener {
 
   public int getMaxUploadSize()
   {
-        /*
-         * get from session
-         */
-	  	  if(maxUploadSize == 0)
-	  	  {
-          FacesContext context = FacesContext.getCurrentInstance();
-          Map sessionMap = context.getExternalContext().getSessionMap();
-          maxUploadSize = 2;
-          if((String)sessionMap.get("maxSize") != null)
-        	  maxUploadSize = Integer.parseInt((String)sessionMap.get("maxSize"));
-          if (logger.isDebugEnabled()) logger.debug("Size is "+maxUploadSize);
-	  	  }
-        return maxUploadSize;
+	  if(maxUploadSize == 0)
+	  {
+		  FacesContext context = FacesContext.getCurrentInstance();
+		  ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		  MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		  maxUploadSize = mPage.getMaxUploadSize();		 
+	  }
+	  return maxUploadSize;
   }
 
   public void resetValues()

@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008,2009, 2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,7 +28,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Manage View" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Manage View" toolCssHref="/etudes-melete-tool/rtbc004.css">
 
 <%@include file="accesscheck.jsp" %>
 <h:form id="ManageModuleForm">
@@ -36,7 +36,7 @@
 	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp?myMode=Manage"/> 
 	</f:subview>
-	<div class="meletePortletToolBarMessage"><img src="images/folder_document.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.modules_author_manage_managing_options}" /></div>
+	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/folder_document.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.modules_author_manage_managing_options}" /></div>
 <!-- This Begins the Main Text Area -->	
 
         		<table class="maintableCollapseWithBorder">
@@ -55,7 +55,7 @@
 								                    	<h:commandLink id="contentgoto" action="#{manageModulesPage.goToManageContent}">
 															<h:graphicImage id="image0"
 									   							alt=""
-									   							url="images/manage_content.png"
+									   							url="/images/manage_content.png"
 									   							 styleClass="AuthImgClass"/>
 									   							<h:outputText id="co" value="#{msgs.modules_author_manage_content}" />
 														</h:commandLink>
@@ -67,7 +67,7 @@
 								                    	<h:commandLink id="restoregoto" action="#{manageModulesPage.goToRestoreModules}">
 															<h:graphicImage id="image"
 									   							alt=""
-									   							url="images/folder_into.gif"
+									   							url="/images/folder_into.gif"
 									   							 styleClass="AuthImgClass"/>
 									   							<h:outputText id="re" value="#{msgs.modules_author_manage_archive_title}" />
 														</h:commandLink>
@@ -79,7 +79,7 @@
 								                    	<h:commandLink id="goto_impexp" action="#{manageModulesPage.importExportModules}">
 															<h:graphicImage id="image_impexp"
 									   							alt=""
-									   							url="images/import1.gif"
+									   							url="/images/import1.gif"
 									   							styleClass="AuthImgClass"/>
 									   							<h:outputText id="import" value="#{msgs.modules_author_manage_import_export}" />
 														</h:commandLink>

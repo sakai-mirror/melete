@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,14 +28,14 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Student Preference" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Student Preference" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
  <h:form id="UserPreferenceForm">
 	<!-- top nav bar -->
 	<f:subview id="top">
 			<jsp:include page="topnavbar.jsp?myMode=Preferences"/> 
 	</f:subview>
-    <div class="meletePortletToolBarMessage"><img src="images/user1_preferences.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.student_preference_user_preference}" /></div>				
+    <div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/user1_preferences.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.student_preference_user_preference}" /></div>				
 	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
      <table  class="maintableCollapseWithBorder">
 		     <tr>

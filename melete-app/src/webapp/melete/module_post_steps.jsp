@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,7 +28,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules:Module Post Steps" toolCssHref="rtbc004.css">
+<sakai:view title="Modules:Module Post Steps" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
 <h:form id="ModulePostStepsForm">
@@ -36,7 +36,7 @@
 		<f:subview id="top">
 				<jsp:include page="topnavbar.jsp"/> 
 		</f:subview>
-		<div class="meletePortletToolBarMessage"><img src="images/view_next.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.module_post_steps_whats_next}" /> </div>
+		<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/view_next.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.module_post_steps_whats_next}" /> </div>
 
 <!-- This Begins the Main Text Area -->
 <h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>

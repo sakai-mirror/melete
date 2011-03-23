@@ -3,7 +3,7 @@
  * $URL$
  * $Id$
  ***********************************************************************************
- * Copyright (c) 2008,2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008,2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -272,9 +272,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 	public void selectedResourceDeleteAction(ActionEvent evt)
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
-
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+     	
 		UICommand cmdLink = (UICommand)evt.getComponent();
 
 		List cList = cmdLink.getChildren();
@@ -282,7 +282,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		UIParameter param1 = (UIParameter) cList.get(0);
 	   	UIParameter param2 = (UIParameter) cList.get(1);
 
-		ValueBinding binding =Util.getBinding("#{deleteResourcePage}");
+		binding =Util.getBinding("#{deleteResourcePage}");
 		DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
 		delResPage.resetValues();
 		if(section.getContentType().equals("typeUpload"))
@@ -293,7 +293,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			delResPage.setFromPage("editContentLTIServerView");
 
 		delResPage.setResourceName((String)param2.getValue());
-		delResPage.processDeletion((String)param1.getValue(), courseId);
+		delResPage.processDeletion((String)param1.getValue(), mPage.getCurrentUser().getId());
 		return;
 	}
 
@@ -504,6 +504,21 @@ public class EditSectionPage extends SectionPage implements Serializable
 		{
 			setSuccess(true);
 			return "editmodulesections";
+		}
+		return "editmodulesections";
+	}
+	
+	/*
+     * For top mode bar clicks, auto save section
+     * Returns # if save is success else stay on same page to correct error
+     */
+	public String autoSave()
+	{
+		setSuccess(false);
+		if (!saveHere().equals("failure"))
+		{
+			setSuccess(true);
+			return "#";
 		}
 		return "editmodulesections";
 	}
@@ -1197,14 +1212,17 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		Map sessionMap = context.getExternalContext().getSessionMap();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo info = (MeleteSiteAndUserInfo) binding.getValue(context);
+		
 		try
 		{
 			Section s = new Section();
 			s.setContentType("notype");
-			// user info from session
-			s.setCreatedByFname((String)sessionMap.get("firstName"));
-			s.setCreatedByLname((String)sessionMap.get("lastName"));
 			s.setTextualContent(true);
+			// user info from session
+			s.setCreatedByFname(info.getCurrentUser().getFirstName());
+			s.setCreatedByLname(info.getCurrentUser().getLastName());
 			//reset flags
 			shouldRenderEditor=false;
 			shouldRenderLink=false;

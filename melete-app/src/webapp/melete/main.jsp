@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -36,21 +36,19 @@ final MeleteSiteAndUserInfo meleteSiteAndUserInfo = (MeleteSiteAndUserInfo)faces
 String navpage = meleteSiteAndUserInfo.processNavigate();
 
 String navpageurl = navpage +".jsf";
-Iterator it = facesContext.getMessages();
-
-if (it != null)
+if(meleteSiteAndUserInfo.checkMeleteRights())
 {
-
- while (it.hasNext())
-  {
-   FacesMessage fm = (FacesMessage)it.next();
-    request.setAttribute("msg",fm.getDetail());
- }
+	Iterator it = facesContext.getMessages();	
+	if (it != null)
+	{	
+	 while (it.hasNext())
+	  {
+	   FacesMessage fm = (FacesMessage)it.next();
+	    request.setAttribute("msg",fm.getDetail());
+	 }
+	}
 }
-else
-{
-  
-}			
+else navpageurl = "noAccess.jsf";			
 %>
 <br />
 <jsp:forward page="<%=navpageurl%>"/>

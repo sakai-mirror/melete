@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -86,13 +86,14 @@ public class ModuleNextStepsPage implements Serializable/*,ToolBean*/ {
 	public String steps()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		Map sessionMap = ctx.getExternalContext().getSessionMap();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		try {
 			mdBean.setDateFlag(false);
 			ArrayList mdbeanList = new ArrayList();
 			mdbeanList.add(mdBean);
-			moduleService.updateProperties(mdbeanList, (String)sessionMap.get("courseId"));
+			moduleService.updateProperties(mdbeanList, mPage.getCurrentSiteId());
 
 			return "success";
 

@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2009 Etudes, Inc.
+ * Copyright (c) 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -81,5 +81,26 @@ public interface ViewModBeanService
 	public abstract String getSeqXml();
 
 	public abstract void setSeqXml(String seqXml);
+	
+	public abstract Date getReadDate();
+
+	public abstract void setReadDate(Date readDate);
+	
+	public abstract String getBlockedBy();
+
+	public abstract void setBlockedBy(String blockedBy);
+	
+	/**
+	 * number of sections viewed by a user in a module
+	 * 
+	 * @return
+	 */
+	public abstract Integer getNoOfSectionsRead();
+
+	/**
+	 * set the number of sections viewed
+	 * @param noOfSectionsRead
+	 */
+	public abstract void setNoOfSectionsRead(Integer noOfSectionsRead);
 
 }

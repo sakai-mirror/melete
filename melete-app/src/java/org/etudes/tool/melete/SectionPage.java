@@ -5,7 +5,7 @@
  * $Id$
  ************************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -317,14 +317,15 @@ public abstract class SectionPage implements Serializable {
     public SectionObjService getSection()
     {
         FacesContext context = FacesContext.getCurrentInstance();
-        Map sessionMap = context.getExternalContext().getSessionMap();
+        ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
           if (null == this.section) {
                         if (logger.isDebugEnabled()) logger.debug("get section is null so creating one");
               this.section = new Section();
               this.section.setContentType("notype");
               // user info from session
-              this.section.setCreatedByFname((String)sessionMap.get("firstName"));
-              this.section.setCreatedByLname((String)sessionMap.get("lastName"));
+              this.section.setCreatedByFname(mPage.getCurrentUser().getFirstName());
+              this.section.setCreatedByLname(mPage.getCurrentUser().getLastName());
               this.section.setTextualContent(true);
           	shouldRenderEditor=false;
         	shouldRenderLink=false;
@@ -374,18 +375,13 @@ public abstract class SectionPage implements Serializable {
      */
     public int getMaxUploadSize()
     {
-            /*
-             * get from session
-             */
-              FacesContext context = FacesContext.getCurrentInstance();
-              Map sessionMap = context.getExternalContext().getSessionMap();
 
+    	FacesContext context = FacesContext.getCurrentInstance();
+    	ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+    	int sz = mPage.getMaxUploadSize();
 
-             int sz = Integer.parseInt((String)sessionMap.get("maxSize"));
-    //          if (logger.isDebugEnabled()) logger.debug("Size is "+sz);
-
-
-            return sz;
+    	return sz;
     }
 
 
@@ -1484,8 +1480,7 @@ public abstract class SectionPage implements Serializable {
 		ResourceLoader bundle = new ResourceLoader(
 				"org.etudes.tool.melete.bundle.Messages");
 		if (allContentTypes == null) {
-			Map sessionMap = context.getExternalContext().getSessionMap();
-			String userId = (String) sessionMap.get("userId");
+			String userId = getCurrUserId();
 
 			ValueBinding binding = Util.getBinding("#{authorPreferences}");
 			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);

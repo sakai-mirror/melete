@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -34,6 +34,7 @@ import javax.faces.el.ValueBinding;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.util.ResourceLoader;
 import org.etudes.api.app.melete.MeleteSecurityService;
 
@@ -57,40 +58,57 @@ public class NavPage implements Serializable {
 	private boolean shouldRenderView;
 	private boolean shouldRenderManage;
 	private boolean isInstructor;
+	
 	/** Dependency: The Melete Security service. */
 	protected MeleteSecurityService meleteSecurityService;
-
+	 protected ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
+	 
 	  public NavPage() { }
-     public String viewAction()
-     {
-      	FacesContext ctx = FacesContext.getCurrentInstance();
-	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
-   	    ValueBinding binding =
-          Util.getBinding("#{listModulesPage}");
-   	    ListModulesPage lmPage = (ListModulesPage) binding.getValue(ctx);
-   	    lmPage.resetValues();
-   	    lmPage.setViewModuleBeans(null);
-   	    return lmPage.listViewAction();
-     }
+	  public String viewAction()
+	  {
+		  FacesContext ctx = FacesContext.getCurrentInstance();
+		  Map sessionMap = ctx.getExternalContext().getSessionMap();
+		  String goToPage = checkCallFrom();
+		  if ("#".equals(goToPage))
+		  {
+			  ValueBinding binding =
+				  Util.getBinding("#{listModulesPage}");
+			  ListModulesPage lmPage = (ListModulesPage) binding.getValue(ctx);
+			  lmPage.resetValues();
+			  lmPage.setViewModuleBeans(null);
+			  return lmPage.listViewAction();
+		  } else return goToPage;
+	  }
+     
      public String authAction()
      {
-       	FacesContext ctx = FacesContext.getCurrentInstance();
-   	    ValueBinding binding =
-          Util.getBinding("#{listAuthModulesPage}");
-   	    ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(ctx);
-   	    lamPage.resetValues();
-     	return "list_auth_modules";
+    	 FacesContext ctx = FacesContext.getCurrentInstance();
+    	 String goToPage = checkCallFrom();
+    	 if ("#".equals(goToPage))
+    	 {
+    		 ValueBinding binding =
+    			 Util.getBinding("#{listAuthModulesPage}");
+    		 ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(ctx);
+    		 lamPage.resetValues();
+    		 return "list_auth_modules";
+    	 }else return goToPage;	  	
      }
+     
      public String manageAction()
      {
-       	FacesContext ctx = FacesContext.getCurrentInstance();
-     	  ValueBinding binding =
-            Util.getBinding("#{manageModulesPage}");
-     	 ManageModulesPage mPage = (ManageModulesPage)
-            binding.getValue(ctx);
-     	 mPage.resetValues();
-     	return "modules_author_manage";
+    	 FacesContext ctx = FacesContext.getCurrentInstance();
+    	 String goToPage = checkCallFrom();
+    	 if ("#".equals(goToPage))
+    	 {
+    		 ValueBinding binding =
+    			 Util.getBinding("#{manageModulesPage}");
+    		 ManageModulesPage mPage = (ManageModulesPage)
+    		 binding.getValue(ctx);
+    		 mPage.resetValues();
+    		 return "modules_author_manage";
+    	 } else return goToPage;
      }
+     
      public String prefAction()
      {
      	return "list_auth_modules";
@@ -98,24 +116,28 @@ public class NavPage implements Serializable {
 
      public String PreferenceAction()
      {
- 		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	Map sessionMap = ctx.getExternalContext().getSessionMap();
-		if (getIsInstructor())
-		{
-			 ValueBinding binding =
-			       Util.getBinding("#{licensePage}");
-			     LicensePage lPage = (LicensePage)
-			            binding.getValue(ctx);
-			     	 lPage.resetValues();
-		      ValueBinding authBinding =
-		    	  Util.getBinding("#{authorPreferences}");
-		      AuthorPreferencePage aPage = (AuthorPreferencePage)
-		      authBinding.getValue(ctx);
-		      aPage.setFormName("UserPreferenceForm");
-		      aPage.resetValues();
-			return "author_preference";
-		}
-		else return "student_preference";
+    	 FacesContext ctx = FacesContext.getCurrentInstance();
+    	 Map sessionMap = ctx.getExternalContext().getSessionMap();
+    	 String goToPage = checkCallFrom();
+    	 if ("#".equals(goToPage))
+    	 {
+    		 if (getIsInstructor())
+    		 {
+    			 ValueBinding binding =
+    				 Util.getBinding("#{licensePage}");
+    			 LicensePage lPage = (LicensePage)
+    			 binding.getValue(ctx);
+    			 lPage.resetValues();
+    			 ValueBinding authBinding =
+    				 Util.getBinding("#{authorPreferences}");
+    			 AuthorPreferencePage aPage = (AuthorPreferencePage)
+    			 authBinding.getValue(ctx);
+    			 aPage.setFormName("UserPreferenceForm");
+    			 aPage.resetValues();
+    			 return "author_preference";
+    		 }
+    		 else return "student_preference";
+    	 } else return goToPage;
      }
 
 	/**
@@ -200,5 +222,36 @@ public class NavPage implements Serializable {
 			logger.warn(e.toString());
 		}
 		return false;
-	}			
+	}
+	
+	/**
+	 * On Click of any mode bar actions, auto save module and section changes.
+	 * If open screen is add/edit module or add/edit sections auto save the changes.
+	 */
+	 private String checkCallFrom()
+	 {
+	 	FacesContext ctx = FacesContext.getCurrentInstance();
+	 	String callFrom = (String)threadLocalManager.get("MELETE_SAVE_FROM");
+
+	  	if("Section".equals(callFrom))
+	  	{
+	  		ValueBinding binding = Util.getBinding("#{editSectionPage}");
+			EditSectionPage ePage = (EditSectionPage)binding.getValue(ctx);
+			return ePage.autoSave();			
+	  	}
+	  	else if("editModule".equals(callFrom))
+	  	{
+	  		ValueBinding binding = Util.getBinding("#{editModulePage}");
+	  		EditModulePage ePage = (EditModulePage)binding.getValue(ctx);
+			return ePage.autoSave();			
+	  	}
+	  	else if("addModule".equals(callFrom))
+	  	{
+	  		ValueBinding binding = Util.getBinding("#{addModulePage}");
+	  		AddModulePage aPage = (AddModulePage)binding.getValue(ctx);
+			return aPage.autoSave();			
+	  	}
+	  	threadLocalManager.set("MELETE_SAVE_FROM", "");
+	  	return "#";
+	 }	 			
 }

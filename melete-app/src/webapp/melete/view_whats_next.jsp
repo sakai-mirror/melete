@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,7 +28,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Student View" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Student View" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
 <a name="newanchor"></a>
 <h:form id="viewNSsectionform">   
@@ -52,7 +52,7 @@
 <tr>
 <td align="right">
 <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
-<h:graphicImage id="mybook_gif" value="images/my-bookmarks.png" alt="" styleClass="AuthImgClass"/>
+<h:graphicImage id="mybook_gif" value="/images/my-bookmarks.png" alt="" styleClass="AuthImgClass"/>
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />
  <f:param name="fromPage" value="view_whats_next" />
 </h:commandLink>				  

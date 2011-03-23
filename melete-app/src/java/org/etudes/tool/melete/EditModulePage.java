@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -35,11 +35,15 @@ import javax.faces.el.ValueBinding;
 import org.sakaiproject.util.ResourceLoader;
 
 import org.etudes.component.app.melete.ModuleDateBean;
+import org.etudes.api.app.melete.ModuleDateBeanService;
+import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
 //import org.sakaiproject.jsf.ToolBean;
 
 import org.sakaiproject.event.cover.EventTrackingService;
+import org.sakaiproject.thread_local.api.ThreadLocalManager;
+import org.sakaiproject.tool.api.Placement;
 import org.sakaiproject.tool.cover.ToolManager;
 
 /**
@@ -62,7 +66,8 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
    private boolean showLicenseFlag = true;
    private boolean hasSections = false;
    private SectionObjService firstSection = null;
-
+   protected ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
+   
     public EditModulePage(){
       setFormName("EditModuleForm");
       setSuccess(false);
@@ -78,9 +83,11 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 	public void setModification()
 	{
 		  FacesContext context = FacesContext.getCurrentInstance();
-	      Map sessionMap = context.getExternalContext().getSessionMap();
-	      module.setModifiedByFname((String)sessionMap.get("firstName"));
-	      module.setModifiedByLname((String)sessionMap.get("lastName"));
+	      ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+	      MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+	
+	      module.setModifiedByFname(mPage.getCurrentUser().getFirstName());
+	      module.setModifiedByLname(mPage.getCurrentUser().getLastName());
 	      module.setModificationDate(new Date());
 	}
 	 public boolean  getShowLicenseFlag() {
@@ -104,7 +111,9 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 	     FacesContext context = FacesContext.getCurrentInstance();
      	 ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
      	 Map sessionMap = context.getExternalContext().getSessionMap();
-
+     	 ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	 MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+     	 
 	    // rashmi added validations start
 //     	validation
       	module.setTitle(module.getTitle().trim());
@@ -151,7 +160,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 			mdbean.setDateFlag(false);
 			ArrayList mdbeanList = new ArrayList();
 			mdbeanList.add(mdbean);
-			moduleService.updateProperties(mdbeanList, (String)sessionMap.get("courseId"));
+			moduleService.updateProperties(mdbeanList, mPage.getCurrentSiteId());
 
 			// add module to session
 			sessionMap.put("currModule",module);
@@ -202,6 +211,21 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 		return "edit_module";
 	}
 
+	/*
+     * For top mode bar clicks, auto save edit module
+     * Returns # if save is success else stay on same page to correct error
+     */
+	public String autoSave()
+	{
+		callFromAddContent = false;
+		if(!savehere().equals("failure"))
+		{   		
+		    setSuccess(true);
+		    return "#";
+		}
+		return "edit_module";	
+	}
+	
     /*
      * Revision by rashmi on 12/20
      * in sbcPage settings ..change from getModule() to module
@@ -265,7 +289,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
         listPage.setModuleDateBeans(null);
 		return "list_auth_modules";
 	}
-
+    
     /*
      * Revised by Rashmi -- 12/21 to fix bug#189
      * reset values
@@ -275,6 +299,7 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
     	setModuleDateBean(mdbean);
     	setModule(mdbean.getModule());
     	setModuleShdates(mdbean.getModuleShdate());
+  
     	if((mdbean.getSectionBeans() == null)||(mdbean.getSectionBeans().isEmpty()))
     	{
     		setFirstSection(null);
@@ -325,4 +350,35 @@ public class EditModulePage extends ModulePage implements Serializable/*, ToolBe
 	{
 		this.firstSection = firstSection;
 	}
+
+
+	public ModuleObjService getModule() {
+		
+		FacesContext ctx = FacesContext.getCurrentInstance();
+    	ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+    	String courseId = mPage.getCurrentSiteId();
+    	String userId = mPage.getCurrentUser().getId();
+    	
+		String moduleIdfromOutside = (String)threadLocalManager.get("MELETE_MODULE_ID");
+    	if (moduleIdfromOutside != null) 
+    	{
+    		logger.debug("reading module id from thread local :" + moduleIdfromOutside);
+    		this.mdBean = (ModuleDateBean)moduleService.getModuleDateBean(userId, courseId, new Integer(moduleIdfromOutside).intValue());
+    		setEditInfo(mdBean);
+    		mPage.populateMeleteSession();
+    		threadLocalManager.set("MELETE_MODULE_ID", null);
+    	}
+		
+		return super.getModule();
+	}
+	
+	public void setMdBean(String userId, String siteId, String id)
+	{
+		if (id == null) return;
+		this.mdBean = (ModuleDateBean)moduleService.getModuleDateBean(userId, siteId, new Integer(id).intValue());
+		setEditInfo(mdBean);
+	}
+
  }

@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,6 +43,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.Vector;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Iterator;
@@ -68,6 +70,7 @@ import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.hibernate.criterion.Restrictions;
 
+import org.sakaiproject.component.cover.ComponentManager;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.user.cover.UserDirectoryService;
@@ -76,6 +79,7 @@ import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.util.ResourceLoader;
 import org.dom4j.Element;
 import org.etudes.component.app.melete.MeleteUserPreferenceDB;
+import org.etudes.util.api.AccessAdvisor;
 
 import org.sakaiproject.db.cover.SqlService;
 
@@ -92,6 +96,7 @@ import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.IdUnusedException;
 
 import org.sakaiproject.site.api.Site;
+import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.tool.cover.ToolManager;
 
 /* Mallika - 4/17/07 - added code to support subsections on list pages
@@ -112,6 +117,9 @@ public class ModuleDB implements Serializable {
 
 	private MeleteUserPreferenceDB userPrefdb;
 	private int MAX_IN_CLAUSES = 500;
+	
+	/** Dependency (optional, self-injected): AccessAdvisor. */
+	protected transient AccessAdvisor accessAdvisor = null;  
 
 	/** Dependency:  The logging service. */
 	private Log logger = LogFactory.getLog(ModuleDB.class);
@@ -179,7 +187,7 @@ public class ModuleDB implements Serializable {
              {
                if (meleteSecurityService.allowAuthor())
                {
-            	 queryStr = "select min(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId=ms.moduleId";
+            	 queryStr = "select min(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId=ms.moduleId and (ms.startDate is null or ms.endDate is null or ms.startDate < ms.endDate)";
                }
                if (meleteSecurityService.allowStudent())
                {
@@ -231,7 +239,7 @@ public class ModuleDB implements Serializable {
      {
         if (meleteSecurityService.allowAuthor())
         {	 
-          queryStr = "select max(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId=ms.moduleId";
+          queryStr = "select max(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId=ms.moduleId and (ms.startDate is null or ms.endDate is null or ms.startDate < ms.endDate)";
         }
         if (meleteSecurityService.allowStudent())
         {
@@ -284,11 +292,11 @@ public class ModuleDB implements Serializable {
 				//First get all sequence numbers after this one from course module table
 				if (prevFlag)
 				{
-					sql = "select cm.seq_no from melete_course_module cm,melete_module_shdates msh where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) order by cm.seq_no desc";
+					sql = "select cm.seq_no, cm.module_id from melete_course_module cm,melete_module_shdates msh where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) order by cm.seq_no desc";
 				}
 				else
 				{
-					sql = "select cm.seq_no from melete_course_module cm,melete_module_shdates msh where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) order by cm.seq_no";
+					sql = "select cm.seq_no, cm.module_id from melete_course_module cm,melete_module_shdates msh where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) order by cm.seq_no";
 				}
 				PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 		        pstmt.setString(1,courseId);
@@ -299,20 +307,30 @@ public class ModuleDB implements Serializable {
                 rs = pstmt.executeQuery();
                 if (rs != null)
                 {
+                	this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
                 	//Add them to resList
                 	while (rs.next())
                 	{
-                		resList.add(rs.getInt("seq_no"));
+                		int moduleId = rs.getInt("module_id");
+                		//Check to see if module is blocked via coursemap, only add to resList otherwise
+                		if ((this.accessAdvisor != null)&&(this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), userId)))
+                		{
+                			continue;
+                		}
+                		else
+                		{	
+                			resList.add(rs.getInt("seq_no"));
+                		}
                 	}
                 } 	
                	//Get all access entries for user	
                 if (prevFlag)
                 {	
-                  sql = "select cm.seq_no, sa.start_date, sa.end_date, sa.override_start, sa.override_end from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = sa.module_id and sa.users like ? order by cm.seq_no desc";
+                  sql = "select cm.seq_no, sa.start_date, sa.end_date, sa.override_start, sa.override_end from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = sa.module_id and sa.users like ? and (sa.start_date is null or sa.end_date is null or sa.start_date < sa.end_date) order by cm.seq_no desc";
                 }
                 else
                 {
-                  sql = "select cm.seq_no, sa.start_date, sa.end_date, sa.override_start, sa.override_end from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = sa.module_id and sa.users like ? order by cm.seq_no";	
+                  sql = "select cm.seq_no, sa.start_date, sa.end_date, sa.override_start, sa.override_end from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = sa.module_id and sa.users like ? and (sa.start_date is null or sa.end_date is null or sa.start_date < sa.end_date) order by cm.seq_no";	
                 }
 		    	PreparedStatement accPstmt = dbConnection.prepareStatement(sql);
 		    	accPstmt.setString(1,courseId);
@@ -942,13 +960,13 @@ public class ModuleDB implements Serializable {
 	    return modList;
 	  }
 
-	 public List getViewModulesAndDates(String userId, String courseId) throws HibernateException {
+	 public List getViewModulesAndDates(String userId, String courseId, boolean fromCourseMap) throws HibernateException {
 		 	List modList = null;
 		 	Module mod = null;
 
 	        try
 			{
-		       modList = getViewModules(userId, courseId);
+		       modList = getViewModules(userId, courseId, fromCourseMap);
 		    }
 		    catch (Exception e)
 		    {
@@ -959,36 +977,26 @@ public class ModuleDB implements Serializable {
 
 		  }
 
-	 public List getViewModules(String userId, String courseId) throws Exception {
+	 public List getViewModules(String userId, String courseId, boolean fromCourseMap) throws Exception {
 		 Connection dbConnection = null;
 		 	List resList = new ArrayList();
 		 	List courseIdList = new ArrayList();
 		 	List sectionsList = null;
 		 	Module mod = null;
 		 	Query sectionQuery = null;
-
+		 	Map accMap = null;
+		 	
 			try {
 				dbConnection = SqlService.borrowConnection();
-				//Check the special access table to see if there are any records
-				//for this user in this course
-		    	ResultSet accRs,rs = null;
-		    	String sql = "select a.module_id,a.start_date,a.end_date,a.override_start,a.override_end from melete_special_access a,melete_course_module c where a.users like ? and a.module_id=c.module_id and c.course_id = ?";
-		    	PreparedStatement accPstmt = dbConnection.prepareStatement(sql);
-		    	accPstmt.setString(1,"%"+userId+"%");
-		    	accPstmt.setString(2,courseId);
-			    accRs = accPstmt.executeQuery();
-			    Map accMap = new HashMap();
-			    if (accRs != null)
-		    	{
-			    	int accModuleId;
-		    		while (accRs.next())
-		    		{
-		    			accModuleId = accRs.getInt("module_id");
-		    			AccessDates ad = new AccessDates(accRs.getTimestamp("start_date"),accRs.getTimestamp("end_date"),accRs.getBoolean("override_start"),accRs.getBoolean("override_end"));
-		    			accMap.put(accModuleId,ad);
-		    		}
-		    	}
-	            sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
+				ResultSet rs = null;
+		    	String sql;
+		    	//Check the special access table to see if there are any records
+				//for this user in this course, do this only for students
+		    	accMap = getAccessRecords(userId, courseId, dbConnection);
+		    	
+			    //Select all undeleted modules in this course
+	            sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (d.start_date is NULL or d.end_date is NULL or d.start_date < d.end_date) and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
+
 	            PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 	            pstmt.setString(1,courseId);
 		    	rs = pstmt.executeQuery();
@@ -998,7 +1006,7 @@ public class ModuleDB implements Serializable {
 				StringBuffer rowClassesBuf;
 				List vsBeanList = null;
 		    	int prevModId =0,prevSeqNo = 0;
-		    	int moduleId,seqNo;
+		    	int moduleId = 0,seqNo;
 		    	ViewModBean vmBean = null;
 		    	String seqXml,prevSeqXml = null;
 		    	java.sql.Timestamp startTimestamp,endTimestamp;
@@ -1006,13 +1014,13 @@ public class ModuleDB implements Serializable {
 		    	{
 		    		while (rs.next())
 		    		{
-
 		    			moduleId = rs.getInt("module_id");
 		    			seqNo = rs.getInt("seq_no");
 		    			seqXml = rs.getString("seq_xml");
-
+		    			
 //		    			Associate vsBeans to vmBean
 		    			//This means its a new module
+		    			//Does not execute for the first module
 		    			if ((prevModId != 0)&&(moduleId != prevModId))
 		    			{
 		    			  if (vsBeanMap != null)
@@ -1029,11 +1037,25 @@ public class ModuleDB implements Serializable {
 		   				      vsBeanList = new ArrayList();
 		   				      processViewSections(vsBeanMap, vsBeanList,xmlSecList,rowClassesBuf);
 		   				      vmBean.setVsBeans(vsBeanList);
-		   				       vmBean.setRowClasses(rowClassesBuf.toString());
+		   				      vmBean.setRowClasses(rowClassesBuf.toString());
+		   				      Vector<Integer> noOfSections = new Vector<Integer>();
+							  int count = 0;
+							  if (fromCourseMap)
+								  vmBean.setReadDate(getReadDate(prevModId, vsBeanMap, userId, dbConnection, noOfSections));
+							  count = (noOfSections.size() > 0) ? noOfSections.get(0) : 0;
+							  vmBean.setNoOfSectionsRead(count);
 		   				    }
 		   				   }
-		    			   vsBeanMap = null;
-		    			 }
+		    			  else
+		    			  {
+		    				  if (fromCourseMap && vmBean != null)
+		    				  {
+		    					  vmBean.setReadDate(null);
+		    					  vmBean.setNoOfSectionsRead(0);
+		    				  }
+		    			  }
+		    			  vsBeanMap = null;
+		    			 }//End if ((prevModId != 0)&&(moduleId != prevModId))
 
 		    			//Populate each vsBean and add to vsBeanMap
 		    			int sectionId = rs.getInt("section_id");
@@ -1058,7 +1080,7 @@ public class ModuleDB implements Serializable {
 		    				vmBean.setTitle(rs.getString("modTitle"));
 		    				vmBean.setWhatsNext(rs.getString("whats_next"));
 		    				vmBean.setSeqXml(seqXml);
-		    				
+
 		    				// what's next display seq number is number of top level sections + 1
 		    				SubSectionUtilImpl ssuImpl1 = new SubSectionUtilImpl();
 		    				int top = ssuImpl1.noOfTopLevelSections(seqXml);
@@ -1066,41 +1088,51 @@ public class ModuleDB implements Serializable {
 		    				String ns_number= new String(seqNo+".");
 		    				ns_number = ns_number.concat(Integer.toString(top));
 		    				vmBean.setNextStepsNumber(ns_number);
-		    				
+
 		    				startTimestamp = rs.getTimestamp("start_date");
 		    				endTimestamp = rs.getTimestamp("end_date");	
-	    					
-	    					//If special access is set up, use those dates; otherwise,
-	    					//use module dates
-		    				if (accMap.size() > 0)
+
+		    				//If special access is set up, use those dates; otherwise,
+		    				//use module dates
+		    				if ((accMap != null)&&(accMap.size() > 0))
 		    				{
 		    					AccessDates ad = (AccessDates)accMap.get(moduleId);
 		    					if (ad != null)
 		    					{
 		    						if (ad.overrideStart) startTimestamp = ad.getAccStartTimestamp();
-				    				if (ad.overrideEnd) endTimestamp = ad.getAccEndTimestamp();
+		    						if (ad.overrideEnd) endTimestamp = ad.getAccEndTimestamp();
 		    					}
+
 		    				}
 
-		 				    if (isVisible(startTimestamp, endTimestamp))
-		 				    {
-		 					   vmBean.setVisibleFlag(true);
-		 				    }
-		 				    else
-		 				    {
-		 					   vmBean.setVisibleFlag(false);
-		 				    }
-		 				    if (startTimestamp != null)
-		 				    {
-		 				    	vmBean.setStartDate(new java.util.Date(startTimestamp.getTime() + (startTimestamp.getNanos()/1000000)));
-		 				    }
-		 				   if (endTimestamp != null)
-		 				    {
-		 				    	vmBean.setEndDate(new java.util.Date(endTimestamp.getTime() + (endTimestamp.getNanos()/1000000)));
-		 				    }
-		 				   resList.add(vmBean);
-		    			}
+		    				if (isVisible(startTimestamp, endTimestamp))	
+                            {
+		    					this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
+		    					if ((this.accessAdvisor != null)&&(this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId())))
+		    					{		    		  					
+		    						vmBean.setBlockedBy(this.accessAdvisor.message("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId()));
+		    						vmBean.setVisibleFlag(false);
+		    					}	
+		    					else
+		    					{	
+		    						vmBean.setVisibleFlag(true);
+		    					}
+		    				}
+		    				else
+		    				{
+		    					vmBean.setVisibleFlag(false);
+		    				}
 
+		    				if (startTimestamp != null)
+		    				{
+		    					vmBean.setStartDate(new java.util.Date(startTimestamp.getTime() + (startTimestamp.getNanos()/1000000)));
+		    				}
+		    				if (endTimestamp != null)
+		    				{
+		    					vmBean.setEndDate(new java.util.Date(endTimestamp.getTime() + (endTimestamp.getNanos()/1000000)));
+		    				}
+		    				resList.add(vmBean);
+		    			}//end if ((prevModId == 0)||(moduleId != prevModId))
 
 		    			prevModId = moduleId;
 		    			prevSeqNo = seqNo;
@@ -1125,10 +1157,22 @@ public class ModuleDB implements Serializable {
 	   				      processViewSections(vsBeanMap, vsBeanList,xmlSecList,rowClassesBuf);
 	   				      vmBean.setVsBeans(vsBeanList);
 	   				      vmBean.setRowClasses(rowClassesBuf.toString());
+	   				      Vector<Integer> noOfSections = new Vector<Integer>();
+						  int count = 0;
+						  if (fromCourseMap)
+							  vmBean.setReadDate(getReadDate(moduleId, vsBeanMap, userId, dbConnection, noOfSections));
+						  count = (noOfSections.size() > 0) ? noOfSections.get(0) : 0;
+						  vmBean.setNoOfSectionsRead(count);
 	   				    }
 	   				   }
-		    		accRs.close();
-		    		accPstmt.close();
+		    		 else
+		    		 {
+		    			 if (fromCourseMap && vmBean != null)
+		    			 {
+		    				 vmBean.setReadDate(null);
+		    				 vmBean.setNoOfSectionsRead(0);
+		    			 }
+		    		 }
 		    		rs.close();
 		    		pstmt.close();
 		    	}
@@ -1192,8 +1236,220 @@ public class ModuleDB implements Serializable {
 		}
 	 }
 
+     private Date getReadDate(int moduleId, Map sectionMap, String userId, Connection dbConnection, Vector<Integer> noOfSections) throws SQLException
+     {
+    	 logger.debug("ModuleDB:get Read date");
+    	 Date viewDate = null;
+    	 java.sql.Timestamp viewTimestamp = null;
+    	
+    	 if (sectionMap == null || sectionMap.size() == 0) 
+    	 {
+    		 return null;
+    	 }
 
+		 if (sectionMap != null)
+		 {
+             //Find all entries that are in sectionMap but not in
+			 //xmlSecList
+			 Set secKeySet = sectionMap.keySet();
+			 List secList = new ArrayList();
+			 Iterator it = secKeySet.iterator();
+			 while (it.hasNext())
+			 {
+				 secList.add((Integer)it.next());
+			 }
+			 ResultSet rs = null;
+			 
+		     String sql = "select sv.section_id,sv.view_date from melete_section_track_view sv,melete_section ms where sv.user_id = ? and sv.section_id = ms.section_id and ms.module_id = ? order by sv.view_date";
+		     PreparedStatement pstmt = dbConnection.prepareStatement(sql);
+		     pstmt.setString(1,userId);
+		     pstmt.setInt(2,moduleId);
+		     rs = pstmt.executeQuery();
+		     List trackSecList = new ArrayList();
+		     
+		     if (rs != null)
+		     {
+			   	int sectionId;
+			   	while (rs.next())
+		    	{
+		    	  sectionId = rs.getInt("section_id");
+		    	  trackSecList.add(new Integer(sectionId));
+		    	  viewTimestamp = rs.getTimestamp("view_date");
+		    	}
+		     }
+			 rs.close();
+			 pstmt.close();
+			 // the list size is the number of viewed sections from a module
+			 noOfSections.add(trackSecList.size());
+			 
+			 secList.removeAll(trackSecList);
+			 if (secList.size() != 0) 
+			 {
+				 viewDate = null;
+				 return viewDate;
+			 }					 
+		 }	
+		 if (viewTimestamp != null) viewDate = new java.util.Date(viewTimestamp.getTime() + (viewTimestamp.getNanos()/1000000));
+		 return viewDate;
+     }
 
+     /**
+	 * Get the number of sections read by a user in a module
+	 * 
+	 * @param user_id
+	 * @param module_id
+	 * @return
+	 */
+	public int getNumberOfSectionsReadFromModule(String user_id, int module_id)
+	{
+		int count = 0;
+		try
+		{
+			ResultSet rs = null;
+			Connection dbConnection = SqlService.borrowConnection();
+			String sql = "select sv.section_id,sv.view_date from melete_section_track_view sv,melete_section ms where sv.user_id = ? and sv.section_id = ms.section_id and ms.module_id = ? order by sv.view_date";
+			PreparedStatement pstmt = dbConnection.prepareStatement(sql);
+			pstmt.setString(1, user_id);
+			pstmt.setInt(2, module_id);
+			rs = pstmt.executeQuery();
+			List<Integer> trackSecList = new ArrayList<Integer>();
+
+			if (rs != null)
+			{
+				while (rs.next())
+				{
+					int sectionId = rs.getInt("section_id");
+					trackSecList.add(new Integer(sectionId));
+				}
+			}
+			rs.close();
+			pstmt.close();
+			count = trackSecList.size();
+		}
+		catch (Exception e)
+		{
+			// nothing
+		}
+		return count;
+	}
+	
+    /**
+	 * Checks if the module is completely read by the user
+	 * 
+	 * @param user_id
+	 * @param module_id
+	 * @return
+	 */
+	public boolean isModuleCompleted(String user_id, int module_id)
+	{
+		Module m = getModule(module_id);
+		if (m == null) return false;
+		Map<Integer, Section> sections = m.getSections();
+
+		// if module has no sections then its considered as completed.
+		if (sections == null || sections.size() == 0) return true;
+
+		// # of sections read by user for this module
+		int userViews = getNumberOfSectionsReadFromModule(user_id, module_id);
+
+		// if both numbers are same then user has finished the module
+		if (sections.size() == userViews)
+			return true;
+		else
+			return false;
+	}
+
+	/**
+	 * Get the number of modules completely read by all users
+	 * 
+	 * @param course_id
+	 * @return
+	 */
+	public Map<String, Integer> getNumberOfModulesCompletedByUserId(String course_id)
+	{
+		if (course_id == null) return null;
+		Map<String, Integer> allCompletedModules = new HashMap<String, Integer>();
+		Map<String, Set<Integer>> checkModules = new HashMap<String, Set<Integer>>();
+		Session session = hibernateUtil.currentSession();
+		try
+		{
+			String queryString = "select secTrack.userId as userId, cmod.moduleId as moduleId from CourseModule cmod,Section sec, SectionTrackView secTrack where cmod.moduleId=sec.moduleId and sec.sectionId = secTrack.sectionId and cmod.archvFlag=0 and cmod.courseId =:courseId order by secTrack.userId";
+			Query query = session.createQuery(queryString);
+			query.setParameter("courseId", course_id);
+			List res = query.list();
+
+			if (res != null)
+			{
+				// collect all distinct read module_ids
+				for (Iterator itr = res.listIterator(); itr.hasNext();)
+				{
+					Object pair[] = (Object[]) itr.next();
+					String userId = (String) pair[0];
+					Integer moduleId = (Integer) pair[1];
+
+					if (moduleId == null || moduleId.intValue() == 0) continue;
+					Set<Integer> mods = new HashSet<Integer>(0);
+					if (checkModules.containsKey(userId)) mods = checkModules.get(userId);
+					mods.add(moduleId);
+					checkModules.put(userId, mods);
+				}
+
+				// if no sections is read in the site return
+				if (checkModules == null || checkModules.size() == 0) return allCompletedModules;
+
+				// count completed modules by the user
+				Iterator<String> i = checkModules.keySet().iterator();
+				for (i = checkModules.keySet().iterator(); i.hasNext();)
+				{
+					String user = i.next();
+					Set<Integer> mods = checkModules.get(user);
+					for (Integer m : mods)
+					{
+						boolean complete = isModuleCompleted(user, m);
+						if (!complete) continue;
+
+						// if complete increment the count
+						Integer count = 0;
+						if (allCompletedModules.containsKey(user)) count = allCompletedModules.get(user);
+						allCompletedModules.put(user, ++count);
+					}
+				} // for end
+				checkModules = null;
+			} // if res is null end
+		}
+		catch (Exception e)
+		{
+			logger.debug("exception at getting viewed modules count " + e.getMessage());
+		}
+		hibernateUtil.closeSession();
+		return allCompletedModules;
+	}
+		
+     private Map getAccessRecords(String userId, String courseId, Connection dbConnection) throws Exception
+     {
+    	 Map accMap = new HashMap();
+    	 if (meleteSecurityService.allowStudent())
+	    	{	
+	    		String sql = "select a.module_id,a.start_date,a.end_date,a.override_start,a.override_end from melete_special_access a,melete_course_module c where a.users like ? and (a.start_date is NULL or a.end_date is NULL or a.start_date < a.end_date) and a.module_id=c.module_id and c.course_id = ?";
+	    		PreparedStatement accPstmt = dbConnection.prepareStatement(sql);
+	    		accPstmt.setString(1,"%"+userId+"%");
+	    		accPstmt.setString(2,courseId);
+	    		ResultSet accRs = accPstmt.executeQuery();
+	    		if (accRs != null)
+	    		{
+	    			int accModuleId;
+	    			while (accRs.next())
+	    			{
+	    				accModuleId = accRs.getInt("module_id");
+	    				AccessDates ad = new AccessDates(accRs.getTimestamp("start_date"),accRs.getTimestamp("end_date"),accRs.getBoolean("override_start"),accRs.getBoolean("override_end"));
+	    				accMap.put(accModuleId,ad);
+	    			}
+	    			accRs.close();
+		    		accPstmt.close();
+	    		}
+	    	}    	 
+    	 return accMap;
+     }
 
 	 public List getActivenArchiveModules(String courseId) throws HibernateException {
 		 	List modList = new ArrayList();
@@ -1356,7 +1612,9 @@ public class ModuleDB implements Serializable {
 	   java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
 
 	   if (mod == null) mod = new Module();
-	   mdBean.setVisibleFlag(mod.getModuleshdate().isVisibleFlag());
+	   ModuleShdates mshdate = (ModuleShdates)mod.getModuleshdate();
+	   mdBean.setVisibleFlag(mshdate.isVisibleFlag());
+	   mdBean.setDateFlag(!mshdate.isValid());
 	   mdBean.setModuleId(mod.getModuleId().intValue());
 	   mdBean.setModule((Module)mod);
 	   mdBean.setModuleShdate(mod.getModuleshdate());
@@ -1919,6 +2177,7 @@ public class ModuleDB implements Serializable {
 			String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in ";
 			String delSectionResourceStr = "delete SectionResource sr where sr.section in ";
 			String delBookmarksStr = "delete Bookmark bm where bm.sectionId in ";
+			String delSectionTrackStr = "delete SectionTrackView stv where stv.sectionId in ";
 			String delSectionStr = "delete Section s where s.moduleId in " + delModuleIds;
 			String delCourseModuleStr = "delete CourseModule cm where cm.moduleId in " + delModuleIds;
 			String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId in " + delModuleIds;
@@ -1935,6 +2194,8 @@ public class ModuleDB implements Serializable {
 					 logger.debug("section resource deleted" + deletedEntities);
 					 deletedEntities = session.createQuery(delBookmarksStr + allSectionIds.toString()).executeUpdate();
 					 logger.debug("Boomkarks deleted "+deletedEntities);
+					 deletedEntities = session.createQuery(delSectionTrackStr + allSectionIds.toString()).executeUpdate();
+					 logger.debug("Section track records deleted "+deletedEntities);
 				}
 			}
 
@@ -2867,6 +3128,8 @@ public class ModuleDB implements Serializable {
 
 				// save object
 				tx = session.beginTransaction();
+				String delSectionTrackStr = "delete SectionTrackView stv where stv.sectionId = ";
+				int deletedEntities = session.createQuery(delSectionTrackStr + section.getSectionId()).executeUpdate();
 				session.saveOrUpdate(section);
 				session.saveOrUpdate(prev_module);
 				session.saveOrUpdate(selectedModule);
@@ -3277,6 +3540,7 @@ public class ModuleDB implements Serializable {
 		//The delSectionResourceStr query would not clear these.
 		 String delSectionNullResourceStr = "delete SectionResource sr where sr.section.sectionId in (select s.sectionId from Section s where s.moduleId in " + allModuleIds +")";
 		String delBookmarksStr = "delete Bookmark bm where bm.siteId like '%" + delCourseId + "%'";
+		String delSectionViewStr = "delete SectionTrackView stv where stv.section.sectionId in (select s.sectionId from Section s where s.moduleId in " + allModuleIds +")";
 		String delSectionStr = "delete Section s where s.moduleId in " + allModuleIds;
 		String delCourseModuleStr = "delete CourseModule cm where cm.courseId= '" + delCourseId + "'";
 		String delModuleshDatesStr = "delete ModuleShdates msh where msh.moduleId in " +  allModuleIds;
@@ -3289,6 +3553,8 @@ public class ModuleDB implements Serializable {
 		//logger.debug("deleted sr null " + deletedEntities);
 		deletedEntities = session.createQuery(delBookmarksStr).executeUpdate();
 		//logger.debug("deleted bookmarks " + deletedEntities);
+		deletedEntities = session.createQuery(delSectionViewStr).executeUpdate();
+		//logger.debug("deleted section views " + deletedEntities);
 		deletedEntities = session.createQuery(delSectionStr).executeUpdate();
 		//logger.debug("deleted section " + deletedEntities);
 		deletedEntities = session.createQuery(delModuleshDatesStr).executeUpdate();
@@ -3480,7 +3746,15 @@ public class ModuleDB implements Serializable {
 		}		
 	}
 	
-
+	public boolean checkEditAccess(String user_id, String course_id)
+	{
+		try
+		{	
+			return meleteSecurityService.allowAuthor(course_id);
+		}
+		catch (Exception e) {return false;}
+	}
+	
 // end clean up deleted stuff code
 	 /**
 	 * @param meleteSecurityService The meleteSecurityService to set.

@@ -1,7 +1,7 @@
 <%--
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009,2010 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Select Resource Item" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Select Resource Item" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
 <script language="javascript1.2">
@@ -37,7 +37,7 @@ function contentChangeSubmit()
     <f:subview id="top">
       <jsp:include page="topnavbar.jsp"/> 
     </f:subview>
-	<div class="meletePortletToolBarMessage"><img src="images/replace2.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.editcontentlinkserverview_selecting}"/></div>
+	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/replace2.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.editcontentlinkserverview_selecting}"/></div>
 
 <!-- This Begins the Main Text Area -->
 	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>

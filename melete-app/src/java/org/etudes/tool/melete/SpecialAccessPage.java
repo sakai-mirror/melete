@@ -3,7 +3,7 @@
  * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/java/org/etudes/tool/melete/SpecialAccessPage.java $
  * $Id: SpecialAccessPage.java 56408 2008-12-19 21:16:52Z mallika@etudes.org $
  ***********************************************************************************
- * Copyright (c) 2010 Etudes, Inc.
+ * Copyright (c) 2010, 2011 Etudes, Inc.
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you
@@ -40,9 +40,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Collections;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Date;
 import java.io.*;
@@ -90,6 +92,7 @@ public class SpecialAccessPage implements Serializable
 	
 	private List deleteAccessIds;
 	private String deleteAccessTitles;
+	private int showInvalidAccessId;
 	
 	int count;
 
@@ -198,20 +201,78 @@ public class SpecialAccessPage implements Serializable
 	  if (specialAccessService == null)
 	    specialAccessService = getSpecialAccessService();
 		
-	    try
-	    {
-	      specialAccessService.insertSpecialAccess(this.saList, this.specialAccess, this.module);
-	    }catch(Exception ex)
+	  Date st = this.specialAccess.getStartDate();
+      Date end = this.specialAccess.getEndDate();
+
+      boolean dateResult = validateDates(context, bundle, st, end);
+       if (dateResult == false) return "failure";
+       
+       if (getUsers() != null)
 		{
-	    	String errMsg = bundle.getString(ex.getMessage());
-	    	context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,ex.getMessage(),errMsg));
-			return "failure";
+			try
+			{
+				specialAccessService.insertSpecialAccess(this.saList, this.specialAccess, this.module);
+			}
+			catch (Exception ex)
+			{
+				String errMsg = bundle.getString(ex.getMessage());
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), errMsg));
+				return "failure";
+			}
 		}
 	    resetValues();
 	   return "list_special_access";
 
 	}
 
+	private boolean validateDates(FacesContext context, ResourceLoader bundle, Date st, Date end)
+	{
+		Calendar calstart = new GregorianCalendar();
+		Calendar calend = new GregorianCalendar();
+
+		boolean errorFlag = false;
+		if ((st != null) || (end!= null))
+		{
+			if (st != null)
+			{
+				calstart.setTime(st);
+				if (calstart.get(Calendar.YEAR) > 9999)
+				{
+					String errMsg = bundle.getString("year_toobig_error");
+					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
+					errorFlag = true;
+				}
+			}
+			if (end != null)
+			{
+				calend.setTime(end);
+				if (calend.get(Calendar.YEAR) > 9999)
+				{
+					String errMsg = bundle.getString("year_toobig_error");
+					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
+					errorFlag = true;
+				}
+			}
+
+			//      validation no 4 b
+			if ((end != null)&&(st != null))
+			{
+				if(end.compareTo(st) <= 0)
+				{
+					String errMsg = "";
+					errMsg = bundle.getString("end_date_before_start");
+					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
+					errorFlag = true;
+				}
+			}
+		}
+		//If there is an error, validation fails and the method returns false
+		//If there are no errors, validation passes and the method returns true;
+		if (errorFlag == true) return false;
+		return true;
+	}
+	
+	
      public String addAccessAction()
      {
     	 this.specialAccess = null;
@@ -321,9 +382,34 @@ public class SpecialAccessPage implements Serializable
 	{
        saList = null;
        noAccFlag = true;
+       setShowInvalidAccessId(-1);
    	}
 
+	 public String showHideInvalid()
+	 {
+		 ModuleDateBean mdbean = null;
+		 FacesContext ctx = FacesContext.getCurrentInstance();
+		 UIViewRoot root = ctx.getViewRoot();
+		 UIData table = null;
+		 table = (UIData)
+		 root.findComponent("listspecialaccessform").findComponent("table");
 
+		 SpecialAccess saObj = (SpecialAccess) table.getRowData();
+		 if (getShowInvalidAccessId() != saObj.getAccessId())
+		 {
+			 setShowInvalidAccessId(saObj.getAccessId());
+		 }
+
+		 return "list_special_access";
+	 }	
+
+
+	  public String hideInvalid()
+	  {
+		  setShowInvalidAccessId(-1);
+		  return "list_special_access";
+	  }
+	  
    public void setSpecialAccess(SpecialAccessObjService specialAccess) {
     this.specialAccess = specialAccess;
   }
@@ -394,8 +480,10 @@ public class SpecialAccessPage implements Serializable
    public List<String> getUsersList()
 	{
 	   FacesContext context = FacesContext.getCurrentInstance();
-	    Map sessionMap = context.getExternalContext().getSessionMap();
-	    String courseId = (String)sessionMap.get("courseId");
+	   ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+   	   MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+   	   String courseId = mPage.getCurrentSiteId();
+   	
 		// get the ids
 		Set<String> ids = this.meleteSecurityService.getUsersIsAllowed(courseId);
 
@@ -535,7 +623,16 @@ public class SpecialAccessPage implements Serializable
 	 */
 	public void setNoAccFlag(boolean noAccFlag) {
 		this.noAccFlag = noAccFlag;
-	}    
+	}   
+	
+	public int getShowInvalidAccessId() {
+		return showInvalidAccessId;
+	}
+
+	public void setShowInvalidAccessId(int showInvalidAccessId) {
+		this.showInvalidAccessId = showInvalidAccessId;
+	}
+	
 	/**
 	 * @return Returns the SpecialAccessService.
 	 */

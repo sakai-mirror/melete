@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009,2010 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -33,7 +33,7 @@
 	</h:column>
 	<h:column>			
 		<h:commandLink id="serverViewButton"  action="#{editSectionPage.gotoServerView}" >
-			<h:graphicImage id="replaceImg2" value="images/replace2.gif" styleClass="AuthImgClass"/>
+			<h:graphicImage id="replaceImg2" value="/images/replace2.gif" styleClass="AuthImgClass"/>
 			<h:outputText value="#{msgs.editcontentuploadview_replace}"/>
         </h:commandLink>		
 	</h:column>

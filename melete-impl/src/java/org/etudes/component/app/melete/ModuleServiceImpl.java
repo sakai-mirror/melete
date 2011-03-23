@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -225,11 +225,11 @@ public List getModuleDateBeans(String userId, String courseId) {
   	return moduleDateBeans;
   }
 
-public List getViewModules(String userId, String courseId) {
+public List getViewModules(String userId, String courseId, boolean fromCourseMap) {
   	if (moduledb == null) moduledb = ModuleDB.getModuleDB();
 
   	try {
-  		viewModuleBeans = moduledb.getViewModulesAndDates(userId, courseId);
+  		viewModuleBeans = moduledb.getViewModulesAndDates(userId, courseId, fromCourseMap);
   	}catch (HibernateException e)
 	{
   		//e.printStackTrace();
@@ -462,7 +462,45 @@ public void restoreModules(List modules, String courseId) throws Exception
      return cMod;
     }
 
+	/**
+	 * Checks if the module is open at a given time
+	 * @param openDate
+	 * @param closeDate
+	 * @return invalid if bad dates or not able to determine the status.
+	 * open if module is open and active 
+	 * closed if module is closed
+	 * later if module is not opened yet
+	 */
+	public String isSectionModuleOpen(Date startDate, Date endDate)
+	{
+		String access = "invalid";
+		Date currentDate = new java.util.Date();
 
+		// check invalid
+		if (startDate != null && endDate != null && startDate.compareTo(endDate) >= 0)
+		{
+			return access;
+		}
+
+		// check for open, close, not yet
+		if ((startDate == null || startDate.before(currentDate)) && (endDate == null || endDate.after(currentDate)))
+		{
+			access = "open";
+		}
+		else
+		{
+			if (startDate != null && startDate.after(currentDate))
+			{
+				access = "later";
+			}
+
+			if (endDate != null && endDate.before(currentDate))
+			{
+				access = "closed";
+			}
+		}
+		return access;
+	}	
 
 	 public int getNextSeqNo(String userId, String courseId, int currSeqNo)
 	  {
@@ -552,6 +590,41 @@ public void restoreModules(List modules, String courseId) throws Exception
 		{
 			moduledb.applyBaseDateTx(course_id, days_diff);
 		}
+		
+		 public void updateModuleDates(ModuleShdatesService modShdates) throws Exception
+		 {
+			 moduledb.updateModuleShdates((ModuleShdates)modShdates);
+		 }
+		 
+		 public boolean checkEditAccess(String user_id, String course_id)
+		 {
+			 return moduledb.checkEditAccess(user_id, course_id);
+		 }
+	
+	/**
+	 *  {@inheritDoc}	 
+	 */
+	public int getNumberOfSectionsReadFromModule(String user_id, int module_id)
+	 {
+		 return moduledb.getNumberOfSectionsReadFromModule(user_id, module_id);
+	 }
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isModuleCompleted(String user_id, int module_id)
+	{
+		return moduledb.isModuleCompleted(user_id, module_id);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Map<String, Integer> getNumberOfModulesCompletedByUserId(String course_id)
+	{
+		return moduledb.getNumberOfModulesCompletedByUserId(course_id);
+	}
+	
 	/**
 	 * @return Returns the moduledb.
 	 */

@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.ArrayList;
@@ -427,6 +428,21 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		meleteUserPrefDB.setSitePreferences(toContext,fromMsp.isPrintable(),fromMsp.isAutonumber());
 	}
 
+	/**
+	 * Converts a list of Modules --> Set of ImportModules.
+	 */
+	private Set<ImportModule> convertToImportModules(List<Module> aModuleList)
+	{
+		Set<ImportModule> aModuleSet = new LinkedHashSet<ImportModule>();
+		if(aModuleList == null) return aModuleSet;
+		for(Module m:aModuleList )
+		{  
+			ImportModule im = new ImportModule(m) ;
+			aModuleSet.add(im);
+		}
+		return aModuleSet;
+	}
+	
 	/*
 	 * Imports all acive and archived modules
 	 */
@@ -437,16 +453,33 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		MeleteResource toMres = null;
 		int fromSecId, toSecId;
 
-		List fromModuleList = moduleDB.getActivenArchiveModules(fromContext);
+		List<Module> fromModuleList = moduleDB.getActivenArchiveModules(fromContext);
 
 		//Iterate through all modules in site A
 		if (fromModuleList == null || fromModuleList.size() <= 0) return;
 
+		// Get TO SITE modules 
+		Set<ImportModule> toSiteModules = new LinkedHashSet<ImportModule>();
+		List<Module> toModuleList = moduleDB.getActivenArchiveModules(toContext);
+		if (toModuleList != null && toModuleList.size() > 0)
+		{
+			// create a set of toSite modules
+			toSiteModules = convertToImportModules(toModuleList);		
+		}
+		
 		for (ListIterator i = fromModuleList.listIterator(); i.hasNext(); )
 		{
 			Module fromMod = (Module) i.next();
 			String fromModSeqXml = fromMod.getSeqXml();
 
+			// if fromModule exists in toSiteModulesList then skip
+			ImportModule check = new ImportModule(fromMod);
+			if(toSiteModules != null && toSiteModules.contains(check))
+			{
+				logger.debug("already there SO DON'T IMPORT OVER" + fromMod.getTitle());
+				continue;
+			}
+			
 			//Copy module properties and insert, seqXml is null for now
 			Module toMod = new Module(fromMod.getTitle(), fromMod.getLearnObj(), fromMod.getDescription(), fromMod.getKeywords(), fromMod.getCreatedByFname(), fromMod.getCreatedByLname(), fromMod.getUserId(), fromMod.getModifiedByFname(), fromMod.getModifiedByLname(), fromMod.getInstitute(), fromMod.getWhatsNext(), fromMod.getCreationDate(), fromMod.getModificationDate(), null);
 			ModuleShdates toModshdate = new ModuleShdates(((ModuleShdates)fromMod.getModuleshdate()).getStartDate(), ((ModuleShdates)fromMod.getModuleshdate()).getEndDate(), fromMod.getModuleshdate().getAddtoSchedule());
@@ -541,7 +574,8 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 
 				}
 			}
-
+			if(toSiteModules != null && toMod != null)
+				toSiteModules.add(new ImportModule(toMod));
 		}
 	}
 
@@ -632,4 +666,85 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 
 	}
 
+	/*
+	 * Class to check if module should be imported to next site.
+	 * If module with same title, no of sections, and all sections with same title and content type 
+	 * exists in next site then don't import over.
+	 */
+	class ImportModule {
+		Module importMod;
+				
+		public ImportModule(Module importMod) {
+			this.importMod = importMod;
+		}
+
+		public Module getImportMod() {
+			return importMod;
+		}
+
+		public void setImportMod(Module importMod) {
+			this.importMod = importMod;
+		}
+
+		@Override
+		public int hashCode() {	
+			int hash = 1;
+			// module title
+			hash = hash * 31 + importMod.getTitle().hashCode();
+			
+			// sections size
+			Map secs = importMod.getSections();
+			hash = hash * 31 + (secs == null ? 0 : secs.size());
+			
+			//sections title and content type
+			if(secs != null)
+			{
+				Iterator keyValuePairs = secs.keySet().iterator();
+				while (keyValuePairs.hasNext())
+				{
+					Section s = (Section)secs.get(keyValuePairs.next());
+					hash = hash * 31 + s.getTitle().hashCode();
+					hash = hash * 31 + (s.getContentType() == null ? 0 : s.getContentType().hashCode());
+				}
+			}
+			return hash;		
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) return true;
+			if (obj == null) return false;
+			if (getClass() != obj.getClass()) return false;
+			ImportModule other = (ImportModule) obj;
+			boolean result = false;
+			//module title
+			if(this.getImportMod().getTitle().equals(other.getImportMod().getTitle()))
+				result= true;
+			else return false;
+			
+			// compare sections
+			Map secs = this.getImportMod().getSections();
+			Map otherSecs =  other.getImportMod().getSections();
+			
+			if (secs != null && otherSecs != null)
+			{
+				if (secs.size() == otherSecs.size()) result = true;
+				else return false;
+				
+				Iterator keyValuePairs = secs.keySet().iterator();
+				Iterator otherKeyValuePairs = otherSecs.keySet().iterator();
+				while (keyValuePairs.hasNext() && otherKeyValuePairs.hasNext())
+				{
+					Section s = (Section)secs.get(keyValuePairs.next());
+					Section sOther = (Section)otherSecs.get(otherKeyValuePairs.next());
+					if(s.getTitle().equals(sOther.getTitle()) && s.getContentType().equals(sOther.getContentType())) result = true;
+					else return false;
+				}
+			}
+			else if (secs == null && otherSecs == null) result = true;
+			else return false;
+			
+			return result;	
+		}		
+	}
 }

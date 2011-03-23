@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -90,7 +90,8 @@ public class AddModulePage extends ModulePage implements Serializable{
 
 	     FacesContext context = FacesContext.getCurrentInstance();
 	     ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-
+	     Map sessionMap = context.getExternalContext().getSessionMap();
+	     
      	 //validation
      	module.setTitle(module.getTitle().trim());
      
@@ -101,10 +102,11 @@ public class AddModulePage extends ModulePage implements Serializable{
         boolean dateResult = validateDates(context, bundle, st, end);
         if (dateResult == false) return "add_module";
 
-	   	// get course info from sessionmap
-	      Map sessionMap = context.getExternalContext().getSessionMap();
-	      String courseId = (String)sessionMap.get("courseId");
-	      String userId = (String)sessionMap.get("userId");
+	   	// get course info 
+    	ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+    	String courseId = mPage.getCurrentSiteId();
+    	String userId = mPage.getCurrentUser().getId();
 
 	     // actual insert
 		try{
@@ -149,5 +151,15 @@ public class AddModulePage extends ModulePage implements Serializable{
         editPage.addBlankSection();
         
        return "editmodulesections";
+    }
+    
+    /*
+     * For top mode bar clicks, auto save add module
+     * Returns # if save is success else stay on same page to correct error
+     */
+    public String autoSave()
+    {
+    	if(save().equals("confirm_addmodule")) return "#";
+    	return "add_module";
     }
  }

@@ -28,5 +28,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/db-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/calendar-api"/>
 	<classpathentry kind="var" path="MAVEN_REPO/etudes/jars/etudes-util-1.0.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/etudes-util-api"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

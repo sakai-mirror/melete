@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009,2010 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -29,9 +29,9 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Edit Module Sections" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Edit Module Sections" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
-<script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
+<script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
 
 <%@ page import="org.sakaiproject.util.ResourceLoader, javax.faces.application.FacesMessage,org.etudes.tool.melete.AddResourcesPage, org.etudes.tool.melete.EditSectionPage"%>
 
@@ -89,7 +89,7 @@ function showmessage()
 		<f:subview id="top">
 			<jsp:include page="topnavbar.jsp"/> 
 		</f:subview>
-		<div class="meletePortletToolBarMessage"><img src="images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText id="captionText" value="#{msgs.editmodulesections_editing_section}" /> </div>
+		<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText id="captionText" value="#{msgs.editmodulesections_editing_section}" /> </div>
 		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
         <div id="errMsg1" style="color:red"><p> </p></div>
         <table class="maintableCollapseWithBorder">

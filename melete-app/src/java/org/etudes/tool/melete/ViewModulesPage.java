@@ -39,6 +39,7 @@ import javax.faces.el.ValueBinding;
 //import com.sun.faces.util.Util;
 import org.etudes.api.app.melete.ModuleService;
 //import org.sakaiproject.jsf.ToolBean;
+import org.sakaiproject.thread_local.api.ThreadLocalManager;
 
 /**
  * @author Faculty
@@ -83,6 +84,8 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 	   /** Dependency:  The logging service. */
 	  protected Log logger = LogFactory.getLog(ViewModulesPage.class);
 
+	  protected ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
+	  
 	  public ViewModulesPage(){
 		  courseId = null;
 		  	userId = null;
@@ -154,6 +157,18 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 
     public ModuleDateBeanService getMdbean()
     {
+      //refresh the bean
+	  String moduleIdfromOutside = (String)threadLocalManager.get("MELETE_MODULE_ID");
+	  if (moduleIdfromOutside != null && new Integer(moduleIdfromOutside).intValue() != this.moduleId) 
+	  {
+		setMdbean(null);
+		setPrevMdbean(null);
+		setModuleId(new Integer(moduleIdfromOutside).intValue());
+		setModuleSeqNo(0);
+		setPrintable(null);
+		setAutonumber(null);	  
+	  }
+	  
       if (this.mdbean == null)
  	  {
     	try {
@@ -161,31 +176,32 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
         	ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 
         	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
-        	String courseId = "";
+        	String courseId = mPage.getCurrentSiteId();
         	String userId = mPage.getCurrentUser().getId();
-        	String directvm_id = (String)ctx.getExternalContext().getRequestParameterMap().get("vm_id");
-        	if(directvm_id != null) 
+    	
+         	if (moduleIdfromOutside != null) 
+        	{
+        		logger.debug("reading module id in view page from thread local :" + moduleIdfromOutside);
+        		this.moduleId = new Integer(moduleIdfromOutside).intValue();	
+        		this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBean(userId, courseId,this.moduleId);
+        		mPage.populateMeleteSession();
+        		threadLocalManager.set("MELETE_MODULE_ID", null);
+        	}
+        	else
+        	{
+        		// normal processing if thread local has no value - rashmi
+        		if (this.moduleId > 0)
         		{
-        		logger.debug("get mdbean found req param value" + ctx.getExternalContext().getRequestParameterMap().get("vm_id"));
-        		this.moduleId=new Integer(directvm_id).intValue();
+        			this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBean(userId, courseId,this.moduleId);
         		}
-        	String direct_cid = (String)ctx.getExternalContext().getRequestParameterMap().get("c_id");
-        	if(direct_cid != null) courseId = direct_cid;
-        	else courseId = getCourseId();
-
-    	/*String courseId = getCourseId();
-	String userId = getUserId();*/
-    	 if (this.moduleId > 0)
-    	  {
-  	  	    this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBean(userId, courseId,this.moduleId);
-    	  }
-    	  else
-    	  {
-    		this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBeanBySeq(userId, courseId,this.moduleSeqNo);
-    	  }
+        		else
+        		{
+        			this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBeanBySeq(userId, courseId,this.moduleSeqNo);
+        		}
+        	}
     	  if (this.mdbean != null)
     	  {
-    		this.moduleId = this.mdbean.getModuleId();  
+     		this.moduleId = this.mdbean.getModuleId();  
     	    this.moduleSeqNo = this.mdbean.getModule().getCoursemodule().getSeqNo();
     	    this.prevSeqNo = getModuleService().getPrevSeqNo(userId, courseId,this.moduleSeqNo);
   	  	    this.nextSeqNo = getModuleService().getNextSeqNo(userId, courseId,this.moduleSeqNo);
@@ -241,9 +257,10 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     {
     	if (courseId == null)
     	{
-    	FacesContext context = FacesContext.getCurrentInstance();
-      	Map sessionMap = context.getExternalContext().getSessionMap();
-    	courseId = (String)sessionMap.get("courseId");
+    		FacesContext context = FacesContext.getCurrentInstance();
+    		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+        	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+        	courseId = mPage.getCurrentSiteId();
     	}
     	return courseId;
     }
@@ -252,9 +269,10 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
     {
     	if (userId == null)
     	{
-    	FacesContext context = FacesContext.getCurrentInstance();
-      	Map sessionMap = context.getExternalContext().getSessionMap();
-    	userId = (String)sessionMap.get("userId");
+    		FacesContext context = FacesContext.getCurrentInstance();
+    		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+        	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+        	userId = mPage.getCurrentUser().getId();
     	}
     	return userId;
     }

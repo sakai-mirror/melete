@@ -5,7 +5,7 @@
  * $Id: delete_module.jsp 68182 2010-06-15 20:18:18Z mallika@etudes.org $  
  ***********************************************************************************
  *
- * Copyright (c) 2010 Etudes, Inc.
+ * Copyright (c) 2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -27,7 +27,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <f:view>
-<sakai:view title="Modules: Change License Confirmation" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Change License Confirmation" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
  <h:form id="changeLicenseForm">
@@ -35,7 +35,7 @@
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
 	  <div class="meletePortletToolBarMessage">
-	  	<img src="images/user1_preferences.gif" alt="" width="16" height="16" align="absbottom" border="0">	  	
+	  	<img src="/etudes-melete-tool/images/user1_preferences.gif" alt="" width="16" height="16" align="absbottom" border="0">	  	
 	  	<h:outputText value="#{msgs.confirm_license_caption}"/>
 	 </div>
       <!-- This Begins the Main Text Area -->
@@ -82,7 +82,7 @@
 	      <tr><td>&nbsp;</td></tr> 
     	  <tr>
 	          <td>	                  
-					<img src="images/Warning.gif" alt="" width="16" height="16" align="absbottom" border="0">
+					<img src="/etudes-melete-tool/images/Warning.gif" alt="" width="16" height="16" align="absbottom" border="0">
 					<h:outputText value="#{msgs.confirm_license_disclaimer}" /> <h:outputText value="#{msgs.confirm_license_disclaimer_1}" styleClass="bold"/>
 					<h:outputText value="#{msgs.confirm_license_disclaimer_2}" /> <h:outputText value="#{msgs.confirm_license_disclaimer_3}" styleClass="bold" /> <h:outputText value="#{msgs.confirm_license_disclaimer_4}" />
 			  </td>

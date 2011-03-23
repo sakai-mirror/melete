@@ -6,7 +6,7 @@
  * $Id: add_bookmark.jsp 64898 2009-11-24 22:26:14Z mallika@etudes.org $  
  ***********************************************************************************
  *
- * Copyright (c) 2010 Etudes, Inc.
+ * Copyright (c) 2010, 2011 Etudes, Inc.
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Bookmark It" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Bookmark It" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
 
 <script type="text/javascript" language="javascript">

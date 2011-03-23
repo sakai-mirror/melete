@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2009, 2010 Etudes, Inc.
+ * Copyright (c) 2009, 2010, 2011 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you
  * may not use this file except in compliance with the License. You may
@@ -116,11 +116,11 @@ public class SortModuleSectionPage implements Serializable{
 			if(currModulesList == null)
 			{
 				FacesContext context = FacesContext.getCurrentInstance();
-				Map sessionMap = context.getExternalContext().getSessionMap();
-
-				String courseId = (String)sessionMap.get("courseId");
+				ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		    	
 				currModulesList = new ArrayList();
-				currModulesList = getModuleService().getModules(courseId);
+				currModulesList = getModuleService().getModules(mPage.getCurrentSiteId());
 				currList  = forSelectItemsList(currModulesList);
 			}
 		} catch(Exception e)
@@ -239,8 +239,9 @@ public class SortModuleSectionPage implements Serializable{
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+    	String courseId = mPage.getCurrentSiteId();
 		// if module is selected then throw message
 		logger.debug("values" + newSelectedModule );
 
@@ -279,8 +280,9 @@ public class SortModuleSectionPage implements Serializable{
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+    	String courseId = mPage.getCurrentSiteId();
 		// if module is selected then throw message
 	  	logger.debug("values" + newSelectedModule );
 
@@ -318,8 +320,9 @@ public class SortModuleSectionPage implements Serializable{
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+    	String courseId = mPage.getCurrentSiteId();
 
 		try{
 			if(newSelectedModule != null)
@@ -354,8 +357,9 @@ public class SortModuleSectionPage implements Serializable{
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+    	String courseId = mPage.getCurrentSiteId();
 
 		try{
 			if(newSelectedModule != null)
@@ -421,8 +425,10 @@ public class SortModuleSectionPage implements Serializable{
 		if(allModules == null || allModulesList == null )
 		{
 			FacesContext context = FacesContext.getCurrentInstance();
-			Map sessionMap = context.getExternalContext().getSessionMap();
-			String courseId = (String)sessionMap.get("courseId");
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+	    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+	    	String courseId = mPage.getCurrentSiteId();
+	    	
 			allModules = new ArrayList();
 			allModules = moduleService.getModules(courseId);
 			if (allModules.size() > 0)

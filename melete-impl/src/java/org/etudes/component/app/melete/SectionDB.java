@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -25,6 +25,7 @@ package org.etudes.component.app.melete;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +35,7 @@ import java.util.ListIterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Element;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -42,10 +44,12 @@ import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.MeleteSecurityService;
+import org.etudes.api.app.melete.SectionTrackViewObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.entity.api.Reference;
+
 
 /**
  * @author Rashmi
@@ -320,6 +324,7 @@ public class SectionDB implements Serializable {
 		String delMeleteResourceStr = "delete MeleteResource mr where mr.resourceId=:resourceId";
 		String delSectionResourceStr = "delete SectionResource sr where sr.sectionId=:sectionId";
 		String delBookmarksStr = "delete Bookmark bm where bm.sectionId=:sectionId";
+		String delSectionViewStr = "delete SectionTrackView stv where stv.sectionId=:sectionId";
 		String delSectionStr = "delete Section sec where sec.sectionId=:sectionId";
 		String selModuleStr = "select mod.seqXml from Module mod where mod.moduleId=:moduleId";
 		String updModuleStr = "update Module mod set mod.seqXml=:seqXml where mod.moduleId=:moduleId";
@@ -399,6 +404,13 @@ public class SectionDB implements Serializable {
 		    	     {
 		    	       affectedEntities = session.createQuery(delBookmarksStr).setInteger("sectionId", sectionId).executeUpdate();
 		    	       logger.debug(affectedEntities+" row was deleted from MELETE_BOOKMARK");
+		    	     }
+		    	     
+		    	   //Delete tracking for this section
+		    	     if (sectionId != null)
+		    	     {
+		    	       affectedEntities = session.createQuery(delSectionViewStr).setInteger("sectionId", sectionId).executeUpdate();
+		    	       logger.debug(affectedEntities+" row was deleted from MELETE_SECTION_TRACK_VIEW");
 		    	     }
 		    	     
 		    	     //Delete section
@@ -718,9 +730,55 @@ public class SectionDB implements Serializable {
 
 		 }
 
+	 public void insertSectionTrack(SectionTrackViewObjService stv) throws Exception
+	 {
+		 Transaction tx = null;
+		 try
+		 {
+			 Session session = hibernateUtil.currentSession();
+			 tx = session.beginTransaction();
 
+			 Query q=session.createQuery("select sv from SectionTrackView as sv where sv.sectionId = :sectionId and sv.userId =:userId");
+			 q.setParameter("sectionId", stv.getSectionId());
+			 q.setParameter("userId", stv.getUserId());
+			 SectionTrackView find_sv = (SectionTrackView)q.uniqueResult();
 
+			 if(find_sv == null)
+				 session.save(stv);
+			 tx.commit();
+		 }
+		 catch(StaleObjectStateException sose)
+		 {
+			 if(tx !=null) tx.rollback();
+			 logger.error("stale object exception" + sose.toString());
+			 throw sose;
+		 }
+		 catch (HibernateException he)
+		 {
+			 logger.error(he.toString());
+			 he.printStackTrace();
+			 throw he;
+		 }
+		 catch (Exception e) {
+			 if (tx!=null) tx.rollback();
+			 logger.error(e.toString());
+			 throw e;
+		 }
+		 finally
+		 {
+			 try
+			 {
+				 hibernateUtil.closeSession();
+			 }
+			 catch (HibernateException he)
+			 {
+				 logger.error(he.toString());
+				 throw he;
+			 }
+		 }
+	 }
 
+	 
 	/*
 	 *  add resource
 	 */
@@ -1734,6 +1792,167 @@ public class SectionDB implements Serializable {
 			e.printStackTrace();
 			throw new MeleteException("all_license_change_fail");
 		}		
+	}
+	
+	/*
+	 * Returns a Map<userId, ViewDate> for a section.
+	 */
+	public Map<String, Date> getSectionUsersViewDate(int sectionId)
+	{
+		 Map<String, Date> all = new HashMap<String,Date>();
+		 Session session = hibernateUtil.currentSession();
+		 Query q = session.getNamedQuery("trackSectionItem");                
+		  q.setParameter("sectionId", sectionId, Hibernate.INTEGER);
+		  
+		  List<SectionTrackView> sectionUsers = q.list();
+		  if (sectionUsers == null || sectionUsers.size() <= 0) return all;
+		  for(SectionTrackView s: sectionUsers)
+		  {
+			  if(s.getViewDate() != null)
+			  {
+				  all.put(s.getUserId(),s.getViewDate());
+			  }
+		  }
+		  hibernateUtil.closeSession();
+		  return all;			
+	}
+	
+	/**
+	 * Count of users view the section
+	 * @param sectionId
+	 * @return
+	 */
+	public Integer getSectionViewersCount(int sectionId)
+	{
+		Integer count =  0;
+		try
+		{
+		Session session = hibernateUtil.currentSession();
+		 Query q = session.getNamedQuery("trackSectionCount");                
+		 q.setParameter("sectionId", sectionId, Hibernate.INTEGER);
+		 List results = q.list();
+		 if( results != null) count = (Integer)results.get(0);
+		 
+		}catch(Exception e)
+		{
+			logger.debug("exception at getting track count " + e.getMessage());
+			count = 0;
+		}
+		hibernateUtil.closeSession();
+		return count;
+	}
+	
+	/** 
+	 * 
+	 * @param course_id
+	 * @return
+	 */
+	public int getAllActiveSectionsCount(String courseId)
+	{
+		int count = 0;
+		if(courseId == null) return count;
+		
+		Session session = hibernateUtil.currentSession();
+		try
+		{
+			String queryString = "select count(sec.sectionId) from CourseModule cmod,Section sec where cmod.moduleId=sec.moduleId and cmod.courseId=:courseId and cmod.archvFlag=0";
+			Query query = session.createQuery(queryString);
+			query.setParameter("courseId",courseId);
+			List res = query.list();
+			if (res != null) count = ((Integer)res.get(0)).intValue();
+		}
+		catch(Exception e)
+		{
+			logger.debug("exception at getting all sections count " + e.getMessage());
+			count = 0;
+		}
+		hibernateUtil.closeSession();
+		return count;
+	}
+	
+	/**
+	 *all viewed sections
+	 * 
+	 * @param courseId
+	 * @return
+	 */
+	public Map<Integer, List<String>> getAllViewedSectionsCount(String courseId)
+	{
+		if (courseId == null) return null;
+		Map<Integer, List<String>> allViewedSections = new HashMap<Integer, List<String>>();
+		Session session = hibernateUtil.currentSession();
+		try
+		{
+			String queryString = "select secTrack from CourseModule cmod,Section sec, SectionTrackView secTrack where cmod.moduleId=sec.moduleId and sec.sectionId = secTrack.sectionId and cmod.archvFlag=0 and cmod.courseId =:courseId order by secTrack.sectionId";
+			Query query = session.createQuery(queryString);
+			query.setParameter("courseId", courseId);
+			List<SectionTrackView> res = query.list();
+			if (res != null)
+			{
+				for (SectionTrackView track : res)
+				{
+					if (allViewedSections.containsKey(track.getSectionId()))
+					{
+						List<String> users = allViewedSections.get(track.getSectionId());
+						users.add(track.getUserId());
+						allViewedSections.put(track.getSectionId(), users);
+					}
+					else
+					{
+						List<String> users = new ArrayList<String>();
+						users.add(track.getUserId());
+						allViewedSections.put(track.getSectionId(), users);
+					}
+				} // for end
+			}
+		}
+		catch (Exception e)
+		{
+			logger.debug("exception at getting viewed sections count " + e.getMessage());
+		}
+		hibernateUtil.closeSession();
+		return allViewedSections;
+	}
+	
+	/**
+	 * number of sections viewed by users of a site
+	 * @param courseId
+	 * @return
+	 */
+	public Map<String, Integer> getNumberOfSectionViewedByUserId(String courseId)
+	{
+		if (courseId == null) return null;
+		Map<String, Integer> allViewedSections = new HashMap<String, Integer>();
+		Session session = hibernateUtil.currentSession();
+		try
+		{
+			String queryString = "select secTrack from CourseModule cmod,Section sec, SectionTrackView secTrack where cmod.moduleId=sec.moduleId and sec.sectionId = secTrack.sectionId and cmod.archvFlag=0 and cmod.courseId =:courseId order by secTrack.userId";
+			Query query = session.createQuery(queryString);
+			query.setParameter("courseId", courseId);
+			List<SectionTrackView> res = query.list();
+			if (res != null)
+			{
+				for (SectionTrackView track : res)
+				{
+					if (allViewedSections.containsKey(track.getUserId()))
+					{
+						Integer count = allViewedSections.get(track.getUserId());
+						count ++;
+						allViewedSections.put(track.getUserId(), count);
+					}
+					else
+					{
+						allViewedSections.put(track.getUserId(), 1);
+					}
+				} // for end
+			}
+		}
+		catch (Exception e)
+		{
+			logger.debug("exception at getting viewed sections count " + e.getMessage());
+		}
+		hibernateUtil.closeSession();
+		return allViewedSections;
 	}
 	
 	/**

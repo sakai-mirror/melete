@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009,2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,9 +28,9 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Student View" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Student View" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
-<script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
+<script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
 
 <h:form id="viewsectionform"> 
 	<f:subview id="top">
@@ -40,25 +40,34 @@
 <table   class="maintableCollapseWithNoBorder">
 <tr>
 <td colspan="2" align="center">
+<h:inputHidden id="trackSection" value="#{viewSectionsPage.sectionTrack}" />
 <f:subview id="topmod">
  	<jsp:include page="view_navigate.jsp"/>
 </f:subview>
+<!-- breadcrumbs -->
+<h:panelGrid id="crumbsItem" columns="1"  style=" border-width:medium; border-color: #E2E4E8">
+	<h:column>
+		<h:commandLink id="moduleItem" action="#{viewSectionsPage.goCurrentModule}" immediate="true" >
+			<h:outputText id="modTitle" value="#{viewSectionsPage.module.title}"/>			
+     	</h:commandLink>
+     <h:outputText id="sep" value=" &raquo; "  escape="false" /> <h:outputText id="secTitle" value="#{viewSectionsPage.section.title}" />
+</h:column>	
+</h:panelGrid>
 
-	<h:panelGroup id="bcsecpgroup" binding="#{viewSectionsPage.secpgroup}"/>
 </td>
 <tr>
 <td colspan="2" align="right">										
   <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','Melete Bookmark Window');">
 		    	<f:param id="sectionId" name="sectionId" value="#{viewSectionsPage.section.sectionId}" />
 	  			<f:param id="sectionTitle" name="sectionTitle" value="#{viewSectionsPage.section.title}" />
-	  			<h:graphicImage id="bul_gif" value="images/bookmark-it.png" alt="" styleClass="AuthImgClass"/>
+	  			<h:graphicImage id="bul_gif" value="/images/bookmark-it.png" alt="" styleClass="AuthImgClass"/>
 				      <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
  	</h:outputLink>		
  <h:outputText value="|"/> 			
- <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
-						<h:graphicImage id="mybook_gif" value="images/my-bookmarks.png" alt="" styleClass="AuthImgClass"/>
-						<h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
- <f:param name="fromPage" value="view_section" />
+ <h:commandLink id="myBookmarksLink" action="#{viewSectionsPage.gotoMyBookmarks}" immediate="true">
+						<h:graphicImage id="mybook_gif" value="/images/my-bookmarks.png" alt="" styleClass="AuthImgClass"/>
+						<h:outputText id="mybks" value="#{msgs.my_bookmarks}" />	
+						<f:param name="fromPage" value="view_section" />								
 </h:commandLink>
 </td>
 </tr>

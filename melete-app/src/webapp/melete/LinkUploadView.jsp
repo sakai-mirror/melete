@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -27,7 +27,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Link Upload" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Link Upload" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
  <h:form id="LinkUploadForm" enctype="multipart/form-data" >
@@ -35,7 +35,7 @@
 	<f:subview id="top">
 			<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
-    <div class="meletePortletToolBarMessage"><img src="images/manage_content.png" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.link_upload_title}" /></div>
+    <div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/manage_content.png" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.link_upload_title}" /></div>
     <table class="maintableCollapseWithBorder">
         <tr>
         <td class="maintabledata3">
@@ -88,14 +88,14 @@
 			   <h:column>
 			   <h:outputText id="brvalmsg" escape="false" value="<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" /><h:message for="url" id="errurlmsg" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 		 	   <h:outputText id="brval0" escape="false" value="<BR>&nbsp;&nbsp;" />
-			   <h:graphicImage id="contenttype_gif" alt="#{msgs.link_upload_view_content}" title="#{msgs.link_upload_view_content}" value="images/url.gif" styleClass="ExpClass"/>
+			   <h:graphicImage id="contenttype_gif" alt="#{msgs.link_upload_view_content}" title="#{msgs.link_upload_view_content}" value="/images/url.gif" styleClass="ExpClass"/>
 			    <h:outputText escape="false" value="&nbsp;*&nbsp;" styleClass="required"/>
 		       <h:outputText id="urltext" escape="false" value="#{msgs.link_upload_view_url}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />
 				 <h:message for="url" id="errurlmsg" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>                
                 <h:inputText id="url" size="40" value="#{ut.url}" />
                 <h:outputText id="spc" escape="false" value="&nbsp;" />
                  <h:commandLink id="removeLink"   actionListener="#{addResourcesPage.removeLink}" action="#{addResourcesPage.redirectToLinkUpload}" >  
-                   <h:graphicImage id="remove_gif" alt="" value="images/remove_item.png" styleClass="ExpClass"/>
+                   <h:graphicImage id="remove_gif" alt="" value="/images/remove_item.png" styleClass="ExpClass"/>
                     <h:outputText 	id="remove_text" value="#{msgs.link_upload_remove_item}"/>		
                   </h:commandLink>
                  <h:outputText id="brvaltitle" escape="false" value="<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />  

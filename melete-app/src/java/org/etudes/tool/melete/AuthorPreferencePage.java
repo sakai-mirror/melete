@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -81,8 +81,10 @@ public class AuthorPreferencePage {
   public void setEditorFlags()
   {
 	  FacesContext context = FacesContext.getCurrentInstance();
-	  Map sessionMap = context.getExternalContext().getSessionMap();
-	  mup = getMup((String)sessionMap.get("userId"));
+  	  ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+      MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+
+	  mup = getMup(mPage.getCurrentUser().getId());
 	  shouldRenderSferyx = false;
 	  shouldRenderFCK = false;
 
@@ -111,12 +113,12 @@ public class AuthorPreferencePage {
   public void resetValues()
   {
 	FacesContext context = FacesContext.getCurrentInstance();
-	Map sessionMap = context.getExternalContext().getSessionMap();
+	ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
 
-	  mup = getMup((String)sessionMap.get("userId"));
+	  mup = getMup(mPage.getCurrentUser().getId());
 	
-      ValueBinding binding =
-	        Util.getBinding("#{licensePage}");
+      binding = Util.getBinding("#{licensePage}");
 	  LicensePage lPage = (LicensePage)binding.getValue(context);
 	  if (lPage.getLicenseCodes() == null)
 	  {
@@ -127,10 +129,11 @@ public class AuthorPreferencePage {
   private void getUserChoice()
   {
 	  	FacesContext context = FacesContext.getCurrentInstance();
-  		Map sessionMap = context.getExternalContext().getSessionMap();
+	  	ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+	    MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
 
-  		mup = getMup((String)sessionMap.get("userId"));
-  		msp = (MeleteSitePreference) getAuthorPref().getSiteChoice((String)sessionMap.get("courseId"));
+		mup = getMup(mPage.getCurrentUser().getId());
+  		msp = (MeleteSitePreference) getAuthorPref().getSiteChoice(mPage.getCurrentSiteId());
 
   		// reset flags
 		setEditorFlags();
@@ -287,9 +290,11 @@ public void setUserView(String userView) {
 private void setChoices() throws Exception
 {
 	FacesContext context = FacesContext.getCurrentInstance();
-	Map sessionMap = context.getExternalContext().getSessionMap();
+    ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
 	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-    if (mup == null)
+
+	if (mup == null)
     {
     	mup = new MeleteUserPreference();
     }
@@ -311,8 +316,7 @@ private void setChoices() throws Exception
 		else mup.setShowLTIChoice(false);
 
 		
-	ValueBinding binding =
-  	        Util.getBinding("#{licensePage}");
+	 binding =Util.getBinding("#{licensePage}");
 	LicensePage lPage = (LicensePage)binding.getValue(context);
 	// validation: check for license and year lengths
 	if (!lPage.getLicenseCodes().equals(lPage.NO_CODE))
@@ -320,13 +324,13 @@ private void setChoices() throws Exception
 		lPage.validateLicenseLengths();
 	}	
 	mup = lPage.processLicenseInformation(mup);
-	mup.setUserId((String)sessionMap.get("userId"));
+	mup.setUserId(mPage.getCurrentUser().getId());
 	authorPref.insertUserChoice(mup);
 
 	// set Site Preferences
 	if(msp == null) {
 		msp = new MeleteSitePreference();
-		msp.setPrefSiteId((String)sessionMap.get("courseId"));
+		msp.setPrefSiteId(mPage.getCurrentSiteId());
 	}
 
 	//set print preference
@@ -437,9 +441,11 @@ public String changeLicenseAction()
 {
 	FacesContext context = FacesContext.getCurrentInstance();
 	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-	Map sessionMap = context.getExternalContext().getSessionMap();
-	mup = getMup((String)sessionMap.get("userId"));
-	String courseId = (String)sessionMap.get("courseId");
+	ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+
+	mup = getMup(mPage.getCurrentUser().getId());
+	String courseId = mPage.getCurrentSiteId();
 	try
 	{
 		sectionService.changeLicenseForAll(courseId, mup);
@@ -452,7 +458,7 @@ public String changeLicenseAction()
 	}
 	
 	// refresh list page
-	ValueBinding binding =Util.getBinding("#{listAuthModulesPage}");
+	binding =Util.getBinding("#{listAuthModulesPage}");
 	ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
     listPage.resetValues();
 	return "list_auth_modules";

@@ -5,7 +5,7 @@
  * $Id: list_special_access.jsp 68182 2010-06-15 20:18:18Z mallika@etudes.org $  
  ***********************************************************************************
  *
- * Copyright (c) 2010 Etudes, Inc.
+ * Copyright (c) 2010, 2011 Etudes, Inc.
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: List Special Access" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: List Special Access" toolCssHref="/etudes-melete-tool/rtbc004.css">
 
 <%@include file="accesscheck.jsp" %>
 
@@ -81,7 +81,7 @@ function resetAllAcc()
     <f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
-	<div class="meletePortletToolBarMessage"><img src="images/access.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_special_access}" /> </div>
+	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/access.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_special_access}" /> </div>
     <h:outputText id="title" value="#{specialAccessPage.module.title}"/>
 	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 	
@@ -92,13 +92,13 @@ function resetAllAcc()
     <h:panelGrid columns="2" columnClasses="authBarCol" cellspacing="5" width="16%">
 	<h:column>
 		<h:commandLink id="addAction" action="#{specialAccessPage.addAccessAction}" immediate="true">
-		    <h:graphicImage id="addAccessImg" value="images/document_add.gif" styleClass="AuthImgClass"/>
+		    <h:graphicImage id="addAccessImg" value="/images/document_add.gif" styleClass="AuthImgClass"/>
 	  		<h:outputText  value="#{msgs.list_special_access_add}"/>
 		</h:commandLink>
 	</h:column>
 	<h:column>
 		<h:commandLink id="delAction" action="#{specialAccessPage.deleteAction}">
-	        <h:graphicImage id="deleteImg" value="images/delete.gif" styleClass="AuthImgClass"/>
+	        <h:graphicImage id="deleteImg" value="/images/delete.gif" styleClass="AuthImgClass"/>
 	        <h:outputText  id="del" value="#{msgs.list_special_access_delete}"></h:outputText>
 	     </h:commandLink>
 	</h:column>
@@ -110,18 +110,38 @@ function resetAllAcc()
    <td>
    <h:dataTable id="table" 
                   value="#{specialAccessPage.saList}"
-                  var="saObj"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass" 
+                  var="saObj"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass" 
                   cellpadding="3" cellspacing="0" 
 				  width="100%" binding="#{specialAccessPage.table}" styleClass="valignStyle9" summary="#{msgs.list_special_access_summary}">
                       
-    <h:column>
-    <f:facet name="header">
-    <h:panelGroup>
+    <h:column>   
+     <f:facet name="header">
+       <h:outputText value="&nbsp;" escape="false"/>
+     </f:facet>  
+     <h:panelGrid columns="1" style="z-index:0;" rendered="#{saObj.valid == false}">   
+	 <h:column>    
+     <h:commandLink id="showHideInvalid" action="#{specialAccessPage.showHideInvalid}" immediate="true">
+	    <h:graphicImage id="err_gif" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" rendered="#{saObj.valid == false}" styleClass="ExpClass"/>                     
+     </h:commandLink> 
+	 <h:panelGrid id="invalidMsg" columns="1" border="1" rules="cols" bgcolor="#FFFFCC" cellpadding="5" width="300px" styleClass="invalidAlert" rendered="#{saObj.valid == false && specialAccessPage.showInvalidAccessId == saObj.accessId}" >   
+		<h:column>     	  
+		<h:outputText value="#{msgs.invalid_access_msg}" />
+		</h:column>
+		<h:column>
+		<h:commandButton value="#{msgs.invalid_ok_msg}" action="#{specialAccessPage.hideInvalid}" immediate="true" styleClass="BottomImgFinish"/>
+		</h:column>
+	  </h:panelGrid> 
+	  </h:column>
+	  </h:panelGrid>             
+    </h:column>   
+   <h:column>
+     <f:facet name="header">
+      <h:panelGroup>
        <h:selectBooleanCheckbox id="allacccheck" value="#{specialAccessPage.selectAllFlag}" onclick="selectAll()" valueChangeListener="#{specialAccessPage.selectAllAccess}" rendered="#{specialAccessPage.noAccFlag == false}" />   
-    </h:panelGroup> 
-     </f:facet>                      
-      <h:selectBooleanCheckbox id="accCheck" value="#{saObj.selected}" onclick="resetAllAcc()" valueChangeListener="#{specialAccessPage.selectedAccess}" />
-        </h:column>               
+      </h:panelGroup> 
+     </f:facet>   
+    <h:selectBooleanCheckbox id="accCheck" value="#{saObj.selected}" onclick="resetAllAcc()" valueChangeListener="#{specialAccessPage.selectedAccess}" />
+     </h:column>               
    <h:column>
  	<f:facet name="header">
  	 <h:panelGroup>
@@ -152,13 +172,14 @@ function resetAllAcc()
                <f:facet name="header">
 				 <h:outputText id="t6" value="#{msgs.list_special_access_end_date}" />
              </f:facet>
-             
+
              <h:outputText id="endDate0" 
                            value="#{msgs.list_special_access_default}"  styleClass="italics"  rendered="#{(saObj.overrideEnd == false)}">
             </h:outputText>
              <h:outputText id="endDate1" 
                            value="#{msgs.list_special_access_open}" styleClass="italics"   rendered="#{((saObj.endDate == null)&&(saObj.overrideEnd == true))}">
              </h:outputText>
+
               <h:outputText id="endDate"
                            value="#{saObj.endDate}"
                               rendered="#{((saObj.endDate != null)&&(saObj.overrideEnd == true))}">

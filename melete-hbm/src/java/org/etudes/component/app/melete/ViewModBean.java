@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2009 Etudes, Inc.
+ * Copyright (c) 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -58,12 +58,22 @@ public class ViewModBean implements Serializable, ViewModBeanService {
     protected int seqNo;
     
     protected String seqXml;
+    
+    protected Date readDate;
 
     protected List vsBeans;
 
     private int vsBeansSize;
     
     private String nextStepsNumber;
+    
+    private String blockedBy;
+    
+    protected boolean closedBeforeFlag;
+    
+    protected boolean openLaterFlag; 
+    
+    protected Integer noOfSectionsRead = 0;
     /**
 	 * {@inheritDoc}
 	 */
@@ -300,6 +310,23 @@ public class ViewModBean implements Serializable, ViewModBeanService {
 	{
 		this.seqXml = seqXml;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getReadDate()
+	{
+		return this.readDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setReadDate(Date readDate)
+	{
+		this.readDate = readDate;
+	}
+	
 
 	public String getNextStepsNumber() {
 		return nextStepsNumber;
@@ -308,5 +335,56 @@ public class ViewModBean implements Serializable, ViewModBeanService {
 	public void setNextStepsNumber(String nextStepsNumber) {
 		this.nextStepsNumber = nextStepsNumber;
 	}
+
+	public String getBlockedBy() {
+		return blockedBy;
+	}
+
+	public void setBlockedBy(String blockedBy) {
+		this.blockedBy = blockedBy;
+	}
+	
+	 public boolean isClosedBeforeFlag()
+	 {
+		 if (visibleFlag == false && blockedBy == null)
+		 {
+			 Date currentDate = new java.util.Date();
+			 if ((getEndDate() != null)&&(getEndDate().before(currentDate)))
+			 {
+				 return true;
+			 }
+		 }
+		 return false;
+	 }
+	 
+	 public boolean isOpenLaterFlag()
+	 {
+		 if (visibleFlag == false && blockedBy == null)
+		 {
+			 Date currentDate = new java.util.Date();
+			 if ((getStartDate() != null)&&(getStartDate().after(currentDate)))
+			 {
+				 return true;
+			 }
+		 }
+		 return false;
+	 }
+	 
+	 /**
+	 * {@inheritDoc}
+	 */
+	public Integer getNoOfSectionsRead()
+	{
+		return noOfSectionsRead;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setNoOfSectionsRead(Integer noOfSectionsRead)
+	{
+		this.noOfSectionsRead = noOfSectionsRead;
+	}
+	 
 
 }

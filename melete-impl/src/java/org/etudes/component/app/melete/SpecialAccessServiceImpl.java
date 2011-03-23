@@ -4,7 +4,7 @@
  * $Id: SpecialAccessServiceImpl.java 56408 2008-12-19 21:16:52Z rashmi@etudes.org $
  ***********************************************************************************
  *
- * Copyright (c) 2010 Etudes, Inc.
+ * Copyright (c) 2010,2011 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,24 +138,24 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 
   private void setSpecialAccess(SpecialAccessObjService sa, ModuleObjService mod) throws Exception
   {
-		  if (Different.different(sa.getStartDate(), mod.getModuleshdate().getStartDate()))
-		  {
-			  sa.setOverrideStart(true);
-		  }
-		  else
-		  {
-			  sa.setOverrideStart(false);
-			  sa.setStartDate(null);
-		  }
-		  if (Different.different(sa.getEndDate(), mod.getModuleshdate().getEndDate()))
-		  {
-			  sa.setOverrideEnd(true);
-		  }
-		  else
-		  {
-			  sa.setOverrideEnd(false);
-			  sa.setEndDate(null);
-		  }  
+	  if (Different.different(sa.getStartDate(), mod.getModuleshdate().getStartDate()))
+	  {
+		  sa.setOverrideStart(true);
+	  }
+	  else
+	  {
+		  sa.setOverrideStart(false);
+		  sa.setStartDate(null);
+	  }
+	  if (Different.different(sa.getEndDate(), mod.getModuleshdate().getEndDate()))
+	  {
+		  sa.setOverrideEnd(true);
+	  }
+	  else
+	  {
+		  sa.setOverrideEnd(false);
+		  sa.setEndDate(null);
+	  }  
 
 	  updateSpecialAccess(sa);
   }
@@ -171,6 +171,8 @@ public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleO
 
 	  }
   }
+  
+  
 
 public List getSpecialAccess(int moduleId)
 {

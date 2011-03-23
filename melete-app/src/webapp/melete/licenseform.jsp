@@ -5,7 +5,7 @@
  * $Id: licenseform.jsp 56408 2008-12-19 21:16:52Z rashmi@etudes.org $  
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -36,7 +36,7 @@
 	 <f:selectItems value="#{licensePage.licenseTypes}" />							
  </h:selectOneMenu>
  <h:outputText value="          " styleClass="ExtraPaddingClass" />
-<h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
+<h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="/images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
  </h:column>
 </h:panelGrid> 
  
@@ -50,7 +50,7 @@
 	 <f:selectItems value="#{licensePage.licenseTypes}" />							
    </h:selectOneMenu>
    <h:outputText value="          " styleClass="ExtraPaddingClass" />
-  <h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
+  <h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="/images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
  </h:column>  
 </h:panelGrid>
 
