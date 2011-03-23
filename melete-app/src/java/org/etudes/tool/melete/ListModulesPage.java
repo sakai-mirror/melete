@@ -271,15 +271,15 @@ public class ListModulesPage implements Serializable{
 	  }
 
 	  public List getViewModuleBeans() {
-	  	    try {
-	  	    if(nomodsFlag == null || viewModuleBeans == null)
-	  	    	viewModuleBeans = getModuleService().getViewModules(getUserId(), getCourseId(), false);
-
-	  	    }
-	  	    catch (Exception e)
-		    {
-	  		  logger.debug(e.toString());
-		    }
+		  try
+		  {
+			  if (nomodsFlag == null || viewModuleBeans == null)
+				  viewModuleBeans = getModuleService().getViewModules(getUserId(), getCourseId(), false, true);
+		  }
+		  catch (Exception e)
+		  {
+			  logger.debug(e.toString());
+		  }
 
 
 	  	    //If list of modules returned is zero or if all of them are hidden

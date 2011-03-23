@@ -960,13 +960,13 @@ public class ModuleDB implements Serializable {
 	    return modList;
 	  }
 
-	 public List getViewModulesAndDates(String userId, String courseId, boolean fromCourseMap) throws HibernateException {
+	 public List getViewModulesAndDates(String userId, String courseId, boolean fromCourseMap, boolean filtered) throws HibernateException {
 		 	List modList = null;
 		 	Module mod = null;
 
 	        try
 			{
-		       modList = getViewModules(userId, courseId, fromCourseMap);
+	        	 modList = getViewModules(userId, courseId, fromCourseMap, filtered);
 		    }
 		    catch (Exception e)
 		    {
@@ -977,7 +977,7 @@ public class ModuleDB implements Serializable {
 
 		  }
 
-	 public List getViewModules(String userId, String courseId, boolean fromCourseMap) throws Exception {
+	 public List getViewModules(String userId, String courseId, boolean fromCourseMap, boolean filtered) throws Exception {
 		 Connection dbConnection = null;
 		 	List resList = new ArrayList();
 		 	List courseIdList = new ArrayList();
@@ -995,9 +995,16 @@ public class ModuleDB implements Serializable {
 		    	accMap = getAccessRecords(userId, courseId, dbConnection);
 		    	
 			    //Select all undeleted modules in this course
-	            sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (d.start_date is NULL or d.end_date is NULL or d.start_date < d.end_date) and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
-
-	            PreparedStatement pstmt = dbConnection.prepareStatement(sql);
+		    	// MAP-32, if filtered don't pick up invalid modules, otherwise pick up all modules
+		    	if (filtered)
+		    	{
+		    		sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (d.start_date is NULL or d.end_date is NULL or d.start_date < d.end_date) and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
+		    	}
+		    	else
+		    	{
+		    		sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
+		    	}
+		    	PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 	            pstmt.setString(1,courseId);
 		    	rs = pstmt.executeQuery();
 		    	ViewSecBean vsBean = null;
@@ -1091,6 +1098,11 @@ public class ModuleDB implements Serializable {
 
 		    				startTimestamp = rs.getTimestamp("start_date");
 		    				endTimestamp = rs.getTimestamp("end_date");	
+		    				
+		    				if ((startTimestamp != null) && (endTimestamp != null) && (startTimestamp.compareTo(endTimestamp) >= 0))
+		    					vmBean.setDateFlag(false);
+		    				else
+		    					vmBean.setDateFlag(true);
 
 		    				//If special access is set up, use those dates; otherwise,
 		    				//use module dates
