@@ -1130,12 +1130,7 @@ public class ModuleDB implements Serializable {
 
 		    				startTimestamp = rs.getTimestamp("start_date");
 		    				endTimestamp = rs.getTimestamp("end_date");	
-		    				
-		    				if ((startTimestamp != null) && (endTimestamp != null) && (startTimestamp.compareTo(endTimestamp) >= 0))
-		    					vmBean.setDateFlag(false);
-		    				else
-		    					vmBean.setDateFlag(true);
-
+		    						    				
 		    				//If special access is set up, use those dates; otherwise,
 		    				//use module dates
 		    				if ((accMap != null)&&(accMap.size() > 0))
@@ -1146,8 +1141,14 @@ public class ModuleDB implements Serializable {
 		    						if (ad.overrideStart) startTimestamp = ad.getAccStartTimestamp();
 		    						if (ad.overrideEnd) endTimestamp = ad.getAccEndTimestamp();
 		    					}
-
 		    				}
+		    				
+		    				//Date flag is false for invalid modules
+		    				if ((startTimestamp != null) && (endTimestamp != null) && (startTimestamp.compareTo(endTimestamp) >= 0))
+		    					vmBean.setDateFlag(false);
+		    				else
+		    					vmBean.setDateFlag(true);
+		    				
 
 		    				if (isVisible(startTimestamp, endTimestamp))	
                             {
@@ -1175,7 +1176,12 @@ public class ModuleDB implements Serializable {
 		    				{
 		    					vmBean.setEndDate(new java.util.Date(endTimestamp.getTime() + (endTimestamp.getNanos()/1000000)));
 		    				}
-		    				resList.add(vmBean);
+		    				//Add invalid modules if not filtered
+		    				//If filtered, do not add invalid modules
+		    				if ((!filtered)||(filtered && vmBean.isDateFlag() == true))
+		    				{	
+		    				  resList.add(vmBean);
+		    				}  
 		    			}//end if ((prevModId == 0)||(moduleId != prevModId))
 
 		    			prevModId = moduleId;
