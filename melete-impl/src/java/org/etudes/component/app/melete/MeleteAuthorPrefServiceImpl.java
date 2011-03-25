@@ -25,8 +25,6 @@
 package org.etudes.component.app.melete;
 
 import java.io.Serializable;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.MeleteAuthorPrefService;
@@ -38,7 +36,9 @@ public class MeleteAuthorPrefServiceImpl implements Serializable, MeleteAuthorPr
 private Log logger = LogFactory.getLog(MeleteAuthorPrefServiceImpl.class);
 private MeleteUserPreferenceDB userPrefdb;
 
-
+/**
+ * {@inheritDoc}
+ */
 public void insertUserChoice(MeleteUserPreferenceService mup) throws Exception
 	{
 		try{
@@ -51,7 +51,9 @@ public void insertUserChoice(MeleteUserPreferenceService mup) throws Exception
 			}
 		return;
 	}
-
+/**
+ * {@inheritDoc}
+ */
 public MeleteUserPreferenceService getUserChoice(String user_id)
 	{
 	MeleteUserPreference mup = null;
@@ -64,6 +66,9 @@ public MeleteUserPreferenceService getUserChoice(String user_id)
 		return mup;
 	}
 
+/**
+ * {@inheritDoc}
+ */
 public void insertUserSiteChoice(MeleteSitePreferenceService msp) throws Exception
 {
 	try{
@@ -77,6 +82,9 @@ public void insertUserSiteChoice(MeleteSitePreferenceService msp) throws Excepti
 	return;
 }
 
+/**
+ * {@inheritDoc}
+ */
 public MeleteSitePreferenceService getSiteChoice(String site_id)
 {
 	MeleteSitePreference msp = null;

@@ -23,37 +23,96 @@
  **********************************************************************************/
 package org.etudes.api.app.melete;
 
-/**
- * Filename:
- * Description:
- * Author:
- * Date:
- * Copyright 2004, Foothill College
- */
-public interface CcLicenseService {
-	public abstract boolean isReqAttr();
-
-	public abstract void setReqAttr(boolean reqAttr);
-
-	public abstract boolean isAllowCmrcl();
-
-	public abstract void setAllowCmrcl(boolean allowCmrcl);
-
-	public abstract int getAllowMod();
-
-	public abstract void setAllowMod(int allowMod);
-
-	public abstract String getUrl();
-
-	public abstract void setUrl(String url);
-
-	public abstract String getName();
-
-	public abstract void setName(String name);
-
-	public abstract String toString();
-
+public interface CcLicenseService
+{
+	/**
+	 * 
+	 * @param other
+	 * @return
+	 */
 	public abstract boolean equals(Object other);
 
+	/**
+	 * Get Allow Modifications part of the license.
+	 * 
+	 * @return 0 if No Modifications allowed,
+	 *         1 Yes, if others share the work alike 
+	 *         2 Yes modifications are allowed.
+	 */
+	public abstract int getAllowMod();
+
+	/**
+	 * Get License name 
+	 * 
+	 * @return
+	 */
+	public abstract String getName();
+
+	/**
+	 * Get the License Url
+	 * 
+	 * @return
+	 */
+	public abstract String getUrl();
+
+	/**
+	 * 
+	 * @return
+	 */
 	public abstract int hashCode();
+
+	/**
+	 * Gets Allow Commercial Use part of the license.
+	 * 
+	 * @return true if allowed
+	 */
+	public abstract boolean isAllowCmrcl();
+
+	/**
+	 * Gets Require Attribution part of the license.
+	 * 
+	 * @return true if required
+	 */
+	public abstract boolean isReqAttr();
+
+	/**
+	 * Set Allow Commercial Use part of the license.
+	 * 
+	 * @param allowCmrcl
+	 */
+	public abstract void setAllowCmrcl(boolean allowCmrcl);
+
+	/**
+	 * Set Allow Modifications part of the license.
+	 * 
+	 * @param allowMod
+	 */
+	public abstract void setAllowMod(int allowMod);
+
+	/**
+	 * Set license name
+	 * 
+	 * @param name
+	 */
+	public abstract void setName(String name);
+
+	/**
+	 * Set Require Attribution part of the license.
+	 * 
+	 * @param reqAttr
+	 */
+	public abstract void setReqAttr(boolean reqAttr);
+
+	/**
+	 * Set License Url
+	 * 
+	 * @param url
+	 */
+	public abstract void setUrl(String url);
+
+	/**
+	 * 
+	 * @return
+	 */
+	public abstract String toString();
 }
