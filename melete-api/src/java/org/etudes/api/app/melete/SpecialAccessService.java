@@ -3,7 +3,7 @@
  * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-api/src/java/org/etudes/api/app/melete/SpecialAccessService.java $
  *
  ***********************************************************************************
- * Copyright (c) 2010 Etudes, Inc.
+ * Copyright (c) 2010, 2011 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you
  * may not use this file except in compliance with the License. You may
@@ -24,13 +24,39 @@ import java.io.File;
 
 /**
  * @author Faculty
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ *         TODO To change the template for this generated type comment go to Window - Preferences - Java - Code Style - Code Templates
  */
-public interface SpecialAccessService {
-	public void insertSpecialAccess(List saList, SpecialAccessObjService mb, ModuleObjService mod) throws Exception;
-	public List getSpecialAccess(int moduleId);
-	//public SpecialAccessObjService getSpecialAccess(String userId, int moduleId);
+public interface SpecialAccessService
+{
+	/**
+	 * Delete special accesses specified in the list from the db
+	 * 
+	 * @param saList
+	 *        List of special accesses
+	 * @throws Exception
+	 */
 	public void deleteSpecialAccess(List saList) throws Exception;
+
+	/**
+	 * Get special access list of this module
+	 * 
+	 * @param moduleId
+	 *        module id
+	 * @return List of special accesses
+	 */
+	public List getSpecialAccess(int moduleId);
+
+	/**
+	 * Insert or update new special access into existing list of special accesses
+	 * 
+	 * @param saList
+	 *        Current list of special accesses
+	 * @param mb
+	 *        New special access object
+	 * @param mod
+	 *        Current Module
+	 * @throws Exception
+	 */
+	public void insertSpecialAccess(List saList, SpecialAccessObjService mb, ModuleObjService mod) throws Exception;
 }
