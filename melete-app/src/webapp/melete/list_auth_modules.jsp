@@ -176,7 +176,7 @@ if (msg != null)
            <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />				
          </h:commandLink>		  
    	</div>
- <table width="100%" rules="rows" class="maintableCollapseWithBorder">
+ <table width="100%" border="1" class="maintableCollapseWithBorder">
   <tr>
    <td>
  	<f:subview id="authtop">
@@ -184,6 +184,8 @@ if (msg != null)
 	</f:subview>
   </td>
  </tr>
+ </table>
+ <table width="100%" border="0">
  <tr>
    <td>
    	<h:outputText id="nomodmsg" value="#{msgs.list_auth_modules_no_modules_available}" rendered="#{listAuthModulesPage.nomodsFlag == null || listAuthModulesPage.nomodsFlag}" styleClass="left"/>
@@ -191,19 +193,19 @@ if (msg != null)
    <h:dataTable id="table" 
                   value="#{listAuthModulesPage.moduleDateBeans}"
                   var="mdbean"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass,ListActionClass" 
-                  cellpadding="3" cellspacing="0"  rendered="#{listAuthModulesPage.nomodsFlag != null && !listAuthModulesPage.nomodsFlag}"
-				  width="100%" binding="#{listAuthModulesPage.table}" styleClass="valignStyle9" summary="#{msgs.list_auth_modules_summary}">
+                  cellpadding="3" cellspacing="0" border="0" rendered="#{listAuthModulesPage.nomodsFlag != null && !listAuthModulesPage.nomodsFlag}"
+				  width="100%" binding="#{listAuthModulesPage.table}" styleClass="mainListTableCollapseWithBorder0" summary="#{msgs.list_auth_modules_summary}">
   
      <h:column>   
      <f:facet name="header">
        <h:outputText value="&nbsp;" escape="false"/>
      </f:facet>  
-     <h:panelGrid columns="1" style="z-index:0;" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag}">   
+     <h:panelGrid border="0" columns="1" style="z-index:0;" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag}">   
 	 <h:column>    
      <h:commandLink id="showHideInvalid" action="#{listAuthModulesPage.showHideInvalid}" immediate="true">
 	    <h:graphicImage id="err_gif" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>                     
      </h:commandLink> 
-	 <h:panelGrid id="invalidMsg" columns="1" border="1" rules="cols" bgcolor="#FFFFCC" cellpadding="5" width="300px" styleClass="invalidAlert" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag && listAuthModulesPage.showInvalidModuleId == mdbean.moduleId}" >   
+	 <h:panelGrid id="invalidMsg" columns="1" border="1" bgcolor="#FFFFCC" cellpadding="5" width="300px" styleClass="invalidAlert" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag && listAuthModulesPage.showInvalidModuleId == mdbean.moduleId}" >   
 		<h:column>     	  
 		<h:outputText value="#{msgs.invalid_msg}" />
 		</h:column>
@@ -245,7 +247,7 @@ if (msg != null)
                </h:outputText>
       </h:commandLink>
       <h:dataTable id="tablesec" rendered="#{((mdbean.moduleId == listAuthModulesPage.showModuleId)||(listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag))}"
-                  value="#{mdbean.sectionBeans}" cellpadding="2" 
+                  value="#{mdbean.sectionBeans}" cellpadding="2" border="0" 
                   var="sectionBean" rowClasses="#{mdbean.rowClasses}" width="95%" binding="#{listAuthModulesPage.secTable}" summary="#{msgs.list_auth_modules_sections_summary}">
                <h:column>
               <h:selectBooleanCheckbox value="#{sectionBean.selected}"  valueChangeListener="#{listAuthModulesPage.selectedSection}"/> 

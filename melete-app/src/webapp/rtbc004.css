@@ -92,6 +92,12 @@ a1:active 			{color : #000080;}
 /* Sets border color to light grey & background color to dull grey in Main Text tables */ 
 .maintabledata9 	{border-color:#FFFFFF;  background-color:#EEEEEE; } 
 
+.mainListTableCollapseWithBorder0 {
+      border: 0px solid #EAEAEA;
+      border-collapse: collapse;
+ 	  vertical-align: top;
+ 	  }
+
 .maintableCollapseWithBorder {
       border: 1px solid #EAEAEA;
       border-collapse: collapse;
@@ -436,10 +442,7 @@ vertical-align:top;
 	border-bottom:medium double black;
 	border-top:medium double black;
 	height:100px;
-	z-index:1;
-	role:alertdialog;
-	aria-hidden:true;
-	tabindex:-1;	
+	z-index:1;	
 }
 .invalidAlert {
 	position:absolute;
@@ -449,8 +452,5 @@ vertical-align:top;
 	border-bottom:medium double black;
 	border-top:medium double black;
 	height:100px;
-	z-index:1;
-	role:alertdialog;
-	aria-hidden:true;
-	tabindex:-1;	
+	z-index:1;		
 }

@@ -25,7 +25,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@include file="accesscheck.jsp" %>
 
-<h:panelGrid columns="8" columnClasses="authBarCol" cellspacing="5" width="64%">
+<h:panelGrid columns="8" border="0" columnClasses="authBarCol" cellspacing="5" width="64%">
 	<h:column>
 		<h:commandLink id="addAction" action="#{listAuthModulesPage.AddModuleAction}" immediate="true">
 		    <h:graphicImage id="addModuleImg" value="/images/document_add.gif" styleClass="AuthImgClass"/>
