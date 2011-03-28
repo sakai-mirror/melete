@@ -38,227 +38,233 @@ import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
 import org.etudes.api.app.melete.SpecialAccessObjService;
 
-
-public class SpecialAccessDB {
+public class SpecialAccessDB
+{
 	private HibernateUtil hibernateUtil;
 	private Log logger = LogFactory.getLog(SpecialAccessDB.class);
 
 	/**
 	 * default constructor
 	 */
-	public SpecialAccessDB() {
+	public SpecialAccessDB()
+	{
 
 	}
 
-	public List getSpecialAccess(int moduleId)
-	{
-		List saList = new ArrayList();
-		try{
-		     Session session = getHibernateUtil().currentSession();
-		     Query q=session.createQuery("from SpecialAccess sa where sa.moduleId =:moduleId");
-			  q.setParameter("moduleId",moduleId);
-			  saList = q.list();
-
-		}
-	    catch (HibernateException he)
-	    {
-		  logger.error(he.toString());
-	    }
-	    finally
-		{
-	    	try
-			  {
-		      	hibernateUtil.closeSession();
-			  }
-		      catch (HibernateException he)
-			  {
-				  logger.error(he.toString());
-			  }
-		}
-		return saList;
-
-	}
-	
-	public List getSpecialAccessModuleIds(String courseId)
-	{
-		List saList = new ArrayList();
-		try{
-		     Session session = getHibernateUtil().currentSession();
-		     Query q=session.createQuery("select sa.moduleId from SpecialAccess sa where sa.module.coursemodule.courseId =:courseId");
-			  q.setParameter("courseId",courseId);
-			  saList = q.list();
-
-		}
-	    catch (HibernateException he)
-	    {
-		  logger.error(he.toString());
-	    }
-	    finally
-		{
-	    	try
-			  {
-		      	hibernateUtil.closeSession();
-			  }
-		      catch (HibernateException he)
-			  {
-				  logger.error(he.toString());
-			  }
-		}
-		return saList;
-
-	}	
-	
-	 public void deleteSpecialAccess(List saList) throws Exception
-     {
-       Transaction tx = null;
-       SpecialAccess sa = null;
-       String delAccessIds = null;
-       StringBuffer allAccessIds = new StringBuffer("(");
-       for (Iterator saIter = saList.iterator(); saIter.hasNext();)
-	   {
-    	  Integer accessId = (Integer) saIter.next();
-    	   allAccessIds.append(accessId.toString() + ",");
-	   }
-       if (allAccessIds.lastIndexOf(",") != -1) delAccessIds = allAccessIds.substring(0, allAccessIds.lastIndexOf(",")) + " )";
-       String delSpecialAccessStr = "delete SpecialAccess sa where sa.accessId in " + delAccessIds;
-      try{
-              Session session = getHibernateUtil().currentSession();
-              tx = session.beginTransaction();
-              int deletedEntities = session.createQuery(delSpecialAccessStr).executeUpdate();
-			  tx.commit();
-          }
-          catch (HibernateException he)
-          {
-              if (tx!=null) tx.rollback();
-              logger.error(he.toString());
-              throw he;
-          }
-          catch (Exception e) {
-             if (tx!=null) tx.rollback();
-              logger.error(e.toString());
-              throw e;
-           }
-           finally
-           {
-           	try
-   			{
-   				hibernateUtil.closeSession();
-   			}
-   			catch (HibernateException he)
-   			{
-   				logger.error(he.toString());
-   				throw he;
-   			}
-           }
-     }
-	
-
-	/*public SpecialAccess getSpecialAccess(String userId, String siteId, int sectionId)
-	{
-		SpecialAccess mb = null;
-		try{
-		    Session session = getHibernateUtil().currentSession();
-		     Query q=session.createQuery("from SpecialAccess mb where mb.userId =:userId and mb.siteId=:siteId and mb.section.sectionId=:sectionId and mb.section.module.coursemodule.archvFlag = 0");
-			  q.setParameter("userId",userId);
-			  q.setParameter("siteId", siteId);
-			  q.setParameter("sectionId", sectionId);
-			  mb = (SpecialAccess)q.uniqueResult();
-
-		}
-	    catch (HibernateException he)
-	    {
-		  logger.error(he.toString());
-	    }
-	    finally
-		{
-	    	try
-			  {
-		      	hibernateUtil.closeSession();
-			  }
-		      catch (HibernateException he)
-			  {
-				  logger.error(he.toString());
-			  }
-		}
-		return mb;
-	}*/
-
-	
-	public void setSpecialAccess(SpecialAccess sa) throws Exception
+	/**
+	 * Delete special accesses specified in the list from the db
+	 * 
+	 * @param saList
+	 *        List of special accesses
+	 * @throws Exception
+	 */
+	public void deleteSpecialAccess(List saList) throws Exception
 	{
 		Transaction tx = null;
-	 	try
+		SpecialAccess sa = null;
+		String delAccessIds = null;
+		StringBuffer allAccessIds = new StringBuffer("(");
+		for (Iterator saIter = saList.iterator(); saIter.hasNext();)
 		{
-	 		 Session session = hibernateUtil.currentSession();
-		      tx = session.beginTransaction();
-
-		      Query q=session.createQuery("select sa1 from SpecialAccess as sa1 where sa1.accessId =:accessId");
-			  q.setParameter("accessId",sa.getAccessId());
-			  SpecialAccess find_sa = (SpecialAccess)q.uniqueResult();
-
-		      if(find_sa == null)
-		      {
-		    	  session.save(sa);
-		      }	  
-		      else
-		      {
-		    	 find_sa.setUsers(sa.getUsers()); 
-		    	 find_sa.setStartDate(sa.getStartDate());
-		    	 find_sa.setEndDate(sa.getEndDate());
-		    	 find_sa.setOverrideStart(sa.isOverrideStart());
-		    	 find_sa.setOverrideEnd(sa.isOverrideEnd());
-		    	 session.update(find_sa);
-		      }
-
-
-	      tx.commit();
-
-	    }
-	 	catch(StaleObjectStateException sose)
-	     {
-			if(tx !=null) tx.rollback();
-			logger.error("stale object exception" + sose.toString());
-			throw sose;
-	     }
-	    catch (HibernateException he)
-	    {
-		  logger.error(he.toString());
-		  he.printStackTrace();
-		  throw he;
-	    }
-	    catch (Exception e) {
-	      if (tx!=null) tx.rollback();
-	      logger.error(e.toString());
-	      throw e;
-	    }
-	    finally
+			Integer accessId = (Integer) saIter.next();
+			allAccessIds.append(accessId.toString() + ",");
+		}
+		if (allAccessIds.lastIndexOf(",") != -1) delAccessIds = allAccessIds.substring(0, allAccessIds.lastIndexOf(",")) + " )";
+		String delSpecialAccessStr = "delete SpecialAccess sa where sa.accessId in " + delAccessIds;
+		try
 		{
-	    	try
-			  {
-		      	hibernateUtil.closeSession();
-			  }
-		      catch (HibernateException he)
-			  {
-				  logger.error(he.toString());
-				  throw he;
-			  }
-		}   
+			Session session = getHibernateUtil().currentSession();
+			tx = session.beginTransaction();
+			int deletedEntities = session.createQuery(delSpecialAccessStr).executeUpdate();
+			tx.commit();
+		}
+		catch (HibernateException he)
+		{
+			if (tx != null) tx.rollback();
+			logger.error(he.toString());
+			throw he;
+		}
+		catch (Exception e)
+		{
+			if (tx != null) tx.rollback();
+			logger.error(e.toString());
+			throw e;
+		}
+		finally
+		{
+			try
+			{
+				hibernateUtil.closeSession();
+			}
+			catch (HibernateException he)
+			{
+				logger.error(he.toString());
+				throw he;
+			}
+		}
 	}
 
 	/**
 	 * @return Returns the hibernateUtil.
 	 */
-	public HibernateUtil getHibernateUtil() {
+	public HibernateUtil getHibernateUtil()
+	{
 		return hibernateUtil;
 	}
+
 	/**
-	 * @param hibernateUtil The hibernateUtil to set.
+	 * Get special access list of this module
+	 * 
+	 * @param moduleId
+	 *        module id
+	 * @return List of special accesses
 	 */
-	public void setHibernateUtil(HibernateUtil hibernateUtil) {
+	public List getSpecialAccess(int moduleId)
+	{
+		List saList = new ArrayList();
+		try
+		{
+			Session session = getHibernateUtil().currentSession();
+			Query q = session.createQuery("from SpecialAccess sa where sa.moduleId =:moduleId");
+			q.setParameter("moduleId", moduleId);
+			saList = q.list();
+
+		}
+		catch (HibernateException he)
+		{
+			logger.error(he.toString());
+		}
+		finally
+		{
+			try
+			{
+				hibernateUtil.closeSession();
+			}
+			catch (HibernateException he)
+			{
+				logger.error(he.toString());
+			}
+		}
+		return saList;
+
+	}
+
+	/**
+	 * Gets a list of module ids from the special access table for this course
+	 * 
+	 * @param courseId
+	 *        Course id
+	 * @return list of module ids
+	 */
+	public List getSpecialAccessModuleIds(String courseId)
+	{
+		List saList = new ArrayList();
+		try
+		{
+			Session session = getHibernateUtil().currentSession();
+			Query q = session.createQuery("select sa.moduleId from SpecialAccess sa where sa.module.coursemodule.courseId =:courseId");
+			q.setParameter("courseId", courseId);
+			saList = q.list();
+
+		}
+		catch (HibernateException he)
+		{
+			logger.error(he.toString());
+		}
+		finally
+		{
+			try
+			{
+				hibernateUtil.closeSession();
+			}
+			catch (HibernateException he)
+			{
+				logger.error(he.toString());
+			}
+		}
+		return saList;
+
+	}
+
+	/**
+	 * @param hibernateUtil
+	 *        The hibernateUtil to set.
+	 */
+	public void setHibernateUtil(HibernateUtil hibernateUtil)
+	{
 		this.hibernateUtil = hibernateUtil;
 	}
 
+	/**
+	 * Insert or update new special access into existing list of special accesses
+	 * 
+	 * @param saList
+	 *        Current list of special accesses
+	 * @param mb
+	 *        New special access object
+	 * @param mod
+	 *        Current Module
+	 * @throws Exception
+	 */
+	public void setSpecialAccess(SpecialAccess sa) throws Exception
+	{
+		Transaction tx = null;
+		try
+		{
+			Session session = hibernateUtil.currentSession();
+			tx = session.beginTransaction();
 
+			Query q = session.createQuery("select sa1 from SpecialAccess as sa1 where sa1.accessId =:accessId");
+			q.setParameter("accessId", sa.getAccessId());
+			SpecialAccess find_sa = (SpecialAccess) q.uniqueResult();
 
+			if (find_sa == null)
+			{
+				session.save(sa);
+			}
+			else
+			{
+				find_sa.setUsers(sa.getUsers());
+				find_sa.setStartDate(sa.getStartDate());
+				find_sa.setEndDate(sa.getEndDate());
+				find_sa.setOverrideStart(sa.isOverrideStart());
+				find_sa.setOverrideEnd(sa.isOverrideEnd());
+				session.update(find_sa);
+			}
+
+			tx.commit();
+
+		}
+		catch (StaleObjectStateException sose)
+		{
+			if (tx != null) tx.rollback();
+			logger.error("stale object exception" + sose.toString());
+			throw sose;
+		}
+		catch (HibernateException he)
+		{
+			logger.error(he.toString());
+			he.printStackTrace();
+			throw he;
+		}
+		catch (Exception e)
+		{
+			if (tx != null) tx.rollback();
+			logger.error(e.toString());
+			throw e;
+		}
+		finally
+		{
+			try
+			{
+				hibernateUtil.closeSession();
+			}
+			catch (HibernateException he)
+			{
+				logger.error(he.toString());
+				throw he;
+			}
+		}
+	}
 
 }

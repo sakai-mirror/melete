@@ -4,7 +4,7 @@
  * $Id: BookmarkServiceImpl.java 56408 2008-12-19 21:16:52Z rashmi@etudes.org $
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -37,100 +37,137 @@ import org.etudes.api.app.melete.BookmarkObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.etudes.component.app.melete.MeleteUtil;
 
-public class BookmarkServiceImpl implements Serializable, BookmarkService{
-private Log logger = LogFactory.getLog(BookmarkServiceImpl.class);
-protected MeleteUtil meleteUtil = new MeleteUtil();
-private BookmarkDB bookmarkDb;
-
-
-public void insertBookmark(BookmarkObjService mb) throws Exception
-	{
-		try{
-			bookmarkDb.setBookmark((Bookmark)mb);
-		}catch(Exception e)
-			{
-			logger.debug("melete bookmark business --add bookmark failed");
-			 throw new MeleteException("add_bookmark_fail");
-
-			}
-		return;
-	}
-
-public BookmarkObjService getBookmark(String userId, String siteId, int sectionId)
+public class BookmarkServiceImpl implements Serializable, BookmarkService
 {
-  BookmarkObjService bObj = null;
-	try{
-		bObj = bookmarkDb.getBookmark(userId, siteId, sectionId);
-	}catch(Exception e)
-		{
-		logger.debug("melete bookmark business --get bookmark failed");
-		}
-	return bObj;
-}
+	private BookmarkDB bookmarkDb;
+	private Log logger = LogFactory.getLog(BookmarkServiceImpl.class);
+	protected MeleteUtil meleteUtil = new MeleteUtil();
 
-  public List getBookmarks(String userId, String siteId)
+	/*
+	 * {@inheritDoc}
+	 */
+	public void createFile(List bmList, String fileName) throws Exception
 	{
-	List mbList = null;
-		try{
-			mbList = bookmarkDb.getBookmarks(userId, siteId);
-		}catch(Exception e)
-			{
-			logger.debug("melete bookmark business --get bookmarks failed");
-			}
-		return mbList;
+		StringBuffer bmStrbuf = new StringBuffer();
+		for (Iterator iter = bmList.iterator(); iter.hasNext();)
+		{
+			Bookmark bm = (Bookmark) iter.next();
+			bmStrbuf.append("\nTitle: " + bm.getTitle());
+			bmStrbuf.append("\nNotes: " + bm.getNotes());
+			bmStrbuf.append("\n");
+			bmStrbuf.append("\n------------------------------------------------------------------");
+		}
+		meleteUtil.createFileFromContent(bmStrbuf.toString().getBytes(), fileName);
 	}
 
-  public int getLastVisitSectionId(boolean isAuthor, String userId, String siteId)
-  {
-	int sectionId = 0;
-	try{
-		sectionId = bookmarkDb.getLastVisitSectionId(isAuthor, userId, siteId);
-	}catch(Exception e)
+	/*
+	 * {@inheritDoc}
+	 */
+	public void deleteBookmark(int bookmarkId) throws Exception
+	{
+		try
 		{
-		  //It is ok to not have a last visited section
-		}
-	return sectionId;
-  }
-  public void deleteBookmark(int bookmarkId) throws Exception
-  {
-	  try{
 			bookmarkDb.deleteBookmark(bookmarkId);
-		}catch(Exception e)
-			{
+		}
+		catch (Exception e)
+		{
 			logger.debug("melete bookmark business -- delete bookmark failed");
 			throw new MeleteException("delete_bookmark_fail");
-			}
-  }
-  
-  public void deleteFiles(File delfile){
+		}
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void deleteFiles(File delfile)
+	{
 
 		meleteUtil.deleteFiles(delfile);
 	}
-  
-  public void createFile(List bmList, String fileName) throws Exception
-  {
-	  StringBuffer bmStrbuf = new StringBuffer();
-	  for (Iterator iter = bmList.iterator(); iter.hasNext();)
-	  {
-		  Bookmark bm = (Bookmark)iter.next();
-		  bmStrbuf.append("\nTitle: "+bm.getTitle());
-		  bmStrbuf.append("\nNotes: "+bm.getNotes());
-		  bmStrbuf.append("\n");
-		  bmStrbuf.append("\n------------------------------------------------------------------");
-	  }
-	  meleteUtil.createFileFromContent(bmStrbuf.toString().getBytes(), fileName);
-  }
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public BookmarkObjService getBookmark(String userId, String siteId, int sectionId)
+	{
+		BookmarkObjService bObj = null;
+		try
+		{
+			bObj = bookmarkDb.getBookmark(userId, siteId, sectionId);
+		}
+		catch (Exception e)
+		{
+			logger.debug("melete bookmark business --get bookmark failed");
+		}
+		return bObj;
+	}
 
 	/**
 	 * @return Returns the bookmarkDb
 	 */
-	public BookmarkDB getBookmarkDb() {
+	public BookmarkDB getBookmarkDb()
+	{
 		return bookmarkDb;
 	}
-	/**
-	 * @param bookmarkDb The bookmarkDb to set.
+
+	/*
+	 * {@inheritDoc}
 	 */
-	public void setBookmarkDb(BookmarkDB bookmarkDb) {
+	public List getBookmarks(String userId, String siteId)
+	{
+		List mbList = null;
+		try
+		{
+			mbList = bookmarkDb.getBookmarks(userId, siteId);
+		}
+		catch (Exception e)
+		{
+			logger.debug("melete bookmark business --get bookmarks failed");
+		}
+		return mbList;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public int getLastVisitSectionId(boolean isAuthor, String userId, String siteId)
+	{
+		int sectionId = 0;
+		try
+		{
+			sectionId = bookmarkDb.getLastVisitSectionId(isAuthor, userId, siteId);
+		}
+		catch (Exception e)
+		{
+			// It is ok to not have a last visited section
+		}
+		return sectionId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void insertBookmark(BookmarkObjService mb) throws Exception
+	{
+		try
+		{
+			bookmarkDb.setBookmark((Bookmark) mb);
+		}
+		catch (Exception e)
+		{
+			logger.debug("melete bookmark business --add bookmark failed");
+			throw new MeleteException("add_bookmark_fail");
+
+		}
+		return;
+	}
+
+	/**
+	 * @param bookmarkDb
+	 *        The bookmarkDb to set.
+	 */
+	public void setBookmarkDb(BookmarkDB bookmarkDb)
+	{
 		this.bookmarkDb = bookmarkDb;
 	}
 
