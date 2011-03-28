@@ -20,66 +20,133 @@
  ********************************************************************************/
 package org.etudes.api.app.melete;
 
-/**
- * @author Faculty
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
-public interface MeleteResourceService {
+public interface MeleteResourceService
+{
 	/**
-	 * @return Returns the copyrightOwner.
+	 * Get resource's license allow Modifications attribute
+	 * 
+	 * @return
+	 */
+	public abstract int getAllowMod();
+
+	/**
+	 * Get resource's license URL
+	 * 
+	 * @return
+	 */
+	public abstract String getCcLicenseUrl();
+
+	/**
+	 * Get the copyrightOwner.
+	 * @return 
 	 */
 	public abstract String getCopyrightOwner();
 
 	/**
-	 * @param copyrightOwner The copyrightOwner to set.
-	 */
-	public abstract void setCopyrightOwner(String copyrightOwner);
-
-	/**
-	 * @return Returns the copyrightYear.
+	 * Get the copyrightYear
+	 * @return 
 	 */
 	public abstract String getCopyrightYear();
 
 	/**
-	 * @param copyrightYear The copyrightYear to set.
+	 * Get resource's license code
+	 * 
+	 * @return
 	 */
-	public abstract void setCopyrightYear(String copyrightYear);
+	public abstract int getLicenseCode();
 
 	/**
-	 * @return Returns the resourceId.
+	 * Get resourceId
+	 * @return 
 	 */
 	public abstract String getResourceId();
 
 	/**
-	 * @param resourceId The resourceId to set.
+	 * 
+	 * @return
+	 */
+	public abstract int getVersion();
+
+	/**
+	 * Get resource's license allow Commercial Use attribute
+	 * 
+	 * @return
+	 */
+	public abstract boolean isAllowCmrcl();
+
+	/**
+	 * Get resource's license require Attribution attribute
+	 * 
+	 * @return
+	 */
+	public abstract boolean isReqAttr();
+
+	/**
+	 * Set resource's license allow Commercial Use attribute
+	 * 
+	 * @param allowCmrcl
+	 *        Allow Commercial Use attribute
+	 */
+	public abstract void setAllowCmrcl(boolean allowCmrcl);
+
+	/**
+	 * Get resource's license allow Modifications attribute
+	 * 
+	 * @param allowMod
+	 *        Allow Modifications attribute
+	 */
+	public abstract void setAllowMod(int allowMod);
+
+	/**
+	 * Set resource's license URL
+	 * 
+	 * @param ccLicenseUrl
+	 */
+	public abstract void setCcLicenseUrl(String ccLicenseUrl);
+
+	/**
+	 * @param copyrightOwner
+	 *        The copyrightOwner to set.
+	 */
+	public abstract void setCopyrightOwner(String copyrightOwner);
+
+	/**
+	 * @param copyrightYear
+	 *        The copyrightYear to set.
+	 */
+	public abstract void setCopyrightYear(String copyrightYear);
+
+	/**
+	 * Set resource's license code
+	 * 
+	 * @param licenseCode
+	 *        License code
+	 */
+	public abstract void setLicenseCode(int licenseCode);
+
+	/**
+	 * Set resource's license require Attribution attribute
+	 * 
+	 * @param reqAttr
+	 *        require Attribution attribute
+	 */
+	public abstract void setReqAttr(boolean reqAttr);
+
+	/**
+	 * @param resourceId
+	 *        The resourceId to set.
 	 */
 	public abstract void setResourceId(String resourceId);
 
-	public abstract int getLicenseCode();
-
-	public abstract void setLicenseCode(int licenseCode);
-
-	public abstract String getCcLicenseUrl();
-
-	public abstract void setCcLicenseUrl(String ccLicenseUrl);
-
-	public abstract boolean isReqAttr();
-
-	public abstract void setReqAttr(boolean reqAttr);
-
-	public abstract boolean isAllowCmrcl();
-
-	public abstract void setAllowCmrcl(boolean allowCmrcl);
-
-	public abstract int getAllowMod();
-
-	public abstract void setAllowMod(int allowMod);
-
-	public abstract int getVersion();
-
+	/**
+	 * 
+	 * @param version
+	 */
 	public abstract void setVersion(int version);
 
+	/**
+	 * 
+	 * @return
+	 */
 	public abstract String toString();
 }
