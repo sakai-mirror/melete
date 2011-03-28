@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -23,6 +23,7 @@
  **********************************************************************************/
 
 package org.etudes.component.app.melete;
+
 import java.io.Serializable;
 
 import org.hibernate.HibernateException;
@@ -31,86 +32,118 @@ import org.hibernate.SessionFactory;
 import java.util.Iterator;
 import java.util.Map;
 
-public class HibernateUtil implements Serializable{
+public class HibernateUtil implements Serializable
+{
 
-    public SessionFactory sessionFactory;
+	public ThreadLocal session = new ThreadLocal();
 
-	  public ThreadLocal session = new ThreadLocal();
+	public SessionFactory sessionFactory;
 
-    public Session currentSession() throws HibernateException {
+	/**
+	 * Close session
+	 * 
+	 * @throws HibernateException
+	 */
+	public void closeSession() throws HibernateException
+	{
+		Session s = (Session) session.get();
+		session.set(null);
+		if (s != null) s.close();
+	}
 
-    	try{
-    	Session s = (Session) session.get();
-    	  // Open a new Session, if this Thread has none yet
-        if (s == null) {
-            s = sessionFactory.openSession();
-            session.set(s);
-        }
-    	
-    	
-        return s;
-    	}
-    	finally{}
-    }
+	/**
+	 * Get current session
+	 * 
+	 * @return Session object
+	 * @throws HibernateException
+	 */
+	public Session currentSession() throws HibernateException
+	{
 
-	    public void closeSession() throws HibernateException {
-	        Session s = (Session) session.get();
-	        session.set(null);
-	        if (s != null)
-	            s.close();
-	    }
-	    
-		public void ensureModuleHasNonNulls(Module mod)
+		try
 		{
-			Map sections = mod.getSections(); 
-			if (sections != null && sections.size() > 0)
+			Session s = (Session) session.get();
+			// Open a new Session, if this Thread has none yet
+			if (s == null)
 			{
-				Iterator iter = sections.keySet().iterator(); 
-				
-				while (iter.hasNext())
-				{
-					Object key; 
-					Section cur;  
-					
-					key = iter.next(); 
-					cur = (Section) sections.get(key); 
-					ensureSectionHasNonNull(cur);
-				}
-			}
-			if (null == mod.getCreatedByFname())
-			{
-				mod.setCreatedByFname("");
-			}
-			if (null == mod.getCreatedByFname())
-			{
-				mod.setCreatedByFname("");
+				s = sessionFactory.openSession();
+				session.set(s);
 			}
 
+			return s;
 		}
-		
-		public void ensureSectionHasNonNull(Section sec)
+		finally
 		{
-			if (null == sec.getCreatedByFname() )
-			{
-				sec.setCreatedByFname("");
-			}
+		}
+	}
 
-			if (null == sec.getCreatedByLname() )
+	/**
+	 * Method added to ensure null values are not added for Oracle
+	 * 
+	 * @param mod
+	 *        module object
+	 */
+	public void ensureModuleHasNonNulls(Module mod)
+	{
+		Map sections = mod.getSections();
+		if (sections != null && sections.size() > 0)
+		{
+			Iterator iter = sections.keySet().iterator();
+
+			while (iter.hasNext())
 			{
-				sec.setCreatedByLname("");
+				Object key;
+				Section cur;
+
+				key = iter.next();
+				cur = (Section) sections.get(key);
+				ensureSectionHasNonNull(cur);
 			}
-		}	    
-	    
-		/**
-		 * @return Returns the sessionFactory.
-		 */
-		public SessionFactory getSessionFactory() {
-			return sessionFactory;
 		}
-		/**
-		 * @param sessionFactory The sessionFactory to set.
-		 */
-		public void setSessionFactory(SessionFactory sessionFactory) {
-			this.sessionFactory = sessionFactory;
+		if (null == mod.getCreatedByFname())
+		{
+			mod.setCreatedByFname("");
 		}
-}		
+		if (null == mod.getCreatedByFname())
+		{
+			mod.setCreatedByFname("");
+		}
+
+	}
+
+	/**
+	 * Method added to ensure section object does not have null objects
+	 * 
+	 * @param sec
+	 *        Section object
+	 */
+	public void ensureSectionHasNonNull(Section sec)
+	{
+		if (null == sec.getCreatedByFname())
+		{
+			sec.setCreatedByFname("");
+		}
+
+		if (null == sec.getCreatedByLname())
+		{
+			sec.setCreatedByLname("");
+		}
+	}
+
+	/**
+	 * @return Returns the sessionFactory.
+	 */
+	public SessionFactory getSessionFactory()
+	{
+		return sessionFactory;
+	}
+
+	/**
+	 * @param sessionFactory
+	 *        The sessionFactory to set.
+	 */
+	public void setSessionFactory(SessionFactory sessionFactory)
+	{
+		this.sessionFactory = sessionFactory;
+	}
+}
