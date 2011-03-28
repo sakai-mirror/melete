@@ -408,8 +408,9 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		}
 		return "";
 	}
-	/*
-	 * Call for import from site process
+	
+	/**
+	 * {@inheritDoc}
 	 */
 	public void copyModules(String fromContext, String toContext)
 	{

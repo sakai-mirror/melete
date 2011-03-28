@@ -136,6 +136,9 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public int mergeAndBuildModules(Document ArchiveDoc, String unZippedDirPath, String fromSiteId) throws Exception
 	{
 		if (logger.isDebugEnabled()) logger.debug("Entering mergeAndBuildModules");
@@ -662,11 +665,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	}
 
 	/**
-	 * Parses the manifest and build modules
-	 *
-	 * @param document document
-	 * @param unZippedDirPath unZipped fiels Directory Path
-	 * @exception throws exception
+	 * {@inheritDoc}
 	 */
 	public void parseAndBuildModules(Document document, String unZippedDirPath) throws Exception
 	{
@@ -1309,6 +1308,10 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 
 		return eleRes;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getContentSourceInfo(Document document)
 	{
 		Map uris = new HashMap();

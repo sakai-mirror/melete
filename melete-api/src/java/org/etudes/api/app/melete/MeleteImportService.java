@@ -26,28 +26,47 @@ package org.etudes.api.app.melete;
 import java.io.File;
 import org.dom4j.Document;
 
-
-/**
- * <p>MeleteImportExportService provides the methods for import export</p>
- * @author Foothill College
- *
- */
-public interface MeleteImportService{
-
+public interface MeleteImportService
+{
 	/**
 	 * deletes the file and its children
-	 * @param delfile - file to be deleted
+	 * 
+	 * @param delfile
+	 *        file to be deleted
 	 */
 	public void deleteFiles(File delfile);
 
 	/**
-	 * Parses the manifest and build modules
-	 *
-	 * @param document document
-	 * @param unZippedDirPath unZipped fiels Directory Path
+	 * Get the package's content provider contact information from rights description of manifest tag.
+	 * 
+	 * @param document
+	 *        Document
+	 * @return
+	 */
+	public String getContentSourceInfo(Document document);
+
+	/**
+	 * Merges melete data in the Sakai archive Document object
+	 * 
+	 * @param ArchiveDoc
+	 *        Sakai generated Archive Document Object
+	 * @param unZippedDirPath
+	 *        Unzipped directory path
+	 * @param fromSiteId
+	 *        The site Id
+	 * @return the count of merged modules
+	 * @throws Exception
+	 */
+	public int mergeAndBuildModules(Document ArchiveDoc, String unZippedDirPath, String fromSiteId) throws Exception;
+
+	/**
+	 * Reads IMS package. Parses the manifest file and import modules.
+	 * 
+	 * @param document
+	 *        document
+	 * @param unZippedDirPath
+	 *        unZipped files Directory Path
 	 * @exception throws exception
 	 */
 	public void parseAndBuildModules(Document document, String unZippedDirPath) throws Exception;
-	public int mergeAndBuildModules(Document ArchiveDoc, String unZippedDirPath, String fromSiteId) throws Exception;
-	public String getContentSourceInfo(Document document);
 }

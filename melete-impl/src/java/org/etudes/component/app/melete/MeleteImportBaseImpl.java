@@ -164,11 +164,11 @@ abstract public class MeleteImportBaseImpl {
 	}
 
 	/**
-	 * deletes the file and its children
-	 * @param delfile - file to be deleted
+	 * {@inheritDoc}
 	 */
-	public void deleteFiles(File delfile){
-      meleteUtil.deleteFiles(delfile);
+	public void deleteFiles(File delfile)
+	{
+		meleteUtil.deleteFiles(delfile);
 	}
 
 	/**
