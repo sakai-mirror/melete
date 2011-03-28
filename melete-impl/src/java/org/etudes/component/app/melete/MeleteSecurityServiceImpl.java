@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009,2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -83,14 +83,6 @@ import org.etudes.basiclti.SakaiBLTIUtil;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.util.ResourceLoader;
 
-/*
- * MeleteSecurityService is the implementation of MeleteSecurityService
- * that provides the access permissions to the melete
- *
- * @author Foot hill college
- * @version $Revision$
- * Mallika - 5/15/07 - Adding code to enable import from site
- */
 public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityProducer,EntityTransferrer {
 
 	private ModuleService moduleService;
@@ -113,8 +105,9 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	/** Dependency: a logger component. */
 	private Log logger = LogFactory.getLog(MeleteSecurityServiceImpl.class);
 	private ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
-/**
-	 * Setup a security advisor.
+
+	/**
+	 * {@inheritDoc}
 	 */
 	public void pushAdvisor()
 	{
@@ -129,7 +122,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	}
 
 	/**
-	 * Remove our security advisor.
+	 * {@inheritDoc}
 	 */
 	public void popAdvisor()
 	{
@@ -225,6 +218,9 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean allowStudent(String reference)throws Exception{
 
          try {
@@ -233,7 +229,9 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 			throw new Exception(this.getClass().getName()+ " : allowStudent(reference) : " + e.toString());
 		}
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean allowAuthor()throws Exception {
 
 		try {
@@ -242,7 +240,9 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 			throw new Exception(this.getClass().getName()+ " : allowAuthor() : " + e.toString());
 		}
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean allowStudent()throws Exception{
 
 		try {
@@ -252,6 +252,9 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isSuperUser(String userId)
 	{
 		return SecurityService.isSuperUser(userId);
@@ -629,6 +632,9 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		return "archiving modules: (" +count + ") modules archived successfully. \n";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Set<String> getUsersIsAllowed(String context)
 	{
 		// check the cache
