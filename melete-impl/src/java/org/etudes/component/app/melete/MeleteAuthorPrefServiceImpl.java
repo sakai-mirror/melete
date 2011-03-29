@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -32,82 +32,95 @@ import org.etudes.api.app.melete.MeleteSitePreferenceService;
 import org.etudes.api.app.melete.MeleteUserPreferenceService;
 import org.etudes.api.app.melete.exception.MeleteException;
 
-public class MeleteAuthorPrefServiceImpl implements Serializable, MeleteAuthorPrefService{
-private Log logger = LogFactory.getLog(MeleteAuthorPrefServiceImpl.class);
-private MeleteUserPreferenceDB userPrefdb;
+public class MeleteAuthorPrefServiceImpl implements Serializable, MeleteAuthorPrefService
+{
+	private Log logger = LogFactory.getLog(MeleteAuthorPrefServiceImpl.class);
+	private MeleteUserPreferenceDB userPrefdb;
 
-/**
- * {@inheritDoc}
- */
-public void insertUserChoice(MeleteUserPreferenceService mup) throws Exception
+	/**
+	 * {@inheritDoc}
+	 */
+	public MeleteSitePreferenceService getSiteChoice(String site_id)
 	{
-		try{
-			userPrefdb.setUserPreferences((MeleteUserPreference)mup);
-		}catch(Exception e)
-			{
-			logger.debug("melete user pref business --add editor choice failed");
-			 throw new MeleteException("add_editorchoice_fail");
-
-			}
-		return;
-	}
-/**
- * {@inheritDoc}
- */
-public MeleteUserPreferenceService getUserChoice(String user_id)
-	{
-	MeleteUserPreference mup = null;
-		try{
-			mup = userPrefdb.getUserPreferences(user_id);
-		}catch(Exception e)
-			{
+		MeleteSitePreference msp = null;
+		try
+		{
+			msp = userPrefdb.getSitePreferences(site_id);
+		}
+		catch (Exception e)
+		{
 			logger.debug("melete user pref business --get editor choice failed");
-			}
+		}
+		return msp;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public MeleteUserPreferenceService getUserChoice(String user_id)
+	{
+		MeleteUserPreference mup = null;
+		try
+		{
+			mup = userPrefdb.getUserPreferences(user_id);
+		}
+		catch (Exception e)
+		{
+			logger.debug("melete user pref business --get editor choice failed");
+		}
 		return mup;
 	}
-
-/**
- * {@inheritDoc}
- */
-public void insertUserSiteChoice(MeleteSitePreferenceService msp) throws Exception
-{
-	try{
-		userPrefdb.setSitePreferences((MeleteSitePreference)msp);
-	}catch(Exception e)
-		{
-		logger.debug("melete user pref business --add editor choice failed");
-		 throw new MeleteException("add_editorchoice_fail");
-
-		}
-	return;
-}
-
-/**
- * {@inheritDoc}
- */
-public MeleteSitePreferenceService getSiteChoice(String site_id)
-{
-	MeleteSitePreference msp = null;
-	try{
-		msp = userPrefdb.getSitePreferences(site_id);
-	}catch(Exception e)
-		{
-		logger.debug("melete user pref business --get editor choice failed");
-		}
-	return msp;
-}
-
 
 	/**
 	 * @return Returns the UserPrefdb
 	 */
-	public MeleteUserPreferenceDB getUserPrefdb() {
+	public MeleteUserPreferenceDB getUserPrefdb()
+	{
 		return userPrefdb;
 	}
+
 	/**
-	 * @param UserPrefdb The UserPrefdb to set.
+	 * {@inheritDoc}
 	 */
-	public void setUserPrefdb(MeleteUserPreferenceDB userPrefdb) {
+	public void insertUserChoice(MeleteUserPreferenceService mup) throws Exception
+	{
+		try
+		{
+			userPrefdb.setUserPreferences((MeleteUserPreference) mup);
+		}
+		catch (Exception e)
+		{
+			logger.debug("melete user pref business --add editor choice failed");
+			throw new MeleteException("add_editorchoice_fail");
+
+		}
+		return;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void insertUserSiteChoice(MeleteSitePreferenceService msp) throws Exception
+	{
+		try
+		{
+			userPrefdb.setSitePreferences((MeleteSitePreference) msp);
+		}
+		catch (Exception e)
+		{
+			logger.debug("melete user pref business --add editor choice failed");
+			throw new MeleteException("add_editorchoice_fail");
+
+		}
+		return;
+	}
+
+	/**
+	 * @param UserPrefdb
+	 *        The UserPrefdb to set.
+	 */
+	public void setUserPrefdb(MeleteUserPreferenceDB userPrefdb)
+	{
 		this.userPrefdb = userPrefdb;
 	}
 

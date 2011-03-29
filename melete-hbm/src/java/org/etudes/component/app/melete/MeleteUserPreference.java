@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,188 +28,274 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import org.etudes.api.app.melete.MeleteUserPreferenceService;
 
-/** @author Hibernate CodeGenerator */
-public class MeleteUserPreference implements Serializable,MeleteUserPreferenceService {
+public class MeleteUserPreference implements Serializable, MeleteUserPreferenceService
+{
+	/** nullable persistent field */
+	private Boolean allowCmrcl;
 
-    /** identifier field */
-    private String userId;
+	/** nullable persistent field */
+	private Integer allowMod;
 
-    /** nullable persistent field */
-    private String editorChoice;
-    
-    private Boolean viewExpChoice;   
-    
-    private int prefId;
-   
-    private Boolean showLTIChoice;
-    
-    /** nullable persistent field */
-    private Integer licenseCode;
+	/** nullable persistent field */
+	private String ccLicenseUrl;
 
-    /** nullable persistent field */
-    private String ccLicenseUrl;
+	private String copyrightOwner;
 
-    /** nullable persistent field */
-    private Boolean reqAttr;
+	private String copyrightYear;
 
-    /** nullable persistent field */
-    private Boolean allowCmrcl;
+	/** nullable persistent field */
+	private String editorChoice;
 
-    /** nullable persistent field */
-    private Integer allowMod;
-    
-    private String copyrightOwner;
-    
-    private String copyrightYear;  
-    
-    
-	/** full constructor
-	 * @param userId
-	 * @param editorChoice
-	 */
-	public MeleteUserPreference(String userId, String editorChoice, Boolean viewExpChoice, Boolean showLTIChoice, Integer licenseCode, String ccLicenseUrl, Boolean reqAttr, Boolean allowCmrcl, Integer allowMod, int version, org.etudes.component.app.melete.Section section, String copyrightOwner, String copyrightYear) {
-		this.userId = userId;
-		this.editorChoice = editorChoice;
-		this.viewExpChoice = viewExpChoice;	
-		this.showLTIChoice = showLTIChoice;
-		this.licenseCode = licenseCode;
-        this.ccLicenseUrl = ccLicenseUrl;
-        this.reqAttr = reqAttr;
-        this.allowCmrcl = allowCmrcl;
-        this.allowMod = allowMod;
-        this.copyrightOwner = copyrightOwner;
-        this.copyrightYear = copyrightYear;
-	}
-		
+	/** nullable persistent field */
+	private Integer licenseCode;
+
+	private int prefId;
+
+	/** nullable persistent field */
+	private Boolean reqAttr;
+
+	private Boolean showLTIChoice;
+
+	/** identifier field */
+	private String userId;
+
+	private Boolean viewExpChoice;
+
 	/**
-	 *  default
+	 * default
 	 */
-	public MeleteUserPreference() {
+	public MeleteUserPreference()
+	{
 		this.viewExpChoice = true;
 		this.showLTIChoice = false;
 		this.licenseCode = 0;
 	}
-		
+
+	/**
+	 * full constructor
+	 * 
+	 * @param userId
+	 * @param editorChoice
+	 */
+	public MeleteUserPreference(String userId, String editorChoice, Boolean viewExpChoice, Boolean showLTIChoice, Integer licenseCode,
+			String ccLicenseUrl, Boolean reqAttr, Boolean allowCmrcl, Integer allowMod, int version, org.etudes.component.app.melete.Section section,
+			String copyrightOwner, String copyrightYear)
+	{
+		this.userId = userId;
+		this.editorChoice = editorChoice;
+		this.viewExpChoice = viewExpChoice;
+		this.showLTIChoice = showLTIChoice;
+		this.licenseCode = licenseCode;
+		this.ccLicenseUrl = ccLicenseUrl;
+		this.reqAttr = reqAttr;
+		this.allowCmrcl = allowCmrcl;
+		this.allowMod = allowMod;
+		this.copyrightOwner = copyrightOwner;
+		this.copyrightYear = copyrightYear;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Integer getAllowMod()
+	{
+		return this.allowMod;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getCcLicenseUrl()
+	{
+		return this.ccLicenseUrl;
+	}
+
+	/**
+	 * @return Returns the copyrightOwner.
+	 */
+	public String getCopyrightOwner()
+	{
+		return copyrightOwner;
+	}
+
+	/**
+	 * @return Returns the copyrightYear.
+	 */
+	public String getCopyrightYear()
+	{
+		return copyrightYear;
+	}
+
 	/**
 	 * @return Returns the editorChoice.
 	 */
-	public String getEditorChoice() {
+	public String getEditorChoice()
+	{
 		return editorChoice;
 	}
+
 	/**
-	 * @param editorChoice The editorChoice to set.
+	 * {@inheritDoc}
 	 */
-	public void setEditorChoice(String editorChoice) {
-		this.editorChoice = editorChoice;
+	public Integer getLicenseCode()
+	{
+		return this.licenseCode;
 	}
-	/**
-	 * @return Returns the userId.
-	 */
-	public String getUserId() {
-		return userId;
-	}
-	/**
-	 * @param userId The userId to set.
-	 */
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("prefId", getPrefId())
-            .toString();
-    }
 
 	/**
 	 * @return Returns the prefId.
 	 */
-	public int getPrefId() {
+	public int getPrefId()
+	{
 		return prefId;
 	}
+
 	/**
-	 * @param prefId The prefId to set.
+	 * @return Returns the userId.
 	 */
-	public void setPrefId(int prefId) {
-		this.prefId = prefId;
+	public String getUserId()
+	{
+		return userId;
 	}
 
-	public Boolean isViewExpChoice() {
-		return viewExpChoice;
+	/**
+	 * {@inheritDoc}
+	 */
+	public Boolean isAllowCmrcl()
+	{
+		return this.allowCmrcl;
 	}
 
-	public void setViewExpChoice(Boolean viewExpChoice) {
-		this.viewExpChoice = viewExpChoice;
+	/**
+	 * {@inheritDoc}
+	 */
+	public Boolean isReqAttr()
+	{
+		return this.reqAttr;
 	}
-	
-	public Boolean isShowLTIChoice(){
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Boolean isShowLTIChoice()
+	{
 		return showLTIChoice;
 	}
 
-	public void setShowLTIChoice(Boolean showLTIChoice) {
-		this.showLTIChoice = showLTIChoice;
-	}
-	   public Integer getLicenseCode() {
-	        return this.licenseCode;
-	    }
-
-	    public void setLicenseCode(Integer licenseCode) {
-	        this.licenseCode = licenseCode;
-	    }
-
-	    public String getCcLicenseUrl() {
-	        return this.ccLicenseUrl;
-	    }
-
-	    public void setCcLicenseUrl(String ccLicenseUrl) {
-	        this.ccLicenseUrl = ccLicenseUrl;
-	    }
-
-	    public Boolean isReqAttr() {
-	        return this.reqAttr;
-	    }
-
-	    public void setReqAttr(Boolean reqAttr) {
-	        this.reqAttr = reqAttr;
-	    }
-
-	    public Boolean isAllowCmrcl() {
-	        return this.allowCmrcl;
-	    }
-
-	    public void setAllowCmrcl(Boolean allowCmrcl) {
-	        this.allowCmrcl = allowCmrcl;
-	    }
-
-	    public Integer getAllowMod() {
-	        return this.allowMod;
-	    }
-
-	    public void setAllowMod(Integer allowMod) {
-	        this.allowMod = allowMod;
-	    }
-	
 	/**
-	 * @return Returns the copyrightOwner.
+	 * {@inheritDoc}
 	 */
-	public String getCopyrightOwner() {
-		return copyrightOwner;
+	public Boolean isViewExpChoice()
+	{
+		return viewExpChoice;
 	}
+
 	/**
-	 * @param copyrightOwner The copyrightOwner to set.
+	 * {@inheritDoc}
 	 */
-	public void setCopyrightOwner(String copyrightOwner) {
+	public void setAllowCmrcl(Boolean allowCmrcl)
+	{
+		this.allowCmrcl = allowCmrcl;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setAllowMod(Integer allowMod)
+	{
+		this.allowMod = allowMod;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setCcLicenseUrl(String ccLicenseUrl)
+	{
+		this.ccLicenseUrl = ccLicenseUrl;
+	}
+
+	/**
+	 * @param copyrightOwner
+	 *        The copyrightOwner to set.
+	 */
+	public void setCopyrightOwner(String copyrightOwner)
+	{
 		this.copyrightOwner = copyrightOwner;
 	}
+
 	/**
-	 * @return Returns the copyrightYear.
+	 * @param copyrightYear
+	 *        The copyrightYear to set.
 	 */
-	public String getCopyrightYear() {
-		return copyrightYear;
-	}
-	/**
-	 * @param copyrightYear The copyrightYear to set.
-	 */
-	public void setCopyrightYear(String copyrightYear) {
+	public void setCopyrightYear(String copyrightYear)
+	{
 		this.copyrightYear = copyrightYear;
-	}	
+	}
+
+	/**
+	 * @param editorChoice
+	 *        The editorChoice to set.
+	 */
+	public void setEditorChoice(String editorChoice)
+	{
+		this.editorChoice = editorChoice;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setLicenseCode(Integer licenseCode)
+	{
+		this.licenseCode = licenseCode;
+	}
+
+	/**
+	 * @param prefId
+	 *        The prefId to set.
+	 */
+	public void setPrefId(int prefId)
+	{
+		this.prefId = prefId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setReqAttr(Boolean reqAttr)
+	{
+		this.reqAttr = reqAttr;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setShowLTIChoice(Boolean showLTIChoice)
+	{
+		this.showLTIChoice = showLTIChoice;
+	}
+
+	/**
+	 * @param userId
+	 *        The userId to set.
+	 */
+	public void setUserId(String userId)
+	{
+		this.userId = userId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setViewExpChoice(Boolean viewExpChoice)
+	{
+		this.viewExpChoice = viewExpChoice;
+	}
+
+	/**
+	 * 
+	 */
+	public String toString()
+	{
+		return new ToStringBuilder(this).append("prefId", getPrefId()).toString();
+	}
 }

@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -30,109 +30,146 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import org.etudes.api.app.melete.CcLicenseService;
 
+public class CcLicense implements Serializable, CcLicenseService
+{
+	/** identifier field */
+	private boolean allowCmrcl;
 
-/** @author Hibernate CodeGenerator */
-public class CcLicense implements Serializable,CcLicenseService {
+	/** identifier field */
+	private int allowMod;
 
-    /** identifier field */
-    private boolean reqAttr;
+	/** identifier field */
+	private String name;
 
-    /** identifier field */
-    private boolean allowCmrcl;
+	/** identifier field */
+	private boolean reqAttr;
 
-    /** identifier field */
-    private int allowMod;
+	/** identifier field */
+	private String url;
 
-    /** identifier field */
-    private String url;
+	/** default constructor */
+	public CcLicense()
+	{
+	}
 
-    /** identifier field */
-    private String name;
+	/** full constructor */
+	public CcLicense(boolean reqAttr, boolean allowCmrcl, int allowMod, String url, String name)
+	{
+		this.reqAttr = reqAttr;
+		this.allowCmrcl = allowCmrcl;
+		this.allowMod = allowMod;
+		this.url = url;
+		this.name = name;
+	}
 
-    /** full constructor */
-    public CcLicense(boolean reqAttr, boolean allowCmrcl, int allowMod, String url, String name) {
-        this.reqAttr = reqAttr;
-        this.allowCmrcl = allowCmrcl;
-        this.allowMod = allowMod;
-        this.url = url;
-        this.name = name;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean equals(Object other)
+	{
+		if ((this == other)) return true;
+		if (!(other instanceof CcLicense)) return false;
+		CcLicense castOther = (CcLicense) other;
+		return new EqualsBuilder().append(this.isReqAttr(), castOther.isReqAttr()).append(this.isAllowCmrcl(), castOther.isAllowCmrcl()).append(
+				this.getAllowMod(), castOther.getAllowMod()).append(this.getUrl(), castOther.getUrl()).append(this.getName(), castOther.getName())
+				.isEquals();
+	}
 
-    /** default constructor */
-    public CcLicense() {
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getAllowMod()
+	{
+		return this.allowMod;
+	}
 
-    public boolean isReqAttr() {
-        return this.reqAttr;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getName()
+	{
+		return this.name;
+	}
 
-    public void setReqAttr(boolean reqAttr) {
-        this.reqAttr = reqAttr;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getUrl()
+	{
+		return this.url;
+	}
 
-    public boolean isAllowCmrcl() {
-        return this.allowCmrcl;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public int hashCode()
+	{
+		return new HashCodeBuilder().append(isReqAttr()).append(isAllowCmrcl()).append(getAllowMod()).append(getUrl()).append(getName()).toHashCode();
+	}
 
-    public void setAllowCmrcl(boolean allowCmrcl) {
-        this.allowCmrcl = allowCmrcl;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isAllowCmrcl()
+	{
+		return this.allowCmrcl;
+	}
 
-    public int getAllowMod() {
-        return this.allowMod;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isReqAttr()
+	{
+		return this.reqAttr;
+	}
 
-    public void setAllowMod(int allowMod) {
-        this.allowMod = allowMod;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setAllowCmrcl(boolean allowCmrcl)
+	{
+		this.allowCmrcl = allowCmrcl;
+	}
 
-    public String getUrl() {
-        return this.url;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setAllowMod(int allowMod)
+	{
+		this.allowMod = allowMod;
+	}
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setName(String name)
+	{
+		this.name = name;
+	}
 
-    public String getName() {
-        return this.name;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setReqAttr(boolean reqAttr)
+	{
+		this.reqAttr = reqAttr;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setUrl(String url)
+	{
+		this.url = url;
+	}
 
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("reqAttr", isReqAttr())
-            .append("allowCmrcl", isAllowCmrcl())
-            .append("allowMod", getAllowMod())
-            .append("url", getUrl())
-            .append("name", getName())
-            .toString();
-    }
-
-    public boolean equals(Object other) {
-        if ( (this == other ) ) return true;
-        if ( !(other instanceof CcLicense) ) return false;
-        CcLicense castOther = (CcLicense) other;
-        return new EqualsBuilder()
-            .append(this.isReqAttr(), castOther.isReqAttr())
-            .append(this.isAllowCmrcl(), castOther.isAllowCmrcl())
-            .append(this.getAllowMod(), castOther.getAllowMod())
-            .append(this.getUrl(), castOther.getUrl())
-            .append(this.getName(), castOther.getName())
-            .isEquals();
-    }
-
-    public int hashCode() {
-        return new HashCodeBuilder()
-            .append(isReqAttr())
-            .append(isAllowCmrcl())
-            .append(getAllowMod())
-            .append(getUrl())
-            .append(getName())
-            .toHashCode();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString()
+	{
+		return new ToStringBuilder(this).append("reqAttr", isReqAttr()).append("allowCmrcl", isAllowCmrcl()).append("allowMod", getAllowMod())
+		.append("url", getUrl()).append("name", getName()).toString();
+	}
 
 }

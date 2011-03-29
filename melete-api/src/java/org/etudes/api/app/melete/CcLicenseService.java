@@ -69,7 +69,7 @@ public interface CcLicenseService
 	public abstract boolean isAllowCmrcl();
 
 	/**
-	 * Gets Require Attribution part of the license.
+	 * Gets Require Attribution part of the license. True for all Creative commons License variations.
 	 * 
 	 * @return true if required
 	 */
