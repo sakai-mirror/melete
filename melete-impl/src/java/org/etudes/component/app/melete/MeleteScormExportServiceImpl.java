@@ -58,6 +58,10 @@ import org.sakaiproject.entity.api.Entity;
  */
 public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImpl implements MeleteExportService{
 
+	/**
+	 * {@inheritDoc}
+	 * Initializes values for SCORM Package
+	 */
 	public void initValues()
 	{
 	   setMetaDataNameSpace("http://ltsc.ieee.org/xsd/LOM");
