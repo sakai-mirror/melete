@@ -4,7 +4,7 @@
  * $Id: Bookmark.java 60573 2009-05-19 20:17:20Z mallika@etudes.org $  
  ***********************************************************************************
  *
- * Copyright (c) 2010 Etudes, Inc.
+ * Copyright (c) 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -29,169 +29,199 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.etudes.api.app.melete.BookmarkObjService;
 
 /** @author Hibernate CodeGenerator */
-public class Bookmark implements Serializable, BookmarkObjService {
+public class Bookmark implements Serializable, BookmarkObjService
+{
 
 	private int bookmarkId;
-	
+
+	private String briefNotes;
+
+	private Boolean lastVisited;
+
+	private String notes;
+
+	private org.etudes.component.app.melete.Section section;
+
 	/** nullable persistent field */
-    private int sectionId;
-    
-    private String userId;
+	private int sectionId;
 
-    private String siteId;
-    
-    private org.etudes.component.app.melete.Section section;
-    
-    private String title;
+	private boolean sectionVisibleFlag;
 
-    private String notes;
-    
-    private String briefNotes;
-    
-    private Boolean lastVisited;   
-    
-    private boolean sectionVisibleFlag;
-    
-    public Bookmark()
-    {
-    	this.sectionId = 0;
-    	this.userId = null;
-    	this.siteId = null;
-    	this.section = null;
-    	this.title = null;
-    	this.notes = null;
-    	this.lastVisited = null;
-    }
-	
+	private String siteId;
 
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.BookmarkObjService#getBookmarkId()
+	private String title;
+
+	private String userId;
+
+	public Bookmark()
+	{
+		this.sectionId = 0;
+		this.userId = null;
+		this.siteId = null;
+		this.section = null;
+		this.title = null;
+		this.notes = null;
+		this.lastVisited = null;
+	}
+
+	/*
+	 * {@inheritDoc}
 	 */
-	public int getBookmarkId() {
+	public int getBookmarkId()
+	{
 		return bookmarkId;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.BookmarkObjService#setBookmarkId(int)
+	/*
+	 * {@inheritDoc}
 	 */
-	public void setBookmarkId(int bookmarkId) {
-		this.bookmarkId = bookmarkId;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.BookmarkObjService#getSectionId()
-	 */
-	public int getSectionId() {
-	     return this.sectionId;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.BookmarkObjService#setSectionId(int)
-	 */
-	public void setSectionId(int sectionId) {
-	     this.sectionId = sectionId;
-	}
-	    
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.BookmarkObjService#getUserId()
-	 */
-	public String getUserId() {
-		return userId;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.BookmarkObjService#setUserId(java.lang.String)
-	 */
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.BookmarkObjService#getSiteId()
-	 */
-	public String getSiteId() {
-		return siteId;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.BookmarkObjService#setSiteId(java.lang.String)
-	 */
-	public void setSiteId(String siteId) {
-		this.siteId = siteId;
-	}
-
-	/**
-	 * @return Returns the section.
-	 */
-	public org.etudes.api.app.melete.SectionObjService getSection() {
-		return section;
-	}
-	/**
-	 * @param section The section to set.
-	 */
-	public void setSection(
-			org.etudes.api.app.melete.SectionObjService section) {
-		this.section = (Section)section;
-	}	
-	
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.BookmarkObjService#getTitle()
-	 */	
-	 public String getTitle() {
-	        return this.title;
-	    }
-
-	 /* (non-Javadoc)
-		 * @see org.etudes.component.app.melete.BookmarkObjService#setTitle(java.lang.String)
-		 */
-	 public void setTitle(String title) {
-	        this.title = title;
-	    }	
-
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.BookmarkObjService#getNotes()
-	 */
-	public String getNotes() {
-		return notes;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.BookmarkObjService#setNotes(java.lang.String)
-	 */
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
-
-	public String getBriefNotes() {
+	public String getBriefNotes()
+	{
 		return briefNotes;
 	}
-	
-	public void setBriefNotes(String briefNotes) {
-		this.briefNotes = briefNotes;
-	}	
-	
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.BookmarkObjService#getLastVisited()
+
+	/*
+	 * {@inheritDoc}
 	 */
-	public Boolean getLastVisited() {
+	public Boolean getLastVisited()
+	{
 		return lastVisited;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.BookmarkObjService#setLastVisited(java.lang.Boolean)
+	/*
+	 * {@inheritDoc}
 	 */
-	public void setLastVisited(Boolean lastVisited) {
-		this.lastVisited = lastVisited;
+	public String getNotes()
+	{
+		return notes;
 	}
 
+	/*
+	 * {@inheritDoc}
+	 */
+	public org.etudes.api.app.melete.SectionObjService getSection()
+	{
+		return section;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public int getSectionId()
+	{
+		return this.sectionId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public String getSiteId()
+	{
+		return siteId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public String getTitle()
+	{
+		return this.title;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public String getUserId()
+	{
+		return userId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
 	public boolean isSectionVisibleFlag()
 	{
 		return sectionVisibleFlag;
 	}
-	
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setBookmarkId(int bookmarkId)
+	{
+		this.bookmarkId = bookmarkId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setBriefNotes(String briefNotes)
+	{
+		this.briefNotes = briefNotes;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setLastVisited(Boolean lastVisited)
+	{
+		this.lastVisited = lastVisited;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setNotes(String notes)
+	{
+		this.notes = notes;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setSection(org.etudes.api.app.melete.SectionObjService section)
+	{
+		this.section = (Section) section;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setSectionId(int sectionId)
+	{
+		this.sectionId = sectionId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
 	public void setSectionVisibleFlag(boolean sectionVisibleFlag)
 	{
 		this.sectionVisibleFlag = sectionVisibleFlag;
 	}
-	
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setSiteId(String siteId)
+	{
+		this.siteId = siteId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setTitle(String title)
+	{
+		this.title = title;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setUserId(String userId)
+	{
+		this.userId = userId;
+	}
+
 }

@@ -3,7 +3,7 @@
  * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-api/src/java/org/etudes/api/app/melete/BookmarkObjService.java $
  *
  ***********************************************************************************
- * Copyright (c) 2010 Etudes, Inc.
+ * Copyright (c) 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -21,7 +21,8 @@
  ****************************************************************************************/
 package org.etudes.api.app.melete;
 
-public interface BookmarkObjService {
+public interface BookmarkObjService
+{
 
 	/**
 	 * @return the bookmarkId
@@ -29,52 +30,9 @@ public interface BookmarkObjService {
 	public abstract int getBookmarkId();
 
 	/**
-	 * @param bookmarkId the bookmarkId to set
+	 * @return the lastVisited
 	 */
-	public abstract void setBookmarkId(int bookmarkId);
-
-	public abstract int getSectionId();
-	
-	public abstract void setSectionId(int sectionId);
-	/**
-	 * @return the userId
-	 */
-	public abstract String getUserId();
-
-	/**
-	 * @param userId the userId to set
-	 */
-	public abstract void setUserId(String userId);
-
-	/**
-	 * @return the siteId
-	 */
-	public abstract String getSiteId();
-
-	/**
-	 * @param siteId the siteId to set
-	 */
-	public abstract void setSiteId(String siteId);
-
-	/**
-	 * @return the section
-	 */
-	public abstract org.etudes.api.app.melete.SectionObjService getSection();
-
-	/**
-	 * @param section the section to set
-	 */
-	public abstract void setSection(org.etudes.api.app.melete.SectionObjService section);
-	
-	/* 
-	 * @return the title
-	 */	
-	 public abstract String getTitle();
-	 
-	 /* 
-		 * @param title the title to set
-		 */
-	 public abstract void setTitle(String title);
+	public abstract Boolean getLastVisited();
 
 	/**
 	 * @return the notes
@@ -82,22 +40,86 @@ public interface BookmarkObjService {
 	public abstract String getNotes();
 
 	/**
-	 * @param notes the notes to set
+	 * @return the section
+	 */
+	public abstract org.etudes.api.app.melete.SectionObjService getSection();
+
+	/**
+	 * @return the section id
+	 */
+	public abstract int getSectionId();
+
+	/**
+	 * @return the siteId
+	 */
+	public abstract String getSiteId();
+
+	/*
+	 * @return the title
+	 */
+	public abstract String getTitle();
+
+	/**
+	 * @return the userId
+	 */
+	public abstract String getUserId();
+
+	/**
+	 * @return the sectionVisibleFlag
+	 */
+	public abstract boolean isSectionVisibleFlag();
+
+	/**
+	 * @param bookmarkId
+	 *        the bookmarkId to set
+	 */
+	public abstract void setBookmarkId(int bookmarkId);
+
+	/**
+	 * @param lastVisited
+	 *        the lastVisited to set
+	 */
+	public abstract void setLastVisited(Boolean lastVisited);
+
+	/**
+	 * @param notes
+	 *        the notes to set
 	 */
 	public abstract void setNotes(String notes);
 
 	/**
-	 * @return the lastVisited
+	 * @param section
+	 *        the section to set
 	 */
-	public abstract Boolean getLastVisited();
+	public abstract void setSection(org.etudes.api.app.melete.SectionObjService section);
 
 	/**
-	 * @param lastVisited the lastVisited to set
+	 * @param sectionId
+	 *        the section id to set
 	 */
-	public abstract void setLastVisited(Boolean lastVisited);
-	
-	public abstract boolean isSectionVisibleFlag();
-	
+	public abstract void setSectionId(int sectionId);
+
+	/**
+	 * @param sectionVisibleFlag
+	 *        the sectionVisibleFlag to set
+	 */
 	public abstract void setSectionVisibleFlag(boolean sectionVisibleFlag);
+
+	/**
+	 * @param siteId
+	 *        the siteId to set
+	 */
+	public abstract void setSiteId(String siteId);
+
+	/*
+	 * @param title the title to set
+	 */
+	public abstract void setTitle(String title);
+
+	/**
+	 * @param userId
+	 *        the userId to set
+	 */
+	public abstract void setUserId(String userId);
 
 }

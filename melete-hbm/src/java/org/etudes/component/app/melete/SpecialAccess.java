@@ -31,183 +31,150 @@ import java.util.Date;
 import org.etudes.api.app.melete.SpecialAccessObjService;
 
 /** @author Hibernate CodeGenerator */
-public class SpecialAccess implements Serializable, SpecialAccessObjService {
+public class SpecialAccess implements Serializable, SpecialAccessObjService
+{
 
 	private int accessId;
-	
+
 	/** nullable persistent field */
-    private int moduleId;
-    
-    private org.etudes.component.app.melete.Module module;
-    
-    private String users;
-    
-    private String userNames;
+	private Date endDate;
 
-    /** nullable persistent field */
-    private Date startDate;
+	private org.etudes.component.app.melete.Module module;
 
-    /** nullable persistent field */
-    private Date endDate;
-    
-    protected boolean selected;
-    
-    /** nullable persistent field */
-    private boolean overrideStart;   
-    private boolean overrideEnd;    
-    
-    private boolean valid;
-    
-    public SpecialAccess()
-    {
-    	this.moduleId = 0;
-    	this.module = null;
-    	this.users = null;
-    	this.startDate = null;
-    	this.endDate = null;
-    	this.overrideStart = false;
+	/** nullable persistent field */
+	private int moduleId;
+
+	private boolean overrideEnd;
+
+	/** nullable persistent field */
+	private boolean overrideStart;
+
+	/** nullable persistent field */
+	private Date startDate;
+
+	private String userNames;
+
+	private String users;
+	private boolean valid;
+
+	protected boolean selected;
+
+	public SpecialAccess()
+	{
+		this.moduleId = 0;
+		this.module = null;
+		this.users = null;
+		this.startDate = null;
+		this.endDate = null;
+		this.overrideStart = false;
 		this.overrideEnd = false;
-    }
+	}
 
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.SpecialAccessObjService#getSpecialAccessId()
+	/*
+	 * {@inheritDoc}
 	 */
-	public int getAccessId() {
+	public int getAccessId()
+	{
 		return accessId;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.SpecialAccessObjService#setSpecialAccessId(int)
+	/*
+	 * {@inheritDoc}
 	 */
-	public void setAccessId(int accessId) {
-		this.accessId = accessId;
+	public Date getEndDate()
+	{
+		return this.endDate;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.SpecialAccessObjService#getModuleId()
+	/*
+	 * {@inheritDoc}
 	 */
-	public int getModuleId() {
-	     return this.moduleId;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.SpecialAccessObjService#setModuleId(int)
-	 */
-	public void setModuleId(int moduleId) {
-	     this.moduleId = moduleId;
-	}
-	    
-	/**
-	 * @return Returns the module.
-	 */
-	public org.etudes.api.app.melete.ModuleObjService getModule() {
+	public org.etudes.api.app.melete.ModuleObjService getModule()
+	{
 		return module;
 	}
-	/**
-	 * @param module The module to set.
+
+	/*
+	 * {@inheritDoc}
 	 */
-	public void setModule(
-			org.etudes.api.app.melete.ModuleObjService module) {
-		this.module = (Module)module;
-	}	
-	
-	
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.SpecialAccessObjService#getUsers()
+	public int getModuleId()
+	{
+		return this.moduleId;
+	}
+
+	/*
+	 * {@inheritDoc}
 	 */
-	public String getUsers() {
+	public Date getStartDate()
+	{
+		return this.startDate;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public String getUserNames()
+	{
+		return this.userNames;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public String getUsers()
+	{
 		return users;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.SpecialAccessObjService#setUsers(java.lang.String)
+	/*
+	 * {@inheritDoc}
 	 */
-	public void setUsers(String users) {
-		this.users = users;
+	public boolean isOverrideEnd()
+	{
+		return this.overrideEnd;
 	}
 
-	public String getUserNames() {
-		return this.userNames;
-	}
-	
-	public void setUserNames(String userNames) {
-		this.userNames = userNames;
-	}
-	
-	public Date getStartDate() {
-	    return this.startDate;
+	/*
+	 * {@inheritDoc}
+	 */
+	public boolean isOverrideStart()
+	{
+		return this.overrideStart;
 	}
 
-	public void setStartDate(Date startDate) {
-	    this.startDate = startDate;
+	/*
+	 * {@inheritDoc}
+	 */
+	public boolean isSelected()
+	{
+		return selected;
 	}
 
-	public Date getEndDate() {
-	    return this.endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-	    this.endDate = endDate;
-	}	
-	
-	 public boolean isSelected()
-	 {
-	   	return selected;
-	 }
-
-     public void setSelected(boolean selected)
-	 {
-	   	this.selected = selected;
-	 }	
-    
-     /**
- 	 * @return the overrideStart
- 	 */
- 	public boolean isOverrideStart()
- 	{
- 		return this.overrideStart;
- 	}
-
- 	/**
- 	 * @param overrideStart the overrideStart to set
- 	 */
- 	public void setOverrideStart(boolean overrideStart)
- 	{
- 		this.overrideStart = overrideStart;
- 	}
- 	
- 	 /**
- 	 * @return the overrideEnd
- 	 */
- 	public boolean isOverrideEnd()
- 	{
- 		return this.overrideEnd;
- 	}
-
- 	/**
- 	 * @param overrideEnd the overrideEnd to set
- 	 */
- 	public void setOverrideEnd(boolean overrideEnd)
- 	{
- 		this.overrideEnd = overrideEnd;
- 	}
- 	
- 	public boolean isValid()
-    {
-    	Calendar stCal = null;
+	/**
+	 * Determines if special access entry is valid, checks against module and special access dates
+	 * 
+	 * @return true if special access is valid, false otherwise
+	 */
+	public boolean isValid()
+	{
+		Calendar stCal = null;
 		Calendar enCal = null;
-		Date actualStartDate,actualEndDate;
-		if (overrideStart) actualStartDate = getStartDate();
-		else actualStartDate = getModule().getModuleshdate().getStartDate();
-		if (overrideEnd) actualEndDate = getEndDate();
-		else actualEndDate = getModule().getModuleshdate().getEndDate();
-    	if (actualStartDate != null)
+		Date actualStartDate, actualEndDate;
+		if (overrideStart)
+			actualStartDate = getStartDate();
+		else
+			actualStartDate = getModule().getModuleshdate().getStartDate();
+		if (overrideEnd)
+			actualEndDate = getEndDate();
+		else
+			actualEndDate = getModule().getModuleshdate().getEndDate();
+		if (actualStartDate != null)
 		{
 			stCal = Calendar.getInstance();
 			stCal.setTime(actualStartDate);
 			if (stCal.get(Calendar.YEAR) > 9999)
 			{
-			  return false;
+				return false;
 			}
 		}
 		if (actualEndDate != null)
@@ -216,16 +183,96 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService {
 			enCal.setTime(actualEndDate);
 			if (enCal.get(Calendar.YEAR) > 9999)
 			{
-			  return false;
+				return false;
 			}
 		}
-		if ((actualStartDate != null)&&(actualEndDate != null))
+		if ((actualStartDate != null) && (actualEndDate != null))
 		{
-		  if (actualStartDate.compareTo(actualEndDate) >= 0)
-		  {
-			return false;
-		  }
-	     }
+			if (actualStartDate.compareTo(actualEndDate) >= 0)
+			{
+				return false;
+			}
+		}
 		return true;
-    } 	
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setAccessId(int accessId)
+	{
+		this.accessId = accessId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setEndDate(Date endDate)
+	{
+		this.endDate = endDate;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setModule(org.etudes.api.app.melete.ModuleObjService module)
+	{
+		this.module = (Module) module;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setModuleId(int moduleId)
+	{
+		this.moduleId = moduleId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setOverrideEnd(boolean overrideEnd)
+	{
+		this.overrideEnd = overrideEnd;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setOverrideStart(boolean overrideStart)
+	{
+		this.overrideStart = overrideStart;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setSelected(boolean selected)
+	{
+		this.selected = selected;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setStartDate(Date startDate)
+	{
+		this.startDate = startDate;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setUserNames(String userNames)
+	{
+		this.userNames = userNames;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setUsers(String users)
+	{
+		this.users = users;
+	}
 }

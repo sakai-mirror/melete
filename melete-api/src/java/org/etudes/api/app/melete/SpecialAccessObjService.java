@@ -3,7 +3,7 @@
  * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-api/src/java/org/etudes/api/app/melete/SpecialAccessObjService.java $
  *
  ***********************************************************************************
- * Copyright (c) 2010 Etudes, Inc.
+ * Copyright (c) 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -20,9 +20,11 @@
  * permissions and limitations under the License. 
  ****************************************************************************************/
 package org.etudes.api.app.melete;
+
 import java.util.Date;
 
-public interface SpecialAccessObjService {
+public interface SpecialAccessObjService
+{
 
 	/**
 	 * @return the accessId
@@ -30,52 +32,96 @@ public interface SpecialAccessObjService {
 	public abstract int getAccessId();
 
 	/**
-	 * @param accessId the accessId to set
+	 * @return endDate end date to set
 	 */
-	public abstract void setAccessId(int accessId);
+	public abstract Date getEndDate();
 
-	public abstract int getModuleId();
-	
-	public abstract void setModuleId(int moduleId);
-	
 	/**
 	 * @return the module
 	 */
 	public abstract org.etudes.api.app.melete.ModuleObjService getModule();
 
 	/**
-	 * @param section the module to set
+	 * @return the moduleId
 	 */
-	public abstract void setModule(org.etudes.api.app.melete.ModuleObjService module);
-	
-	/* 
-	 * @return the users
-	 */	
-	public abstract String getUsers();
-	 
-	/* 
-	* @param users the users to set
-	*/
-	public abstract void setUsers(String users);
-	
-	public abstract String getUserNames();
-	
-	public abstract void setUserNames(String userNames);
+	public abstract int getModuleId();
 
+	/**
+	 * @return startDate the start date
+	 */
 	public abstract Date getStartDate();
 
+	/**
+	 * @return the user names
+	 */
+	public abstract String getUserNames();
+
+	/*
+	 * @return the users
+	 */
+	public abstract String getUsers();
+
+	/**
+	 * @return overrideEnd
+	 */
+	public abstract boolean isOverrideEnd();
+
+	/**
+	 * @return overrideStart
+	 */
+	public abstract boolean isOverrideStart();
+
+	/**
+	 * @param accessId
+	 *        the accessId to set
+	 */
+	public abstract void setAccessId(int accessId);
+
+	/**
+	 * @param endDate
+	 *        end date to set
+	 */
+	public abstract void setEndDate(Date endDate);
+
+	/**
+	 * @param section
+	 *        the module to set
+	 */
+	public abstract void setModule(org.etudes.api.app.melete.ModuleObjService module);
+
+	/**
+	 * @param moduleId
+	 *        the moduleId to set
+	 */
+	public abstract void setModuleId(int moduleId);
+
+	/**
+	 * @param overrideEnd
+	 *        overrideEnd to set
+	 */
+	public abstract void setOverrideEnd(boolean overrideEnd);
+
+	/**
+	 * @param overrideStart
+	 *        overrideStart to set
+	 */
+	public abstract void setOverrideStart(boolean overrideStart);
+
+	/**
+	 * @param startDate
+	 *        start date to set
+	 */
 	public abstract void setStartDate(Date startDate);
 
-	public abstract Date getEndDate();
+	/**
+	 * @param userNames
+	 *        the userNames to set
+	 */
+	public abstract void setUserNames(String userNames);
 
-	public abstract void setEndDate(Date endDate);
-	
-	public abstract boolean isOverrideStart();
- 	
- 	public abstract void setOverrideStart(boolean overrideStart);
- 
- 	public abstract boolean isOverrideEnd();
- 	
- 	public abstract void setOverrideEnd(boolean overrideEnd);
- 	
+	/*
+	 * @param users the users to set
+	 */
+	public abstract void setUsers(String users);
+
 }
