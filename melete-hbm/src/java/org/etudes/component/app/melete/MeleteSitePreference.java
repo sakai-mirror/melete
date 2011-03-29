@@ -29,49 +29,58 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.etudes.api.app.melete.MeleteSitePreferenceService;
 
 /** @author Hibernate CodeGenerator */
-public class MeleteSitePreference implements Serializable,MeleteSitePreferenceService{
+public class MeleteSitePreference implements Serializable, MeleteSitePreferenceService
+{
 
-    /** identifier field */
-    private String prefSiteId;
+	/** identifier field */
+	private String prefSiteId;
 
-    /** nullable persistent field */
-    private Boolean printable;   
-    private boolean autonumber;   
-   
-	/** full constructor
-	 * @param userId
+	/** nullable persistent field */
+	private Boolean printable;
+	private boolean autonumber;
+
+	/**
+	 * full constructor
+	 * 
+	 * @param siteId
 	 * @param editorChoice
 	 */
-	public MeleteSitePreference(String prefSiteId, Boolean printable) {
-		this.prefSiteId = prefSiteId;		
+	public MeleteSitePreference(String prefSiteId, Boolean printable)
+	{
+		this.prefSiteId = prefSiteId;
 		this.printable = printable;
 	}
-		
+
 	/**
-	 *  default
+	 * default
 	 */
-	public MeleteSitePreference() {
+	public MeleteSitePreference()
+	{
 		this.printable = false;
 		this.autonumber = false;
 	}
-		
+
 	/**
-	 * @return Returns the userId.
+	 * @return Returns the siteId.
 	 */
-	public String getPrefSiteId() {
+	public String getPrefSiteId()
+	{
 		return prefSiteId;
 	}
+
 	/**
-	 * @param userId The userId to set.
+	 * @param prefSiteId
+	 *        The site Id
 	 */
-	public void setPrefSiteId(String prefSiteId) {
+	public void setPrefSiteId(String prefSiteId)
+	{
 		this.prefSiteId = prefSiteId;
 	}
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("prefSiteId", getPrefSiteId())
-            .toString();
-    }
+
+	public String toString()
+	{
+		return new ToStringBuilder(this).append("prefSiteId", getPrefSiteId()).toString();
+	}
 
 	/**
 	 * @return the printable
@@ -82,12 +91,14 @@ public class MeleteSitePreference implements Serializable,MeleteSitePreferenceSe
 	}
 
 	/**
-	 * @param printable the printable to set
+	 * @param printable
+	 *        printable to set
 	 */
 	public void setPrintable(Boolean printable)
 	{
 		this.printable = printable;
 	}
+
 	/**
 	 * @return the autonumber
 	 */
@@ -97,7 +108,8 @@ public class MeleteSitePreference implements Serializable,MeleteSitePreferenceSe
 	}
 
 	/**
-	 * @param autonumber the autonumber to set
+	 * @param autonumber
+	 *        the autonumber to set
 	 */
 	public void setAutonumber(boolean autonumber)
 	{

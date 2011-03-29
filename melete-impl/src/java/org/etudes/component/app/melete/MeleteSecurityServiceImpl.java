@@ -24,7 +24,6 @@
 package org.etudes.component.app.melete;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -47,10 +46,7 @@ import org.sakaiproject.authz.cover.FunctionManager;
 import org.sakaiproject.tool.cover.ToolManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dom4j.Attribute;
 import org.dom4j.DocumentHelper;
-import org.dom4j.Namespace;
-import org.dom4j.QName;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.authz.cover.AuthzGroupService;
@@ -72,8 +68,6 @@ import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Node;
 import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.util.Xml;
@@ -83,24 +77,25 @@ import org.etudes.basiclti.SakaiBLTIUtil;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.util.ResourceLoader;
 
-public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityProducer,EntityTransferrer {
+public class MeleteSecurityServiceImpl implements MeleteSecurityService, EntityProducer, EntityTransferrer
+{
 
 	private ModuleService moduleService;
 	private MeleteImportfromSiteService meleteImportfromSiteService;
 	private MeleteImportService meleteImportService;
 	private MeleteExportService meleteExportService;
 
-        // Keep both of these here for upwards compatibility - Chuck
-	public static final String MIME_TYPE_SLTI="ims/simplelti";
-	public static final String MIME_TYPE_BLTI="ims/basiclti";
+	// Keep both of these here for upwards compatibility - Chuck
+	public static final String MIME_TYPE_SLTI = "ims/simplelti";
+	public static final String MIME_TYPE_BLTI = "ims/basiclti";
 
-        private static ResourceLoader rb = new ResourceLoader("security_svc");
+	private static ResourceLoader rb = new ResourceLoader("security_svc");
 
 	// Note: security needs a proper Resource reference
 
 	/*******************************************************************************
-	* Dependencies and their setter methods
-	*******************************************************************************/
+	 * Dependencies and their setter methods
+	 *******************************************************************************/
 
 	/** Dependency: a logger component. */
 	private Log logger = LogFactory.getLog(MeleteSecurityServiceImpl.class);
@@ -116,7 +111,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		{
 			public SecurityAdvice isAllowed(String userId, String function, String reference)
 			{
-				  return SecurityAdvice.ALLOWED;
+				return SecurityAdvice.ALLOWED;
 			}
 		});
 	}
@@ -131,7 +126,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 
 	/**
 	 * Check security for this entity.
-	 *
+	 * 
 	 * @param ref
 	 *        The Reference to the entity.
 	 * @return true if allowed, false if not.
@@ -139,12 +134,12 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	protected boolean checkSecurity(Reference ref)
 	{
 
-		//Need to add additional code here to make sure the section corresponding to the
-		//resource is visible, not deleted or inactivated
+		// Need to add additional code here to make sure the section corresponding to the
+		// resource is visible, not deleted or inactivated
 		boolean result = false;
 		try
 		{
-		  result = allowAuthor(ref.getContext()) || allowStudent(ref.getContext());
+			result = allowAuthor(ref.getContext()) || allowStudent(ref.getContext());
 		}
 		catch (Exception e)
 		{
@@ -152,9 +147,10 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		}
 		return result;
 	}
+
 	/*******************************************************************************
-	* Init and Destroy
-	*******************************************************************************/
+	 * Init and Destroy
+	 *******************************************************************************/
 
 	/**
 	 * Final initialization, once all dependencies are set.
@@ -162,20 +158,18 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	public void init()
 	{
 
-
-		logger.info(this +".init()");
-// setup a security advisor
+		logger.info(this + ".init()");
+		// setup a security advisor
 		pushAdvisor();
 
 		try
 		{
 			// register as an entity producer
-			EntityManager.registerEntityProducer(this,REFERENCE_ROOT);
+			EntityManager.registerEntityProducer(this, REFERENCE_ROOT);
 
-			//register melete functions
+			// register melete functions
 			FunctionManager.registerFunction(SECURE_AUTHOR);
-		    FunctionManager.registerFunction(SECURE_STUDENT);
-
+			FunctionManager.registerFunction(SECURE_STUDENT);
 
 		}
 		catch (Throwable t)
@@ -195,13 +189,14 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	 */
 	public void destroy()
 	{
-		logger.info(this +".destroy()");
+		logger.info(this + ".destroy()");
 	}
 
 	/**
 	 *
 	 */
-	public MeleteSecurityServiceImpl() {
+	public MeleteSecurityServiceImpl()
+	{
 		super();
 
 	}
@@ -209,46 +204,64 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean allowAuthor(String reference)throws Exception {
+	public boolean allowAuthor(String reference) throws Exception
+	{
 
-      try {
+		try
+		{
 			return SecurityService.unlock(SECURE_AUTHOR, getContextSiteId(reference));
-    	} catch (Exception e) {
-			throw new Exception(this.getClass().getName()+ " : allowAuthor(reference) : " + e.toString());
+		}
+		catch (Exception e)
+		{
+			throw new Exception(this.getClass().getName() + " : allowAuthor(reference) : " + e.toString());
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean allowStudent(String reference)throws Exception{
+	public boolean allowStudent(String reference) throws Exception
+	{
 
-         try {
-			  return SecurityService.unlock(SECURE_STUDENT, getContextSiteId(reference));
-		} catch (Exception e) {
-			throw new Exception(this.getClass().getName()+ " : allowStudent(reference) : " + e.toString());
+		try
+		{
+			return SecurityService.unlock(SECURE_STUDENT, getContextSiteId(reference));
+		}
+		catch (Exception e)
+		{
+			throw new Exception(this.getClass().getName() + " : allowStudent(reference) : " + e.toString());
 		}
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean allowAuthor()throws Exception {
+	public boolean allowAuthor() throws Exception
+	{
 
-		try {
+		try
+		{
 			return SecurityService.unlock(SECURE_AUTHOR, getContextSiteId(ToolManager.getCurrentPlacement().getContext()));
-		} catch (Exception e) {
-			throw new Exception(this.getClass().getName()+ " : allowAuthor() : " + e.toString());
+		}
+		catch (Exception e)
+		{
+			throw new Exception(this.getClass().getName() + " : allowAuthor() : " + e.toString());
 		}
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean allowStudent()throws Exception{
+	public boolean allowStudent() throws Exception
+	{
 
-		try {
+		try
+		{
 			return SecurityService.unlock(SECURE_STUDENT, getContextSiteId(ToolManager.getCurrentPlacement().getContext()));
-		} catch (Exception e) {
-			throw new Exception(this.getClass().getName()+ " : allowStudent() : " + e.toString());
+		}
+		catch (Exception e)
+		{
+			throw new Exception(this.getClass().getName() + " : allowStudent() : " + e.toString());
 		}
 	}
 
@@ -263,41 +276,42 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	/**
 	 * @return siteId
 	 */
-	private String getContextSiteId(String reference) {
-		  return ("/site/" + reference);
+	private String getContextSiteId(String reference)
+	{
+		return ("/site/" + reference);
 	}
 
-		/*******************************************************************************************************************************
-		 * EntityProducer
-		 ******************************************************************************************************************************/
+	/*******************************************************************************************************************************
+	 * EntityProducer
+	 ******************************************************************************************************************************/
 
-		/**
-		 * {@inheritDoc}
-		 */
-		public boolean parseEntityReference(String reference, Reference ref)
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean parseEntityReference(String reference, Reference ref)
+	{
+		if (reference.startsWith(REFERENCE_ROOT))
 		{
-			if (reference.startsWith(REFERENCE_ROOT))
+			// we will get null, sampleAccess, content, private, sampleAccess, <context>, test.txt
+			// we will store the context, and the ContentHosting reference in our id field.
+			String id = null;
+			String context = null;
+			String[] parts = StringUtil.split(reference, Entity.SEPARATOR);
+
+			if (parts.length > 5)
 			{
-				// we will get null, sampleAccess, content, private, sampleAccess, <context>, test.txt
-				// we will store the context, and the ContentHosting reference in our id field.
-				String id = null;
-				String context = null;
-				String[] parts = StringUtil.split(reference, Entity.SEPARATOR);
-
-				if (parts.length > 5)
-				{
-					context = parts[5];
-					//Should the slashes below be entityseparator
-					id = "/" + StringUtil.unsplit(parts, 2, parts.length - 2, "/");
-				}
-
-				ref.set(APPLICATION_ID, null, id, null, context);
-
-				return true;
+				context = parts[5];
+				// Should the slashes below be entityseparator
+				id = "/" + StringUtil.unsplit(parts, 2, parts.length - 2, "/");
 			}
 
-			return false;
+			ref.set(APPLICATION_ID, null, id, null, context);
+
+			return true;
 		}
+
+		return false;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -306,15 +320,13 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	{
 		return new HttpAccess()
 		{
-			public void handleAccess(HttpServletRequest req, HttpServletResponse res, Reference ref,
-					Collection copyrightAcceptedRefs) throws EntityPermissionException, EntityNotDefinedException,
-					EntityAccessOverloadException, EntityCopyrightException
+			public void handleAccess(HttpServletRequest req, HttpServletResponse res, Reference ref, Collection copyrightAcceptedRefs)
+			throws EntityPermissionException, EntityNotDefinedException, EntityAccessOverloadException, EntityCopyrightException
 			{
 				// decide on security
 				if (!checkSecurity(ref))
 				{
-					throw new EntityPermissionException(SessionManager.getCurrentSessionUserId(), "meleteDocs", ref
-							.getReference());
+					throw new EntityPermissionException(SessionManager.getCurrentSessionUserId(), "meleteDocs", ref.getReference());
 				}
 
 				boolean handled = false;
@@ -331,39 +343,39 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 					EntityProducer service = contentHostingRef.getEntityProducer();
 					if (service == null) throw new EntityNotDefinedException(ref.getReference());
 
-					if ( service instanceof ContentHostingService )
+					if (service instanceof ContentHostingService)
 					{
 						ContentHostingService chService = (ContentHostingService) service;
 						try
 						{
 							ContentResource content = chService.getResource(contentHostingRef.getId());
-							if ( MIME_TYPE_SLTI.equals(content.getContentType()) || 
-							     MIME_TYPE_BLTI.equals(content.getContentType()) )
+							if (MIME_TYPE_SLTI.equals(content.getContentType()) || MIME_TYPE_BLTI.equals(content.getContentType()))
 							{
-								byte [] bytes = content.getContent();
+								byte[] bytes = content.getContent();
 								ResourceProperties resprops = content.getProperties();
 								String str = new String(bytes);
 								String postData = null;
-								if ( BasicLTIUtil.validateDescriptor(str) != null ) 
+								if (BasicLTIUtil.validateDescriptor(str) != null)
 								{
 									try
-                                                                	{
-                                                                        	popAdvisor();
+									{
+										popAdvisor();
 										// Leave ResourceBundle off for now
-										String [] retval = SakaiBLTIUtil.postLaunchHTML(str, contextId, ref.getId(), resprops, rb);
-										if ( retval != null ) postData = retval[0];
-                                                                	}
-                                                                	catch (Exception e)
-                                                                	{
-                                                                        	logger.info("Exception e "+e.getMessage());
-                                                                        	e.printStackTrace();
-                                                                	}
-                                                                	finally
-                                                                	{
-                                                                        	pushAdvisor();
-                                                                	}
+										String[] retval = SakaiBLTIUtil.postLaunchHTML(str, contextId, ref.getId(), resprops, rb);
+										if (retval != null) postData = retval[0];
+									}
+									catch (Exception e)
+									{
+										logger.info("Exception e " + e.getMessage());
+										e.printStackTrace();
+									}
+									finally
+									{
+										pushAdvisor();
+									}
 								}
-								else // Attempt SimpleLTI
+								else
+									// Attempt SimpleLTI
 								{
 									Properties props = null;
 									// We must remove our advisor while we do the launch and then put it back
@@ -375,24 +387,26 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 									}
 									catch (Exception e)
 									{
-										logger.info("Exception e "+e.getMessage());
+										logger.info("Exception e " + e.getMessage());
 										e.printStackTrace();
 									}
 									finally
 									{
 										pushAdvisor();
 									}
-									if ( props != null ) {
+									if (props != null)
+									{
 										postData = props.getProperty("htmltext");
 									}
 								}
 
-								if ( postData == null ) {
+								if (postData == null)
+								{
 									String msg = rb.getString("not.configured", "Not configured.");
-									postData = "<p>"+msg+"</p>\n<!--\n"+str+"-->\n";
-								} 
+									postData = "<p>" + msg + "</p>\n<!--\n" + str + "-->\n";
+								}
 
-								if ( postData != null )
+								if (postData != null)
 								{
 									res.setContentType("text/html");
 									ServletOutputStream out = res.getOutputStream();
@@ -404,11 +418,12 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 						}
 						catch (Exception e)
 						{
-						//	logger.info("Exception e "+e.getMessage());
-						//	e.printStackTrace();
+							// logger.info("Exception e "+e.getMessage());
+							// e.printStackTrace();
 						}
 					}
-					if ( !handled ) {
+					if (!handled)
+					{
 						// get the producer's HttpAccess helper, it might not support one
 						HttpAccess access = service.getHttpAccess();
 						if (access == null) throw new EntityNotDefinedException(ref.getReference());
@@ -526,7 +541,8 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	 * {@inheritDoc}
 	 */
 	public String getEntityUrl(Reference ref)
-	{		return ServerConfigurationService.getAccessUrl() + ref.getReference();
+	{
+		return ServerConfigurationService.getAccessUrl() + ref.getReference();
 	}
 
 	/**
@@ -543,36 +559,39 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	public String merge(String siteId, Element root, String archivePath, String fromSiteId, Map attachmentNames, Map userIdTrans,
 			Set userListAllowImport)
 	{
-		logger.debug("merge of melete" + siteId +"," +fromSiteId + ","+root.toString());
+		logger.debug("merge of melete" + siteId + "," + fromSiteId + "," + root.toString());
 		int count = 0;
-		try{
-		org.w3c.dom.Document w3doc = Xml.createDocument();
-		org.w3c.dom.Element w3root = (org.w3c.dom.Element)w3doc.importNode(root, true);
-		w3doc.appendChild(w3root);
+		try
+		{
+			org.w3c.dom.Document w3doc = Xml.createDocument();
+			org.w3c.dom.Element w3root = (org.w3c.dom.Element) w3doc.importNode(root, true);
+			w3doc.appendChild(w3root);
 
-		//convert to dom4j doc
-		org.dom4j.io.DOMReader domReader = new org.dom4j.io.DOMReader();
-		org.dom4j.Document domDoc =	domReader.read(w3doc);
-		logger.debug("archive str " + archivePath + archivePath.lastIndexOf(File.separator));
-		archivePath = archivePath.substring(0,archivePath.lastIndexOf("/"));
-		count = getMeleteImportService().mergeAndBuildModules(domDoc,archivePath,siteId);
-		}catch(Exception e)
+			// convert to dom4j doc
+			org.dom4j.io.DOMReader domReader = new org.dom4j.io.DOMReader();
+			org.dom4j.Document domDoc = domReader.read(w3doc);
+			logger.debug("archive str " + archivePath + archivePath.lastIndexOf(File.separator));
+			archivePath = archivePath.substring(0, archivePath.lastIndexOf("/"));
+			count = getMeleteImportService().mergeAndBuildModules(domDoc, archivePath, siteId);
+		}
+		catch (Exception e)
 		{
 			e.printStackTrace();
 			return "error on merging modules content";
 		}
-		return "merging modules content: (" + count+ ") modules \n";
+		return "merging modules content: (" + count + ") modules \n";
 	}
 
 	private String createdom4jtree(org.dom4j.Element oneelement)
 	{
-	org.dom4j.Document document4jmelete = DocumentHelper.createDocument();
-	org.dom4j.Element document4jmeleteRoot = document4jmelete.getRootElement();
-	org.dom4j.Element organizationNewElement = oneelement.createCopy();
-	organizationNewElement.setParent(document4jmeleteRoot);
-	document4jmelete.add(organizationNewElement);
-	return document4jmelete.asXML();
+		org.dom4j.Document document4jmelete = DocumentHelper.createDocument();
+		org.dom4j.Element document4jmeleteRoot = document4jmelete.getRootElement();
+		org.dom4j.Element organizationNewElement = oneelement.createCopy();
+		organizationNewElement.setParent(document4jmeleteRoot);
+		document4jmelete.add(organizationNewElement);
+		return document4jmelete.asXML();
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -589,32 +608,34 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 				List<Module> selectList = getModuleService().getModules(siteId);
 				count = selectList.size();
 				File basePackDir = new File(archivePath);
-				List orgResElements = getMeleteExportService()
-					.generateOrganizationResourceItems(selectList,true,
-							basePackDir, SiteService.getSite(siteId).getTitle(), siteId);
+				List orgResElements = getMeleteExportService().generateOrganizationResourceItems(selectList, true, basePackDir,
+						SiteService.getSite(siteId).getTitle(), siteId);
 
-					if (orgResElements != null && orgResElements.size() > 0) {
+				if (orgResElements != null && orgResElements.size() > 0)
+				{
 
-						String xmlstr =  createdom4jtree((org.dom4j.Element)(org.dom4j.Element)orgResElements.get(0));
-						// read organizations 4j document as w3c document
-						org.w3c.dom.Document meletew3cDocument = Xml.readDocumentFromString(xmlstr);
-						org.w3c.dom.Element meletew3cElement = (org.w3c.dom.Element)meletew3cDocument.getFirstChild();
-						org.w3c.dom.Element meletew3cNewElement = (org.w3c.dom.Element)((Element) stack.peek()).getOwnerDocument().importNode(meletew3cElement,true);
-						modulesElement.appendChild(meletew3cNewElement);
+					String xmlstr = createdom4jtree((org.dom4j.Element) (org.dom4j.Element) orgResElements.get(0));
+					// read organizations 4j document as w3c document
+					org.w3c.dom.Document meletew3cDocument = Xml.readDocumentFromString(xmlstr);
+					org.w3c.dom.Element meletew3cElement = (org.w3c.dom.Element) meletew3cDocument.getFirstChild();
+					org.w3c.dom.Element meletew3cNewElement = (org.w3c.dom.Element) ((Element) stack.peek()).getOwnerDocument().importNode(
+							meletew3cElement, true);
+					modulesElement.appendChild(meletew3cNewElement);
 
-						// now resources document
-						xmlstr =  createdom4jtree((org.dom4j.Element)(org.dom4j.Element)orgResElements.get(1));
+					// now resources document
+					xmlstr = createdom4jtree((org.dom4j.Element) (org.dom4j.Element) orgResElements.get(1));
 
-						org.w3c.dom.Document meletew3cResDocument = Xml.readDocumentFromString(xmlstr);
-						org.w3c.dom.Element meletew3cElement1 = (org.w3c.dom.Element)meletew3cResDocument.getFirstChild();
-						org.w3c.dom.Element meletew3cNewElement1 = (org.w3c.dom.Element)((Element) stack.peek()).getOwnerDocument().importNode(meletew3cElement1,true);
-						modulesElement.appendChild(meletew3cNewElement1);
+					org.w3c.dom.Document meletew3cResDocument = Xml.readDocumentFromString(xmlstr);
+					org.w3c.dom.Element meletew3cElement1 = (org.w3c.dom.Element) meletew3cResDocument.getFirstChild();
+					org.w3c.dom.Element meletew3cNewElement1 = (org.w3c.dom.Element) ((Element) stack.peek()).getOwnerDocument().importNode(
+							meletew3cElement1, true);
+					modulesElement.appendChild(meletew3cNewElement1);
 
-						((Element) stack.peek()).appendChild(modulesElement);
-						stack.push(modulesElement);
+					((Element) stack.peek()).appendChild(modulesElement);
+					stack.push(modulesElement);
 				}
 			}
-	//		stack.pop();
+			// stack.pop();
 		}
 		catch (IdUnusedException iue)
 		{
@@ -623,13 +644,14 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		}
 		catch (Exception ex)
 		{
-			if (logger.isDebugEnabled()) {
-			logger.debug("error in melete during site archive" + ex.toString());
-			ex.printStackTrace();
+			if (logger.isDebugEnabled())
+			{
+				logger.debug("error in melete during site archive" + ex.toString());
+				ex.printStackTrace();
 			}
 			return "error archiving modules";
 		}
-		return "archiving modules: (" +count + ") modules archived successfully. \n";
+		return "archiving modules: (" + count + ") modules archived successfully. \n";
 	}
 
 	/**
@@ -639,7 +661,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 	{
 		// check the cache
 		String key = SECURE_STUDENT + "@" + context;
-		
+
 		// form the azGroups for a context-as-implemented-by-site
 		Collection azGroups = new Vector(2);
 		azGroups.add(SiteService.siteReference(context));
@@ -658,26 +680,27 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		return true;
 	}
 
-    public String[] myToolIds()
+	public String[] myToolIds()
 	{
-		String[] toolIds = { "sakai.melete" };
+		String[] toolIds =
+		{ "sakai.melete" };
 		return toolIds;
 	}
 
-    public void transferCopyEntities(String fromContext, String toContext, List ids, boolean cleanup)
-   {
-	transferCopyEntities(fromContext, toContext, ids);
-   }
+	public void transferCopyEntities(String fromContext, String toContext, List ids, boolean cleanup)
+	{
+		transferCopyEntities(fromContext, toContext, ids);
+	}
 
 	public void transferCopyEntities(String fromContext, String toContext, List ids)
 	{
 		try
 		{
 			logger.debug("transer copy Melete items by transferCopyEntities");
-			 Set<String> importResources =  new HashSet<String>();
-			 Set<String> addNowResources =  new HashSet<String>();
-			 threadLocalManager.set("MELETE_importResources" , importResources);
-			 threadLocalManager.set("MELETE_addedNowResource" , addNowResources);
+			Set<String> importResources = new HashSet<String>();
+			Set<String> addNowResources = new HashSet<String>();
+			threadLocalManager.set("MELETE_importResources", importResources);
+			threadLocalManager.set("MELETE_addedNowResource", addNowResources);
 
 			getMeleteImportfromSiteService().copyModules(fromContext, toContext);
 			logger.debug("importResources: End importing melete data");
@@ -689,25 +712,25 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		}
 	}
 
-   public ModuleService getModuleService() {
-	        return moduleService;
-	    }
+	public ModuleService getModuleService()
+	{
+		return moduleService;
+	}
 
-   public void setModuleService(ModuleService moduleService) {
-	        this.moduleService = moduleService;
-	 }
+	public void setModuleService(ModuleService moduleService)
+	{
+		this.moduleService = moduleService;
+	}
 
+	public MeleteImportfromSiteService getMeleteImportfromSiteService()
+	{
+		return meleteImportfromSiteService;
+	}
 
-    public MeleteImportfromSiteService getMeleteImportfromSiteService() {
-	return meleteImportfromSiteService;
-   }
-
-
-     public void setMeleteImportfromSiteService(
-		MeleteImportfromSiteService meleteImportfromSiteService) {
-	this.meleteImportfromSiteService = meleteImportfromSiteService;
-    }
-
+	public void setMeleteImportfromSiteService(MeleteImportfromSiteService meleteImportfromSiteService)
+	{
+		this.meleteImportfromSiteService = meleteImportfromSiteService;
+	}
 
 	/**
 	 * @return the meleteExportService
@@ -717,20 +740,22 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService,EntityPr
 		return this.meleteExportService;
 	}
 
-
 	/**
-	 * @param meleteExportService the meleteExportService to set
+	 * @param meleteExportService
+	 *        the meleteExportService to set
 	 */
 	public void setMeleteExportService(MeleteExportService meleteExportService)
 	{
 		this.meleteExportService = meleteExportService;
 	}
 
-	public MeleteImportService getMeleteImportService() {
+	public MeleteImportService getMeleteImportService()
+	{
 		return meleteImportService;
 	}
 
-	public void setMeleteImportService(MeleteImportService meleteImportService) {
+	public void setMeleteImportService(MeleteImportService meleteImportService)
+	{
 		this.meleteImportService = meleteImportService;
 	}
 }

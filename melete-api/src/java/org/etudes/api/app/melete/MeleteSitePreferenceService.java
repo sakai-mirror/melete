@@ -3,7 +3,7 @@
  * $URL$
  *
  ***********************************************************************************
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -21,18 +21,50 @@
  ****************************************************************************************/
 package org.etudes.api.app.melete;
 
-/**
- * @author Faculty
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
-public interface MeleteSitePreferenceService {
+public interface MeleteSitePreferenceService
+{
+	/**
+	 * Gets the Site Id
+	 * 
+	 * @return
+	 */
 	public abstract String getPrefSiteId();
-	public abstract void setPrefSiteId(String prefSiteId);
-	public abstract Boolean isPrintable();
-	public abstract void setPrintable(Boolean printable);
+
+	/**
+	 * Checks author's preference for auto-numbering of modules/sections on list page
+	 * 
+	 * @return true if auto-numbered
+	 */
 	public abstract boolean isAutonumber();
+
+	/**
+	 * Checks if author has allowed printing of material preference
+	 * 
+	 * @return true if allowed
+	 */
+	public abstract Boolean isPrintable();
+
+	/**
+	 * Sets auto-numbering preference
+	 * 
+	 * @param autonumber
+	 *        The preferred option
+	 */
 	public abstract void setAutonumber(boolean autonumber);
-	
+
+	/**
+	 * Sets the Site Id
+	 * 
+	 * @param prefSiteId
+	 *        The Site Id
+	 */
+	public abstract void setPrefSiteId(String prefSiteId);
+
+	/**
+	 * Set allow printing of material preference
+	 * 
+	 * @param printable
+	 *        The preferred option
+	 */
+	public abstract void setPrintable(Boolean printable);
 }

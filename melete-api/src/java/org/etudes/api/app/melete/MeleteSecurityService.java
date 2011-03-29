@@ -56,6 +56,7 @@ public interface MeleteSecurityService
 	 * Check if the current user has permission as author for a particular site.
 	 * 
 	 * @param reference
+	 *        The Site Id
 	 * @return
 	 * @throws Exception
 	 */
@@ -73,6 +74,7 @@ public interface MeleteSecurityService
 	 * Check if the current user has permission as student for a particular site.
 	 * 
 	 * @param reference
+	 *        The Site Id
 	 * @return
 	 * @throws Exception
 	 */
@@ -82,6 +84,7 @@ public interface MeleteSecurityService
 	 * Get all students and guests who are authorized to view the site content
 	 * 
 	 * @param context
+	 *        The Site Id
 	 * @return Set of user ids
 	 */
 	public Set<String> getUsersIsAllowed(String context);
@@ -90,7 +93,8 @@ public interface MeleteSecurityService
 	 * Check if the user has administrative rights
 	 * 
 	 * @param userId
-	 * @return
+	 *        The user Id
+	 * @return true if user has rights
 	 */
 	public boolean isSuperUser(String userId);
 
