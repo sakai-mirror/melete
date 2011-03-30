@@ -25,9 +25,6 @@ package org.etudes.api.app.melete;
 
 import java.util.List;
 
-/**
- * Filename: Description: Author: Date: Copyright 2004, Foothill College
- */
 public interface ModuleDateBeanService
 {
 
@@ -77,52 +74,56 @@ public interface ModuleDateBeanService
 	public abstract boolean isSelected();
 
 	/**
-	 * @param set course module object
+	 * @param cmod
+	 *        set course module object
 	 */
 	public abstract void setCmod(org.etudes.api.app.melete.CourseModuleService cmod);
 
 	/**
-	 * @param the
-	 *        date flag
+	 * @param dateFlag
+	 *        the date flag
 	 */
 	public abstract void setDateFlag(boolean dateFlag);
 
 	/**
-	 * @param set
-	 *        module
+	 * @param module
+	 *        the module
 	 */
 	public abstract void setModule(org.etudes.api.app.melete.ModuleObjService module);
 
 	/**
-	 * @param the
-	 *        module id
+	 * @param moduleId
+	 *        the module id
 	 */
 	public abstract void setModuleId(int moduleId);
 
 	/**
-	 * @param set moduleShdate object
+	 * @param moduleShdate
+	 *        the moduleShdate object
 	 */
 	public abstract void setModuleShdate(org.etudes.api.app.melete.ModuleShdatesService moduleShdate);
 
 	/**
-	 * @param set rowClasses string
+	 * @param rowClasses
+	 *        the rowClasses string
 	 */
 	public abstract void setRowClasses(String rowClasses);
 
 	/**
-	 * @param set sectionBeans list
+	 * @param sectionBeans
+	 *        the sectionBeans list
 	 */
 	public abstract void setSectionBeans(List sectionBeans);
 
 	/**
-	 * @param the
-	 *        selected flag
+	 * @param selected
+	 *        the selected flag
 	 */
 	public abstract void setSelected(boolean selected);
 
 	/**
-	 * @param the
-	 *        truncTitle string
+	 * @param truncTitle
+	 *        the truncTitle string
 	 */
 	public abstract void setTruncTitle(String truncTitle);
 

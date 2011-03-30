@@ -108,93 +108,92 @@ public interface ViewModBeanService
 	public abstract boolean isVisibleFlag();
 
 	/**
-	 * @param set
-	 *        blockedBy
+	 * @param blockedBy
+	 *        set blockedBy string
 	 */
 	public abstract void setBlockedBy(String blockedBy);
 
 	/**
-	 * @param set
+	 * @param dateFlag
 	 *        the date flag
 	 */
 	public abstract void setDateFlag(boolean dateFlag);
 
 	/**
-	 * @param set
-	 *        end date
+	 * @param endDate
+	 *        the end date
 	 */
 	public abstract void setEndDate(Date endDate);
 
 	/**
-	 * @param set
-	 *        module id
+	 * @param moduleId
+	 *        the module id
 	 */
 	public abstract void setModuleId(int moduleId);
 
 	/**
-	 * set the number of sections viewed
-	 * 
 	 * @param noOfSectionsRead
+	 *        set number of sections viewed
 	 */
 	public abstract void setNoOfSectionsRead(Integer noOfSectionsRead);
 
 	/**
-	 * @param set
-	 *        readDate
+	 * @param readDate
+	 *        set read date
 	 */
 	public abstract void setReadDate(Date readDate);
 
 	/**
-	 * @param set
-	 *        rowClasses
+	 * @param rowClasses
+	 *        set rowClasses string
 	 */
 	public abstract void setRowClasses(String rowClasses);
 
 	/**
-	 * @param set
-	 *        selected flag
+	 * @param selected
+	 *        set selected flag
 	 */
 	public abstract void setSelected(boolean selected);
 
 	/**
-	 * @param set
-	 *        seq no
+	 * @param seqNo
+	 *        set seq no
 	 */
 	public abstract void setSeqNo(int seqNo);
 
 	/**
-	 * @param set
-	 *        seqXml
+	 * @param seqXml
+	 *        set seq xml
 	 */
 	public abstract void setSeqXml(String seqXml);
 
 	/**
-	 * @param set
-	 *        start date
+	 * @param startDate
+	 *        set start date
 	 */
 	public abstract void setStartDate(Date startDate);
 
 	/**
-	 * @param set
-	 *        title
+	 * @param title
+	 *        set title
 	 */
 	public abstract void setTitle(String title);
 
 	/**
-	 * @param the
-	 *        visible flag
+	 * @param visibleFlag
+	 *        set visible flag
 	 */
 	public abstract void setVisibleFlag(boolean visibleFlag);
 
 	/**
-	 * @param set
-	 *        list of vsBeans
+	 * @param vsBeans
+	 *        set list of vsBeans
 	 */
 	public abstract void setVsBeans(List vsBeans);
 
 	/**
-	 * @param set
-	 *        whatsNext
+	 * @param whatsNext
+	 *        set whats next
 	 */
 	public abstract void setWhatsNext(String whatsNext);
 

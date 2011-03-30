@@ -111,8 +111,9 @@ public interface BookmarkObjService
 	 */
 	public abstract void setSiteId(String siteId);
 
-	/*
-	 * @param title the title to set
+	/**
+	 * @param title
+	 *        the title to set
 	 */
 	public abstract void setTitle(String title);
 

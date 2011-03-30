@@ -84,14 +84,14 @@ public interface SpecialAccessObjService
 	public abstract void setEndDate(Date endDate);
 
 	/**
-	 * @param section
+	 * @param module
 	 *        the module to set
 	 */
 	public abstract void setModule(org.etudes.api.app.melete.ModuleObjService module);
 
 	/**
 	 * @param moduleId
-	 *        the moduleId to set
+	 *        the module id to set
 	 */
 	public abstract void setModuleId(int moduleId);
 
@@ -119,8 +119,9 @@ public interface SpecialAccessObjService
 	 */
 	public abstract void setUserNames(String userNames);
 
-	/*
-	 * @param users the users to set
+	/**
+	 * @param users
+	 *        the users to set
 	 */
 	public abstract void setUsers(String users);
 
