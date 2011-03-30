@@ -51,7 +51,7 @@
            </td>
 	     </tr>
 	     <tr>
-		   <td align="right">
+		   <td>
              <table class="deleteConfirmTable" width="75%" >
 	          <tr>
 		          <td>

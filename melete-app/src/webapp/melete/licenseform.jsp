@@ -40,7 +40,7 @@
  </h:column>
 </h:panelGrid> 
  
- <h:panelGrid id="PreferenceView"  columns="1" rendered="#{!licensePage.callFromSection}">
+ <h:panelGrid id="PreferenceView" cellspacing="5" cellpadding="5" columns="1" rendered="#{!licensePage.callFromSection}">
  <h:column>
    <h:outputText value="#{msgs.licenseform_select_license}" styleClass="bold"/>
  </h:column>
@@ -52,10 +52,11 @@
    <h:outputText value="          " styleClass="ExtraPaddingClass" />
   <h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="/images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
  </h:column>  
+ <h:column/>
 </h:panelGrid>
 
  <!--license table -->
-<h:panelGrid id="LicenseForm" columns="1" width="100%" rendered="#{licensePage.shouldRenderCC || licensePage.shouldRenderCopyright || licensePage.shouldRenderPublicDomain || licensePage.shouldRenderFairUse}">
+<h:panelGrid id="LicenseForm" columns="1" cellpadding="3" width="100%" rendered="#{licensePage.shouldRenderCC || licensePage.shouldRenderCopyright || licensePage.shouldRenderPublicDomain || licensePage.shouldRenderFairUse}">
   <h:column>	
     <h:panelGrid id="licensetitle" columns="1" columnClasses="maintabledata8" width="100%">
 	<h:column>
@@ -106,7 +107,7 @@
 	</h:panelGrid>
     
     <!-- other licenses -->
-    <h:panelGrid id="copyrighttable2" columns="1"  width="100%" rendered="#{licensePage.shouldRenderCopyright || licensePage.shouldRenderPublicDomain || licensePage.shouldRenderFairUse}">
+    <h:panelGrid id="copyrighttable2" columns="1" cellpadding="3" width="100%" rendered="#{licensePage.shouldRenderCopyright || licensePage.shouldRenderPublicDomain || licensePage.shouldRenderFairUse}">
 		<h:column>	  
 	       <h:outputText value="#{msgs.licenseform_cclicense_form_msg2}"  rendered="#{licensePage.shouldRenderCopyright}"/>		 
 	       <h:outputText value="#{msgs.licenseform_cclicense_form_msg3}" rendered="#{licensePage.shouldRenderPublicDomain}"/> 	
