@@ -33,179 +33,152 @@ import org.sakaiproject.tool.cover.SessionManager;
 import org.etudes.api.app.melete.*;
 import org.etudes.util.api.AccessAdvisor;
 
-/** @author Hibernate CodeGenerator */
-public class ModuleShdates implements Serializable,ModuleShdatesService {
+public class ModuleShdates implements Serializable, ModuleShdatesService
+{
 
-    /** identifier field */
-    private Integer moduleId;
+	/** nullable persistent field */
+	private Boolean addtoSchedule;
 
-    /** nullable persistent field */
-    private Date startDate;
+	/** nullable persistent field */
+	private Date endDate;
 
-    /** nullable persistent field */
-    private Date endDate;
+	/** nullable persistent field */
+	private String endEventId;
 
-    /** nullable persistent field */
-    private int version;
+	/** identifier field */
+	private org.etudes.component.app.melete.Module module;
 
-    /** nullable persistent field */
-    private Boolean addtoSchedule;
+	/** identifier field */
+	private Integer moduleId;
 
-    /** nullable persistent field */
-    private String startEventId;
+	/** nullable persistent field */
+	private Date startDate;
 
-    /** nullable persistent field */
-    private String endEventId;
+	/** nullable persistent field */
+	private String startEventId;
 
-    /** identifier field */
-    private org.etudes.component.app.melete.Module module;
+	private boolean valid;
 
-    private boolean visibleFlag;
-    
-    private boolean valid;
-    
-    /** Dependency (optional, self-injected): AccessAdvisor. */
-	protected transient AccessAdvisor accessAdvisor = null;    
+	/** nullable persistent field */
+	private int version;
 
-    /** full constructor */
-    public ModuleShdates(Date startDate, Date endDate, int version, Boolean addtoSchedule, String startEventId, String endEventId, org.etudes.component.app.melete.Module module) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.version = version;
-        this.addtoSchedule = addtoSchedule;
-        this.startEventId = startEventId;
-        this.endEventId = endEventId;
-        this.module = module;
-    }
+	private boolean visibleFlag;
 
-    /** Custom constructor */
-    public ModuleShdates(Date startDate, Date endDate, Boolean addtoSchedule) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.addtoSchedule = addtoSchedule;
-    }
+	/** Dependency (optional, self-injected): AccessAdvisor. */
+	protected transient AccessAdvisor accessAdvisor = null;
 
-    /** default constructor */
-    public ModuleShdates() {
-    }
-
-    /** copy constructor */
-    public ModuleShdates(ModuleShdates oldModuleShdates)
-    {
-        this.startDate = oldModuleShdates.getStartDate();
-        this.endDate = oldModuleShdates.getEndDate();
-        this.module = null;
-    }
-
-
-    public Integer getModuleId() {
-        return this.moduleId;
-    }
-
-    public void setModuleId(Integer moduleId) {
-        this.moduleId = moduleId;
-    }
-
-
-    public Date getStartDate() {
-        return this.startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return this.endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public int getVersion() {
-        return this.version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-
-
-	public void setAddtoSchedule(Boolean addtoSchedule)
+	/** default constructor */
+	public ModuleShdates()
 	{
+	}
+
+	/** Custom constructor */
+	public ModuleShdates(Date startDate, Date endDate, Boolean addtoSchedule)
+	{
+		this.startDate = startDate;
+		this.endDate = endDate;
 		this.addtoSchedule = addtoSchedule;
 	}
 
-	public  Boolean getAddtoSchedule()
+	/** full constructor */
+	public ModuleShdates(Date startDate, Date endDate, int version, Boolean addtoSchedule, String startEventId, String endEventId,
+			org.etudes.component.app.melete.Module module)
+	{
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.version = version;
+		this.addtoSchedule = addtoSchedule;
+		this.startEventId = startEventId;
+		this.endEventId = endEventId;
+		this.module = module;
+	}
+
+	/** copy constructor */
+	public ModuleShdates(ModuleShdates oldModuleShdates)
+	{
+		this.startDate = oldModuleShdates.getStartDate();
+		this.endDate = oldModuleShdates.getEndDate();
+		this.module = null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Boolean getAddtoSchedule()
 	{
 		return this.addtoSchedule;
 	}
 
-	public String getStartEventId()
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getEndDate()
 	{
-		return this.startEventId;
+		return this.endDate;
 	}
 
-	public void setStartEventId(String startEventId)
-	{
-		this.startEventId = startEventId;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getEndEventId()
 	{
 		return this.endEventId;
 	}
 
-	public void setEndEventId(String endEventId)
+	/**
+	 * {@inheritDoc}
+	 */
+	public org.etudes.api.app.melete.ModuleObjService getModule()
 	{
-		this.endEventId = endEventId;
+		return this.module;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public Integer getModuleId()
+	{
+		return this.moduleId;
+	}
 
-    public org.etudes.api.app.melete.ModuleObjService getModule() {
-        return this.module;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getStartDate()
+	{
+		return this.startDate;
+	}
 
-    public void setModule(org.etudes.api.app.melete.ModuleObjService module) {
-        this.module = (Module) module;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getStartEventId()
+	{
+		return this.startEventId;
+	}
 
-    public boolean isVisibleFlag()
-    {
-    	java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
-    	// check if there is an access advisor - if not, that's ok.
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getVersion()
+	{
+		return this.version;
+	}
 
-    	if (((getStartDate() == null)||(getStartDate().before(currentTimestamp)))&&((getEndDate() == null)||(getEndDate().after(currentTimestamp))))
-    	{
-    		this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
-    		if ((this.accessAdvisor != null)&&(this.accessAdvisor.denyAccess("sakai.melete", getModule().getCoursemodule().getCourseId(), String.valueOf(getModuleId()), SessionManager.getCurrentSessionUserId())))
-    		{	
-    			return false;
-    		}
-    		else
-    		{
-    			return true;
-    		}
-    	}
-    	else
-    	{
-    		return false;
-    	}
-    }	
-
-    public boolean isValid()
-    {
-    	Calendar stCal = null;
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isValid()
+	{
+		Calendar stCal = null;
 		Calendar enCal = null;
-    	if (getStartDate() != null)
+		if (getStartDate() != null)
 		{
 			stCal = Calendar.getInstance();
 			stCal.setTime(getStartDate());
 			if (stCal.get(Calendar.YEAR) > 9999)
 			{
-			  return false;
+				return false;
 			}
 		}
 		if (getEndDate() != null)
@@ -214,23 +187,118 @@ public class ModuleShdates implements Serializable,ModuleShdatesService {
 			enCal.setTime(getEndDate());
 			if (enCal.get(Calendar.YEAR) > 9999)
 			{
-			  return false;
+				return false;
 			}
 		}
-		if ((getStartDate() != null)&&(getEndDate() != null))
+		if ((getStartDate() != null) && (getEndDate() != null))
 		{
-		  if (getStartDate().compareTo(getEndDate()) >= 0)
-		  {
-			return false;
-		  }
-	     }
+			if (getStartDate().compareTo(getEndDate()) >= 0)
+			{
+				return false;
+			}
+		}
 		return true;
-    }
-    
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("moduleId", getModuleId())
-            .toString();
-    }
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isVisibleFlag()
+	{
+		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+		// check if there is an access advisor - if not, that's ok.
+
+		if (((getStartDate() == null) || (getStartDate().before(currentTimestamp)))
+				&& ((getEndDate() == null) || (getEndDate().after(currentTimestamp))))
+		{
+			this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
+			if ((this.accessAdvisor != null)
+					&& (this.accessAdvisor.denyAccess("sakai.melete", getModule().getCoursemodule().getCourseId(), String.valueOf(getModuleId()),
+							SessionManager.getCurrentSessionUserId())))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setAddtoSchedule(Boolean addtoSchedule)
+	{
+		this.addtoSchedule = addtoSchedule;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setEndDate(Date endDate)
+	{
+		this.endDate = endDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setEndEventId(String endEventId)
+	{
+		this.endEventId = endEventId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setModule(org.etudes.api.app.melete.ModuleObjService module)
+	{
+		this.module = (Module) module;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setModuleId(Integer moduleId)
+	{
+		this.moduleId = moduleId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setStartDate(Date startDate)
+	{
+		this.startDate = startDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setStartEventId(String startEventId)
+	{
+		this.startEventId = startEventId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setVersion(int version)
+	{
+		this.version = version;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString()
+	{
+		return new ToStringBuilder(this).append("moduleId", getModuleId()).toString();
+	}
 
 }
