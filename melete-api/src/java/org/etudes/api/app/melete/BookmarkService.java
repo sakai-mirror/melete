@@ -24,11 +24,7 @@ package org.etudes.api.app.melete;
 import java.util.List;
 import java.io.File;
 
-/**
- * @author Faculty
- * 
- *         TODO To change the template for this generated type comment go to Window - Preferences - Java - Code Style - Code Templates
- */
+
 public interface BookmarkService
 {
 
