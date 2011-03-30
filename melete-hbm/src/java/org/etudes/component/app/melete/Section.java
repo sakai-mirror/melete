@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -25,296 +25,457 @@ package org.etudes.component.app.melete;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import org.etudes.api.app.melete.SectionObjService;
 
-/** @author Hibernate CodeGenerator */
-public class Section implements Serializable,SectionObjService {
-
-	  /** identifier field */
-    private Integer sectionId;
-
-    /** nullable persistent field */
-    private int moduleId;
-
-    /** persistent field */
-    private String title = "Untitled section";
-
-    /** persistent field */
-    private String createdByFname;
-
-    /** persistent field */
-    private String createdByLname;
-
-    /** nullable persistent field */
-    private String modifiedByFname;
-
-    /** nullable persistent field */
-    private String modifiedByLname;
-
-    /** nullable persistent field */
-    private String instr;
-
-    /** persistent field */
-    private String contentType;
-
-    /** nullable persistent field */
-    private boolean audioContent;
-
-    /** nullable persistent field */
-    private boolean videoContent;
-
-    /** nullable persistent field */
-    private boolean textualContent;
-
-    /** nullable persistent field */
-    private boolean openWindow;
-
-    /** nullable persistent field */
-    private boolean deleteFlag;
-
-    /** persistent field */
-    private Date creationDate;
-
-    /** persistent field */
-    private Date modificationDate;
-
-    /** nullable persistent field */
-    private int version;
-
-    /** nullable persistent field */
-    private org.etudes.component.app.melete.Module module;
-
-    /** nullable persistent field */
-    private org.etudes.component.app.melete.SectionResource sectionResource;
-
-
-    /** full constructor */
-    public Section(int moduleId, String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname, String instr, String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean openWindow, boolean deleteFlag, Date creationDate, Date modificationDate, int version, org.etudes.component.app.melete.Module module, org.etudes.component.app.melete.SectionResource sectionResource) {
-        this.moduleId = moduleId;
-        this.title = title;
-        this.createdByFname = createdByFname;
-        this.createdByLname = createdByLname;
-        this.modifiedByFname = modifiedByFname;
-        this.modifiedByLname = modifiedByLname;
-        this.instr = instr;
-        this.contentType = contentType;
-        this.audioContent = audioContent;
-        this.videoContent = videoContent;
-        this.textualContent = textualContent;
-        this.openWindow = openWindow;
-        this.deleteFlag = deleteFlag;
-        this.creationDate = creationDate;
-        this.modificationDate = modificationDate;
-        this.version = version;
-        this.module = module;
-        this.sectionResource = sectionResource;
-    }
-    /** Custom constructor */
-    public Section(String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname, String instr, String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean openWindow, boolean deleteFlag, Date creationDate, Date modificationDate) {
-        this.title = title;
-        this.createdByFname = createdByFname;
-        this.createdByLname = createdByLname;
-        this.modifiedByFname = modifiedByFname;
-        this.modifiedByLname = modifiedByLname;
-        this.instr = instr;
-        this.contentType = contentType;
-        this.audioContent = audioContent;
-        this.videoContent = videoContent;
-        this.textualContent = textualContent;
-        this.openWindow = openWindow;
-        this.deleteFlag = deleteFlag;
-        this.creationDate = creationDate;
-        this.modificationDate = modificationDate;
-    }
-    /** default constructor */
-    public Section() {
-    }
-
-    /** minimal constructor */
-    public Section(String title, String createdByFname, String createdByLname, String contentType, Date creationDate, Date modificationDate) {
-        this.title = title;
-        this.createdByFname = createdByFname;
-        this.createdByLname = createdByLname;
-        this.contentType = contentType;
-        this.creationDate = creationDate;
-        this.modificationDate = modificationDate;
-    }
-
-    /** copy constructor */
-    public Section(Section oldSection) {
-           this.title = oldSection.getTitle();
-           this.instr = oldSection.getInstr();
-           this.contentType = oldSection.getContentType();
-           this.audioContent = oldSection.isAudioContent();
-           this.videoContent = oldSection.isVideoContent();
-           this.textualContent = oldSection.isTextualContent();
-           this.openWindow = oldSection.isOpenWindow();
-           this.deleteFlag = oldSection.isDeleteFlag();
-           this.module = null;
-           this.sectionResource = null;
-    }
-
-    public Integer getSectionId() {
-        return this.sectionId;
-    }
-
-    public void setSectionId(Integer sectionId) {
-        this.sectionId = sectionId;
-    }
-
-    public int getModuleId() {
-        return this.moduleId;
-    }
-
-    public void setModuleId(int moduleId) {
-        this.moduleId = moduleId;
-    }
-
-
-    public String getTitle() {
-        return this.title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCreatedByFname() {
-        return this.createdByFname;
-    }
-
-    public void setCreatedByFname(String createdByFname) {
-        this.createdByFname = createdByFname;
-    }
-
-    public String getCreatedByLname() {
-        return this.createdByLname;
-    }
-
-    public void setCreatedByLname(String createdByLname) {
-        this.createdByLname = createdByLname;
-    }
-
-    public String getModifiedByFname() {
-        return this.modifiedByFname;
-    }
-
-    public void setModifiedByFname(String modifiedByFname) {
-        this.modifiedByFname = modifiedByFname;
-    }
-
-    public String getModifiedByLname() {
-        return this.modifiedByLname;
-    }
-
-    public void setModifiedByLname(String modifiedByLname) {
-        this.modifiedByLname = modifiedByLname;
-    }
-
-    public String getInstr() {
-        return this.instr;
-    }
-
-    public void setInstr(String instr) {
-        this.instr = instr;
-    }
-
-    public String getContentType() {
-        return this.contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-
-    public boolean isAudioContent() {
-        return this.audioContent;
-    }
-
-    public void setAudioContent(boolean audioContent) {
-        this.audioContent = audioContent;
-    }
-
-    public boolean isVideoContent() {
-        return this.videoContent;
-    }
-
-    public void setVideoContent(boolean videoContent) {
-        this.videoContent = videoContent;
-    }
-
-    public boolean isTextualContent() {
-        return this.textualContent;
-    }
-
-    public void setTextualContent(boolean textualContent) {
-        this.textualContent = textualContent;
-    }
-
-    public boolean isOpenWindow() {
-        return this.openWindow;
-    }
-
-    public void setOpenWindow(boolean openWindow) {
-        this.openWindow = openWindow;
-    }
-
-    public boolean isDeleteFlag() {
-        return this.deleteFlag;
-    }
-
-    public void setDeleteFlag(boolean deleteFlag) {
-        this.deleteFlag = deleteFlag;
-    }
-
-    public Date getCreationDate() {
-        return this.creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public Date getModificationDate() {
-        return this.modificationDate;
-    }
-
-    public void setModificationDate(Date modificationDate) {
-        this.modificationDate = modificationDate;
-    }
-
-    public int getVersion() {
-        return this.version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    public org.etudes.api.app.melete.ModuleObjService getModule() {
-        return this.module;
-    }
-
-    public void setModule(org.etudes.api.app.melete.ModuleObjService module) {
-        this.module = (Module)module;
-    }
-
-    public org.etudes.api.app.melete.SectionResourceService getSectionResource() {
-        return this.sectionResource;
-    }
-
-    public void setSectionResource(org.etudes.api.app.melete.SectionResourceService sectionResource) {
-        this.sectionResource = (SectionResource)sectionResource;
-    }
-
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("sectionId", getSectionId())
-            .toString();
-    }
+public class Section implements Serializable, SectionObjService
+{
+	/** nullable persistent field */
+	private boolean audioContent;
+
+	/** persistent field */
+	private String contentType;
+
+	/** persistent field */
+	private String createdByFname;
+
+	/** persistent field */
+	private String createdByLname;
+
+	/** persistent field */
+	private Date creationDate;
+
+	/** nullable persistent field */
+	private boolean deleteFlag;
+
+	/** nullable persistent field */
+	private String instr;
+
+	/** persistent field */
+	private Date modificationDate;
+
+	/** nullable persistent field */
+	private String modifiedByFname;
+
+	/** nullable persistent field */
+	private String modifiedByLname;
+
+	/** nullable persistent field */
+	private org.etudes.component.app.melete.Module module;
+
+	/** nullable persistent field */
+	private int moduleId;
+
+	/** nullable persistent field */
+	private boolean openWindow;
+
+	/** identifier field */
+	private Integer sectionId;
+
+	/** nullable persistent field */
+	private org.etudes.component.app.melete.SectionResource sectionResource;
+
+	/** nullable persistent field */
+	private boolean textualContent;
+
+	/** persistent field */
+	private String title = "Untitled section";
+
+	/** nullable persistent field */
+	private int version;
+
+	/** nullable persistent field */
+	private boolean videoContent;
+
+	/** default constructor */
+	public Section()
+	{
+	}
+
+	/** full constructor */
+	public Section(int moduleId, String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname,
+			String instr, String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean openWindow,
+			boolean deleteFlag, Date creationDate, Date modificationDate, int version, org.etudes.component.app.melete.Module module,
+			org.etudes.component.app.melete.SectionResource sectionResource)
+	{
+		this.moduleId = moduleId;
+		this.title = title;
+		this.createdByFname = createdByFname;
+		this.createdByLname = createdByLname;
+		this.modifiedByFname = modifiedByFname;
+		this.modifiedByLname = modifiedByLname;
+		this.instr = instr;
+		this.contentType = contentType;
+		this.audioContent = audioContent;
+		this.videoContent = videoContent;
+		this.textualContent = textualContent;
+		this.openWindow = openWindow;
+		this.deleteFlag = deleteFlag;
+		this.creationDate = creationDate;
+		this.modificationDate = modificationDate;
+		this.version = version;
+		this.module = module;
+		this.sectionResource = sectionResource;
+	}
+
+	/** copy constructor */
+	public Section(Section oldSection)
+	{
+		this.title = oldSection.getTitle();
+		this.instr = oldSection.getInstr();
+		this.contentType = oldSection.getContentType();
+		this.audioContent = oldSection.isAudioContent();
+		this.videoContent = oldSection.isVideoContent();
+		this.textualContent = oldSection.isTextualContent();
+		this.openWindow = oldSection.isOpenWindow();
+		this.deleteFlag = oldSection.isDeleteFlag();
+		this.module = null;
+		this.sectionResource = null;
+	}
+
+	/** minimal constructor */
+	public Section(String title, String createdByFname, String createdByLname, String contentType, Date creationDate, Date modificationDate)
+	{
+		this.title = title;
+		this.createdByFname = createdByFname;
+		this.createdByLname = createdByLname;
+		this.contentType = contentType;
+		this.creationDate = creationDate;
+		this.modificationDate = modificationDate;
+	}
+
+	/** Custom constructor */
+	public Section(String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname, String instr,
+			String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean openWindow, boolean deleteFlag,
+			Date creationDate, Date modificationDate)
+	{
+		this.title = title;
+		this.createdByFname = createdByFname;
+		this.createdByLname = createdByLname;
+		this.modifiedByFname = modifiedByFname;
+		this.modifiedByLname = modifiedByLname;
+		this.instr = instr;
+		this.contentType = contentType;
+		this.audioContent = audioContent;
+		this.videoContent = videoContent;
+		this.textualContent = textualContent;
+		this.openWindow = openWindow;
+		this.deleteFlag = deleteFlag;
+		this.creationDate = creationDate;
+		this.modificationDate = modificationDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getContentType()
+	{
+		return this.contentType;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getCreatedByFname()
+	{
+		return this.createdByFname;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getCreatedByLname()
+	{
+		return this.createdByLname;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getCreationDate()
+	{
+		return this.creationDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getInstr()
+	{
+		return this.instr;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getModificationDate()
+	{
+		return this.modificationDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getModifiedByFname()
+	{
+		return this.modifiedByFname;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getModifiedByLname()
+	{
+		return this.modifiedByLname;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public org.etudes.api.app.melete.ModuleObjService getModule()
+	{
+		return this.module;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getModuleId()
+	{
+		return this.moduleId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Integer getSectionId()
+	{
+		return this.sectionId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public org.etudes.api.app.melete.SectionResourceService getSectionResource()
+	{
+		return this.sectionResource;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getTitle()
+	{
+		return this.title;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getVersion()
+	{
+		return this.version;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isAudioContent()
+	{
+		return this.audioContent;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isDeleteFlag()
+	{
+		return this.deleteFlag;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isOpenWindow()
+	{
+		return this.openWindow;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isTextualContent()
+	{
+		return this.textualContent;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isVideoContent()
+	{
+		return this.videoContent;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setAudioContent(boolean audioContent)
+	{
+		this.audioContent = audioContent;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setContentType(String contentType)
+	{
+		this.contentType = contentType;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setCreatedByFname(String createdByFname)
+	{
+		this.createdByFname = createdByFname;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setCreatedByLname(String createdByLname)
+	{
+		this.createdByLname = createdByLname;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setCreationDate(Date creationDate)
+	{
+		this.creationDate = creationDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setDeleteFlag(boolean deleteFlag)
+	{
+		this.deleteFlag = deleteFlag;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setInstr(String instr)
+	{
+		this.instr = instr;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setModificationDate(Date modificationDate)
+	{
+		this.modificationDate = modificationDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setModifiedByFname(String modifiedByFname)
+	{
+		this.modifiedByFname = modifiedByFname;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setModifiedByLname(String modifiedByLname)
+	{
+		this.modifiedByLname = modifiedByLname;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setModule(org.etudes.api.app.melete.ModuleObjService module)
+	{
+		this.module = (Module) module;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setModuleId(int moduleId)
+	{
+		this.moduleId = moduleId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setOpenWindow(boolean openWindow)
+	{
+		this.openWindow = openWindow;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setSectionId(Integer sectionId)
+	{
+		this.sectionId = sectionId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setSectionResource(org.etudes.api.app.melete.SectionResourceService sectionResource)
+	{
+		this.sectionResource = (SectionResource) sectionResource;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setTextualContent(boolean textualContent)
+	{
+		this.textualContent = textualContent;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setTitle(String title)
+	{
+		this.title = title;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setVersion(int version)
+	{
+		this.version = version;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setVideoContent(boolean videoContent)
+	{
+		this.videoContent = videoContent;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString()
+	{
+		return new ToStringBuilder(this).append("sectionId", getSectionId()).toString();
+	}
 
 }
