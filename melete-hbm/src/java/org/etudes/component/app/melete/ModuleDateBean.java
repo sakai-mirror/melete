@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,148 +28,231 @@ import java.util.List;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.etudes.api.app.melete.*;
 
-/** @author Hibernate CodeGenerator */
-/* Mallika - 3/22/05 - changed to implement moduledatebeanservice
- *
- */
-public class ModuleDateBean implements Serializable, ModuleDateBeanService {
+public class ModuleDateBean implements Serializable, ModuleDateBeanService
+{
 
-    /** identifier field */
-    protected int moduleId;
+	private List sectionBeans;
 
-    protected boolean selected;
+	protected CourseModule cmod;
 
-    protected boolean dateFlag;
+	protected boolean dateFlag;
 
-    protected boolean visibleFlag;
-    
-    protected boolean saFlag;
+	/** nullable persistent field */
+	protected Module module;
 
-    protected String truncTitle;
+	/** identifier field */
+	protected int moduleId;
 
-    protected String rowClasses;
+	/** nullable persistent field */
+	protected ModuleShdates moduleShdate;
 
-    /** nullable persistent field */
-    protected Module module;
+	protected String rowClasses;
 
-    /** nullable persistent field */
-    protected ModuleShdates moduleShdate;
+	protected boolean saFlag;
 
-    protected CourseModule cmod;
+	protected boolean selected;
 
-    private List sectionBeans;
+	protected String truncTitle;
 
+	protected boolean visibleFlag;
 
-    public boolean isSelected()
-    {
-    	return selected;
-    }
+	/** default constructor */
+	public ModuleDateBean()
+	{
+	}
 
-    public void setSelected(boolean selected)
-    {
-    	this.selected = selected;
-    }
-    public boolean isDateFlag()
-    {
-    	return dateFlag;
-    }
+	/** full constructor */
+	public ModuleDateBean(int moduleId, Module module, ModuleShdates moduleShdate, CourseModule cmod, List sectionBeans)
+	{
+		this.moduleId = moduleId;
+		this.module = module;
+		this.moduleShdate = moduleShdate;
+		this.cmod = cmod;
+		this.sectionBeans = sectionBeans;
+	}
 
-    public void setDateFlag(boolean dateFlag)
-    {
-    	this.dateFlag = dateFlag;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public org.etudes.api.app.melete.CourseModuleService getCmod()
+	{
+		return this.cmod;
+	}
 
-    public boolean isVisibleFlag()
-    {
-    	return visibleFlag;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public org.etudes.api.app.melete.ModuleObjService getModule()
+	{
+		return this.module;
+	}
 
-    public void setVisibleFlag(boolean visibleFlag)
-    {
-    	this.visibleFlag = visibleFlag;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getModuleId()
+	{
+		return this.moduleId;
+	}
 
-    public boolean isSaFlag()
-    {
-    	return saFlag;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public org.etudes.api.app.melete.ModuleShdatesService getModuleShdate()
+	{
+		return this.moduleShdate;
+	}
 
-    public void setSaFlag(boolean saFlag)
-    {
-    	this.saFlag = saFlag;
-    }    
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getRowClasses()
+	{
+		return this.rowClasses;
+	}
 
-    public String getTruncTitle()
-    {
-    	return truncTitle;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public List getSectionBeans()
+	{
+		return this.sectionBeans;
+	}
 
-    public void setTruncTitle(String truncTitle)
-    {
-    	this.truncTitle = truncTitle;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getTruncTitle()
+	{
+		return truncTitle;
+	}
 
-    /** full constructor */
-    public ModuleDateBean(int moduleId, Module module, ModuleShdates moduleShdate,CourseModule cmod, List sectionBeans) {
-        this.moduleId = moduleId;
-        this.module = module;
-        this.moduleShdate = moduleShdate;
-        this.cmod = cmod;
-        this.sectionBeans = sectionBeans;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isDateFlag()
+	{
+		return dateFlag;
+	}
 
-    /** default constructor */
-    public ModuleDateBean() {
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isSaFlag()
+	{
+		return saFlag;
+	}
 
-    public int getModuleId() {
-        return this.moduleId;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isSelected()
+	{
+		return selected;
+	}
 
-    public void setModuleId(int moduleId) {
-        this.moduleId = moduleId;
-    }
-    public org.etudes.api.app.melete.ModuleObjService getModule() {
-        return this.module;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isVisibleFlag()
+	{
+		return visibleFlag;
+	}
 
-    public void setModule(org.etudes.api.app.melete.ModuleObjService module) {
-        this.module = (Module) module;
-    }
-    public org.etudes.api.app.melete.ModuleShdatesService getModuleShdate() {
-        return this.moduleShdate;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setCmod(org.etudes.api.app.melete.CourseModuleService cmod)
+	{
+		this.cmod = (CourseModule) cmod;
+	}
 
-    public void setModuleShdate(org.etudes.api.app.melete.ModuleShdatesService moduleShdate) {
-        this.moduleShdate = (ModuleShdates) moduleShdate;
-    }
-    public org.etudes.api.app.melete.CourseModuleService getCmod() {
-        return this.cmod;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setDateFlag(boolean dateFlag)
+	{
+		this.dateFlag = dateFlag;
+	}
 
-    public void setCmod(org.etudes.api.app.melete.CourseModuleService cmod) {
-        this.cmod = (CourseModule) cmod;
-    }
-    public List getSectionBeans() {
-        return this.sectionBeans;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setModule(org.etudes.api.app.melete.ModuleObjService module)
+	{
+		this.module = (Module) module;
+	}
 
-    public void setSectionBeans(List sectionBeans) {
-        this.sectionBeans = sectionBeans;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setModuleId(int moduleId)
+	{
+		this.moduleId = moduleId;
+	}
 
-    public void setRowClasses(String rowClasses) {
-      this.rowClasses = rowClasses;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setModuleShdate(org.etudes.api.app.melete.ModuleShdatesService moduleShdate)
+	{
+		this.moduleShdate = (ModuleShdates) moduleShdate;
+	}
 
-    public String getRowClasses() {
-    	return this.rowClasses;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setRowClasses(String rowClasses)
+	{
+		this.rowClasses = rowClasses;
+	}
 
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("moduleId", getModuleId())
-            .toString();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setSaFlag(boolean saFlag)
+	{
+		this.saFlag = saFlag;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setSectionBeans(List sectionBeans)
+	{
+		this.sectionBeans = sectionBeans;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setSelected(boolean selected)
+	{
+		this.selected = selected;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setTruncTitle(String truncTitle)
+	{
+		this.truncTitle = truncTitle;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setVisibleFlag(boolean visibleFlag)
+	{
+		this.visibleFlag = visibleFlag;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString()
+	{
+		return new ToStringBuilder(this).append("moduleId", getModuleId()).toString();
+	}
 
 }

@@ -32,75 +32,175 @@ import java.util.List;
 public interface ViewModBeanService
 {
 
-	public abstract boolean isSelected();
-
-	public abstract void setSelected(boolean selected);
-
-	public abstract boolean isDateFlag();
-
-	public abstract void setDateFlag(boolean dateFlag);
-
-	public abstract boolean isVisibleFlag();
-
-	public abstract void setVisibleFlag(boolean visibleFlag);
-
-	public abstract String getTitle();
-
-	public abstract void setTitle(String title);
-
-	public abstract int getModuleId();
-
-	public abstract void setModuleId(int moduleId);
-
-	public abstract List getVsBeans();
-
-	public abstract void setVsBeans(List vsBeans);
-
-	public abstract void setRowClasses(String rowClasses);
-
-	public abstract String getRowClasses();
-
-	public abstract String toString();
-
-	public abstract Date getEndDate();
-
-	public abstract void setEndDate(Date endDate);
-
-	public abstract int getSeqNo();
-
-	public abstract void setSeqNo(int seqNo);
-
-	public abstract Date getStartDate();
-
-	public abstract void setStartDate(Date startDate);
-
-	public abstract String getWhatsNext();
-
-	public abstract void setWhatsNext(String whatsNext);
-
-	public abstract String getSeqXml();
-
-	public abstract void setSeqXml(String seqXml);
-	
-	public abstract Date getReadDate();
-
-	public abstract void setReadDate(Date readDate);
-	
+	/**
+	 * @return get blockedBy
+	 */
 	public abstract String getBlockedBy();
 
-	public abstract void setBlockedBy(String blockedBy);
-	
 	/**
-	 * number of sections viewed by a user in a module
-	 * 
-	 * @return
+	 * @return end date
+	 */
+	public abstract Date getEndDate();
+
+	/**
+	 * @return get module id
+	 */
+	public abstract int getModuleId();
+
+	/**
+	 * @return get number of sections viewed
 	 */
 	public abstract Integer getNoOfSectionsRead();
 
 	/**
+	 * @return get readDate
+	 */
+	public abstract Date getReadDate();
+
+	/**
+	 * @return get rowClasses
+	 */
+	public abstract String getRowClasses();
+
+	/**
+	 * @return get seq no
+	 */
+	public abstract int getSeqNo();
+
+	/**
+	 * @return seqXml string value
+	 */
+	public abstract String getSeqXml();
+
+	/**
+	 * @return get start date
+	 */
+	public abstract Date getStartDate();
+
+	/**
+	 * @return title
+	 */
+	public abstract String getTitle();
+
+	/**
+	 * @return get list of vsBeans
+	 */
+	public abstract List getVsBeans();
+
+	/**
+	 * @return whatsNext string value
+	 */
+	public abstract String getWhatsNext();
+
+	/**
+	 * @return the date flag
+	 */
+	public abstract boolean isDateFlag();
+
+	/**
+	 * @return selected boolean flag
+	 */
+	public abstract boolean isSelected();
+
+	/**
+	 * @return the visible flag
+	 */
+	public abstract boolean isVisibleFlag();
+
+	/**
+	 * @param set
+	 *        blockedBy
+	 */
+	public abstract void setBlockedBy(String blockedBy);
+
+	/**
+	 * @param set
+	 *        the date flag
+	 */
+	public abstract void setDateFlag(boolean dateFlag);
+
+	/**
+	 * @param set
+	 *        end date
+	 */
+	public abstract void setEndDate(Date endDate);
+
+	/**
+	 * @param set
+	 *        module id
+	 */
+	public abstract void setModuleId(int moduleId);
+
+	/**
 	 * set the number of sections viewed
+	 * 
 	 * @param noOfSectionsRead
 	 */
 	public abstract void setNoOfSectionsRead(Integer noOfSectionsRead);
+
+	/**
+	 * @param set
+	 *        readDate
+	 */
+	public abstract void setReadDate(Date readDate);
+
+	/**
+	 * @param set
+	 *        rowClasses
+	 */
+	public abstract void setRowClasses(String rowClasses);
+
+	/**
+	 * @param set
+	 *        selected flag
+	 */
+	public abstract void setSelected(boolean selected);
+
+	/**
+	 * @param set
+	 *        seq no
+	 */
+	public abstract void setSeqNo(int seqNo);
+
+	/**
+	 * @param set
+	 *        seqXml
+	 */
+	public abstract void setSeqXml(String seqXml);
+
+	/**
+	 * @param set
+	 *        start date
+	 */
+	public abstract void setStartDate(Date startDate);
+
+	/**
+	 * @param set
+	 *        title
+	 */
+	public abstract void setTitle(String title);
+
+	/**
+	 * @param the
+	 *        visible flag
+	 */
+	public abstract void setVisibleFlag(boolean visibleFlag);
+
+	/**
+	 * @param set
+	 *        list of vsBeans
+	 */
+	public abstract void setVsBeans(List vsBeans);
+
+	/**
+	 * @param set
+	 *        whatsNext
+	 */
+	public abstract void setWhatsNext(String whatsNext);
+
+	/**
+	 * @return string value of object
+	 */
+	public abstract String toString();
 
 }

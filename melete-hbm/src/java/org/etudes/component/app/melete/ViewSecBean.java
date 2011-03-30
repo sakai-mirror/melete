@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2009 Etudes, Inc.
+ * Copyright (c) 2009, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -25,8 +25,6 @@ package org.etudes.component.app.melete;
 import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-
-/** @author Hibernate CodeGenerator */
 public class ViewSecBean implements Serializable {
 
     protected boolean selected;
@@ -34,8 +32,6 @@ public class ViewSecBean implements Serializable {
     protected String contentType;
     protected String displaySequence;
     protected String title;
-
-      
 
 	/**
 	 * @param selected
@@ -54,66 +50,94 @@ public class ViewSecBean implements Serializable {
 		this.title = title;
 	}
 
+	/**
+	 * @return selected flag
+	 */
 	public boolean isSelected()
     {
     	return selected;
     }
 
+    /**
+     * @param set selected flag
+     */
     public void setSelected(boolean selected)
     {
     	this.selected = selected;
     }
     
+    /**
+     * @return displaySequence string
+     */
     public String getDisplaySequence()
     {
     	return displaySequence;
     }
 
+    /**
+     * @param set displaySequence
+     */
     public void setDisplaySequence(String displaySequence)
     {
     	this.displaySequence = displaySequence;
     }
 
-    
-
     /** default constructor */
     public ViewSecBean() {
     }
 
-
-   
-
-
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     public String toString() {
         return new ToStringBuilder(this)
             .toString();
     }
 
+	/**
+	 * @return section content type string
+	 */
 	public String getContentType()
 	{
 		return this.contentType;
 	}
 
+	/**
+	 * @param set section content type
+	 */
 	public void setContentType(String contentType)
 	{
 		this.contentType = contentType;
 	}
 
+	/**
+	 * @return get section title
+	 */
 	public String getTitle()
 	{
 		return this.title;
 	}
 
+	/**
+	 * @param set section title
+	 */
 	public void setTitle(String title)
 	{
 		this.title = title;
 	}
 
+	/**
+	 * @return get section id
+	 */
 	public int getSectionId()
 	{
 		return this.sectionId;
 	}
 
+	/**
+	 * @param set section id
+	 */
 	public void setSectionId(int sectionId)
 	{
 		this.sectionId = sectionId;

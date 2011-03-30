@@ -29,239 +29,53 @@ import java.util.Date;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.etudes.api.app.melete.*;
 
-/** @author Hibernate CodeGenerator */
-/* Mallika - 3/22/05 - changed to implement moduledatebeanservice
- *
- */
-public class ViewModBean implements Serializable, ViewModBeanService {
+public class ViewModBean implements Serializable, ViewModBeanService
+{
 
-    /** identifier field */
-    protected int moduleId;
+	private String blockedBy;
 
-    protected boolean selected;
+	private String nextStepsNumber;
 
-    protected boolean dateFlag;
+	private int vsBeansSize;
 
-    protected boolean visibleFlag;
+	protected boolean closedBeforeFlag;
 
-    protected String title;
+	protected boolean dateFlag;
 
-    protected String rowClasses;
-    
-    protected String whatsNext;
+	protected Date endDate;
 
-    /** nullable persistent field */
-    protected Date startDate;
-    
-    protected Date endDate;
+	/** identifier field */
+	protected int moduleId;
 
-    protected int seqNo;
-    
-    protected String seqXml;
-    
-    protected Date readDate;
+	protected Integer noOfSectionsRead = 0;
 
-    protected List vsBeans;
+	protected boolean openLaterFlag;
 
-    private int vsBeansSize;
-    
-    private String nextStepsNumber;
-    
-    private String blockedBy;
-    
-    protected boolean closedBeforeFlag;
-    
-    protected boolean openLaterFlag; 
-    
-    protected Integer noOfSectionsRead = 0;
-    /**
-	 * {@inheritDoc}
-	 */
-    public boolean isSelected()
-    {
-    	return selected;
-    }
+	protected Date readDate;
 
-    /**
-	 * {@inheritDoc}
-	 */
-    public void setSelected(boolean selected)
-    {
-    	this.selected = selected;
-    }
-    /**
-	 * {@inheritDoc}
-	 */
-    public boolean isDateFlag()
-    {
-    	return dateFlag;
-    }
+	protected String rowClasses;
 
-    /**
-	 * {@inheritDoc}
-	 */
-    public void setDateFlag(boolean dateFlag)
-    {
-    	this.dateFlag = dateFlag;
-    }
+	protected boolean selected;
 
-    /**
-	 * {@inheritDoc}
-	 */
-    public boolean isVisibleFlag()
-    {
-    	return visibleFlag;
-    }
+	protected int seqNo;
 
-    /**
-	 * {@inheritDoc}
-	 */
-    public void setVisibleFlag(boolean visibleFlag)
-    {
-    	this.visibleFlag = visibleFlag;
-    }
+	protected String seqXml;
 
+	/** nullable persistent field */
+	protected Date startDate;
 
-    /**
-	 * {@inheritDoc}
-	 */
-    public String getTitle()
-    {
-    	return title;
-    }
+	protected String title;
 
-    /**
-	 * {@inheritDoc}
-	 */
-    public void setTitle(String title)
-    {
-    	this.title = title;
-    }
+	protected boolean visibleFlag;
 
-    /** full constructor */
-   
-    /** default constructor */
-    public ViewModBean() {
-    }
+	protected List vsBeans;
 
-    /**
-	 * {@inheritDoc}
-	 */
-    public int getModuleId() {
-        return this.moduleId;
-    }
+	protected String whatsNext;
 
-    /**
-	 * {@inheritDoc}
-	 */
-    public void setModuleId(int moduleId) {
-        this.moduleId = moduleId;
-    }
-   
-    /**
-	 * {@inheritDoc}
-	 */
-    public List getVsBeans() {
-    	if(this.vsBeans != null) this.vsBeansSize = this.vsBeans.size();
-    	else this.vsBeansSize = 0;
-    	return this.vsBeans;        
-    }
-
-    /**
-	 * {@inheritDoc}
-	 */
-    public void setVsBeans(List vsBeans) {
-        this.vsBeans = vsBeans;
-    }
-
-    /**
-	 * {@inheritDoc}
-	 */
-    public void setRowClasses(String rowClasses) {
-      this.rowClasses = rowClasses;
-    }
-
-    /**
-	 * {@inheritDoc}
-	 */
-    public String getRowClasses() {
-    	return this.rowClasses;
-    }
-
-    /**
-	 * {@inheritDoc}
-	 */
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("moduleId", getModuleId())
-            .toString();
-    }
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Date getEndDate()
+	/** default constructor */
+	public ViewModBean()
 	{
-		return this.endDate;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setEndDate(Date endDate)
-	{
-		this.endDate = endDate;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getSeqNo()
-	{
-		return this.seqNo;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setSeqNo(int seqNo)
-	{
-		this.seqNo = seqNo;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Date getStartDate()
-	{
-		return this.startDate;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setStartDate(Date startDate)
-	{
-		this.startDate = startDate;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getWhatsNext()
-	{
-		return this.whatsNext;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setWhatsNext(String whatsNext)
-	{
-		this.whatsNext = whatsNext;
-	}
-
-	
 
 	/**
 	 * @param moduleId
@@ -277,7 +91,8 @@ public class ViewModBean implements Serializable, ViewModBeanService {
 	 * @param seqXml
 	 * @param vsBeans
 	 */
-	public ViewModBean(int moduleId, boolean selected, boolean dateFlag, boolean visibleFlag, String title, String rowClasses, String whatsNext, Date startDate, Date endDate, int seqNo, String seqXml, List vsBeans)
+	public ViewModBean(int moduleId, boolean selected, boolean dateFlag, boolean visibleFlag, String title, String rowClasses, String whatsNext,
+			Date startDate, Date endDate, int seqNo, String seqXml, List vsBeans)
 	{
 		this.moduleId = moduleId;
 		this.selected = selected;
@@ -291,8 +106,74 @@ public class ViewModBean implements Serializable, ViewModBeanService {
 		this.seqNo = seqNo;
 		this.seqXml = seqXml;
 		this.vsBeans = vsBeans;
-		if(vsBeans != null)	this.vsBeansSize = vsBeans.size();
-		else this.vsBeansSize = 0;
+		if (vsBeans != null)
+			this.vsBeansSize = vsBeans.size();
+		else
+			this.vsBeansSize = 0;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getBlockedBy()
+	{
+		return blockedBy;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getEndDate()
+	{
+		return this.endDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getModuleId()
+	{
+		return this.moduleId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getNextStepsNumber()
+	{
+		return nextStepsNumber;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Integer getNoOfSectionsRead()
+	{
+		return noOfSectionsRead;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getReadDate()
+	{
+		return this.readDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getRowClasses()
+	{
+		return this.rowClasses;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getSeqNo()
+	{
+		return this.seqNo;
 	}
 
 	/**
@@ -306,76 +187,133 @@ public class ViewModBean implements Serializable, ViewModBeanService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setSeqXml(String seqXml)
+	public Date getStartDate()
 	{
-		this.seqXml = seqXml;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Date getReadDate()
-	{
-		return this.readDate;
+		return this.startDate;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setReadDate(Date readDate)
+	public String getTitle()
 	{
-		this.readDate = readDate;
-	}
-	
-
-	public String getNextStepsNumber() {
-		return nextStepsNumber;
+		return title;
 	}
 
-	public void setNextStepsNumber(String nextStepsNumber) {
-		this.nextStepsNumber = nextStepsNumber;
+	/**
+	 * {@inheritDoc}
+	 */
+	public List getVsBeans()
+	{
+		if (this.vsBeans != null)
+			this.vsBeansSize = this.vsBeans.size();
+		else
+			this.vsBeansSize = 0;
+		return this.vsBeans;
 	}
 
-	public String getBlockedBy() {
-		return blockedBy;
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getWhatsNext()
+	{
+		return this.whatsNext;
 	}
 
-	public void setBlockedBy(String blockedBy) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isClosedBeforeFlag()
+	{
+		if (visibleFlag == false && blockedBy == null)
+		{
+			Date currentDate = new java.util.Date();
+			if ((getEndDate() != null) && (getEndDate().before(currentDate)))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isDateFlag()
+	{
+		return dateFlag;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isOpenLaterFlag()
+	{
+		if (visibleFlag == false && blockedBy == null)
+		{
+			Date currentDate = new java.util.Date();
+			if ((getStartDate() != null) && (getStartDate().after(currentDate)))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isSelected()
+	{
+		return selected;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isVisibleFlag()
+	{
+		return visibleFlag;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setBlockedBy(String blockedBy)
+	{
 		this.blockedBy = blockedBy;
 	}
-	
-	 public boolean isClosedBeforeFlag()
-	 {
-		 if (visibleFlag == false && blockedBy == null)
-		 {
-			 Date currentDate = new java.util.Date();
-			 if ((getEndDate() != null)&&(getEndDate().before(currentDate)))
-			 {
-				 return true;
-			 }
-		 }
-		 return false;
-	 }
-	 
-	 public boolean isOpenLaterFlag()
-	 {
-		 if (visibleFlag == false && blockedBy == null)
-		 {
-			 Date currentDate = new java.util.Date();
-			 if ((getStartDate() != null)&&(getStartDate().after(currentDate)))
-			 {
-				 return true;
-			 }
-		 }
-		 return false;
-	 }
-	 
-	 /**
+
+	/**
 	 * {@inheritDoc}
 	 */
-	public Integer getNoOfSectionsRead()
+	public void setDateFlag(boolean dateFlag)
 	{
-		return noOfSectionsRead;
+		this.dateFlag = dateFlag;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setEndDate(Date endDate)
+	{
+		this.endDate = endDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setModuleId(int moduleId)
+	{
+		this.moduleId = moduleId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setNextStepsNumber(String nextStepsNumber)
+	{
+		this.nextStepsNumber = nextStepsNumber;
 	}
 
 	/**
@@ -385,6 +323,93 @@ public class ViewModBean implements Serializable, ViewModBeanService {
 	{
 		this.noOfSectionsRead = noOfSectionsRead;
 	}
-	 
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setReadDate(Date readDate)
+	{
+		this.readDate = readDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setRowClasses(String rowClasses)
+	{
+		this.rowClasses = rowClasses;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setSelected(boolean selected)
+	{
+		this.selected = selected;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setSeqNo(int seqNo)
+	{
+		this.seqNo = seqNo;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setSeqXml(String seqXml)
+	{
+		this.seqXml = seqXml;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setStartDate(Date startDate)
+	{
+		this.startDate = startDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setTitle(String title)
+	{
+		this.title = title;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setVisibleFlag(boolean visibleFlag)
+	{
+		this.visibleFlag = visibleFlag;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setVsBeans(List vsBeans)
+	{
+		this.vsBeans = vsBeans;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setWhatsNext(String whatsNext)
+	{
+		this.whatsNext = whatsNext;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString()
+	{
+		return new ToStringBuilder(this).append("moduleId", getModuleId()).toString();
+	}
 
 }

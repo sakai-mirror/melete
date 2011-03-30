@@ -4,7 +4,7 @@
  * $Id: SectionTrackView.java 60573 2009-05-19 20:17:20Z mallika@etudes.org $  
  ***********************************************************************************
  *
- * Copyright (c) 2010 Etudes, Inc.
+ * Copyright (c) 2010, 2011 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,91 +29,108 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.etudes.api.app.melete.SectionTrackViewObjService;
 
-/** @author Hibernate CodeGenerator */
-public class SectionTrackView implements Serializable, SectionTrackViewObjService {
+
+public class SectionTrackView implements Serializable, SectionTrackViewObjService
+{
+
+	private org.etudes.component.app.melete.Section section;
 
 	/** nullable persistent field */
-    private int sectionId;
-    
-    private String userId;
+	private int sectionId;
 
-    private Date viewDate;
-    
-    private org.etudes.component.app.melete.Section section;
-    
-    public SectionTrackView()
-    {
-    	this.sectionId = 0;
-    	this.userId = null;
-    	this.viewDate = null;
-    	this.section = null;
-    }
-	
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.SectionTrackViewObjService#getSectionId()
-	 */
-	public int getSectionId() {
-	     return this.sectionId;
+	private String userId;
+
+	private Date viewDate;
+
+	public SectionTrackView()
+	{
+		this.sectionId = 0;
+		this.userId = null;
+		this.viewDate = null;
+		this.section = null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.SectionTrackViewObjService#setSectionId(int)
+	/*
+	 * {@inheritDoc}
 	 */
-	public void setSectionId(int sectionId) {
-	     this.sectionId = sectionId;
+	public boolean equals(Object other)
+	{
+		if ((this == other)) return true;
+		if (!(other instanceof SectionTrackView)) return false;
+		SectionTrackView castOther = (SectionTrackView) other;
+		return new EqualsBuilder().append(this.getSectionId(), castOther.getSectionId()).append(this.getUserId(), castOther.getUserId()).append(
+				this.getViewDate(), castOther.getViewDate()).isEquals();
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.SectionTrackViewObjService#getUserId()
+
+	/*
+	 * {@inheritDoc}
 	 */
-	public String getUserId() {
+	public org.etudes.api.app.melete.SectionObjService getSection()
+	{
+		return section;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public int getSectionId()
+	{
+		return this.sectionId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public String getUserId()
+	{
 		return userId;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.etudes.component.app.melete.SectionTrackViewObjService#setUserId(java.lang.String)
+	/*
+	 * {@inheritDoc}
 	 */
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	public Date getViewDate() {
+	public Date getViewDate()
+	{
 		return this.viewDate;
 	}
 
-	public void setViewDate(Date viewDate) {
-		this.viewDate = viewDate;
-	}	
-	/**
-	 * @return Returns the section.
+	/*
+	 * {@inheritDoc}
 	 */
-	public org.etudes.api.app.melete.SectionObjService getSection() {
-		return section;
+	public int hashCode()
+	{
+		return new HashCodeBuilder().append(getSectionId()).append(getUserId()).append(getViewDate()).toHashCode();
 	}
-	/**
-	 * @param section The section to set.
-	 */
-	public void setSection(
-			org.etudes.api.app.melete.SectionObjService section) {
-		this.section = (Section)section;
-	}	
-	
-	public boolean equals(Object other) {
-        if ( (this == other ) ) return true;
-        if ( !(other instanceof SectionTrackView) ) return false;
-        SectionTrackView castOther = (SectionTrackView) other;
-        return new EqualsBuilder()
-            .append(this.getSectionId(), castOther.getSectionId())
-            .append(this.getUserId(), castOther.getUserId())
-            .append(this.getViewDate(), castOther.getViewDate())
-            .isEquals();
-    }
 
-    public int hashCode() {
-        return new HashCodeBuilder()
-            .append(getSectionId())
-            .append(getUserId())
-            .append(getViewDate())
-            .toHashCode();
-    }	
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setSection(org.etudes.api.app.melete.SectionObjService section)
+	{
+		this.section = (Section) section;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setSectionId(int sectionId)
+	{
+		this.sectionId = sectionId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setUserId(String userId)
+	{
+		this.userId = userId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setViewDate(Date viewDate)
+	{
+		this.viewDate = viewDate;
+	}
 }

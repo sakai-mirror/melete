@@ -3,7 +3,7 @@
  * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-api/src/java/org/etudes/api/app/melete/SectionTrackViewObjService.java $
  *
  ***********************************************************************************
- * Copyright (c) 2010 Etudes, Inc.
+ * Copyright (c) 2010, 2011 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you
  * may not use this file except in compliance with the License. You may
@@ -21,38 +21,65 @@ package org.etudes.api.app.melete;
 
 import java.util.Date;
 
-public interface SectionTrackViewObjService {
-
-	public abstract int getSectionId();
-	
-	public abstract void setSectionId(int sectionId);
-	
-	/**
-	 * @return the userId
-	 */
-	public abstract String getUserId();
+public interface SectionTrackViewObjService
+{
 
 	/**
-	 * @param userId the userId to set
+	 * method to compare two section track view objects
+	 * 
+	 * @param other
+	 * @return true if equal, false if not
 	 */
-	public abstract void setUserId(String userId);
-	
-	public abstract Date getViewDate();
+	public abstract boolean equals(Object other);
 
-	public abstract void setViewDate(Date viewDate);	
-
-	
 	/**
 	 * @return the section
 	 */
 	public abstract org.etudes.api.app.melete.SectionObjService getSection();
 
 	/**
-	 * @param section the section to set
+	 * @return section id
+	 */
+	public abstract int getSectionId();
+
+	/**
+	 * @return the userId
+	 */
+	public abstract String getUserId();
+
+	/**
+	 * @return get view date
+	 */
+	public abstract Date getViewDate();
+
+	/**
+	 * method to compare with hashcode
+	 * 
+	 * @return hashcode value
+	 */
+	public abstract int hashCode();
+
+	/**
+	 * @param section
+	 *        the section to set
 	 */
 	public abstract void setSection(org.etudes.api.app.melete.SectionObjService section);
-	
-	public abstract boolean equals(Object other);
 
-	public abstract int hashCode();
+	/**
+	 * @param set
+	 *        section id
+	 */
+	public abstract void setSectionId(int sectionId);
+
+	/**
+	 * @param userId
+	 *        the userId to set
+	 */
+	public abstract void setUserId(String userId);
+
+	/**
+	 * @param viewDate
+	 *        set view date
+	 */
+	public abstract void setViewDate(Date viewDate);
 }
