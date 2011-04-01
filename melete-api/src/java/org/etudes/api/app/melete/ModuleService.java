@@ -29,7 +29,6 @@ import org.etudes.api.app.melete.exception.MeleteException;
 
 public interface ModuleService
 {
-
 	/**
 	 * Apply base date to all module start and end dates
 	 * 
@@ -88,8 +87,7 @@ public interface ModuleService
 	 * Part of melete admin tool. Cleans database and removes the deleted modules.
 	 * 
 	 * @return
-	 * @throws Exception
-	 *         "cleanup_module_fail" MeleteException
+	 * @throws "cleanup_module_fail" MeleteException
 	 */
 	public int cleanUpDeletedModules() throws Exception;
 
@@ -162,11 +160,12 @@ public interface ModuleService
 	public int getCourseModuleSize(String courseId);
 
 	/**
-	 * Gets the earliest start date(if defined) of all the modules
+	 * Gets the earliest start date(if defined) of all the modules. If start date exists for the modules gets the earliest start 
+	 * date of all modules else returns null
 	 * 
 	 * @param course_id
 	 *        Course id
-	 * @return If start date exists for the modules gets the earliest start date of all modules else returns null
+	 * @return 
 	 */
 	public Date getMinStartDate(String course_id);
 
@@ -192,18 +191,26 @@ public interface ModuleService
 	 */
 	public ModuleDateBeanService getModuleDateBean(String userId, String courseId, int moduleId);
 
-	/** Creates the ModuleDateBean wrapper class and sets the section display level and row classes etc,
-	 * fetches by seq number
-	 * @param userId The user id
-	 * @param courseId The course id
-	 * @param seqNo Sequence number
+	/**
+	 * Creates the ModuleDateBean wrapper class and sets the section display level and row classes etc, fetches by seq number
+	 * 
+	 * @param userId
+	 *        The user id
+	 * @param courseId
+	 *        The course id
+	 * @param seqNo
+	 *        Sequence number
 	 * @return
 	 */
 	public ModuleDateBeanService getModuleDateBeanBySeq(String userId, String courseId, int seqNo);
 
-	/** Gets list of modules
-	 * @param userId User id
-	 * @param courseId Course id
+	/**
+	 * Gets list of modules
+	 * 
+	 * @param userId
+	 *        User id
+	 * @param courseId
+	 *        Course id
 	 * @return List of ModuleObjService objects
 	 */
 	public List getModuleDateBeans(String userId, String courseId);
@@ -217,11 +224,15 @@ public interface ModuleService
 	 */
 	public List getModules(String courseId);
 
-	/** Get next sequence number. Method invoked for authors and students
-	 * Checks against special access and denied modules before returning sequence number
-	 * @param userId User id
-	 * @param courseId Course id
-	 * @param currSeqNo Current sequence number
+	/**
+	 * Get next sequence number. Method invoked for authors and students Checks against special access and denied modules before returning sequence number
+	 * 
+	 * @param userId
+	 *        User id
+	 * @param courseId
+	 *        Course id
+	 * @param currSeqNo
+	 *        Current sequence number
 	 * @return Next sequence number
 	 */
 	public int getNextSeqNo(String userId, String courseId, int currSeqNo);
@@ -246,11 +257,15 @@ public interface ModuleService
 	 */
 	public int getNumberOfSectionsReadFromModule(String user_id, int module_id);
 
-	/**Get previous sequence number. Method invoked for authors and students
-	 * Checks against special access and denied modules before returning sequence number
-	* @param userId User id
-	 * @param courseId Course id
-	 * @param currSeqNo Current sequence number
+	/**
+	 * Get previous sequence number. Method invoked for authors and students Checks against special access and denied modules before returning sequence number
+	 * 
+	 * @param userId
+	 *        User id
+	 * @param courseId
+	 *        Course id
+	 * @param currSeqNo
+	 *        Current sequence number
 	 * @return Previous sequence number
 	 */
 	public int getPrevSeqNo(String userId, String courseId, int currSeqNo);
@@ -264,11 +279,17 @@ public interface ModuleService
 	 */
 	public org.w3c.dom.Document getSubSectionW3CDOM(String sectionsSeqXML);
 
-	/** Get list of modules with view status set
-	 * @param userId User id
-	 * @param courseId Course id
-	 * @param fromCourseMap true if method is invoked from coursemap, false otherwise.If not invoked from course map, some queries may be skipped
-	 * @param filtered If false, return all modules including invalid ones. If true, do not return invalid modules.
+	/**
+	 * Get list of modules with view status set
+	 * 
+	 * @param userId
+	 *        User id
+	 * @param courseId
+	 *        Course id
+	 * @param fromCourseMap
+	 *        true if method is invoked from coursemap, false otherwise.If not invoked from course map, some queries may be skipped
+	 * @param filtered
+	 *        If false, return all modules including invalid ones. If true, do not return invalid modules.
 	 * @return List of modules
 	 */
 	public List getViewModules(String userId, String courseId, boolean fromCourseMap, boolean filtered);
