@@ -77,32 +77,27 @@ import org.sakaiproject.entity.api.Entity;
 
 import org.sakaiproject.util.Validator;
 
-/**
- * 
- * This is the class implementing ModuleService interface.
- */
-
 public class ModuleServiceImpl implements ModuleService, Serializable
 {
-	/** Dependency: The logging service. */
-	private Log logger = LogFactory.getLog(ModuleServiceImpl.class);
+	public final static int CC_CODE = 3;
 
-	private ModuleDB moduledb;
-	private List moduleDateBeans = null;
-	private List viewModuleBeans = null;
-	private List modules = null;
-	private Module module = null;
-	private ModuleDateBean mdBean = null;
-	private MeleteUtil meleteUtil = new MeleteUtil();
-
+	public final static int Copyright_CODE = 1;
+	public final static int FU_CODE = 4;
 	// constants
 	public final static int NO_CODE = 0;
-	public final static int Copyright_CODE = 1;
 	public final static int PD_CODE = 2;
-	public final static int CC_CODE = 3;
-	public final static int FU_CODE = 4;
+	/** Dependency: The logging service. */
+	private Log logger = LogFactory.getLog(ModuleServiceImpl.class);
+	private ModuleDateBean mdBean = null;
 	private MeleteCHService meleteCHService;
+
+	private MeleteUtil meleteUtil = new MeleteUtil();
+	private Module module = null;
+	private List moduleDateBeans = null;
+	private ModuleDB moduledb;
+	private List modules = null;
 	private SectionService sectionService;
+	private List viewModuleBeans = null;
 	/** Dependency: The melete import export service. */
 	protected MeleteExportService meleteExportService;
 
@@ -165,7 +160,9 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 		return moduledb.checkEditAccess(user_id, course_id);
 	}
 
-	// clean up deleted modules
+	/**
+	 * {@inheritDoc}
+	 */
 	public int cleanUpDeletedModules() throws Exception
 	{
 		int noOfDeleted = moduledb.cleanUpDeletedModules();
@@ -244,11 +241,17 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 		return cMod;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public int getCourseModuleSize(String courseId)
 	{
 		return moduledb.getCourseModuleSize(courseId);
 	}
 
+	/**
+	 * @return meleteChService
+	 */
 	public MeleteCHService getMeleteCHService()
 	{
 		return meleteCHService;
@@ -337,7 +340,7 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	}
 
 	/**
-	 * @return Returns the moduledb.
+	 * @return moduledb Returns the moduledb.
 	 */
 	public ModuleDB getModuledb()
 	{
@@ -397,6 +400,9 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 		return prevseq;
 	}
 
+	/**
+	 * @return sectionService
+	 */
 	public SectionService getSectionService()
 	{
 		return sectionService;
@@ -413,6 +419,9 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 
 	}
 
+	/**
+	 * @return list of viewModuleBeans
+	 */
 	public List getViewModuleBeans()
 	{
 		return this.viewModuleBeans;
@@ -474,13 +483,13 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 		return moduledb.isModuleCompleted(user_id, module_id);
 	}
 
-	/* METHODS USED BY UPDATESEQXML END */
-
 	/**
 	 * Checks if the module is open at a given time
 	 * 
 	 * @param openDate
+	 *        Start date
 	 * @param closeDate
+	 *        End date
 	 * @return invalid if bad dates or not able to determine the status. open if module is open and active closed if module is closed later if module is not opened yet
 	 */
 	public String isSectionModuleOpen(Date startDate, Date endDate)
@@ -572,6 +581,10 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 		}
 	}
 
+	/**
+	 * @param meleteCHService
+	 *        The meleteChService to set
+	 */
 	public void setMeleteCHService(MeleteCHService meleteCHService)
 	{
 		this.meleteCHService = meleteCHService;
@@ -618,11 +631,19 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 		this.modules = modules;
 	}
 
+	/**
+	 * @param sectionService
+	 *        The sectionService to set
+	 */
 	public void setSectionService(SectionService sectionService)
 	{
 		this.sectionService = sectionService;
 	}
 
+	/**
+	 * @param viewModuleBeans
+	 *        The list of viewModuleBeans to set
+	 */
 	public void setViewModuleBeans(List viewModuleBeans)
 	{
 		this.viewModuleBeans = viewModuleBeans;
@@ -684,8 +705,9 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 		}
 	}
 
-	/* METHODS USED BY UPDATESEQXML BEGIN */
-	// This method generates the XML sequence string from the module's sections
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean updateSeqXml(String courseId) throws Exception
 	{
 		int modId;
@@ -732,12 +754,4 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 		return true;
 	}
 
-	/**
-	 * @param meleteExportService
-	 * 
-	 */
-	// public void setMeleteExportService(
-	// MeleteExportService meleteExportService) {
-	// this.meleteExportService = meleteExportService;
-	// }
 }
