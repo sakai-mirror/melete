@@ -27,154 +27,222 @@ import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.etudes.api.app.melete.MeleteResourceService;
 
-/** @author Hibernate CodeGenerator */
-public class MeleteResource implements Serializable, MeleteResourceService {
+public class MeleteResource implements Serializable, MeleteResourceService
+{
 
-       /** persistent field */
-    private String resourceId;
+	/** persistent field */
+	private String resourceId;
 
-    /** nullable persistent field */
-    private int licenseCode;
+	/** nullable persistent field */
+	private int licenseCode;
 
-    /** nullable persistent field */
-    private String ccLicenseUrl;
+	/** nullable persistent field */
+	private String ccLicenseUrl;
 
-    /** nullable persistent field */
-    private boolean reqAttr;
+	/** nullable persistent field */
+	private boolean reqAttr;
 
-    /** nullable persistent field */
-    private boolean allowCmrcl;
+	/** nullable persistent field */
+	private boolean allowCmrcl;
 
-    /** nullable persistent field */
-    private int allowMod;
+	/** nullable persistent field */
+	private int allowMod;
 
-     /** nullable persistent field */
-    private int version;
+	/** nullable persistent field */
+	private int version;
 
-    private String copyrightOwner;
-    
-    private String copyrightYear;  
-    
-    
-    /** full constructor */
-    public MeleteResource( String resourceId, int licenseCode, String ccLicenseUrl, boolean reqAttr, boolean allowCmrcl, int allowMod, int version, org.etudes.component.app.melete.Section section, String copyrightOwner, String copyrightYear) {
-        this.resourceId = resourceId;
-        this.licenseCode = licenseCode;
-        this.ccLicenseUrl = ccLicenseUrl;
-        this.reqAttr = reqAttr;
-        this.allowCmrcl = allowCmrcl;
-        this.allowMod = allowMod;
-        this.version = version;
-        this.copyrightOwner = copyrightOwner;
-        this.copyrightYear = copyrightYear;
-       
-    }
+	private String copyrightOwner;
 
-    /** default constructor */
-    public MeleteResource() {
-    }
+	private String copyrightYear;
 
-    //copy constructor added by rashmi
-    public MeleteResource( MeleteResource s1) {
-    //    this.resourceId = s1.resourceId;
-        this.licenseCode = s1.licenseCode;
-        this.ccLicenseUrl = s1.ccLicenseUrl;
-        this.reqAttr = s1.reqAttr;
-        this.allowCmrcl = s1.allowCmrcl;
-        this.allowMod = s1.allowMod;
-        this.copyrightOwner = s1.copyrightOwner;
-        this.copyrightYear = s1.copyrightYear;
-   
-    }
-    /**
+	/** full constructor */
+	public MeleteResource(String resourceId, int licenseCode, String ccLicenseUrl, boolean reqAttr, boolean allowCmrcl, int allowMod, int version,
+			org.etudes.component.app.melete.Section section, String copyrightOwner, String copyrightYear)
+	{
+		this.resourceId = resourceId;
+		this.licenseCode = licenseCode;
+		this.ccLicenseUrl = ccLicenseUrl;
+		this.reqAttr = reqAttr;
+		this.allowCmrcl = allowCmrcl;
+		this.allowMod = allowMod;
+		this.version = version;
+		this.copyrightOwner = copyrightOwner;
+		this.copyrightYear = copyrightYear;
+
+	}
+
+	/** default constructor */
+	public MeleteResource()
+	{
+	}
+
+	/** copy constructor */
+	public MeleteResource(MeleteResource s1)
+	{
+		// this.resourceId = s1.resourceId;
+		this.licenseCode = s1.licenseCode;
+		this.ccLicenseUrl = s1.ccLicenseUrl;
+		this.reqAttr = s1.reqAttr;
+		this.allowCmrcl = s1.allowCmrcl;
+		this.allowMod = s1.allowMod;
+		this.copyrightOwner = s1.copyrightOwner;
+		this.copyrightYear = s1.copyrightYear;
+
+	}
+
+	/**
 	 * @return Returns the copyrightOwner.
 	 */
-	public String getCopyrightOwner() {
+	public String getCopyrightOwner()
+	{
 		return copyrightOwner;
 	}
+
 	/**
-	 * @param copyrightOwner The copyrightOwner to set.
+	 * @param copyrightOwner
+	 *        The copyrightOwner to set.
 	 */
-	public void setCopyrightOwner(String copyrightOwner) {
+	public void setCopyrightOwner(String copyrightOwner)
+	{
 		this.copyrightOwner = copyrightOwner;
 	}
+
 	/**
 	 * @return Returns the copyrightYear.
 	 */
-	public String getCopyrightYear() {
+	public String getCopyrightYear()
+	{
 		return copyrightYear;
 	}
+
 	/**
-	 * @param copyrightYear The copyrightYear to set.
+	 * @param copyrightYear
+	 *        The copyrightYear to set.
 	 */
-	public void setCopyrightYear(String copyrightYear) {
+	public void setCopyrightYear(String copyrightYear)
+	{
 		this.copyrightYear = copyrightYear;
 	}
+
 	/**
 	 * @return Returns the resourceId.
 	 */
-	public String getResourceId() {
+	public String getResourceId()
+	{
 		return resourceId;
 	}
+
 	/**
-	 * @param resourceId The resourceId to set.
+	 * @param resourceId
+	 *        The resourceId to set.
 	 */
-	public void setResourceId(String resourceId) {
+	public void setResourceId(String resourceId)
+	{
 		this.resourceId = resourceId;
 	}
-	
-    public int getLicenseCode() {
-        return this.licenseCode;
-    }
 
-    public void setLicenseCode(int licenseCode) {
-        this.licenseCode = licenseCode;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getLicenseCode()
+	{
+		return this.licenseCode;
+	}
 
-    public String getCcLicenseUrl() {
-        return this.ccLicenseUrl;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setLicenseCode(int licenseCode)
+	{
+		this.licenseCode = licenseCode;
+	}
 
-    public void setCcLicenseUrl(String ccLicenseUrl) {
-        this.ccLicenseUrl = ccLicenseUrl;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getCcLicenseUrl()
+	{
+		return this.ccLicenseUrl;
+	}
 
-    public boolean isReqAttr() {
-        return this.reqAttr;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setCcLicenseUrl(String ccLicenseUrl)
+	{
+		this.ccLicenseUrl = ccLicenseUrl;
+	}
 
-    public void setReqAttr(boolean reqAttr) {
-        this.reqAttr = reqAttr;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isReqAttr()
+	{
+		return this.reqAttr;
+	}
 
-    public boolean isAllowCmrcl() {
-        return this.allowCmrcl;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setReqAttr(boolean reqAttr)
+	{
+		this.reqAttr = reqAttr;
+	}
 
-    public void setAllowCmrcl(boolean allowCmrcl) {
-        this.allowCmrcl = allowCmrcl;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isAllowCmrcl()
+	{
+		return this.allowCmrcl;
+	}
 
-    public int getAllowMod() {
-        return this.allowMod;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setAllowCmrcl(boolean allowCmrcl)
+	{
+		this.allowCmrcl = allowCmrcl;
+	}
 
-    public void setAllowMod(int allowMod) {
-        this.allowMod = allowMod;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getAllowMod()
+	{
+		return this.allowMod;
+	}
 
-    public int getVersion() {
-        return this.version;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setAllowMod(int allowMod)
+	{
+		this.allowMod = allowMod;
+	}
 
-    public void setVersion(int version) {
-        this.version = version;
-    }
-	
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("resourceId", getResourceId())
-            .toString();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getVersion()
+	{
+		return this.version;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setVersion(int version)
+	{
+		this.version = version;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString()
+	{
+		return new ToStringBuilder(this).append("resourceId", getResourceId()).toString();
+	}
 
 }

@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -22,71 +22,121 @@
  *
  **********************************************************************************/
 package org.etudes.component.app.melete;
+
 import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+public class SectionBean implements Serializable
+{
 
-/** @author Hibernate CodeGenerator */
-public class SectionBean implements Serializable {
+	protected boolean selected;
+	protected String truncTitle;
+	protected String displaySequence;
 
-    protected boolean selected;
-    protected String truncTitle;
-    protected String displaySequence;
+	/** nullable persistent field */
+	protected Section section;
 
-    /** nullable persistent field */
-    protected Section section;
+	/** default constructor */
+	public SectionBean()
+	{
+	}
 
+	/** full constructor */
+	public SectionBean(Section section)
+	{
+		this.section = (Section) section;
+	}
 
-    public boolean isSelected()
-    {
-    	return selected;
-    }
+	/**
+	 * Get the display sequence of a section based on user preference and sub section level.
+	 * 
+	 * @return
+	 */
+	public String getDisplaySequence()
+	{
+		return displaySequence;
+	}
 
-    public void setSelected(boolean selected)
-    {
-    	this.selected = selected;
-    }
-    public String getTruncTitle()
-    {
-    	return truncTitle;
-    }
+	/**
+	 * Get the section.
+	 * 
+	 * @return
+	 */
+	public Section getSection()
+	{
+		return this.section;
+	}
 
-    public void setTruncTitle(String truncTitle)
-    {
-    	this.truncTitle = truncTitle;
-    }
-    public String getDisplaySequence()
-    {
-    	return displaySequence;
-    }
+	/**
+	 * Get the title truncated to 30 characters. Note:Not in use anymore
+	 * 
+	 * @return
+	 */
+	public String getTruncTitle()
+	{
+		return truncTitle;
+	}
 
-    public void setDisplaySequence(String displaySequence)
-    {
-    	this.displaySequence = displaySequence;
-    }
+	/**
+	 * Checks if section is selected by the user.
+	 * 
+	 * @return
+	 */
+	public boolean isSelected()
+	{
+		return selected;
+	}
 
-      /** full constructor */
-    public SectionBean(Section section) {
-        this.section = (Section)section;
-    }
+	/**
+	 * Set the display sequence.
+	 * 
+	 * @param displaySequence
+	 *        the sub section level sequence
+	 */
+	public void setDisplaySequence(String displaySequence)
+	{
+		this.displaySequence = displaySequence;
+	}
 
-    /** default constructor */
-    public SectionBean() {
-    }
+	/**
+	 * Set the section.
+	 * 
+	 * @param section
+	 *        The section
+	 */
+	public void setSection(Section section)
+	{
+		this.section = (Section) section;
+	}
 
+	/**
+	 * Set the user selection
+	 * 
+	 * @param selected
+	 *        selected
+	 */
+	public void setSelected(boolean selected)
+	{
+		this.selected = selected;
+	}
 
-    public Section getSection() {
-        return this.section;
-    }
+	/**
+	 * Set the title truncated to 30 characters.
+	 * 
+	 * @return
+	 */
+	public void setTruncTitle(String truncTitle)
+	{
+		this.truncTitle = truncTitle;
+	}
 
-    public void setSection(Section section) {
-        this.section = (Section)section;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
 
-
-    public String toString() {
-        return new ToStringBuilder(this)
-            .toString();
-    }
+	public String toString()
+	{
+		return new ToStringBuilder(this).toString();
+	}
 
 }

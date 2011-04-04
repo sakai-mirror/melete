@@ -22,16 +22,23 @@
  *
  **********************************************************************************/
 package org.etudes.component.app.melete;
+
 import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-public class ViewSecBean implements Serializable {
+public class ViewSecBean implements Serializable
+{
 
-    protected boolean selected;
-    protected int sectionId;
-    protected String contentType;
-    protected String displaySequence;
-    protected String title;
+	protected boolean selected;
+	protected int sectionId;
+	protected String contentType;
+	protected String displaySequence;
+	protected String title;
+
+	/** default constructor */
+	public ViewSecBean()
+	{
+	}
 
 	/**
 	 * @param selected
@@ -51,51 +58,6 @@ public class ViewSecBean implements Serializable {
 	}
 
 	/**
-	 * @return selected flag
-	 */
-	public boolean isSelected()
-    {
-    	return selected;
-    }
-
-    /**
-     * @param set selected flag
-     */
-    public void setSelected(boolean selected)
-    {
-    	this.selected = selected;
-    }
-    
-    /**
-     * @return displaySequence string
-     */
-    public String getDisplaySequence()
-    {
-    	return displaySequence;
-    }
-
-    /**
-     * @param set displaySequence
-     */
-    public void setDisplaySequence(String displaySequence)
-    {
-    	this.displaySequence = displaySequence;
-    }
-
-    /** default constructor */
-    public ViewSecBean() {
-    }
-
-    
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    public String toString() {
-        return new ToStringBuilder(this)
-            .toString();
-    }
-
-	/**
 	 * @return section content type string
 	 */
 	public String getContentType()
@@ -104,27 +66,11 @@ public class ViewSecBean implements Serializable {
 	}
 
 	/**
-	 * @param set section content type
+	 * @return displaySequence string
 	 */
-	public void setContentType(String contentType)
+	public String getDisplaySequence()
 	{
-		this.contentType = contentType;
-	}
-
-	/**
-	 * @return get section title
-	 */
-	public String getTitle()
-	{
-		return this.title;
-	}
-
-	/**
-	 * @param set section title
-	 */
-	public void setTitle(String title)
-	{
-		this.title = title;
+		return displaySequence;
 	}
 
 	/**
@@ -136,11 +82,72 @@ public class ViewSecBean implements Serializable {
 	}
 
 	/**
-	 * @param set section id
+	 * @return get section title
+	 */
+	public String getTitle()
+	{
+		return this.title;
+	}
+
+	/**
+	 * @return selected flag
+	 */
+	public boolean isSelected()
+	{
+		return selected;
+	}
+
+	/**
+	 * @param contentType
+	 *        set section content type
+	 */
+	public void setContentType(String contentType)
+	{
+		this.contentType = contentType;
+	}
+
+	/**
+	 * @param displaySequence
+	 *        set displaySequence
+	 */
+	public void setDisplaySequence(String displaySequence)
+	{
+		this.displaySequence = displaySequence;
+	}
+
+	/**
+	 * @param sectionId
+	 *        set section id
 	 */
 	public void setSectionId(int sectionId)
 	{
 		this.sectionId = sectionId;
+	}
+
+	/**
+	 * @param selected
+	 *        set selected flag
+	 */
+	public void setSelected(boolean selected)
+	{
+		this.selected = selected;
+	}
+
+	/**
+	 * @param title
+	 *        set section title
+	 */
+	public void setTitle(String title)
+	{
+		this.title = title;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString()
+	{
+		return new ToStringBuilder(this).toString();
 	}
 
 }

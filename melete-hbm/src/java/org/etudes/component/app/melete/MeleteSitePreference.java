@@ -28,7 +28,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import org.etudes.api.app.melete.MeleteSitePreferenceService;
 
-/** @author Hibernate CodeGenerator */
 public class MeleteSitePreference implements Serializable, MeleteSitePreferenceService
 {
 

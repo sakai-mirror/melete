@@ -37,66 +37,35 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
-
-public class MeleteLicenseDB implements Serializable{
+public class MeleteLicenseDB implements Serializable
+{
 	ArrayList licenseTypes;
 	private HibernateUtil hibernateUtil;
 	private Log logger = LogFactory.getLog(MeleteLicenseDB.class);
 
-	public MeleteLicenseDB(){}
-	public ArrayList getLicenseTypes()
+	/**
+	 * default constructor
+	 */
+	public MeleteLicenseDB()
 	{
-		List licenseTypes = new ArrayList();
-	  	try
-		{
-		    Session session = getHibernateUtil().currentSession();
-		    StringBuffer query = new StringBuffer();
-		    query.append("from MeleteLicense");
-		    licenseTypes = session.createQuery(query.toString()).list();
-	        getHibernateUtil().closeSession();
-	     }
-	     catch (HibernateException he)
-	     {
-			 logger.error(he.toString());
-	     }
-
-	     return (ArrayList)licenseTypes;
 	}
 
 	/**
-	 * fetches ccLicense
-	 * @return
+	 * Adds by default variations of Creative commons license
+	 * 
+	 * @param ccLicenses
+	 *        List of meleteLicense objects
 	 */
-	public List getCcLicense() {
-
-		List ccLicenceList = new ArrayList();
-		try {
-			Session session = getHibernateUtil().currentSession();
-
-			StringBuffer query = new StringBuffer();
-			query.append("from CcLicense");
-			ccLicenceList= session.createQuery(query.toString()).list();
-			getHibernateUtil().closeSession();
-		} catch (HibernateException he) {
-			logger.error(this + he.toString());
-		}
-
-		return ccLicenceList;
-	}
-
-
-
 	public void createCcLicense(ArrayList ccLicenses)
 	{
 		saveData(ccLicenses);
 	}
 
-
 	/**
-	 * creates ModuleLicense
-	 *
-	 * @param moduleLicense -
-	 *            ModuleLicense
+	 * Adds by default license choices
+	 * 
+	 * @param moduleLicense
+	 *        ModuleLicense
 	 */
 	public void createMeleteLicense(ArrayList moduleLicenses)
 	{
@@ -104,44 +73,61 @@ public class MeleteLicenseDB implements Serializable{
 
 	}
 
-
 	/**
-	 * @param obj
+	 * Get license name for creative commons and public domain license choice. Used mainly for export packages.
+	 * 
+	 * @param licenseUrl
+	 * @return
 	 */
-	private void saveData(ArrayList objs) {
-		Transaction tx = null;
+	public String fetchCcLicenseName(String licenseUrl)
+	{
+		String licenseInfo = null;
 		try
 		{
-		     Session session = hibernateUtil.currentSession();
+			logger.debug("MeleteLicenseDB:fetchCcLicenseName");
+			Session session = getHibernateUtil().currentSession();
+			Query q = session.createQuery("select ccl.name from CcLicense ccl where ccl.url =:url");
+			q.setParameter("url", licenseUrl);
+			licenseInfo = (String) q.uniqueResult();
+			getHibernateUtil().closeSession();
+		}
+		catch (Exception ex)
+		{
+			// ex.printStackTrace();
+			logger.error(ex.toString());
+		}
+		return licenseInfo;
+	}
 
-	         tx = session.beginTransaction();
-	         for(int i=0; i < objs.size();i++)
-	         {
-	         Object obj = objs.get(i);
-	         session.save(obj);
-	         }
-	         tx.commit();
-		}catch(HibernateException he)
+	/**
+	 * Get license URL. Used mainly for IMS import packages.
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public CcLicense fetchCcLicenseUrl(String name)
+	{
+		CcLicense licenseInfo = null;
+		try
 		{
-			try {
-				if(tx !=null)
-					tx.rollback();
-			} catch (HibernateException e) {
-				logger.error(e.toString());
-			}
-			logger.error(he.toString());
-		}finally
+			logger.debug("MeleteLicenseDB:fetchCcLicenseUrl " + name);
+			Session session = getHibernateUtil().currentSession();
+			Query q = session.createQuery("from CcLicense ccl1 where ccl1.name =:name");
+			q.setParameter("name", name);
+			licenseInfo = (CcLicense) q.uniqueResult();
+			getHibernateUtil().closeSession();
+		}
+		catch (Exception ex)
 		{
-			try {
-				hibernateUtil.closeSession();
-			} catch (HibernateException e) {
-				logger.error(e.toString());
-			}
-		 }
+			// ex.printStackTrace();
+			logger.error(ex.toString());
+		}
+		return licenseInfo;
 	}
 
 	/**
 	 * called from backing bean addModulePage to get the license url and license name
+	 * 
 	 * @param reqAttr
 	 * @param allowCmrcl
 	 * @param allowMod
@@ -150,75 +136,137 @@ public class MeleteLicenseDB implements Serializable{
 	public String[] fetchCcLicenseURL(Boolean reqAttr, Boolean allowCmrcl, Integer allowMod)
 	{
 		String[] licenseInfo = new String[2];
-		try{
-
-		     Session session = getHibernateUtil().currentSession();
-		     CcLicense Cc = (CcLicense) session.createCriteria(CcLicense.class)
-			  .add(Restrictions.sqlRestriction("req_attr=?", reqAttr, Hibernate.BOOLEAN) )
-			  .add(Restrictions.sqlRestriction("allow_Cmrcl=?", allowCmrcl, Hibernate.BOOLEAN) )
-			  .add(Restrictions.sqlRestriction("allow_Mod=?", allowMod, Hibernate.INTEGER) )
-	  	     .list().get(0);
-	         licenseInfo[0]=Cc.getUrl();
-		     licenseInfo[1]=Cc.getName();
-		     getHibernateUtil().closeSession();
-		} catch(Exception ex)
+		try
 		{
-			//ex.printStackTrace();
+
+			Session session = getHibernateUtil().currentSession();
+			CcLicense Cc = (CcLicense) session.createCriteria(CcLicense.class).add(
+					Restrictions.sqlRestriction("req_attr=?", reqAttr, Hibernate.BOOLEAN)).add(
+							Restrictions.sqlRestriction("allow_Cmrcl=?", allowCmrcl, Hibernate.BOOLEAN)).add(
+									Restrictions.sqlRestriction("allow_Mod=?", allowMod, Hibernate.INTEGER)).list().get(0);
+			licenseInfo[0] = Cc.getUrl();
+			licenseInfo[1] = Cc.getName();
+			getHibernateUtil().closeSession();
+		}
+		catch (Exception ex)
+		{
+			// ex.printStackTrace();
 			logger.error(ex.toString());
-			}
+		}
 		return licenseInfo;
 	}
 
-//	 add by rashmi to fetch license name for export
-	public String fetchCcLicenseName(String licenseUrl)
+	/**
+	 * fetches ccLicense
+	 * 
+	 * @return
+	 */
+	public List getCcLicense()
 	{
-		String licenseInfo=null;
-		try{
-			logger.debug("MeleteLicenseDB:fetchCcLicenseName");
-		     Session session = getHibernateUtil().currentSession();
-		     Query q=session.createQuery("select ccl.name from CcLicense ccl where ccl.url =:url");
-			  q.setParameter("url",licenseUrl);
-			  licenseInfo = (String)q.uniqueResult();
-		     getHibernateUtil().closeSession();
-		} catch(Exception ex)
-		{
-			//ex.printStackTrace();
-			logger.error(ex.toString());
-			}
-		return licenseInfo;
-	}
 
-//	 add by rashmi
-	public CcLicense fetchCcLicenseUrl(String name)
-	{
-		CcLicense licenseInfo=null;
-		try{
-			logger.debug("MeleteLicenseDB:fetchCcLicenseUrl " + name);
-		     Session session = getHibernateUtil().currentSession();
-		     Query q=session.createQuery("from CcLicense ccl1 where ccl1.name =:name");
-			 q.setParameter("name",name);
-			 licenseInfo = (CcLicense)q.uniqueResult();
-		     getHibernateUtil().closeSession();
-		} catch(Exception ex)
+		List ccLicenceList = new ArrayList();
+		try
 		{
-			//ex.printStackTrace();
-			logger.error(ex.toString());
-			}
-		return licenseInfo;
+			Session session = getHibernateUtil().currentSession();
+
+			StringBuffer query = new StringBuffer();
+			query.append("from CcLicense");
+			ccLicenceList = session.createQuery(query.toString()).list();
+			getHibernateUtil().closeSession();
+		}
+		catch (HibernateException he)
+		{
+			logger.error(this + he.toString());
+		}
+
+		return ccLicenceList;
 	}
 
 	/**
 	 * @return Returns the hibernateUtil.
 	 */
-	public HibernateUtil getHibernateUtil() {
+	public HibernateUtil getHibernateUtil()
+	{
 		return hibernateUtil;
 	}
+
 	/**
-	 * @param hibernateUtil The hibernateUtil to set.
+	 * Get the licenses from db
+	 * 
+	 * @return a list of MeleteLicense objects
 	 */
-	public void setHibernateUtil(HibernateUtil hibernateUtil) {
-		this.hibernateUtil = hibernateUtil;
+	public ArrayList getLicenseTypes()
+	{
+		List licenseTypes = new ArrayList();
+		try
+		{
+			Session session = getHibernateUtil().currentSession();
+			StringBuffer query = new StringBuffer();
+			query.append("from MeleteLicense");
+			licenseTypes = session.createQuery(query.toString()).list();
+			getHibernateUtil().closeSession();
+		}
+		catch (HibernateException he)
+		{
+			logger.error(he.toString());
+		}
+
+		return (ArrayList) licenseTypes;
 	}
 
+	/**
+	 * Adds to the database.
+	 * 
+	 * @param objs
+	 *        List of licenses
+	 */
+	private void saveData(ArrayList objs)
+	{
+		Transaction tx = null;
+		try
+		{
+			Session session = hibernateUtil.currentSession();
+
+			tx = session.beginTransaction();
+			for (int i = 0; i < objs.size(); i++)
+			{
+				Object obj = objs.get(i);
+				session.save(obj);
+			}
+			tx.commit();
+		}
+		catch (HibernateException he)
+		{
+			try
+			{
+				if (tx != null) tx.rollback();
+			}
+			catch (HibernateException e)
+			{
+				logger.error(e.toString());
+			}
+			logger.error(he.toString());
+		}
+		finally
+		{
+			try
+			{
+				hibernateUtil.closeSession();
+			}
+			catch (HibernateException e)
+			{
+				logger.error(e.toString());
+			}
+		}
+	}
+
+	/**
+	 * @param hibernateUtil
+	 *        The hibernateUtil to set.
+	 */
+	public void setHibernateUtil(HibernateUtil hibernateUtil)
+	{
+		this.hibernateUtil = hibernateUtil;
+	}
 
 }

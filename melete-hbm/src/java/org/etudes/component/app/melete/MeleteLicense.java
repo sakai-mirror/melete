@@ -28,50 +28,71 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import org.etudes.api.app.melete.MeleteLicenseService;
 
-/** @author Hibernate CodeGenerator */
-public class MeleteLicense implements Serializable,MeleteLicenseService {
+public class MeleteLicense implements Serializable, MeleteLicenseService
+{
 
-    /** identifier field */
-    private Integer code;
+	/** identifier field */
+	private Integer code;
 
-    /** nullable persistent field */
-    private String description;
+	/** nullable persistent field */
+	private String description;
 
-    /** full constructor */
-    public MeleteLicense(Integer code, String description) {
-        this.code = code;
-        this.description = description;
-    }
+	/** default constructor */
+	public MeleteLicense()
+	{
+	}
 
-    /** default constructor */
-    public MeleteLicense() {
-    }
+	/** minimal constructor */
+	public MeleteLicense(Integer code)
+	{
+		this.code = code;
+	}
 
-    /** minimal constructor */
-    public MeleteLicense(Integer code) {
-        this.code = code;
-    }
+	/** full constructor */
+	public MeleteLicense(Integer code, String description)
+	{
+		this.code = code;
+		this.description = description;
+	}
 
-    public Integer getCode() {
-        return this.code;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public Integer getCode()
+	{
+		return this.code;
+	}
 
-    public void setCode(Integer code) {
-        this.code = code;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getDescription()
+	{
+		return this.description;
+	}
 
-    public String getDescription() {
-        return this.description;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setCode(Integer code)
+	{
+		this.code = code;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
 
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("code", getCode())
-            .toString();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString()
+	{
+		return new ToStringBuilder(this).append("code", getCode()).toString();
+	}
 
 }
