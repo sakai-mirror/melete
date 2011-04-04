@@ -839,7 +839,7 @@ public class ViewSectionsPage implements Serializable
 	}
 
 	/**
-	 * Creates breadcrumbs for this section in the form module>>section
+	 * Creates breadcrumbs for this section in the format module title>>section title
 	 * 
 	 * @param secpgroup
 	 *        html panel group to populate
