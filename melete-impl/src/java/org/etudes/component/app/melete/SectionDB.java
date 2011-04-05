@@ -84,6 +84,8 @@ public class SectionDB implements Serializable
 			{
 				// set default values for not-null fields
 				section.setCreationDate(new java.util.Date());
+				section.setModifiedByFname(UserDirectoryService.getCurrentUser().getFirstName());
+				section.setModifiedByLname(UserDirectoryService.getCurrentUser().getLastName());
 				section.setModificationDate(new java.util.Date());
 				section.setModuleId(module.getModuleId().intValue());
 				section.setDeleteFlag(false);
@@ -181,8 +183,8 @@ public class SectionDB implements Serializable
 				findSection.setAudioContent(section.isAudioContent());
 				findSection.setContentType(section.getContentType());
 				findSection.setInstr(section.getInstr());
-				findSection.setModifiedByFname(section.getModifiedByFname());
-				findSection.setModifiedByLname(section.getModifiedByLname());
+				findSection.setModifiedByFname(UserDirectoryService.getCurrentUser().getFirstName());
+				findSection.setModifiedByLname(UserDirectoryService.getCurrentUser().getLastName());
 				findSection.setOpenWindow(section.isOpenWindow());
 				findSection.setTextualContent(section.isTextualContent());
 				findSection.setTitle(section.getTitle());
@@ -262,7 +264,8 @@ public class SectionDB implements Serializable
 
 				secResource.setSection(section);
 				secResource.setResource(melResource);
-
+				section.setModifiedByFname(UserDirectoryService.getCurrentUser().getFirstName());
+				section.setModifiedByLname(UserDirectoryService.getCurrentUser().getLastName());
 				section.setModificationDate(new java.util.Date());
 				section.setSectionResource(secResource);
 

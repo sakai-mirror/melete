@@ -126,16 +126,24 @@ function showmessage()
 			          	</td>
 			          </tr>	 
 	                   <!-- end table header -->
+	                         	 <tr>
+                                    <td class="col1" align="left" valign="top"><h:outputText id="text8" value="#{msgs.editmodulesections_author}"/></td>
+                                    <td class="col2" align="left" valign="top"><h:outputText value="#{editSectionPage.section.createdByFname}" styleClass="formtext"/>&nbsp;<h:outputText value="#{editSectionPage.section.createdByLname}" styleClass="formtext"/>
+                                    <h:outputText value="#{editSectionPage.section.creationDate}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm:ss a"/></h:outputText>
+                                    </td>
+                                  </tr>
+                                    <tr>
+                                    <td class="col1" align="left" valign="top"><h:outputText id="text8_1" value="#{msgs.edit_module_modified_by}"/></td>
+                                    <td class="col2" align="left" valign="top"><h:outputText value="#{editSectionPage.section.modifiedByFname}" styleClass="formtext"/>&nbsp;<h:outputText value="#{editSectionPage.section.modifiedByLname}" styleClass="formtext"/>
+                                    <h:outputText value="#{editSectionPage.section.modificationDate}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm:ss a"/></h:outputText>
+                                    </td>
+                                  </tr>
                                    <tr>
                                     <td class="col1" align="left" valign="top"><h:outputText id="text7" value="#{msgs.editmodulesections_section_title}" /><span class="required">*</span></td>
                                     <td class="col2" align="left" valign="top">
 									<h:inputText id="title" value="#{editSectionPage.section.title}" size="45"  required="true" styleClass="formtext"/>
 									</td>
-                                  </tr>
-                                  <tr>
-                                    <td class="col1" align="left" valign="top"><h:outputText id="text8" value="#{msgs.editmodulesections_author}"/></td>
-                                    <td class="col2" align="left" valign="top"><h:outputText value="#{editSectionPage.section.createdByFname}" styleClass="formtext"/>&nbsp;<h:outputText value="#{editSectionPage.section.createdByLname}" styleClass="formtext"/></td>
-                                  </tr>
+                                  </tr>                           
 								  <tr>
                                     <td class="col1" align="left" valign="top"><h:outputText id="text9" value="#{msgs.editmodulesections_instructions}" /></td>
                                     <td class="col2" align="left" valign="top">
