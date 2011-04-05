@@ -55,28 +55,27 @@ import org.etudes.api.app.melete.SectionService;
 public class MoveSectionsPage implements Serializable
 {
 
+	private ArrayList<SelectItem> availableModules;
+
+	private String courseId;
+
+	private List<ModuleDateBean> moduleDateBeans;
+
+	private ModuleService moduleService;
+
+	private boolean nomodsFlag;
+
+	private List<SectionBean> sectionBeans;
+
 	/** identifier field */
 
 	private ModuleObjService selectedModule;
 
-	private ModuleService moduleService;
-
-	private List<SectionBean> sectionBeans;
-
-	private List<ModuleDateBean> moduleDateBeans;
-
-	private ArrayList<SelectItem> availableModules;
-
-	private boolean nomodsFlag;
-
-	private String courseId;
+	private Integer selectId;
 
 	private String userId;
 
-	private Integer selectId ;
-
-
-	/** Dependency:  The logging service. */
+	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(MoveSectionsPage.class);
 
 	public MoveSectionsPage()
@@ -84,33 +83,11 @@ public class MoveSectionsPage implements Serializable
 
 	}
 
-	public String move()
-	{
-		logger.debug("move called");
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		try{
-			if(selectId != null && selectId != 0) selectedModule = moduleService.getModule(new Integer(selectId).intValue());
-
-			if(selectedModule == null)
-			{
-				String msg = bundle.getString("select_one_move_section");
-				ctx.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"select_one_move_section",msg));
-				return "move_section";
-			}
-		moduleService.moveSections(sectionBeans, selectedModule);
-		}catch(Exception e)
-		{
-			String msg = bundle.getString("move_section_fail");
-			ctx.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"move_section_fail",msg));
-		}
-
-		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
-		ListAuthModulesPage lPage = (ListAuthModulesPage) binding.getValue(ctx);
-		lPage.resetValues();
-		return "list_auth_modules";
-	}
-
+	/**
+	 * Reset values on list auth page and redirect
+	 * 
+	 * @return list_auth_modules
+	 */
 	public String cancel()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -120,6 +97,11 @@ public class MoveSectionsPage implements Serializable
 		return "list_auth_modules";
 	}
 
+	/**
+	 * Get list of modules in a list of select items
+	 * 
+	 * @return list of select items
+	 */
 	public List<SelectItem> getAvailableModules()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -127,48 +109,30 @@ public class MoveSectionsPage implements Serializable
 
 		try
 		{
-			if(availableModules == null)
+			if (availableModules == null)
 			{
 				availableModules = new ArrayList<SelectItem>(0);
 				ModuleService moduleService = getModuleService();
 				moduleDateBeans = moduleService.getModuleDateBeans(getUserId(), getCourseId());
-				if(moduleDateBeans == null || moduleDateBeans.size() == 0)
+				if (moduleDateBeans == null || moduleDateBeans.size() == 0)
 				{
 					nomodsFlag = true;
 					return availableModules;
 				}
 				nomodsFlag = false;
-				for(ModuleDateBean md:moduleDateBeans)
+				for (ModuleDateBean md : moduleDateBeans)
 				{
-					availableModules.add(new SelectItem(new Integer(md.getModuleId()),md.getModule().getTitle()));
+					availableModules.add(new SelectItem(new Integer(md.getModuleId()), md.getModule().getTitle()));
 				}
-				//selectId = new Integer(moduleDateBeans.get(0).getModuleId());
+				// selectId = new Integer(moduleDateBeans.get(0).getModuleId());
 			}
-		}catch(Exception ex)
+		}
+		catch (Exception ex)
 		{
 			String msg = bundle.getString("move_section_fail");
-			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"move_section_fail",msg));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "move_section_fail", msg));
 		}
 		return availableModules;
-}
-
-	public void resetValues()
-	{
-		moduleDateBeans = null;
-		availableModules = null;
-		selectedModule = null;
-		sectionBeans = null;
-		selectId = null;
-	}
-
-
-
-	/**
-	 * @param sectionBeans the sectionBeans to set
-	 */
-	public void setSectionBeans(List<SectionBean> sectionBeans)
-	{
-		this.sectionBeans = sectionBeans;
 	}
 
 	/**
@@ -180,11 +144,11 @@ public class MoveSectionsPage implements Serializable
 	}
 
 	/**
-	 * @param moduleService The moduleService to set.
+	 * @return the selectId
 	 */
-	public void setModuleService(ModuleService moduleService)
+	public Integer getSelectId()
 	{
-		this.moduleService = moduleService;
+		return this.selectId;
 	}
 
 	/**
@@ -195,42 +159,107 @@ public class MoveSectionsPage implements Serializable
 		return this.nomodsFlag;
 	}
 
-	private String getCourseId()
-	{
-		if (courseId == null)
-		{
-		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
-    	courseId = mPage.getCurrentSiteId();
-		}
-		return courseId;
-	}
-	private String getUserId()
-	{
-		if (userId == null)
-		{
-		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
-    	userId = mPage.getCurrentUser().getId();
-		}
-		return userId;
-	}
-
 	/**
-	 * @return the selectId
+	 * Move sections from one module to another
+	 * 
+	 * @return list_auth_modules if there are no errors
 	 */
-	public Integer getSelectId()
+	public String move()
 	{
-		return this.selectId;
+		logger.debug("move called");
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		try
+		{
+			if (selectId != null && selectId != 0) selectedModule = moduleService.getModule(new Integer(selectId).intValue());
+
+			if (selectedModule == null)
+			{
+				String msg = bundle.getString("select_one_move_section");
+				ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "select_one_move_section", msg));
+				return "move_section";
+			}
+			moduleService.moveSections(sectionBeans, selectedModule);
+		}
+		catch (Exception e)
+		{
+			String msg = bundle.getString("move_section_fail");
+			ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "move_section_fail", msg));
+		}
+
+		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage lPage = (ListAuthModulesPage) binding.getValue(ctx);
+		lPage.resetValues();
+		return "list_auth_modules";
 	}
 
 	/**
-	 * @param selectId the selectId to set
+	 * Reset values for move sections page
+	 * 
+	 */
+	public void resetValues()
+	{
+		moduleDateBeans = null;
+		availableModules = null;
+		selectedModule = null;
+		sectionBeans = null;
+		selectId = null;
+	}
+
+	/**
+	 * @param moduleService
+	 *        The moduleService to set.
+	 */
+	public void setModuleService(ModuleService moduleService)
+	{
+		this.moduleService = moduleService;
+	}
+
+	/**
+	 * @param sectionBeans
+	 *        the sectionBeans to set
+	 */
+	public void setSectionBeans(List<SectionBean> sectionBeans)
+	{
+		this.sectionBeans = sectionBeans;
+	}
+
+	/**
+	 * @param selectId
+	 *        the selectId to set
 	 */
 	public void setSelectId(Integer selectId)
 	{
 		this.selectId = selectId;
+	}
+
+	/**
+	 * @return The course id
+	 */
+	private String getCourseId()
+	{
+		if (courseId == null)
+		{
+			FacesContext context = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+			courseId = mPage.getCurrentSiteId();
+		}
+		return courseId;
+	}
+
+	/**
+	 * @return The user id
+	 */
+	private String getUserId()
+	{
+		if (userId == null)
+		{
+			FacesContext context = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+			userId = mPage.getCurrentUser().getId();
+		}
+		return userId;
 	}
 }
