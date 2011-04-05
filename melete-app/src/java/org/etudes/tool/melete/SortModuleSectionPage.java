@@ -75,8 +75,9 @@ public class SortModuleSectionPage implements Serializable{
 	protected SectionService sectionService;
 
 
-	/**
-	 *navigates manage modules page on cancel
+	
+	/** Reset values on list auth page and redirect
+	 * @return list_auth_modules
 	 */
 	public String cancel()
 	{
@@ -87,8 +88,8 @@ public class SortModuleSectionPage implements Serializable{
 		return "list_auth_modules";
 	}
 
-	/*
-	 * Reset all values
+	/**Reset all values
+	 * 
 	 */
 	public void resetValues()
 	{
@@ -107,8 +108,8 @@ public class SortModuleSectionPage implements Serializable{
 		currModule = null;
 	}
 
-	/*
-	 * get the current seq of modules
+	/**Get the current sequence of modules
+	 * @return list of select items with current sequence of modules
 	 */
 	public List getCurrList()
 	{
@@ -154,9 +155,11 @@ public class SortModuleSectionPage implements Serializable{
 		this.newList = newList;
 	}
 
-	/*
-	 * converts the coursemodule list to selectItems for displaying at
+	
+	/*Converts the coursemodule list to selectItems for displaying at
 	 * the list boxes in the JSF page
+	 * @param list list of coursemodule objects
+	 * @return list of selectItems
 	 */
 	private List forSelectItemsList(List list)
 	{
@@ -180,6 +183,11 @@ public class SortModuleSectionPage implements Serializable{
 		return selectList;
 	}
 
+	/**Converts the section list to selectItems for displaying at
+	 * the list boxes in the JSF page
+	 * @param list list of section objects
+	 * @return list of select items
+	 */
 	private List forSelectSectionsItemsList(List list)
 	{
 		List selectList = new ArrayList();
@@ -218,6 +226,9 @@ public class SortModuleSectionPage implements Serializable{
 	}
 
 
+	/** Determines number of sections or modules shown in the select list
+	 * @return list size to show
+	 */
 	public int getShowSize()
 	{
 		showSize = 6;
@@ -235,6 +246,9 @@ public class SortModuleSectionPage implements Serializable{
 	}
 
 
+	/** Move selected item to the top of the select list
+	 * @return modules_sort
+	 */
 	public String MoveItemAllUpAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -276,6 +290,9 @@ public class SortModuleSectionPage implements Serializable{
 	}
 
 
+	/** Move item up by one in the select list
+	 * @return modules_sort
+	 */
 	public String MoveItemUpAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -316,6 +333,9 @@ public class SortModuleSectionPage implements Serializable{
 		return "modules_sort";
 	}
 
+	/** Move item down by one in the select list
+	 * @return modules_sort
+	 */
 	public String MoveItemDownAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -353,6 +373,9 @@ public class SortModuleSectionPage implements Serializable{
 		return "modules_sort";
 	}
 
+	/** Move item to bottom of select list
+	 * @return modules_sort
+	 */
 	public String MoveItemAllDownAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -390,6 +413,9 @@ public class SortModuleSectionPage implements Serializable{
 		return "modules_sort";
 	}
 
+	/** Reset values and redirect to sort section page
+	 * @return sections_sort
+	 */
 	public String gotoSortSections()
 	{
 		resetValues();
@@ -398,8 +424,9 @@ public class SortModuleSectionPage implements Serializable{
 		return "sections_sort";
 	}
 
-	/**
-	 * @return navigation for sort modules
+	
+	/** Reset values and redirect to sort modules page
+	 * @return modules_sort
 	 */
 	public String goToSortModules(){
 		resetValues();
@@ -420,6 +447,9 @@ public class SortModuleSectionPage implements Serializable{
 		this.formName = formName;
 	}
 
+	/** Get list of modules in a list of select items
+	 * @return list of select items with modules
+	 */
 	public List getAllModulesList()
 	{
 		if(allModules == null || allModulesList == null )
@@ -460,6 +490,10 @@ public class SortModuleSectionPage implements Serializable{
 		this.currModule = currModule;
 	}
 
+	/** Get sections of next module as a list of select items
+	 * @param event ValueChangeEvent
+	 * @throws AbortProcessingException
+	 */
 	public void nextModuleSections(ValueChangeEvent event)throws AbortProcessingException
 	{
 		UIInput moduleSelect = (UIInput)event.getComponent();
@@ -479,6 +513,9 @@ public class SortModuleSectionPage implements Serializable{
 		newSecList = null;
 	}
 
+	/** Get list of sections formatted with dashes in a list of select items
+	 * @return list of select items
+	 */
 	public List getCurrSecList()
 	{
 		try{
@@ -521,6 +558,9 @@ public class SortModuleSectionPage implements Serializable{
 		return newSecList;
 	}
 
+	/** Move section to the top of the select item list
+	 * @return sections_sort
+	 */
 	public String MoveSectionItemAllUpAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -553,6 +593,10 @@ public class SortModuleSectionPage implements Serializable{
 		}
 		return "sections_sort";
 	}
+	
+	/** Move section item up by one in the select list
+	 * @return sections_sort
+	 */
 	public String MoveSectionItemUpAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -587,6 +631,9 @@ public class SortModuleSectionPage implements Serializable{
 		return "sections_sort";
 	}
 
+	/** Move section item down by one in the select list
+	 * @return sections_sort
+	 */
 	public String MoveSectionItemDownAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -621,6 +668,9 @@ public class SortModuleSectionPage implements Serializable{
 		return "sections_sort";
 	}
 
+	/** Move section item to the bottom of the select list
+	 * @return sections_sort
+	 */
 	public String MoveSectionItemAllDownAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
