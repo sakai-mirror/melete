@@ -38,220 +38,266 @@ import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.util.ResourceLoader;
 import org.etudes.api.app.melete.MeleteSecurityService;
 
-/**
- * @author Faculty
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
- * Mallika - 3/30/05 - invoking resetValues to make sure state is not retained
- * Mallika - 4/21/05 - added in code to do a role check in view
- * Mallika - 4/22/05 - Added the association to go to correct view page
- * Rashmi - clean code
- * Rashmi - 12/6/06 - read from sakai.properties to show preferences tab or not
- **/
-public class NavPage implements Serializable {
+public class NavPage implements Serializable
+{
 
-/** Dependency:  The logging service. */
-	protected Log logger = LogFactory.getLog(NavPage.class);
-	private boolean shouldRenderPreferences=false;
-	private boolean shouldRenderAuthor;
-	private boolean shouldRenderView;
-	private boolean shouldRenderManage;
 	private boolean isInstructor;
-	
+	private boolean shouldRenderAuthor;
+	private boolean shouldRenderManage;
+	private boolean shouldRenderPreferences = false;
+	private boolean shouldRenderView;
+	/** Dependency: The logging service. */
+	protected Log logger = LogFactory.getLog(NavPage.class);
+
 	/** Dependency: The Melete Security service. */
 	protected MeleteSecurityService meleteSecurityService;
-	 protected ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
-	 
-	  public NavPage() { }
-	  public String viewAction()
-	  {
-		  FacesContext ctx = FacesContext.getCurrentInstance();
-		  Map sessionMap = ctx.getExternalContext().getSessionMap();
-		  String goToPage = checkCallFrom();
-		  if ("#".equals(goToPage))
-		  {
-			  ValueBinding binding =
-				  Util.getBinding("#{listModulesPage}");
-			  ListModulesPage lmPage = (ListModulesPage) binding.getValue(ctx);
-			  lmPage.resetValues();
-			  lmPage.setViewModuleBeans(null);
-			  return lmPage.listViewAction();
-		  } else return goToPage;
-	  }
-     
-     public String authAction()
-     {
-    	 FacesContext ctx = FacesContext.getCurrentInstance();
-    	 String goToPage = checkCallFrom();
-    	 if ("#".equals(goToPage))
-    	 {
-    		 ValueBinding binding =
-    			 Util.getBinding("#{listAuthModulesPage}");
-    		 ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(ctx);
-    		 lamPage.resetValues();
-    		 return "list_auth_modules";
-    	 }else return goToPage;	  	
-     }
-     
-     public String manageAction()
-     {
-    	 FacesContext ctx = FacesContext.getCurrentInstance();
-    	 String goToPage = checkCallFrom();
-    	 if ("#".equals(goToPage))
-    	 {
-    		 ValueBinding binding =
-    			 Util.getBinding("#{manageModulesPage}");
-    		 ManageModulesPage mPage = (ManageModulesPage)
-    		 binding.getValue(ctx);
-    		 mPage.resetValues();
-    		 return "modules_author_manage";
-    	 } else return goToPage;
-     }
-     
-     public String prefAction()
-     {
-     	return "list_auth_modules";
-     }
+	protected ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
 
-     public String PreferenceAction()
-     {
-    	 FacesContext ctx = FacesContext.getCurrentInstance();
-    	 Map sessionMap = ctx.getExternalContext().getSessionMap();
-    	 String goToPage = checkCallFrom();
-    	 if ("#".equals(goToPage))
-    	 {
-    		 if (getIsInstructor())
-    		 {
-    			 ValueBinding binding =
-    				 Util.getBinding("#{licensePage}");
-    			 LicensePage lPage = (LicensePage)
-    			 binding.getValue(ctx);
-    			 lPage.resetValues();
-    			 ValueBinding authBinding =
-    				 Util.getBinding("#{authorPreferences}");
-    			 AuthorPreferencePage aPage = (AuthorPreferencePage)
-    			 authBinding.getValue(ctx);
-    			 aPage.setFormName("UserPreferenceForm");
-    			 aPage.resetValues();
-    			 return "author_preference";
-    		 }
-    		 else return "student_preference";
-    	 } else return goToPage;
-     }
+	public NavPage()
+	{
+	}
 
 	/**
-	 * @return Returns the shouldRenderPreferences.
+	 * Resets values on list auth page and redirects
+	 * 
+	 * @return list_auth_modules page
 	 */
-	public boolean isShouldRenderPreferences() {
+	public String authAction()
+	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	String usrMode = (String)ctx.getExternalContext().getRequestParameterMap().get("myMode");
-	  	
-	  	shouldRenderPreferences = !("Preferences".equals(usrMode));
-		return shouldRenderPreferences;
-	}
-	/**
-	 * @param shouldRenderPreferences The shouldRenderPreferences to set.
-	 */
-	public void setShouldRenderPreferences(boolean shouldRenderPreferences) {
-		this.shouldRenderPreferences = shouldRenderPreferences;
-	}
-
-	public boolean isShouldRenderAuthor() {
-		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	String usrMode = (String)ctx.getExternalContext().getRequestParameterMap().get("myMode");
-	  	
-	  	shouldRenderAuthor = !("Author".equals(usrMode));
-		return shouldRenderAuthor;
-	}
-	
-	public boolean isShouldRenderView() {
-		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	String usrMode = (String)ctx.getExternalContext().getRequestParameterMap().get("myMode");
-	  	
-	  	shouldRenderView = !("View".equals(usrMode));
-		return shouldRenderView;
-	}
-	
-	public boolean isShouldRenderManage() {
-		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	String usrMode = (String)ctx.getExternalContext().getRequestParameterMap().get("myMode");
-	  	
-	  	shouldRenderManage = !("Manage".equals(usrMode));
-		return shouldRenderManage;
-	}
-	/**
-	 * @param meleteSecurityService The meleteSecurityService to set.
-	 */
-	public void setMeleteSecurityService(
-			MeleteSecurityService meleteSecurityService) {
-		this.meleteSecurityService = meleteSecurityService;
+		String goToPage = checkCallFrom();
+		if ("#".equals(goToPage))
+		{
+			ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+			ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(ctx);
+			lamPage.resetValues();
+			return "list_auth_modules";
+		}
+		else
+			return goToPage;
 	}
 
 	/**
 	 * Check if the current user has permission as author.
+	 * 
 	 * @return true if the current user has permission to perform this action, false if not.
 	 */
-	public boolean getIsInstructor(){
+	public boolean getIsInstructor()
+	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		
-		try {
+
+		try
+		{
 			return meleteSecurityService.allowAuthor();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			String errMsg = bundle.getString("auth_failed");
-			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"auth_failed",errMsg));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "auth_failed", errMsg));
 			logger.warn(e.toString());
 		}
 		return false;
+	}
+
+	/**
+	 * @return true if author mode, false otherwise
+	 */
+	public boolean isShouldRenderAuthor()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		String usrMode = (String) ctx.getExternalContext().getRequestParameterMap().get("myMode");
+
+		shouldRenderAuthor = !("Author".equals(usrMode));
+		return shouldRenderAuthor;
+	}
+
+	/**
+	 * @return true if manage mode, false otherwise
+	 */
+	public boolean isShouldRenderManage()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		String usrMode = (String) ctx.getExternalContext().getRequestParameterMap().get("myMode");
+
+		shouldRenderManage = !("Manage".equals(usrMode));
+		return shouldRenderManage;
+	}
+
+	/**
+	 * @return Returns the shouldRenderPreferences.
+	 */
+	public boolean isShouldRenderPreferences()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		String usrMode = (String) ctx.getExternalContext().getRequestParameterMap().get("myMode");
+
+		shouldRenderPreferences = !("Preferences".equals(usrMode));
+		return shouldRenderPreferences;
+	}
+
+	/**
+	 * @return true if view mode, false otherwise
+	 */
+	public boolean isShouldRenderView()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		String usrMode = (String) ctx.getExternalContext().getRequestParameterMap().get("myMode");
+
+		shouldRenderView = !("View".equals(usrMode));
+		return shouldRenderView;
 	}
 
 	/**
 	 * Check if the current user has permission as student.
+	 * 
 	 * @return true if the current user has permission to perform this action, false if not.
 	 */
-	public boolean isUserStudent(){
+	public boolean isUserStudent()
+	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		
-		try {
+
+		try
+		{
 			return meleteSecurityService.allowStudent();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			String errMsg = bundle.getString("auth_failed");
-			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"auth_failed",errMsg));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "auth_failed", errMsg));
 			logger.warn(e.toString());
 		}
 		return false;
 	}
-	
-	/**
-	 * On Click of any mode bar actions, auto save module and section changes.
-	 * If open screen is add/edit module or add/edit sections auto save the changes.
-	 */
-	 private String checkCallFrom()
-	 {
-	 	FacesContext ctx = FacesContext.getCurrentInstance();
-	 	String callFrom = (String)threadLocalManager.get("MELETE_SAVE_FROM");
 
-	  	if("Section".equals(callFrom))
-	  	{
-	  		ValueBinding binding = Util.getBinding("#{editSectionPage}");
-			EditSectionPage ePage = (EditSectionPage)binding.getValue(ctx);
-			return ePage.autoSave();			
-	  	}
-	  	else if("editModule".equals(callFrom))
-	  	{
-	  		ValueBinding binding = Util.getBinding("#{editModulePage}");
-	  		EditModulePage ePage = (EditModulePage)binding.getValue(ctx);
-			return ePage.autoSave();			
-	  	}
-	  	else if("addModule".equals(callFrom))
-	  	{
-	  		ValueBinding binding = Util.getBinding("#{addModulePage}");
-	  		AddModulePage aPage = (AddModulePage)binding.getValue(ctx);
-			return aPage.autoSave();			
-	  	}
-	  	threadLocalManager.set("MELETE_SAVE_FROM", "");
-	  	return "#";
-	 }	 			
+	/**
+	 * Resets values on manage modules page and redirects
+	 * 
+	 * @return modules_author_manage page
+	 */
+	public String manageAction()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		String goToPage = checkCallFrom();
+		if ("#".equals(goToPage))
+		{
+			ValueBinding binding = Util.getBinding("#{manageModulesPage}");
+			ManageModulesPage mPage = (ManageModulesPage) binding.getValue(ctx);
+			mPage.resetValues();
+			return "modules_author_manage";
+		}
+		else
+			return goToPage;
+	}
+
+	/**
+	 * @return list_auth_modules
+	 */
+	public String prefAction()
+	{
+		return "list_auth_modules";
+	}
+
+	/**
+	 * Resets values on author preference page and redirects
+	 * 
+	 * @return author_preference or student_preference page
+	 */
+	public String PreferenceAction()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		Map sessionMap = ctx.getExternalContext().getSessionMap();
+		String goToPage = checkCallFrom();
+		if ("#".equals(goToPage))
+		{
+			if (getIsInstructor())
+			{
+				ValueBinding binding = Util.getBinding("#{licensePage}");
+				LicensePage lPage = (LicensePage) binding.getValue(ctx);
+				lPage.resetValues();
+				ValueBinding authBinding = Util.getBinding("#{authorPreferences}");
+				AuthorPreferencePage aPage = (AuthorPreferencePage) authBinding.getValue(ctx);
+				aPage.setFormName("UserPreferenceForm");
+				aPage.resetValues();
+				return "author_preference";
+			}
+			else
+				return "student_preference";
+		}
+		else
+			return goToPage;
+	}
+
+	/**
+	 * @param meleteSecurityService
+	 *        The meleteSecurityService to set.
+	 */
+	public void setMeleteSecurityService(MeleteSecurityService meleteSecurityService)
+	{
+		this.meleteSecurityService = meleteSecurityService;
+	}
+
+	/**
+	 * @param shouldRenderPreferences
+	 *        The shouldRenderPreferences to set.
+	 */
+	public void setShouldRenderPreferences(boolean shouldRenderPreferences)
+	{
+		this.shouldRenderPreferences = shouldRenderPreferences;
+	}
+
+	/**
+	 * Resets values on listModulesPage and redirects
+	 * 
+	 * @return list_modules_student or list_modules_inst page
+	 */
+	public String viewAction()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		Map sessionMap = ctx.getExternalContext().getSessionMap();
+		String goToPage = checkCallFrom();
+		if ("#".equals(goToPage))
+		{
+			ValueBinding binding = Util.getBinding("#{listModulesPage}");
+			ListModulesPage lmPage = (ListModulesPage) binding.getValue(ctx);
+			lmPage.resetValues();
+			lmPage.setViewModuleBeans(null);
+			return lmPage.listViewAction();
+		}
+		else
+			return goToPage;
+	}
+
+	/**
+	 * On Click of any mode bar actions, auto save module and section changes. If open screen is add/edit module or add/edit sections auto save the changes.
+	 * 
+	 * @return editmodulesections or add_module or edit_module or confirm_addmodule
+	 */
+	private String checkCallFrom()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		String callFrom = (String) threadLocalManager.get("MELETE_SAVE_FROM");
+
+		if ("Section".equals(callFrom))
+		{
+			ValueBinding binding = Util.getBinding("#{editSectionPage}");
+			EditSectionPage ePage = (EditSectionPage) binding.getValue(ctx);
+			return ePage.autoSave();
+		}
+		else if ("editModule".equals(callFrom))
+		{
+			ValueBinding binding = Util.getBinding("#{editModulePage}");
+			EditModulePage ePage = (EditModulePage) binding.getValue(ctx);
+			return ePage.autoSave();
+		}
+		else if ("addModule".equals(callFrom))
+		{
+			ValueBinding binding = Util.getBinding("#{addModulePage}");
+			AddModulePage aPage = (AddModulePage) binding.getValue(ctx);
+			return aPage.autoSave();
+		}
+		threadLocalManager.set("MELETE_SAVE_FROM", "");
+		return "#";
+	}
 }
