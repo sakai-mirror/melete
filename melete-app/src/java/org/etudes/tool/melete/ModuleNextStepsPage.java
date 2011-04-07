@@ -35,86 +35,26 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.etudes.component.app.melete.ModuleDateBean;
-//import org.sakaiproject.jsf.ToolBean;
+import org.etudes.component.app.melete.ModuleDateBean; //import org.sakaiproject.jsf.ToolBean;
 import org.etudes.api.app.melete.ModuleService;
-/*
- * Created on Apr 7, 2005
- * Author Rashmi Maheshwari
- * revised on 5/23/05 to remove add confirmation and redirect back to list auth modules page
- *
- */
-public class ModuleNextStepsPage implements Serializable/*,ToolBean*/ {
 
-	 private ModuleDateBean mdBean;
-	 private ModuleService moduleService;
-	 private String isNull = null;
-	 protected Log logger = LogFactory.getLog(ModuleNextStepsPage.class);
+public class ModuleNextStepsPage implements Serializable/* ,ToolBean */
+{
+
+	private String isNull = null;
+	private ModuleDateBean mdBean;
+	private ModuleService moduleService;
+	protected Log logger = LogFactory.getLog(ModuleNextStepsPage.class);
+
 	/**
 	 * constructor
 	 */
-	public ModuleNextStepsPage(){}
-
-	/**
-	 * @return Returns the mdBean.
-	 */
-	public ModuleDateBean getMdBean() {
-		return mdBean;
-	}
-	/**
-	 * @param mdBean The mdBean to set.
-	 */
-	public void setMdBean(ModuleDateBean mdBean) {
-		this.mdBean = mdBean;
-	}
-
-	/**
-	 * @return string whose value is null for render comparison on the Jsp page
-	 */
-	  public String getIsNull()
-	  {
-	  	return isNull;
-	  }
-
-
-	/**
-	 * @return status - success/failure
-	 * This method calls module service to update the module and add what's next steps
-	 * If next steps are saved properly, return success
-	 * In case of error add error message to the context and return failure
-	 */
-	public String steps()
+	public ModuleNextStepsPage()
 	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
-		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		try {
-			mdBean.setDateFlag(false);
-			ArrayList mdbeanList = new ArrayList();
-			mdbeanList.add(mdBean);
-			moduleService.updateProperties(mdbeanList, mPage.getCurrentSiteId());
-
-			return "success";
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			logger.debug("error in updating what's next"+e.toString());
-	  		String errMsg = bundle.getString("add_post_steps_fail");
-	  		FacesMessage msg =
-		  		new FacesMessage("Error Message", errMsg);
-		  	msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-	  		ctx.addMessage (null, msg);
-			return "failure";
-		}
 	}
 
-
 	/**
-	 * @return navigation rule
-	 * if save is success then go to confirmation page
-	 * and if fails, go to the same page and show error message there
-	 * revised - to check text before adding
+	 * @return navigation rule if save is success then go to confirmation page and if fails, go to the same page and show error message there revised - to check text before adding
 	 */
 	public String addPostSteps()
 	{
@@ -122,60 +62,31 @@ public class ModuleNextStepsPage implements Serializable/*,ToolBean*/ {
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 
-		if(stepsText.length() == 0)
+		if (stepsText.length() == 0)
 		{
 			String errMsg = bundle.getString("add_post_steps_reqd");
-	  		FacesMessage msg =
-		  		new FacesMessage("Error Message", errMsg);
-		  	msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-	  		ctx.addMessage ("nextsteps", msg);
-	  		mdBean.getModule().setWhatsNext(null);
+			FacesMessage msg = new FacesMessage("Error Message", errMsg);
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			ctx.addMessage("nextsteps", msg);
+			mdBean.getModule().setWhatsNext(null);
 			return "module_post_steps";
 		}
 
-	   if(steps().equals("success"))
+		if (steps().equals("success"))
 		{
-		 // return "confirm_modulepoststeps";
-	   	String successMsg = bundle.getString("add_post_steps_success");
-	   	FacesMessage msg =
-	  		new FacesMessage("Info message",successMsg);
-	  	msg.setSeverity(FacesMessage.SEVERITY_INFO);
-	  	ctx.addMessage(null,msg);
+			// return "confirm_modulepoststeps";
+			String successMsg = bundle.getString("add_post_steps_success");
+			FacesMessage msg = new FacesMessage("Info message", successMsg);
+			msg.setSeverity(FacesMessage.SEVERITY_INFO);
+			ctx.addMessage(null, msg);
 
-	  	ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
-		ListAuthModulesPage lPage = (ListAuthModulesPage) binding.getValue(ctx);
-		lPage.resetValues();
-	    return "list_auth_modules";
-		}
-		else return "module_post_steps";
-	}
-
-	/**
-	 * @return navigation page as module post steps
-	 * If the save is success then add the save message to the page
-	 * in case of failure go again to the same page
-	 */
-	public String savePostSteps()
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-
-		String stepsText = mdBean.getModule().getWhatsNext().trim();
-		if(stepsText.length() == 0)
-			mdBean.getModule().setWhatsNext(null);
-
-		if(steps().equals("success"))
-		{
-			FacesMessage msg =
-		  		new FacesMessage("Changes Saved", "Your changes have been saved.");
-		  	msg.setSeverity(FacesMessage.SEVERITY_INFO);
-		  	ctx.addMessage(null,msg);
-		  	ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+			ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
 			ListAuthModulesPage lPage = (ListAuthModulesPage) binding.getValue(ctx);
 			lPage.resetValues();
-
-		  return "list_auth_modules";
+			return "list_auth_modules";
 		}
-		else return "module_post_steps";
+		else
+			return "module_post_steps";
 	}
 
 	/**
@@ -191,6 +102,30 @@ public class ModuleNextStepsPage implements Serializable/*,ToolBean*/ {
 	}
 
 	/**
+	 * @return string whose value is null for render comparison on the Jsp page
+	 */
+	public String getIsNull()
+	{
+		return isNull;
+	}
+
+	/**
+	 * @return Returns the mdBean.
+	 */
+	public ModuleDateBean getMdBean()
+	{
+		return mdBean;
+	}
+
+	/**
+	 * @return Returns the moduleService.
+	 */
+	public ModuleService getModuleService()
+	{
+		return moduleService;
+	}
+
+	/**
 	 * @return navigate back to list modules page
 	 */
 	public String returnToModules()
@@ -203,16 +138,77 @@ public class ModuleNextStepsPage implements Serializable/*,ToolBean*/ {
 	}
 
 	/**
-	 * @return Returns the moduleService.
+	 * @return navigation page as module post steps If the save is success then add the save message to the page in case of failure go again to the same page
 	 */
-	public ModuleService getModuleService() {
-		return moduleService;
+	public String savePostSteps()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+
+		String stepsText = mdBean.getModule().getWhatsNext().trim();
+		if (stepsText.length() == 0) mdBean.getModule().setWhatsNext(null);
+
+		if (steps().equals("success"))
+		{
+			FacesMessage msg = new FacesMessage("Changes Saved", "Your changes have been saved.");
+			msg.setSeverity(FacesMessage.SEVERITY_INFO);
+			ctx.addMessage(null, msg);
+			ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+			ListAuthModulesPage lPage = (ListAuthModulesPage) binding.getValue(ctx);
+			lPage.resetValues();
+
+			return "list_auth_modules";
+		}
+		else
+			return "module_post_steps";
 	}
+
 	/**
-	 * @param moduleService The moduleService to set.
+	 * @param mdBean
+	 *        The mdBean to set.
 	 */
-	public void setModuleService(ModuleService moduleService) {
+	public void setMdBean(ModuleDateBean mdBean)
+	{
+		this.mdBean = mdBean;
+	}
+
+	/**
+	 * @param moduleService
+	 *        The moduleService to set.
+	 */
+	public void setModuleService(ModuleService moduleService)
+	{
 		this.moduleService = moduleService;
+	}
+
+	/**
+	 * @return status - success/failure This method calls module service to update the module and add what's next steps If next steps are saved properly, return success In case of error add error message to the context and return failure
+	 */
+	public String steps()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		try
+		{
+			mdBean.setDateFlag(false);
+			ArrayList mdbeanList = new ArrayList();
+			mdbeanList.add(mdBean);
+			moduleService.updateProperties(mdbeanList, mPage.getCurrentSiteId());
+
+			return "success";
+
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			logger.debug("error in updating what's next" + e.toString());
+			String errMsg = bundle.getString("add_post_steps_fail");
+			FacesMessage msg = new FacesMessage("Error Message", errMsg);
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			ctx.addMessage(null, msg);
+			return "failure";
+		}
 	}
 
 }
