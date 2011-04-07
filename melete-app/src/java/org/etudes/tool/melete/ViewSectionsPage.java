@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -33,10 +33,9 @@ import javax.faces.component.html.*;
 import javax.faces.component.*;
 
 import java.util.List;
-import java.util.Map;
+
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 import java.io.*;
 
 import javax.faces.context.FacesContext;
@@ -60,7 +59,6 @@ import org.sakaiproject.tool.cover.ToolManager;
 import org.etudes.simpleti.SakaiSimpleLTI;
 import org.imsglobal.simplelti.SimpleLTIUtil;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.etudes.util.HtmlHelper;
@@ -951,8 +949,8 @@ public class ViewSectionsPage implements Serializable
 	{
 		String frameHeight = SimpleLTIUtil.getFrameHeight(str);
 		String htmltext = "<iframe id=\"iframeLTIPost\" src=\"" + getContentLink()
-				+ "\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" " + " marginwidth=\"0\" marginheight=\"0\" " + "height=\""
-				+ frameHeight + "\"  border=\"0\" frameborder= \"0\"></iframe>";
+		+ "\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" " + " marginwidth=\"0\" marginheight=\"0\" " + "height=\""
+		+ frameHeight + "\"  border=\"0\" frameborder= \"0\"></iframe>";
 		return htmltext;
 	}
 

@@ -23,6 +23,7 @@
  **********************************************************************************/
 
 package org.etudes.tool.melete;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.component.app.melete.*;
@@ -35,350 +36,372 @@ import javax.faces.el.ValueBinding;
 import org.sakaiproject.util.ResourceLoader;
 
 import org.etudes.component.app.melete.ModuleDateBean;
-import org.etudes.api.app.melete.ModuleDateBeanService;
+
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
-//import org.sakaiproject.jsf.ToolBean;
-
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
-import org.sakaiproject.tool.api.Placement;
 import org.sakaiproject.tool.cover.ToolManager;
 
 /**
- * @author Mallika
- *
+ * 
  * Edit Module Page is the backing bean for the page edit_module.jsp.
- * It also connects to other jsp pages like cclicenseform.jsp and
- * publicdomainform.jsp and license_results.jsp
- * 8/1/06 - Mallika - Removing IAgree code
- * 28/12/06 - Rashmi - remove license validations and clean up license code
- * 2/6/07 - Rashmi - set section breadcrumbs to text only for add section page
- * 3/6/07- Rashmi - remove section breadcrumbs
- *   */
+ */
 
-public class EditModulePage extends ModulePage implements Serializable/*, ToolBean*/ {
+public class EditModulePage extends ModulePage implements Serializable/* , ToolBean */
+{
 
-   /** Dependency:  The logging service. */
+	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(EditModulePage.class);
-   private boolean callFromAddContent = false;
-   private boolean showLicenseFlag = true;
-   private boolean hasSections = false;
-   private SectionObjService firstSection = null;
-   protected ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
-   
-    public EditModulePage(){
-      setFormName("EditModuleForm");
-      setSuccess(false);
+	private boolean callFromAddContent = false;
+	private boolean showLicenseFlag = true;
+	private boolean hasSections = false;
+	private SectionObjService firstSection = null;
+	protected ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
 
-    }
+	/**
+	 * constructor
+	 */
+	public EditModulePage()
+	{
+		setFormName("EditModuleForm");
+		setSuccess(false);
 
+	}
 
-	/*
-	 * Rashmi 12/21
-	 * modification details
-	 *
+	/**
+	 * Set modification details.
 	 */
 	public void setModification()
 	{
-		  FacesContext context = FacesContext.getCurrentInstance();
-	      ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-	      MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
-	
-	      module.setModifiedByFname(mPage.getCurrentUser().getFirstName());
-	      module.setModifiedByLname(mPage.getCurrentUser().getLastName());
-	      module.setModificationDate(new Date());
-	}
-	 public boolean  getShowLicenseFlag() {
-	  	return showLicenseFlag;
-	  }
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
 
-	  public void setShowLicenseFlag(boolean  showLicenseFlag) {
-	  	this.showLicenseFlag = showLicenseFlag;
-	  }
-	/*
-	 * Rashmi -- 12/21 revised to put correct validations
-	 *
+		module.setModifiedByFname(mPage.getCurrentUser().getFirstName());
+		module.setModifiedByLname(mPage.getCurrentUser().getLastName());
+		module.setModificationDate(new Date());
+	}
+
+	/**
+	 * Note: not in use anymore
+	 * 
+	 * @return
+	 */
+	public boolean getShowLicenseFlag()
+	{
+		return showLicenseFlag;
+	}
+
+	/**
+	 * Note: not in use anymore
+	 * 
+	 * @param showLicenseFlag
+	 */
+	public void setShowLicenseFlag(boolean showLicenseFlag)
+	{
+		this.showLicenseFlag = showLicenseFlag;
+	}
+
+	/**
+	 * Update module. Validates the dates.Tracks module edit event.
+	 * 
+	 * @return
 	 */
 	public String savehere()
 	{
-    	String errMsg = "";
-        setSuccess(false);
-        if(moduleService == null)
-        	moduleService = getModuleService();
+		String errMsg = "";
+		setSuccess(false);
+		if (moduleService == null) moduleService = getModuleService();
 
-	     FacesContext context = FacesContext.getCurrentInstance();
-     	 ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-     	 Map sessionMap = context.getExternalContext().getSessionMap();
-     	 ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-    	 MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
-     	 
-	    // rashmi added validations start
-//     	validation
-      	module.setTitle(module.getTitle().trim());
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		Map sessionMap = context.getExternalContext().getSessionMap();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
 
-      	// validation no 3
-      	Date  d = new Date();
-      	Date st = getModuleShdates().getStartDate();
-      	Date end = getModuleShdates().getEndDate();
+		// rashmi added validations start
+		// validation
+		module.setTitle(module.getTitle().trim());
 
-//       validation no 4 b
-      	 boolean dateResult = validateDates(context, bundle, st, end);
-         if (dateResult == false) return "failure";
+		// validation no 3
+		Date st = getModuleShdates().getStartDate();
+		Date end = getModuleShdates().getEndDate();
 
-    	/*if ((end != null) && (st != null))
+		// validation no 4 b
+		boolean dateResult = validateDates(context, bundle, st, end);
+		if (dateResult == false) return "failure";
+
+		/*
+		 * if ((end != null) && (st != null)) { if (end.compareTo(st) <= 0) { errMsg = ""; errMsg = bundle.getString("end_date_before_start"); FacesMessage msg = new FacesMessage(errMsg); msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+		 * context.addMessage(null, msg); return "failure"; } }
+		 */
+
+		// rashmi added validations end
+		// actual update
+		try
 		{
-			if (end.compareTo(st) <= 0)
-			{
-				errMsg = "";
-				errMsg = bundle.getString("end_date_before_start");
-				FacesMessage msg = new FacesMessage(errMsg);
-				msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-				context.addMessage(null, msg);
-				return "failure";
-			}
-		}*/
-
- 	    // rashmi added validations end
-
-	     // actual update
-		try{
 			setModification();
-			if(module.getKeywords() != null)
+			if (module.getKeywords() != null)
 			{
 				module.setKeywords(module.getKeywords().trim());
 			}
-			if(module.getKeywords() == null || (module.getKeywords().length() == 0) )
-				 	{
-						module.setKeywords(module.getTitle());
-					}
+			if (module.getKeywords() == null || (module.getKeywords().length() == 0))
+			{
+				module.setKeywords(module.getTitle());
+			}
 			ModuleDateBean mdbean = new ModuleDateBean();
 			mdbean.setModuleId(getModule().getModuleId().intValue());
-			mdbean.setModule((Module)getModule());
-			mdbean.setModuleShdate((ModuleShdates)getModuleShdates());
+			mdbean.setModule((Module) getModule());
+			mdbean.setModuleShdate((ModuleShdates) getModuleShdates());
 			mdbean.setDateFlag(false);
-			ArrayList mdbeanList = new ArrayList();
+			ArrayList<ModuleDateBean> mdbeanList = new ArrayList<ModuleDateBean>();
 			mdbeanList.add(mdbean);
 			moduleService.updateProperties(mdbeanList, mPage.getCurrentSiteId());
 
 			// add module to session
-			sessionMap.put("currModule",module);
+			sessionMap.put("currModule", module);
 
-			//Track the event
+			// Track the event
 			EventTrackingService.post(EventTrackingService.newEvent("melete.module.edit", ToolManager.getCurrentPlacement().getContext(), true));
 
-
 		}
-		catch(MeleteException me)
+		catch (MeleteException me)
 		{
-			logger.debug("show error message for"+me.toString()+me.getMessage()+",");
+			logger.debug("show error message for" + me.toString() + me.getMessage() + ",");
 			errMsg = bundle.getString(me.getMessage());
 			addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
 			return "failure";
 		}
-		catch(Exception ex)
+		catch (Exception ex)
 		{
 			errMsg = bundle.getString("edit_module_fail");
 			addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
 			return "failure";
 		}
-		/*if (callFromAddContent == false)
-		{
-		  String msg="";
-		  msg = bundle.getString("edit_module_success");
-		  addMessage(context, "Info Message", msg, FacesMessage.SEVERITY_INFO);
-		}*/
+		/*
+		 * if (callFromAddContent == false) { String msg=""; msg = bundle.getString("edit_module_success"); addMessage(context, "Info Message", msg, FacesMessage.SEVERITY_INFO); }
+		 */
 		setSuccess(true);
 		return "success";
-	 }
+	}
 
-	/*
-	 *
+	/**
+	 * Abstract method implementation for edit module.
 	 */
 	public String save()
 	{
-		if(!savehere().equals("failure"))
+		if (!savehere().equals("failure"))
 		{
-    		callFromAddContent = false;
-		    setSuccess(true);
+			callFromAddContent = false;
+			setSuccess(true);
 		}
-    	else
-    	{
-    		callFromAddContent = false;
+		else
+		{
+			callFromAddContent = false;
 
-    	}
+		}
 		return "edit_module";
 	}
 
-	/*
-     * For top mode bar clicks, auto save edit module
-     * Returns # if save is success else stay on same page to correct error
-     */
+	/**
+	 * For top mode bar clicks, auto save edit module Returns # if save is success else stay on same page to correct error
+	 */
 	public String autoSave()
 	{
 		callFromAddContent = false;
-		if(!savehere().equals("failure"))
-		{   		
-		    setSuccess(true);
-		    return "#";
+		if (!savehere().equals("failure"))
+		{
+			setSuccess(true);
+			return "#";
 		}
-		return "edit_module";	
+		return "edit_module";
 	}
-	
-    /*
-     * Revision by rashmi on 12/20
-     * in sbcPage settings ..change from getModule() to module
-     * add section page instance to reset values
-     */
-    public String addContentSections()
-    {
-    	String errMsg = "";
 
-        if(!getSuccess())
-        {
-        	callFromAddContent = true;
-        	if(!savehere().equals("failure"))
-    		{
-        		callFromAddContent = false;
-    		    setSuccess(true);
-    		}
-        	else
-        	{
-        		callFromAddContent = false;
-        		return "edit_module";
-        	}
-        }
-        //Revision -- 12/20 - to remove retaintion of values
-        FacesContext context = FacesContext.getCurrentInstance();
-        Map sessionMap = context.getExternalContext().getSessionMap();
-		sessionMap.put("currModule", module);
-		
-        ValueBinding binding =Util.getBinding("#{editSectionPage}");
-        EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
-        editPage.setSection(null);
-        editPage.resetSectionValues();
-        editPage.setModule(module);
-        editPage.addBlankSection();
-        
-       return "editmodulesections";
-    }
-
-    public String gotoTOC()
+	/**
+	 * Creates a new section.
+	 */
+	public String addContentSections()
 	{
-    	String errMsg = "";
-
-        if(!getSuccess())
-        {
-        	callFromAddContent = true;
-        	if(!savehere().equals("failure"))
-    		{
-        		callFromAddContent = false;
-    		    setSuccess(true);
-    		}
-        	else
-        	{
-        		callFromAddContent = false;
-        		return "edit_module";
-        	}
-        }
+		if (!getSuccess())
+		{
+			callFromAddContent = true;
+			if (!savehere().equals("failure"))
+			{
+				callFromAddContent = false;
+				setSuccess(true);
+			}
+			else
+			{
+				callFromAddContent = false;
+				return "edit_module";
+			}
+		}
+		// Revision -- 12/20 - to remove retaintion of values
 		FacesContext context = FacesContext.getCurrentInstance();
-        ValueBinding binding =Util.getBinding("#{listAuthModulesPage}");
-        ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
-        listPage.resetValues();
-        listPage.setModuleDateBeans(null);
+		Map sessionMap = context.getExternalContext().getSessionMap();
+		sessionMap.put("currModule", module);
+
+		ValueBinding binding = Util.getBinding("#{editSectionPage}");
+		EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
+		editPage.setSection(null);
+		editPage.resetSectionValues();
+		editPage.setModule(module);
+		editPage.addBlankSection();
+
+		return "editmodulesections";
+	}
+
+	/**
+	 * Go to Table of contents.
+	 * 
+	 * @return
+	 */
+	public String gotoTOC()
+	{
+		if (!getSuccess())
+		{
+			callFromAddContent = true;
+			if (!savehere().equals("failure"))
+			{
+				callFromAddContent = false;
+				setSuccess(true);
+			}
+			else
+			{
+				callFromAddContent = false;
+				return "edit_module";
+			}
+		}
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
+		listPage.resetValues();
+		listPage.setModuleDateBeans(null);
 		return "list_auth_modules";
 	}
-    
-    /*
-     * Revised by Rashmi -- 12/21 to fix bug#189
-     * reset values
-     */
-    public void setEditInfo(ModuleDateBean mdbean){
-    	resetModuleValues();
-    	setModuleDateBean(mdbean);
-    	setModule(mdbean.getModule());
-    	setModuleShdates(mdbean.getModuleShdate());
-  
-    	if((mdbean.getSectionBeans() == null)||(mdbean.getSectionBeans().isEmpty()))
-    	{
-    		setFirstSection(null);
-    		setHasSections(false);
-    	}
-    	else{
-    		setHasSections(true);
-    		setFirstSection(((SectionBean)mdbean.getSectionBeans().get(0)).getSection());
-    	}
 
-   	}
-
-    public boolean isHasSections()
-    {
-    	return hasSections;
-    }
 	/**
-	 * @param hasSections the hasSections to set
+	 * Initialize values for editing a module.
+	 * 
+	 * @param mdbean
+	 */
+	public void setEditInfo(ModuleDateBean mdbean)
+	{
+		resetModuleValues();
+		setModuleDateBean(mdbean);
+		setModule(mdbean.getModule());
+		setModuleShdates(mdbean.getModuleShdate());
+
+		if ((mdbean.getSectionBeans() == null) || (mdbean.getSectionBeans().isEmpty()))
+		{
+			setFirstSection(null);
+			setHasSections(false);
+		}
+		else
+		{
+			setHasSections(true);
+			setFirstSection(((SectionBean) mdbean.getSectionBeans().get(0)).getSection());
+		}
+
+	}
+
+	/**
+	 * Checks if module has sections.
+	 * 
+	 * @return
+	 */
+	public boolean isHasSections()
+	{
+		return hasSections;
+	}
+
+	/**
+	 * @param hasSections
+	 *        the hasSections to set
 	 */
 	public void setHasSections(boolean hasSections)
 	{
 		this.hasSections = hasSections;
 	}
 
+	/**
+	 * Edit the section. Takes user to the first section.
+	 * 
+	 * @return
+	 */
 	public String editSection()
 	{
 		callFromAddContent = false;
-		 if(!getSuccess())
-	        {
-	        	if(!savehere().equals("failure"))
-	    	 		    setSuccess(true);
-	    	   	else return "edit_module";
-	        }
+		if (!getSuccess())
+		{
+			if (!savehere().equals("failure"))
+				setSuccess(true);
+			else
+				return "edit_module";
+		}
 
-	        FacesContext context = FacesContext.getCurrentInstance();
-	        ValueBinding binding =Util.getBinding("#{editSectionPage}");
-	        EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
-	        Map sessionMap = context.getExternalContext().getSessionMap();
-			sessionMap.put("currModule", module);
-			editPage.setEditInfo(firstSection);
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{editSectionPage}");
+		EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
+		Map sessionMap = context.getExternalContext().getSessionMap();
+		sessionMap.put("currModule", module);
+		editPage.setEditInfo(firstSection);
 
 		return "editmodulesections";
 	}
+
 	/**
-	 * @param firstSection the firstSection to set
+	 * @param firstSection
+	 *        the firstSection to set
 	 */
 	public void setFirstSection(SectionObjService firstSection)
 	{
 		this.firstSection = firstSection;
 	}
 
+	/**
+	 * Get Module. Edit can be invoked from coursemap and from author list page. For coursemap, it reads from the threadlocal MELETE_MODULE_ID variable.
+	 */
+	public ModuleObjService getModule()
+	{
 
-	public ModuleObjService getModule() {
-		
 		FacesContext ctx = FacesContext.getCurrentInstance();
-    	ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 
-    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
-    	String courseId = mPage.getCurrentSiteId();
-    	String userId = mPage.getCurrentUser().getId();
-    	
-		String moduleIdfromOutside = (String)threadLocalManager.get("MELETE_MODULE_ID");
-    	if (moduleIdfromOutside != null) 
-    	{
-    		logger.debug("reading module id from thread local :" + moduleIdfromOutside);
-    		this.mdBean = (ModuleDateBean)moduleService.getModuleDateBean(userId, courseId, new Integer(moduleIdfromOutside).intValue());
-    		setEditInfo(mdBean);
-    		mPage.populateMeleteSession();
-    		threadLocalManager.set("MELETE_MODULE_ID", null);
-    	}
-		
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+		String courseId = mPage.getCurrentSiteId();
+		String userId = mPage.getCurrentUser().getId();
+
+		String moduleIdfromOutside = (String) threadLocalManager.get("MELETE_MODULE_ID");
+		if (moduleIdfromOutside != null)
+		{
+			logger.debug("reading module id from thread local :" + moduleIdfromOutside);
+			this.mdBean = (ModuleDateBean) moduleService.getModuleDateBean(userId, courseId, new Integer(moduleIdfromOutside).intValue());
+			setEditInfo(mdBean);
+			mPage.populateMeleteSession();
+			threadLocalManager.set("MELETE_MODULE_ID", null);
+		}
+
 		return super.getModule();
 	}
-	
+
+	/**
+	 * Set the module date bean.
+	 * 
+	 * @param userId
+	 *        The user Id
+	 * @param siteId
+	 *        The site Id
+	 * @param id
+	 *        module Id
+	 */
 	public void setMdBean(String userId, String siteId, String id)
 	{
 		if (id == null) return;
-		this.mdBean = (ModuleDateBean)moduleService.getModuleDateBean(userId, siteId, new Integer(id).intValue());
+		this.mdBean = (ModuleDateBean) moduleService.getModuleDateBean(userId, siteId, new Integer(id).intValue());
 		setEditInfo(mdBean);
 	}
 
- }
+}

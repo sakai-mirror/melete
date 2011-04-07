@@ -24,7 +24,6 @@
 package org.etudes.tool.melete;
 
 import java.util.*;
-import java.io.File;
 import java.io.Serializable;
 import javax.faces.context.FacesContext;
 import javax.faces.application.FacesMessage;
@@ -35,32 +34,28 @@ import javax.faces.event.*;
 import org.etudes.component.app.melete.MeleteResource;
 import org.etudes.component.app.melete.Section;
 import org.etudes.component.app.melete.SectionResource;
-import org.etudes.component.app.melete.SubSectionUtilImpl;
+
 import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.etudes.api.app.melete.exception.UserErrorException;
-import org.etudes.component.app.melete.ModuleDateBean;
+
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentResource;
-import org.sakaiproject.content.api.ContentResourceEdit;
+
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.util.ResourceLoader;
 
 import org.sakaiproject.event.cover.EventTrackingService;
-import org.sakaiproject.tool.cover.ToolManager;
+
 
 public class EditSectionPage extends SectionPage implements Serializable
 {
 	private boolean sizeWarning = false;
 
-	private String previewPage;
-
 	private ModuleService moduleService;
-
-	private String secResourceDescription1;
 
 	private boolean shouldRenderContentTypeSelect = false;
 
@@ -77,11 +72,20 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 	private Boolean hasPrev = false;
 
+	/**
+	 * Default constructor
+	 */
 	public EditSectionPage()
 	{
 		setFormName("EditSectionForm");
 	}
 
+	/**
+	 * initializes values. 
+	 * @param section1
+	 * SectionObjService 
+	 * @return
+	 */
 	public String setEditInfo(SectionObjService section1)
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -153,7 +157,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		this.sizeWarning = sizeWarning;
 	}
-
+/**
+ * set resource data.
+ * @param resourceId
+ * The resource Id
+ */
 	private void setContentResourceData(String resourceId)
 	{
 
@@ -182,6 +190,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	}
 
 	/**
+	 * Get composed section content.
 	 * return content editor
 	 */
 	public String getContentEditor()
@@ -190,6 +199,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return this.contentEditor;
 	}
 
+	/**
+	 * Checks if section has a content type.If not show the dropdown menu to pick a content type.
+	 * @return
+	 */
 	public boolean isShouldRenderContentTypeSelect()
 	{
 		// shouldRenderContentTypeSelect = false;
@@ -204,71 +217,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return shouldRenderContentTypeSelect;
 	}
 
-	/*
-	 * action listener for currenet site resource listings. It sets the variable
+	/**
+	 * Delete the selected resource.
+	 * @param evt
+	 * ActionEvent
 	 */
-	/*public void selectedResourceReplaceAction(ActionEvent evt)
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UICommand cmdLink = (UICommand) evt.getComponent();
-		List cList = cmdLink.getChildren();
-		// UIParameter param = (UIParameter) cList.get(0);
-		UIComponent comp = (UIComponent) cList.get(0);
-		// Mallika - Needed to add the if condition below since param tags aren't being
-		// rendered if file size is too large
-
-		if (!(comp instanceof UIOutput))
-		{
-			UIParameter param = (UIParameter) comp;
-			selResourceIdFromList = (String) param.getValue();
-		}
-		else
-		{
-			String selclientId = cmdLink.getClientId(ctx);
-			selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-			selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-			selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-			String resId = selclientId.substring(0, selclientId.indexOf(':'));
-			int selResIndex = Integer.parseInt(resId);
-			selResIndex = selResIndex + getListNav().getCurrIndex();
-			selResourceIdFromList = ((DisplaySecResources) currSiteResourcesList.get(selResIndex)).getResource_id();
-		}
-
-		logger.debug("selected resource id by user in editsectionPage is " + selResourceIdFromList);
-
-		// populate properties panel with the selected resource
-		try
-		{
-			ContentResource cr = getMeleteCHService().getResource(selResourceIdFromList);
-			if (cr != null)
-			{
-				// get resource object
-				selectedResource = (MeleteResource) sectionService.getMeleteResource(selResourceIdFromList);
-				if (selectedResource != null)
-				{
-					this.selectedResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
-					this.selectedResourceDescription = cr.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION);
-					renderSelectedResource = true;
-					ValueBinding binding = Util.getBinding("#{licensePage}");
-			  		LicensePage lPage = (LicensePage)binding.getValue(ctx);
-			  		lPage.setInitialValues(formName, selectedResource);
-				}
-				else
-				{
-					// short term soln for missing records in melete_resource
-					logger.error("selected resource doesnot exist in meleteResource" + selResourceIdFromList);
-				}
-			}
-			ctx.renderResponse();
-		}
-		catch (Exception ex)
-		{
-			//ex.printStackTrace();
-			logger.debug("error while accessing content resource" + ex.toString());
-		}
-		return;
-	}*/
-
 	public void selectedResourceDeleteAction(ActionEvent evt)
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -297,10 +250,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return;
 	}
 
-
+/**
+ * Save the section.Validates modality and license required fields. Track section edit event.
+ */
 	public String saveHere()
 	{
-		String dataPath = new String();
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 
@@ -514,7 +468,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editmodulesections";
 	}
 	
-	/*
+	/**
      * For top mode bar clicks, auto save section
      * Returns # if save is success else stay on same page to correct error
      */
@@ -530,8 +484,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	}
 
 	/**
-	 * save the section, if not saved yet and then refresh the page to add more sections. Revision on 11/15: - add code to initiate breadcrumps in add
-	 * section page Revised on 3/22 - to set section as null Revised on 5/31/05 - to get addsectionpage instance and call resetvalues there
+	 * save the section and create next section.
 	 */
 	public String saveAndAddAnotherSection()
 	{
@@ -563,8 +516,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	}
 
 	/**
-	 * returns failure if the section has not been saved first. returns finish to redirect to addmodulefinish page. revised by rashmi on 3/21 to
-	 * enforce automatic save revised by rashmi 06/14/05 to remove retain values problem in finish page
+	 * Save the section and navigate to author list page.
 	 */
 	public String Finish()
 	{
@@ -590,8 +542,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 	}
 
-	/*
-	 * Preview - force save on preview
+	/**
+	 * Preview the content. Save section.
 	 */
 	public String getPreviewPage()
 	{
@@ -621,13 +573,17 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editpreview";
 	}
 
+	/**
+	 * Navigate back to edit page from preview.
+	 * @return
+	 */
 	public String returnBack()
 	{
 		return "editmodulesections";
 	}
 
-	/*
-	 * reset edit section variables first and then of base class
+	/**
+	 * reset values
 	 */
 	public void resetSectionValues()
 	{
@@ -643,14 +599,18 @@ public class EditSectionPage extends SectionPage implements Serializable
 		super.resetSectionValues();
 	}
 
+	/**
+	 * Navigate to edit page
+	 * @return
+	 */
 	public String redirectLinktoEdit()
 	{
 		return "editmodulesections";
 		// return "#";
 	}
 
-	/*
-	 * on clicking link 2 me the page navigates back to add module section
+	/**
+	 * on clicking link 2 me the page navigates back
 	 */
 	public String redirectLink()
 	{
@@ -658,12 +618,14 @@ public class EditSectionPage extends SectionPage implements Serializable
 		// return "#";
 	}
 
+	/**
+	 * Navigate page to delete a resource
+	 * @return
+	 */
 	public String redirectDeleteLink()
 	{
 		 return "delete_resource";
 	}
-
-
 
 	/**
 	 * @return Returns the ModuleService.
@@ -722,6 +684,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 		this.m_selected_license = m_selected_license;
 	}*/
 
+	/**
+	 * navigate to upload screen.
+	 */
 	public String gotoServerView()
 	{
 		selectedResourceName = null;
@@ -737,6 +702,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editContentUploadServerView";
 	}
 
+	/**
+	 * Set the selected file as resource selected for the section.
+	 * @return
+	 */
 	public String setServerFile()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -805,7 +774,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editmodulesections";
 	}
 
-	// edit link
+	/**
+	 * Navigate to select a link resource.
+	 * @return
+	 */
 	public String gotoServerLinkView()
 	{
 		selectedResourceName = null;
@@ -823,6 +795,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editContentLinkServerView";
 	}
 
+	/**
+	 * Navigate to LTI resources list
+	 * @return
+	 */
 	public String gotoServerLTIView()
 	{
 		gotoServerLinkView();
@@ -840,6 +816,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editContentLTIServerView";
 	}
 
+	/**
+	 * Associate section with the user selected resource item.
+	 * @return
+	 */
 	public String setServerUrl()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -923,6 +903,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editmodulesections";
 	}
 
+	/**
+	 * Associate section with LTI resource selected.
+	 * @return
+	 */
 	public String setServerLTI()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -991,6 +975,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editmodulesections";
 	}
 
+	/**
+	 * Cancel selected file.
+	 * @return
+	 */
 	public String cancelServerFile()
 	{
 		selectedResource = null;
@@ -1035,6 +1023,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		this.shouldRenderLocalUpload = shouldRenderLocalUpload;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean isHasNext()
 	{
 		SectionObjService nextSection = null;

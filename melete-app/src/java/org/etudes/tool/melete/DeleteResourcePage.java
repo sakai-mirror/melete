@@ -36,13 +36,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.SectionService;
-import org.etudes.api.app.melete.exception.MeleteException;
-import org.sakaiproject.util.ResourceLoader;
 
+public class DeleteResourcePage implements Serializable
+{
 
-public class DeleteResourcePage implements Serializable{
-
-	 /** Dependency:  The logging service. */
+	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(DeleteResourcePage.class);
 	private SectionService sectionService;
 	private MeleteCHService meleteCHService;
@@ -53,85 +51,115 @@ public class DeleteResourcePage implements Serializable{
 	private String delResourceId;
 	private String courseId;
 
-    public DeleteResourcePage(){
-    }
+	/**
+	 * Default constructor
+	 */
+	public DeleteResourcePage()
+	{
+	}
 
-  	public void resetValues()
-  	{
-  		warningFlag = false;
-  		fromPage = "";
-  		delResourceId = null;
-  		delResourceName = null;
-  		courseId = null;
-  	}
+	/**
+	 * Reset values.
+	 */
+	public void resetValues()
+	{
+		warningFlag = false;
+		fromPage = "";
+		delResourceId = null;
+		delResourceName = null;
+		courseId = null;
+	}
 
-  	public void setFromPage(String fromPage)
-  	{
-  		this.fromPage = fromPage;
-  	}
+	/**
+	 * Set the start page.
+	 * 
+	 * @param fromPage
+	 */
+	public void setFromPage(String fromPage)
+	{
+		this.fromPage = fromPage;
+	}
 
-  	public void processDeletion(String delResourceId, String courseId)
-  	{
-  		this.delResourceId = delResourceId;
-  		this.courseId = courseId;
-  		List res_in_use = sectionService.findResourceInUse(delResourceId,courseId);
-		if(res_in_use != null)	logger.debug("res_in_use size " + res_in_use.size());
-		if (res_in_use != null && res_in_use.size() > 0)
-			warningFlag = true;
-  	}
+	/**
+	 * Checks the selected resource is used in the other sections. If yes, warns the user.
+	 * 
+	 * @param delResourceId
+	 *        The Resource Id
+	 * @param courseId
+	 *        The Site Id
+	 */
+	public void processDeletion(String delResourceId, String courseId)
+	{
+		this.delResourceId = delResourceId;
+		this.courseId = courseId;
+		List<?> res_in_use = sectionService.findResourceInUse(delResourceId, courseId);
+		if (res_in_use != null) logger.debug("res_in_use size " + res_in_use.size());
+		if (res_in_use != null && res_in_use.size() > 0) warningFlag = true;
+	}
 
-  	public void setResourceName(String title)
-  	{
-  		delResourceName = title;
-  	}
+	/**
+	 * Set resource name
+	 * 
+	 * @param title
+	 */
+	public void setResourceName(String title)
+	{
+		delResourceName = title;
+	}
 
-  	private void refreshCurrSiteResourcesList()
-  	{
-  		FacesContext ctx = FacesContext.getCurrentInstance();
-		ValueBinding binding =Util.getBinding("#{listResourcesPage}");
+	/**
+	 * Refresh the resources list.
+	 */
+	private void refreshCurrSiteResourcesList()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{listResourcesPage}");
 		ListResourcesPage listResPage = (ListResourcesPage) binding.getValue(ctx);
 		listResPage.setFromPage(this.fromPage);
-        listResPage.refreshCurrSiteResourcesList();
-  	}
-  	
-  	public String deleteResource()
-  	{
-  		FacesContext context = FacesContext.getCurrentInstance();
-  		try
-  		{
-  			if(delResourceId != null)
-  			{
-  				// delete from content resource
-  				sectionService.deleteResourceInUse(this.delResourceId);
-  				meleteCHService.removeResource(this.delResourceId);
-  				logger.debug("delete resource is done now move back to page");
-  			}
-  			if (fromPage.startsWith("edit"))
-  			{
-  				ValueBinding binding = Util.getBinding("#{editSectionPage}");
-  				EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
-  				if(editPage.meleteResource != null && editPage.meleteResource.getResourceId() != null && 
-  				   editPage.meleteResource.getResourceId().equals(delResourceId))
-  				{
-  					logger.debug("remove resource from cache" );
-  					if (editPage.secResource != null) editPage.secResource.setResource(null);
-  					editPage.meleteResource = null;
-  					editPage.resetMeleteResourceValues();
-  				}
-  				refreshCurrSiteResourcesList();
-  			}
-  			else if(fromPage.startsWith("manage"))
-  			{
-  				ValueBinding binding = Util.getBinding("#{manageResourcesPage}");
-  				ManageResourcesPage managePage = (ManageResourcesPage) binding.getValue(context);
-  				refreshCurrSiteResourcesList();
-  			}
-  			
-  			return fromPage;
-  		}
+		listResPage.refreshCurrSiteResourcesList();
+	}
+
+	/**
+	 * Delete a resource even if shared by other sections. Delete from content hosting.
+	 * 
+	 * @return navigate back to start page
+	 */
+	public String deleteResource()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		try
+		{
+			if (delResourceId != null)
+			{
+				// delete from content resource
+				sectionService.deleteResourceInUse(this.delResourceId);
+				meleteCHService.removeResource(this.delResourceId);
+				logger.debug("delete resource is done now move back to page");
+			}
+			if (fromPage.startsWith("edit"))
+			{
+				ValueBinding binding = Util.getBinding("#{editSectionPage}");
+				EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
+				if (editPage.meleteResource != null && editPage.meleteResource.getResourceId() != null
+						&& editPage.meleteResource.getResourceId().equals(delResourceId))
+				{
+					logger.debug("remove resource from cache");
+					if (editPage.secResource != null) editPage.secResource.setResource(null);
+					editPage.meleteResource = null;
+					editPage.resetMeleteResourceValues();
+				}
+				refreshCurrSiteResourcesList();
+			}
+			else if (fromPage.startsWith("manage"))
+			{
+				refreshCurrSiteResourcesList();
+			}
+
+			return fromPage;
+		}
 		catch (Exception e)
 		{
-			//e.printStackTrace();
+			// e.printStackTrace();
 			logger.debug("error in delete resource" + e.toString());
 			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 			String errMsg = bundle.getString("delete_resource_fail");
@@ -140,32 +168,41 @@ public class DeleteResourcePage implements Serializable{
 		}
 	}
 
-  	public String cancelDeleteResource()
-  	{
-  		return fromPage;
-  	}
+	/**
+	 * Cancel the action. Navigate back to start page.
+	 * 
+	 * @return
+	 */
+	public String cancelDeleteResource()
+	{
+		return fromPage;
+	}
 
 	/**
 	 * @return Returns the SectionService.
 	 */
-	public SectionService getSectionService() {
+	public SectionService getSectionService()
+	{
 		return sectionService;
 	}
+
 	/**
-	 * @param SectionService The SectionService to set.
+	 * @param SectionService
+	 *        The SectionService to set.
 	 */
-	public void setSectionService(SectionService sectionService) {
+	public void setSectionService(SectionService sectionService)
+	{
 		this.sectionService = sectionService;
 	}
+
 	/**
-	 * @param meleteCHService the meleteCHService to set
+	 * @param meleteCHService
+	 *        the meleteCHService to set
 	 */
 	public void setMeleteCHService(MeleteCHService meleteCHService)
 	{
 		this.meleteCHService = meleteCHService;
 	}
-
-
 
 	/**
 	 * @return the warningFlag
@@ -176,7 +213,8 @@ public class DeleteResourcePage implements Serializable{
 	}
 
 	/**
-	 * @param warningFlag the warningFlag to set
+	 * @param warningFlag
+	 *        the warningFlag to set
 	 */
 	public void setWarningFlag(boolean warningFlag)
 	{
@@ -191,4 +229,4 @@ public class DeleteResourcePage implements Serializable{
 		return this.delResourceName;
 	}
 
- }
+}
