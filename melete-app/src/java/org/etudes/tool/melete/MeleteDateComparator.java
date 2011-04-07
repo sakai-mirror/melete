@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -32,6 +32,9 @@ import org.etudes.component.app.melete.CourseModule;
  */
 public class MeleteDateComparator implements java.util.Comparator {
 
+	/* Check to see if archived dates are equal
+	 * @return result of comparison
+	 */
 	public int compare(Object o1, Object o2) {
 	    Date d1 = ((CourseModule)o1).getDateArchived();
 	    Date d2 = ((CourseModule)o2).getDateArchived();

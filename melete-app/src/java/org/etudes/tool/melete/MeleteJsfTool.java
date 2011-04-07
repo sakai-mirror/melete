@@ -39,26 +39,24 @@ import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Web;
 
-/**
- */
 public class MeleteJsfTool extends HttpServlet
 {
-	/** Our log (commons). */
-	private static Log M_log = LogFactory.getLog(MeleteJsfTool.class);
-
-	/** The file extension to get to JSF. */
-	protected static final String JSF_EXT = ".jsf";
-
 	/** Session attribute to hold the last view visited. */
 	public static final String LAST_VIEW_VISITED = "sakai.jsf.tool.last.view.visited";
-
-	//	 TODO: Note, these two values must match those in jsf-app's SakaiViewHandler
 
 	/** Request attribute we set to help the return URL know what extension we (or jsf) add (does not need to be in the URL. */
 	public static final String URL_EXT = "sakai.jsf.tool.URL.ext";
 
 	/** Request attribute we set to help the return URL know what path we add (does not need to be in the URL. */
 	public static final String URL_PATH = "sakai.jsf.tool.URL.path";
+
+	// TODO: Note, these two values must match those in jsf-app's SakaiViewHandler
+
+	/** Our log (commons). */
+	private static Log M_log = LogFactory.getLog(MeleteJsfTool.class);
+
+	/** The file extension to get to JSF. */
+	protected static final String JSF_EXT = ".jsf";
 
 	/** The default target, as configured. */
 	protected String m_default = null;
@@ -68,6 +66,50 @@ public class MeleteJsfTool extends HttpServlet
 
 	/** The folder to the jsf files, as configured. Does not end with a "/". */
 	protected String m_path = null;
+
+	/**
+	 * Shutdown the servlet.
+	 */
+	public void destroy()
+	{
+		M_log.info("destroy");
+
+		super.destroy();
+	}
+
+	/**
+	 * Access the Servlet's information display.
+	 * 
+	 * @return servlet information.
+	 */
+	public String getServletInfo()
+	{
+		return "Sakai JSF Tool Servlet";
+	}
+
+	/**
+	 * Initialize the servlet.
+	 * 
+	 * @param config
+	 *        The servlet config.
+	 * @throws ServletException
+	 */
+	public void init(ServletConfig config) throws ServletException
+	{
+		super.init(config);
+
+		m_default = config.getInitParameter("default");
+		m_path = config.getInitParameter("path");
+		m_defaultToLastView = "true".equals(config.getInitParameter("default.last.view"));
+
+		// make sure there is no "/" at the end of the path
+		if (m_path != null && m_path.endsWith("/"))
+		{
+			m_path = m_path.substring(0, m_path.length() - 1);
+		}
+
+		M_log.info("init: default: " + m_default + " path: " + m_path);
+	}
 
 	/**
 	 * Compute a target (i.e. the servlet path info, not including folder root or jsf extension) for the case of the actual path being empty.
@@ -94,16 +136,6 @@ public class MeleteJsfTool extends HttpServlet
 	}
 
 	/**
-	 * Shutdown the servlet.
-	 */
-	public void destroy()
-	{
-		M_log.info("destroy");
-
-		super.destroy();
-	}
-
-	/**
 	 * Respond to requests.
 	 * 
 	 * @param req
@@ -116,9 +148,9 @@ public class MeleteJsfTool extends HttpServlet
 	protected void dispatch(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
 		// NOTE: this is a simple path dispatching, taking the path as the view id = jsp file name for the view,
-		//       with default used if no path and a path prefix as configured.
+		// with default used if no path and a path prefix as configured.
 		// TODO: need to allow other sorts of dispatching, such as pulling out drill-down ids and making them
-		//       available to the JSF
+		// available to the JSF
 
 		// build up the target that will be dispatched to
 		String target = req.getPathInfo();
@@ -148,7 +180,7 @@ public class MeleteJsfTool extends HttpServlet
 			if (target == null || "/".equals(target))
 			{
 				target = computeDefaultTarget();
-				
+
 				// make sure it's a valid path
 				if (!target.startsWith("/"))
 				{
@@ -162,7 +194,7 @@ public class MeleteJsfTool extends HttpServlet
 
 			// see if we want to change the specifically requested view
 			String newTarget = redirectRequestedTarget(target);
-			
+
 			// make sure it's a valid path
 			if (!newTarget.startsWith("/"))
 			{
@@ -192,28 +224,28 @@ public class MeleteJsfTool extends HttpServlet
 			{
 				String id = parts[2];
 				ThreadLocalManager.set("MELETE_MODULE_ID", id);
-				
+
 				target = "/" + parts[1];
 			}
 		}
 
-		//Add variable to autosave module and section changes
+		// Add variable to autosave module and section changes
 		if (target.startsWith("/edit_module"))
 		{
-			ThreadLocalManager.set("MELETE_SAVE_FROM" , "editModule");
+			ThreadLocalManager.set("MELETE_SAVE_FROM", "editModule");
 		}
 		else if (target.startsWith("/add_module"))
 		{
-			ThreadLocalManager.set("MELETE_SAVE_FROM" , "addModule");
+			ThreadLocalManager.set("MELETE_SAVE_FROM", "addModule");
 		}
 		else if (target.startsWith("/editmodulesections"))
 		{
-			ThreadLocalManager.set("MELETE_SAVE_FROM" , "Section");
+			ThreadLocalManager.set("MELETE_SAVE_FROM", "Section");
 		}
-	  	
-		// add the configured folder root and extension (if missing)		
+
+		// add the configured folder root and extension (if missing)
 		target = m_path + target;
-		
+
 		// add the default JSF extension (if we have no extension)
 		int lastSlash = target.lastIndexOf("/");
 		int lastDot = target.lastIndexOf(".");
@@ -221,7 +253,7 @@ public class MeleteJsfTool extends HttpServlet
 		{
 			target += JSF_EXT;
 		}
-				
+
 		// set the information that can be removed from return URLs
 		req.setAttribute(URL_PATH, m_path);
 		req.setAttribute(URL_EXT, ".jsp");
@@ -238,8 +270,7 @@ public class MeleteJsfTool extends HttpServlet
 		res.addHeader("Pragma", "no-cache");
 
 		// dispatch to the target
-		M_log.debug("dispatching path: " + req.getPathInfo() + " to: " + target + " context: "
-				+ getServletContext().getServletContextName());
+		M_log.debug("dispatching path: " + req.getPathInfo() + " to: " + target + " context: " + getServletContext().getServletContextName());
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(target);
 		dispatcher.forward(req, res);
 
@@ -277,40 +308,6 @@ public class MeleteJsfTool extends HttpServlet
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
 		dispatch(req, res);
-	}
-
-	/**
-	 * Access the Servlet's information display.
-	 * 
-	 * @return servlet information.
-	 */
-	public String getServletInfo()
-	{
-		return "Sakai JSF Tool Servlet";
-	}
-
-	/**
-	 * Initialize the servlet.
-	 * 
-	 * @param config
-	 *        The servlet config.
-	 * @throws ServletException
-	 */
-	public void init(ServletConfig config) throws ServletException
-	{
-		super.init(config);
-
-		m_default = config.getInitParameter("default");
-		m_path = config.getInitParameter("path");
-		m_defaultToLastView = "true".equals(config.getInitParameter("default.last.view"));
-
-		// make sure there is no "/" at the end of the path
-		if (m_path != null && m_path.endsWith("/"))
-		{
-			m_path = m_path.substring(0, m_path.length() - 1);
-		}
-
-		M_log.info("init: default: " + m_default + " path: " + m_path);
 	}
 
 	/**
@@ -353,6 +350,3 @@ public class MeleteJsfTool extends HttpServlet
 	}
 
 }
-
-
-
