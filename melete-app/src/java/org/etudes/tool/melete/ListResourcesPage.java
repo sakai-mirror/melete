@@ -23,54 +23,25 @@
 package org.etudes.tool.melete;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.faces.component.UICommand;
-import javax.faces.component.UIData;
-import javax.faces.component.UIInput;
-import javax.faces.component.UIViewRoot;
-
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIOutput;
 import javax.faces.component.UIParameter;
-
-import org.sakaiproject.util.ResourceLoader;
-
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ValueChangeEvent;
-import javax.faces.model.SelectItem;
-import javax.faces.component.UIInput;
-import javax.faces.component.UIViewRoot;
-import javax.faces.event.AbortProcessingException;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.ActionEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.etudes.component.app.melete.MeleteResource;
-import org.etudes.api.app.melete.MeleteLicenseService;
-
-import org.sakaiproject.component.cover.ServerConfigurationService;
-import org.etudes.api.app.melete.SectionService;
 import org.etudes.api.app.melete.MeleteCHService;
-import org.etudes.api.app.melete.exception.UserErrorException;
-
+import org.etudes.api.app.melete.SectionService;
+import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentResource;
-import org.sakaiproject.content.api.ContentResourceEdit;
-import org.sakaiproject.entity.api.ResourceProperties;
-import org.sakaiproject.entity.api.ResourcePropertiesEdit;
-import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.cover.ContentTypeImageService;
-import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.tool.cover.SessionManager;
-import org.sakaiproject.util.ResourceLoader;
-import javax.faces.model.SelectItem;
+import org.sakaiproject.entity.api.ResourceProperties;
 
 public class ListResourcesPage
 {
@@ -87,6 +58,16 @@ public class ListResourcesPage
 		boolean typeLink;
 		boolean typeLTI;
 
+		/**
+		 * constructor
+		 * 
+		 * @param resource_title
+		 * @param resource_id
+		 * @param resource_url
+		 * @param isTypeLink
+		 * @param resource_gif
+		 * @param typeLTI
+		 */
 		public DisplaySecResources(String resource_title, String resource_id, String resource_url, boolean isTypeLink, String resource_gif,
 				boolean typeLTI)
 		{
@@ -98,7 +79,7 @@ public class ListResourcesPage
 			this.typeLTI = typeLTI;
 		}
 
-		/*
+		/**
 		 * @return result of comparison
 		 */
 		public int compareTo(DisplaySecResources n)
@@ -230,6 +211,10 @@ public class ListResourcesPage
 			return resource_title;
 		}
 	}
+
+	/**
+	 * The comparator to sort list ascending or descending
+	 */
 	static Comparator<DisplaySecResources> SectionResourcesComparatorDesc = new Comparator<DisplaySecResources>()
 	{
 		public int compare(DisplaySecResources o1, DisplaySecResources o2)
@@ -258,6 +243,9 @@ public class ListResourcesPage
 
 	protected boolean shouldRenderUpload = false;
 
+	/**
+	 * Default constructor
+	 */
 	public ListResourcesPage()
 	{
 	}
@@ -280,7 +268,7 @@ public class ListResourcesPage
 				// get list of all resources for upload type for the current site
 				currSiteResourcesList = new ArrayList<DisplaySecResources>();
 
-				List<ContentResource> allmembers = null;
+				List<?> allmembers = null;
 				if (this.fromPage == null) return null;
 
 				// to create list of resource whose type is typeUpload
@@ -296,7 +284,7 @@ public class ListResourcesPage
 
 				if (this.fromPage.equals("ContentLTIServerView") || this.fromPage.equals("editContentLTIServerView"))
 				{
-					allmembers = getMeleteCHService().getListFromCollection(uploadCollId, getMeleteCHService().MIME_TYPE_LTI);
+					allmembers = getMeleteCHService().getListFromCollection(uploadCollId, MeleteCHService.MIME_TYPE_LTI);
 				}
 
 				if (this.fromPage.equals("manage_content"))
@@ -308,16 +296,16 @@ public class ListResourcesPage
 				{
 					return null;
 				}
-				Iterator<ContentResource> allmembers_iter = allmembers.iterator();
+				Iterator<?> allmembers_iter = allmembers.iterator();
 				String serverUrl = ServerConfigurationService.getServerUrl();
 				while (allmembers_iter != null && allmembers_iter.hasNext())
 				{
-					ContentResource cr = allmembers_iter.next();
+					ContentResource cr = (ContentResource) allmembers_iter.next();
 					String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 					if (displayName.length() > 50) displayName = displayName.substring(0, 50) + "...";
 					String rUrl = getMeleteCHService().getResourceUrl(cr.getId());
-					boolean rType = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LINK);
-					boolean rTypeLTI = cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LTI);
+					boolean rType = cr.getContentType().equals(MeleteCHService.MIME_TYPE_LINK);
+					boolean rTypeLTI = cr.getContentType().equals(MeleteCHService.MIME_TYPE_LTI);
 					String rgif = serverUrl + "/library/image/sakai/url.gif";
 					if (!rType && !rTypeLTI)
 					{
@@ -351,7 +339,7 @@ public class ListResourcesPage
 	 * 
 	 * @return resource list in chunks
 	 */
-	public List getDisplayResourcesList()
+	public List<DisplaySecResources> getDisplayResourcesList()
 	{
 		try
 		{
@@ -365,7 +353,7 @@ public class ListResourcesPage
 				displayResourcesList = null;
 				if (fromIndex >= 0 && toIndex > fromIndex && fromIndex <= currSiteResourcesList.size() && toIndex <= currSiteResourcesList.size())
 				{
-					displayResourcesList = (List) currSiteResourcesList.subList(fromIndex, toIndex);
+					displayResourcesList = (List<DisplaySecResources>) currSiteResourcesList.subList(fromIndex, toIndex);
 					logger.debug("displayResourcesList" + displayResourcesList.size());
 				}
 			}
@@ -503,6 +491,9 @@ public class ListResourcesPage
 		return this.fromPage;
 	}
 
+	/**
+	 * Refresh the list.
+	 */
 	public void refreshCurrSiteResourcesList()
 	{
 		currSiteResourcesList = null;
@@ -521,8 +512,8 @@ public class ListResourcesPage
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		UICommand cmdLink = (UICommand) evt.getComponent();
 
-		List cList = cmdLink.getChildren();
-		UIComponent comp = (UIComponent) cList.get(0);
+		// List<UIComponent> cList = cmdLink.getChildren();
+		// UIComponent comp = (UIComponent) cList.get(0);
 		// Mallika - Needed to add the if condition below since param tags aren't being
 		// rendered if file size is too large
 
@@ -573,7 +564,7 @@ public class ListResourcesPage
 		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
 
 		String courseId = mPage.getCurrentSiteId();
-		UIViewRoot root = ctx.getViewRoot();
+		// UIViewRoot root = ctx.getViewRoot();
 		/*
 		 * UIData table = (UIData) root.findComponent("ServerViewForm:ResourceListingForm").findComponent("table"); DisplaySecResources selectedDr = (DisplaySecResources) table.getRowData();
 		 * 
@@ -581,7 +572,7 @@ public class ListResourcesPage
 		 */
 		UICommand cmdLink = (UICommand) evt.getComponent();
 
-		List cList = cmdLink.getChildren();
+		List<?> cList = cmdLink.getChildren();
 		if (cList == null || cList.size() < 2) return;
 		UIParameter param1 = (UIParameter) cList.get(0);
 		UIParameter param2 = (UIParameter) cList.get(1);

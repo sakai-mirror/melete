@@ -24,8 +24,6 @@
 package org.etudes.tool.melete;
 
 import java.io.Serializable;
-
-import org.sakaiproject.util.ResourceLoader;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -36,6 +34,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.SectionService;
+import org.sakaiproject.util.ResourceLoader;
 
 public class DeleteResourcePage implements Serializable
 {

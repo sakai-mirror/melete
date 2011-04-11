@@ -325,7 +325,7 @@ public class DeleteModulePage implements Serializable/* ,ToolBean */
 			{
 				sectionService.deleteSections(this.sectionBeans, getCourseId(), getUserId());
 
-				Iterator it = this.sectionBeans.iterator();
+				Iterator<SectionBean> it = this.sectionBeans.iterator();
 				while (it.hasNext())
 				{
 					SectionBean obj = (SectionBean) it.next();
