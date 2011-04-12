@@ -24,34 +24,11 @@
 
 package org.etudes.tool.melete;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import org.sakaiproject.util.ResourceLoader;
-
-import javax.faces.application.FacesMessage;
-import javax.faces.component.UIData;
-import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-
 import javax.faces.el.ValueBinding;
-import javax.faces.event.ActionEvent;
-
-import javax.faces.model.SelectItem;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.sakaiproject.component.cover.ServerConfigurationService;
-import org.sakaiproject.content.cover.ContentTypeImageService;
-import org.sakaiproject.content.api.ContentResource;
-import org.sakaiproject.entity.api.ResourceProperties;
 import org.etudes.api.app.melete.MeleteCHService;
 
 public class ManageResourcesPage
@@ -62,6 +39,9 @@ public class ManageResourcesPage
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(ManageResourcesPage.class);
 
+	/**
+	 * default constructor
+	 */
 	public ManageResourcesPage()
 	{
 

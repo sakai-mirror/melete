@@ -22,39 +22,31 @@
 
 package org.etudes.tool.melete;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.etudes.component.app.melete.*;
-import org.etudes.api.app.melete.*;
-import org.sakaiproject.util.ResourceLoader;
-
-import javax.faces.application.Application;
-import javax.faces.application.FacesMessage;
-import javax.faces.component.html.*;
-import javax.faces.component.*;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.io.*;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UICommand;
+import javax.faces.component.UIParameter;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.event.ActionEvent;
-
-import javax.faces.context.ExternalContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
-import org.sakaiproject.util.ResourceLoader;
-import org.sakaiproject.component.cover.ServerConfigurationService;
-
-import org.etudes.api.app.melete.BookmarkService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.BookmarkObjService;
+import org.etudes.api.app.melete.BookmarkService;
+import org.etudes.api.app.melete.SectionService;
+import org.etudes.component.app.melete.Bookmark;
+import org.etudes.component.app.melete.Section;
+import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.sakaiproject.util.ResourceLoader;
 
 public class BookmarkPage implements Serializable
 {
@@ -70,12 +62,10 @@ public class BookmarkPage implements Serializable
 	protected SectionService sectionService;
 
 	private String sectionId;
-	
+
 	private String sectionTitle;
 
-	private List bmList;
-
-	private boolean instRole;
+	private List<? extends BookmarkObjService> bmList;
 
 	private int deleteBookmarkId;
 
@@ -85,165 +75,214 @@ public class BookmarkPage implements Serializable
 
 	private String fromPage;
 
-	private boolean trueFlag = true;
-
-	/** Dependency:  The logging service. */
+	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(BookmarkPage.class);
 
+	/**
+	 * default constructor
+	 */
 	public BookmarkPage()
 	{
 
 	}
 
-
+	/**
+	 * Add a Bookmark.
+	 * 
+	 * @return
+	 */
 	public String addBookmark()
 	{
-		  FacesContext context = FacesContext.getCurrentInstance();
-		  ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 
-	  if (bookmarkService == null)
-	    bookmarkService = getBookmarkService();
+		if (bookmarkService == null) bookmarkService = getBookmarkService();
 
-	  /*if (bookmark == null)
-	    bookmark = new Bookmark();*/
+		/*
+		 * if (bookmark == null) bookmark = new Bookmark();
+		 */
 
-	    this.bookmark.setSiteId(getMeleteSiteAndUserInfo().getCurrentSiteId());
-	    this.bookmark.setUserId(getMeleteSiteAndUserInfo().getCurrentUser().getId());
-	    if (null != this.sectionId) this.bookmark.setSectionId(Integer.parseInt(this.sectionId));
-	    try
-	    {
-	      bookmarkService.insertBookmark(this.bookmark);
-	    }catch(Exception ex)
+		this.bookmark.setSiteId(getMeleteSiteAndUserInfo().getCurrentSiteId());
+		this.bookmark.setUserId(getMeleteSiteAndUserInfo().getCurrentUser().getId());
+		if (null != this.sectionId) this.bookmark.setSectionId(Integer.parseInt(this.sectionId));
+		try
 		{
-	    	String errMsg = bundle.getString(ex.getMessage());
-	    	context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,ex.getMessage(),errMsg));
+			bookmarkService.insertBookmark(this.bookmark);
+		}
+		catch (Exception ex)
+		{
+			String errMsg = bundle.getString(ex.getMessage());
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), errMsg));
 			return "failure";
 		}
-	    resetValues();
-	   return "confirm_bookmark";
+		resetValues();
+		return "confirm_bookmark";
 
 	}
 
-	   public void viewSection(ActionEvent evt)
-		{
-			FacesContext ctx = FacesContext.getCurrentInstance();
-			UIViewRoot root = ctx.getViewRoot();
+	/**
+	 * On clicking the bookmark title from the bookmark listing, it takes student user to view the section.
+	 * 
+	 * @param evt
+	 *        Action Event
+	 */
+	public void viewSection(ActionEvent evt)
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
 
-			UICommand cmdLink = (UICommand)evt.getComponent();
+		UICommand cmdLink = (UICommand) evt.getComponent();
 
-	      	List cList = cmdLink.getChildren();
-	      	if(cList == null || cList.size() <1) return;
-	    	UIParameter param1 = (UIParameter) cList.get(0);
-			ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
+		List<?> cList = cmdLink.getChildren();
+		if (cList == null || cList.size() < 1) return;
+		UIParameter param1 = (UIParameter) cList.get(0);
+		ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
 
-			ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
+		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
 
-			vsPage.resetValues();
-			vsPage.setSectionId(((Integer)param1.getValue()).intValue());
-			Section sec = (Section)sectionService.getSection(((Integer)param1.getValue()).intValue());
-			vsPage.setModuleId(sec.getModuleId());
-			vsPage.setModuleSeqNo(sec.getModule().getCoursemodule().getSeqNo());
-			vsPage.setSection(sec);
-			vsPage.setModule(null);
+		vsPage.resetValues();
+		vsPage.setSectionId(((Integer) param1.getValue()).intValue());
+		Section sec = (Section) sectionService.getSection(((Integer) param1.getValue()).intValue());
+		vsPage.setModuleId(sec.getModuleId());
+		vsPage.setModuleSeqNo(sec.getModule().getCoursemodule().getSeqNo());
+		vsPage.setSection(sec);
+		vsPage.setModule(null);
 
-		}
+	}
 
+	/**
+	 * Navigation
+	 */
 	public String redirectViewSection()
 	{
 		return "view_section";
 	}
 
-	  public void editSection(ActionEvent evt)
-		{
-			FacesContext ctx = FacesContext.getCurrentInstance();
-			UIViewRoot root = ctx.getViewRoot();
-			UICommand cmdLink = (UICommand)evt.getComponent();
+	/**
+	 * On clicking the bookmark title from the bookmark listing, it takes author user to edit the section.
+	 * 
+	 * @param evt
+	 *        ActionEvent
+	 */
+	public void editSection(ActionEvent evt)
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
 
-	      	List cList = cmdLink.getChildren();
-	      	if(cList == null || cList.size() <1) return;
-	    	UIParameter param1 = (UIParameter) cList.get(0);
-	    	Section sec = (Section)sectionService.getSection(((Integer)param1.getValue()).intValue());
+		UICommand cmdLink = (UICommand) evt.getComponent();
 
-			ValueBinding binding = Util.getBinding("#{editSectionPage}");
-			EditSectionPage esPage = (EditSectionPage) binding.getValue(ctx);
-			esPage.setEditInfo(sec);
-		}
+		List<?> cList = cmdLink.getChildren();
+		if (cList == null || cList.size() < 1) return;
+		UIParameter param1 = (UIParameter) cList.get(0);
+		Section sec = (Section) sectionService.getSection(((Integer) param1.getValue()).intValue());
 
-	  public String redirectEditSection()
-		{
-			return "editmodulesections";
-		}
+		ValueBinding binding = Util.getBinding("#{editSectionPage}");
+		EditSectionPage esPage = (EditSectionPage) binding.getValue(ctx);
+		esPage.setEditInfo(sec);
+	}
 
-	  public void deleteAction(ActionEvent evt)
-		{
-			UICommand cmdLink = (UICommand)evt.getComponent();
+	/**
+	 * Navigation
+	 */
+	public String redirectEditSection()
+	{
+		return "editmodulesections";
+	}
 
-	      	List cList = cmdLink.getChildren();
-	      	if(cList == null || cList.size() <2) return;
-	    	UIParameter param1 = (UIParameter) cList.get(0);
-	    	UIParameter param2 = (UIParameter) cList.get(1);
+	/**
+	 * Sets the delete bookmark values.
+	 * 
+	 * @param evt
+	 *        ActionEvent
+	 */
+	public void deleteAction(ActionEvent evt)
+	{
+		UICommand cmdLink = (UICommand) evt.getComponent();
 
-		    setDeleteBookmarkId(((Integer)param1.getValue()).intValue());
-			setDeleteBookmarkTitle((String)param2.getValue());
-			return;
-		}
+		List<?> cList = cmdLink.getChildren();
+		if (cList == null || cList.size() < 2) return;
+		UIParameter param1 = (UIParameter) cList.get(0);
+		UIParameter param2 = (UIParameter) cList.get(1);
 
-	  public String redirectDeleteLink()
-		{
-			 return "delete_bookmark";
-		}
+		setDeleteBookmarkId(((Integer) param1.getValue()).intValue());
+		setDeleteBookmarkTitle((String) param2.getValue());
+		return;
+	}
 
+	/**
+	 * Navigation
+	 */
+	public String redirectDeleteLink()
+	{
+		return "delete_bookmark";
+	}
 
+	/**
+	 * Deletes the Bookmark.
+	 * 
+	 * @return
+	 */
 	public String deleteBookmark()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
-		 ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 
 		try
-	    {
-	      bookmarkService.deleteBookmark(this.deleteBookmarkId);
-	    }catch(Exception ex)
 		{
-	    	String errMsg = bundle.getString(ex.getMessage());
-	    	context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,ex.getMessage(),errMsg));
+			bookmarkService.deleteBookmark(this.deleteBookmarkId);
+		}
+		catch (Exception ex)
+		{
+			String errMsg = bundle.getString(ex.getMessage());
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), errMsg));
 			return "failure";
 		}
-	    resetValues();
-	    //setFromPage("list_bookmarks");
-	    return "list_bookmarks";
+		resetValues();
+		// setFromPage("list_bookmarks");
+		return "list_bookmarks";
 	}
 
+	/**
+	 * Cancel delete bookmarks.
+	 * 
+	 * @return
+	 */
 	public String cancelDeleteBookmark()
-  	{
-  		return "list_bookmarks";
-  	}
+	{
+		return "list_bookmarks";
+	}
 
-
+	/**
+	 * Reset Values.
+	 */
 	public void resetValues()
 	{
-      deleteBookmarkId = 0;
-      deleteBookmarkTitle = null;
-      bmList = null;
-      nobmsFlag = true;
+		deleteBookmarkId = 0;
+		deleteBookmarkTitle = null;
+		bmList = null;
+		nobmsFlag = true;
 	}
 
+	/**
+	 * Export Notes from bookmarks as siteTitlexxxx_my_bookmarks_notes.txt
+	 * 
+	 * @param evt
+	 *        ActionEvent
+	 */
 	public void exportNotes(ActionEvent evt)
 	{
 		String packagingdirpath = ServerConfigurationService.getString("melete.packagingDir", "");
 		FacesContext context = FacesContext.getCurrentInstance();
 
 		File packagedir = null;
-		ResourceLoader bundle = new ResourceLoader(
-		"org.etudes.tool.melete.bundle.Messages");
-		try {
-			if(packagingdirpath == null || packagingdirpath.length() <=0 )
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		try
+		{
+			if (packagingdirpath == null || packagingdirpath.length() <= 0)
 			{
 				logger.warn("Melete Packaging Dir property is not set. Please check melete's readme file. ");
 				return;
 			}
 			File basePackDir = new File(packagingdirpath);
-			if (!basePackDir.exists())
-				basePackDir.mkdirs();
+			if (!basePackDir.exists()) basePackDir.mkdirs();
 
 			String title = getMeleteSiteAndUserInfo().getCourseTitle();
 			title = title.trim();
@@ -251,68 +290,91 @@ public class BookmarkPage implements Serializable
 			String courseId = getMeleteSiteAndUserInfo().getCurrentSiteId();
 			String userId = getMeleteSiteAndUserInfo().getCurrentUser().getId();
 
-			packagedir = new File(basePackDir.getAbsolutePath()
-					+ File.separator + courseId + "_" + userId + File.separator + title.replace(' ', '_'));
+			packagedir = new File(basePackDir.getAbsolutePath() + File.separator + courseId + "_" + userId + File.separator + title.replace(' ', '_'));
 
-			if (!packagedir.exists())
-				packagedir.mkdirs();
+			if (!packagedir.exists()) packagedir.mkdirs();
 
-			String outputfilename = packagedir.getParentFile()
-			.getAbsolutePath() + File.separator  + title.replace(' ', '_') + "_my_bookmarks_notes.txt";
+			String outputfilename = packagedir.getParentFile().getAbsolutePath() + File.separator + title.replace(' ', '_')
+			+ "_my_bookmarks_notes.txt";
 
 			bookmarkService.createFile(bmList, outputfilename);
 			File outfile = new File(outputfilename);
 
 			download(new File(outfile.getAbsolutePath()));
 
-			FacesContext facesContext = FacesContext
-			.getCurrentInstance();
+			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.responseComplete();
 
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 			String errMsg = bundle.getString("list_bookmarks_export_error");
 			FacesMessage msg = new FacesMessage(null, errMsg);
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			context.addMessage(null, msg);
-		} finally {
+		}
+		finally
+		{
 			// delete the files - Directory courseid_instructorid and
 			// it's child
-			if (packagedir != null && packagedir.exists())
-				bookmarkService.deleteFiles(packagedir
-						.getParentFile());
+			if (packagedir != null && packagedir.exists()) bookmarkService.deleteFiles(packagedir.getParentFile());
 
 		}
 
 	}
 
-
+	/**
+	 * Navigation
+	 */
 	public String redirectExportNotes()
 	{
 		return "list_bookmarks";
 	}
 
+	/**
+	 * Reset values and go to Listing page.
+	 * 
+	 * @return
+	 */
 	public String gotoMyBookmarks()
 	{
 		resetValues();
 		FacesContext context = FacesContext.getCurrentInstance();
-		setFromPage((String)context.getExternalContext().getRequestParameterMap().get("fromPage"));
+		setFromPage((String) context.getExternalContext().getRequestParameterMap().get("fromPage"));
 		return "list_bookmarks";
 	}
 
+	/**
+	 * Reset values and go to Listing page.
+	 * 
+	 * @param from
+	 *        The start point
+	 * @return
+	 */
 	public String gotoMyBookmarks(String from)
 	{
 		resetValues();
 		setFromPage(from);
 		return "list_bookmarks";
 	}
-	
+
+	/**
+	 * Refresh the page.
+	 * 
+	 * @return
+	 */
 	public String refreshAction()
 	{
 		resetValues();
 		return "list_bookmarks";
 	}
 
+	/**
+	 * Go back to start page.
+	 * 
+	 * @return
+	 */
 	public String returnAction()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -321,35 +383,35 @@ public class BookmarkPage implements Serializable
 		{
 			if (this.fromPage.equals("list_auth_modules"))
 			{
-		      ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
-		      ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(context);
-	          lamPage.resetValues();
+				ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+				ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(context);
+				lamPage.resetValues();
 			}
 			if (this.fromPage.equals("list_modules_student"))
 			{
-	          ValueBinding binding = Util.getBinding("#{listModulesPage}");
-		      ListModulesPage lmPage = (ListModulesPage) binding.getValue(context);
-	         lmPage.resetValues();
+				ValueBinding binding = Util.getBinding("#{listModulesPage}");
+				ListModulesPage lmPage = (ListModulesPage) binding.getValue(context);
+				lmPage.resetValues();
 			}
 			if (this.fromPage.equals("view_section"))
 			{
-			  ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
-		      ViewSectionsPage vsPage = (ViewSectionsPage)binding.getValue(context);
-		      vsPage.resetValues();
-		      vsPage.setSection(null);
-		      vsPage.setModule(null);
+				ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
+				ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(context);
+				vsPage.resetValues();
+				vsPage.setSection(null);
+				vsPage.setModule(null);
 			}
 			if (this.fromPage.equals("view_module"))
 			{
-		      ValueBinding binding = Util.getBinding("#{viewModulesPage}");
-	    	  ViewModulesPage vmPage = (ViewModulesPage)binding.getValue(context);
-	          vmPage.setMdbean(null);
+				ValueBinding binding = Util.getBinding("#{viewModulesPage}");
+				ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
+				vmPage.setMdbean(null);
 			}
 			if (this.fromPage.equals("view_whats_next"))
 			{
-	          ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
-	          ViewNextStepsPage vnPage = (ViewNextStepsPage)binding.getValue(context);
-	          vnPage.setModule(null);
+				ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
+				ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(context);
+				vnPage.setModule(null);
 			}
 		}
 		else
@@ -359,181 +421,294 @@ public class BookmarkPage implements Serializable
 		return this.fromPage;
 	}
 
-
 	/**
 	 * writes the text file to browser
-	 *
-	 * @param file -
-	 *            text file to download
+	 * 
+	 * @param file
+	 *        - text file to download
 	 * @throws Exception
 	 */
-	private void download(File file) throws Exception {
+	private void download(File file) throws Exception
+	{
 		FileInputStream fis = null;
 		ServletOutputStream out = null;
-		try {
-			String disposition = "attachment; filename=\"" + file.getName()
-					+ "\"";
+		try
+		{
+			String disposition = "attachment; filename=\"" + file.getName() + "\"";
 			fis = new FileInputStream(file);
 
 			FacesContext cxt = FacesContext.getCurrentInstance();
 			ExternalContext context = cxt.getExternalContext();
-			HttpServletResponse response = (HttpServletResponse) context
-					.getResponse();
+			HttpServletResponse response = (HttpServletResponse) context.getResponse();
 			response.setContentType("application/text"); // application/text
 			response.addHeader("Content-Disposition", disposition);
 			// Contributed by Diego for ME-233
 			response.setHeader("Pragma", "public");
-			response.setHeader("Cache-Control",
-					"public, post-check=0, must-revalidate, pre-check=0");
+			response.setHeader("Cache-Control", "public, post-check=0, must-revalidate, pre-check=0");
 
 			out = response.getOutputStream();
 
 			int len;
 			byte buf[] = new byte[102400];
-			while ((len = fis.read(buf)) > 0) {
+			while ((len = fis.read(buf)) > 0)
+			{
 				out.write(buf, 0, len);
 			}
 
 			out.flush();
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			throw e;
-		} finally {
-			try {
-				if (out != null)
-					out.close();
-			} catch (IOException e1) {
+		}
+		finally
+		{
+			try
+			{
+				if (out != null) out.close();
+			}
+			catch (IOException e1)
+			{
 			}
 
-			try {
-				if (fis != null)
-					fis.close();
-			} catch (IOException e2) {
+			try
+			{
+				if (fis != null) fis.close();
+			}
+			catch (IOException e2)
+			{
 			}
 		}
 	}
 
-	public int getDeleteBookmarkId() {
-	      return deleteBookmarkId;
-	   }
-
-    public void setDeleteBookmarkId(int deleteBookmarkId) {
-	     this.deleteBookmarkId = deleteBookmarkId;
-	 }
-
-	public String getDeleteBookmarkTitle() {
-		  return deleteBookmarkTitle;
+	/**
+	 * Get to be deleted bookmark Id
+	 * 
+	 * @return
+	 */
+	public int getDeleteBookmarkId()
+	{
+		return deleteBookmarkId;
 	}
 
-    public void setDeleteBookmarkTitle(String deleteBookmarkTitle) {
-		     this.deleteBookmarkTitle = deleteBookmarkTitle;
+	/**
+	 * 
+	 * @param deleteBookmarkId
+	 *        set bookmark Id
+	 */
+	public void setDeleteBookmarkId(int deleteBookmarkId)
+	{
+		this.deleteBookmarkId = deleteBookmarkId;
 	}
 
+	/**
+	 * Get to be deleted bookmark title
+	 * 
+	 * @return
+	 */
+	public String getDeleteBookmarkTitle()
+	{
+		return deleteBookmarkTitle;
+	}
+
+	/**
+	 * 
+	 * @param deleteBookmarkTitle
+	 *        set bookmark title
+	 */
+	public void setDeleteBookmarkTitle(String deleteBookmarkTitle)
+	{
+		this.deleteBookmarkTitle = deleteBookmarkTitle;
+	}
+
+	/**
+	 * Get the user's role in Melete tool of the site.
+	 * 
+	 * @return true if author otherwise false.
+	 */
 	public boolean getInstRole()
-    {
+	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		
-		try {
+	
+		try
+		{
 			return getMeleteSiteAndUserInfo().isUserAuthor();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			String errMsg = bundle.getString("auth_failed");
-			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"auth_failed",errMsg));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "auth_failed", errMsg));
 			logger.warn(e.toString());
 		}
-    	return false;
-    }
+		return false;
+	}
 
+	/**
+	 * Get no bookmarks flag and show the message.
+	 * 
+	 * @return
+	 */
 	public boolean getNobmsFlag()
 	{
 		getBmList();
 		return this.nobmsFlag;
 	}
 
+	/**
+	 * Set no bookmarks flag.
+	 * 
+	 * @param nobmsFlag
+	 *        No Bookmarks flag
+	 */
 	public void setNobmsFlag(boolean nobmsFlag)
 	{
 		this.nobmsFlag = nobmsFlag;
 	}
 
-	public String getFromPage() {
-		  return fromPage;
+	/**
+	 * Get the start page
+	 * 
+	 * @return
+	 */
+	public String getFromPage()
+	{
+		return fromPage;
 	}
 
-    public void setFromPage(String fromPage) {
-		     this.fromPage = fromPage;
+	/**
+	 * Set the start page
+	 * 
+	 * @param fromPage
+	 *        the start page
+	 */
+	public void setFromPage(String fromPage)
+	{
+		this.fromPage = fromPage;
 	}
 
-    public BookmarkObjService getBookmark() {
- 	  FacesContext context = FacesContext.getCurrentInstance();
-	  if (bookmark == null)
-	  {
-		  if (null != this.sectionId)
-		  {	  
-		    bookmark = bookmarkService.getBookmark(getMeleteSiteAndUserInfo().getCurrentUser().getId(),getMeleteSiteAndUserInfo().getCurrentSiteId(),Integer.parseInt(this.sectionId));
-            if (bookmark == null)
-            {
-        	  bookmark = new Bookmark();
-        	  if (null != this.sectionId)
-        	  {	  
-        	    bookmark.setTitle(getSectionTitle());
-        	  }  
-             }
-		  }  
-	  }
-	return bookmark;
-    }
+	/**
+	 * Read Bookmark from the database.
+	 * 
+	 * @return
+	 */
+	public BookmarkObjService getBookmark()
+	{
 
-   public void setBookmark(BookmarkObjService bookmark) {
-    this.bookmark = bookmark;
-  }
+		if (bookmark == null)
+		{
+			if (null != this.sectionId)
+			{
+				bookmark = bookmarkService.getBookmark(getMeleteSiteAndUserInfo().getCurrentUser().getId(), getMeleteSiteAndUserInfo()
+						.getCurrentSiteId(), Integer.parseInt(this.sectionId));
+				if (bookmark == null)
+				{
+					bookmark = new Bookmark();
+					if (null != this.sectionId)
+					{
+						bookmark.setTitle(getSectionTitle());
+					}
+				}
+			}
+		}
+		return bookmark;
+	}
 
+	/**
+	 * 
+	 * @param bookmark
+	 */
+	public void setBookmark(BookmarkObjService bookmark)
+	{
+		this.bookmark = bookmark;
+	}
 
-   public List getBmList()
-   {
-	   FacesContext context = FacesContext.getCurrentInstance();
-	   
-	   if (bmList == null)
-	   {
-		  setNobmsFlag(true);
-		  bmList = bookmarkService.getBookmarks(getMeleteSiteAndUserInfo().getCurrentUser().getId(),getMeleteSiteAndUserInfo().getCurrentSiteId());
-	    
-	     if ((bmList != null)&&(bmList.size() > 0))
-	     {
-		   setNobmsFlag(false);
-	     }
-	     
-	   }
-	   return bmList;
-   }
+	/**
+	 * Get all bookmarks.
+	 * 
+	 * @return a list of BookmarkObjService objects
+	 */
+	public List<?> getBmList()
+	{
+		if (bmList == null)
+		{
+			setNobmsFlag(true);
+			bmList = bookmarkService.getBookmarks(getMeleteSiteAndUserInfo().getCurrentUser().getId(), getMeleteSiteAndUserInfo().getCurrentSiteId());
 
-   public void setBmList(List bmList)
-   {
-	   this.bmList = bmList;
-   }
+			if ((bmList != null) && (bmList.size() > 0))
+			{
+				setNobmsFlag(false);
+			}
 
-  public String getSectionId() {
-      return sectionId;
-   }
+		}
+		return bmList;
+	}
 
-   public void setSectionId(String sectionId) {
-     this.sectionId = sectionId;
-   }
-   
-   public String getSectionTitle() {
-	      return sectionTitle;
-   }
+	public void setBmList(List<? extends BookmarkObjService> bmList)
+	{
+		this.bmList = bmList;
+	}
 
-   public void setSectionTitle(String sectionTitle) {
-	     this.sectionTitle = sectionTitle;
-   }   
+	/**
+	 * Get the section Id.
+	 * 
+	 * @return
+	 */
+	public String getSectionId()
+	{
+		return sectionId;
+	}
 
-   public String getTitle(int sectionId) {
-	   return sectionService.getSectionTitle(sectionId);
-   }
+	/**
+	 * Set section Id
+	 * 
+	 * @param sectionId
+	 */
+	public void setSectionId(String sectionId)
+	{
+		this.sectionId = sectionId;
+	}
 
+	/**
+	 * Get section title
+	 * 
+	 * @return
+	 */
+	public String getSectionTitle()
+	{
+		return sectionTitle;
+	}
 
-   public boolean  getTrueFlag() {
-	  	return true;
-   }
+	/**
+	 * 
+	 * @param sectionTitle
+	 */
+	public void setSectionTitle(String sectionTitle)
+	{
+		this.sectionTitle = sectionTitle;
+	}
+
+	/**
+	 * Get Section's title from db.
+	 * 
+	 * @param sectionId
+	 *        The section Id
+	 * @return
+	 */
+	public String getTitle(int sectionId)
+	{
+		return sectionService.getSectionTitle(sectionId);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean getTrueFlag()
+	{
+		return true;
+	}
+
 	/**
 	 * @return Returns the BookmarkService.
 	 */
@@ -543,7 +718,8 @@ public class BookmarkPage implements Serializable
 	}
 
 	/**
-	 * @param bookmarkService The bookmarkService to set.
+	 * @param bookmarkService
+	 *        The bookmarkService to set.
 	 */
 	public void setBookmarkService(BookmarkService bookmarkService)
 	{
@@ -551,32 +727,36 @@ public class BookmarkPage implements Serializable
 	}
 
 	/**
-     * @return Returns the SectionService.
-     */
-    public SectionService getSectionService() {
-            return sectionService;
-    }
+	 * @return Returns the SectionService.
+	 */
+	public SectionService getSectionService()
+	{
+		return sectionService;
+	}
 
-    /**
-     * @param SectionService The SectionService to set.
-     */
-    public void setSectionService(SectionService sectionService) {
-            this.sectionService = sectionService;
-    }
+	/**
+	 * @param SectionService
+	 *        The SectionService to set.
+	 */
+	public void setSectionService(SectionService sectionService)
+	{
+		this.sectionService = sectionService;
+	}
 
-    /**
+	/**
 	 * get MeleteSiteAndUserInfo
-	 *
+	 * 
 	 * @return
 	 */
-	private MeleteSiteAndUserInfo getMeleteSiteAndUserInfo() {
-		if (meleteSiteAndUserInfo == null) {
+	private MeleteSiteAndUserInfo getMeleteSiteAndUserInfo()
+	{
+		if (meleteSiteAndUserInfo == null)
+		{
 			FacesContext context = FacesContext.getCurrentInstance();
 			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 			meleteSiteAndUserInfo = (MeleteSiteAndUserInfo) binding.getValue(context);
 		}
-		return meleteSiteAndUserInfo;		
+		return meleteSiteAndUserInfo;
 	}
-
 
 }

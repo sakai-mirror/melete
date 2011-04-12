@@ -37,7 +37,7 @@ public interface BookmarkService
 	 *        Filename to export to
 	 * @throws Exception
 	 */
-	public void createFile(List bmList, String fileName) throws Exception;
+	public void createFile(List<? extends BookmarkObjService> bmList, String fileName) throws Exception;
 
 	/**
 	 * Deletes a bookmark
@@ -78,7 +78,7 @@ public interface BookmarkService
 	 *        Site id
 	 * @return List of bookmarks, empty list if none are found
 	 */
-	public List getBookmarks(String userId, String siteId);
+	public List<? extends BookmarkObjService> getBookmarks(String userId, String siteId);
 
 	/**
 	 * Returns the section bookmarked as the last visited. For students, checks to see if special access is defined. If restricted, returns 0.

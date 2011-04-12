@@ -29,39 +29,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
-
-import javax.faces.component.UIColumn;
-import javax.faces.component.html.HtmlCommandButton;
-import javax.faces.component.html.HtmlOutputText;
-import javax.faces.component.html.HtmlPanelGrid;
-import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentResource;
-import org.sakaiproject.entity.api.Entity;
 import org.sakaiproject.entity.api.ResourceProperties;
-import org.sakaiproject.tool.cover.ToolManager;
-
 
 /**
- * @author Rashmi Created on Jan 7, 2005 To get the server side files for wysiwyg editor remote browse
+ *Get the server side files for wysiwyg editor remote browse
  */
 class FileExtensionFilter implements FilenameFilter
 {
-	private String ext = "*";
-
 	private String ext1 = ".gif";
 
 	private String ext2 = ".jpg";
-
-	public FileExtensionFilter(String ext)
-	{
-		this.ext = ext;
-	}
 
 	public boolean accept(File dir, String name)
 	{
@@ -87,18 +70,17 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 
 	protected Log logger = LogFactory.getLog(RemoteBrowserFile.class);
 
-	private String remoteDirLocation;
-
-	private String commonDirLocation;
-
 	private MeleteCHService meleteCHService;
 
 	private ArrayList<RemoteBrowserFile> remoteFiles = null;
 
 	private ArrayList<RemoteBrowserFile> remoteLinkFiles = null;
-	
+
 	private String displayName;
-	
+
+	/**
+	 * default constructor
+	 */
 	public RemoteBrowserFile()
 	{
 		this.fileName = null;
@@ -107,6 +89,13 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 		this.displayName = null;
 	}
 
+	/**
+	 * Full constructor
+	 * 
+	 * @param filename
+	 * @param sz
+	 * @param mdate
+	 */
 	public RemoteBrowserFile(String filename, long sz, long mdate)
 	{
 		this.fileName = filename;
@@ -115,6 +104,12 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 		this.displayName = filename;
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param filename
+	 * @param sz
+	 */
 	public RemoteBrowserFile(String filename, long sz)
 	{
 		this.fileName = filename;
@@ -122,7 +117,14 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 		this.modifiedDate = new Date();
 		this.displayName = filename;
 	}
-	
+
+	/**
+	 * Constructor
+	 * 
+	 * @param filename
+	 * @param sz
+	 * @param displayname
+	 */
 	public RemoteBrowserFile(String filename, long sz, String displayname)
 	{
 		this.fileName = filename;
@@ -131,47 +133,92 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 		this.displayName = displayname;
 	}
 
+	/**
+	 * To sort alphabetically
+	 */
 	public int compareTo(RemoteBrowserFile n)
 	{
 		int res = fileName.compareTo(n.getFileName());
 		return res;
 	}
 
+	/**
+	 * Get the URL of item from content hosting
+	 * 
+	 * @return
+	 */
 	public String getFileName()
 	{
 		return fileName;
 	}
 
+	/**
+	 * Get the File size
+	 * 
+	 * @return
+	 */
 	public long getSize()
 	{
 		return size;
 	}
 
+	/**
+	 * Get the last Modified Date
+	 * 
+	 * @return
+	 */
 	public Date getModifiedDate()
 	{
 		return modifiedDate;
 	}
 
+	/**
+	 * Set the file URL
+	 * 
+	 * @param fileName
+	 */
 	public void setFileName(String fileName)
 	{
 		this.fileName = fileName;
 	}
 
+	/**
+	 * Set file size
+	 * 
+	 * @param size
+	 */
 	public void setSize(long size)
 	{
 		this.size = size;
 	}
 
+	/**
+	 * Set Modified date
+	 * 
+	 * @param modifiedDate
+	 */
 	public void setModifiedDate(Date modifiedDate)
 	{
 		this.modifiedDate = modifiedDate;
 	}
 
-	public String getDisplayName() {
+	/**
+	 * Get display name
+	 * 
+	 * @return
+	 */
+	public String getDisplayName()
+	{
 		return displayName;
 	}
 
-	public void setDisplayName(String displayName) {
+	/**
+	 * set display name of resource
+	 * 
+	 * @param displayName
+	 */
+	public void setDisplayName(String displayName)
+	{
 		this.displayName = displayName;
 	}
 
@@ -192,8 +239,10 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 		return serverConfigurationService.getServerUrl() + "/etudes-melete-tool/melete/commonfilebrowser.jsf";
 	}
 
-	/*
-	 * new method to get files from collection
+	/**
+	 * Get pictures from collection
+	 * 
+	 * @return a collection of RemoteBrowserFile objects
 	 */
 	public List<RemoteBrowserFile> getRemoteBrowserFiles()
 	{
@@ -205,17 +254,17 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 				// 1. get upload collection
 				String uploadCollId = getMeleteCHService().getUploadCollectionId();
 				// 2. list resources under collection
-				List allImgMembers = getMeleteCHService().getListofImagesFromCollection(uploadCollId);
+				List<?> allImgMembers = getMeleteCHService().getListofImagesFromCollection(uploadCollId);
 				// 3. add resources info in remoteFiles array as obj of RemoteBrowserFile
-				ListIterator allmembers_iter = allImgMembers.listIterator();
+				ListIterator<?> allmembers_iter = allImgMembers.listIterator();
 				while (allmembers_iter != null && allmembers_iter.hasNext())
 				{
 					ContentResource cr = (ContentResource) allmembers_iter.next();
 					String fileUrl = getMeleteCHService().getResourceUrl(cr.getId());
-					fileUrl = fileUrl.substring(fileUrl.lastIndexOf("/")+1);
+					fileUrl = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
 					String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
-					RemoteBrowserFile ob = new RemoteBrowserFile(fileUrl, cr.getContentLength(),displayName);
-					//RemoteBrowserFile ob = new RemoteBrowserFile(fileUrl.substring(fileUrl.lastIndexOf("/")+1), cr.getContentLength());
+					RemoteBrowserFile ob = new RemoteBrowserFile(fileUrl, cr.getContentLength(), displayName);
+					// RemoteBrowserFile ob = new RemoteBrowserFile(fileUrl.substring(fileUrl.lastIndexOf("/")+1), cr.getContentLength());
 					remoteFiles.add(ob);
 				}
 				java.util.Collections.sort(remoteFiles);
@@ -228,8 +277,10 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 		return remoteFiles;
 	}
 
-	/*
-	 * new method to get links from collection
+	/**
+	 * Get link items from collection
+	 * 
+	 * @return List of RemoteBrowserFile objects
 	 */
 	public List<RemoteBrowserFile> getRemoteBrowserLinkFiles()
 	{
@@ -242,18 +293,18 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 				String uploadCollId = getMeleteCHService().getUploadCollectionId();
 				// 2. list resources under collection
 				// List allImgMembers = getMeleteCHService().getListofLinksFromCollection(uploadCollId);
-				List allImgMembers = getMeleteCHService().getListofMediaFromCollection(uploadCollId);
+				List<?> allImgMembers = getMeleteCHService().getListofMediaFromCollection(uploadCollId);
 
 				// 3. add resources info in remoteFiles array as obj of RemoteBrowserFile
-				ListIterator allmembers_iter = allImgMembers.listIterator();
+				ListIterator<?> allmembers_iter = allImgMembers.listIterator();
 				while (allmembers_iter != null && allmembers_iter.hasNext())
 				{
 					ContentResource cr = (ContentResource) allmembers_iter.next();
 					String fileUrl = getMeleteCHService().getResourceUrl(cr.getId());
-					fileUrl = fileUrl.substring(fileUrl.lastIndexOf("/")+1);
+					fileUrl = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
 					String displayName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
-					RemoteBrowserFile ob = new RemoteBrowserFile(fileUrl, cr.getContentLength(),displayName);
-					//RemoteBrowserFile ob = new RemoteBrowserFile(fileUrl.substring(fileUrl.lastIndexOf("/")+1), cr.getContentLength());
+					RemoteBrowserFile ob = new RemoteBrowserFile(fileUrl, cr.getContentLength(), displayName);
+					// RemoteBrowserFile ob = new RemoteBrowserFile(fileUrl.substring(fileUrl.lastIndexOf("/")+1), cr.getContentLength());
 					remoteLinkFiles.add(ob);
 				}
 				java.util.Collections.sort(remoteLinkFiles);
@@ -283,8 +334,6 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 		this.serverConfigurationService = serverConfigurationService;
 	}
 
-
-
 	/**
 	 * @return Returns the meleteCHService.
 	 */
@@ -293,6 +342,11 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 		return meleteCHService;
 	}
 
+	/**
+	 * 
+	 * @param meleteCHService
+	 *        Set meleteCHService service
+	 */
 	public void setMeleteCHService(MeleteCHService meleteCHService)
 	{
 		this.meleteCHService = meleteCHService;

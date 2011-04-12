@@ -25,7 +25,6 @@
 package org.etudes.component.app.melete;
 
 import java.io.Serializable;
-import java.util.Set;
 import java.util.List;
 import java.util.Iterator;
 import java.io.File;
@@ -46,10 +45,10 @@ public class BookmarkServiceImpl implements Serializable, BookmarkService
 	/*
 	 * {@inheritDoc}
 	 */
-	public void createFile(List bmList, String fileName) throws Exception
+	public void createFile(List<? extends BookmarkObjService> bmList, String fileName) throws Exception
 	{
 		StringBuffer bmStrbuf = new StringBuffer();
-		for (Iterator iter = bmList.iterator(); iter.hasNext();)
+		for (Iterator<?> iter = bmList.iterator(); iter.hasNext();)
 		{
 			Bookmark bm = (Bookmark) iter.next();
 			bmStrbuf.append("\nTitle: " + bm.getTitle());
@@ -113,9 +112,9 @@ public class BookmarkServiceImpl implements Serializable, BookmarkService
 	/*
 	 * {@inheritDoc}
 	 */
-	public List getBookmarks(String userId, String siteId)
+	public List<? extends BookmarkObjService> getBookmarks(String userId, String siteId)
 	{
-		List mbList = null;
+		List<? extends BookmarkObjService> mbList = null;
 		try
 		{
 			mbList = bookmarkDb.getBookmarks(userId, siteId);

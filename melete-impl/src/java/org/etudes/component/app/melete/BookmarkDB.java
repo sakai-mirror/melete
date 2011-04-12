@@ -24,17 +24,15 @@
 
 package org.etudes.component.app.melete;
 
-import java.util.Iterator;
-import java.util.ListIterator;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.ListIterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.etudes.api.app.melete.BookmarkObjService;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -64,13 +62,13 @@ public class BookmarkDB
 	public void deleteBookmark(int bookmarkId) throws Exception
 	{
 		Transaction tx = null;
-		Bookmark mb = null;
+	
 		String delBookmarkStr = "delete Bookmark bm where bm.bookmarkId=:bookmarkId";
 		try
 		{
 			Session session = getHibernateUtil().currentSession();
 			tx = session.beginTransaction();
-			int deletedEntities = session.createQuery(delBookmarkStr).setInteger("bookmarkId", bookmarkId).executeUpdate();
+			session.createQuery(delBookmarkStr).setInteger("bookmarkId", bookmarkId).executeUpdate();
 			tx.commit();
 		}
 		catch (HibernateException he)
@@ -151,10 +149,10 @@ public class BookmarkDB
 	 *        Site id
 	 * @return List of bookmarks, empty list if none are found
 	 */
-	public List getBookmarks(String userId, String siteId)
+	public List<? extends BookmarkObjService> getBookmarks(String userId, String siteId)
 	{
-		List saList = new ArrayList();
-		List bmList = new ArrayList();
+		List<? extends SpecialAccess> saList = new ArrayList<SpecialAccess>();
+		List<? extends BookmarkObjService> bmList = new ArrayList<BookmarkObjService>();
 		try
 		{
 			Session session = getHibernateUtil().currentSession();
@@ -170,7 +168,7 @@ public class BookmarkDB
 			bmList = q.list();
 			if (bmList != null)
 			{
-				for (ListIterator i = bmList.listIterator(); i.hasNext();)
+				for (ListIterator<?> i = bmList.listIterator(); i.hasNext();)
 				{
 					Bookmark bmark = (Bookmark) i.next();
 					if (bmark.getNotes() != null)
@@ -196,7 +194,7 @@ public class BookmarkDB
 					{
 						boolean accessFound = false;
 						// Iterate through special access list to see if this module has special access set
-						for (ListIterator j = saList.listIterator(); j.hasNext();)
+						for (ListIterator<?> j = saList.listIterator(); j.hasNext();)
 						{
 							SpecialAccess sa = (SpecialAccess) j.next();
 							// If module matches, compare dates and set visible flag
@@ -391,7 +389,7 @@ public class BookmarkDB
 		// for this user's site
 		if (mb.getLastVisited().booleanValue() == true)
 		{
-			List mbList = getBookmarks(mb.getUserId(), mb.getSiteId());
+			List<? extends BookmarkObjService> mbList = getBookmarks(mb.getUserId(), mb.getSiteId());
 			if (mbList != null)
 			{
 				if (mbList.size() > 0)
@@ -420,14 +418,14 @@ public class BookmarkDB
 	 *        Section Id
 	 * @throws Exception
 	 */
-	private void adjustLastVisited(List mbList, int sectionId) throws Exception
+	private void adjustLastVisited(List<? extends BookmarkObjService> mbList, int sectionId) throws Exception
 	{
 		Transaction tx = null;
 		try
 		{
 			Session session = hibernateUtil.currentSession();
 			tx = session.beginTransaction();
-			for (ListIterator i = mbList.listIterator(); i.hasNext();)
+			for (ListIterator<?> i = mbList.listIterator(); i.hasNext();)
 			{
 				Bookmark bm = (Bookmark) i.next();
 				if ((bm.getSectionId() != sectionId) && (bm.getLastVisited().booleanValue() == true))

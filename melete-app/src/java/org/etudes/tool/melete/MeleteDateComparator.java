@@ -23,22 +23,23 @@
  **********************************************************************************/
 
 package org.etudes.tool.melete;
+
 import java.util.Date;
-
 import org.etudes.component.app.melete.CourseModule;
-/**
- * @author Rashmi
- * 
- */
-public class MeleteDateComparator implements java.util.Comparator {
 
-	/* Check to see if archived dates are equal
+public class MeleteDateComparator implements java.util.Comparator<CourseModule>
+{
+
+	/**
+	 * Check to see if archived dates are equal
+	 * 
 	 * @return result of comparison
 	 */
-	public int compare(Object o1, Object o2) {
-	    Date d1 = ((CourseModule)o1).getDateArchived();
-	    Date d2 = ((CourseModule)o2).getDateArchived();
-	    return d1.compareTo(d2);
-	  }
+	public int compare(CourseModule o1, CourseModule o2)
+	{
+		Date d1 = ((CourseModule) o1).getDateArchived();
+		Date d2 = ((CourseModule) o2).getDateArchived();
+		return d1.compareTo(d2);
+	}
 
 }

@@ -23,14 +23,11 @@
 package org.etudes.tool.melete;
 
 import javax.faces.component.UIInput;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 
-public class RemoteFilesListingNav {
-
+public class RemoteFilesListingNav
+{
 	private int totalSize;
 	private int currIndex;
 	private int chunkSize;
@@ -41,8 +38,10 @@ public class RemoteFilesListingNav {
 	private int displayEndIndex;
 	private boolean displayNav;
 	private String fromPage;
-	private String chunkStr;
 
+	/**
+	 * default constructor
+	 */
 	public RemoteFilesListingNav()
 	{
 		totalSize = 0;
@@ -50,10 +49,17 @@ public class RemoteFilesListingNav {
 		chunkSize = 0;
 		displayPrev = false;
 		displayNext = false;
-		fromPage ="#";
+		fromPage = "#";
 	}
 
-	public RemoteFilesListingNav(int totalSize,int currIndex,int chunkSize)
+	/**
+	 * Full constructor
+	 * 
+	 * @param totalSize
+	 * @param currIndex
+	 * @param chunkSize
+	 */
+	public RemoteFilesListingNav(int totalSize, int currIndex, int chunkSize)
 	{
 		this.totalSize = totalSize;
 		this.currIndex = currIndex;
@@ -61,50 +67,68 @@ public class RemoteFilesListingNav {
 		this.endIndex = currIndex + chunkSize;
 		displayPrev = false;
 		displayNext = false;
-		fromPage ="#";
+		fromPage = "#";
 	}
 
+	/**
+	 * Get the current start index
+	 * 
+	 * @return
+	 */
 	public int getCurrIndex()
 	{
-		if(currIndex <= 0)
-				currIndex  = 0;
-     	return currIndex;
+		if (currIndex <= 0) currIndex = 0;
+		return currIndex;
 	}
-	
-	public void changeChunkSize(ValueChangeEvent event)throws AbortProcessingException
+
+	/**
+	 * Change the pagination size. Refreshes the page and starts with new chunk size.
+	 * 
+	 * @param event
+	 * @throws AbortProcessingException
+	 */
+	public void changeChunkSize(ValueChangeEvent event) throws AbortProcessingException
 	{
+		UIInput chunkSelect = (UIInput) event.getComponent();
 
-		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	UIViewRoot root = ctx.getViewRoot();
-		UIInput chunkSelect = (UIInput)event.getComponent();
-
-		this.chunkSize = Integer.parseInt((String)chunkSelect.getValue());
-		//-1 implies all resources need to be displayed
-		if (this.chunkSize == -1) this.chunkSize = totalSize-1;
+		this.chunkSize = Integer.parseInt((String) chunkSelect.getValue());
+		// -1 implies all resources need to be displayed
+		if (this.chunkSize == -1) this.chunkSize = totalSize - 1;
 		resetCurrIndex();
 	}
 
-
+	/**
+	 * Get the end Index
+	 * 
+	 * @return
+	 */
 	public int getEndIndex()
 	{
 
-		if(endIndex >= totalSize-1)
-			endIndex = totalSize-1;
-		if((totalSize + 1) <= chunkSize)endIndex = totalSize-1;
+		if (endIndex >= totalSize - 1) endIndex = totalSize - 1;
+		if ((totalSize + 1) <= chunkSize) endIndex = totalSize - 1;
 
 		return endIndex;
 	}
-	
+
+	/**
+	 * Reset all indices.
+	 */
 	public void resetCurrIndex()
 	{
-		this.currIndex  = 0;
+		this.currIndex = 0;
 		this.endIndex = currIndex + chunkSize;
-		if (endIndex >= totalSize-1) this.endIndex = totalSize-1;
+		if (endIndex >= totalSize - 1) this.endIndex = totalSize - 1;
 
 		displayPrev = false;
 		displayNext = false;
 	}
 
+	/**
+	 * Process start and end indices for the previous page
+	 * 
+	 * @return the start page
+	 */
 	public String goPrev()
 	{
 		currIndex = currIndex - chunkSize;
@@ -113,109 +137,133 @@ public class RemoteFilesListingNav {
 		return fromPage;
 	}
 
+	/**
+	 * Process start and end indices for the next page
+	 * 
+	 * @return the start page
+	 */
 	public String goNext()
 	{
 		currIndex = currIndex + chunkSize;
 		endIndex = currIndex + chunkSize;
-		if(endIndex >= totalSize-1)
-			endIndex = totalSize-1;
+		if (endIndex >= totalSize - 1) endIndex = totalSize - 1;
 		return fromPage;
 	}
 
 	/**
 	 * @return Returns the displayNext.
 	 */
-	public boolean isDisplayNext() {
-		if((totalSize + 1) > chunkSize)
+	public boolean isDisplayNext()
+	{
+		if ((totalSize + 1) > chunkSize)
 		{
-			if(endIndex < totalSize -1)
-				displayNext = true;
+			if (endIndex < totalSize - 1) displayNext = true;
 
-			 if(endIndex >= totalSize -1)
-			 	displayNext = false;
+			if (endIndex >= totalSize - 1) displayNext = false;
 		}
-		else displayNext = false;
+		else
+			displayNext = false;
 		return displayNext;
 	}
+
 	/**
 	 * @return Returns the displayPrev.
 	 */
-	public boolean isDisplayPrev() {
-		if(currIndex >= chunkSize)
+	public boolean isDisplayPrev()
+	{
+		if (currIndex >= chunkSize)
 			displayPrev = true;
-		else displayPrev = false;
+		else
+			displayPrev = false;
 		return displayPrev;
 	}
+
 	/**
 	 * @return Returns the totalSize.
 	 */
-	public int getTotalSize() {
+	public int getTotalSize()
+	{
 		return totalSize;
 	}
+
 	/**
-	 * @param totalSize The totalSize to set.
+	 * @param totalSize
+	 *        The totalSize to set.
 	 */
-	public void setTotalSize(int totalSize) {
+	public void setTotalSize(int totalSize)
+	{
 		this.totalSize = totalSize;
 	}
+
 	/**
 	 * @return Returns the displayEndIndex.
 	 */
-	public int getDisplayEndIndex() {
-	//	displayEndIndex = endIndex + 1;
+	public int getDisplayEndIndex()
+	{
+		// displayEndIndex = endIndex + 1;
 		displayEndIndex = getEndIndex();
 		return displayEndIndex;
 	}
+
 	/**
 	 * @return Returns the displayStartIndex.
 	 */
-	public int getDisplayStartIndex() {
-		displayStartIndex = currIndex+1;
+	public int getDisplayStartIndex()
+	{
+		displayStartIndex = currIndex + 1;
 		return displayStartIndex;
 	}
+
 	/**
+	 * If the number of resources are less than 30 then don't show navigation bar
+	 * 
 	 * @return Returns the displayNav.
 	 */
-	public boolean isDisplayNav() {
-		if ((totalSize - 1<= chunkSize)&&(chunkSize == 30))
+	public boolean isDisplayNav()
+	{
+		if ((totalSize - 1 <= chunkSize) && (chunkSize == 30))
 			displayNav = false;
 		else
 			displayNav = true;
 		return displayNav;
 	}
+
 	/**
-	 * @param displayNav The displayNav to set.
+	 * @param displayNav
+	 *        The displayNav to set.
 	 */
-	public void setDisplayNav(boolean displayNav) {
+	public void setDisplayNav(boolean displayNav)
+	{
 		this.displayNav = displayNav;
 	}
 
 	/**
-	 * @param fromPage the fromPage to set
+	 * @param fromPage
+	 *        the fromPage to set
 	 */
 	public void setFromPage(String fromPage)
 	{
 		this.fromPage = fromPage;
 	}
 
+	/**
+	 * Get the pagination size
+	 * 
+	 * @return
+	 */
 	public int getChunkSize()
 	{
 		return this.chunkSize;
 	}
 
+	/**
+	 * Set the pagination size
+	 * 
+	 * @param chunkSize
+	 */
 	public void setChunkSize(int chunkSize)
 	{
 		this.chunkSize = chunkSize;
 	}
 
-	public String getChunkStr()
-	{
-		return this.chunkStr;
-	}
-
-	public void setChunkStr(String chunkStr)
-	{
-		this.chunkStr = chunkStr;
-		//setChunkSize(Integer.parseInt(chunkStr));
-	}
 }

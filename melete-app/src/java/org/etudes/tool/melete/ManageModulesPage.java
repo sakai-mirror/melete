@@ -27,11 +27,8 @@ package org.etudes.tool.melete;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
-import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIInput;
@@ -40,25 +37,23 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ValueChangeEvent;
-import javax.faces.model.SelectItem;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.etudes.component.app.melete.SectionBean;
-import org.etudes.component.app.melete.CourseModule;
-import org.etudes.component.app.melete.Module; //import org.sakaiproject.jsf.ToolBean;
-import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.SectionService;
-import org.etudes.api.app.melete.exception.MeleteException;
+import org.etudes.component.app.melete.CourseModule;
+import org.etudes.component.app.melete.Module;
+import org.sakaiproject.util.ResourceLoader;
+
 
 public class ManageModulesPage implements Serializable/* ,ToolBean */
 {
 
-	private List archiveModulesList;
-	private boolean falseBool = false;
-	private List restoreModulesList;
-	private boolean shouldRenderEmptyList;
+	private List<CourseModule> archiveModulesList;
+
+	private List<CourseModule> restoreModulesList;
+	
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(ManageModulesPage.class);
 
@@ -77,8 +72,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 	public ManageModulesPage()
 	{
 		count = 0;
-		restoreModulesList = new ArrayList();
-		shouldRenderEmptyList = false;
+		restoreModulesList = new ArrayList<CourseModule>();
 		archiveModulesList = null;
 		selectAllFlag = false;
 	}
@@ -125,7 +119,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 			return "restore_modules";
 		}
 
-		for (ListIterator i = restoreModulesList.listIterator(); i.hasNext();)
+		for (ListIterator<?> i = restoreModulesList.listIterator(); i.hasNext();)
 		{
 			CourseModule cmod = (CourseModule) i.next();
 			delModules.add((Module) cmod.getModule());
@@ -147,7 +141,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 	/**
 	 * @return list of archived modules
 	 */
-	public List getArchiveModulesList()
+	public List<CourseModule> getArchiveModulesList()
 	{
 		try
 		{
@@ -170,7 +164,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 	}
 
 	/**
-	 * Returns boolean false value added by rashmi on 3/29 to not render restore commandlink if modules are not present
+	 * Returns boolean false to not render restore commandlink if modules are not present
 	 * 
 	 * @return
 	 */
@@ -198,7 +192,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 	/**
 	 * @return list of restored modules
 	 */
-	public List getRestoreModulesList()
+	public List<CourseModule> getRestoreModulesList()
 	{
 		return restoreModulesList;
 	}
@@ -220,7 +214,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 	}
 
 	/**
-	 * NOT is ue
+	 * NOT in use
 	 * 
 	 * @return
 	 */
@@ -278,8 +272,8 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 		return "importexportmodules";
 	}
 
-	/*
-	 * Reset all values, archive and restor modules, count and select flag
+	/**
+	 * Reset all values, archive and restore modules, count and select flag
 	 */
 	public void resetValues()
 	{
@@ -360,9 +354,10 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 			String modId = selclientId.substring(0, selclientId.indexOf(':'));
 			int selectedModIndex = Integer.parseInt(modId);
 
-			if (restoreModulesList == null) restoreModulesList = new ArrayList();
+			if (restoreModulesList == null) restoreModulesList = new ArrayList<CourseModule>();
 
-			restoreModulesList.add(archiveModulesList.get(selectedModIndex));
+			CourseModule cm = archiveModulesList.get(selectedModIndex);
+			restoreModulesList.add(cm);
 			count++;
 
 		}

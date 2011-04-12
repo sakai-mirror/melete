@@ -24,11 +24,8 @@
 package org.etudes.tool.melete;
 
 import java.io.Serializable;
-
 import java.util.Date;
-
 import java.util.Map;
-import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -36,6 +33,7 @@ import javax.faces.el.ValueBinding;
 
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.tool.cover.ToolManager;
+import org.sakaiproject.util.ResourceLoader;
 
 public class AddModulePage extends ModulePage implements Serializable
 {
@@ -64,7 +62,6 @@ public class AddModulePage extends ModulePage implements Serializable
 
 	public String save()
 	{
-		Date d = new Date();
 		Date st = getModuleShdates().getStartDate();
 
 		setSuccess(false);

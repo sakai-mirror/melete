@@ -23,39 +23,34 @@
  **********************************************************************************/
 package org.etudes.tool.melete;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.List;
 import java.util.Iterator;
-import java.io.File;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import javax.faces.component.*;
-
-import org.sakaiproject.util.ResourceLoader;
+import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UICommand;
+import javax.faces.component.UIData;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
-import javax.faces.event.*;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.etudes.api.app.melete.exception.UserErrorException;
-import org.etudes.api.app.melete.MeleteCHService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+import org.sakaiproject.util.ResourceLoader;
 
 public class AddResourcesPage implements ServletContextListener
 {
@@ -64,7 +59,7 @@ public class AddResourcesPage implements ServletContextListener
 	private String numberItems;
 	private int maxUploadSize;
 	private int removeLinkIndex;
-	private List utList;
+	private List<UrlTitleObj> utList;
 	protected MeleteCHService meleteCHService;
 	private UIData table;
 	private ArrayList<String> err_fields = null;
@@ -157,9 +152,7 @@ public class AddResourcesPage implements ServletContextListener
 
 		// Code that validates required fields
 		int emptyCounter = 0;
-		String linkValue, titleValue;
-		boolean emptyLinkFlag = false;
-		boolean emptyTitleFlag = false;
+
 		err_fields = null;
 		if (this.fileType.equals("upload"))
 		{
@@ -259,7 +252,7 @@ public class AddResourcesPage implements ServletContextListener
 
 		if (this.fileType.equals("link"))
 		{
-			Iterator utIterator = utList.iterator();
+			Iterator<UrlTitleObj> utIterator = utList.iterator();
 			// Finish validating here
 			int count = -1;
 			while (utIterator.hasNext())
@@ -299,7 +292,6 @@ public class AddResourcesPage implements ServletContextListener
 				}
 				catch (UserErrorException uex)
 				{
-					String errMsg = bundle.getString(uex.getMessage());
 					context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "add_section_bad_url_formats", bundle
 							.getString("add_section_bad_url_formats")));
 					return "failure";
@@ -315,7 +307,7 @@ public class AddResourcesPage implements ServletContextListener
 				UrlTitleObj utObj = (UrlTitleObj) utIterator.next();
 				try
 				{
-					secContentMimeType = getMeleteCHService().MIME_TYPE_LINK;
+					secContentMimeType = MeleteCHService.MIME_TYPE_LINK;
 					String linkUrl = utObj.getUrl();
 					secResourceName = utObj.getTitle();
 					if ((linkUrl != null) && (linkUrl.trim().length() > 0) && (secResourceName != null) && (secResourceName.trim().length() > 0))
@@ -434,7 +426,7 @@ public class AddResourcesPage implements ServletContextListener
 		}
 		else
 		{
-			this.utList = new ArrayList();
+			this.utList = new ArrayList<UrlTitleObj>();
 			this.utList.add(new UrlTitleObj("http://", ""));
 		}
 
@@ -510,11 +502,11 @@ public class AddResourcesPage implements ServletContextListener
 	 * 
 	 * @return the list of UrlTitleObj objects
 	 */
-	public List getUtList()
+	public List<UrlTitleObj> getUtList()
 	{
 		if (this.utList == null)
 		{
-			utList = new ArrayList();
+			utList = new ArrayList<UrlTitleObj>();
 			if (this.fileType.equals("link"))
 			{
 				for (int i = 0; i < Integer.parseInt(this.numberItems); i++)
@@ -532,7 +524,7 @@ public class AddResourcesPage implements ServletContextListener
 	 * 
 	 * @param utList
 	 */
-	public void setUtList(List utList)
+	public void setUtList(List<UrlTitleObj> utList)
 	{
 		this.utList = utList;
 	}
@@ -684,7 +676,7 @@ public class AddResourcesPage implements ServletContextListener
 	 *        Composed content
 	 */
 	public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, String moduleId, String sectionId, String userId,
-			Map newEmbeddedResources, String htmlContentData) throws Exception
+			Map<String, String> newEmbeddedResources, String htmlContentData) throws Exception
 			{
 		ArrayList<String> errs = new ArrayList<String>();
 		String revisedData = getMeleteCHService().findLocalImagesEmbeddedInEditor(courseId, errs, newEmbeddedResources, htmlContentData);
@@ -718,7 +710,7 @@ public class AddResourcesPage implements ServletContextListener
 
 			String secResourceName = getMeleteCHService().getTypeEditorSectionName(new Integer(sectionId));
 			ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true, secResourceName, "compose content");
-			String newResourceId = getMeleteCHService().addResourceItem(secResourceName, getMeleteCHService().MIME_TYPE_EDITOR,
+			String newResourceId = getMeleteCHService().addResourceItem(secResourceName, MeleteCHService.MIME_TYPE_EDITOR,
 					getMeleteCHService().getCollectionId(courseId, "typeEditor", new Integer(moduleId)), secContentData, res);
 			addtoMeleteResource(sectionId, newResourceId);
 		}
