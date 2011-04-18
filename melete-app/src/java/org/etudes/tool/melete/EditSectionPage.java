@@ -282,12 +282,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 				lPage.checkForRequiredFields();
 			}
 
-			// modification details
-			binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-			MeleteSiteAndUserInfo meleteSiteAndUser = (MeleteSiteAndUserInfo) binding.getValue(context);
-			section.setModifiedByFname(meleteSiteAndUser.getCurrentUser().getFirstName());
-			section.setModifiedByLname(meleteSiteAndUser.getCurrentUser().getLastName());
-			
 			// validation 3: if upload a new file check fileName format -- move to uploadSectionContent()
 			// validation 3-1: if typeEditor and saved by sferyx then check for error messages
 			if (section.getContentType().equals("typeEditor"))

@@ -84,8 +84,6 @@ public class SectionDB implements Serializable
 			{
 				// set default values for not-null fields
 				section.setCreationDate(new java.util.Date());
-				section.setModifiedByFname(UserDirectoryService.getCurrentUser().getFirstName());
-				section.setModifiedByLname(UserDirectoryService.getCurrentUser().getLastName());
 				section.setModificationDate(new java.util.Date());
 				section.setModuleId(module.getModuleId().intValue());
 				section.setDeleteFlag(false);
@@ -183,8 +181,8 @@ public class SectionDB implements Serializable
 				findSection.setAudioContent(section.isAudioContent());
 				findSection.setContentType(section.getContentType());
 				findSection.setInstr(section.getInstr());
-				findSection.setModifiedByFname(UserDirectoryService.getCurrentUser().getFirstName());
-				findSection.setModifiedByLname(UserDirectoryService.getCurrentUser().getLastName());
+				findSection.setModifiedByFname(section.getModifiedByFname());
+				findSection.setModifiedByLname(section.getModifiedByLname());
 				findSection.setOpenWindow(section.isOpenWindow());
 				findSection.setTextualContent(section.isTextualContent());
 				findSection.setTitle(section.getTitle());
@@ -264,8 +262,6 @@ public class SectionDB implements Serializable
 
 				secResource.setSection(section);
 				secResource.setResource(melResource);
-				section.setModifiedByFname(UserDirectoryService.getCurrentUser().getFirstName());
-				section.setModifiedByLname(UserDirectoryService.getCurrentUser().getLastName());
 				section.setModificationDate(new java.util.Date());
 				section.setSectionResource(secResource);
 
@@ -393,7 +389,7 @@ public class SectionDB implements Serializable
 							if (secRes.getSectionId() != null)
 							{
 								affectedEntities = session.createQuery(updSectionResourceStr).setInteger("sectionId", secRes.getSectionId())
-										.executeUpdate();
+								.executeUpdate();
 							}
 							if (secRes.getResource().getResourceId() != null)
 							{
@@ -410,7 +406,7 @@ public class SectionDB implements Serializable
 						if (secRes.getSectionId() != null)
 						{
 							affectedEntities = session.createQuery(delSectionResourceStr).setInteger("sectionId", secRes.getSectionId())
-									.executeUpdate();
+							.executeUpdate();
 							// logger.debug(affectedEntities+" row was deleted from SECTION_RESOURCE");
 						}
 					}
@@ -457,7 +453,7 @@ public class SectionDB implements Serializable
 						if (secRes != null)
 						{
 							affectedEntities = session.createQuery(delSectionResourceStr).setInteger("sectionId", secRes.getSectionId())
-									.executeUpdate();
+							.executeUpdate();
 							// logger.debug(affectedEntities+" row was deleted from SECTION_RESOURCE");
 						}
 						affectedEntities = session.createQuery(delSectionStr).setInteger("sectionId", sectionId).executeUpdate();
@@ -577,14 +573,14 @@ public class SectionDB implements Serializable
 					}
 				}
 				else
-				// resource_id is usually null if the resource has been deleted via Manage
+					// resource_id is usually null if the resource has been deleted via Manage
 				{
 					// Delete from MELETE_SECTION_RESOURCE and MELETE_SECTION
 					deleteFromMeleteTables(sec, userId, SECTION_RESOURCE_ONLY, null);
 				}
 			}// End if section.getSectionResource != null
 			else
-			// Ideally this condition should never arise, it is a safety feature
+				// Ideally this condition should never arise, it is a safety feature
 			{
 				deleteFromMeleteTables(sec, userId, NONE_TO_DELETE, null);
 			}
@@ -1363,7 +1359,7 @@ public class SectionDB implements Serializable
 		{
 			Session session = hibernateUtil.currentSession();
 			String queryString = "select meleteresource.resourceId from MeleteResource meleteresource where meleteresource.resourceId like '%"
-					+ courseId + "%'";
+				+ courseId + "%'";
 			Query query = session.createQuery(queryString);
 			List result_list = query.list();
 			return result_list;
@@ -1388,7 +1384,7 @@ public class SectionDB implements Serializable
 		{
 			Session session = hibernateUtil.currentSession();
 			String queryString = "select meleteresource.resourceId from MeleteResource meleteresource where meleteresource.resourceId like '%"
-					+ courseId + "/uploads%'";
+				+ courseId + "/uploads%'";
 			Query query = session.createQuery(queryString);
 			List result_list = query.list();
 			return result_list;
@@ -1626,7 +1622,7 @@ public class SectionDB implements Serializable
 			Session session = hibernateUtil.currentSession();
 
 			String queryString = "Select a from Section a, SectionResource b where a.sectionId = b.sectionId "
-					+ " AND a.deleteFlag=0 AND b.resource.resourceId=:resourceId";
+				+ " AND a.deleteFlag=0 AND b.resource.resourceId=:resourceId";
 
 			Query query = session.createQuery(queryString);
 			query.setParameter("resourceId", selResourceId);
@@ -1892,7 +1888,7 @@ public class SectionDB implements Serializable
 					String allSecIds = getAllDeleteSectionIds(delSections);
 					// logger.debug("all SecIds in sectionscleanup" + allSecIds);
 					String selectResourceStr = "select sr.resource.resourceId from SectionResource sr where sr.section.contentType ='typeEditor' and sr.section in "
-							+ allSecIds;
+						+ allSecIds;
 					String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in " + allSecIds;
 					String delSectionResourceStr = "delete SectionResource sr where sr.section in " + allSecIds;
 					String delSectionStr = "delete Section s where s.sectionId in " + allSecIds;
@@ -2037,8 +2033,8 @@ public class SectionDB implements Serializable
 			{
 				// get all active section melete resource objects for this site
 				String queryString = "Select sr.resource.resourceId from SectionResource sr " + "join sr.section s " + "join s.module m "
-						+ "join m.coursemodule cmod "
-						+ "where cmod.courseId=:courseId and cmod.archvFlag = 0 and cmod.deleteFlag = 0 and sr.resource != null";
+				+ "join m.coursemodule cmod "
+				+ "where cmod.courseId=:courseId and cmod.archvFlag = 0 and cmod.deleteFlag = 0 and sr.resource != null";
 				Query query = session.createQuery(queryString);
 				query.setParameter("courseId", courseId);
 				List result_list = query.list();
@@ -2058,8 +2054,8 @@ public class SectionDB implements Serializable
 					// bulk update
 					tx = session.beginTransaction();
 					String updMeleteResourceStr = "update MeleteResource mr1 set mr1.licenseCode=:lcode, mr1.ccLicenseUrl=:lurl,"
-							+ " mr1.reqAttr=:reqAttr, mr1.allowCmrcl=:allowCmrcl, mr1.allowMod=:allowMod, mr1.copyrightOwner=:copyrightOwner, "
-							+ "mr1.copyrightYear=:copyrightYear where mr1.resourceId in " + res_ids;
+						+ " mr1.reqAttr=:reqAttr, mr1.allowCmrcl=:allowCmrcl, mr1.allowMod=:allowMod, mr1.copyrightOwner=:copyrightOwner, "
+						+ "mr1.copyrightYear=:copyrightYear where mr1.resourceId in " + res_ids;
 					int updatedEntities = 0;
 					Query query1 = session.createQuery(updMeleteResourceStr);
 					query1.setParameter("lcode", mup.getLicenseCode());

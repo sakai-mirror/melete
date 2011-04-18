@@ -132,12 +132,7 @@ function showmessage()
                                     <h:outputText value="#{editSectionPage.section.creationDate}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm:ss a"/></h:outputText>
                                     </td>
                                   </tr>
-                                    <tr>
-                                    <td class="col1" align="left" valign="top"><h:outputText id="text8_1" value="#{msgs.edit_module_modified_by}"/></td>
-                                    <td class="col2" align="left" valign="top"><h:outputText value="#{editSectionPage.section.modifiedByFname}" styleClass="formtext"/>&nbsp;<h:outputText value="#{editSectionPage.section.modifiedByLname}" styleClass="formtext"/>
-                                    <h:outputText value="#{editSectionPage.section.modificationDate}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm:ss a"/></h:outputText>
-                                    </td>
-                                  </tr>
+
                                    <tr>
                                     <td class="col1" align="left" valign="top"><h:outputText id="text7" value="#{msgs.editmodulesections_section_title}" /><span class="required">*</span></td>
                                     <td class="col2" align="left" valign="top">
