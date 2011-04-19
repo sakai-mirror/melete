@@ -375,7 +375,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getListofImagesFromCollection(String collId)
+	public List<ContentResource> getListofImagesFromCollection(String collId)
 	{
 		try
 		{
@@ -385,10 +385,10 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			long starttime = System.currentTimeMillis();
 			logger.debug("time to get all collectionMap" + starttime);
 			ContentCollection c = getContentservice().getCollection(collId);
-			List mem = c.getMemberResources();
+			List<ContentResource> mem = c.getMemberResources();
 			if (mem == null) return null;
 
-			ListIterator memIt = mem.listIterator();
+			ListIterator<?> memIt = mem.listIterator();
 			while (memIt != null && memIt.hasNext())
 			{
 				ContentEntity ce = (ContentEntity) memIt.next();
@@ -424,7 +424,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getListofFilesFromCollection(String collId)
+	public List<ContentResource> getListofFilesFromCollection(String collId)
 	{
 		try
 		{
@@ -434,10 +434,10 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			long starttime = System.currentTimeMillis();
 			logger.debug("time to get all collectionMap" + starttime);
 			ContentCollection c = getContentservice().getCollection(collId);
-			List mem = c.getMemberResources();
+			List<ContentResource> mem = c.getMemberResources();
 			if (mem == null) return null;
 
-			ListIterator memIt = mem.listIterator();
+			ListIterator<?> memIt = mem.listIterator();
 			while (memIt != null && memIt.hasNext())
 			{
 				ContentEntity ce = (ContentEntity) memIt.next();
@@ -472,7 +472,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getListofLinksFromCollection(String collId)
+	public List<ContentResource> getListofLinksFromCollection(String collId)
 	{
 		try
 		{
@@ -484,10 +484,10 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
 			ContentCollection c = getContentservice().getCollection(collId);
-			List mem = c.getMemberResources();
+			List<ContentResource> mem = c.getMemberResources();
 			if (mem == null) return null;
 
-			ListIterator memIt = mem.listIterator();
+			ListIterator<?> memIt = mem.listIterator();
 			while (memIt != null && memIt.hasNext())
 			{
 				ContentEntity ce = (ContentEntity) memIt.next();
@@ -518,7 +518,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getListFromCollection(String collId, String mimeType)
+	public List<ContentResource> getListFromCollection(String collId, String mimeType)
 	{
 		try
 		{
@@ -529,10 +529,10 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
 			ContentCollection c = getContentservice().getCollection(collId);
-			List mem = c.getMemberResources();
+			List<ContentResource> mem = c.getMemberResources();
 			if (mem == null) return null;
 
-			ListIterator memIt = mem.listIterator();
+			ListIterator<?> memIt = mem.listIterator();
 			while (memIt != null && memIt.hasNext())
 			{
 				ContentEntity ce = (ContentEntity) memIt.next();
@@ -564,7 +564,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getListofMediaFromCollection(String collId)
+	public List<ContentResource> getListofMediaFromCollection(String collId)
 	{
 		try
 		{
@@ -576,10 +576,10 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
 			ContentCollection c = getContentservice().getCollection(collId);
-			List mem = c.getMemberResources();
+			List<ContentResource> mem = c.getMemberResources();
 			if (mem == null) return null;
 
-			ListIterator memIt = mem.listIterator();
+			ListIterator<?> memIt = mem.listIterator();
 			while (memIt != null && memIt.hasNext())
 			{
 				ContentEntity ce = (ContentEntity) memIt.next();
@@ -610,7 +610,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getMemberNamesCollection(String collId)
+	public List<String> getMemberNamesCollection(String collId)
 	{
 		try
 		{
@@ -622,7 +622,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
 			ContentCollection c = getContentservice().getCollection(collId);
-			List mem = c.getMembers();
+			List<String> mem = c.getMembers();
 			if (mem == null) return null;
 
 			return mem;

@@ -30,15 +30,14 @@
 
 package org.etudes.api.app.melete;
 
-import org.etudes.api.app.melete.exception.MeleteException;
-import org.sakaiproject.content.api.ContentEntity;
-import org.sakaiproject.content.api.ContentResource;
-import org.sakaiproject.content.api.ContentCollection;
-import org.sakaiproject.entity.api.ResourcePropertiesEdit;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.etudes.api.app.melete.exception.MeleteException;
+import org.sakaiproject.content.api.ContentCollection;
+import org.sakaiproject.content.api.ContentResource;
+import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 
 /*
  *  This is a basic class to do all content hosting service work through melete
@@ -263,7 +262,7 @@ public interface MeleteCHService
 	 *        Mime type
 	 * @return a list of ContentEntity objects
 	 */
-	public List getListFromCollection(String collId, String mimeType);
+	public List<ContentResource> getListFromCollection(String collId, String mimeType);
 
 	/**
 	 * Gets all html and media resources of a site.
@@ -272,7 +271,7 @@ public interface MeleteCHService
 	 *        The Collection id
 	 * @return a list of ContentEntity objects
 	 */
-	public List getListofFilesFromCollection(String collId);
+	public List<ContentResource> getListofFilesFromCollection(String collId);
 
 	/**
 	 * Get all image resources from a site's uploads collection.
@@ -281,7 +280,7 @@ public interface MeleteCHService
 	 *        The Collection Id
 	 * @return a list of ContentEntity objects
 	 */
-	public List getListofImagesFromCollection(String collId);
+	public List<ContentResource> getListofImagesFromCollection(String collId);
 
 	/**
 	 * Get all link resources from a site's uploads collection.Note:not in use anymore
@@ -290,7 +289,7 @@ public interface MeleteCHService
 	 *        The Collection Id
 	 * @return a list of ContentEntity objects
 	 */
-	public List getListofLinksFromCollection(String collId);
+	public List<ContentResource> getListofLinksFromCollection(String collId);
 
 	/**
 	 * Get all resources from the collection
@@ -299,7 +298,7 @@ public interface MeleteCHService
 	 *        The Collection Id
 	 * @return a list of ContentEntity objects
 	 */
-	public List getListofMediaFromCollection(String collId);
+	public List<ContentResource> getListofMediaFromCollection(String collId);
 
 	/**
 	 * Get all resources from the collection
