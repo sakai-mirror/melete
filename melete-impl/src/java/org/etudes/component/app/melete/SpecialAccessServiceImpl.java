@@ -24,13 +24,11 @@ package org.etudes.component.app.melete;
 
 import java.io.Serializable;
 import java.util.ListIterator;
-import java.util.Set;
 import java.util.List;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.io.File;
+
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,7 +48,7 @@ public class SpecialAccessServiceImpl implements Serializable, SpecialAccessServ
 	/*
 	 * {@inheritDoc}
 	 */
-	public void deleteSpecialAccess(List saList) throws Exception
+	public void deleteSpecialAccess(List<Integer> saList) throws Exception
 	{
 		try
 		{
@@ -66,9 +64,9 @@ public class SpecialAccessServiceImpl implements Serializable, SpecialAccessServ
 	/*
 	 * {@inheritDoc}
 	 */
-	public List getSpecialAccess(int moduleId)
+	public List<SpecialAccessService> getSpecialAccess(int moduleId)
 	{
-		List saList = null;
+		List<SpecialAccessService> saList = null;
 		try
 		{
 			saList = specialAccessDb.getSpecialAccess(moduleId);
@@ -91,7 +89,7 @@ public class SpecialAccessServiceImpl implements Serializable, SpecialAccessServ
 	/*
 	 * {@inheritDoc}
 	 */
-	public void insertSpecialAccess(List saList, SpecialAccessObjService sa, ModuleObjService mod) throws Exception
+	public void insertSpecialAccess(List<SpecialAccessService> saList, SpecialAccessObjService sa, ModuleObjService mod) throws Exception
 	{
 		if (moduleDatesDiffer(sa, mod) == true)
 		{
@@ -103,7 +101,7 @@ public class SpecialAccessServiceImpl implements Serializable, SpecialAccessServ
 			else
 			{
 				// Iterate through each access
-				for (ListIterator i = saList.listIterator(); i.hasNext();)
+				for (ListIterator<?> i = saList.listIterator(); i.hasNext();)
 				{
 					SpecialAccess saObj = (SpecialAccess) i.next();
 					// Perform checks on accesses that aren't the current one
@@ -135,7 +133,7 @@ public class SpecialAccessServiceImpl implements Serializable, SpecialAccessServ
 								else
 								{
 									// delete access
-									List delList = new ArrayList();
+									List<Integer> delList = new ArrayList<Integer>();
 									delList.add(saObj.getAccessId());
 									deleteSpecialAccess(delList);
 								}
@@ -177,7 +175,7 @@ public class SpecialAccessServiceImpl implements Serializable, SpecialAccessServ
 			else
 			{
 				// Existing access, delete it
-				List delList = new ArrayList();
+				List<Integer> delList = new ArrayList<Integer>();
 				delList.add(sa.getAccessId());
 				deleteSpecialAccess(delList);
 				return false;

@@ -30,6 +30,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.etudes.api.app.melete.MeleteLicenseService;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -195,9 +196,9 @@ public class MeleteLicenseDB implements Serializable
 	 * 
 	 * @return a list of MeleteLicense objects
 	 */
-	public ArrayList getLicenseTypes()
+	public List<MeleteLicenseService> getLicenseTypes()
 	{
-		List licenseTypes = new ArrayList();
+		List<MeleteLicenseService> licenseTypes = new ArrayList<MeleteLicenseService>();
 		try
 		{
 			Session session = getHibernateUtil().currentSession();
@@ -211,7 +212,7 @@ public class MeleteLicenseDB implements Serializable
 			logger.error(he.toString());
 		}
 
-		return (ArrayList) licenseTypes;
+		return licenseTypes;
 	}
 
 	/**

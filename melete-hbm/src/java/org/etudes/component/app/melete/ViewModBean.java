@@ -68,7 +68,7 @@ public class ViewModBean implements Serializable, ViewModBeanService
 
 	protected boolean visibleFlag;
 
-	protected List vsBeans;
+	protected List<ViewSecBeanService> vsBeans;
 
 	protected String whatsNext;
 
@@ -92,7 +92,7 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	 * @param vsBeans
 	 */
 	public ViewModBean(int moduleId, boolean selected, boolean dateFlag, boolean visibleFlag, String title, String rowClasses, String whatsNext,
-			Date startDate, Date endDate, int seqNo, String seqXml, List vsBeans)
+			Date startDate, Date endDate, int seqNo, String seqXml, List<ViewSecBeanService> vsBeans)
 	{
 		this.moduleId = moduleId;
 		this.selected = selected;
@@ -203,7 +203,7 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getVsBeans()
+	public List<ViewSecBeanService> getVsBeans()
 	{
 		if (this.vsBeans != null)
 			this.vsBeansSize = this.vsBeans.size();
@@ -391,7 +391,7 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setVsBeans(List vsBeans)
+	public void setVsBeans(List<ViewSecBeanService> vsBeans)
 	{
 		this.vsBeans = vsBeans;
 	}

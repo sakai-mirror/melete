@@ -24,6 +24,7 @@ package org.etudes.tool.melete;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.sakaiproject.util.ResourceLoader;
 
@@ -189,7 +190,7 @@ public class LicensePage
 		if (licenseTypes == null || licenseTypes.size() == 0)
 		{
 			licenseTypes = new ArrayList<SelectItem>();
-			ArrayList<MeleteLicenseService> allLicenseTypes = new ArrayList<MeleteLicenseService>();
+			List<MeleteLicenseService> allLicenseTypes = new ArrayList<MeleteLicenseService>();
 			allLicenseTypes = sectionService.getMeleteLicenses();
 
 			// Adding available list to select box

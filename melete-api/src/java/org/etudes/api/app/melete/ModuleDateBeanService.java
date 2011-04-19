@@ -56,7 +56,7 @@ public interface ModuleDateBeanService
 	/**
 	 * @return sectionBeans list
 	 */
-	public abstract List getSectionBeans();
+	public abstract List<SectionBeanService> getSectionBeans();
 
 	/**
 	 * @return truncTitle string
@@ -113,7 +113,7 @@ public interface ModuleDateBeanService
 	 * @param sectionBeans
 	 *        the sectionBeans list
 	 */
-	public abstract void setSectionBeans(List sectionBeans);
+	public abstract void setSectionBeans(List<SectionBeanService> sectionBeans);
 
 	/**
 	 * @param selected

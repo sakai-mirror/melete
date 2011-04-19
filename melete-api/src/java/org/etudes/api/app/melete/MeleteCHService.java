@@ -192,7 +192,7 @@ public interface MeleteCHService
 	 * @return the revised HTML data
 	 * @throws MeleteException
 	 */
-	public String findLocalImagesEmbeddedInEditor(String courseId, ArrayList<String> errs, Map newEmbeddedResources, String contentEditor)
+	public String findLocalImagesEmbeddedInEditor(String courseId, ArrayList<String> errs, Map<String, String> newEmbeddedResources, String contentEditor)
 			throws MeleteException;
 
 	/**
@@ -201,7 +201,7 @@ public interface MeleteCHService
 	 * @param uploadCollId
 	 * @return
 	 */
-	public List<?> getAllResources(String uploadCollId);
+	public List<ContentResource> getAllResources(String uploadCollId);
 
 	/**
 	 * Get content collection. Note:not in use anymore
@@ -306,9 +306,9 @@ public interface MeleteCHService
 	 * 
 	 * @param collId
 	 *        The Collection Id
-	 * @return a list of ContentEntity objects
+	 * @return a list of resource names
 	 */
-	public List getMemberNamesCollection(String collId);
+	public List<String> getMemberNamesCollection(String collId);
 
 	/**
 	 * Get content resource

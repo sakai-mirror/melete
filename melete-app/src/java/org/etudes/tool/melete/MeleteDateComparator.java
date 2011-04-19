@@ -25,9 +25,9 @@
 package org.etudes.tool.melete;
 
 import java.util.Date;
-import org.etudes.component.app.melete.CourseModule;
+import org.etudes.api.app.melete.CourseModuleService;
 
-public class MeleteDateComparator implements java.util.Comparator<CourseModule>
+public class MeleteDateComparator implements java.util.Comparator<CourseModuleService>
 {
 
 	/**
@@ -35,10 +35,10 @@ public class MeleteDateComparator implements java.util.Comparator<CourseModule>
 	 * 
 	 * @return result of comparison
 	 */
-	public int compare(CourseModule o1, CourseModule o2)
+	public int compare(CourseModuleService o1, CourseModuleService o2)
 	{
-		Date d1 = ((CourseModule) o1).getDateArchived();
-		Date d2 = ((CourseModule) o2).getDateArchived();
+		Date d1 = ((CourseModuleService) o1).getDateArchived();
+		Date d2 = ((CourseModuleService) o2).getDateArchived();
 		return d1.compareTo(d2);
 	}
 

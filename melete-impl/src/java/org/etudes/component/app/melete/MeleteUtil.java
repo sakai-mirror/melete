@@ -160,9 +160,9 @@ public class MeleteUtil
 	 *        String to check for embed pattern
 	 * @return ArrayList with 3 values
 	 */
-	public ArrayList findEmbedItemPattern(String checkforimgs)
+	public ArrayList<?> findEmbedItemPattern(String checkforimgs)
 	{
-		ArrayList returnData = new ArrayList();
+		ArrayList<Object> returnData = new ArrayList<Object>();
 		// a and link uses href, applet uses archive, object uses data
 		Pattern p1 = Pattern
 				.compile("<[iI][mM][gG]\\s|<[aA]\\s|<[eE][mM][bB][eE][dD]\\s|<[sS][cC][rR][iI][pP][tT]\\s|<[lL][iI][nN][kK]\\s|<[aA][pP][pP][lL][eE][tT]\\s|<[oO][bB][jJ][eE][cC][tT]\\s");
@@ -248,7 +248,7 @@ public class MeleteUtil
 				checkforimgs = checkforimgs.substring(endSrc);
 				if (checkforimgs != null)
 				{
-					ArrayList r = findEmbedItemPattern(checkforimgs);
+					ArrayList<?> r = findEmbedItemPattern(checkforimgs);
 					checkforimgs = (String) r.get(0);
 					if (r.size() > 1 && ((Integer) r.get(2)).intValue() > 0)
 					{
@@ -285,7 +285,7 @@ public class MeleteUtil
 	 */
 	public String findFormPattern(String checkforimgs)
 	{
-		ArrayList returnData = new ArrayList();
+	
 		Pattern pi = Pattern.compile("<\\s*<[fF][oO][rR][mM]");
 
 		// look for <table tr td form

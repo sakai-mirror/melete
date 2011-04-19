@@ -24,16 +24,11 @@ package org.etudes.tool.melete;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIInput;
-import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
@@ -42,12 +37,12 @@ import javax.faces.model.SelectItem;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.etudes.component.app.melete.SectionBean;
-import org.etudes.component.app.melete.Module;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.ModuleService;
+import org.etudes.api.app.melete.SectionBeanService;
 import org.etudes.api.app.melete.SectionService;
 import org.etudes.api.app.melete.exception.MeleteException;
+import org.sakaiproject.util.ResourceLoader;
 
 public class SortModuleSectionPage implements Serializable{
 
@@ -201,7 +196,7 @@ public class SortModuleSectionPage implements Serializable{
 		Iterator itr = list.iterator();
 		int countidx = 0;
 		while (itr.hasNext()) {
-			SectionBean secBean= (SectionBean) itr.next();
+			SectionBeanService secBean= (SectionBeanService) itr.next();
 			if (secBean != null)
 			{
 				String value = new Integer(countidx++).toString();
@@ -576,7 +571,7 @@ public class SortModuleSectionPage implements Serializable{
 					return "sections_sort";
 				}
 				ModuleObjService  mod  = (ModuleObjService) allModules.get(new Integer(currModule).intValue() -1);
-				String sort_sec_id = ((SectionBean)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
+				String sort_sec_id = ((SectionBeanService)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
 				moduleService.sortSectionItem(mod,sort_sec_id, "allUp");
 				newSectionsList = sectionService.getSortSections(mod);
 				newSecList = forSelectSectionsItemsList(newSectionsList);
@@ -613,7 +608,7 @@ public class SortModuleSectionPage implements Serializable{
 					return "sections_sort";
 				}
 				ModuleObjService  mod  = (ModuleObjService) allModules.get(new Integer(currModule).intValue() -1);
-				String sort_sec_id = ((SectionBean)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
+				String sort_sec_id = ((SectionBeanService)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
 				moduleService.sortSectionItem(mod,sort_sec_id, "up");
 				newSectionsList = sectionService.getSortSections(mod);
 				newSecList = forSelectSectionsItemsList(newSectionsList);
@@ -650,7 +645,7 @@ public class SortModuleSectionPage implements Serializable{
 					return "sections_sort";
 				}
 				ModuleObjService  mod  = (ModuleObjService) allModules.get(new Integer(currModule).intValue() -1);
-				String sort_sec_id = ((SectionBean)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
+				String sort_sec_id = ((SectionBeanService)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
 				moduleService.sortSectionItem(mod,sort_sec_id, "down");
 				newSectionsList = sectionService.getSortSections(mod);
 				newSecList = forSelectSectionsItemsList(newSectionsList);
@@ -687,7 +682,7 @@ public class SortModuleSectionPage implements Serializable{
 					return "sections_sort";
 				}
 				ModuleObjService  mod  = (ModuleObjService) allModules.get(new Integer(currModule).intValue() -1);
-				String sort_sec_id = ((SectionBean)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
+				String sort_sec_id = ((SectionBeanService)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
 				moduleService.sortSectionItem(mod,sort_sec_id, "allDown");
 				newSectionsList = sectionService.getSortSections(mod);
 				newSecList = forSelectSectionsItemsList(newSectionsList);

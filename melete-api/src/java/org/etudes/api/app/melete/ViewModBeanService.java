@@ -85,7 +85,7 @@ public interface ViewModBeanService
 	/**
 	 * @return get list of vsBeans
 	 */
-	public abstract List getVsBeans();
+	public abstract List<ViewSecBeanService> getVsBeans();
 
 	/**
 	 * @return whatsNext string value
@@ -189,7 +189,7 @@ public interface ViewModBeanService
 	 * @param vsBeans
 	 *        set list of vsBeans
 	 */
-	public abstract void setVsBeans(List vsBeans);
+	public abstract void setVsBeans(List<ViewSecBeanService> vsBeans);
 
 	/**
 	 * @param whatsNext

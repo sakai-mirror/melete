@@ -24,7 +24,6 @@ package org.etudes.api.app.melete;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
 public interface ModuleObjService
 {
@@ -105,7 +104,7 @@ public interface ModuleObjService
 	/**
 	 * @return map of sections
 	 */
-	public abstract Map getSections();
+	public abstract Map<Integer,SectionObjService> getSections();
 
 	/**
 	 * @return seqXml string
@@ -216,7 +215,7 @@ public interface ModuleObjService
 	 * @param sections
 	 *        map of sections to set
 	 */
-	public abstract void setSections(Map sections);
+	public abstract void setSections(Map<Integer,SectionObjService> sections);
 
 	/**
 	 * @param seqXml

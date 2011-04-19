@@ -26,14 +26,16 @@ package org.etudes.component.app.melete;
 
 import java.io.File;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -41,63 +43,47 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.Calendar;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
-import org.hibernate.Hibernate;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.etudes.api.app.melete.CourseModuleService;
+import org.etudes.api.app.melete.MeleteCHService;
+import org.etudes.api.app.melete.MeleteSecurityService;
+import org.etudes.api.app.melete.ModuleDateBeanService;
+import org.etudes.api.app.melete.ModuleObjService;
+import org.etudes.api.app.melete.SectionBeanService;
+import org.etudes.api.app.melete.SectionObjService;
+import org.etudes.api.app.melete.ViewModBeanService;
+import org.etudes.api.app.melete.ViewSecBeanService;
+import org.etudes.api.app.melete.exception.MeleteException;
+import org.etudes.util.api.AccessAdvisor;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.etudes.api.app.melete.MeleteSecurityService;
-import org.etudes.api.app.melete.ModuleObjService;
-import org.etudes.api.app.melete.SectionObjService;
-import org.etudes.api.app.melete.exception.MeleteException;
-import org.hibernate.criterion.Restrictions;
-
-import org.sakaiproject.component.cover.ComponentManager;
-import org.sakaiproject.content.api.ContentResource;
-import org.sakaiproject.entity.api.ResourcePropertiesEdit;
-import org.sakaiproject.user.cover.UserDirectoryService;
-import org.etudes.api.app.melete.MeleteCHService;
-import org.sakaiproject.entity.api.ResourceProperties;
-import org.sakaiproject.util.ResourceLoader;
-import org.dom4j.Element;
-import org.etudes.component.app.melete.MeleteUserPreferenceDB;
-import org.etudes.util.api.AccessAdvisor;
-
-import org.sakaiproject.db.cover.SqlService;
-
-import org.etudes.api.app.melete.MeleteAuthorPrefService;
-
-import org.sakaiproject.site.cover.SiteService;
-
 import org.sakaiproject.calendar.api.CalendarEvent;
 import org.sakaiproject.calendar.api.CalendarEventEdit;
 import org.sakaiproject.calendar.api.CalendarService;
-import org.sakaiproject.time.cover.TimeService;
+import org.sakaiproject.component.cover.ComponentManager;
+import org.sakaiproject.content.api.ContentResource;
+import org.sakaiproject.db.cover.SqlService;
+import org.sakaiproject.entity.api.ResourceProperties;
+import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.entity.cover.EntityManager;
-import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.IdUnusedException;
-
+import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.api.Site;
+import org.sakaiproject.site.cover.SiteService;
+import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.tool.cover.ToolManager;
+import org.sakaiproject.user.cover.UserDirectoryService;
+import org.sakaiproject.util.ResourceLoader;
 
 public class ModuleDB implements Serializable
 {
@@ -352,13 +338,13 @@ public class ModuleDB implements Serializable
 	 *        Course id
 	 * @throws Exception
 	 */
-	public void archiveModules(List selModBeans, List moduleDateBeans, String courseId) throws Exception
+	public void archiveModules(List<? extends ModuleDateBeanService> selModBeans, List<? extends ModuleDateBeanService> moduleDateBeans, String courseId) throws Exception
 	{
 		Transaction tx = null;
 		StringBuffer moduleIds = new StringBuffer();
 		moduleIds.append("(");
 		ModuleDateBean mdbean = null;
-		for (ListIterator i = selModBeans.listIterator(); i.hasNext();)
+		for (ListIterator<?> i = selModBeans.listIterator(); i.hasNext();)
 		{
 			mdbean = (ModuleDateBean) i.next();
 			moduleIds.append(mdbean.getModule().getModuleId().toString());
@@ -383,7 +369,7 @@ public class ModuleDB implements Serializable
 
 			moduleDateBeans.removeAll(selModBeans);
 			List<CourseModule> courseModules = new ArrayList<CourseModule>(0);
-			for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();)
+			for (ListIterator<?> i = moduleDateBeans.listIterator(); i.hasNext();)
 			{
 				mdbean = (ModuleDateBean) i.next();
 				courseModules.add((CourseModule) mdbean.getCmod());
@@ -417,7 +403,7 @@ public class ModuleDB implements Serializable
 				throw he;
 			}
 		}
-		List modList = new ArrayList();
+		List<Module> modList = new ArrayList<Module>();
 		try
 		{
 			Session session = hibernateUtil.currentSession();
@@ -440,7 +426,7 @@ public class ModuleDB implements Serializable
 				logger.error(he.toString());
 			}
 		}
-		for (ListIterator i = modList.listIterator(); i.hasNext();)
+		for (ListIterator<?> i = modList.listIterator(); i.hasNext();)
 		{
 			Module mod = (Module) i.next();
 			updateCalendar(mod, (ModuleShdates) mod.getModuleshdate(), courseId);
@@ -465,7 +451,7 @@ public class ModuleDB implements Serializable
 			Transaction tx = null;
 			String pattern = "\\.";
 			Integer section_id;
-			SectionBean secBean = null;
+			SectionBeanService secBean = null;
 			try
 			{
 				String sectionsSeqXML = module.getSeqXml();
@@ -473,7 +459,7 @@ public class ModuleDB implements Serializable
 				SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
 				if (secBeans.size() == 1)
 				{
-					secBean = (SectionBean) secBeans.get(0);
+					secBean = (SectionBeanService) secBeans.get(0);
 					section_id = secBean.getSection().getSectionId();
 					logger.debug("bring up section " + section_id);
 					sectionsSeqXML = SectionUtil.bringOneLevelUp(sectionsSeqXML, section_id.toString());
@@ -482,7 +468,7 @@ public class ModuleDB implements Serializable
 				{
 					for (ListIterator i = secBeans.listIterator(); i.hasNext();)
 					{
-						secBean = (SectionBean) i.next();
+						secBean = (SectionBeanService) i.next();
 						int occurs = secBean.getDisplaySequence().split(pattern).length - 1;
 						// Only left indent non-top level sections
 						if (occurs > 1)
@@ -606,7 +592,7 @@ public class ModuleDB implements Serializable
 					long starttime = System.currentTimeMillis();
 					String toDelCourseId = (String) iter.next();
 					logger.info("processing " + i++ + " course with id " + toDelCourseId);
-					List activenArchModules = getActivenArchiveModules(toDelCourseId);
+					List<? extends ModuleObjService> activenArchModules = getActivenArchiveModules(toDelCourseId);
 					List<Integer> delModules = (ArrayList) deletedModules.get(toDelCourseId);
 
 					if (activenArchModules == null || activenArchModules.size() == 0)
@@ -887,7 +873,7 @@ public class ModuleDB implements Serializable
 			Transaction tx = null;
 			String pattern = "\\.";
 			Integer section_id;
-			SectionBean secBean = null;
+			SectionBeanService secBean = null;
 			try
 			{
 				String sectionsSeqXML = module.getSeqXml();
@@ -896,7 +882,7 @@ public class ModuleDB implements Serializable
 
 				for (ListIterator i = secBeans.listIterator(); i.hasNext();)
 				{
-					secBean = (SectionBean) i.next();
+					secBean = (SectionBeanService) i.next();
 					section_id = secBean.getSection().getSectionId();
 					logger.debug("indenting section " + section_id);
 					sectionsSeqXML = SectionUtil.MakeSubSection(sectionsSeqXML, section_id.toString());
@@ -1268,12 +1254,10 @@ public class ModuleDB implements Serializable
 	 * @return List of active and archived modules
 	 * @throws HibernateException
 	 */
-	public List getActivenArchiveModules(String courseId) throws HibernateException
+	public List<? extends  ModuleObjService> getActivenArchiveModules(String courseId) throws HibernateException
 	{
-		List modList = new ArrayList();
-		List sectionsList = null;
-		Module mod = null;
-		Query sectionQuery = null;
+		List<? extends  ModuleObjService> modList = new ArrayList<ModuleObjService>();
+	
 		try
 		{
 			Session session = hibernateUtil.currentSession();
@@ -1311,9 +1295,9 @@ public class ModuleDB implements Serializable
 	 *        course id
 	 * @return list of archived modules
 	 */
-	public List getArchivedModules(String course_id)
+	public List< CourseModuleService> getArchivedModules(String course_id)
 	{
-		List archModules = new ArrayList();
+		List<CourseModuleService> archModules = new ArrayList<CourseModuleService>();
 		try
 		{
 			Session session = hibernateUtil.currentSession();
@@ -1680,13 +1664,11 @@ public class ModuleDB implements Serializable
 	 * @return list of modules
 	 * @throws HibernateException
 	 */
-	public List getModules(String courseId) throws HibernateException
+	public List<ModuleObjService> getModules(String courseId) throws HibernateException
 	{
-		List modList = new ArrayList();
-		List cmodList = new ArrayList();
-		List sectionsList = null;
-		Module mod = null;
-		Query sectionQuery = null;
+		List<ModuleObjService>  modList = new ArrayList<ModuleObjService>();
+		List<? extends  CourseModuleService> cmodList = new ArrayList<CourseModuleService>();
+
 		try
 		{
 			Session session = hibernateUtil.currentSession();
@@ -1697,7 +1679,7 @@ public class ModuleDB implements Serializable
 			query.setParameter("courseId", courseId);
 
 			cmodList = query.list();
-			Iterator i = cmodList.iterator();
+			Iterator<?> i = cmodList.iterator();
 			while (i.hasNext())
 			{
 				CourseModule cmod = (CourseModule) i.next();
@@ -1957,11 +1939,10 @@ public class ModuleDB implements Serializable
 	 * @return list of sections
 	 * @throws HibernateException
 	 */
-	public List getSections(int moduleId) throws HibernateException
+	public List<Section> getSections(int moduleId) throws HibernateException
 	{
-		List sectionsList = new ArrayList();
-		Module mod = null;
-		Query sectionQuery = null;
+		List<Section> sectionsList = new ArrayList<Section>();
+
 		try
 		{
 			Session session = hibernateUtil.currentSession();
@@ -2034,21 +2015,20 @@ public class ModuleDB implements Serializable
 	 * @return list of modules
 	 * @throws HibernateException
 	 */
-	public List getShownModulesAndDatesForInstructor(String userId, String courseId) throws HibernateException
+	public List<ModuleDateBeanService> getShownModulesAndDatesForInstructor(String userId, String courseId) throws HibernateException
 	{
-		List moduleDateBeansList = new ArrayList();
-		List modList = null;
-		List saModList = null;
+		List<ModuleDateBeanService> moduleDateBeansList = new ArrayList<ModuleDateBeanService>();
+		List<? extends ModuleObjService> modList = null;
+		List<SpecialAccess> saModList = null;
 		ModuleDateBean mdBean = null;
 		Module mod = null;
 
 		try
-		{
-			Session session = hibernateUtil.currentSession();
+		{			
 			modList = getModules(courseId);
 			saModList = saDB.getSpecialAccessModuleIds(courseId);
 
-			Iterator i = modList.iterator();
+			Iterator<?> i = modList.iterator();
 
 			while (i.hasNext())
 			{
@@ -2109,15 +2089,12 @@ public class ModuleDB implements Serializable
 	 * @return list of modules
 	 * @throws HibernateException
 	 */
-	public List getViewModules(String userId, String courseId, boolean fromCourseMap, boolean filtered) throws Exception
+	public List<ViewModBeanService> getViewModules(String userId, String courseId, boolean fromCourseMap, boolean filtered) throws Exception
 	{
 		Connection dbConnection = null;
-		List resList = new ArrayList();
-		List courseIdList = new ArrayList();
-		List sectionsList = null;
+		List<ViewModBeanService> resList = new ArrayList<ViewModBeanService>();
 		Module mod = null;
-		Query sectionQuery = null;
-		Map accMap = null;
+		Map<Integer, AccessDates> accMap = null;
 
 		try
 		{
@@ -2142,7 +2119,7 @@ public class ModuleDB implements Serializable
 			pstmt.setString(1, courseId);
 			rs = pstmt.executeQuery();
 			ViewSecBean vsBean = null;
-			Map vsBeanMap = null;
+			Map<Integer, ViewSecBean> vsBeanMap = null;
 			SubSectionUtilImpl ssuImpl;
 			StringBuffer rowClassesBuf;
 			List vsBeanList = null;
@@ -2201,7 +2178,7 @@ public class ModuleDB implements Serializable
 					int sectionId = rs.getInt("section_id");
 					if (sectionId != 0)
 					{
-						if (vsBeanMap == null) vsBeanMap = new LinkedHashMap();
+						if (vsBeanMap == null) vsBeanMap = new LinkedHashMap<Integer, ViewSecBean>();
 
 						vsBean = new ViewSecBean();
 						vsBean.setSectionId(sectionId);
@@ -2363,9 +2340,9 @@ public class ModuleDB implements Serializable
 	 * @return list of modules
 	 * @throws HibernateException
 	 */
-	public List getViewModulesAndDates(String userId, String courseId, boolean fromCourseMap, boolean filtered) throws HibernateException
+	public List<ViewModBeanService> getViewModulesAndDates(String userId, String courseId, boolean fromCourseMap, boolean filtered) throws HibernateException
 	{
-		List modList = null;
+		List<ViewModBeanService> modList = null;
 		Module mod = null;
 
 		try
@@ -2394,7 +2371,7 @@ public class ModuleDB implements Serializable
 	{
 		Module m = getModule(module_id);
 		if (m == null) return false;
-		Map<Integer, Section> sections = m.getSections();
+		Map<Integer, ? extends SectionObjService> sections = m.getSections();
 
 		// if module has no sections then its considered as completed.
 		if (sections == null || sections.size() == 0) return true;
@@ -3051,7 +3028,7 @@ public class ModuleDB implements Serializable
 	 *        List of moduledatebeans to update
 	 * @throws Exception
 	 */
-	public void updateModuleDateBeans(List moduleDateBeans) throws Exception
+	public void updateModuleDateBeans(List<? extends  ModuleDateBeanService> moduleDateBeans) throws Exception
 	{
 		Transaction tx = null;
 
@@ -3571,9 +3548,9 @@ public class ModuleDB implements Serializable
 	 * @return Map of module id and access dates object
 	 * @throws Exception
 	 */
-	private Map getAccessRecords(String userId, String courseId, Connection dbConnection) throws Exception
+	private Map<Integer, AccessDates> getAccessRecords(String userId, String courseId, Connection dbConnection) throws Exception
 	{
-		Map accMap = new HashMap();
+		Map<Integer, AccessDates> accMap = new HashMap();
 		if (meleteSecurityService.allowStudent())
 		{
 			String sql = "select a.module_id,a.start_date,a.end_date,a.override_start,a.override_end from melete_special_access a,melete_course_module c where a.users like ? and (a.start_date is NULL or a.end_date is NULL or a.start_date < a.end_date) and a.module_id=c.module_id and c.course_id = ?";
@@ -4017,7 +3994,7 @@ public class ModuleDB implements Serializable
 	private void processSections(Map sectionMap, List sectionBeanList, List xmlSecList, StringBuffer rowClassesBuf)
 	{
 		Section sec = null;
-		SectionBean secBean = null;
+		SectionBeanService secBean = null;
 
 		if ((sectionMap != null) && (xmlSecList != null))
 		{
@@ -4058,7 +4035,7 @@ public class ModuleDB implements Serializable
 	 */
 	private void processViewSections(Map vsBeanMap, List vsBeanList, List xmlSecList, StringBuffer rowClassesBuf)
 	{
-		ViewSecBean vsBean = null;
+		ViewSecBeanService vsBean = null;
 		// SectionBean secBean = null;
 
 		if ((vsBeanMap != null) && (xmlSecList != null))
@@ -4070,7 +4047,7 @@ public class ModuleDB implements Serializable
 					SecLevelObj slObj = (SecLevelObj) k.next();
 					if (slObj != null)
 					{
-						vsBean = (ViewSecBean) vsBeanMap.get(new Integer(slObj.getSectionId()));
+						vsBean = (ViewSecBeanService) vsBeanMap.get(new Integer(slObj.getSectionId()));
 						if (vsBean != null)
 						{
 							vsBean.setDisplaySequence(slObj.getDispSeq());

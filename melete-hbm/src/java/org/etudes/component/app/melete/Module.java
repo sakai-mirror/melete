@@ -32,6 +32,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import org.etudes.api.app.melete.ModuleObjService;
+import org.etudes.api.app.melete.SectionObjService;
 
 public class Module implements Serializable, ModuleObjService
 {
@@ -78,7 +79,7 @@ public class Module implements Serializable, ModuleObjService
 	private org.etudes.component.app.melete.ModuleShdates moduleshdate;
 
 	/** persistent field */
-	private Map sections;
+	private Map<Integer, SectionObjService> sections;
 
 	/** nullable persistent field */
 	private String seqXml;
@@ -117,7 +118,7 @@ public class Module implements Serializable, ModuleObjService
 	}
 
 	/** minimal constructor */
-	public Module(String title, String keywords, String createdByFname, String createdByLname, String userId, Date creationDate, Map sections,
+	public Module(String title, String keywords, String createdByFname, String createdByLname, String userId, Date creationDate, Map<Integer, SectionObjService> sections,
 			Map deletedSections)
 	{
 		this.title = title;
@@ -156,7 +157,7 @@ public class Module implements Serializable, ModuleObjService
 	public Module(String title, String learnObj, String description, String keywords, String createdByFname, String createdByLname, String userId,
 			String modifiedByFname, String modifiedByLname, String institute, String whatsNext, Date creationDate, Date modificationDate,
 			String seqXml, int version, org.etudes.component.app.melete.ModuleShdates moduleshdate,
-			org.etudes.component.app.melete.CourseModule coursemodule, Map sections, Map deletedSections)
+			org.etudes.component.app.melete.CourseModule coursemodule, Map<Integer, SectionObjService> sections, Map deletedSections)
 	{
 		this.title = title;
 		this.learnObj = learnObj;
@@ -305,7 +306,7 @@ public class Module implements Serializable, ModuleObjService
 	/**
 	 * {@inheritDoc}
 	 */
-	public Map getSections()
+	public Map<Integer,SectionObjService> getSections()
 	{
 		return this.sections;
 	}
@@ -473,7 +474,7 @@ public class Module implements Serializable, ModuleObjService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setSections(Map sections)
+	public void setSections(Map<Integer, SectionObjService> sections)
 	{
 		this.sections = sections;
 	}

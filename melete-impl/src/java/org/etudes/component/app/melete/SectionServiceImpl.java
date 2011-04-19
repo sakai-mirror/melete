@@ -32,22 +32,26 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.etudes.api.app.melete.MeleteCHService;
+import org.etudes.api.app.melete.MeleteLicenseService;
 import org.etudes.api.app.melete.MeleteResourceService;
 import org.etudes.api.app.melete.MeleteUserPreferenceService;
+import org.etudes.api.app.melete.ModuleObjService;
+import org.etudes.api.app.melete.SectionBeanService;
+import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.SectionResourceService;
 import org.etudes.api.app.melete.SectionService;
-import org.etudes.api.app.melete.ModuleObjService;
-import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.SectionTrackViewObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
-import org.etudes.api.app.melete.MeleteCHService;
 
 public class SectionServiceImpl implements Serializable, SectionService
 {
 	private Log logger = LogFactory.getLog(SectionServiceImpl.class);
+
 	private MeleteCHService meleteCHService;
+	
 	private MeleteLicenseDB meleteLicenseDB;
-	private Section section = null;
+	
 	private SectionDB sectiondb;
 
 	public SectionServiceImpl()
@@ -152,12 +156,12 @@ public class SectionServiceImpl implements Serializable, SectionService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void deleteSections(List sectionBeans, String courseId, String userId) throws MeleteException
+	public void deleteSections(List<SectionBeanService> sectionBeans, String courseId, String userId) throws MeleteException
 	{
-		List secList = null;
-		for (ListIterator i = sectionBeans.listIterator(); i.hasNext();)
+	
+		for (ListIterator<SectionBeanService> i = sectionBeans.listIterator(); i.hasNext();)
 		{
-			SectionBean secbean = (SectionBean) i.next();
+			SectionBeanService secbean = (SectionBeanService) i.next();
 
 			Section sec = (Section) secbean.getSection();
 			deleteSection(sec, courseId, userId);
@@ -212,9 +216,9 @@ public class SectionServiceImpl implements Serializable, SectionService
 	/**
 	 * {@inheritDoc}
 	 */
-	public List findResourceInUse(String selResourceId, String courseId)
+	public List<?> findResourceInUse(String selResourceId, String courseId)
 	{
-		List resourceUseList = null;
+		List<?> resourceUseList = null;
 		// found in section resources so break
 		resourceUseList = sectiondb.checkInSectionResources(selResourceId);
 		if (resourceUseList != null && resourceUseList.size() > 0)
@@ -255,11 +259,11 @@ public class SectionServiceImpl implements Serializable, SectionService
 	/**
 	 * {@inheritDoc}
 	 */
-	public ArrayList getMeleteLicenses()
+	public List<MeleteLicenseService> getMeleteLicenses()
 	{
 		try
 		{
-			ArrayList licenses = new ArrayList();
+			List<MeleteLicenseService> licenses = new ArrayList<MeleteLicenseService>();
 			licenses = getMeleteLicenseDB().getLicenseTypes();
 
 			return licenses;
@@ -528,7 +532,7 @@ public class SectionServiceImpl implements Serializable, SectionService
 						String addBefore = "| - ";
 						for (int i = 0; i < slObj.getLevel(); i++)
 							addBefore = addBefore + "- ";
-						SectionBean secBean = new SectionBean(sec);
+						SectionBeanService secBean = new SectionBean(sec);
 						secBean.setDisplaySequence(addBefore + slObj.getDispSeq());
 						sectionsList.add(secBean);
 					}
@@ -679,12 +683,6 @@ public class SectionServiceImpl implements Serializable, SectionService
 	public void setMeleteLicenseDB(MeleteLicenseDB meleteLicenseDB)
 	{
 		this.meleteLicenseDB = meleteLicenseDB;
-	}
-
-	// Mallika's methods
-	public void setSection(SectionObjService sec)
-	{
-		section = (Section) sec;
 	}
 
 	/**

@@ -25,8 +25,9 @@ package org.etudes.component.app.melete;
 
 import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.etudes.api.app.melete.ViewSecBeanService;
 
-public class ViewSecBean implements Serializable
+public class ViewSecBean implements Serializable, ViewSecBeanService
 {
 
 	protected boolean selected;
@@ -58,7 +59,7 @@ public class ViewSecBean implements Serializable
 	}
 
 	/**
-	 * @return section content type string
+	 * {@inheritDoc}
 	 */
 	public String getContentType()
 	{
@@ -66,7 +67,7 @@ public class ViewSecBean implements Serializable
 	}
 
 	/**
-	 * @return displaySequence string
+	 * {@inheritDoc}
 	 */
 	public String getDisplaySequence()
 	{
@@ -74,7 +75,7 @@ public class ViewSecBean implements Serializable
 	}
 
 	/**
-	 * @return get section id
+	 * {@inheritDoc}
 	 */
 	public int getSectionId()
 	{
@@ -82,7 +83,7 @@ public class ViewSecBean implements Serializable
 	}
 
 	/**
-	 * @return get section title
+	 * {@inheritDoc}
 	 */
 	public String getTitle()
 	{
@@ -90,7 +91,7 @@ public class ViewSecBean implements Serializable
 	}
 
 	/**
-	 * @return selected flag
+	 * {@inheritDoc}
 	 */
 	public boolean isSelected()
 	{
@@ -98,8 +99,7 @@ public class ViewSecBean implements Serializable
 	}
 
 	/**
-	 * @param contentType
-	 *        set section content type
+	 * {@inheritDoc}
 	 */
 	public void setContentType(String contentType)
 	{
@@ -107,8 +107,7 @@ public class ViewSecBean implements Serializable
 	}
 
 	/**
-	 * @param displaySequence
-	 *        set displaySequence
+	 * {@inheritDoc}
 	 */
 	public void setDisplaySequence(String displaySequence)
 	{
@@ -116,8 +115,7 @@ public class ViewSecBean implements Serializable
 	}
 
 	/**
-	 * @param sectionId
-	 *        set section id
+	 * {@inheritDoc}
 	 */
 	public void setSectionId(int sectionId)
 	{
@@ -125,8 +123,7 @@ public class ViewSecBean implements Serializable
 	}
 
 	/**
-	 * @param selected
-	 *        set selected flag
+	 * {@inheritDoc}
 	 */
 	public void setSelected(boolean selected)
 	{
@@ -134,8 +131,7 @@ public class ViewSecBean implements Serializable
 	}
 
 	/**
-	 * @param title
-	 *        set section title
+	 * {@inheritDoc}
 	 */
 	public void setTitle(String title)
 	{

@@ -44,6 +44,8 @@ import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.MeleteSecurityService;
+import org.etudes.api.app.melete.ModuleObjService;
+import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.SectionTrackViewObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.sakaiproject.user.cover.UserDirectoryService;
@@ -177,7 +179,7 @@ public class SectionDB implements Serializable
 			try
 			{
 				// refresh section object
-				Section findSection = getSection(section.getSectionId().intValue());
+				Section findSection = getSection(section.getSectionId().intValue());								
 				findSection.setAudioContent(section.isAudioContent());
 				findSection.setContentType(section.getContentType());
 				findSection.setInstr(section.getInstr());
@@ -766,9 +768,9 @@ public class SectionDB implements Serializable
 	 * 
 	 * @throws HibernateException
 	 */
-	private List getEditorSections(String courseId) throws HibernateException
+	private List<Section> getEditorSections(String courseId) throws HibernateException
 	{
-		List secList = new ArrayList();
+		List<Section> secList = new ArrayList<Section>();
 
 		try
 		{
@@ -1378,7 +1380,7 @@ public class SectionDB implements Serializable
 	 *        The course Id
 	 * @return
 	 */
-	public List getUploadMeleteResourcesOfCourse(String courseId)
+	public List<String> getUploadMeleteResourcesOfCourse(String courseId)
 	{
 		try
 		{
@@ -1386,7 +1388,7 @@ public class SectionDB implements Serializable
 			String queryString = "select meleteresource.resourceId from MeleteResource meleteresource where meleteresource.resourceId like '%"
 				+ courseId + "/uploads%'";
 			Query query = session.createQuery(queryString);
-			List result_list = query.list();
+			List<String> result_list = query.list();
 			return result_list;
 		}
 		catch (Exception ex)
@@ -1614,7 +1616,7 @@ public class SectionDB implements Serializable
 	 * 
 	 * @return a list of Object[] with obj[0] as section and obj[1] as sectionresource
 	 */
-	public List checkInSectionResources(String selResourceId)
+	public List<Object[]> checkInSectionResources(String selResourceId)
 	{
 
 		try
@@ -1626,7 +1628,7 @@ public class SectionDB implements Serializable
 
 			Query query = session.createQuery(queryString);
 			query.setParameter("resourceId", selResourceId);
-			List result_list = query.list();
+			List<Object[]> result_list = query.list();
 			if (result_list == null) return null;
 			return result_list;
 			/*
@@ -1651,18 +1653,18 @@ public class SectionDB implements Serializable
 	 *        The site Id
 	 * @return a list section objects
 	 */
-	public List findResourceInUse(String selResourceId, String courseId)
+	public List<SectionObjService> findResourceInUse(String selResourceId, String courseId)
 	{
 		try
 		{
-			List<Section> resourceUseList = null;
+			List<SectionObjService> resourceUseList = null;
 
 			logger.debug("now looking in embed data as section resources don't have it");
 			// String lookingFor = "/access/meleteDocs/content" + selResourceId;
 			String lookingFor = selResourceId;
 			// find in embedded data
 			long starttime = System.currentTimeMillis();
-			resourceUseList = new ArrayList<Section>(0);
+			resourceUseList = new ArrayList<SectionObjService>(0);
 			List<Section> secList = getEditorSections(courseId);
 			if ((secList != null) && (secList.size() > 0))
 			{
@@ -1675,7 +1677,7 @@ public class SectionDB implements Serializable
 					{
 						// String foundAt = sec.getModule().getTitle() + " >> " + sec.getTitle();
 						// resourceUseList.add(foundAt);
-						resourceUseList.add(sec);
+						resourceUseList.add((SectionObjService)sec);
 						long endtime = System.currentTimeMillis();
 						logger.debug("found in " + (endtime - starttime));
 						return resourceUseList;
@@ -1867,7 +1869,7 @@ public class SectionDB implements Serializable
 					long starttime = System.currentTimeMillis();
 					String toDelSecCourseId = (String) iter.next();
 					logger.info("processing " + i++ + " course with id " + toDelSecCourseId);
-					List activenArchModules = moduleDB.getActivenArchiveModules(toDelSecCourseId);
+					List<? extends ModuleObjService> activenArchModules = moduleDB.getActivenArchiveModules(toDelSecCourseId);
 					// parse and list all names which are in use
 					List<String> activeResources = moduleDB.getActiveResourcesFromList(activenArchModules);
 					List<String> allCourseResources = moduleDB.getAllMeleteResourcesOfCourse(toDelSecCourseId);

@@ -24,25 +24,28 @@
 
 package org.etudes.tool.melete;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.etudes.component.app.melete.*;
-
-import java.util.*;
-import java.io.Serializable;
-import javax.faces.context.FacesContext;
-import javax.faces.application.FacesMessage;
-import javax.faces.el.ValueBinding;
-import org.sakaiproject.util.ResourceLoader;
-
-import org.etudes.component.app.melete.ModuleDateBean;
-
 import org.etudes.api.app.melete.ModuleObjService;
+import org.etudes.api.app.melete.SectionBeanService;
 import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
+import org.etudes.component.app.melete.Module;
+import org.etudes.component.app.melete.ModuleDateBean;
+import org.etudes.component.app.melete.ModuleShdates;
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.tool.cover.ToolManager;
+import org.sakaiproject.util.ResourceLoader;
 
 /**
  * 
@@ -302,7 +305,7 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 		else
 		{
 			setHasSections(true);
-			setFirstSection(((SectionBean) mdbean.getSectionBeans().get(0)).getSection());
+			setFirstSection(((SectionBeanService) mdbean.getSectionBeans().get(0)).getSection());
 		}
 
 	}

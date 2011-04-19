@@ -53,6 +53,7 @@ import org.etudes.component.app.melete.CourseModule;
 import org.etudes.component.app.melete.Module;
 import org.etudes.api.app.melete.MeleteExportService;
 import org.etudes.api.app.melete.MeleteImportService;
+import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.etudes.api.app.melete.util.XMLHelper;
@@ -76,7 +77,7 @@ public class ExportMeleteModules
 	/** Dependency: The module service. */
 	ModuleService moduleService;
 
-	private List<Module> modList;
+	private List<ModuleObjService> modList;
 	private List<SelectItem> availableModules;
 	private List<String> selectedModules;
 	private boolean noFlag;
@@ -132,7 +133,7 @@ public class ExportMeleteModules
 			String allmsg = bundle.getString("importexportmodules_export_one_more_select");
 			availableModules.add(new SelectItem("all", allmsg));
 
-			for (Module mod : modList)
+			for (ModuleObjService mod : modList)
 				availableModules.add(new SelectItem(mod.getModuleId().toString(), mod.getTitle()));
 
 		}
@@ -144,17 +145,17 @@ public class ExportMeleteModules
 	 * 
 	 * @return
 	 */
-	private List<Module> createSelectedList()
+	private List<ModuleObjService> createSelectedList()
 	{
 		if (selectedModules == null || selectedModules.size() == 0) return null;
 		if (selectedModules.size() == 1 && selectedModules.get(0).equals("all")) return modList;
 
-		List<Module> returnList = new ArrayList<Module>(0);
+		List<ModuleObjService> returnList = new ArrayList<ModuleObjService>(0);
 		for (String sel : selectedModules)
 		{
 			if (sel.equals("all")) continue;
 
-			for (Module m : modList)
+			for (ModuleObjService m : modList)
 			{
 				if (m.getModuleId().toString().equals(sel))
 				{
@@ -178,7 +179,7 @@ public class ExportMeleteModules
 
 		try
 		{
-			List<Module> selectList = createSelectedList();
+			List<ModuleObjService> selectList = createSelectedList();
 			boolean allFlag = false;
 
 			if (selectList != null && selectList.size() > 0)
@@ -242,7 +243,7 @@ public class ExportMeleteModules
 	 *        Flag to check all modules or selected ones
 	 * @return navigation page
 	 */
-	public void exportIMSModules(List<Module> selectList, boolean allFlag) throws Exception
+	public void exportIMSModules(List<ModuleObjService> selectList, boolean allFlag) throws Exception
 	{
 		if (logger.isDebugEnabled()) logger.debug("Starting export IMS Modules....");
 
@@ -292,7 +293,7 @@ public class ExportMeleteModules
 			File xml_File = new File(imsxml);
 			meleteExportService.createFile(xml_File.getAbsolutePath(), packagedir.getAbsolutePath() + File.separator + "xml.xsd");
 
-			List<?> orgResElements = meleteExportService.generateOrganizationResourceItems(selectList, allFlag, packagedir, title, courseId);
+			List<Element> orgResElements = meleteExportService.generateOrganizationResourceItems(selectList, allFlag, packagedir, title, courseId);
 
 			if (orgResElements != null && orgResElements.size() > 0) manifest.add((Element) orgResElements.get(0));
 			if (orgResElements != null && orgResElements.size() > 1) manifest.add((Element) orgResElements.get(1));
@@ -354,7 +355,7 @@ public class ExportMeleteModules
 	 *        flag to check all modules or selected modules
 	 * @return navigation page
 	 */
-	public void exportScormModules(List<Module> selectList, boolean allFlag) throws Exception
+	public void exportScormModules(List<ModuleObjService> selectList, boolean allFlag) throws Exception
 	{
 		if (logger.isDebugEnabled()) logger.debug("Starting exportModules....");
 

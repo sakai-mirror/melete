@@ -24,11 +24,8 @@
 package org.etudes.tool.melete;
 
 import java.io.Serializable;
-
 import java.util.HashMap;
 import java.util.Iterator;
-
-import org.sakaiproject.util.ResourceLoader;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -37,17 +34,17 @@ import javax.faces.el.ValueBinding;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.etudes.component.app.melete.Module;
-
-import org.etudes.component.app.melete.SectionBean;
 import org.etudes.api.app.melete.ModuleDateBeanService;
 import org.etudes.api.app.melete.ModuleService;
-import org.etudes.api.app.melete.SectionService;
+import org.etudes.api.app.melete.SectionBeanService;
 import org.etudes.api.app.melete.SectionObjService;
+import org.etudes.api.app.melete.SectionService;
 import org.etudes.api.app.melete.exception.MeleteException;
-
+import org.etudes.component.app.melete.Module;
+import org.etudes.component.app.melete.SectionBean;
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.tool.cover.ToolManager;
+import org.sakaiproject.util.ResourceLoader;
 
 /**
  * Delete Module Page is the backing bean for the page delete_module.jsp. It also connects to other jsp pages like confirm_delete.jsp and list_auth_modules.jsp
@@ -65,7 +62,7 @@ public class DeleteModulePage implements Serializable/* ,ToolBean */
 	private boolean moduleSelected;
 	private boolean sectionSelected;
 	private List<Module> modules = null;
-	private List<SectionBean> sectionBeans = null;
+	private List<SectionBeanService> sectionBeans = null;
 	String courseId;
 	String userId;
 	private boolean sameModuleSectionSelected;
@@ -155,7 +152,7 @@ public class DeleteModulePage implements Serializable/* ,ToolBean */
 	 * @param sectionBeansList
 	 *        List of SectionBean objects
 	 */
-	public void setSectionBeans(List<SectionBean> sectionBeansList)
+	public void setSectionBeans(List<SectionBeanService> sectionBeansList)
 	{
 		this.sectionBeans = sectionBeansList;
 	}
@@ -165,7 +162,7 @@ public class DeleteModulePage implements Serializable/* ,ToolBean */
 	 * 
 	 * @return
 	 */
-	public List<SectionBean> getSectionBeans()
+	public List<SectionBeanService> getSectionBeans()
 	{
 		return this.sectionBeans;
 	}
@@ -248,7 +245,7 @@ public class DeleteModulePage implements Serializable/* ,ToolBean */
 
 		for (int i = 0; i < sectionBeans.size(); i++)
 		{
-			SectionBean secbean = (SectionBean) sectionBeans.get(i);
+			SectionBeanService secbean = (SectionBeanService) sectionBeans.get(i);
 			Integer checkModId = new Integer(secbean.getSection().getModuleId());
 			if (modulekeys.containsKey(checkModId)) throw new MeleteException("same_module_section_selected");
 		}
@@ -268,10 +265,10 @@ public class DeleteModulePage implements Serializable/* ,ToolBean */
 			Integer mkey = new Integer(mod.getModuleId());
 			modulekeys.put(mkey, mkey);
 		}
-		Iterator<SectionBean> iter = sectionBeans.iterator();
+		Iterator<SectionBeanService> iter = sectionBeans.iterator();
 		while (iter != null && iter.hasNext())
 		{
-			SectionBean secbean = (SectionBean) iter.next();
+			SectionBeanService secbean = (SectionBeanService) iter.next();
 			Integer checkModId = new Integer(secbean.getSection().getModuleId());
 			if (modulekeys.containsKey(checkModId)) iter.remove();
 		}
@@ -325,10 +322,10 @@ public class DeleteModulePage implements Serializable/* ,ToolBean */
 			{
 				sectionService.deleteSections(this.sectionBeans, getCourseId(), getUserId());
 
-				Iterator<SectionBean> it = this.sectionBeans.iterator();
+				Iterator<SectionBeanService> it = this.sectionBeans.iterator();
 				while (it.hasNext())
 				{
-					SectionBean obj = (SectionBean) it.next();
+					SectionBeanService obj = (SectionBeanService) it.next();
 					// Track the event
 					EventTrackingService.post(EventTrackingService.newEvent("melete.section.delete", ToolManager.getCurrentPlacement().getContext(),
 							true));

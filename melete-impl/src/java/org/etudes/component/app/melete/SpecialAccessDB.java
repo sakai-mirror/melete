@@ -37,6 +37,7 @@ import org.hibernate.Session;
 import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
 import org.etudes.api.app.melete.SpecialAccessObjService;
+import org.etudes.api.app.melete.SpecialAccessService;
 
 public class SpecialAccessDB
 {
@@ -119,9 +120,9 @@ public class SpecialAccessDB
 	 *        module id
 	 * @return List of special accesses
 	 */
-	public List getSpecialAccess(int moduleId)
+	public List<SpecialAccessService> getSpecialAccess(int moduleId)
 	{
-		List saList = new ArrayList();
+		List<SpecialAccessService> saList = new ArrayList<SpecialAccessService>();
 		try
 		{
 			Session session = getHibernateUtil().currentSession();

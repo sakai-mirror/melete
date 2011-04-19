@@ -40,6 +40,7 @@ import javax.faces.event.ValueChangeEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.etudes.api.app.melete.CourseModuleService;
 import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.SectionService;
 import org.etudes.component.app.melete.CourseModule;
@@ -50,9 +51,9 @@ import org.sakaiproject.util.ResourceLoader;
 public class ManageModulesPage implements Serializable/* ,ToolBean */
 {
 
-	private List<CourseModule> archiveModulesList;
+	private List<CourseModuleService> archiveModulesList;
 
-	private List<CourseModule> restoreModulesList;
+	private List<CourseModuleService> restoreModulesList;
 	
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(ManageModulesPage.class);
@@ -72,7 +73,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 	public ManageModulesPage()
 	{
 		count = 0;
-		restoreModulesList = new ArrayList<CourseModule>();
+		restoreModulesList = new ArrayList<CourseModuleService>();
 		archiveModulesList = null;
 		selectAllFlag = false;
 	}
@@ -141,7 +142,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 	/**
 	 * @return list of archived modules
 	 */
-	public List<CourseModule> getArchiveModulesList()
+	public List<? extends CourseModuleService> getArchiveModulesList()
 	{
 		try
 		{
@@ -192,7 +193,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 	/**
 	 * @return list of restored modules
 	 */
-	public List<CourseModule> getRestoreModulesList()
+	public List<? extends CourseModuleService> getRestoreModulesList()
 	{
 		return restoreModulesList;
 	}
@@ -354,9 +355,9 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 			String modId = selclientId.substring(0, selclientId.indexOf(':'));
 			int selectedModIndex = Integer.parseInt(modId);
 
-			if (restoreModulesList == null) restoreModulesList = new ArrayList<CourseModule>();
+			if (restoreModulesList == null) restoreModulesList = new ArrayList<CourseModuleService>();
 
-			CourseModule cm = archiveModulesList.get(selectedModIndex);
+			CourseModuleService cm = archiveModulesList.get(selectedModIndex);
 			restoreModulesList.add(cm);
 			count++;
 

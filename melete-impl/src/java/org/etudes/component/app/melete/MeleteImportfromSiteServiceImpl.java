@@ -24,30 +24,28 @@
 package org.etudes.component.app.melete;
 
 import java.net.MalformedURLException;
-import java.net.UnknownHostException;
 import java.net.URLDecoder;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashSet;
 import java.util.Set;
-import org.etudes.component.app.melete.MeleteUtil;
-import org.etudes.api.app.melete.MeleteCHService;
-import org.etudes.api.app.melete.MeleteImportfromSiteService;
-import org.etudes.api.app.melete.exception.MeleteException;
-
-import org.sakaiproject.content.api.ContentResource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.etudes.api.app.melete.MeleteCHService;
+import org.etudes.api.app.melete.MeleteImportfromSiteService;
+import org.etudes.api.app.melete.ModuleObjService;
+import org.etudes.api.app.melete.SectionObjService;
+import org.etudes.api.app.melete.exception.MeleteException;
+import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.util.ResourceLoader;
 import org.sakaiproject.util.Validator;
 
 
@@ -138,7 +136,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			String uploadCollId = getMeleteCHService().getUploadCollectionId(toSiteId);
 			String newResourceId = null;
 
-			if (cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LINK))
+			if (cr.getContentType().equals(MeleteCHService.MIME_TYPE_LINK))
 			{
 				String linkData = new String(cr.getContent());
 
@@ -157,7 +155,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 					// link item should point to new address
 					byte[] melContentData = (getMeleteCHService().getResourceUrl(firstReferId)).getBytes();
 					ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true, melResourceName, melResourceDescription);
-					newResourceId = getMeleteCHService().addResourceItem(melResourceName, getMeleteCHService().MIME_TYPE_LINK, uploadCollId,
+					newResourceId = getMeleteCHService().addResourceItem(melResourceName, MeleteCHService.MIME_TYPE_LINK, uploadCollId,
 							melContentData, res);
 				}
 				// external urls or my workspace etc
@@ -165,10 +163,10 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 					newResourceId = getMeleteCHService().copyIntoFolder(cr.getId(), uploadCollId);
 			}
 			// LTI resource
-			else if (cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LTI))
+			else if (cr.getContentType().equals(MeleteCHService.MIME_TYPE_LTI))
 			{
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true, melResourceName, melResourceDescription);
-				newResourceId = getMeleteCHService().addResourceItem(melResourceName, getMeleteCHService().MIME_TYPE_LTI, uploadCollId,
+				newResourceId = getMeleteCHService().addResourceItem(melResourceName, MeleteCHService.MIME_TYPE_LTI, uploadCollId,
 						cr.getContent(), res);
 			}
 			else
@@ -246,7 +244,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		if (fileResourceName == null) fileResourceName = cr1.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 		String contentEditor = new String(cr1.getContent());
 		String parentStr = meleteUtil.findParentReference(cr1.getId());
-		ArrayList content = createHTMLFile(contentEditor, toSiteId, new HashSet<String>(), parentStr);
+		ArrayList<?> content = createHTMLFile(contentEditor, toSiteId, new HashSet<String>(), parentStr);
 		contentEditor = (String) content.get(0);
 
 		ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true, fileResourceName,
@@ -273,12 +271,12 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 	 * @return
 	 * @throws Exception
 	 */
-	protected ArrayList createHTMLFile(String contentEditor, String courseId, Set<String> checkEmbedHTMLResources, String parentRef) throws Exception
+	protected ArrayList<?> createHTMLFile(String contentEditor, String courseId, Set<String> checkEmbedHTMLResources, String parentRef) throws Exception
 	{
 		// save uploaded img inside content editor to destination directory
 		String checkforimgs = contentEditor;
 		int imgindex = -1;
-		String imgSrcPath, imgName, imgLoc;
+		String imgSrcPath;
 
 		int startSrc = 0;
 		int endSrc = 0;
@@ -287,7 +285,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		logger.debug("parentStr inside createHTML" + parentRef);
 		while (checkforimgs != null)
 		{
-			ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
+			ArrayList<?> embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
 			checkforimgs = (String) embedData.get(0);
 			if (embedData.size() > 1)
 			{
@@ -371,7 +369,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 						String filename = imgActualPath.substring(imgActualPath.lastIndexOf('/') + 1);
 						String res_id = embedResource.getId();
 						res_id = res_id.substring(res_id.lastIndexOf('/') + 1);
-						ArrayList contentData = createHTMLFile(moreContentData, courseId, checkEmbedHTMLResources, parentStr);
+						ArrayList<?> contentData = createHTMLFile(moreContentData, courseId, checkEmbedHTMLResources, parentStr);
 						moreContentData = (String) contentData.get(0);
 						checkEmbedHTMLResources = (Set<String>) contentData.get(1);
 						try
@@ -405,7 +403,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			endSrc = 0;
 			checkLink = null;
 		}// End while
-		ArrayList returnData = new ArrayList();
+		ArrayList<Object> returnData = new ArrayList<Object>();
 		returnData.add(contentEditor);
 		returnData.add(checkEmbedHTMLResources);
 		return returnData;
@@ -467,26 +465,15 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 	}
 
 	/**
-	 * 
-	 * @param fromContext
-	 * @param toContext
-	 */
-	private void setMeleteSitePreference(String fromContext, String toContext)
-	{
-		MeleteSitePreference fromMsp = meleteUserPrefDB.getSitePreferences(fromContext);
-		meleteUserPrefDB.setSitePreferences(toContext, fromMsp.isPrintable(), fromMsp.isAutonumber());
-	}
-
-	/**
 	 * Converts a list of Modules --> Set of ImportModules.
 	 */
-	private Set<ImportModule> convertToImportModules(List<Module> aModuleList)
+	private Set<ImportModule> convertToImportModules(List<? extends ModuleObjService> aModuleList)
 	{
 		Set<ImportModule> aModuleSet = new LinkedHashSet<ImportModule>();
 		if (aModuleList == null) return aModuleSet;
-		for (Module m : aModuleList)
+		for (ModuleObjService m :  aModuleList)
 		{
-			ImportModule im = new ImportModule(m);
+			ImportModule im = new ImportModule((Module)m);
 			aModuleSet.add(im);
 		}
 		return aModuleSet;
@@ -501,25 +488,25 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 	private void buildModules(String fromContext, String toContext)
 	{
 		// Get modules in site A
-		Map sectionList = null;
+		Map<Integer,? extends SectionObjService> sectionList = null;
 		MeleteResource toMres = null;
 		int fromSecId, toSecId;
 
-		List<Module> fromModuleList = moduleDB.getActivenArchiveModules(fromContext);
+		List<? extends ModuleObjService> fromModuleList = moduleDB.getActivenArchiveModules(fromContext);
 
 		// Iterate through all modules in site A
 		if (fromModuleList == null || fromModuleList.size() <= 0) return;
 
 		// Get TO SITE modules
 		Set<ImportModule> toSiteModules = new LinkedHashSet<ImportModule>();
-		List<Module> toModuleList = moduleDB.getActivenArchiveModules(toContext);
+		List<? extends ModuleObjService> toModuleList = moduleDB.getActivenArchiveModules(toContext);
 		if (toModuleList != null && toModuleList.size() > 0)
 		{
 			// create a set of toSite modules
 			toSiteModules = convertToImportModules(toModuleList);
 		}
 
-		for (ListIterator i = fromModuleList.listIterator(); i.hasNext();)
+		for (ListIterator<?> i = fromModuleList.listIterator(); i.hasNext();)
 		{
 			Module fromMod = (Module) i.next();
 			String fromModSeqXml = fromMod.getSeqXml();
@@ -576,7 +563,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				int mapSize = sectionList.size();
 				if (mapSize > 0)
 				{
-					Iterator keyValuePairs = sectionList.entrySet().iterator();
+					Iterator<?> keyValuePairs = sectionList.entrySet().iterator();
 					while (keyValuePairs.hasNext())
 					{
 						Map.Entry entry = (Map.Entry) keyValuePairs.next();
@@ -657,13 +644,13 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		String fromUploadsColl = meleteCHService.getUploadCollectionId(fromContext);
 		String toUploadsColl = meleteCHService.getUploadCollectionId(toContext);
 
-		List fromContextList = meleteCHService.getMemberNamesCollection(fromUploadsColl);
+		List<String> fromContextList = meleteCHService.getMemberNamesCollection(fromUploadsColl);
 
-		List toContextList = meleteCHService.getMemberNamesCollection(toUploadsColl);
+		List<String> toContextList = meleteCHService.getMemberNamesCollection(toUploadsColl);
 
 		if ((fromContextList != null) && (toContextList != null))
 		{
-			ListIterator memIt = fromContextList.listIterator();
+			ListIterator<String> memIt = fromContextList.listIterator();
 			List<String> replaceContextList = new ArrayList<String>();
 			while (memIt != null && memIt.hasNext())
 			{
@@ -676,7 +663,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				replaceContextList.removeAll(toContextList);
 				if (replaceContextList.size() > 0)
 				{
-					ListIterator repIt = replaceContextList.listIterator();
+					ListIterator<?> repIt = replaceContextList.listIterator();
 					while (repIt != null && repIt.hasNext())
 					{
 						String resId = (String) repIt.next();
@@ -769,13 +756,13 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			hash = hash * 31 + importMod.getTitle().hashCode();
 
 			// sections size
-			Map secs = importMod.getSections();
+			Map<Integer, ? extends SectionObjService> secs = importMod.getSections();
 			hash = hash * 31 + (secs == null ? 0 : secs.size());
 
 			// sections title and content type
 			if (secs != null)
 			{
-				Iterator keyValuePairs = secs.keySet().iterator();
+				Iterator<?> keyValuePairs = secs.keySet().iterator();
 				while (keyValuePairs.hasNext())
 				{
 					Section s = (Section) secs.get(keyValuePairs.next());
@@ -801,8 +788,8 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				return false;
 
 			// compare sections
-			Map secs = this.getImportMod().getSections();
-			Map otherSecs = other.getImportMod().getSections();
+			Map<Integer, ? extends SectionObjService> secs = this.getImportMod().getSections();
+			Map<Integer, ? extends SectionObjService> otherSecs = other.getImportMod().getSections();
 
 			if (secs != null && otherSecs != null)
 			{
@@ -811,8 +798,8 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				else
 					return false;
 
-				Iterator keyValuePairs = secs.keySet().iterator();
-				Iterator otherKeyValuePairs = otherSecs.keySet().iterator();
+				Iterator<?> keyValuePairs = secs.keySet().iterator();
+				Iterator<?> otherKeyValuePairs = otherSecs.keySet().iterator();
 				while (keyValuePairs.hasNext() && otherKeyValuePairs.hasNext())
 				{
 					Section s = (Section) secs.get(keyValuePairs.next());

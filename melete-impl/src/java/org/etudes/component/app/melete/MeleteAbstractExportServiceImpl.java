@@ -143,12 +143,6 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 			String imagespath) throws Exception;
 
 	/**
-	 * {@inheritDoc}
-	 */
-	abstract public List generateOrganizationResourceItems(List modList, boolean allFlag, File packagedir, String maintitle, String courseId)
-			throws Exception;
-
-	/**
 	 * Creates Resource tags for un-referred meleteDocs items.
 	 * 
 	 * @param resources
@@ -459,7 +453,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 	 * 
 	 * @throws Exception
 	 */
-	byte[] setContentResourceData(String resourceId, ArrayList data) throws Exception
+	byte[] setContentResourceData(String resourceId, ArrayList<String> data) throws Exception
 	{
 		try
 		{
@@ -496,14 +490,13 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 	 * @param resource
 	 * @return the content with modifed image path
 	 */
-	ArrayList replaceImagePath(String secContent, String imagespath, Element resource, boolean nested, Set<String> checkEmbedHTMLResources,
+	ArrayList<?> replaceImagePath(String secContent, String imagespath, Element resource, boolean nested, Set<String> checkEmbedHTMLResources,
 			String parentRef) throws Exception
 	{
-		StringBuffer strBuf = new StringBuffer();
 		String checkforimgs = secContent;
-		int imgindex = -1;
-
-		String imgSrcPath, imgName, imgLoc;
+	
+		String imgSrcPath = null;
+		String imgName = null;
 		String modifiedSecContent = new String(secContent);
 		// meletedocsdirpath = meleteDocsDirPath;
 
@@ -519,7 +512,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 
 			while (checkforimgs != null)
 			{
-				ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
+				ArrayList<?> embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
 				checkforimgs = (String) embedData.get(0);
 
 				if (embedData.size() > 1)
@@ -551,7 +544,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 					if (checkLink != null && checkLink.equals("link") && findResourcePath.indexOf("#") != -1)
 						findResourcePath = findResourcePath.substring(0, findResourcePath.indexOf("#"));
 
-					ArrayList r = meleteUtil.findResourceSource(findResourcePath, null, null, false);
+					ArrayList<String> r = meleteUtil.findResourceSource(findResourcePath, null, null, false);
 					if (r == null || r.size() == 0)
 					{
 						/*
@@ -567,7 +560,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 					String img_resource_id = (String) r.get(0);
 
 					byte[] img_data = null;
-					ArrayList img_content = new ArrayList();
+					ArrayList<String> img_content = new ArrayList<String>();
 					if (img_resource_id.endsWith(".htm") || img_resource_id.endsWith(".html"))
 					{
 						// if not processed yet then add to the set
@@ -591,11 +584,11 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 							}
 							String parentStr = meleteUtil.findParentReference(img_resource_id);
 							logger.debug("parent str is" + parentStr);
-							ArrayList newimgarr_data = replaceImagePath(new String(img_data), imagespath, resource, true, checkEmbedHTMLResources,
+							ArrayList<?> newimgarr_data = replaceImagePath(new String(img_data), imagespath, resource, true, checkEmbedHTMLResources,
 									parentStr);
 							String newimg_data = (String) newimgarr_data.get(0);
 							img_data = newimg_data.getBytes();
-							checkEmbedHTMLResources = (Set) newimgarr_data.get(1);
+							checkEmbedHTMLResources = (Set<String>) newimgarr_data.get(1);
 							// return modifiedSecContent;
 						}
 					} // html check end
@@ -649,7 +642,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 			throw e;
 		}
 
-		ArrayList returnData = new ArrayList();
+		ArrayList<Object> returnData = new ArrayList<Object>();
 		returnData.add(modifiedSecContent);
 		returnData.add(checkEmbedHTMLResources);
 		return returnData;
@@ -692,7 +685,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 			// read the content to modify the path for images
 			String modSecContent = new String(content_data1);
 			logger.debug("replace image called for " + fileName);
-			ArrayList rData = replaceImagePath(modSecContent, imagespath, resource, false, new HashSet<String>(), meleteUtil
+			ArrayList<?> rData = replaceImagePath(modSecContent, imagespath, resource, false, new HashSet<String>(), meleteUtil
 					.findParentReference(fileName));
 			modSecContent = (String) rData.get(0);
 			content_data1 = modSecContent.getBytes();
@@ -711,7 +704,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 		// certain characters which are passed by ecode but xml parser doesn't like change them to _
 		fileName = meleteUtil.escapeFileforExportPackage(fileName);
 		// look for file element
-		org.dom4j.Node node = null;
+
 		boolean found = false;
 		List<Element> allfiles = resource.elements();
 		for (org.dom4j.Element afile : allfiles)
@@ -728,7 +721,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 			logger.debug("actual file insert" + fileName);
 			if (!fileName.startsWith("Section_"))
 			{
-				Set recordFiles = (Set) exportThreadLocal.get("MeleteExportFiles");
+				Set<String> recordFiles = (Set) exportThreadLocal.get("MeleteExportFiles");
 				if (recordFiles != null) recordFiles.add(fileName);
 			}
 			createFileFromContent(content_data1, resourcesDir.getAbsolutePath() + File.separator + fileName);
@@ -757,7 +750,7 @@ public abstract class MeleteAbstractExportServiceImpl implements MeleteExportSer
 			File outputFile = new File(outputurl);
 			in = new FileInputStream(inputFile);
 			out = new FileOutputStream(outputFile);
-			int c;
+
 			int len;
 			byte buf[] = new byte[102400];
 			while ((len = in.read(buf)) > 0)

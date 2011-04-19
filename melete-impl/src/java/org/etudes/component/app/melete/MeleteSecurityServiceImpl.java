@@ -39,6 +39,7 @@ import javax.servlet.ServletOutputStream;
 
 import org.etudes.api.app.melete.MeleteExportService;
 import org.etudes.api.app.melete.MeleteSecurityService;
+import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.MeleteImportfromSiteService;
 import org.etudes.api.app.melete.MeleteImportService;
@@ -605,10 +606,10 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService, EntityP
 
 			if (siteId != null && siteId.length() > 0)
 			{
-				List<Module> selectList = getModuleService().getModules(siteId);
+				List<? extends ModuleObjService> selectList = getModuleService().getModules(siteId);
 				count = selectList.size();
 				File basePackDir = new File(archivePath);
-				List orgResElements = getMeleteExportService().generateOrganizationResourceItems(selectList, true, basePackDir,
+				List<org.dom4j.Element> orgResElements = getMeleteExportService().generateOrganizationResourceItems(selectList, true, basePackDir,
 						SiteService.getSite(siteId).getTitle(), siteId);
 
 				if (orgResElements != null && orgResElements.size() > 0)

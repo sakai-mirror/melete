@@ -35,6 +35,7 @@ import org.etudes.component.app.melete.MeleteResource;
 import org.etudes.component.app.melete.Section;
 import org.etudes.component.app.melete.SectionResource;
 
+import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
@@ -172,9 +173,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 				ContentResource cr = getMeleteCHService().getResource(resourceId);
 				if (cr == null) return;
 
-				if (cr.getContentType().equals(getMeleteCHService().MIME_TYPE_EDITOR))
+				if (cr.getContentType().equals(MeleteCHService.MIME_TYPE_EDITOR))
 					this.contentEditor = new String(cr.getContent());
-				else if (cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LINK)) setCurrLinkUrl(new String(cr.getContent()));
+				else if (cr.getContentType().equals(MeleteCHService.MIME_TYPE_LINK)) setCurrLinkUrl(new String(cr.getContent()));
 
 				this.secResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 				uploadFileName = this.secResourceName;
@@ -230,7 +231,7 @@ public class EditSectionPage extends SectionPage implements Serializable
      	
 		UICommand cmdLink = (UICommand)evt.getComponent();
 
-		List cList = cmdLink.getChildren();
+		List<?> cList = cmdLink.getChildren();
 		if(cList == null || cList.size() <2) return;
 		UIParameter param1 = (UIParameter) cList.get(0);
 	   	UIParameter param2 = (UIParameter) cList.get(1);
@@ -272,12 +273,12 @@ public class EditSectionPage extends SectionPage implements Serializable
 		try
 		{
 			// validation 2a: if content is provided then check for license and year lengths
-			if (!section.getContentType().equals("notype") && !lPage.getLicenseCodes().equals(lPage.NO_CODE))
+			if (!section.getContentType().equals("notype") && !lPage.getLicenseCodes().equals(LicensePage.NO_CODE))
 			{
 				lPage.validateLicenseLengths();
 			}
 			// validation 2: if content is provided then check for copyright license
-			if (!section.getContentType().equals("notype") && lPage.getLicenseCodes().equals(lPage.Copyright_CODE))
+			if (!section.getContentType().equals("notype") && lPage.getLicenseCodes().equals(LicensePage.Copyright_CODE))
 			{
 				lPage.checkForRequiredFields();
 			}
@@ -849,7 +850,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				}
 				secResourceName = newURLTitle;
 				createLinkUrl();
-				String res_mime_type = getMeleteCHService().MIME_TYPE_LINK;
+				String res_mime_type = MeleteCHService.MIME_TYPE_LINK;
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, secResourceDescription);
 			//	if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
 				containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
@@ -929,7 +930,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				}
 				secResourceName = newURLTitle;
 				createLTIDescriptor();
-				String res_mime_type = getMeleteCHService().MIME_TYPE_LTI;
+				String res_mime_type = MeleteCHService.MIME_TYPE_LTI;
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, secResourceDescription);
 		//		if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
 				containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
@@ -1248,7 +1249,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		String currId = "";
 		FacesContext context = FacesContext.getCurrentInstance();
-		Map sessionMap = context.getExternalContext().getSessionMap();
+		Map<?,?> sessionMap = context.getExternalContext().getSessionMap();
 		currId = (String)sessionMap.get("course_id");
 		if(currId == null || currId.length() == 0)
 		{
@@ -1258,4 +1259,5 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		return currId;
 	}
+
 }

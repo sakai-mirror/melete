@@ -278,7 +278,7 @@ public class ViewModulesPage implements Serializable
 
 		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
 
-		SectionBean secBean = (SectionBean) this.mdbean.getSectionBeans().get(0);
+		SectionBeanService secBean = (SectionBeanService) this.mdbean.getSectionBeans().get(0);
 		vsPage.setSectionId(secBean.getSection().getSectionId());
 		vsPage.setModuleId(secBean.getSection().getModuleId());
 		vsPage.setModuleSeqNo(secBean.getSection().getModule().getCoursemodule().getSeqNo());
@@ -319,7 +319,7 @@ public class ViewModulesPage implements Serializable
 
 		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
 
-		SectionBean secBean = (SectionBean) this.prevMdbean.getSectionBeans().get(this.prevMdbean.getSectionBeans().size() - 1);
+		SectionBeanService secBean = (SectionBeanService) this.prevMdbean.getSectionBeans().get(this.prevMdbean.getSectionBeans().size() - 1);
 		vsPage.setSectionId(secBean.getSection().getSectionId());
 		vsPage.setModuleId(secBean.getSection().getModuleId());
 		vsPage.setModuleSeqNo(secBean.getSection().getModule().getCoursemodule().getSeqNo());
@@ -348,7 +348,7 @@ public class ViewModulesPage implements Serializable
 		{
 			if (this.prevMdbean.getSectionBeans() != null)
 			{
-				vnPage.setPrevSecId(((SectionBean) this.prevMdbean.getSectionBeans().get(this.prevMdbean.getSectionBeans().size() - 1)).getSection()
+				vnPage.setPrevSecId(((SectionBeanService) this.prevMdbean.getSectionBeans().get(this.prevMdbean.getSectionBeans().size() - 1)).getSection()
 						.getSectionId());
 			}
 			else
@@ -587,7 +587,7 @@ public class ViewModulesPage implements Serializable
 
 		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
 
-		SectionBean secBean = (SectionBean) table.getRowData();
+		SectionBeanService secBean = (SectionBeanService) table.getRowData();
 		vsPage.resetValues();
 		vsPage.setSectionId(secBean.getSection().getSectionId());
 		vsPage.setModuleId(secBean.getSection().getModuleId());

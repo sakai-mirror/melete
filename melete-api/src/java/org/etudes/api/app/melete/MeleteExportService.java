@@ -26,7 +26,7 @@ package org.etudes.api.app.melete;
 import java.io.File;
 import java.util.List;
 import org.dom4j.Element;
-
+import org.etudes.api.app.melete.ModuleObjService;
 /**
  * MeleteImportExportService provides the methods for import export
  */
@@ -108,17 +108,17 @@ public interface MeleteExportService
 	public void deleteFiles(File delfile);
 
 	/**
-	 * adds organization and resource items tomanifest
+	 * adds organization and resource items to manifest
 	 * 
-	 * @param modDateBeans
-	 *        module date beans
+	 * @param modList
+	 *       list of modules 
 	 * @param packagedir
 	 *        package directory
 	 * @return the list of manifest elements
 	 * @throws Exception
 	 */
-	public List generateOrganizationResourceItems(List modDateBeans, boolean allFlag, File packagedir, String title, String courseId)
-	throws Exception;
+	List<Element> generateOrganizationResourceItems(List<? extends ModuleObjService> modList, boolean allFlag, File packagedir,
+			String maintitle, String courseId) throws Exception;
 
 	/**
 	 * creates document root element "manifest" from the default manifest file and adds the namespaces
@@ -131,5 +131,4 @@ public interface MeleteExportService
 	public Element getManifest(File xmlFile) throws Exception;
 
 	public void initValues();
-
 }

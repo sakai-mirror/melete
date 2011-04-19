@@ -24,58 +24,27 @@
 
 package org.etudes.component.app.melete;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.sakaiproject.content.api.ContentResource;
-import org.sakaiproject.content.api.ContentCollection;
-import org.sakaiproject.content.cover.ContentTypeImageService;
-
-import org.etudes.component.app.melete.MeleteResource;
-import org.etudes.component.app.melete.MeleteUtil;
-import org.hibernate.HibernateException;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.CourseModuleService;
+import org.etudes.api.app.melete.MeleteCHService;
+import org.etudes.api.app.melete.MeleteExportService;
 import org.etudes.api.app.melete.ModuleDateBeanService;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.ModuleShdatesService;
-import org.etudes.api.app.melete.MeleteCHService;
-import org.etudes.api.app.melete.SectionObjService;
+import org.etudes.api.app.melete.SectionBeanService;
 import org.etudes.api.app.melete.SectionService;
-import org.etudes.api.app.melete.MeleteExportService;
-import org.sakaiproject.component.cover.ServerConfigurationService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.etudes.api.app.melete.ViewModBeanService;
 import org.etudes.api.app.melete.exception.MeleteException;
-import org.sakaiproject.exception.IdUnusedException;
-
-import org.sakaiproject.db.cover.SqlService;
-import org.sakaiproject.content.api.ContentResourceEdit;
-import org.sakaiproject.entity.api.ResourcePropertiesEdit;
-import org.sakaiproject.entity.api.Entity;
-
-import org.sakaiproject.util.Validator;
+import org.hibernate.HibernateException;
 
 public class ModuleServiceImpl implements ModuleService, Serializable
 {
@@ -91,13 +60,12 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	private ModuleDateBean mdBean = null;
 	private MeleteCHService meleteCHService;
 
-	private MeleteUtil meleteUtil = new MeleteUtil();
 	private Module module = null;
-	private List moduleDateBeans = null;
+
 	private ModuleDB moduledb;
-	private List modules = null;
+
 	private SectionService sectionService;
-	private List viewModuleBeans = null;
+	private List<?> viewModuleBeans = null;
 	/** Dependency: The melete import export service. */
 	protected MeleteExportService meleteExportService;
 
@@ -116,10 +84,12 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 
 	/**
 	 * {@inheritDoc}
+	 * 
 	 */
-	public void archiveModules(List selModBeans, List moduleDateBeans, String courseId) throws Exception
+	public void archiveModules(List<ModuleDateBeanService> selModBeans, List<ModuleDateBeanService> moduleDateBeans, String courseId)
+	throws Exception
 	{
-		List cmodList = null;
+
 		try
 		{
 			moduledb.archiveModules(selModBeans, moduleDateBeans, courseId);
@@ -139,7 +109,7 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public void bringOneLevelUp(ModuleObjService module, List secBeans) throws MeleteException
+	public void bringOneLevelUp(ModuleObjService module, List<? extends SectionBeanService> secBeans) throws MeleteException
 	{
 		moduledb.bringOneLevelUp((Module) module, secBeans);
 	}
@@ -181,7 +151,7 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public void createSubSection(ModuleObjService module, List secBeans) throws MeleteException
+	public void createSubSection(ModuleObjService module, List<? extends SectionBeanService> secBeans) throws MeleteException
 	{
 		moduledb.createSubSection((Module) module, secBeans);
 	}
@@ -189,10 +159,9 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public void deleteModules(List delModules, String courseId, String userId) throws Exception
+	public void deleteModules(List<? extends ModuleObjService> delModules, String courseId, String userId) throws Exception
 	{
-		List cmodList = null;
-		List<Module> allModules = new ArrayList<Module>(0);
+		List<? extends ModuleObjService> allModules = new ArrayList<Module>(0);
 
 		moduledb.deleteCalendar(delModules, courseId);
 		try
@@ -209,10 +178,12 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @return
 	 */
-	public List getArchiveModules(String course_id)
+	public List<CourseModuleService> getArchiveModules(String course_id)
 	{
-		List archModules = null;
+		List<CourseModuleService> archModules = null;
 		try
 		{
 			archModules = moduledb.getArchivedModules(course_id);
@@ -323,10 +294,10 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getModuleDateBeans(String userId, String courseId)
+	public List<ModuleDateBeanService> getModuleDateBeans(String userId, String courseId)
 	{
 		if (moduledb == null) moduledb = ModuleDB.getModuleDB();
-
+		List<ModuleDateBeanService> moduleDateBeans = null;
 		try
 		{
 			moduleDateBeans = moduledb.getShownModulesAndDatesForInstructor(userId, courseId);
@@ -350,8 +321,9 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getModules(String courseId)
+	public List<ModuleObjService> getModules(String courseId)
 	{
+		List<ModuleObjService> modules = null;
 		try
 		{
 			modules = moduledb.getModules(courseId);
@@ -430,10 +402,10 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getViewModules(String userId, String courseId, boolean fromCourseMap, boolean filtered)
+	public List<ViewModBeanService> getViewModules(String userId, String courseId, boolean fromCourseMap, boolean filtered)
 	{
 		if (moduledb == null) moduledb = ModuleDB.getModuleDB();
-
+		List<ViewModBeanService> viewModuleBeans = null;
 		try
 		{
 			viewModuleBeans = moduledb.getViewModulesAndDates(userId, courseId, fromCourseMap, filtered);
@@ -526,11 +498,11 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public void moveSections(List sectionBeans, ModuleObjService selectedModule) throws MeleteException
+	public void moveSections(List<? extends SectionBeanService> sectionBeans, ModuleObjService selectedModule) throws MeleteException
 	{
 		try
 		{
-			for (ListIterator<SectionBean> i = sectionBeans.listIterator(); i.hasNext();)
+			for (ListIterator<?> i = sectionBeans.listIterator(); i.hasNext();)
 			{
 				SectionBean moveSectionBean = (SectionBean) i.next();
 				if (moveSectionBean.getSection().getModuleId() != selectedModule.getModuleId().intValue())
@@ -607,28 +579,12 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public void setModuleDateBeans(List moduleDateBeansList)
-	{
-		moduleDateBeans = moduleDateBeansList;
-	}
-
-	/**
 	 * @param moduledb
 	 *        The moduledb to set.
 	 */
 	public void setModuledb(ModuleDB moduledb)
 	{
 		this.moduledb = moduledb;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setModules(List modules)
-	{
-		this.modules = modules;
 	}
 
 	/**
@@ -677,7 +633,7 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public void updateProperties(List moduleDateBeans, String courseId) throws MeleteException
+	public void updateProperties(List<? extends ModuleDateBeanService> moduleDateBeans, String courseId) throws MeleteException
 	{
 		try
 		{
@@ -688,7 +644,7 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 			logger.debug("multiple user exception in module business");
 			throw new MeleteException("edit_module_multiple_users");
 		}
-		for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();)
+		for (ListIterator<?> i = moduleDateBeans.listIterator(); i.hasNext();)
 		{
 			ModuleDateBean mdbean = (ModuleDateBean) i.next();
 			try
@@ -711,14 +667,14 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	public boolean updateSeqXml(String courseId) throws Exception
 	{
 		int modId;
-		List modList = getModules(courseId);
+		List<ModuleObjService> modList = getModules(courseId);
 		// Iterate through each course, get all modules for the course
 		if (modList != null)
 		{
 			if (logger.isDebugEnabled()) logger.debug("Number of modules is " + modList.size());
-			List secList;
+			List<Section> secList;
 			Module mod = null;
-			for (ListIterator i = modList.listIterator(); i.hasNext();)
+			for (ListIterator<ModuleObjService> i = modList.listIterator(); i.hasNext();)
 			{
 				mod = (Module) i.next();
 				modId = mod.getModuleId().intValue();
@@ -739,7 +695,7 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 				{
 					if (logger.isDebugEnabled()) logger.debug("Number of sections is " + secList.size());
 					SubSectionUtilImpl ssuImpl = new SubSectionUtilImpl();
-					for (ListIterator j = secList.listIterator(); j.hasNext();)
+					for (ListIterator<Section> j = secList.listIterator(); j.hasNext();)
 					{
 						Section sec = (Section) j.next();
 						ssuImpl.addSection(sec.getSectionId().toString());

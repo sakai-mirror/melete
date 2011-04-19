@@ -25,8 +25,10 @@ package org.etudes.component.app.melete;
 
 import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.etudes.api.app.melete.SectionBeanService;
+import org.etudes.api.app.melete.SectionObjService;
 
-public class SectionBean implements Serializable
+public class SectionBean implements SectionBeanService, Serializable
 {
 
 	protected boolean selected;
@@ -47,83 +49,64 @@ public class SectionBean implements Serializable
 		this.section = (Section) section;
 	}
 
-	/**
-	 * Get the display sequence of a section based on user preference and sub section level.
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#getDisplaySequence()
 	 */
 	public String getDisplaySequence()
 	{
 		return displaySequence;
 	}
 
-	/**
-	 * Get the section.
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#getSection()
 	 */
 	public Section getSection()
 	{
 		return this.section;
 	}
 
-	/**
-	 * Get the title truncated to 30 characters. Note:Not in use anymore
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#getTruncTitle()
 	 */
 	public String getTruncTitle()
 	{
 		return truncTitle;
 	}
 
-	/**
-	 * Checks if section is selected by the user.
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#isSelected()
 	 */
 	public boolean isSelected()
 	{
 		return selected;
 	}
 
-	/**
-	 * Set the display sequence.
-	 * 
-	 * @param displaySequence
-	 *        the sub section level sequence
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#setDisplaySequence(java.lang.String)
 	 */
 	public void setDisplaySequence(String displaySequence)
 	{
 		this.displaySequence = displaySequence;
 	}
 
-	/**
-	 * Set the section.
-	 * 
-	 * @param section
-	 *        The section
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#setSection(org.etudes.component.app.melete.Section)
 	 */
-	public void setSection(Section section)
+	public void setSection(SectionObjService section)
 	{
 		this.section = (Section) section;
 	}
 
-	/**
-	 * Set the user selection
-	 * 
-	 * @param selected
-	 *        selected
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#setSelected(boolean)
 	 */
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
 	}
 
-	/**
-	 * Set the title truncated to 30 characters.
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#setTruncTitle(java.lang.String)
 	 */
 	public void setTruncTitle(String truncTitle)
 	{

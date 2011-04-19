@@ -149,10 +149,10 @@ public class BookmarkDB
 	 *        Site id
 	 * @return List of bookmarks, empty list if none are found
 	 */
-	public List<? extends BookmarkObjService> getBookmarks(String userId, String siteId)
+	public List<BookmarkObjService> getBookmarks(String userId, String siteId)
 	{
 		List<? extends SpecialAccess> saList = new ArrayList<SpecialAccess>();
-		List<? extends BookmarkObjService> bmList = new ArrayList<BookmarkObjService>();
+		List<BookmarkObjService> bmList = new ArrayList<BookmarkObjService>();
 		try
 		{
 			Session session = getHibernateUtil().currentSession();
@@ -389,7 +389,7 @@ public class BookmarkDB
 		// for this user's site
 		if (mb.getLastVisited().booleanValue() == true)
 		{
-			List<? extends BookmarkObjService> mbList = getBookmarks(mb.getUserId(), mb.getSiteId());
+			List<BookmarkObjService> mbList = getBookmarks(mb.getUserId(), mb.getSiteId());
 			if (mbList != null)
 			{
 				if (mbList.size() > 0)

@@ -38,12 +38,8 @@ import java.util.Set;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
-import org.dom4j.Namespace;
-import org.dom4j.Node;
-import org.dom4j.QName;
 import org.dom4j.XPath;
 
-import org.etudes.component.app.melete.MeleteUtil;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.MeleteImportService;
 import org.etudes.api.app.melete.exception.MeleteException;
@@ -133,23 +129,6 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	}
 
 	/**
-	 * Remove Namespaces.
-	 * 
-	 * @param elem
-	 */
-	private void removeNamespaces(Element elem)
-	{
-		elem.setQName(QName.get(elem.getName(), Namespace.NO_NAMESPACE, elem.getQualifiedName()));
-		Node n = null;
-		for (int i = 0; i < elem.content().size(); i++)
-		{
-			n = (Node) elem.content().get(i);
-			if (n.getNodeType() == Node.ATTRIBUTE_NODE) ((Attribute) n).setNamespace(Namespace.NO_NAMESPACE);
-			if (n.getNodeType() == Node.ELEMENT_NODE) removeNamespaces((Element) n);
-		}
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public int mergeAndBuildModules(Document ArchiveDoc, String unZippedDirPath, String fromSiteId) throws Exception
@@ -161,15 +140,15 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		{
 			Element rootEle = ArchiveDoc.getRootElement();
 
-			Map uris = new HashMap();
+			Map<String,String> uris = new HashMap<String,String>();
 			uris.put("imscp", DEFAULT_NAMESPACE_URI);
 			uris.put("imsmd", IMSMD_NAMESPACE_URI);
 
 			// organizations
-			List elements = rootEle.selectNodes("//organization/item");
+			List<?> elements = rootEle.selectNodes("//organization/item");
 			logger.debug("sz of elements is" + elements.size());
 			count = elements.size();
-			for (Iterator iter = elements.iterator(); iter.hasNext();)
+			for (Iterator<?> iter = elements.iterator(); iter.hasNext();)
 			{
 				Element element = (Element) iter.next();
 
@@ -177,17 +156,17 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 				Module module = new Module();
 				boolean keywords = false;
 				boolean descr = false;
-				for (Iterator iter1 = element.elementIterator(); iter1.hasNext();)
+				for (Iterator<?> iter1 = element.elementIterator(); iter1.hasNext();)
 				{
 					Element childele = (Element) iter1.next();
 
 					if (childele.getName().equals("title")) buildModuleTitle(childele, module);
 					if (childele.getName().equals("imsmd:lom"))
 					{
-						List<Element> modulegeneralList = childele.elements();
-						List moduleMetadataList = modulegeneralList.get(0).elements();
+						List<?> modulegeneralList = childele.elements();
+						List<?> moduleMetadataList = ((Element)modulegeneralList.get(0)).elements();
 
-						for (Iterator iter2 = moduleMetadataList.iterator(); iter2.hasNext();)
+						for (Iterator<?> iter2 = moduleMetadataList.iterator(); iter2.hasNext();)
 						{
 							Element metaElement = (Element) iter2.next();
 
@@ -205,7 +184,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 				sectionUtil = new SubSectionUtilImpl();
 				Document seqDocument = sectionUtil.createSubSection4jDOM();
 
-				for (Iterator iter3 = element.elementIterator("item"); iter3.hasNext();)
+				for (Iterator<?> iter3 = element.elementIterator("item"); iter3.hasNext();)
 				{
 					Element itemelement = (Element) iter3.next();
 
@@ -243,8 +222,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 */
 	private void processManageItems(Element rootEle, String unZippedDirPath, String fromSiteId, Document document) throws Exception
 	{
-		List elements = rootEle.elements();
-		for (Iterator iter = elements.iterator(); iter.hasNext();)
+		List<?> elements = rootEle.elements();
+		for (Iterator<?> iter = elements.iterator(); iter.hasNext();)
 		{
 			Element element = (Element) iter.next();
 			// for next steps file don't bring in as unreferrrenced material
@@ -261,13 +240,13 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 				if (hrefVal != null && hrefVal.indexOf("module_") != -1 && hrefVal.endsWith("nextsteps.html")) continue;
 
 				// for files already imported
-				Set recordFiles = (Set) importThreadLocal.get("MeleteIMSImportFiles");
+				Set<String> recordFiles = (Set) importThreadLocal.get("MeleteIMSImportFiles");
 				if (recordFiles != null && recordFiles.contains(hrefVal)) continue;
 
 				String melResourceName = null;
 				String melResourceDescription = null;
 				String contentType = "typeUpload";
-				List resElements = element.elements();
+				List<Element> resElements = element.elements();
 
 				// typeLink resource
 				if (hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:"))
@@ -307,7 +286,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 * @param hrefVal
 	 * @return
 	 */
-	private String readTitlefromElement(List resElements, boolean link, String hrefVal)
+	private String readTitlefromElement(List<Element> resElements, boolean link, String hrefVal)
 	{
 		String urlTitle = null;
 		if (resElements != null)
@@ -342,7 +321,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 * @param resElements
 	 * @return
 	 */
-	private String readDescriptionFromElement(List resElements)
+	private String readDescriptionFromElement(List<Element> resElements)
 	{
 		String melResourceDescription = null;
 		if (resElements != null)
@@ -372,7 +351,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 * @return
 	 * @throws Exception
 	 */
-	private String checkAndAddResource(String hrefVal, String contentType, String courseId, List resElements, String unZippedDirPath, boolean addDB)
+	private String checkAndAddResource(String hrefVal, String contentType, String courseId, List<Element> resElements, String unZippedDirPath, boolean addDB)
 	throws Exception
 	{
 		ArrayList<String> checkResource = null;
@@ -412,7 +391,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 					// this section points to the link location of added resource item
 					String secondResName = getMeleteCHService().getResourceUrl(firstReferId);
 					melContentData = secondResName.getBytes();
-					res_mime_type = getMeleteCHService().MIME_TYPE_LINK;
+					res_mime_type = MeleteCHService.MIME_TYPE_LINK;
 				}
 				else
 				{
@@ -421,12 +400,12 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 					if (hrefVal.indexOf("/access/") != -1)
 						hrefVal = ServerConfigurationService.getServerUrl() + hrefVal.substring(hrefVal.indexOf("/access/"));
 					melContentData = hrefVal.getBytes();
-					res_mime_type = getMeleteCHService().MIME_TYPE_LINK;
+					res_mime_type = MeleteCHService.MIME_TYPE_LINK;
 				}
 			}
 			else if (contentType.equals("typeLTI"))
 			{
-				res_mime_type = getMeleteCHService().MIME_TYPE_LTI;
+				res_mime_type = MeleteCHService.MIME_TYPE_LTI;
 				String fileName = ((Element) resElements.get(0)).attributeValue("href");
 				melContentData = readData(unZippedDirPath, fileName);
 			}
@@ -457,7 +436,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 * @return
 	 * @throws Exception
 	 */
-	private ArrayList copyResource(String hrefVal, String toSiteId, String uploadCollId, List resElements, String unZippedDirPath) throws Exception
+	private ArrayList<String> copyResource(String hrefVal, String toSiteId, String uploadCollId, List<Element> resElements, String unZippedDirPath) throws Exception
 	{
 		String firstReferId = null;
 		ArrayList<String> checkResource = new ArrayList<String>();
@@ -514,7 +493,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 * @return
 	 * @throws Exception
 	 */
-	private String getFileNamefromElement(List resElements, String fileResourceName) throws Exception
+	private String getFileNamefromElement(List<Element> resElements, String fileResourceName) throws Exception
 	{
 		String actualFileLocation = null;
 		// NOTE:this decoder is reqd. It helps in reading the right file.ex:-href says student%24guide.pdf and the file is
@@ -574,13 +553,13 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 * @return
 	 * @throws Exception
 	 */
-	private ArrayList createHTMLFile(String contentEditor, List resElements, String unZippedDirPath, String courseId,
+	private ArrayList<?> createHTMLFile(String contentEditor, List<Element> resElements, String unZippedDirPath, String courseId,
 			Set<String> checkEmbedHTMLResources, String parentRef) throws Exception
 			{
 		// save uploaded img inside content editor to destination directory
 		String checkforimgs = contentEditor;
 		int imgindex = -1;
-		String imgSrcPath, imgName, imgLoc;
+		String imgSrcPath;
 
 		int startSrc = 0;
 		int endSrc = 0;
@@ -588,7 +567,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 
 		while (checkforimgs != null)
 		{
-			ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
+			ArrayList<?> embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
 			checkforimgs = (String) embedData.get(0);
 			if (embedData.size() > 1)
 			{
@@ -606,6 +585,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			}
 			String patternStr = imgSrcPath;
 			String anchorString = null;
+
 			// changed on 10/16/06 - add https condition too
 			if (resElements != null)
 			{
@@ -625,7 +605,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 
 						if (imgActualPath == null || imgActualPath.length() == 0)
 						{
-							imgindex = -1;
+							imgindex  = -1;
 							startSrc = 0;
 							endSrc = 0;
 							checkLink = null;
@@ -642,7 +622,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 								byte[] embedByteData = readData(unZippedDirPath, imgActualPath);
 								if (embedByteData != null && (embedContentData = new String(embedByteData)) != null)
 								{
-									ArrayList contentData = createHTMLFile(embedContentData, resElements, unZippedDirPath, courseId,
+									ArrayList<?> contentData = createHTMLFile(embedContentData, resElements, unZippedDirPath, courseId,
 											checkEmbedHTMLResources, null);
 									embedContentData = (String) contentData.get(0);
 									checkEmbedHTMLResources = (Set) contentData.get(1);
@@ -686,7 +666,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			endSrc = 0;
 			checkLink = null;
 		}
-		ArrayList returnData = new ArrayList();
+		ArrayList<Object> returnData = new ArrayList<Object>();
 		returnData.add(contentEditor);
 		returnData.add(checkEmbedHTMLResources);
 		return returnData;
@@ -707,7 +687,6 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		try
 		{
 			String filename = hrefVal;
-			String res_mime_type = null;
 			byte[] melContentData = null;
 
 			if (hrefVal.lastIndexOf('/') != -1) filename = hrefVal.substring(hrefVal.lastIndexOf('/') + 1);
@@ -752,9 +731,9 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	{
 		org.dom4j.Attribute identifierref = eleItem.attribute("identifierref");
 		if (identifierref == null) return null;
-		List elements = eleParentOrganization.elements();
+		List<?> elements = eleParentOrganization.elements();
 		org.dom4j.Element newModuleElement = eleParentOrganization.addElement("item");
-		for (Iterator iter = elements.iterator(); iter.hasNext();)
+		for (Iterator<?> iter = elements.iterator(); iter.hasNext();)
 		{
 			org.dom4j.Element e = (org.dom4j.Element) iter.next();
 			newModuleElement.add(e.createCopy());
@@ -770,7 +749,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	{
 		if (logger.isDebugEnabled()) logger.debug("Entering parseAndBuildModules");
 
-		Map uris = new HashMap();
+		Map<String,String> uris = new HashMap<String,String>();
 		uris.put("imscp", DEFAULT_NAMESPACE_URI);
 		uris.put("imsmd", IMSMD_NAMESPACE_URI);
 
@@ -785,8 +764,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		if (eleOrg != null)
 		{
 			importThreadLocal.set("MeleteIMSImportFiles", new HashSet<String>());
-			List elements = eleOrg.elements();
-			for (Iterator iter = eleOrg.elementIterator("item"); iter.hasNext();)
+
+			for (Iterator<?> iter = eleOrg.elementIterator("item"); iter.hasNext();)
 			{
 				Element element = (Element) iter.next();
 				// for moodle packages which don't have parent item tag for modules.
@@ -882,8 +861,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		if (eleItem.selectNodes("./imsmd:lom/imsmd:general") != null && eleItem.selectNodes("./imsmd:lom/imsmd:general").size() != 0)
 		{
 			Element generalElement = (Element) eleItem.selectNodes("./imsmd:lom/imsmd:general").get(0);
-			List moduleMetadataList = generalElement.elements();
-			for (Iterator iter = moduleMetadataList.iterator(); iter.hasNext();)
+			List<?> moduleMetadataList = generalElement.elements();
+			for (Iterator<?> iter = moduleMetadataList.iterator(); iter.hasNext();)
 			{
 				Element metaElement = (Element) iter.next();
 
@@ -915,7 +894,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			sectionUtil = new SubSectionUtilImpl();
 			Document seqDocument = sectionUtil.createSubSection4jDOM();
 
-			for (Iterator iter = eleItem.elementIterator("item"); iter.hasNext();)
+			for (Iterator<?> iter = eleItem.elementIterator("item"); iter.hasNext();)
 			{
 				Element element = (Element) iter.next();
 
@@ -975,7 +954,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			mdbean.setModuleId(module.getModuleId().intValue());
 			mdbean.setModule(module);
 			mdbean.setModuleShdate(module.getModuleshdate());
-			ArrayList mdbeanList = new ArrayList();
+			ArrayList<ModuleDateBean> mdbeanList = new ArrayList<ModuleDateBean>();
 			mdbeanList.add(mdbean);
 			moduleDB.updateModuleDateBeans(mdbeanList);
 		}
@@ -1029,8 +1008,6 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		{
 			if (module.getCoursemodule().isArchvFlag() == true)
 			{
-				CourseModule cmod = new CourseModule(courseId, -1, true, null, false, module);
-
 				moduleDB.addArchivedModule(module, getModuleShdates(), userId, courseId, (CourseModule) module.getCoursemodule());
 			}
 		}
@@ -1068,8 +1045,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		boolean sectionTitleFlag = false;
 		boolean sectionCopyrightFlag = false;
 
-		List elements = eleItem.elements();
-		for (Iterator iter = elements.iterator(); iter.hasNext();)
+		List<?> elements = eleItem.elements();
+		for (Iterator<?> iter = elements.iterator(); iter.hasNext();)
 		{
 			Element element = (Element) iter.next();
 
@@ -1165,7 +1142,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 					// end missing file check
 
 					// create meleteResourceObject
-					List resElements = eleRes.elements();
+					List<Element> resElements = eleRes.elements();
 					createContentResource(module, section, meleteResource, hrefVal, resElements, unZippedDirPath, courseId);
 
 				} // resHrefAttr check end
@@ -1202,8 +1179,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		boolean sectionTitleFlag = false;
 		boolean sectionCopyrightFlag = false;
 
-		List elements = eleItem.elements();
-		for (Iterator iter = elements.iterator(); iter.hasNext();)
+		List<?> elements = eleItem.elements();
+		for (Iterator<?> iter = elements.iterator(); iter.hasNext();)
 		{
 			Element element = (Element) iter.next();
 
@@ -1223,10 +1200,10 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			else if (element.getName().equalsIgnoreCase("imsmd:lom"))
 			{
 				// section instructions
-				List<Element> modulegeneralList = element.elements();
-				List moduleMetadataList = modulegeneralList.get(0).elements();
+				List<?> modulegeneralList = element.elements();
+				List<?> moduleMetadataList = ((Element)modulegeneralList.get(0)).elements();
 
-				for (Iterator iter2 = moduleMetadataList.iterator(); iter2.hasNext();)
+				for (Iterator<?> iter2 = moduleMetadataList.iterator(); iter2.hasNext();)
 				{
 					Element metaElement = (Element) iter2.next();
 
@@ -1240,8 +1217,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 				// read license information
 				if (modulegeneralList.size() > 1)
 				{
-					List rightList = modulegeneralList.get(1).elements();
-					for (Iterator iter3 = rightList.iterator(); iter3.hasNext();)
+					List<?> rightList = ((Element)modulegeneralList.get(1)).elements();
+					for (Iterator<?> iter3 = rightList.iterator(); iter3.hasNext();)
 					{
 						Element rightsElement = (Element) iter3.next();
 
@@ -1308,7 +1285,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 					// end missing file check
 
 					// create meleteResourceObject
-					List resElements = eleRes.elements();
+					List<Element> resElements = eleRes.elements();
 					createContentResource(module, section, meleteResource, hrefVal, resElements, unZippedDirPath, courseId);
 
 				} // resHrefAttr check end
@@ -1331,7 +1308,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 * @return
 	 * @throws Exception
 	 */
-	private String processEmbedDatafromHTML(String hrefVal, String fileResourceName, String courseId, String uploadCollId, List resElements,
+	private String processEmbedDatafromHTML(String hrefVal, String fileResourceName, String courseId, String uploadCollId, List<Element> resElements,
 			String unZippedDirPath) throws Exception
 			{
 		byte[] contentData = readData(unZippedDirPath, hrefVal);
@@ -1339,12 +1316,12 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		if (contentData != null)
 		{
 			String contentEditor = new String(contentData);
-			ArrayList content = createHTMLFile(contentEditor, resElements, unZippedDirPath, courseId, new HashSet<String>(), null);
+			ArrayList<?> content = createHTMLFile(contentEditor, resElements, unZippedDirPath, courseId, new HashSet<String>(), null);
 			if (fileResourceName == null) fileResourceName = readTitlefromElement(resElements, true, hrefVal);
 			String melResourceDescription = readDescriptionFromElement(resElements);
 			contentEditor = (String) content.get(0);
 			ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true, fileResourceName, melResourceDescription);
-			return getMeleteCHService().addResourceItem(fileResourceName, getMeleteCHService().MIME_TYPE_EDITOR, uploadCollId,
+			return getMeleteCHService().addResourceItem(fileResourceName, MeleteCHService.MIME_TYPE_EDITOR, uploadCollId,
 					contentEditor.getBytes(), res);
 		}
 		return null;
@@ -1365,14 +1342,14 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 * @throws MeleteException
 	 * @throws Exception
 	 */
-	private void createContentResource(Module module, Section section, MeleteResource meleteResource, String hrefVal, List resElements,
+	private void createContentResource(Module module, Section section, MeleteResource meleteResource, String hrefVal, List<Element> resElements,
 			String unZippedDirPath, String courseId) throws MalformedURLException, UnknownHostException, MeleteException, Exception
 			{
 		String newResourceId = "";
 
 		if (logger.isDebugEnabled()) logger.debug("Entering createSection...");
 
-		Set recordFiles = (Set) importThreadLocal.get("MeleteIMSImportFiles");
+		Set<String> recordFiles = (Set) importThreadLocal.get("MeleteIMSImportFiles");
 		if (recordFiles != null) recordFiles.add(hrefVal);
 		// html file
 		if (!(hrefVal.startsWith("http://") || hrefVal.startsWith("https://") || hrefVal.startsWith("mailto:"))
@@ -1430,7 +1407,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	{
 		if (logger.isDebugEnabled()) logger.debug("Entering getResource...");
 
-		Map uris = new HashMap();
+		Map<String, String> uris = new HashMap<String, String> ();
 		uris.put("imscp", DEFAULT_NAMESPACE_URI);
 		uris.put("imsmd", IMSMD_NAMESPACE_URI);
 
@@ -1457,7 +1434,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	{
 		if (logger.isDebugEnabled()) logger.debug("Entering getResource...");
 
-		Map uris = new HashMap();
+		Map<String, String>  uris = new HashMap<String, String> ();
 		uris.put("imscp", DEFAULT_NAMESPACE_URI);
 		uris.put("imsmd", IMSMD_NAMESPACE_URI);
 
@@ -1477,7 +1454,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 */
 	public String getContentSourceInfo(Document document)
 	{
-		Map uris = new HashMap();
+		Map<String, String>  uris = new HashMap<String, String> ();
 		uris.put("imscp", DEFAULT_NAMESPACE_URI);
 		uris.put("imsmd", IMSMD_NAMESPACE_URI);
 

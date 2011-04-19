@@ -23,34 +23,22 @@
 
 package org.etudes.tool.melete;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.etudes.component.app.melete.*;
-import org.etudes.api.app.melete.*;
-import org.sakaiproject.util.ResourceLoader;
-
-import javax.faces.application.Application;
-import javax.faces.application.FacesMessage;
-import javax.faces.model.SelectItem;
-import javax.faces.component.html.*;
-import javax.faces.component.*;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.io.*;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.ModuleService;
-import org.etudes.api.app.melete.SectionService;
+import org.etudes.api.app.melete.ModuleDateBeanService;
+import org.etudes.component.app.melete.SectionBean;
+import org.sakaiproject.util.ResourceLoader;
 
 public class MoveSectionsPage implements Serializable
 {
@@ -59,7 +47,7 @@ public class MoveSectionsPage implements Serializable
 
 	private String courseId;
 
-	private List<ModuleDateBean> moduleDateBeans;
+	private List<ModuleDateBeanService> moduleDateBeans;
 
 	private ModuleService moduleService;
 
@@ -120,7 +108,7 @@ public class MoveSectionsPage implements Serializable
 					return availableModules;
 				}
 				nomodsFlag = false;
-				for (ModuleDateBean md : moduleDateBeans)
+				for (ModuleDateBeanService md : moduleDateBeans)
 				{
 					availableModules.add(new SelectItem(new Integer(md.getModuleId()), md.getModule().getTitle()));
 				}

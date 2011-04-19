@@ -25,51 +25,46 @@
 package org.etudes.component.app.melete;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.net.URLDecoder;
 
-import org.etudes.api.app.melete.MeleteCHService;
-import org.etudes.api.app.melete.MeleteSecurityService;
-import org.etudes.util.HtmlHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.etudes.component.app.melete.MeleteUtil;
+import org.etudes.api.app.melete.MeleteCHService;
+import org.etudes.api.app.melete.MeleteSecurityService;
 import org.etudes.api.app.melete.exception.MeleteException;
-import org.sakaiproject.content.api.ContentCollectionEdit;
+import org.etudes.util.HtmlHelper;
+import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentCollection;
+import org.sakaiproject.content.api.ContentCollectionEdit;
+import org.sakaiproject.content.api.ContentEntity;
+import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.content.api.ContentResourceEdit;
-import org.sakaiproject.content.api.ContentHostingService;
-import org.sakaiproject.content.api.ContentEntity;
 import org.sakaiproject.content.api.ResourceType;
-import org.sakaiproject.content.cover.ContentTypeImageService;
 import org.sakaiproject.entity.api.Entity;
+import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.exception.IdInvalidException;
 import org.sakaiproject.exception.IdLengthException;
 import org.sakaiproject.exception.IdUniquenessException;
 import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.IdUsedException;
-import org.sakaiproject.exception.TypeException;
+import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.InconsistentException;
 import org.sakaiproject.exception.OverQuotaException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
+import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.tool.cover.ToolManager;
-import org.sakaiproject.component.cover.ServerConfigurationService;
-import org.sakaiproject.entity.cover.EntityManager;
-import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.util.Validator;
 
 public class MeleteCHServiceImpl implements MeleteCHService
@@ -996,7 +991,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getAllResources(String uploadCollId)
+	public List<ContentResource> getAllResources(String uploadCollId)
 	{
 		try
 		{
@@ -1007,7 +1002,10 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			}
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
-			return (getContentservice().getAllResources(uploadCollId));
+			List<ContentResource> all = null;
+			all=getContentservice().getAllResources(uploadCollId);
+			return all;
+			
 		}
 		catch (Exception e)
 		{
@@ -1314,7 +1312,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	/**
 	 * {@inheritDoc}
 	 */
-	public String findLocalImagesEmbeddedInEditor(String courseId, ArrayList<String> errs, Map newEmbeddedResources, String contentEditor)
+	public String findLocalImagesEmbeddedInEditor(String courseId, ArrayList<String> errs, Map<String, String> newEmbeddedResources, String contentEditor)
 	throws MeleteException
 	{
 		String checkforimgs = contentEditor;
@@ -1370,7 +1368,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			while (checkforimgs != null)
 			{
 				// look for a href and img tag
-				ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
+				ArrayList<?> embedData = meleteUtil.findEmbedItemPattern(checkforimgs);
 
 				checkforimgs = (String) embedData.get(0);
 				if (embedData.size() > 1)
@@ -1522,19 +1520,19 @@ public class MeleteCHServiceImpl implements MeleteCHService
 		return contentEditor;
 	}
 
-	public List findAllEmbeddedImages(String sec_resId) throws Exception
+	public List<String> findAllEmbeddedImages(String sec_resId) throws Exception
 	{
 		try
 		{
 			ContentResource cr = getResource(sec_resId);
 			String checkforImgs = new String(cr.getContent());
-			List secEmbedData = new ArrayList<String>(0);
+			List<String> secEmbedData = new ArrayList<String>(0);
 			int startSrc = 0, endSrc = 0;
 			if (checkforImgs == null || checkforImgs.length() == 0) return null;
 			while (checkforImgs != null)
 			{
 				// look for a href and img tag
-				ArrayList embedData = meleteUtil.findEmbedItemPattern(checkforImgs);
+				ArrayList<?> embedData = meleteUtil.findEmbedItemPattern(checkforImgs);
 				checkforImgs = (String) embedData.get(0);
 				if (embedData.size() > 1)
 				{
@@ -1832,9 +1830,9 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			logger.debug("collection sz" + getContentservice().getCollectionSize(delColl_id));
 			if (getContentservice().getCollectionSize(delColl_id) == 1)
 			{
-				List allEnt = getContentservice().getAllEntities(delColl_id);
+				List<?> allEnt = getContentservice().getAllEntities(delColl_id);
 
-				for (Iterator i = allEnt.iterator(); i.hasNext();)
+				for (Iterator<?> i = allEnt.iterator(); i.hasNext();)
 				{
 					ContentEntity ce = (ContentEntity) i.next();
 					if (ce.isCollection() && (ce.getId().indexOf("module_") == -1)) getContentservice().removeCollection(delColl_id);

@@ -32,7 +32,7 @@ public interface SpecialAccessService
 	 *        List of special accesses
 	 * @throws Exception
 	 */
-	public void deleteSpecialAccess(List saList) throws Exception;
+	public void deleteSpecialAccess(List<Integer> saList) throws Exception;
 
 	/**
 	 * Get special access list of this module
@@ -41,7 +41,7 @@ public interface SpecialAccessService
 	 *        module id
 	 * @return List of special accesses
 	 */
-	public List getSpecialAccess(int moduleId);
+	public List<SpecialAccessService> getSpecialAccess(int moduleId);
 
 	/**
 	 * Insert or update new special access into existing list of special accesses
@@ -54,5 +54,5 @@ public interface SpecialAccessService
 	 *        Current Module
 	 * @throws Exception
 	 */
-	public void insertSpecialAccess(List saList, SpecialAccessObjService mb, ModuleObjService mod) throws Exception;
+	public void insertSpecialAccess(List<SpecialAccessService> saList, SpecialAccessObjService mb, ModuleObjService mod) throws Exception;
 }

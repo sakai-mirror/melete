@@ -112,9 +112,9 @@ public class BookmarkServiceImpl implements Serializable, BookmarkService
 	/*
 	 * {@inheritDoc}
 	 */
-	public List<? extends BookmarkObjService> getBookmarks(String userId, String siteId)
+	public List<BookmarkObjService> getBookmarks(String userId, String siteId)
 	{
-		List<? extends BookmarkObjService> mbList = null;
+		List<BookmarkObjService> mbList = null;
 		try
 		{
 			mbList = bookmarkDb.getBookmarks(userId, siteId);

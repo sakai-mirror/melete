@@ -33,23 +33,11 @@ import java.util.ListIterator;
 import java.util.Set;
 
 import org.dom4j.Element;
-import org.etudes.component.app.melete.MeleteUtil;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.MeleteExportService;
-import org.etudes.api.app.melete.MeleteSecurityService;
-import org.etudes.api.app.melete.exception.MeleteException;
-import org.etudes.api.app.melete.util.XMLHelper;
-import org.xml.sax.SAXException;
-import org.sakaiproject.component.cover.ServerConfigurationService;
-import org.sakaiproject.util.Validator;
-import org.sakaiproject.entity.cover.EntityManager;
-import org.sakaiproject.entity.api.Reference;
-import org.sakaiproject.content.api.ContentResource;
-import org.sakaiproject.entity.api.ResourceProperties;
-import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.content.cover.ContentHostingService;
-import org.sakaiproject.entity.api.Entity;
+import org.etudes.api.app.melete.ModuleObjService;
 import org.imsglobal.basiclti.BasicLTIUtil;
+import org.sakaiproject.component.cover.ServerConfigurationService;
 
 public class MeleteExportServiceImpl extends MeleteAbstractExportServiceImpl implements MeleteExportService
 {
@@ -103,7 +91,7 @@ public class MeleteExportServiceImpl extends MeleteAbstractExportServiceImpl imp
 		{
 			String linkData = new String(content_data1);
 
-			Set recordFiles = (Set) exportThreadLocal.get("MeleteExportFiles");
+			Set<String> recordFiles = (Set) exportThreadLocal.get("MeleteExportFiles");
 			if (recordFiles != null) recordFiles.add(resourceDisplayName);
 
 			// LINK POINTS TO SITE RESOURCES OR MELETEDOCS FILE
@@ -114,7 +102,7 @@ public class MeleteExportServiceImpl extends MeleteAbstractExportServiceImpl imp
 				String link_resource_id = r.get(0);
 
 				// read resource and create a file
-				ArrayList link_content = new ArrayList();
+				ArrayList<String> link_content = new ArrayList<String>();
 				byte[] linkdata = setContentResourceData(link_resource_id, link_content);
 				if (linkdata == null)
 				{
@@ -168,7 +156,7 @@ public class MeleteExportServiceImpl extends MeleteAbstractExportServiceImpl imp
 			urlTitle.add(imsmdlangstring);
 			resource.add(urlTitle);
 
-			Set recordFiles = (Set) exportThreadLocal.get("MeleteExportFiles");
+			Set<String> recordFiles = (Set) exportThreadLocal.get("MeleteExportFiles");
 			if (recordFiles != null) recordFiles.add(resourceDisplayName);
 
 			// UPLOAD RESOURCE
@@ -223,7 +211,7 @@ public class MeleteExportServiceImpl extends MeleteAbstractExportServiceImpl imp
 			MeleteResource meleteResource = (MeleteResource) section.getSectionResource().getResource();
 			if (meleteResource == null) return k;
 			String content_resource_id = meleteResource.getResourceId();
-			ArrayList content_data = new ArrayList();
+			ArrayList<String> content_data = new ArrayList<String>();
 			logger.debug("calling secContent from create section");
 			byte[] content_data1 = setContentResourceData(content_resource_id, content_data);
 
@@ -261,9 +249,9 @@ public class MeleteExportServiceImpl extends MeleteAbstractExportServiceImpl imp
 	/**
 	 * {@inheritDoc}
 	 */
-	public List generateOrganizationResourceItems(List modList, boolean allFlag, File packagedir, String maintitle, String courseId) throws Exception
+	public List<Element> generateOrganizationResourceItems(List<? extends ModuleObjService> modList, boolean allFlag, File packagedir, String maintitle, String courseId) throws Exception
 	{
-		String probEncounteredSections = "";
+	//	String probEncounteredSections = "";
 		try
 		{
 			String packagedirpath = packagedir.getAbsolutePath();
@@ -279,7 +267,7 @@ public class MeleteExportServiceImpl extends MeleteAbstractExportServiceImpl imp
 
 			// record all files being added in the package
 			exportThreadLocal.set("MeleteExportFiles", new HashSet<String>());
-			Iterator modIter = modList.iterator();
+			Iterator<?> modIter = modList.iterator();
 			int i = 0, k = 0;
 			// create item for each module and items under the module item for
 			// scetions
@@ -365,10 +353,10 @@ public class MeleteExportServiceImpl extends MeleteAbstractExportServiceImpl imp
 
 			}
 			if (allFlag == true) resources = transferManageItems(resources, courseId, resoucesDir, k + 1);
-			ArrayList manElements = new ArrayList();
+			ArrayList<Element> manElements = new ArrayList<Element>();
 			manElements.add(organizations);
 			manElements.add(resources);
-			manElements.add(probEncounteredSections);
+//			manElements.add(probEncounteredSections);
 			return manElements;
 
 		}
@@ -389,11 +377,10 @@ public class MeleteExportServiceImpl extends MeleteAbstractExportServiceImpl imp
 		String imagespath = resoucesDir.getAbsolutePath();
 
 		String fromUploadsColl = getMeleteCHService().getUploadCollectionId(courseId);
-		List fromContextList = meleteCHService.getMemberNamesCollection(fromUploadsColl);
+		List<String> fromContextList = meleteCHService.getMemberNamesCollection(fromUploadsColl);
 		if ((fromContextList == null) || (fromContextList.size() == 0)) return resources;
 
-		List meleteResourceList = null;
-		Set recordFiles = (Set) exportThreadLocal.get("MeleteExportFiles");
+		Set<String> recordFiles = (Set) exportThreadLocal.get("MeleteExportFiles");
 		if (recordFiles != null && recordFiles.size() > 0)
 		{
 			List<String> l = new ArrayList<String>(recordFiles);
@@ -408,11 +395,11 @@ public class MeleteExportServiceImpl extends MeleteAbstractExportServiceImpl imp
 		logger.debug("left in fromlist collection:" + fromContextList.toString());
 		if ((fromContextList != null) && (fromContextList.size() > 0))
 		{
-			ListIterator repIt = fromContextList.listIterator();
+			ListIterator<String> repIt = fromContextList.listIterator();
 			while (repIt != null && repIt.hasNext())
 			{
 				String content_resource_id = (String) repIt.next();
-				ArrayList content_data = new ArrayList();
+				ArrayList<String> content_data = new ArrayList<String>();
 
 				Element resource = resources.addElement("resource");
 				resource.addAttribute("identifier", "MANAGERESOURCE" + item_ref_num);
@@ -422,9 +409,9 @@ public class MeleteExportServiceImpl extends MeleteAbstractExportServiceImpl imp
 				String sectionFileName = (String) content_data.get(0);
 				Section sec = new Section();
 				String type = (String) content_data.get(2);
-				if (type.equals(getMeleteCHService().MIME_TYPE_LINK))
+				if (type.equals(MeleteCHService.MIME_TYPE_LINK))
 					sec.setContentType("typeLink");
-				else if (type.equals(getMeleteCHService().MIME_TYPE_LTI))
+				else if (type.equals(MeleteCHService.MIME_TYPE_LTI))
 					sec.setContentType("typeLTI");
 				else
 					sec.setContentType("typeUpload");

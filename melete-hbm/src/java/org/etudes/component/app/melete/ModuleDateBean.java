@@ -31,7 +31,7 @@ import org.etudes.api.app.melete.*;
 public class ModuleDateBean implements Serializable, ModuleDateBeanService
 {
 
-	private List sectionBeans;
+	private List<SectionBeanService> sectionBeans;
 
 	protected CourseModule cmod;
 
@@ -62,7 +62,7 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService
 	}
 
 	/** full constructor */
-	public ModuleDateBean(int moduleId, Module module, ModuleShdates moduleShdate, CourseModule cmod, List sectionBeans)
+	public ModuleDateBean(int moduleId, Module module, ModuleShdates moduleShdate, CourseModule cmod, List<SectionBeanService> sectionBeans)
 	{
 		this.moduleId = moduleId;
 		this.module = module;
@@ -114,7 +114,7 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getSectionBeans()
+	public List<SectionBeanService> getSectionBeans()
 	{
 		return this.sectionBeans;
 	}
@@ -218,7 +218,7 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setSectionBeans(List sectionBeans)
+	public void setSectionBeans(List<SectionBeanService> sectionBeans)
 	{
 		this.sectionBeans = sectionBeans;
 	}

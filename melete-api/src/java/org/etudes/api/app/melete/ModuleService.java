@@ -51,7 +51,7 @@ public interface ModuleService
 	 * @throws Exception
 	 *         "archive_fail" MeleteException
 	 */
-	public void archiveModules(List selModBeans, List moduleDateBeans, String courseId) throws Exception;
+	public void archiveModules(List<ModuleDateBeanService> selModBeans, List<ModuleDateBeanService> moduleDateBeans, String courseId) throws Exception;
 
 	/**
 	 * Move subsections a level up.
@@ -63,7 +63,7 @@ public interface ModuleService
 	 * @throws MeleteException
 	 *         "indent_left_fail" MeleteException
 	 */
-	public void bringOneLevelUp(ModuleObjService module, List secBeans) throws MeleteException;
+	public void bringOneLevelUp(ModuleObjService module, List<? extends SectionBeanService> secBeans) throws MeleteException;
 
 	/**
 	 * Checks if calendar tool is included in the site
@@ -114,7 +114,7 @@ public interface ModuleService
 	 * @throws MeleteException
 	 *         "indent_right_fail" MeleteException
 	 */
-	public void createSubSection(ModuleObjService module, List secBeans) throws MeleteException;
+	public void createSubSection(ModuleObjService module, List<? extends SectionBeanService> secBeans) throws MeleteException;
 
 	/**
 	 * 
@@ -127,7 +127,7 @@ public interface ModuleService
 	 * @throws Exception
 	 *         "delete_module_fail" MeleteException
 	 */
-	public void deleteModules(List delModules, String courseId, String userId) throws Exception;
+	public void deleteModules(List<? extends ModuleObjService> delModules, String courseId, String userId) throws Exception;
 
 	/**
 	 * Get archived modules of the course.
@@ -136,7 +136,7 @@ public interface ModuleService
 	 *        The Site Id
 	 * @return List of archived CourseModule Objects
 	 */
-	public List getArchiveModules(String course_id);
+	public List<CourseModuleService> getArchiveModules(String course_id);
 
 	/**
 	 * Gets the corresponding courseModule object
@@ -213,7 +213,7 @@ public interface ModuleService
 	 *        Course id
 	 * @return List of ModuleObjService objects
 	 */
-	public List getModuleDateBeans(String userId, String courseId);
+	public List<ModuleDateBeanService> getModuleDateBeans(String userId, String courseId);
 
 	/**
 	 * Gets the list of active Modules of a site.
@@ -222,7 +222,7 @@ public interface ModuleService
 	 *        The course Id
 	 * @return List of ModuleObjService Objects
 	 */
-	public List getModules(String courseId);
+	public List<ModuleObjService> getModules(String courseId);
 
 	/**
 	 * Get next sequence number. Method invoked for authors and students Checks against special access and denied modules before returning sequence number
@@ -292,7 +292,7 @@ public interface ModuleService
 	 *        If false, return all modules including invalid ones. If true, do not return invalid modules.
 	 * @return List of modules
 	 */
-	public List getViewModules(String userId, String courseId, boolean fromCourseMap, boolean filtered);
+	public List<ViewModBeanService> getViewModules(String userId, String courseId, boolean fromCourseMap, boolean filtered);
 
 	/**
 	 * Adds Module to the Database.
@@ -340,7 +340,7 @@ public interface ModuleService
 	 * @throws MeleteException
 	 *         "move_section_fail" MeleteException
 	 */
-	public void moveSections(List sectionBeans, ModuleObjService selectedModule) throws MeleteException;
+	public void moveSections(List<? extends SectionBeanService> sectionBeans, ModuleObjService selectedModule) throws MeleteException;
 
 	/**
 	 * Gets the module and its sections contents in a printable fashion.
@@ -362,7 +362,7 @@ public interface ModuleService
 	 * @throws Exception
 	 *         MeleteException
 	 */
-	public void restoreModules(List modules, String courseId) throws Exception;
+	public void restoreModules(List<? extends CourseModuleService> modules, String courseId) throws Exception;
 
 	/**
 	 * Note: No longer in use
@@ -378,20 +378,6 @@ public interface ModuleService
 	 * @param mdBean
 	 */
 	public void setModuleDateBean(ModuleDateBeanService mdBean);
-
-	/**
-	 * Note: no longer in use
-	 * 
-	 * @param moduleDateBeansList
-	 */
-	public void setModuleDateBeans(List moduleDateBeansList);
-
-	/**
-	 * Note: No longer in Use
-	 * 
-	 * @param modules
-	 */
-	public void setModules(List modules);
 
 	/**
 	 * Sorts the module in the specified direction (One up/down, all up/all down).
@@ -439,7 +425,7 @@ public interface ModuleService
 	 * @throws Exception
 	 *         edit_module_multiple_users MeleteException
 	 */
-	public void updateProperties(List moduleDateBeans, String courseId) throws Exception;
+	public void updateProperties(List<? extends ModuleDateBeanService>  moduleDateBeans, String courseId) throws Exception;
 
 	/**
 	 * Creates sequence XML for all modules of the site.

@@ -23,7 +23,6 @@
  **********************************************************************************/
 package org.etudes.api.app.melete;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -113,7 +112,7 @@ public interface SectionService
 	 * @throws Exception
 	 *         "delete_module_fail" MeleteException
 	 */
-	public void deleteSections(List sectionBeans, String courseId, String userId) throws Exception;
+	public void deleteSections(List<SectionBeanService> sectionBeans, String courseId, String userId) throws Exception;
 
 	/**
 	 * Updates the section.
@@ -144,9 +143,11 @@ public interface SectionService
 	 *        The resource id
 	 * @param courseId
 	 *        The site Id
-	 * @return a list of SectionObjService
+	 * @return a list of Object[] with 0 index as SectionObjService and 1 as SectionResource if resource found as uploaded/linked media
+	 * and a list of SectionObjService if found as embedded media.
+	 * 
 	 */
-	public List findResourceInUse(String selResourceId, String courseId);
+	public List<?> findResourceInUse(String selResourceId, String courseId);
 
 	/**
 	 * Get the license URL. For all combinations there is a distinct creative commons license URL.
@@ -166,7 +167,7 @@ public interface SectionService
 	 * 
 	 * @return list of MeleteLicense objects
 	 */
-	public ArrayList getMeleteLicenses();
+	public List<MeleteLicenseService> getMeleteLicenses();
 
 	/**
 	 * Get Melete Resource.
@@ -292,7 +293,7 @@ public interface SectionService
 	 *        The Module
 	 * @return a list of secBean objects
 	 */
-	public List getSortSections(ModuleObjService module);
+	public List<SectionBeanService> getSortSections(ModuleObjService module);
 
 	/**
 	 * Inserts the association and inserts a new melete resource
@@ -343,13 +344,6 @@ public interface SectionService
 	 *        SectionTrackViewObjService object
 	 */
 	public void insertSectionTrack(SectionTrackViewObjService stv);
-
-	/**
-	 * Note:Not in use anymore
-	 * 
-	 * @param sec
-	 */
-	public void setSection(SectionObjService sec);
 
 	/**
 	 * Updates the melete resource.
