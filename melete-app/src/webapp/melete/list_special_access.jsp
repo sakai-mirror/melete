@@ -82,32 +82,29 @@ function resetAllAcc()
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
 	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/access.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_special_access}" /> </div>
-    <h:outputText id="title" value="#{specialAccessPage.module.title}"/>
+    
 	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
+	<h:outputText id="title" value="#{specialAccessPage.module.title}" styleClass="style6"/>
 	
- <table width="100%" rules="rows" class="maintableCollapseWithBorder">
-  <tr>
-   <td>
- 	<f:subview id="authtop">
-    <h:panelGrid columns="2" columnClasses="authBarCol" cellspacing="5" width="16%">
+	<h:panelGrid columns="1" styleClass="maintableCollapseWithBorder">
 	<h:column>
-		<h:commandLink id="addAction" action="#{specialAccessPage.addAccessAction}" immediate="true">
-		    <h:graphicImage id="addAccessImg" value="/images/document_add.gif" styleClass="AuthImgClass"/>
-	  		<h:outputText  value="#{msgs.list_special_access_add}"/>
-		</h:commandLink>
-	</h:column>
-	<h:column>
-		<h:commandLink id="delAction" action="#{specialAccessPage.deleteAction}">
-	        <h:graphicImage id="deleteImg" value="/images/delete.gif" styleClass="AuthImgClass"/>
-	        <h:outputText  id="del" value="#{msgs.list_special_access_delete}"></h:outputText>
-	     </h:commandLink>
-	</h:column>
+	    <h:panelGrid columns="2" columnClasses="authBarCol" border="0" width="16%" >
+		<h:column>
+			<h:commandLink id="addAction" action="#{specialAccessPage.addAccessAction}" immediate="true">
+			    <h:graphicImage id="addAccessImg" value="/images/document_add.gif" styleClass="AuthImgClass"/>
+		  		<h:outputText  value="#{msgs.list_special_access_add}"/>
+			</h:commandLink>
+		</h:column>
+		<h:column>
+			<h:commandLink id="delAction" action="#{specialAccessPage.deleteAction}">
+		        <h:graphicImage id="deleteImg" value="/images/delete.gif" styleClass="AuthImgClass"/>
+		        <h:outputText  id="del" value="#{msgs.list_special_access_delete}"></h:outputText>
+		     </h:commandLink>
+		</h:column>
+	    </h:panelGrid>
+    </h:column>
     </h:panelGrid>
-	</f:subview>
-  </td>
- </tr>
-<tr>
-   <td>
+    	
    <h:dataTable id="table" 
                   value="#{specialAccessPage.saList}"
                   var="saObj"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass" 
@@ -193,10 +190,7 @@ function resetAllAcc()
    </div>	
 	
 <!--End Content-->
-   </td>
-  </tr> 
-
- </table>
+ 
 </h:form>
 </sakai:view>
 <script type="text/javascript">
