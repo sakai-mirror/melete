@@ -172,7 +172,6 @@ public class MeleteJsfTool extends HttpServlet
 			// This allows only one Title JSF for each tool
 			target = "/title.jsf";
 		}
-
 		else
 		{
 			ToolSession session = SessionManager.getCurrentToolSession();
@@ -220,11 +219,13 @@ public class MeleteJsfTool extends HttpServlet
 		if (target.startsWith("/view_module/") || target.startsWith("/edit_module/"))
 		{
 			String[] parts = StringUtil.split(target, "/");
-			if (parts.length == 3)
+
+			if (parts.length == 6)
 			{
 				String id = parts[2];
 				ThreadLocalManager.set("MELETE_MODULE_ID", id);
-
+				String returnBackUrl = "/" + parts[4] + "/" + parts[5];
+				ThreadLocalManager.set("MELETE_NAVIGATE_BACK", returnBackUrl);
 				target = "/" + parts[1];
 			}
 		}
