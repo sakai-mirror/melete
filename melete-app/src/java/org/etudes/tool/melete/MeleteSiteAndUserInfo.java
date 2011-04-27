@@ -573,4 +573,38 @@ public class MeleteSiteAndUserInfo
 		}
 
 	}
+	
+	/**
+	 * Sets the return tool url. If param is null then melete is clearing the address.
+	 * 
+	 * @param back
+	 *        The tool address
+	 * 
+	 */
+	public void setNavigateCM(String back)
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		Map m = ctx.getExternalContext().getSessionMap();
+		if (back != null)
+			m.put("backTo", back);
+		else
+			m.remove("backTo");
+	}
+
+	/**
+	 * Get the returning tool address
+	 * 
+	 * @return
+	 */
+	public String getNavigateCM()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		Map m = ctx.getExternalContext().getSessionMap();
+		if (m.containsKey("backTo"))
+		{
+			String returnUrl = ServerConfigurationService.getServerUrl() + (String) m.get("backTo");
+			return returnUrl;
+		}
+		return null;
+	}
 }

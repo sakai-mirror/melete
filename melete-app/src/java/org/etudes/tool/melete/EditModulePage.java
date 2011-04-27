@@ -203,13 +203,15 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 		else
 		{
 			callFromAddContent = false;
-
 		}
 		return "edit_module";
+
 	}
 
 	/**
-	 * For top mode bar clicks, auto save edit module Returns # if save is success else stay on same page to correct error
+	 * For top mode bar clicks, auto save edit module.
+	 * Returns # if save is success else stay on same page to correct error
+	 * If page is invoked from outside melete, then clear return url.
 	 */
 	public String autoSave()
 	{
@@ -217,6 +219,11 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 		if (!savehere().equals("failure"))
 		{
 			setSuccess(true);
+			// clear back url as user clicked on top mode bar
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+			mPage.setNavigateCM(null);
 			return "#";
 		}
 		return "edit_module";
@@ -252,12 +259,12 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 		editPage.resetSectionValues();
 		editPage.setModule(module);
 		editPage.addBlankSection();
-
 		return "editmodulesections";
 	}
 
 	/**
 	 * Go to Table of contents.
+	 * If invoked from CM and user clicks on TOC then no need to return back. 
 	 * 
 	 * @return
 	 */
@@ -277,14 +284,82 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 				return "edit_module";
 			}
 		}
+		//clear back url
 		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		mPage.setNavigateCM(null);
+		
+		//go to list page
+		binding = Util.getBinding("#{listAuthModulesPage}");
 		ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
 		listPage.resetValues();
 		listPage.setModuleDateBeans(null);
 		return "list_auth_modules";
 	}
 
+	/**
+	 * cancel from edit module Screen. If this is invoked from coursemap, then return back.
+	 */
+	public String cancel()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		// reset values
+		resetModuleValues();
+		this.mdBean = null;
+		this.firstSection = null;
+		this.module = null;
+		this.hasSections = false;
+		setModuleShdates(null);
+
+		// Go back to coursemap if invoked from there
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		if (mPage.getNavigateCM() != null)
+		{
+			return "coursemap";
+		}
+
+		binding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
+		listPage.resetValues();
+		listPage.setModuleDateBeans(null);
+		return "list_auth_modules";
+	}
+
+	public String goDone()
+	{
+		if (!getSuccess())
+		{
+			callFromAddContent = true;
+			if (!savehere().equals("failure"))
+			{
+				callFromAddContent = false;
+				setSuccess(true);
+			}
+			else
+			{
+				callFromAddContent = false;
+				return "edit_module";
+			}
+		}
+
+		//return back to CM if invoked from there
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		if (mPage.getNavigateCM() != null)
+		{
+			return "coursemap";
+		}
+
+		binding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
+		listPage.resetValues();
+		listPage.setModuleDateBeans(null);
+		return "list_auth_modules";
+	}
+	
 	/**
 	 * Initialize values for editing a module.
 	 * 
@@ -293,6 +368,12 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 	public void setEditInfo(ModuleDateBean mdbean)
 	{
 		resetModuleValues();
+		this.mdBean = null;
+		this.firstSection = null;
+		this.module = null;
+		this.hasSections = false;
+		setModuleShdates(null);
+	
 		setModuleDateBean(mdbean);
 		setModule(mdbean.getModule());
 		setModuleShdates(mdbean.getModuleShdate());
@@ -331,7 +412,7 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 
 	/**
 	 * Edit the section. Takes user to the first section.
-	 * 
+	 * If edit module is invoked from CM, then pass the return address to section page.
 	 * @return
 	 */
 	public String editSection()
@@ -351,7 +432,6 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 		Map sessionMap = context.getExternalContext().getSessionMap();
 		sessionMap.put("currModule", module);
 		editPage.setEditInfo(firstSection);
-
 		return "editmodulesections";
 	}
 
@@ -382,9 +462,12 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 		{
 			logger.debug("reading module id from thread local :" + moduleIdfromOutside);
 			this.mdBean = (ModuleDateBean) moduleService.getModuleDateBean(userId, courseId, new Integer(moduleIdfromOutside).intValue());
-			setEditInfo(mdBean);
+			setEditInfo(this.mdBean);
+			String backToOutside = (String) threadLocalManager.get("MELETE_NAVIGATE_BACK");
 			mPage.populateMeleteSession();
+			mPage.setNavigateCM(backToOutside);
 			threadLocalManager.set("MELETE_MODULE_ID", null);
+			threadLocalManager.set("MELETE_NAVIGATE_BACK", null);
 		}
 
 		return super.getModule();
@@ -406,5 +489,4 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 		this.mdBean = (ModuleDateBean) moduleService.getModuleDateBean(userId, siteId, new Integer(id).intValue());
 		setEditInfo(mdBean);
 	}
-
 }

@@ -224,7 +224,7 @@ public class MeleteJsfTool extends HttpServlet
 			{
 				String id = parts[2];
 				ThreadLocalManager.set("MELETE_MODULE_ID", id);
-				String returnBackUrl = "/" + parts[4] + "/" + parts[5];
+				String returnBackUrl = "/portal/directtool/" + parts[4] + "/" + parts[5];
 				ThreadLocalManager.set("MELETE_NAVIGATE_BACK", returnBackUrl);
 				target = "/" + parts[1];
 			}
