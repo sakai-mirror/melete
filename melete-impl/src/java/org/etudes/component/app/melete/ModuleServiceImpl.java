@@ -117,9 +117,9 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean checkCalendar()
+	public boolean checkCalendar(String courseId)
 	{
-		return moduledb.checkCalendar();
+		return moduledb.checkCalendar(courseId);
 	}
 
 	/**

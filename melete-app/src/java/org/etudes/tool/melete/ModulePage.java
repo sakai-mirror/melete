@@ -133,7 +133,10 @@ public abstract class ModulePage implements Serializable
 	 */
 	public boolean getCalendarFlag()
 	{
-		return moduleService.checkCalendar();
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		return moduleService.checkCalendar(mPage.getCourse_id());
 	}
 
 	/**
@@ -172,7 +175,7 @@ public abstract class ModulePage implements Serializable
 		if (null == module)
 		{
 			module = new Module();
-
+	
 			// get user information from session
 			FacesContext context = FacesContext.getCurrentInstance();
 			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");

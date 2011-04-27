@@ -68,9 +68,12 @@ public interface ModuleService
 	/**
 	 * Checks if calendar tool is included in the site
 	 * 
+	 * @param courseId
+	 *        The Site Id
+	 * 
 	 * @return true if site has calendar tool
 	 */
-	public boolean checkCalendar();
+	public boolean checkCalendar(String courseId);
 
 	/**
 	 * Check if user has edit access.

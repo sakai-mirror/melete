@@ -81,7 +81,6 @@ import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.tool.cover.SessionManager;
-import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.util.ResourceLoader;
 
@@ -4258,12 +4257,12 @@ public class ModuleDB implements Serializable
 	 * 
 	 * @return true if calendar exists, false otherwise
 	 */
-	boolean checkCalendar()
+	boolean checkCalendar(String courseId)
 	{
 		Site site = null;
 		try
 		{
-			site = SiteService.getSite(ToolManager.getCurrentPlacement().getContext());
+			site = SiteService.getSite(courseId);
 		}
 		catch (Exception e)
 		{
@@ -4289,7 +4288,7 @@ public class ModuleDB implements Serializable
 	 */
 	void deleteCalendar(List delModules, String courseId)
 	{
-		if (checkCalendar() == true)
+		if (checkCalendar(courseId) == true)
 		{
 			// Delete all calendar associated events
 			CalendarService cService = org.sakaiproject.calendar.cover.CalendarService.getInstance();
@@ -4352,7 +4351,7 @@ public class ModuleDB implements Serializable
 	 */
 	void updateCalendar(Module module1, ModuleShdates moduleshdates1, String courseId) throws Exception
 	{
-		if (checkCalendar() == true)
+		if (checkCalendar(courseId) == true)
 		{
 			// The code below adds the start and stop dates to the Calendar
 			boolean addtoSchedule = moduleshdates1.getAddtoSchedule().booleanValue();
