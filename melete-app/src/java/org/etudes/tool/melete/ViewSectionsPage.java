@@ -659,7 +659,10 @@ public class ViewSectionsPage implements Serializable
 	{
 		resetValues();
 		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{listModulesPage}");
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		mPage.setNavigateCM(null);
+		binding = Util.getBinding("#{listModulesPage}");
 		ListModulesPage listPage = (ListModulesPage) binding.getValue(context);
 		listPage.setViewModuleBeans(null);
 		listPage.setAutonumberMaterial(null);
@@ -675,9 +678,7 @@ public class ViewSectionsPage implements Serializable
 		ValueBinding binding = Util.getBinding("#{bookmarkPage}");
 		BookmarkPage bPage = (BookmarkPage) binding.getValue(context);
 
-		bPage.resetValues();
-		bPage.setFromPage("view_section");
-		return "list_bookmarks";
+		return bPage.gotoMyBookmarks("view_section", this.moduleId);
 	}
 
 	/**

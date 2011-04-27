@@ -37,7 +37,7 @@
 			<f:param name="modid" value="#{viewSectionsPage.moduleId}" />
 			<f:param name="secid" value="#{viewSectionsPage.prevSecId}" />
      	</h:commandLink>
-	</h:column>
+     </h:column>
 		<h:column>
 				<h:outputText id="seperatorMsg1" value=" | "/>	
 		</h:column>
@@ -59,9 +59,12 @@
 		  <h:outputText  id="whatsNextMsg" value="#{msgs.view_navigate_next2}"></h:outputText>
 		    <f:param name="modseqno" value="#{viewSectionsPage.moduleSeqNo}" />
      </h:commandLink>   
-    <h:commandLink id="nextMod" action="#{viewSectionsPage.goNextModule}" immediate="true" rendered="#{(((viewSectionsPage.module != null && viewSectionsPage.module.whatsNext == viewSectionsPage.nullString)||(viewSectionsPage.module != null && viewSectionsPage.module.whatsNext == viewSectionsPage.emptyString))&&(viewSectionsPage.nextSecId == 0)&&(viewSectionsPage.moduleSeqNo < viewSectionsPage.nextSeqNo))}">
+    <h:commandLink id="nextMod" action="#{viewSectionsPage.goNextModule}" immediate="true" rendered="#{(((viewSectionsPage.module != null && viewSectionsPage.module.whatsNext == viewSectionsPage.nullString && meleteSiteAndUserInfo.navigateCM == null)||(viewSectionsPage.module != null && viewSectionsPage.module.whatsNext == viewSectionsPage.emptyString))&&(viewSectionsPage.nextSecId == 0)&&(viewSectionsPage.moduleSeqNo < viewSectionsPage.nextSeqNo)&& (meleteSiteAndUserInfo.navigateCM == null))}">
 		  <h:outputText  id="nextModMsg" value="#{msgs.view_navigate_next3}"></h:outputText>
 		    <f:param name="modseqno" value="#{viewSectionsPage.nextSeqNo}" />
-     </h:commandLink>     
-	</h:column>
+     </h:commandLink>  
+     <h:commandLink id="returnCm" action="#{meleteSiteAndUserInfo.returnToCM}" immediate="true" rendered="#{(((viewSectionsPage.module != null && viewSectionsPage.module.whatsNext == viewSectionsPage.nullString && meleteSiteAndUserInfo.navigateCM != null)||(viewSectionsPage.module != null && viewSectionsPage.module.whatsNext == viewSectionsPage.emptyString))&&(viewSectionsPage.nextSecId == 0)&&(viewSectionsPage.moduleSeqNo < viewSectionsPage.nextSeqNo)&& (meleteSiteAndUserInfo.navigateCM != null))}">
+		  <h:outputText  id="returnCmMsg" value="#{msgs.return_cm_msg}"></h:outputText>
+     </h:commandLink>  
+    </h:column>
 </h:panelGrid>	

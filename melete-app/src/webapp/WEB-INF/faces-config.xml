@@ -1369,7 +1369,10 @@
 		   <from-outcome>list_bookmarks</from-outcome>
         <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
       </navigation-case>                                                           
-
+     <navigation-case>
+		   <from-outcome>coursemap</from-outcome>
+        <to-view-id>/melete/coursemap.jsp</to-view-id>
+      </navigation-case>        
    </navigation-rule>        
    
  <!--Rule for view_section -->  
@@ -1419,6 +1422,10 @@
 		   <from-outcome>list_bookmarks</from-outcome>
         <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
       </navigation-case>                                                             
+      <navigation-case>
+		   <from-outcome>coursemap</from-outcome>
+        <to-view-id>/melete/coursemap.jsp</to-view-id>
+      </navigation-case>                                                          
    </navigation-rule>     
    
 <!--Rule for view_whats_next -->  
@@ -1460,6 +1467,10 @@
 		   <from-outcome>list_bookmarks</from-outcome>
         <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
       </navigation-case>                                                                                             
+       <navigation-case>
+		   <from-outcome>coursemap</from-outcome>
+        <to-view-id>/melete/coursemap.jsp</to-view-id>
+      </navigation-case>                                                                                                     
    </navigation-rule>     
    
          

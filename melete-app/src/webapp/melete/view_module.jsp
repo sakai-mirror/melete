@@ -55,6 +55,7 @@
  <h:graphicImage id="mybook_gif" value="/images/my-bookmarks.png" alt="" styleClass="AuthImgClass" />
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
  <f:param name="fromPage" value="view_module" />
+ <f:param name="fromModuleId" value="#{viewModulesPage.moduleId}" />
 </h:commandLink>				  
 </td>
 </tr>			               

@@ -45,10 +45,13 @@
 				<h:outputText id="seperatorMsg2" value=" | "/>	
 		</h:column>
 	<h:column>
-     <h:commandLink id="nextMod" action="#{viewNextStepsPage.goNextModule}" immediate="true" rendered="#{viewNextStepsPage.moduleSeqNo < viewNextStepsPage.nextSeqNo}">
+     <h:commandLink id="nextMod" action="#{viewNextStepsPage.goNextModule}" immediate="true" rendered="#{(viewNextStepsPage.moduleSeqNo < viewNextStepsPage.nextSeqNo)&&(meleteSiteAndUserInfo.navigateCM == null)}">
 			<h:outputText  id="nextItemMsg" value="#{msgs.view_navigate_ws_next}"/>	
 			 <f:param name="modseqno" value="#{viewNextStepsPage.nextSeqNo}" />
      	</h:commandLink>
+     <h:commandLink id="nextReturnCm" action="#{meleteSiteAndUserInfo.returnToCM}" immediate="true" rendered="#{(viewNextStepsPage.moduleSeqNo < viewNextStepsPage.nextSeqNo)&&(meleteSiteAndUserInfo.navigateCM != null)}">
+			<h:outputText  id="nextReturnCmMsg" value="#{msgs.return_cm_msg}"></h:outputText>
+     	</h:commandLink> 	
    
 	</h:column>
 </h:panelGrid>	

@@ -209,6 +209,7 @@ public class NavPage implements Serializable
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map sessionMap = ctx.getExternalContext().getSessionMap();
 		String goToPage = checkCallFrom();
+		cancelCMReturn();
 		if ("#".equals(goToPage))
 		{
 			if (getIsInstructor())
@@ -257,6 +258,7 @@ public class NavPage implements Serializable
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map sessionMap = ctx.getExternalContext().getSessionMap();
 		String goToPage = checkCallFrom();
+		cancelCMReturn();
 		if ("#".equals(goToPage))
 		{
 			ValueBinding binding = Util.getBinding("#{listModulesPage}");
@@ -269,6 +271,14 @@ public class NavPage implements Serializable
 			return goToPage;
 	}
 
+	private void cancelCMReturn()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		mPage.setNavigateCM(null);
+	}
+	
 	/**
 	 * On Click of any mode bar actions, auto save module and section changes. If open screen is add/edit module or add/edit sections auto save the changes.
 	 * 

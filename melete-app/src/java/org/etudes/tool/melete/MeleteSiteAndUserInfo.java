@@ -607,4 +607,13 @@ public class MeleteSiteAndUserInfo
 		}
 		return null;
 	}
+
+	public String returnToCM()
+	{
+		if(getNavigateCM() != null)
+		{
+			return "coursemap";
+		}
+		return "#";
+	}
 }

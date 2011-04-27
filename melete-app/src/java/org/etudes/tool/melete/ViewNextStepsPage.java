@@ -239,7 +239,10 @@ public class ViewNextStepsPage implements Serializable
 	public String goTOC()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{listModulesPage}");
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		mPage.setNavigateCM(null);
+		binding = Util.getBinding("#{listModulesPage}");
 		ListModulesPage listPage = (ListModulesPage) binding.getValue(context);
 		listPage.setViewModuleBeans(null);
 		listPage.setAutonumberMaterial(null);
