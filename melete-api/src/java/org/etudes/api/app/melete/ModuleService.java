@@ -333,6 +333,8 @@ public interface ModuleService
 	/**
 	 * Moves the list of sections to the module. Updates the old and selected module sequence XML. For composed sections, moves the file to selected module's content collection.
 	 * 
+	 * @param courseId
+	 *        The Site Id
 	 * @param sectionBeans
 	 *        List of Sections to be moved
 	 * @param selectedModule
@@ -340,7 +342,8 @@ public interface ModuleService
 	 * @throws MeleteException
 	 *         "move_section_fail" MeleteException
 	 */
-	public void moveSections(List<? extends SectionBeanService> sectionBeans, ModuleObjService selectedModule) throws MeleteException;
+	public void moveSections(String courseId, List<? extends SectionBeanService> sectionBeans, ModuleObjService selectedModule)
+			throws MeleteException;
 
 	/**
 	 * Gets the module and its sections contents in a printable fashion.

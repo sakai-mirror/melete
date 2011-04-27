@@ -148,7 +148,10 @@ public class AddResourcesPage implements ServletContextListener
 
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		String addCollId = getMeleteCHService().getUploadCollectionId();
+
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo info = (MeleteSiteAndUserInfo) binding.getValue(context);
+		String addCollId = getMeleteCHService().getUploadCollectionId(info.getCourse_id());
 
 		// Code that validates required fields
 		int emptyCounter = 0;
@@ -168,9 +171,8 @@ public class AddResourcesPage implements ServletContextListener
 
 			if (emptyCounter == 10)
 			{
-				FacesContext ctx = FacesContext.getCurrentInstance();
-				ValueBinding binding = Util.getBinding("#{manageResourcesPage}");
-				ManageResourcesPage manResPage = (ManageResourcesPage) binding.getValue(ctx);
+				binding = Util.getBinding("#{manageResourcesPage}");
+				ManageResourcesPage manResPage = (ManageResourcesPage) binding.getValue(context);
 				manResPage.resetValues();
 				return "manage_content";
 			}
@@ -329,9 +331,8 @@ public class AddResourcesPage implements ServletContextListener
 				}
 			}
 		}
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{manageResourcesPage}");
-		ManageResourcesPage manResPage = (ManageResourcesPage) binding.getValue(ctx);
+		binding = Util.getBinding("#{manageResourcesPage}");
+		ManageResourcesPage manResPage = (ManageResourcesPage) binding.getValue(context);
 		manResPage.resetValues();
 		return "manage_content";
 	}

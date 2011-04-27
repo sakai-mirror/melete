@@ -30,6 +30,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.MeleteCHService;
@@ -252,7 +255,11 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 			try
 			{
 				// 1. get upload collection
-				String uploadCollId = getMeleteCHService().getUploadCollectionId();
+				FacesContext ctx = FacesContext.getCurrentInstance();
+				ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+				MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+				String uploadCollId = getMeleteCHService().getUploadCollectionId(mPage.getCurrentSiteId());
+
 				// 2. list resources under collection
 				List<?> allImgMembers = getMeleteCHService().getListofImagesFromCollection(uploadCollId);
 				// 3. add resources info in remoteFiles array as obj of RemoteBrowserFile
@@ -290,7 +297,11 @@ public class RemoteBrowserFile implements Comparable<RemoteBrowserFile>
 			try
 			{
 				// 1. get upload collection
-				String uploadCollId = getMeleteCHService().getUploadCollectionId();
+				FacesContext ctx = FacesContext.getCurrentInstance();
+				ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+				MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+				String uploadCollId = getMeleteCHService().getUploadCollectionId(mPage.getCurrentSiteId());
+
 				// 2. list resources under collection
 				// List allImgMembers = getMeleteCHService().getListofLinksFromCollection(uploadCollId);
 				List<?> allImgMembers = getMeleteCHService().getListofMediaFromCollection(uploadCollId);

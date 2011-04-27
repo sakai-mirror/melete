@@ -815,7 +815,7 @@ public class ModuleDB implements Serializable
 						if (toCopySection.getContentType().equals("typeEditor"))
 						{
 
-							String copyModCollId = meleteCHService.getCollectionId("typeEditor", copyMod.getModuleId());
+							String copyModCollId = meleteCHService.getCollectionId(courseId, "typeEditor", copyMod.getModuleId());
 							String res_mime_type = meleteCHService.MIME_TYPE_EDITOR;
 							ContentResource cr = meleteCHService.getResource(toCopySection.getSectionResource().getResource().getResourceId());
 							byte[] secContentData = cr.getContent();
@@ -2395,7 +2395,7 @@ public class ModuleDB implements Serializable
 	 *        Module object
 	 * @throws MeleteException
 	 */
-	public void moveSection(Section section, Module selectedModule) throws MeleteException
+	public void moveSection(String courseId, Section section, Module selectedModule) throws MeleteException
 	{
 		try
 		{
@@ -2431,7 +2431,7 @@ public class ModuleDB implements Serializable
 				if (section.getContentType() != null && section.getContentType().equals("typeEditor"))
 				{
 					String secContentFile = section.getSectionResource().getResource().getResourceId();
-					String destinationColl = meleteCHService.getCollectionId("typeEditor", selectedModule.getModuleId());
+					String destinationColl = meleteCHService.getCollectionId(courseId, "typeEditor", selectedModule.getModuleId());
 					String newResId = meleteCHService.moveResource(secContentFile, destinationColl);
 					MeleteResource old = (MeleteResource) section.getSectionResource().getResource();
 					MeleteResource newMR = new MeleteResource(old);

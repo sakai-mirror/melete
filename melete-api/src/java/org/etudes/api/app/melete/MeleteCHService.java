@@ -212,17 +212,6 @@ public interface MeleteCHService
 	public ContentCollection getCollection(String toColl);
 
 	/**
-	 * Get collection based on section's content type. For composed sections, get module's collection and for rest meleteDocs/uploads collection.
-	 * 
-	 * @param contentType
-	 *        Section content type
-	 * @param modId
-	 *        The module Id
-	 * @return
-	 */
-	public String getCollectionId(String contentType, Integer modId);
-
-	/**
 	 * Get collection based on section's content type for a site. For composed sections, get module's collection and for rest meleteDocs/uploads collection.
 	 * 
 	 * @param courseId
@@ -358,13 +347,6 @@ public interface MeleteCHService
 	 * @return
 	 */
 	public String getTypeEditorSectionName(Integer sectionId);
-
-	/**
-	 * Get meleteDocs uploads collection for the current site.
-	 * 
-	 * @return
-	 */
-	public String getUploadCollectionId();
 
 	/**
 	 * Get meleteDocs uploads collection for a site.

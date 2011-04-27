@@ -498,7 +498,8 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public void moveSections(List<? extends SectionBeanService> sectionBeans, ModuleObjService selectedModule) throws MeleteException
+	public void moveSections(String courseId, List<? extends SectionBeanService> sectionBeans, ModuleObjService selectedModule)
+			throws MeleteException
 	{
 		try
 		{
@@ -506,7 +507,7 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 			{
 				SectionBean moveSectionBean = (SectionBean) i.next();
 				if (moveSectionBean.getSection().getModuleId() != selectedModule.getModuleId().intValue())
-					moduledb.moveSection(moveSectionBean.getSection(), (Module) selectedModule);
+					moduledb.moveSection(courseId, moveSectionBean.getSection(), (Module) selectedModule);
 			}
 		}
 		catch (Exception ex)

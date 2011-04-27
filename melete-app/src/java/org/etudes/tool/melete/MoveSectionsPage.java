@@ -167,7 +167,7 @@ public class MoveSectionsPage implements Serializable
 				ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "select_one_move_section", msg));
 				return "move_section";
 			}
-			moduleService.moveSections(sectionBeans, selectedModule);
+			moduleService.moveSections(getCourseId(),sectionBeans, selectedModule);
 		}
 		catch (Exception e)
 		{

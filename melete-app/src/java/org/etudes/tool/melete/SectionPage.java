@@ -1328,7 +1328,7 @@ public abstract class SectionPage implements Serializable
 	 */
 	public void setFCKCollectionAttrib()
 	{
-		FCK_CollId = getMeleteCHService().getUploadCollectionId();
+		FCK_CollId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
 		String attrb = "fck.security.advisor." + FCK_CollId;
 
 		SessionManager.getCurrentSession().setAttribute(attrb, new SecurityAdvisor()
@@ -1661,4 +1661,22 @@ public abstract class SectionPage implements Serializable
 		this.currUserId = currUserId;
 	}
 
+	/*
+	 * get the current course id
+	 * Pass it to getuploads collection method
+	 */
+	protected String getCurrentCourseId()
+	{
+		String currId = "";
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map<?,?> sessionMap = context.getExternalContext().getSessionMap();
+		currId = (String)sessionMap.get("course_id");
+		if(currId == null || currId.length() == 0)
+		{
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo info = (MeleteSiteAndUserInfo) binding.getValue(context);
+			currId = info.getCourse_id();
+		}
+		return currId;
+	}
 }

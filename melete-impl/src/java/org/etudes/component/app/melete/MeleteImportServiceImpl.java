@@ -1358,7 +1358,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		{
 			// This is for typeEditor sections
 			section.setContentType("typeEditor");
-			String addCollId = getMeleteCHService().getCollectionId(section.getContentType(), module.getModuleId());
+			String addCollId = getMeleteCHService().getCollectionId(courseId, section.getContentType(), module.getModuleId());
 			String sectionResourceName = getMeleteCHService().getTypeEditorSectionName(section.getSectionId());
 			newResourceId = processEmbedDatafromHTML(hrefVal, sectionResourceName, courseId, addCollId, resElements, unZippedDirPath);
 			meleteResource.setResourceId(newResourceId);

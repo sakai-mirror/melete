@@ -263,7 +263,10 @@ public class ListResourcesPage
 			{
 				logger.debug("from getCurrSiteResourcesList - i am null");
 				// get current site upload collection
-				String uploadCollId = getMeleteCHService().getUploadCollectionId();
+				FacesContext ctx = FacesContext.getCurrentInstance();
+				ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+				MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+				String uploadCollId = getMeleteCHService().getUploadCollectionId(mPage.getCurrentSiteId());
 
 				// get list of all resources for upload type for the current site
 				currSiteResourcesList = new ArrayList<DisplaySecResources>();

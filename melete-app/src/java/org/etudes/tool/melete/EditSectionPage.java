@@ -388,7 +388,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 					String addCollId = null;
 					if("typeEditor".equals(section.getContentType()))
-						addCollId = getMeleteCHService().getCollectionId(section.getContentType(), module.getModuleId());
+						addCollId = getMeleteCHService().getCollectionId(getCurrentCourseId(),section.getContentType(), module.getModuleId());
 					else addCollId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
 
 					logger.debug("addCollId is:" + addCollId);
@@ -1258,24 +1258,5 @@ public class EditSectionPage extends SectionPage implements Serializable
 		{
 			// do nothing
 		}
-	}
-
-	/*
-	 * get the current course id
-	 * Pass it to getuploads collection method
-	 */
-	private String getCurrentCourseId()
-	{
-		String currId = "";
-		FacesContext context = FacesContext.getCurrentInstance();
-		Map<?,?> sessionMap = context.getExternalContext().getSessionMap();
-		currId = (String)sessionMap.get("course_id");
-		if(currId == null || currId.length() == 0)
-		{
-			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-			MeleteSiteAndUserInfo info = (MeleteSiteAndUserInfo) binding.getValue(context);
-			currId = info.getCourse_id();
-		}
-		return currId;
-	}
+	}	
 }

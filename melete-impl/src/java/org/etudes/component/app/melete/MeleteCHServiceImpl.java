@@ -64,7 +64,6 @@ import org.sakaiproject.exception.OverQuotaException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.exception.TypeException;
-import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.util.Validator;
 
 public class MeleteCHServiceImpl implements MeleteCHService
@@ -280,55 +279,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 
 		return null;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getCollectionId(String contentType, Integer modId)
-	{
-		String addToCollection = "";
-		String collName = "";
-		if (contentType.equals("typeEditor"))
-		{
-
-			addToCollection = ToolManager.getCurrentPlacement().getContext() + Entity.SEPARATOR + "module_" + modId;
-
-			collName = "module_" + modId;
-		}
-		else
-		{
-			addToCollection = ToolManager.getCurrentPlacement().getContext() + Entity.SEPARATOR + "uploads";
-
-			collName = "uploads";
-		}
-		// check if collection exists otherwise create it
-		String addCollId = addCollectionToMeleteCollection(addToCollection, collName);
-		return addCollId;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getUploadCollectionId()
-	{
-		try
-		{
-			String uploadCollectionId;
-			uploadCollectionId = ToolManager.getCurrentPlacement().getContext() + Entity.SEPARATOR + "uploads";
-
-			String collName = "uploads";
-			// check if collection exists
-			// read meletDocs dir name from web.xml
-			String uploadCollId = addCollectionToMeleteCollection(uploadCollectionId, collName);
-			return uploadCollId;
-		}
-		catch (Exception e)
-		{
-			logger.info("error accessing uploads directory");
-			return null;
-		}
-	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -804,7 +755,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 					}
 				}
 
-				if (logger.isDebugEnabled()) logger.debug("IN addResourceItem " + displayName + " resourceId " + resource.getId());
+				if (logger.isDebugEnabled()) logger.debug("IN addResourceItem " + res.getProperty(ResourceProperties.PROP_DISPLAY_NAME) + " resourceId " + resource.getId());
 
 				// check if its duplicate file and edit the resource name if it is
 				String checkDup = resource.getUrl().substring(resource.getUrl().lastIndexOf("/") + 1);
