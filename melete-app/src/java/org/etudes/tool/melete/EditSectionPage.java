@@ -473,6 +473,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 		if (!saveHere().equals("failure"))
 		{
 			setSuccess(true);
+			// clear return url
+			FacesContext context = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+			mPage.setNavigateCM(null);
 			return "#";
 		}
 		return "editmodulesections";
@@ -522,6 +527,14 @@ public class EditSectionPage extends SectionPage implements Serializable
 			setSuccess(true);
 			} else return "editmodulesections";
 
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		if (mPage.getNavigateCM() != null)
+		{
+			return "coursemap";
+		}
 		// un-comment to show success message again.
 		/*FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
@@ -529,8 +542,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		FacesMessage msg = new FacesMessage("Info message", successMsg);
 		msg.setSeverity(FacesMessage.SEVERITY_INFO);
 		context.addMessage(null, msg);*/
-		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding =Util.getBinding("#{listAuthModulesPage}");
+
+		binding =Util.getBinding("#{listAuthModulesPage}");
 		ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
         listPage.resetValues();
 		return "list_auth_modules";
@@ -1134,6 +1147,12 @@ public class EditSectionPage extends SectionPage implements Serializable
 		else
 			return "editmodulesections";
 
+		//clear return url
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		mPage.setNavigateCM(null);
+		
 		// reset section model to refresh
 		setSection(null);
 		resetSectionValues();
@@ -1259,5 +1278,4 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		return currId;
 	}
-
 }
