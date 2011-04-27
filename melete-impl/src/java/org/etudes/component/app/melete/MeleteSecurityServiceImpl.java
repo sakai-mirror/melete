@@ -44,7 +44,6 @@ import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.MeleteImportfromSiteService;
 import org.etudes.api.app.melete.MeleteImportService;
 import org.sakaiproject.authz.cover.FunctionManager;
-import org.sakaiproject.tool.cover.ToolManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentHelper;
@@ -231,38 +230,6 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService, EntityP
 		catch (Exception e)
 		{
 			throw new Exception(this.getClass().getName() + " : allowStudent(reference) : " + e.toString());
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean allowAuthor() throws Exception
-	{
-
-		try
-		{
-			return SecurityService.unlock(SECURE_AUTHOR, getContextSiteId(ToolManager.getCurrentPlacement().getContext()));
-		}
-		catch (Exception e)
-		{
-			throw new Exception(this.getClass().getName() + " : allowAuthor() : " + e.toString());
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean allowStudent() throws Exception
-	{
-
-		try
-		{
-			return SecurityService.unlock(SECURE_STUDENT, getContextSiteId(ToolManager.getCurrentPlacement().getContext()));
-		}
-		catch (Exception e)
-		{
-			throw new Exception(this.getClass().getName() + " : allowStudent() : " + e.toString());
 		}
 	}
 

@@ -1721,11 +1721,11 @@ public class ModuleDB implements Serializable
 		String queryStr = null;
 		try
 		{
-			if (meleteSecurityService.allowAuthor())
+			if (meleteSecurityService.allowAuthor(courseId))
 			{
 				queryStr = "select min(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId=ms.moduleId and (ms.startDate is null or ms.endDate is null or ms.startDate < ms.endDate)";
 			}
-			if (meleteSecurityService.allowStudent())
+			if (meleteSecurityService.allowStudent(courseId))
 			{
 				return getStudentNavSeqNo(userId, courseId, currSeqNo, false);
 			}
@@ -1888,11 +1888,11 @@ public class ModuleDB implements Serializable
 		boolean allowStudent = false;
 		try
 		{
-			if (meleteSecurityService.allowAuthor())
+			if (meleteSecurityService.allowAuthor(courseId))
 			{
 				queryStr = "select max(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId=ms.moduleId and (ms.startDate is null or ms.endDate is null or ms.startDate < ms.endDate)";
 			}
-			if (meleteSecurityService.allowStudent())
+			if (meleteSecurityService.allowStudent(courseId))
 			{
 				return getStudentNavSeqNo(userId, courseId, currSeqNo, true);
 			}
@@ -3550,7 +3550,7 @@ public class ModuleDB implements Serializable
 	private Map<Integer, AccessDates> getAccessRecords(String userId, String courseId, Connection dbConnection) throws Exception
 	{
 		Map<Integer, AccessDates> accMap = new HashMap();
-		if (meleteSecurityService.allowStudent())
+		if (meleteSecurityService.allowStudent(courseId))
 		{
 			String sql = "select a.module_id,a.start_date,a.end_date,a.override_start,a.override_end from melete_special_access a,melete_course_module c where a.users like ? and (a.start_date is NULL or a.end_date is NULL or a.start_date < a.end_date) and a.module_id=c.module_id and c.course_id = ?";
 			PreparedStatement accPstmt = dbConnection.prepareStatement(sql);

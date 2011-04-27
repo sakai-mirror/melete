@@ -362,7 +362,7 @@ public class MeleteSiteAndUserInfo
 
 		try
 		{
-			return meleteSecurityService.allowAuthor();
+			return meleteSecurityService.allowAuthor(ToolManager.getCurrentPlacement().getContext());
 		}
 		catch (Exception e)
 		{
@@ -379,7 +379,7 @@ public class MeleteSiteAndUserInfo
 	{
 		try
 		{
-			return meleteSecurityService.allowStudent();
+			return meleteSecurityService.allowStudent(ToolManager.getCurrentPlacement().getContext());
 		}
 		catch (Exception e)
 		{

@@ -45,14 +45,6 @@ public interface MeleteSecurityService
 	public static final String SECURE_STUDENT = "melete.student";
 
 	/**
-	 * Check if the current user has permission as author for the current site.
-	 * 
-	 * @return true if the current user has permission to perform this action, false if not.
-	 * @throws Exception
-	 */
-	boolean allowAuthor() throws Exception;
-
-	/**
 	 * Check if the current user has permission as author for a particular site.
 	 * 
 	 * @param reference
@@ -61,14 +53,6 @@ public interface MeleteSecurityService
 	 * @throws Exception
 	 */
 	boolean allowAuthor(String reference) throws Exception;
-
-	/**
-	 * Check if the current user has permission as student for the current site.
-	 * 
-	 * @return true if the current user has permission to perform this action, false if not.
-	 * @throws Exception
-	 */
-	boolean allowStudent() throws Exception;
 
 	/**
 	 * Check if the current user has permission as student for a particular site.

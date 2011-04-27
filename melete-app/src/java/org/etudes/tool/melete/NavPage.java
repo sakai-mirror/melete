@@ -35,6 +35,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
+import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.util.ResourceLoader;
 import org.etudes.api.app.melete.MeleteSecurityService;
 
@@ -89,7 +90,7 @@ public class NavPage implements Serializable
 
 		try
 		{
-			return meleteSecurityService.allowAuthor();
+			return meleteSecurityService.allowAuthor(ToolManager.getCurrentPlacement().getContext());
 		}
 		catch (Exception e)
 		{
@@ -160,7 +161,7 @@ public class NavPage implements Serializable
 
 		try
 		{
-			return meleteSecurityService.allowStudent();
+			return meleteSecurityService.allowStudent(ToolManager.getCurrentPlacement().getContext());
 		}
 		catch (Exception e)
 		{

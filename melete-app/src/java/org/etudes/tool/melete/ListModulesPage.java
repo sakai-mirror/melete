@@ -506,7 +506,7 @@ public class ListModulesPage implements Serializable
 
 		try
 		{
-			return meleteSecurityService.allowAuthor();
+			return meleteSecurityService.allowAuthor(ToolManager.getCurrentPlacement().getContext());
 		}
 		catch (Exception e)
 		{
@@ -529,7 +529,7 @@ public class ListModulesPage implements Serializable
 
 		try
 		{
-			return meleteSecurityService.allowStudent();
+			return meleteSecurityService.allowStudent(ToolManager.getCurrentPlacement().getContext());
 		}
 		catch (Exception e)
 		{

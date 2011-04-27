@@ -81,42 +81,6 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	static final String REFERENCE_ROOT = Entity.SEPARATOR + "meleteDocs";
 
 	/**
-	 * Check if the current user has permission as author.
-	 * 
-	 * @return true if the current user has permission to perform this action, false if not.
-	 */
-	public boolean isUserAuthor() throws Exception
-	{
-
-		try
-		{
-			return meleteSecurityService.allowAuthor();
-		}
-		catch (Exception e)
-		{
-			throw e;
-		}
-	}
-
-	/**
-	 * Check if the current user has permission as student.
-	 * 
-	 * @return true if the current user has permission to perform this action, false if not.
-	 */
-	public boolean isUserStudent() throws Exception
-	{
-
-		try
-		{
-			return meleteSecurityService.allowStudent();
-		}
-		catch (Exception e)
-		{
-			throw e;
-		}
-	}
-
-	/**
 	 * Check if the current user has permission as author to a site.
 	 * 
 	 * @return true if the current user has permission to perform this action, false if not.
@@ -427,7 +391,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	{
 		try
 		{
-			if (!isUserAuthor())
+			if (!isUserAuthor(getCourseId(collId)))
 			{
 				logger.info("User is not authorized to access meleteDocs collection");
 				return null;
@@ -473,7 +437,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	{
 		try
 		{
-			if (!isUserAuthor())
+			if (!isUserAuthor(getCourseId(collId)))
 			{
 				logger.info("User is not authorized to access meleteDocs collection");
 			}
@@ -519,7 +483,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	{
 		try
 		{
-			if (!isUserAuthor())
+			if (!isUserAuthor(getCourseId(collId)))
 			{
 				logger.info("User is not authorized to access meleteDocs collection");
 				return null;
@@ -565,7 +529,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	{
 		try
 		{
-			if (!isUserAuthor())
+			if (!isUserAuthor(getCourseId(collId)))
 			{
 				logger.info("User is not authorized to access meleteDocs collection");
 				return null;
@@ -654,7 +618,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 		ContentResourceEdit edit = null;
 		try
 		{
-			if (!isUserAuthor())
+			if (!isUserAuthor(getCourseId(selResourceIdFromList)))
 			{
 				logger.info("User is not authorized to access meleteDocs collection");
 				return;
@@ -946,7 +910,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	{
 		try
 		{
-			if (!isUserAuthor())
+			if (!isUserAuthor(getCourseId(uploadCollId)))
 			{
 				logger.info("User is not authorized to access meleteDocs collection");
 				return null;
@@ -1143,7 +1107,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 		ContentResourceEdit edit = null;
 		try
 		{
-			if (!isUserAuthor())
+			if (!isUserAuthor(getCourseId(resourceId)))
 			{
 				logger.info("User is not authorized to access meleteDocs collection");
 				return;
@@ -1566,7 +1530,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	{
 		try
 		{
-			if (!isUserAuthor())
+			if (!isUserAuthor(getCourseId(toColl)))
 			{
 				logger.info("User is not authorized to perform the copyIntoFolder function");
 				return "";
@@ -1637,7 +1601,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 		ContentCollection toCollection = null;
 		try
 		{
-			if (!isUserAuthor())
+			if (!isUserAuthor(getCourseId(toColl)))
 			{
 				logger.info("User is not authorized to perform the copyIntoFolder function");
 				return null;
@@ -1677,7 +1641,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	 */
 	public void removeResource(String delRes_id) throws Exception
 	{
-		if (!isUserAuthor())
+		if (!isUserAuthor(getCourseId(delRes_id)))
 		{
 			logger.info("User is not authorized to perform del resource function");
 			return;
@@ -1720,7 +1684,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	 */
 	public void removeCollection(String delColl_id, String delSubColl_id) throws Exception
 	{
-		if (!isUserAuthor())
+		if (!isUserAuthor(getCourseId(delColl_id)))
 		{
 			logger.info("User is not authorized to perform del resource function");
 			return;
@@ -1764,7 +1728,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	 */
 	public void removeCourseCollection(String delColl_id) throws Exception
 	{
-		if (!isUserAuthor())
+		if (!isUserAuthor(getCourseId(delColl_id)))
 		{
 			logger.info("User is not authorized to perform del resource function");
 			return;
@@ -1818,7 +1782,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	 */
 	public String moveResource(String resourceId, String destinationColl) throws Exception
 	{
-		if (!isUserAuthor())
+		if (!isUserAuthor(getCourseId(destinationColl)))
 		{
 			logger.info("User is not authorized to perform del resource function");
 			return null;

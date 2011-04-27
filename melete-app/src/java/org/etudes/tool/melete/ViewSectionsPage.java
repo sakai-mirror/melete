@@ -740,7 +740,7 @@ public class ViewSectionsPage implements Serializable
 
 		try
 		{
-			return meleteSecurityService.allowStudent();
+			return meleteSecurityService.allowStudent(ToolManager.getCurrentPlacement().getContext());
 		}
 		catch (Exception e)
 		{
