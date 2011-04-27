@@ -522,7 +522,7 @@ public class ExportMeleteModules
 
 						Document document = XMLHelper.parseFile(imsmanifest);
 						// Mallika - line below changes
-						meleteImportService.parseAndBuildModules(document, unzippedDirpath);
+						meleteImportService.parseAndBuildModules(courseId, document, unzippedDirpath);
 
 						// message as import is success
 						String infoMsg = bundle.getString("import_success");

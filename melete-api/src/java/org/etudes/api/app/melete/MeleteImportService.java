@@ -62,11 +62,13 @@ public interface MeleteImportService
 	/**
 	 * Reads IMS package. Parses the manifest file and import modules.
 	 * 
+	 * @param courseId
+	 *        The site id
 	 * @param document
 	 *        document
 	 * @param unZippedDirPath
 	 *        unZipped files Directory Path
 	 * @exception throws exception
 	 */
-	public void parseAndBuildModules(Document document, String unZippedDirPath) throws Exception;
+	public void parseAndBuildModules(String courseId, Document document, String unZippedDirPath) throws Exception;
 }

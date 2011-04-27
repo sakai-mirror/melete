@@ -49,7 +49,6 @@ import org.sakaiproject.content.cover.ContentTypeImageService;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
-import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -745,7 +744,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	/**
 	 * {@inheritDoc}
 	 */
-	public void parseAndBuildModules(Document document, String unZippedDirPath) throws Exception
+	public void parseAndBuildModules(String courseId, Document document, String unZippedDirPath) throws Exception
 	{
 		if (logger.isDebugEnabled()) logger.debug("Entering parseAndBuildModules");
 
@@ -772,11 +771,11 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 				Element blankElement = checkModuleItem(element, eleOrg);
 				if (blankElement != null)
 				{
-					buildModule(blankElement, document, unZippedDirPath, ToolManager.getCurrentPlacement().getContext());
+					buildModule(blankElement, document, unZippedDirPath, courseId);
 					break;
 				}
 				else
-					buildModule(element, document, unZippedDirPath, ToolManager.getCurrentPlacement().getContext());
+					buildModule(element, document, unZippedDirPath, courseId);
 			}
 		}
 
@@ -784,7 +783,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		xpath.setNamespaceURIs(uris);
 
 		Element eleResource = (Element) xpath.selectSingleNode(document);
-		if (eleResource != null) processManageItems(eleResource, unZippedDirPath, ToolManager.getCurrentPlacement().getContext(), document);
+		if (eleResource != null) processManageItems(eleResource, unZippedDirPath, courseId, document);
 
 		if (logger.isDebugEnabled()) logger.debug("Exiting parseAndBuildModules");
 	}
