@@ -65,6 +65,7 @@ import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -528,6 +529,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService, EntityP
 			Set userListAllowImport)
 	{
 		logger.debug("merge of melete" + siteId + "," + fromSiteId + "," + root.toString());
+	
 		int count = 0;
 		try
 		{
@@ -540,7 +542,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService, EntityP
 			org.dom4j.Document domDoc = domReader.read(w3doc);
 			logger.debug("archive str " + archivePath + archivePath.lastIndexOf(File.separator));
 			archivePath = archivePath.substring(0, archivePath.lastIndexOf("/"));
-			count = getMeleteImportService().mergeAndBuildModules(domDoc, archivePath, siteId);
+			count = getMeleteImportService().mergeAndBuildModules(domDoc, archivePath, siteId,UserDirectoryService.getCurrentUser().getId());
 		}
 		catch (Exception e)
 		{

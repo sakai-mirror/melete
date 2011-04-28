@@ -130,7 +130,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	/**
 	 * {@inheritDoc}
 	 */
-	public int mergeAndBuildModules(Document ArchiveDoc, String unZippedDirPath, String fromSiteId) throws Exception
+	public int mergeAndBuildModules(Document ArchiveDoc, String unZippedDirPath, String fromSiteId, String userId) throws Exception
 	{
 		if (logger.isDebugEnabled()) logger.debug("Entering mergeAndBuildModules");
 
@@ -177,7 +177,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 					}
 
 				}
-				createModule(module, fromSiteId);
+				createModule(module, fromSiteId,userId);
 				// build sections
 
 				sectionUtil = new SubSectionUtilImpl();
@@ -190,7 +190,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 					if (itemelement.attributeValue("identifier").startsWith("NEXTSTEPS"))
 						mergeWhatsNext(itemelement, ArchiveDoc, module, unZippedDirPath);
 					else
-						mergeSection(itemelement, ArchiveDoc, module, addBlankSection(null, seqDocument), unZippedDirPath, seqDocument, fromSiteId);
+						mergeSection(itemelement, ArchiveDoc, module, addBlankSection(null, seqDocument), unZippedDirPath, seqDocument, fromSiteId, userId);
 				}
 
 				// update module seqXml
@@ -744,7 +744,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	/**
 	 * {@inheritDoc}
 	 */
-	public void parseAndBuildModules(String courseId, Document document, String unZippedDirPath) throws Exception
+	public void parseAndBuildModules(String courseId, Document document, String unZippedDirPath, String userId) throws Exception
 	{
 		if (logger.isDebugEnabled()) logger.debug("Entering parseAndBuildModules");
 
@@ -771,11 +771,11 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 				Element blankElement = checkModuleItem(element, eleOrg);
 				if (blankElement != null)
 				{
-					buildModule(blankElement, document, unZippedDirPath, courseId);
+					buildModule(blankElement, document, unZippedDirPath, courseId, userId);
 					break;
 				}
 				else
-					buildModule(element, document, unZippedDirPath, courseId);
+					buildModule(element, document, unZippedDirPath, courseId, userId);
 			}
 		}
 
@@ -789,42 +789,13 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	}
 
 	/**
-	 * Build default section without reading ims item element
-	 * 
-	 * @param module
-	 * @param sectionElement
-	 * @return
-	 * @throws Exception
-	 */
-	private Section buildDefaultSection(Module module, Element sectionElement) throws Exception
-	{
-		String userId = UserDirectoryService.getCurrentUser().getEid();
-		String firstName = UserDirectoryService.getCurrentUser().getFirstName();
-		String lastName = UserDirectoryService.getCurrentUser().getLastName();
-
-		Section section = new Section();
-		section.setTextualContent(true);
-		section.setCreatedByFname(firstName);
-		section.setCreatedByLname(lastName);
-		section.setContentType("notype");
-		section.setTitle("Untitled Section");
-
-		// save section object
-		Integer new_section_id = sectionDB.addSection(module, section, true);
-		section.setSectionId(new_section_id);
-		sectionElement.addAttribute("id", new_section_id.toString());
-
-		return section;
-	}
-
-	/**
 	 * Builds the module for each Item element under organization
 	 * 
 	 * @param eleItem
 	 *        item element
 	 * @exception throws exception
 	 */
-	private void buildModule(Element eleItem, Document document, String unZippedDirPath, String courseId) throws Exception
+	private void buildModule(Element eleItem, Document document, String unZippedDirPath, String courseId, String userId) throws Exception
 	{
 
 		if (logger.isDebugEnabled()) logger.debug("Entering buildModule...");
@@ -885,7 +856,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		}
 		if (!keywords) module.setKeywords(module.getTitle());
 		if (!descr) module.setDescription("    ");
-		createModule(module, courseId);
+		createModule(module, courseId, userId);
 
 		// build sections
 		try
@@ -900,7 +871,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 				if (element.attributeValue("identifier").startsWith("NEXTSTEPS"))
 					buildWhatsNext(element, document, module, unZippedDirPath);
 				else
-					buildSection(element, document, module, addBlankSection(null, seqDocument), unZippedDirPath, seqDocument, courseId);
+					buildSection(element, document, module, addBlankSection(null, seqDocument), unZippedDirPath, seqDocument, courseId, userId);
 			}
 
 			// update module seqXml
@@ -991,13 +962,12 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 * @param courseId
 	 * @throws Exception
 	 */
-	private void createModule(Module module, String courseId) throws Exception
+	private void createModule(Module module, String courseId, String userId) throws Exception
 	{
 		if (logger.isDebugEnabled()) logger.debug("Entering createModule...");
 
-		String userId = UserDirectoryService.getCurrentUser().getId();
-		String firstName = UserDirectoryService.getCurrentUser().getFirstName();
-		String lastName = UserDirectoryService.getCurrentUser().getLastName();
+		String firstName = UserDirectoryService.getUser(userId).getFirstName();
+		String lastName = UserDirectoryService.getUser(userId).getLastName();
 
 		module.setUserId(userId);
 		module.setCreatedByFname(firstName);
@@ -1029,7 +999,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 * @throws Exception
 	 */
 	private void buildSection(Element eleItem, Document document, Module module, Element seqElement, String unZippedDirPath, Document seqDocument,
-			String courseId) throws Exception
+			String courseId, String userId) throws Exception
 			{
 		if (logger.isDebugEnabled()) logger.debug("Entering buildSection...");
 
@@ -1059,7 +1029,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			else if (element.getQualifiedName().equalsIgnoreCase("item"))
 			{
 				// call recursive here
-				buildSection(element, document, module, addBlankSection(seqElement, seqDocument), unZippedDirPath, seqDocument, courseId);
+				buildSection(element, document, module, addBlankSection(seqElement, seqDocument), unZippedDirPath, seqDocument, courseId, userId);
 			}
 			// metadata
 			else if (element.getQualifiedName().equalsIgnoreCase("imsmd:lom"))
@@ -1093,9 +1063,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		}
 		// other attributes
 		// logger.debug("setting section attribs");
-		String userId = UserDirectoryService.getCurrentUser().getEid();
-		String firstName = UserDirectoryService.getCurrentUser().getFirstName();
-		String lastName = UserDirectoryService.getCurrentUser().getLastName();
+		String firstName = UserDirectoryService.getUser(userId).getFirstName();
+		String lastName = UserDirectoryService.getUser(userId).getLastName();
 
 		section.setTextualContent(true);
 		section.setCreatedByFname(firstName);
@@ -1163,7 +1132,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 	 * @throws Exception
 	 */
 	private void mergeSection(Element eleItem, Document document, Module module, Element seqElement, String unZippedDirPath, Document seqDocument,
-			String courseId) throws Exception
+			String courseId, String userId) throws Exception
 			{
 		if (logger.isDebugEnabled()) logger.debug("Entering mergeSection...");
 
@@ -1193,7 +1162,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			else if (element.getQualifiedName().equalsIgnoreCase("item"))
 			{
 				// call recursive here
-				buildSection(element, document, module, addBlankSection(seqElement, seqDocument), unZippedDirPath, seqDocument, courseId);
+				buildSection(element, document, module, addBlankSection(seqElement, seqDocument), unZippedDirPath, seqDocument, courseId, userId);
 			}
 			// metadata
 			else if (element.getName().equalsIgnoreCase("imsmd:lom"))
@@ -1237,9 +1206,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		}
 		// other attributes
 		// logger.debug("setting section attribs");
-		String userId = UserDirectoryService.getCurrentUser().getEid();
-		String firstName = UserDirectoryService.getCurrentUser().getFirstName();
-		String lastName = UserDirectoryService.getCurrentUser().getLastName();
+		String firstName = UserDirectoryService.getUser(userId).getFirstName();
+		String lastName = UserDirectoryService.getUser(userId).getLastName();
 
 		section.setTextualContent(true);
 		section.setCreatedByFname(firstName);

@@ -54,10 +54,12 @@ public interface MeleteImportService
 	 *        Unzipped directory path
 	 * @param fromSiteId
 	 *        The site Id
+	 * @param userId
+	 * 		  The user Id       
 	 * @return the count of merged modules
 	 * @throws Exception
 	 */
-	public int mergeAndBuildModules(Document ArchiveDoc, String unZippedDirPath, String fromSiteId) throws Exception;
+	public int mergeAndBuildModules(Document ArchiveDoc, String unZippedDirPath, String fromSiteId, String userId) throws Exception;
 
 	/**
 	 * Reads IMS package. Parses the manifest file and import modules.
@@ -68,7 +70,9 @@ public interface MeleteImportService
 	 *        document
 	 * @param unZippedDirPath
 	 *        unZipped files Directory Path
+	 * @param userId
+	 * 		  The user Id     
 	 * @exception throws exception
 	 */
-	public void parseAndBuildModules(String courseId, Document document, String unZippedDirPath) throws Exception;
+	public void parseAndBuildModules(String courseId, Document document, String unZippedDirPath, String userId) throws Exception;
 }

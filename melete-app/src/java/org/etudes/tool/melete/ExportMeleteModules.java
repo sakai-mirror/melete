@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.util.ResourceLoader;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -522,7 +524,7 @@ public class ExportMeleteModules
 
 						Document document = XMLHelper.parseFile(imsmanifest);
 						// Mallika - line below changes
-						meleteImportService.parseAndBuildModules(courseId, document, unzippedDirpath);
+						meleteImportService.parseAndBuildModules(courseId, document, unzippedDirpath, UserDirectoryService.getCurrentUser().getId());
 
 						// message as import is success
 						String infoMsg = bundle.getString("import_success");
