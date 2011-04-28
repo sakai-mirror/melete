@@ -1827,7 +1827,17 @@ public class ModuleDB implements Serializable
 		{
 			logger.debug("exception at getting viewed modules count " + e.getMessage());
 		}
-		hibernateUtil.closeSession();
+		finally
+		{
+			try
+			{
+				hibernateUtil.closeSession();
+			}
+			catch (HibernateException he)
+			{
+				logger.error(he.toString());
+			}
+		}
 		return allCompletedModules;
 	}
 
