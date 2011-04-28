@@ -1777,13 +1777,31 @@ public class ModuleDB implements Serializable
 		Map<String, Integer> allCompletedModules = new HashMap<String, Integer>();
 		Map<String, Set<Integer>> checkModules = new HashMap<String, Set<Integer>>();
 		Session session = hibernateUtil.currentSession();
+		List res = null;
 		try
 		{
 			String queryString = "select secTrack.userId as userId, cmod.moduleId as moduleId from CourseModule cmod,Section sec, SectionTrackView secTrack where cmod.moduleId=sec.moduleId and sec.sectionId = secTrack.sectionId and cmod.archvFlag=0 and cmod.courseId =:courseId order by secTrack.userId";
 			Query query = session.createQuery(queryString);
 			query.setParameter("courseId", course_id);
-			List res = query.list();
-
+			res = query.list();
+		}
+		catch (Exception ex)
+		{
+			logger.debug(ex.toString());
+		}
+		finally
+		{
+			try
+			{
+				hibernateUtil.closeSession();
+			}
+			catch (HibernateException he)
+			{
+				logger.error(he.toString());
+			}
+		}
+		try
+		{
 			if (res != null)
 			{
 				// collect all distinct read module_ids
@@ -1827,17 +1845,7 @@ public class ModuleDB implements Serializable
 		{
 			logger.debug("exception at getting viewed modules count " + e.getMessage());
 		}
-		finally
-		{
-			try
-			{
-				hibernateUtil.closeSession();
-			}
-			catch (HibernateException he)
-			{
-				logger.error(he.toString());
-			}
-		}
+
 		return allCompletedModules;
 	}
 
