@@ -89,10 +89,12 @@ public interface ModuleService
 	/**
 	 * Part of melete admin tool. Cleans database and removes the deleted modules.
 	 * 
+	 * @param userId
+	 *        The user Id
 	 * @return
 	 * @throws "cleanup_module_fail" MeleteException
 	 */
-	public int cleanUpDeletedModules() throws Exception;
+	public int cleanUpDeletedModules(String userId) throws Exception;
 
 	/**
 	 * Creates a duplicate copy. The copied Module title and its sections title are appended with (Copied date)

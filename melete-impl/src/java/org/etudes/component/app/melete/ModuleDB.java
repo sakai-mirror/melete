@@ -541,9 +541,9 @@ public class ModuleDB implements Serializable
 	 * @return Number of modules deleted
 	 * @throws Exception
 	 */
-	public int cleanUpDeletedModules() throws Exception
+	public int cleanUpDeletedModules(String userId) throws Exception
 	{
-		if (!meleteSecurityService.isSuperUser(UserDirectoryService.getCurrentUser().getId())) throw new MeleteException("admin_allow_cleanup");
+		if (!meleteSecurityService.isSuperUser(userId)) throw new MeleteException("admin_allow_cleanup");
 
 		logger.info("clean up process started");
 		int delCount = 0;
@@ -778,8 +778,8 @@ public class ModuleDB implements Serializable
 		{
 			// get module and its sections
 			Module copyMod = new Module(module);
-			String firstName = UserDirectoryService.getCurrentUser().getFirstName();
-			String lastName = UserDirectoryService.getCurrentUser().getLastName();
+			String firstName = UserDirectoryService.getUser(userId).getFirstName();
+			String lastName = UserDirectoryService.getUser(userId).getLastName();
 
 			DateFormat shortTime = DateFormat.getDateInstance(DateFormat.LONG);
 

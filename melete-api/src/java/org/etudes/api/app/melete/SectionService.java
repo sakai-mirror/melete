@@ -44,10 +44,12 @@ public interface SectionService
 	/**
 	 * Clean up database. Removes the orphaned deleted sections. Part of the melete admin tool to cleanup deleted modules and sections before deep delete.
 	 * 
+	 * @param userId
+	 *        The user Id
 	 * @return
 	 * @throws Exception
 	 */
-	public int cleanUpDeletedSections() throws Exception;
+	public int cleanUpDeletedSections(String userId) throws Exception;
 
 	/**
 	 * Note: not in use anymore.

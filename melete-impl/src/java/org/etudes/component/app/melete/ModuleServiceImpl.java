@@ -133,9 +133,9 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public int cleanUpDeletedModules() throws Exception
+	public int cleanUpDeletedModules(String userId) throws Exception
 	{
-		int noOfDeleted = moduledb.cleanUpDeletedModules();
+		int noOfDeleted = moduledb.cleanUpDeletedModules(userId);
 		return noOfDeleted;
 	}
 

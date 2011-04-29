@@ -77,9 +77,9 @@ public class SectionServiceImpl implements Serializable, SectionService
 	/**
 	 * {@inheritDoc}
 	 */
-	public int cleanUpDeletedSections() throws Exception
+	public int cleanUpDeletedSections(String userId) throws Exception
 	{
-		int noOfDeleted = sectiondb.cleanUpDeletedSections();
+		int noOfDeleted = sectiondb.cleanUpDeletedSections(userId);
 		return noOfDeleted;
 	}
 

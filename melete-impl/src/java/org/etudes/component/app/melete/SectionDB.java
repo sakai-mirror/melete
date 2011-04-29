@@ -1819,9 +1819,9 @@ public class SectionDB implements Serializable
 	 * 
 	 * @throws "cleanup_module_fail" MeleteException
 	 */
-	public int cleanUpDeletedSections() throws Exception
+	public int cleanUpDeletedSections(String userId) throws Exception
 	{
-		if (!meleteSecurityService.isSuperUser(UserDirectoryService.getCurrentUser().getId())) throw new MeleteException("admin_allow_cleanup");
+		if (!meleteSecurityService.isSuperUser(userId)) throw new MeleteException("admin_allow_cleanup");
 
 		int delCount = 0;
 		long totalStart = System.currentTimeMillis();
