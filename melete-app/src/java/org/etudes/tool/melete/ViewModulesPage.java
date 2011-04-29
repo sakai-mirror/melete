@@ -119,7 +119,7 @@ public class ViewModulesPage implements Serializable
 					this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBean(userId, courseId, this.moduleId);
 					mPage.populateMeleteSession();
 					String backToOutside = (String) threadLocalManager.get("MELETE_NAVIGATE_BACK");
-					mPage.setNavigateCM(backToOutside);mPage.populateMeleteSession();
+					mPage.setNavigateCM(backToOutside);
 					
 					threadLocalManager.set("MELETE_MODULE_ID", null);
 					threadLocalManager.set("MELETE_NAVIGATE_BACK", null);
