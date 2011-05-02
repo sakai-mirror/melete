@@ -41,6 +41,7 @@ import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.cover.SiteService;
+import org.sakaiproject.thread_local.cover.ThreadLocalManager;
 import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.cover.UserDirectoryService;
@@ -600,10 +601,20 @@ public class MeleteSiteAndUserInfo
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map m = ctx.getExternalContext().getSessionMap();
+		String returnUrl;
 		if (m.containsKey("backTo"))
 		{
-			String returnUrl = ServerConfigurationService.getServerUrl() + (String) m.get("backTo");
+			returnUrl = ServerConfigurationService.getServerUrl() + (String) m.get("backTo");
 			return returnUrl;
+		}
+		else
+		{
+			if (ThreadLocalManager.get("MELETE_NAVIGATE_BACK") != null)
+			{
+				setNavigateCM((String) ThreadLocalManager.get("MELETE_NAVIGATE_BACK"));
+				returnUrl = ServerConfigurationService.getServerUrl() + getNavigateCM();
+				return returnUrl;
+			}
 		}
 		return null;
 	}
