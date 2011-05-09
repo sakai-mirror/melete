@@ -63,7 +63,7 @@
 		  <h:outputText  id="nextModMsg" value="#{msgs.view_navigate_next3}"></h:outputText>
 		    <f:param name="modseqno" value="#{viewSectionsPage.nextSeqNo}" />
      </h:commandLink>  
-     <h:commandLink id="returnCm" action="#{meleteSiteAndUserInfo.returnToCM}" immediate="true" rendered="#{(((viewSectionsPage.module != null && viewSectionsPage.module.whatsNext == viewSectionsPage.nullString && meleteSiteAndUserInfo.navigateCM != null)||(viewSectionsPage.module != null && viewSectionsPage.module.whatsNext == viewSectionsPage.emptyString))&&(viewSectionsPage.nextSecId == 0)&&(viewSectionsPage.moduleSeqNo < viewSectionsPage.nextSeqNo)&& (meleteSiteAndUserInfo.navigateCM != null))}">
+     <h:commandLink id="returnCm" action="#{meleteSiteAndUserInfo.returnToCM}" immediate="true" rendered="#{(((viewSectionsPage.module != null && viewSectionsPage.module.whatsNext == viewSectionsPage.nullString)||(viewSectionsPage.module != null && viewSectionsPage.module.whatsNext == viewSectionsPage.emptyString))&&(viewSectionsPage.nextSecId == 0)&&(viewSectionsPage.moduleSeqNo < viewSectionsPage.nextSeqNo || viewSectionsPage.nextSeqNo == -1)&& (meleteSiteAndUserInfo.navigateCM != null))}">
 		  <h:outputText  id="returnCmMsg" value="#{msgs.return_cm_msg}"></h:outputText>
      </h:commandLink>  
     </h:column>

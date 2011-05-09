@@ -64,7 +64,7 @@
 			<h:outputText  id="nextItemMsg3" value="#{msgs.view_navigate_mod_next3}"/>	
 			 <f:param name="modseqno" value="#{viewModulesPage.nextSeqNo}" />
      	</h:commandLink>
-     <h:commandLink id="nextReturnCm" action="#{meleteSiteAndUserInfo.returnToCM}" immediate="true" rendered="#{(((viewModulesPage.mdbean.module.whatsNext == viewModulesPage.nullString)||(viewModulesPage.mdbean.module.whatsNext == viewModulesPage.emptyString))&&(viewModulesPage.sectionSize == 0)&&(viewModulesPage.moduleSeqNo < viewModulesPage.nextSeqNo)&&(meleteSiteAndUserInfo.navigateCM != null))}">
+     <h:commandLink id="nextReturnCm" action="#{meleteSiteAndUserInfo.returnToCM}" immediate="true" rendered="#{(((viewModulesPage.mdbean.module.whatsNext == viewModulesPage.nullString)||(viewModulesPage.mdbean.module.whatsNext == viewModulesPage.emptyString))&&(viewModulesPage.sectionSize == 0)&&(viewModulesPage.moduleSeqNo < viewModulesPage.nextSeqNo || viewModulesPage.nextSeqNo == -1)&&(meleteSiteAndUserInfo.navigateCM != null))}">
 			 <h:outputText  id="nextReturnCmMsg" value="#{msgs.return_cm_msg}"></h:outputText>
      	</h:commandLink>	
    
