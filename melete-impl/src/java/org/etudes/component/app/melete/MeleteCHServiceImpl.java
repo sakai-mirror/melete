@@ -148,9 +148,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				}
 			}
 		}
-
-		return courseId;
-
+	    return courseId;
 	}
 
 	/**
@@ -1684,9 +1682,9 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	 */
 	public void removeCollection(String delColl_id, String delSubColl_id) throws Exception
 	{
-		if (!isUserAuthor(getCourseId(delColl_id)))
+		if (!isUserAuthor(delColl_id))
 		{
-			logger.info("User is not authorized to perform del resource function");
+			logger.info("User is not authorized to perform del collection function");
 			return;
 		}
 		// setup a security advisor

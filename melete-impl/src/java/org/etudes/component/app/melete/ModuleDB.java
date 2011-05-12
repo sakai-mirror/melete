@@ -955,7 +955,8 @@ public class ModuleDB implements Serializable
 	 *        User id not in use
 	 * @throws Exception
 	 */
-	public void deleteModules(List delModules, List allModules, String courseId, String userId) throws Exception
+	public void deleteModules(List<? extends ModuleObjService> delModules, List<? extends ModuleObjService> allModules, String courseId, String userId)
+			throws Exception
 	{
 		long starttime = System.currentTimeMillis();
 		Transaction tx = null;
@@ -965,7 +966,7 @@ public class ModuleDB implements Serializable
 		{
 			logger.debug("delete some Modules begin");
 			ArrayList<DelModuleInfo> DelModuleInfoList = new ArrayList<DelModuleInfo>(0);
-			List delResourcesList;
+			List<String> delResourcesList;
 			try
 			{
 				// Get resources for modules that need to be deleted
@@ -991,14 +992,14 @@ public class ModuleDB implements Serializable
 				String delModuleIds = null;
 				// String delSectionIds = null;
 				int count = 1;
-				for (Iterator dmIter = delModules.iterator(); dmIter.hasNext();)
+				for (Iterator<? extends ModuleObjService> dmIter = delModules.iterator(); dmIter.hasNext();)
 				{
 					Module dm = (Module) dmIter.next();
 					allModuleIds.append(dm.getModuleId().toString() + ",");
-					Map delSections = dm.getSections();
+					Map<Integer, SectionObjService> delSections = dm.getSections();
 					if (delSections != null && !delSections.isEmpty())
 					{
-						for (Iterator i = delSections.keySet().iterator(); i.hasNext();)
+						for (Iterator<Integer> i = delSections.keySet().iterator(); i.hasNext();)
 						{
 							if (count % MAX_IN_CLAUSES == 0)
 							{
@@ -1014,10 +1015,10 @@ public class ModuleDB implements Serializable
 						}
 					}
 
-					Map delDeletedSections = dm.getDeletedSections();
+					Map<Integer, SectionObjService>  delDeletedSections = dm.getDeletedSections();
 					if (delDeletedSections != null && !delDeletedSections.isEmpty())
 					{
-						for (Iterator i1 = delDeletedSections.keySet().iterator(); i1.hasNext();)
+						for (Iterator<Integer> i1 = delDeletedSections.keySet().iterator(); i1.hasNext();)
 						{
 							if (count % MAX_IN_CLAUSES == 0)
 							{
@@ -1037,7 +1038,7 @@ public class ModuleDB implements Serializable
 					DelModuleInfoList.add(new DelModuleInfo(dm.getModuleId().toString(), dm.getCoursemodule().getSeqNo()));
 				}
 
-				if (allModuleIds.lastIndexOf(",") != -1) delModuleIds = allModuleIds.substring(0, allModuleIds.lastIndexOf(",")) + " )";
+				if (allModuleIds.lastIndexOf(",") != -1) delModuleIds = allModuleIds.substring(0, allModuleIds.lastIndexOf(",")) + ")";
 
 				// if (allSectionIds.lastIndexOf(",") != -1) delSectionIds = allSectionIds.substring(0, allSectionIds.lastIndexOf(",")) + " )";
 				if (allSectionIds.lastIndexOf(",") != -1)
@@ -1056,8 +1057,8 @@ public class ModuleDB implements Serializable
 				int deletedEntities;
 
 				// delete modules and sections
-				String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section in ";
-				String delSectionResourceStr = "delete SectionResource sr where sr.section in ";
+				String updSectionResourceStr = "update SectionResource sr set sr.resource = null where sr.section.sectionId in ";
+				String delSectionResourceStr = "delete SectionResource sr where sr.section.sectionId in ";
 				String delBookmarksStr = "delete Bookmark bm where bm.sectionId in ";
 				String delSectionTrackStr = "delete SectionTrackView stv where stv.sectionId in ";
 				String delSectionStr = "delete Section s where s.moduleId in " + delModuleIds;
@@ -1071,34 +1072,70 @@ public class ModuleDB implements Serializable
 					for (int i = 0; i < allSectionIdsArray.size(); i++)
 					{
 						allSectionIds = allSectionIdsArray.get(i);
-						deletedEntities = session.createQuery(updSectionResourceStr + allSectionIds.toString()).executeUpdate();
-						deletedEntities = session.createQuery(delSectionResourceStr + allSectionIds.toString()).executeUpdate();
-						logger.debug("section resource deleted" + deletedEntities);
-						deletedEntities = session.createQuery(delBookmarksStr + allSectionIds.toString()).executeUpdate();
-						logger.debug("Boomkarks deleted " + deletedEntities);
-						deletedEntities = session.createQuery(delSectionTrackStr + allSectionIds.toString()).executeUpdate();
-						logger.debug("Section track records deleted " + deletedEntities);
+			
+						try
+						{
+							deletedEntities = session.createQuery(updSectionResourceStr + allSectionIds.toString()).executeUpdate();
+							deletedEntities = session.createQuery(delSectionResourceStr + allSectionIds.toString()).executeUpdate();
+							logger.debug("section resource deleted" + deletedEntities);
+							deletedEntities = session.createQuery(delBookmarksStr + allSectionIds.toString()).executeUpdate();
+							logger.debug("Boomkarks deleted " + deletedEntities);
+							deletedEntities = session.createQuery(delSectionTrackStr + allSectionIds.toString()).executeUpdate();
+							logger.debug("Section track records deleted " + deletedEntities);
+							session.flush();
+						}
+						catch (HibernateException he)
+						{
+							logger.error("Error in deleting one of these section resources :" + allSectionIds );
+							logger.error(he.toString());
+							he.printStackTrace();
+							throw he;
+						}
+						catch (Exception e)
+						{
+							logger.error("Error in deleting one of these section resources :" + allSectionIds );
+							logger.error(e.toString());
+							e.printStackTrace();
+							throw e;
+						}
+					
 					}
 				}
-
-				if (delModuleIds != null)
+		    	if (delModuleIds != null)
 				{
-					deletedEntities = session.createQuery(delSectionStr).executeUpdate();
-					logger.debug("section deleted" + deletedEntities);
-					deletedEntities = session.createQuery(delCourseModuleStr).executeUpdate();
-					logger.debug("course module deleted" + deletedEntities);
-					deletedEntities = session.createQuery(delModuleshDatesStr).executeUpdate();
-					deletedEntities = session.createQuery(delSpecialAccStr).executeUpdate();
-					logger.debug("special access deleted" + deletedEntities);
-					deletedEntities = session.createQuery(delModuleStr).executeUpdate();
-					logger.debug("module deleted" + deletedEntities);
-				}
+					try
+					{
+						deletedEntities = session.createQuery(delSectionStr).executeUpdate();
+						logger.debug("section deleted" + deletedEntities);
+						deletedEntities = session.createQuery(delCourseModuleStr).executeUpdate();
+						logger.debug("course module deleted" + deletedEntities);
+						deletedEntities = session.createQuery(delModuleshDatesStr).executeUpdate();
+						deletedEntities = session.createQuery(delSpecialAccStr).executeUpdate();
+						logger.debug("special access deleted" + deletedEntities);
+						deletedEntities = session.createQuery(delModuleStr).executeUpdate();
+						logger.debug("module deleted" + deletedEntities);
+					}
+					catch (HibernateException he)
+					{
+						logger.error("Error in deleting module :" + delModuleIds);
+						logger.error(he.toString());
+						he.printStackTrace();
+						throw he;
+					}
+					catch (Exception e)
+					{
+						logger.error("Error in deleting module :" + delModuleIds);
+						logger.error(e.toString());
+						e.printStackTrace();
+						throw e;
+					}
+			    }
 
 				// delete module collection
 
 				logger.debug("updating seq_number now");
 				List<CourseModule> courseModules = new ArrayList<CourseModule>(0);
-				for (ListIterator i = allModules.listIterator(); i.hasNext();)
+				for (ListIterator<? extends ModuleObjService> i = allModules.listIterator(); i.hasNext();)
 				{
 					Module mdbean = (Module) i.next();
 					courseModules.add((CourseModule) mdbean.getCoursemodule());
@@ -1110,7 +1147,7 @@ public class ModuleDB implements Serializable
 				{
 					StringBuffer delResourceIds = new StringBuffer("(");
 					// delete melete resource and from content resource
-					for (Iterator delIter = delResourcesList.listIterator(); delIter.hasNext();)
+					for (Iterator<String> delIter = delResourcesList.listIterator(); delIter.hasNext();)
 					{
 						String delResourceId = (String) delIter.next();
 						if ((delResourceId == null) || (delResourceId.trim().length() == 0))
@@ -1167,7 +1204,7 @@ public class ModuleDB implements Serializable
 			}
 
 			logger.debug("Removing upload collection resources");
-			for (Iterator delIter = delResourcesList.listIterator(); delIter.hasNext();)
+			for (Iterator<String> delIter = delResourcesList.listIterator(); delIter.hasNext();)
 			{
 				String delResourceId = (String) delIter.next();
 				if ((delResourceId == null) || (delResourceId.trim().length() == 0))
@@ -1195,7 +1232,7 @@ public class ModuleDB implements Serializable
 				tx = session.beginTransaction();
 				StringBuffer allModuleIds = new StringBuffer("(");
 				String delModuleIds = null;
-				for (Iterator dmIter = delModules.iterator(); dmIter.hasNext();)
+				for (Iterator<? extends ModuleObjService> dmIter = delModules.iterator(); dmIter.hasNext();)
 				{
 					Module dm = (Module) dmIter.next();
 					allModuleIds.append(dm.getModuleId().toString() + ",");
@@ -4124,7 +4161,7 @@ public class ModuleDB implements Serializable
 	 *        List of modules to check
 	 * @return List of embedded and section associated resources
 	 */
-	protected List getActiveResourcesFromList(List activenArchModules)
+	protected List<String> getActiveResourcesFromList(List activenArchModules)
 	{
 		List<String> secEmbed = new ArrayList();
 		try
