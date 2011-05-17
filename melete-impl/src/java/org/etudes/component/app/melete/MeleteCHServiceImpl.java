@@ -694,7 +694,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 					secContentData = checkURL.getBytes();
 				}
 				// name is escaped to create resource url
-				if (res_mime_type != MIME_TYPE_LINK) name = Validator.escapeResourceName(displayName);
+				name = Validator.escapeResourceName(displayName);
 				String finalName = addCollId + name;
 				if (finalName.length() > getContentservice().MAXIMUM_RESOURCE_ID_LENGTH)
 				{

@@ -97,6 +97,26 @@ public class DeleteResourcePage implements Serializable
 	}
 
 	/**
+	 * Checks the selected resource is used in the other sections. If yes, warns the user.
+	 * 
+	 * @param delResourceId
+	 *        The Resource Id
+	 * @param title
+	 *        The resource display name. Get it from meleteCHService
+	 * @param courseId
+	 *        The Site Id
+	 */
+	public void processDeletion(String delResourceId, String title, String courseId)
+	{
+		this.delResourceId = delResourceId;
+		this.courseId = courseId;
+		this.delResourceName = title;
+		List<?> res_in_use = sectionService.findResourceInUse(delResourceId, courseId);
+		if (res_in_use != null) logger.debug("res_in_use size " + res_in_use.size());
+		if (res_in_use != null && res_in_use.size() > 0) warningFlag = true;
+	}
+	
+	/**
 	 * Set resource name
 	 * 
 	 * @param title

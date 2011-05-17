@@ -567,35 +567,19 @@ public class ListResourcesPage
 		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
 
 		String courseId = mPage.getCurrentSiteId();
-		// UIViewRoot root = ctx.getViewRoot();
-		/*
-		 * UIData table = (UIData) root.findComponent("ServerViewForm:ResourceListingForm").findComponent("table"); DisplaySecResources selectedDr = (DisplaySecResources) table.getRowData();
-		 * 
-		 * logger.debug("selected row to delete " + selectedDr.getResource_id());
-		 */
+
 		UICommand cmdLink = (UICommand) evt.getComponent();
-
 		List<?> cList = cmdLink.getChildren();
-		if (cList == null || cList.size() < 2) return;
+		if (cList == null || cList.size() < 1) return;
 		UIParameter param1 = (UIParameter) cList.get(0);
-		UIParameter param2 = (UIParameter) cList.get(1);
-
+		String delRes_id = (String) param1.getValue();
+		
 		binding = Util.getBinding("#{deleteResourcePage}");
 		DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
 		delResPage.resetValues();
 		delResPage.setFromPage(this.fromPage);
-		/*
-		 * if(this.formName.equals("UploadServerViewForm")) delResPage.setFromPage("ContentUploadServerView"); if(this.formName.equals("EditUploadServerViewForm")) delResPage.setFromPage("editContentUploadServerView");
-		 * if(this.formName.equals("ServerViewForm")) delResPage.setFromPage("ContentLinkServerView"); if(this.formName.equals("EditServerViewForm")) delResPage.setFromPage("editContentLinkServerView"); if(this.formName.equals("LtiServerViewForm"))
-		 * delResPage.setFromPage("ContentLTIServerView"); if(this.formName.equals("EditLtiServerViewForm")) delResPage.setFromPage("editContentLTIServerView");
-		 */
-
-		/*
-		 * delResPage.setResourceName(selectedDr.getResource_title()); delResPage.processDeletion(selectedDr.getResource_id(), courseId);
-		 */
-
-		delResPage.setResourceName((String) param2.getValue());
-		delResPage.processDeletion((String) param1.getValue(), courseId);
+		delResPage.setResourceName(meleteCHService.getDisplayName(delRes_id));
+		delResPage.processDeletion(delRes_id, courseId);
 		return;
 	}
 
