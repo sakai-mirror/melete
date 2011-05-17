@@ -720,6 +720,9 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				{
 					int lastDashIndex = checkDup.lastIndexOf("-");
 					int lastDotIndex = checkDup.lastIndexOf(".");
+					
+					// for titles with no file extension
+					if (lastDotIndex == -1) lastDotIndex = checkDup.length();
 					if ((lastDashIndex != -1) && (lastDotIndex != -1))
 					{
 						numberStr = checkDup.substring(lastDashIndex, lastDotIndex);
@@ -818,12 +821,16 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	{
 		String dupName = null;
 		int index = name.lastIndexOf(".");
+		
+		// for files with no extension
+		if (index == -1) index = name.length();
 		String base = null;
 		String ext = null;
 		if (index > 0)
 		{
 			base = name.substring(0, index);
 			ext = name.substring(index);
+			if(ext == null) ext = "";
 		}
 		dupName = base + numberStr + ext;
 		return dupName;
