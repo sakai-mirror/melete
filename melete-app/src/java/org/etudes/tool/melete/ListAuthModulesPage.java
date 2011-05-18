@@ -1221,7 +1221,7 @@ public class ListAuthModulesPage implements Serializable
 		ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
 		ValueBinding binding = Util.getBinding("#{specialAccessPage}");
 		SpecialAccessPage specialAccessPage = (SpecialAccessPage) binding.getValue(ctx);
-		specialAccessPage.setModule(mdbean.getModule());
+		specialAccessPage.setModuleId(mdbean.getModule().getModuleId().intValue());
 		specialAccessPage.setSaList(null);
 		return "list_special_access";
 	}	
