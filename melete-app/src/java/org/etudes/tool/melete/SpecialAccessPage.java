@@ -78,6 +78,7 @@ public class SpecialAccessPage implements Serializable
 	private String deleteAccessTitles;
 
 	private ModuleObjService module;
+	private int moduleId;
 	private boolean noAccFlag;
 	private List saList;
 
@@ -144,7 +145,7 @@ public class SpecialAccessPage implements Serializable
 		{
 			try
 			{
-				specialAccessService.insertSpecialAccess(this.saList, this.specialAccess, this.module);
+				specialAccessService.insertSpecialAccess(this.saList, this.specialAccess, getModule());
 			}
 			catch (Exception ex)
 			{
@@ -313,7 +314,7 @@ public class SpecialAccessPage implements Serializable
 	 */
 	public Date getEndDate()
 	{
-		return this.module.getModuleshdate().getEndDate();
+		return getModule().getModuleshdate().getEndDate();
 	}
 
 	/**
@@ -325,11 +326,19 @@ public class SpecialAccessPage implements Serializable
 	}
 
 	/**
+	 * @return moduleId
+	 */
+	public int getModuleId()
+	{
+		return moduleId;
+	}
+
+	/**
 	 * @return current module object
 	 */
 	public ModuleObjService getModule()
 	{
-		return this.module;
+		return this.moduleService.getModule(this.moduleId);
 	}
 
 	/**
@@ -349,7 +358,7 @@ public class SpecialAccessPage implements Serializable
 	{
 		if (saList == null)
 		{
-			saList = specialAccessService.getSpecialAccess(this.module.getModuleId().intValue());
+			saList = specialAccessService.getSpecialAccess(this.moduleId);
 			listSize = saList.size();
 
 			StringBuffer userNameBuf = new StringBuffer();
@@ -399,9 +408,9 @@ public class SpecialAccessPage implements Serializable
 		{
 			specialAccess = new SpecialAccess();
 			specialAccess.setAccessId(0);
-			specialAccess.setModuleId(this.module.getModuleId().intValue());
-			specialAccess.setStartDate(this.module.getModuleshdate().getStartDate());
-			specialAccess.setEndDate(this.module.getModuleshdate().getEndDate());
+			specialAccess.setModuleId(this.moduleId);
+			specialAccess.setStartDate(getModule().getModuleshdate().getStartDate());
+			specialAccess.setEndDate(getModule().getModuleshdate().getEndDate());
 			specialAccess.setOverrideStart(false);
 			specialAccess.setOverrideEnd(false);
 		}
@@ -421,7 +430,7 @@ public class SpecialAccessPage implements Serializable
 	 */
 	public Date getStartDate()
 	{
-		return this.module.getModuleshdate().getStartDate();
+		return getModule().getModuleshdate().getStartDate();
 	}
 
 	/**
@@ -637,6 +646,15 @@ public class SpecialAccessPage implements Serializable
 	}
 
 	/**
+	 * @param moduleId
+	 *        module id
+	 */
+	public void setModuleId(int moduleId)
+	{
+		this.moduleId = moduleId;
+	}
+
+	/**
 	 * @param meleteSecurityService
 	 *        The meleteSecurityService to set.
 	 */
@@ -645,14 +663,6 @@ public class SpecialAccessPage implements Serializable
 		this.meleteSecurityService = meleteSecurityService;
 	}
 
-	/**
-	 * @param module
-	 *        module object
-	 */
-	public void setModule(ModuleObjService module)
-	{
-		this.module = module;
-	}
 
 	/**
 	 * @param ModuleService
