@@ -3834,9 +3834,9 @@ public class ModuleDB implements Serializable
 			pstmt.setTimestamp(3, currentTimestamp);
 			pstmt.setTimestamp(4, currentTimestamp);
 			rs = pstmt.executeQuery();
+			this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
 			if (rs != null)
 			{
-				this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
 				// Add them to resList
 				while (rs.next())
 				{
@@ -3872,9 +3872,16 @@ public class ModuleDB implements Serializable
 				// Add them to accMap
 				while (accRs.next())
 				{
-					AccessDates ad = new AccessDates(accRs.getInt("module_id"), accRs.getTimestamp("start_date"), accRs.getTimestamp("end_date"),
-							accRs.getBoolean("override_start"), accRs.getBoolean("override_end"));
-					accMap.put(accRs.getInt("seq_no"), ad);
+					int moduleId = accRs.getInt("module_id");
+					//Check to see if modules granted to by special access are blocked by course map ME-1377
+					if ((this.accessAdvisor != null) && (this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), userId)))
+					  continue;
+					else
+					{	
+					  AccessDates ad = new AccessDates(moduleId, accRs.getTimestamp("start_date"), accRs.getTimestamp("end_date"),
+						accRs.getBoolean("override_start"), accRs.getBoolean("override_end"));
+					  accMap.put(accRs.getInt("seq_no"), ad);
+					}  
 				}
 			}
 			accRs.close();
