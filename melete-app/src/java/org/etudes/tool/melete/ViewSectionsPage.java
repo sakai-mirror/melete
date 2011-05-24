@@ -917,7 +917,7 @@ public class ViewSectionsPage implements Serializable
 	{
 		this.sectionDisplaySequence = sectionDisplaySequence;
 	}
-
+	
 	/**
 	 * Set section id
 	 * 
@@ -937,6 +937,15 @@ public class ViewSectionsPage implements Serializable
 	public void setSectionService(SectionService sectionService)
 	{
 		this.sectionService = sectionService;
+	}
+
+	/**
+	 * @param sectionTrack
+	 *        section display sequence
+	 */
+	public void setSectionTrack(String sectionTrack)
+	{
+		this.sectionTrack = sectionTrack;
 	}
 
 	/**
