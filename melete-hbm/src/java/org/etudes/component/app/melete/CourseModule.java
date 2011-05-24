@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,112 +28,170 @@ import java.util.Date;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.etudes.api.app.melete.CourseModuleService;
 
+public class CourseModule implements Serializable, CourseModuleService
+{
+	/** nullable persistent field */
+	private boolean archvFlag;
 
-/** @author Hibernate CodeGenerator */
-public class CourseModule implements Serializable,CourseModuleService {
+	/** nullable persistent field */
+	private String courseId;
 
-    /** identifier field */
-    private Integer moduleId;
+	/** nullable persistent field */
+	private Date dateArchived;
 
-    /** nullable persistent field */
-    private String courseId;
+	/** nullable persistent field */
+	private boolean deleteFlag;
 
-    /** persistent field */
-    private int seqNo;
+	/** identifier field */
+	private org.etudes.component.app.melete.Module module;
 
-    /** nullable persistent field */
-    private boolean archvFlag;
+	/** identifier field */
+	private Integer moduleId;
 
-     /** nullable persistent field */
-    private Date dateArchived;
+	/** persistent field */
+	private int seqNo;
 
-    /** nullable persistent field */
-    private boolean deleteFlag;
+	/** default constructor */
+	public CourseModule()
+	{
+	}
 
+	/** minimal constructor */
+	public CourseModule(int seqNo)
+	{
+		this.seqNo = seqNo;
+	}
 
-    /** identifier field */
-    private org.etudes.component.app.melete.Module module;
+	/** full constructor */
+	public CourseModule(String courseId, int seqNo, boolean archvFlag, Date dateArchived, boolean deleteFlag,
+			org.etudes.component.app.melete.Module module)
+	{
+		this.courseId = courseId;
+		this.seqNo = seqNo;
+		this.archvFlag = archvFlag;
+		this.dateArchived = dateArchived;
+		this.deleteFlag = deleteFlag;
+		this.module = module;
+	}
 
-    /** full constructor */
-    public CourseModule(String courseId, int seqNo, boolean archvFlag, Date dateArchived, boolean deleteFlag, org.etudes.component.app.melete.Module module) {
-        this.courseId = courseId;
-        this.seqNo = seqNo;
-        this.archvFlag = archvFlag;
-        this.dateArchived = dateArchived;
-        this.deleteFlag = deleteFlag;
-        this.module = module;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getCourseId()
+	{
+		return this.courseId;
+	}
 
-    /** default constructor */
-    public CourseModule() {
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getDateArchived()
+	{
+		return this.dateArchived;
+	}
 
-    /** minimal constructor */
-    public CourseModule(int seqNo) {
-        this.seqNo = seqNo;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public org.etudes.api.app.melete.ModuleObjService getModule()
+	{
+		return this.module;
+	}
 
-    public Integer getModuleId() {
-        return this.moduleId;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public Integer getModuleId()
+	{
+		return this.moduleId;
+	}
 
-    public void setModuleId(Integer moduleId) {
-        this.moduleId = moduleId;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getSeqNo()
+	{
+		return this.seqNo;
+	}
 
-    public String getCourseId() {
-        return this.courseId;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isArchvFlag()
+	{
+		return this.archvFlag;
+	}
 
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isDeleteFlag()
+	{
+		return this.deleteFlag;
+	}
 
-    public int getSeqNo() {
-        return this.seqNo;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setArchvFlag(boolean archvFlag)
+	{
+		this.archvFlag = archvFlag;
+	}
 
-    public void setSeqNo(int seqNo) {
-        this.seqNo = seqNo;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setCourseId(String courseId)
+	{
+		this.courseId = courseId;
+	}
 
-    public boolean isArchvFlag() {
-        return this.archvFlag;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setDateArchived(Date dateArchived)
+	{
+		this.dateArchived = dateArchived;
+	}
 
-    public void setArchvFlag(boolean archvFlag) {
-        this.archvFlag = archvFlag;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setDeleteFlag(boolean deleteFlag)
+	{
+		this.deleteFlag = deleteFlag;
+	}
 
-    public Date getDateArchived() {
-        return this.dateArchived;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setModule(org.etudes.api.app.melete.ModuleObjService module)
+	{
+		this.module = (Module) module;
+	}
 
-    public void setDateArchived(Date dateArchived) {
-        this.dateArchived = dateArchived;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setModuleId(Integer moduleId)
+	{
+		this.moduleId = moduleId;
+	}
 
-    public boolean isDeleteFlag() {
-        return this.deleteFlag;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setSeqNo(int seqNo)
+	{
+		this.seqNo = seqNo;
+	}
 
-    public void setDeleteFlag(boolean deleteFlag) {
-        this.deleteFlag = deleteFlag;
-    }
-
-    public org.etudes.api.app.melete.ModuleObjService getModule() {
-        return this.module;
-    }
-
-    public void setModule(org.etudes.api.app.melete.ModuleObjService module) {
-        this.module = (Module) module;
-    }
-
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("moduleId", getModuleId())
-             .append("courseId", getCourseId())
-            .toString();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString()
+	{
+		return new ToStringBuilder(this).append("moduleId", getModuleId()).append("courseId", getCourseId()).toString();
+	}
 
 }

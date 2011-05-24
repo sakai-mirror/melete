@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009,2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009,2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -26,25 +26,18 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
-<sakai:tool_bar id="topbar">
-  <h:graphicImage url="/images/preview.png" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
-  <sakai:tool_bar_item disabled="#{!navPage.shouldRenderView}" immediate="true" value="#{msgs.topnavbar_view}" action="#{navPage.viewAction}"/>	 
+<sakai:tool_bar>
+  <h:commandButton id="ViewButton" action="#{navPage.viewAction}" disabled="#{!navPage.shouldRenderView}" value="#{msgs.topnavbar_view}" title="#{msgs.topnavbar_view}" styleClass="TopImgView"/>
   <h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
   
-  <h:graphicImage url="/images/pen_red.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass" rendered="#{navPage.isInstructor}" />
-  <sakai:tool_bar_item disabled="#{!navPage.shouldRenderAuthor}" immediate="true" value="#{msgs.topnavbar_author}" action="#{navPage.authAction}" rendered="#{navPage.isInstructor}" />
+  <h:commandButton id="AuthorButton" action="#{navPage.authAction}" disabled="#{!navPage.shouldRenderAuthor}" value="#{msgs.topnavbar_author}" title="#{msgs.topnavbar_author}" rendered="#{navPage.isInstructor}" styleClass="TopImgAuthor"/>
   <h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
   
-  <h:graphicImage url="/images/folder_document.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass" rendered="#{navPage.isInstructor}"/>
-  <sakai:tool_bar_item disabled="#{!navPage.shouldRenderManage}" immediate="true" value="#{msgs.topnavbar_manage}" action="#{navPage.manageAction}" rendered="#{navPage.isInstructor}" />
+  <h:commandButton id="ManageButton" action="#{navPage.manageAction}" disabled="#{!navPage.shouldRenderManage}" value="#{msgs.topnavbar_manage}" title="#{msgs.topnavbar_manage}" rendered="#{navPage.isInstructor}" styleClass="TopImgManage"/>
   <h:outputText value="&nbsp;&nbsp;&nbsp;" escape="false" />
   
-  <h:graphicImage url="/images/user1_preferences.gif" alt="" title=""height="16" width="16"  styleClass="AuthImgClass"/>
-  <sakai:tool_bar_item disabled="#{!navPage.shouldRenderPreferences}" immediate="true" value="#{msgs.topnavbar_preferences}" action="#{navPage.PreferenceAction}"/>
+  <h:commandButton id="PreferencesButton" action="#{navPage.PreferenceAction}" disabled="#{!navPage.shouldRenderPreferences}" value="#{msgs.topnavbar_preferences}" title="#{msgs.topnavbar_preferences}" styleClass="TopImgPreference"/>
    
 </sakai:tool_bar>
 <!-- End code to display images horizontally. -->
-
-
-
 

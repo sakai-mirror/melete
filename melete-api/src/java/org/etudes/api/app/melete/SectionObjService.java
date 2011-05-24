@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -25,89 +25,284 @@ package org.etudes.api.app.melete;
 
 import java.util.Date;
 
-public interface SectionObjService {
-	public Integer getSectionId();
-
-    public void setSectionId(Integer sectionId);
-
-	public abstract int getModuleId();
-
-	public abstract void setModuleId(int moduleId);
-
-	public abstract String getTitle();
-
-	public abstract void setTitle(String title);
-
-	public abstract String getCreatedByFname();
-
-	public abstract void setCreatedByFname(String createdByFname);
-
-	public abstract String getCreatedByLname();
-
-	public abstract void setCreatedByLname(String createdByLname);
-
-	public abstract String getModifiedByFname();
-
-	public abstract void setModifiedByFname(String modifiedByFname);
-
-	public abstract String getModifiedByLname();
-
-	public abstract void setModifiedByLname(String modifiedByLname);
-
-	public abstract String getInstr();
-
-	public abstract void setInstr(String instr);
-
-	public abstract String getContentType();
-
-	public abstract void setContentType(String contentType);
-
-	public abstract boolean isAudioContent();
-
-	public abstract void setAudioContent(boolean audioContent);
-
-	public abstract boolean isVideoContent();
-
-	public abstract void setVideoContent(boolean videoContent);
-
-	public abstract boolean isTextualContent();
-
-	public abstract void setTextualContent(boolean textualContent);
-
-	public abstract boolean isOpenWindow();
-
-	public abstract void setOpenWindow(boolean openWindow);
-
-	public abstract boolean isDeleteFlag();
-
-	public abstract void setDeleteFlag(boolean deleteFlag);
-
-
-	public abstract Date getCreationDate();
-
-	public abstract void setCreationDate(Date creationDate);
-
-	public abstract Date getModificationDate();
-
-	public abstract void setModificationDate(Date modificationDate);
-
-	public abstract int getVersion();
-
-	public abstract void setVersion(int version);
-
-	public abstract org.etudes.api.app.melete.ModuleObjService getModule();
-
-	public abstract void setModule(
-			org.etudes.api.app.melete.ModuleObjService module);
-
-	public abstract org.etudes.api.app.melete.SectionResourceService getSectionResource();
-
-	 public abstract void setSectionResource(
-	 		org.etudes.api.app.melete.SectionResourceService sectionResource) ;
-
-	 public abstract String toString();
-
+public interface SectionObjService
+{
+	/**
+	 * {@inheritDoc}
+	 */
 	public abstract boolean equals(Object other);
 
+	/**
+	 * Get section content type like noType, typeEditor, typeUpload, typeLink or typeLTI
+	 * 
+	 * @return
+	 */
+	public abstract String getContentType();
+
+	/**
+	 * Get created by user's first name
+	 * 
+	 * @return
+	 */
+	public abstract String getCreatedByFname();
+
+	/**
+	 * Get created by user's last name
+	 * 
+	 * @return
+	 */
+	public abstract String getCreatedByLname();
+
+	/**
+	 * Get section creation date
+	 * 
+	 * @return
+	 */
+	public abstract Date getCreationDate();
+
+	/**
+	 * Get section instructions
+	 * 
+	 * @return
+	 */
+	public abstract String getInstr();
+
+	/**
+	 * Get section's modification date
+	 * 
+	 * @return
+	 */
+	public abstract Date getModificationDate();
+
+	/**
+	 * Get modified by user's first name
+	 * 
+	 * @return
+	 */
+	public abstract String getModifiedByFname();
+
+	/**
+	 * Get modified by user's last name
+	 * 
+	 * @return
+	 */
+	public abstract String getModifiedByLname();
+
+	/**
+	 * Get Module.
+	 * 
+	 * @return
+	 */
+	public abstract org.etudes.api.app.melete.ModuleObjService getModule();
+
+	/**
+	 * Get Module Id
+	 * 
+	 * @return
+	 */
+	public abstract int getModuleId();
+
+	/**
+	 * Get section Id
+	 * 
+	 * @return
+	 */
+	public Integer getSectionId();
+
+	/**
+	 * Get section resource
+	 * 
+	 * @return
+	 */
+	public abstract org.etudes.api.app.melete.SectionResourceService getSectionResource();
+
+	/**
+	 * Get Section title
+	 * 
+	 * @return
+	 */
+	public abstract String getTitle();
+
+	/**
+	 * 
+	 * @return
+	 */
+	public abstract int getVersion();
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public abstract int hashCode();
+
+	/**
+	 * Does content have audio
+	 * 
+	 * @return
+	 */
+	public abstract boolean isAudioContent();
+
+	/**
+	 * Checks if section is marked as deleted
+	 * 
+	 * @return
+	 */
+	public abstract boolean isDeleteFlag();
+
+	/**
+	 * Checks to open content in a new window/tab
+	 * 
+	 * @return
+	 */
+	public abstract boolean isOpenWindow();
+
+	/**
+	 * Does content have textual content
+	 * 
+	 * @return
+	 */
+	public abstract boolean isTextualContent();
+
+	/**
+	 * Does content have video
+	 * 
+	 * @return
+	 */
+	public abstract boolean isVideoContent();
+
+	/**
+	 * set if content has audio
+	 * 
+	 * @param audioContent
+	 */
+	public abstract void setAudioContent(boolean audioContent);
+
+	/**
+	 * Set section content type
+	 * 
+	 * @param contentType
+	 */
+	public abstract void setContentType(String contentType);
+
+	/**
+	 * Set created by user's first name
+	 * 
+	 * @param createdByFname
+	 */
+	public abstract void setCreatedByFname(String createdByFname);
+
+	/**
+	 * Set created by user's last name
+	 * 
+	 * @param createdByLname
+	 */
+	public abstract void setCreatedByLname(String createdByLname);
+
+	/**
+	 * Set section's creation date
+	 * 
+	 * @param creationDate
+	 */
+	public abstract void setCreationDate(Date creationDate);
+
+	/**
+	 * Mark section as deleted.
+	 * 
+	 * @param deleteFlag
+	 */
+	public abstract void setDeleteFlag(boolean deleteFlag);
+
+	/**
+	 * Set section instructions
+	 * 
+	 * @param instr
+	 */
+	public abstract void setInstr(String instr);
+
+	/**
+	 * set section's modification date
+	 * 
+	 * @param modificationDate
+	 */
+	public abstract void setModificationDate(Date modificationDate);
+
+	/**
+	 * Set modified by user's first name
+	 * 
+	 * @param modifiedByFname
+	 */
+	public abstract void setModifiedByFname(String modifiedByFname);
+
+	/**
+	 * Set modified by user's last name
+	 * 
+	 * @param modifiedByLname
+	 */
+	public abstract void setModifiedByLname(String modifiedByLname);
+
+	/**
+	 * Set Module
+	 * 
+	 * @param module
+	 */
+	public abstract void setModule(org.etudes.api.app.melete.ModuleObjService module);
+
+	/**
+	 * Set Module Id
+	 * 
+	 * @param moduleId
+	 */
+	public abstract void setModuleId(int moduleId);
+
+	/**
+	 * Set to open content in new window/tab
+	 * 
+	 * @param openWindow
+	 */
+	public abstract void setOpenWindow(boolean openWindow);
+
+	/**
+	 * Set Section id
+	 * 
+	 * @param sectionId
+	 */
+	public void setSectionId(Integer sectionId);
+
+	/**
+	 * Set section resource
+	 * 
+	 * @param sectionResource
+	 */
+	public abstract void setSectionResource(org.etudes.api.app.melete.SectionResourceService sectionResource);
+
+	/**
+	 * Set if content has text
+	 * 
+	 * @param textualContent
+	 */
+	public abstract void setTextualContent(boolean textualContent);
+
+	/**
+	 * Set section title
+	 * 
+	 * @param title
+	 */
+	public abstract void setTitle(String title);
+
+	/**
+	 * 
+	 * @param version
+	 */
+	public abstract void setVersion(int version);
+
+	/**
+	 * Set if content has video
+	 * 
+	 * @param videoContent
+	 */
+	public abstract void setVideoContent(boolean videoContent);
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public abstract String toString();
 }

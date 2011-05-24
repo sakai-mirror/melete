@@ -3,7 +3,7 @@
  * $URL$
  * $Id$
  ***********************************************************************************
- * Copyright (c) 2008,2009 Etudes, Inc.
+ * Copyright (c) 2008,2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -24,7 +24,6 @@
 package org.etudes.tool.melete;
 
 import java.util.*;
-import java.io.File;
 import java.io.Serializable;
 import javax.faces.context.FacesContext;
 import javax.faces.application.FacesMessage;
@@ -35,32 +34,29 @@ import javax.faces.event.*;
 import org.etudes.component.app.melete.MeleteResource;
 import org.etudes.component.app.melete.Section;
 import org.etudes.component.app.melete.SectionResource;
-import org.etudes.component.app.melete.SubSectionUtilImpl;
+
+import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.etudes.api.app.melete.exception.UserErrorException;
-import org.etudes.component.app.melete.ModuleDateBean;
+
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentResource;
-import org.sakaiproject.content.api.ContentResourceEdit;
+
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.util.ResourceLoader;
 
 import org.sakaiproject.event.cover.EventTrackingService;
-import org.sakaiproject.tool.cover.ToolManager;
+
 
 public class EditSectionPage extends SectionPage implements Serializable
 {
 	private boolean sizeWarning = false;
 
-	private String previewPage;
-
 	private ModuleService moduleService;
-
-	private String secResourceDescription1;
 
 	private boolean shouldRenderContentTypeSelect = false;
 
@@ -77,26 +73,52 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 	private Boolean hasPrev = false;
 
+	/**
+	 * Default constructor
+	 */
 	public EditSectionPage()
 	{
 		setFormName("EditSectionForm");
 	}
 
-	public String setEditInfo(SectionObjService section)
+	/**
+	 * initializes values. 
+	 * @param section1
+	 * SectionObjService 
+	 * @return
+	 */
+	public String setEditInfo(SectionObjService section1)
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 
 		resetSectionValues();
-		setModule(section.getModule());
-		setSection(section);
-		setSecResource(section.getSectionResource());
-		if (secResource != null && secResource.getResource() != null)
+
+		setFormName("EditSectionForm");
+		setSection(section1);
+		setModule(this.section.getModule());
+	//	setSecResource(this.section.getSectionResource());
+		setSecResource(sectionService.getSectionResourcebyId(this.section.getSectionId().toString()));
+		if (this.secResource != null && this.secResource.getResource() != null)
 		{
-			setMeleteResource((MeleteResource) secResource.getResource());
-			setContentResourceData(meleteResource.getResourceId());
+		//	setMeleteResource((MeleteResource) this.secResource.getResource());
+			setMeleteResource((MeleteResource)sectionService.getMeleteResource(secResource.getResource().getResourceId()));
+			if(this.meleteResource != null && this.meleteResource.getResourceId() != null && this.meleteResource.getResourceId().length() != 0)
+				setContentResourceData(this.meleteResource.getResourceId());
 	    	ValueBinding binding = Util.getBinding("#{licensePage}");
 	  		LicensePage lPage = (LicensePage)binding.getValue(context);
 	  		lPage.setInitialValues(this.formName, getMeleteResource());
+
+	  		// for incomplete add action and resource file is saved through intermediate save
+	  		try
+	  		{
+	  			if(("notype").equals(this.section.getContentType()) && this.meleteResource != null && this.meleteResource.getResourceId() != null)
+	  			{
+	  				if(this.meleteResource.getResourceId().indexOf("Section_")!= -1)
+	  					this.section.setContentType("typeEditor");
+	  				else this.section.setContentType("typeUpload");
+	  				sectionService.insertSectionResource(this.section, this.meleteResource);
+	  			}
+	  		} catch(Exception ex) {}
 		}
 		else
 		{
@@ -107,13 +129,15 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 		ValueBinding binding = Util.getBinding("#{authorPreferences}");
 		AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
-		String usereditor = preferencePage.getUserEditor();
+		preferencePage.setEditorFlags();
+
 		// if fck editor then push advisors and other config values
-		if (section.getContentType().equals("typeEditor") && usereditor.equals(preferencePage.FCKEDITOR))
+		if (this.section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderFCK())
 		{
 			setFCKCollectionAttrib();
 		}
-		if (section.getContentType().equals("typeEditor") && usereditor.equals(preferencePage.SFERYX)) preferencePage.setDisplaySferyx(true);
+		if (this.section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx())
+			preferencePage.setDisplaySferyx(true);
 
 		return "success";
 	}
@@ -134,9 +158,14 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		this.sizeWarning = sizeWarning;
 	}
-
+/**
+ * set resource data.
+ * @param resourceId
+ * The resource Id
+ */
 	private void setContentResourceData(String resourceId)
 	{
+
 		try
 		{
 			if (resourceId != null)
@@ -144,9 +173,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 				ContentResource cr = getMeleteCHService().getResource(resourceId);
 				if (cr == null) return;
 
-				if (cr.getContentType().equals(getMeleteCHService().MIME_TYPE_EDITOR))
+				if (cr.getContentType().equals(MeleteCHService.MIME_TYPE_EDITOR))
 					this.contentEditor = new String(cr.getContent());
-				else if (cr.getContentType().equals(getMeleteCHService().MIME_TYPE_LINK)) setCurrLinkUrl(new String(cr.getContent()));
+				else if (cr.getContentType().equals(MeleteCHService.MIME_TYPE_LINK)) setCurrLinkUrl(new String(cr.getContent()));
 
 				this.secResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 				uploadFileName = this.secResourceName;
@@ -162,6 +191,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	}
 
 	/**
+	 * Get composed section content.
 	 * return content editor
 	 */
 	public String getContentEditor()
@@ -170,6 +200,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return this.contentEditor;
 	}
 
+	/**
+	 * Checks if section has a content type.If not show the dropdown menu to pick a content type.
+	 * @return
+	 */
 	public boolean isShouldRenderContentTypeSelect()
 	{
 		// shouldRenderContentTypeSelect = false;
@@ -184,85 +218,25 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return shouldRenderContentTypeSelect;
 	}
 
-	/*
-	 * action listener for currenet site resource listings. It sets the variable
+	/**
+	 * Delete the selected resource.
+	 * @param evt
+	 * ActionEvent
 	 */
-	/*public void selectedResourceReplaceAction(ActionEvent evt)
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UICommand cmdLink = (UICommand) evt.getComponent();
-		List cList = cmdLink.getChildren();
-		// UIParameter param = (UIParameter) cList.get(0);
-		UIComponent comp = (UIComponent) cList.get(0);
-		// Mallika - Needed to add the if condition below since param tags aren't being
-		// rendered if file size is too large
-
-		if (!(comp instanceof UIOutput))
-		{
-			UIParameter param = (UIParameter) comp;
-			selResourceIdFromList = (String) param.getValue();
-		}
-		else
-		{
-			String selclientId = cmdLink.getClientId(ctx);
-			selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-			selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-			selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-			String resId = selclientId.substring(0, selclientId.indexOf(':'));
-			int selResIndex = Integer.parseInt(resId);
-			selResIndex = selResIndex + getListNav().getCurrIndex();
-			selResourceIdFromList = ((DisplaySecResources) currSiteResourcesList.get(selResIndex)).getResource_id();
-		}
-
-		logger.debug("selected resource id by user in editsectionPage is " + selResourceIdFromList);
-
-		// populate properties panel with the selected resource
-		try
-		{
-			ContentResource cr = getMeleteCHService().getResource(selResourceIdFromList);
-			if (cr != null)
-			{
-				// get resource object
-				selectedResource = (MeleteResource) sectionService.getMeleteResource(selResourceIdFromList);
-				if (selectedResource != null)
-				{
-					this.selectedResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
-					this.selectedResourceDescription = cr.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION);
-					renderSelectedResource = true;
-					ValueBinding binding = Util.getBinding("#{licensePage}");
-			  		LicensePage lPage = (LicensePage)binding.getValue(ctx);
-			  		lPage.setInitialValues(formName, selectedResource);
-				}
-				else
-				{
-					// short term soln for missing records in melete_resource
-					logger.error("selected resource doesnot exist in meleteResource" + selResourceIdFromList);
-				}
-			}
-			ctx.renderResponse();
-		}
-		catch (Exception ex)
-		{
-			//ex.printStackTrace();
-			logger.debug("error while accessing content resource" + ex.toString());
-		}
-		return;
-	}*/
-
 	public void selectedResourceDeleteAction(ActionEvent evt)
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
-
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+     	
 		UICommand cmdLink = (UICommand)evt.getComponent();
 
-		List cList = cmdLink.getChildren();
-		if(cList == null || cList.size() <2) return;
+		List<?> cList = cmdLink.getChildren();
+		if(cList == null || cList.size() <1) return;
 		UIParameter param1 = (UIParameter) cList.get(0);
-	   	UIParameter param2 = (UIParameter) cList.get(1);
-
-		ValueBinding binding =Util.getBinding("#{deleteResourcePage}");
+		String delRes_id = (String) param1.getValue();
+		
+		binding =Util.getBinding("#{deleteResourcePage}");
 		DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
 		delResPage.resetValues();
 		if(section.getContentType().equals("typeUpload"))
@@ -272,15 +246,16 @@ public class EditSectionPage extends SectionPage implements Serializable
 		else if (section.getContentType().equals("typeLTI"))
 			delResPage.setFromPage("editContentLTIServerView");
 
-		delResPage.setResourceName((String)param2.getValue());
-		delResPage.processDeletion((String)param1.getValue(), courseId);
+		delResPage.setResourceName(meleteCHService.getDisplayName(delRes_id));
+		delResPage.processDeletion(delRes_id, mPage.getCurrentUser().getId());
 		return;
 	}
 
-
+/**
+ * Save the section.Validates modality and license required fields. Track section edit event.
+ */
 	public String saveHere()
 	{
-		String dataPath = new String();
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 
@@ -297,21 +272,41 @@ public class EditSectionPage extends SectionPage implements Serializable
 		 lPage.setFormName(formName);
 		try
 		{
+			// validation 2a: if content is provided then check for license and year lengths
+			if (!section.getContentType().equals("notype") && !lPage.getLicenseCodes().equals(LicensePage.NO_CODE))
+			{
+				lPage.validateLicenseLengths();
+			}
 			// validation 2: if content is provided then check for copyright license
-			if (!section.getContentType().equals("notype") && lPage.getLicenseCodes().equals(lPage.Copyright_CODE))
+			if (!section.getContentType().equals("notype") && lPage.getLicenseCodes().equals(LicensePage.Copyright_CODE))
 			{
 				lPage.checkForRequiredFields();
 			}
 
 			// validation 3: if upload a new file check fileName format -- move to uploadSectionContent()
-
-			// validation 4: check link url title
-			if (section.getContentType().equals("typeLink") && meleteResource != null && meleteResource.getResourceId() != null && (secResourceName == null || secResourceName.trim().length() == 0))
-				throw new UserErrorException("URL_title_reqd");
+			// validation 3-1: if typeEditor and saved by sferyx then check for error messages
+			if (section.getContentType().equals("typeEditor"))
+			{
+				binding = Util.getBinding("#{addResourcesPage}");
+				AddResourcesPage resourcesPage = (AddResourcesPage) binding.getValue(context);
+				HashMap<String,ArrayList<String>> save_err = resourcesPage.getHm_msgs();
+				logger.debug("hashmap in editsectionpage is " + save_err);
+				String errKey = section.getSectionId().toString() + "-" + getCurrUserId();
+				if(save_err != null && !save_err.isEmpty() && save_err.containsKey(errKey))
+				{
+					ArrayList<String> errs = save_err.get(errKey);
+					for(String err:errs)
+					{
+					String errMsg = resourcesPage.getMessageText(err);
+					context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, err, errMsg));
+					}
+					resourcesPage.removeFromHm_Msgs(errKey);
+					return "failure";
+				}
+			}
 
 			// save section
 			if (logger.isDebugEnabled()) logger.debug("EditSectionpage:save section" + section.getContentType());
-			String uploadHomeDir = ServerConfigurationService.getString("melete.uploadDir", "");
 
 			if (section.getContentType().equals("notype"))
 			{
@@ -323,49 +318,95 @@ public class EditSectionPage extends SectionPage implements Serializable
 				// step 1: check if new resource content or existing resource is edited
 				try
 				{
-					//The condition below was put in to handle ME-639
-					if (meleteResource != null && meleteResource.getResourceId() != null)
-					{
-						if (logger.isDebugEnabled()) logger.debug("Ist step of edit - check meleteResource" + meleteResource.getResourceId());
-					  getMeleteCHService().checkResource(meleteResource.getResourceId());
-					  editMeleteCollectionResource(uploadHomeDir, meleteResource.getResourceId());
-					}
-					else
-					{
-						logger.debug("old type is " + oldType + meleteResource);
-						if (oldType != null && oldType.equals("notype"))  throw new Exception();
+					binding = Util.getBinding("#{authorPreferences}");
+	    			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
 
-						//resource is removed
-						if (logger.isDebugEnabled()) logger.debug("Resource ID is null i.e resource is removed");
-						editMeleteCollectionResource(uploadHomeDir, null);
-						meleteResource = null;
-						//throw new Exception();
-					}
+	    			if ("typeEditor".equals(section.getContentType()) && preferencePage.isShouldRenderSferyx())
+	    			{
+	    				// get secResource object
+	    				secResource = sectionService.getSectionResourcebyId(section.getSectionId().toString());
+	    				logger.debug("after fetching section resource object is:" + secResource.getResource() + secResource.getSectionId());
+	    				meleteResource.setResourceId(secResource.getResource().getResourceId());
+	    				section.setSectionResource(secResource);
+	    				// refresh contentEditor
+	    				ContentResource cr = getMeleteCHService().getResource(secResource.getResource().getResourceId());
+	    				if (cr != null) this.contentEditor = new String(cr.getContent());
+	    			}
+	    			else if ("typeEditor".equals(section.getContentType()) && preferencePage.isShouldRenderFCK())
+	    			{
+	       				// type change from type upload or typeLink to compose then create section xxx.html file
+	    				if (meleteResource != null && meleteResource.getResourceId() != null && meleteResource.getResourceId().length() != 0 &&
+	    					meleteResource.getResourceId().indexOf("/private/meleteDocs/") != -1 && meleteResource.getResourceId().indexOf("/uploads/") != -1)
+	    				{
+		   					throw new MeleteException("section_html_null");
+	    				}
+	    				// no type to editor
+	    				if (meleteResource != null && meleteResource.getResourceId() != null && meleteResource.getResourceId().length() == 0)
+	    				{
+	      					throw new MeleteException("section_html_null");
+	    				}
+	    				getMeleteCHService().checkResource(meleteResource.getResourceId());
+    					editMeleteCollectionResource(meleteResource.getResourceId());
+	    			}
+	    			//The condition below was put in to handle ME-639
+	    			else
+	    			{
+	    				if (meleteResource != null && meleteResource.getResourceId() != null && meleteResource.getResourceId().trim().length() != 0)
+	    				{
+	    					if (logger.isDebugEnabled()) logger.debug("Ist step of edit - check meleteResource" + meleteResource.getResourceId());
+	    					// validation 4: check link url title
+	    					if (section.getContentType().equals("typeLink") && (secResourceName == null || secResourceName.trim().length() == 0))
+	    						throw new UserErrorException("URL_title_reqd");
+	    					getMeleteCHService().checkResource(meleteResource.getResourceId());
+	    					editMeleteCollectionResource(meleteResource.getResourceId());
+	    				}
+	    				else
+	    				{
+	    					//resource is removed
+	    					if (logger.isDebugEnabled()) logger.debug("Resource ID is null i.e resource is removed");
+	    					editMeleteCollectionResource( null);
+	    					meleteResource = null;
+	    					    					
+	    					// delete existing record from section_resource table
+	    					sectionService.deleteSectionResourcebyId(section.getSectionId().toString());
+	    					//change section type to notype
+	    					section.setContentType("notype");
+	    					//insert just into section table	    					
+	    					sectionService.editSection(section);
+	    					//Track the event
+	    					EventTrackingService.post(EventTrackingService.newEvent("melete.section.edit", ToolManager.getCurrentPlacement().getContext(), true));
+
+	    					return "success";
+	    				}
+	    			}
+
 				}
 				catch (Exception e)
 				{
 					// resource is not there when no content type is choosen
 					if (logger.isDebugEnabled()) logger.debug("resource is new i.e. coming from notype content");
-					String addCollId = getMeleteCHService().getCollectionId(section.getContentType(), module.getModuleId());
-					String newResourceId = addResourceToMeleteCollection(uploadHomeDir, addCollId);
+
+					String addCollId = null;
+					if("typeEditor".equals(section.getContentType()))
+						addCollId = getMeleteCHService().getCollectionId(getCurrentCourseId(),section.getContentType(), module.getModuleId());
+					else addCollId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
+
+					logger.debug("addCollId is:" + addCollId);
+					String newResourceId = addResourceToMeleteCollection(addCollId);
 					meleteResource.setResourceId(newResourceId);
 					if (logger.isDebugEnabled()) logger.debug("new resource id" + newResourceId + meleteResource);
 					/* here create association and insert new resource */
-					sectionService.insertMeleteResource(section, meleteResource);
+					sectionService.insertSectionResource(section, meleteResource);
 				}
 
 				// step 3: edit license information
-				if(meleteResource != null && meleteResource.getResourceId() != null)
+				if(meleteResource != null && meleteResource.getResourceId() != null && meleteResource.getResourceId().length() != 0)
+				{
 				meleteResource = lPage.processLicenseInformation(meleteResource);
-
-				// step2: edit section properties
-				sectionService.editSection(section, meleteResource);
+				sectionService.updateResource(meleteResource);
+				}
+				sectionService.insertSectionResource(section, meleteResource);
 			}
-
-			// uploadFileName=null;
-			//un-comment if want to show success message on save.
-			//String successMsg = bundle.getString("add_section_success");
-			//context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "add_section_success", successMsg));
 
 			//Track the event
 			EventTrackingService.post(EventTrackingService.newEvent("melete.section.edit", ToolManager.getCurrentPlacement().getContext(), true));
@@ -382,10 +423,16 @@ public class EditSectionPage extends SectionPage implements Serializable
 		{
 			logger.debug("error in updating section " + mex.toString());
 			String errMsg = bundle.getString(mex.getMessage());
-			if(mex.getMessage().equals("embed_image_size_exceed"))
+			// uncomment it after sferyx brings uploadfile limit param
+			/*if(mex.getMessage().equals("embed_image_size_exceed"))
 			{
 				errMsg = errMsg.concat(ServerConfigurationService.getString("content.upload.max", "0"));
 				errMsg = errMsg.concat(bundle.getString("embed_image_size_exceed1"));
+			}*/
+			if(mex.getMessage().equals("embed_image_size_exceed2"))
+			{
+				errMsg = errMsg.concat(ServerConfigurationService.getString("content.upload.max", "0"));
+				errMsg = errMsg.concat(bundle.getString("embed_image_size_exceed2-1"));
 			}
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, mex.getMessage(), errMsg));
 			return "failure";
@@ -415,10 +462,29 @@ public class EditSectionPage extends SectionPage implements Serializable
 		}
 		return "editmodulesections";
 	}
+	
+	/**
+     * For top mode bar clicks, auto save section
+     * Returns # if save is success else stay on same page to correct error
+     */
+	public String autoSave()
+	{
+		setSuccess(false);
+		if (!saveHere().equals("failure"))
+		{
+			setSuccess(true);
+			// clear return url
+			FacesContext context = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+			mPage.setNavigateCM(null);
+			return "#";
+		}
+		return "editmodulesections";
+	}
 
 	/**
-	 * save the section, if not saved yet and then refresh the page to add more sections. Revision on 11/15: - add code to initiate breadcrumps in add
-	 * section page Revised on 3/22 - to set section as null Revised on 5/31/05 - to get addsectionpage instance and call resetvalues there
+	 * save the section and create next section.
 	 */
 	public String saveAndAddAnotherSection()
 	{
@@ -431,7 +497,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 
 		// create new instance of section model
-	setSection(null);
+		setSection(null);
 		resetSectionValues();
 		setSizeWarning(false);
 
@@ -442,19 +508,15 @@ public class EditSectionPage extends SectionPage implements Serializable
 		ValueBinding binding = Util.getBinding("#{authorPreferences}");
 		AuthorPreferencePage authPage = (AuthorPreferencePage) binding.getValue(context);
 		authPage.setEditorFlags();
-		
-		binding = Util.getBinding("#{addSectionPage}");
-		AddSectionPage aPage = (AddSectionPage) binding.getValue(context);
-		aPage.setSection(null);
-		aPage.resetSectionValues();
-		aPage.setModule(module);
-		logger.debug("render flags:" + aPage.getShouldRenderEditor() + authPage.isShouldRenderFCK());
-		return "addmodulesections";
+
+		// create new section
+		addBlankSection();
+
+		return "editmodulesections";
 	}
 
 	/**
-	 * returns failure if the section has not been saved first. returns finish to redirect to addmodulefinish page. revised by rashmi on 3/21 to
-	 * enforce automatic save revised by rashmi 06/14/05 to remove retain values problem in finish page
+	 * Save the section and navigate to author list page.
 	 */
 	public String Finish()
 	{
@@ -465,6 +527,14 @@ public class EditSectionPage extends SectionPage implements Serializable
 			setSuccess(true);
 			} else return "editmodulesections";
 
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		if (mPage.getNavigateCM() != null)
+		{
+			return "coursemap";
+		}
 		// un-comment to show success message again.
 		/*FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
@@ -472,78 +542,56 @@ public class EditSectionPage extends SectionPage implements Serializable
 		FacesMessage msg = new FacesMessage("Info message", successMsg);
 		msg.setSeverity(FacesMessage.SEVERITY_INFO);
 		context.addMessage(null, msg);*/
+
+		binding =Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
+        listPage.resetValues();
 		return "list_auth_modules";
 
 	}
 
-	/*
-	 * Preview - force save on preview
+	/**
+	 * Preview the content. Save section.
 	 */
 	public String getPreviewPage()
 	{
-	   ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-	   FacesContext context = FacesContext.getCurrentInstance();
-
-
-	   if(meleteResource != null && meleteResource.getResourceId() != null)
-	   {
-		   ValueBinding binding = Util.getBinding("#{licensePage}");
-		   LicensePage lPage = (LicensePage)binding.getValue(context);
-		     lPage.setFormName(getFormName());
-			meleteResource = lPage.processLicenseInformation(meleteResource);
-	   }
-	   contentWithHtml = false;
-		try
+		setSuccess(false);
+		if(!saveHere().equals("failure"))
 		{
-			if (!section.getContentType().equals("notype"))
-			{
-				if (this.section.getContentType().equals("typeEditor"))
-				{
-					String uploadHomeDir = ServerConfigurationService.getString("melete.uploadDir", "");
-					try
-					{
-					  this.previewContentData = getMeleteCHService().findLocalImagesEmbeddedInEditor(uploadHomeDir, contentEditor);
-					  contentEditor = previewContentData;
-						if(Util.FindNestedHTMLTags(contentEditor))
-						{
-							this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
-							contentWithHtml = true;
-						}
-	
-						return "editpreview";
-					}
-					catch (MeleteException mex)
-					{
-						logger.debug("error in editing section "+ mex.toString());
-						String errMsg = bundle.getString(mex.getMessage());
-						context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
-						return "failure";
-					}
-					
-				}
-				this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
-			}
-			else
-			{
-				this.previewContentData = null;
-			}
+			setSuccess(true);
 		}
+		else return "editmodulesections";
 
-		catch (Exception e)
-		{
-			logger.error(e.toString());
-		}
+		contentWithHtml = false;
+		this.previewContentData = null;
+
+		if (meleteResource != null && meleteResource.getResourceId() != null)
+		   {
+			   if (this.section.getContentType().equals("typeEditor"))
+			   {
+				   this.previewContentData = contentEditor;
+				   if(Util.FindNestedHTMLTags(contentEditor))
+				   {
+					   this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
+					   contentWithHtml = true;
+				   }
+			   }
+			   else this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
+		   }
 		return "editpreview";
-
 	}
 
-	public String cancelFromPreview()
+	/**
+	 * Navigate back to edit page from preview.
+	 * @return
+	 */
+	public String returnBack()
 	{
 		return "editmodulesections";
 	}
 
-	/*
-	 * reset edit section variables first and then of base class
+	/**
+	 * reset values
 	 */
 	public void resetSectionValues()
 	{
@@ -559,14 +607,18 @@ public class EditSectionPage extends SectionPage implements Serializable
 		super.resetSectionValues();
 	}
 
+	/**
+	 * Navigate to edit page
+	 * @return
+	 */
 	public String redirectLinktoEdit()
 	{
 		return "editmodulesections";
 		// return "#";
 	}
 
-	/*
-	 * on clicking link 2 me the page navigates back to add module section
+	/**
+	 * on clicking link 2 me the page navigates back
 	 */
 	public String redirectLink()
 	{
@@ -574,12 +626,14 @@ public class EditSectionPage extends SectionPage implements Serializable
 		// return "#";
 	}
 
+	/**
+	 * Navigate page to delete a resource
+	 * @return
+	 */
 	public String redirectDeleteLink()
 	{
 		 return "delete_resource";
 	}
-
-
 
 	/**
 	 * @return Returns the ModuleService.
@@ -638,6 +692,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 		this.m_selected_license = m_selected_license;
 	}*/
 
+	/**
+	 * navigate to upload screen.
+	 */
 	public String gotoServerView()
 	{
 		selectedResourceName = null;
@@ -653,6 +710,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editContentUploadServerView";
 	}
 
+	/**
+	 * Set the selected file as resource selected for the section.
+	 * @return
+	 */
 	public String setServerFile()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -670,12 +731,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 				if (res_mime_type != null)
 				{
 					secResourceDescription = "";
-
-					setLicenseCodes(null);
+                    setLicenseInfo();
 					ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, secResourceDescription);
 
-					if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId();
-
+			//		if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
+					containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
 					String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type, containCollectionId,
 							getSecContentData(), res);
 					selectedResource = new MeleteResource();
@@ -696,7 +756,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 				/*secResourceName = selectedResourceName;
 				secResourceDescription = selectedResourceDescription;*/
 				processSelectedResource(selResourceIdFromList);
-				logger.debug("assigned selected disp name and properties properly to current");
 				//setLicenseCodes(m_selected_license);
 			}
 			meleteResource = selectedResource;
@@ -723,7 +782,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editmodulesections";
 	}
 
-	// edit link
+	/**
+	 * Navigate to select a link resource.
+	 * @return
+	 */
 	public String gotoServerLinkView()
 	{
 		selectedResourceName = null;
@@ -741,6 +803,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editContentLinkServerView";
 	}
 
+	/**
+	 * Navigate to LTI resources list
+	 * @return
+	 */
 	public String gotoServerLTIView()
 	{
 		gotoServerLinkView();
@@ -758,6 +824,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editContentLTIServerView";
 	}
 
+	/**
+	 * Associate section with the user selected resource item.
+	 * @return
+	 */
 	public String setServerUrl()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -784,7 +854,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				 */
 				/*secResourceName = "";
 				secResourceDescription = "";*/
-				setLicenseCodes(null);
+				setLicenseInfo();
 				if(newURLTitle == null || newURLTitle.length() == 0)
 				{
 					errMsg = bundle.getString("URL_title_reqd");
@@ -793,9 +863,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 				}
 				secResourceName = newURLTitle;
 				createLinkUrl();
-				String res_mime_type = getMeleteCHService().MIME_TYPE_LINK;
+				String res_mime_type = MeleteCHService.MIME_TYPE_LINK;
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, secResourceDescription);
-				if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId();
+			//	if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
+				containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
 				String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type, containCollectionId, getSecContentData(),
 						res);
 				selectedResource = new MeleteResource();
@@ -840,6 +911,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editmodulesections";
 	}
 
+	/**
+	 * Associate section with LTI resource selected.
+	 * @return
+	 */
 	public String setServerLTI()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -859,7 +934,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "select_or_cancel", errMsg));
 					return "editContentLTIServerView";
 				}
-				setLicenseCodes(null);
+				setLicenseInfo();
 				if(newURLTitle == null || newURLTitle.length() == 0)
 				{
 					errMsg = bundle.getString("URL_title_reqd");
@@ -868,9 +943,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 				}
 				secResourceName = newURLTitle;
 				createLTIDescriptor();
-				String res_mime_type = getMeleteCHService().MIME_TYPE_LTI;
+				String res_mime_type = MeleteCHService.MIME_TYPE_LTI;
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, secResourceDescription);
-				if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId();
+		//		if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
+				containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
 				String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type, containCollectionId, getSecContentData(),
 						res);
 				selectedResource = new MeleteResource();
@@ -907,6 +983,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return "editmodulesections";
 	}
 
+	/**
+	 * Cancel selected file.
+	 * @return
+	 */
 	public String cancelServerFile()
 	{
 		selectedResource = null;
@@ -951,6 +1031,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		this.shouldRenderLocalUpload = shouldRenderLocalUpload;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean isHasNext()
 	{
 		SectionObjService nextSection = null;
@@ -965,7 +1049,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 			}
 			catch (Exception e)
 			{
-
 			}
 		}
 		return hasNext.booleanValue();
@@ -1017,7 +1100,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 			}
 			catch (Exception e)
 			{
-
 			}
 		}
 		return hasPrev.booleanValue();
@@ -1065,10 +1147,116 @@ public class EditSectionPage extends SectionPage implements Serializable
 		else
 			return "editmodulesections";
 
+		//clear return url
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		mPage.setNavigateCM(null);
+		
 		// reset section model to refresh
 		setSection(null);
 		resetSectionValues();
 		setSizeWarning(false);
 		return cancel();
 	}
+
+	public String getDataUrl()
+	{
+
+		String rUrl = null;
+		if (this.section == null) return null;
+		SectionResource secRes = (SectionResource)this.section.getSectionResource();
+		String resourceId = null;
+		if (secRes != null && (secRes.getResource() != null))
+		{
+			resourceId = secRes.getResource().getResourceId();
+		}
+
+		if (resourceId != null)
+		{
+			try
+			{
+					rUrl = getMeleteCHService().getResourceUrl(resourceId);
+			}catch(Exception e) {
+				// do nothing
+			}
+		}
+	  return rUrl;
+	}
+
+	public String gotoMyBookmarks()
+	{
+
+		setSuccess(false);
+		if(!saveHere().equals("failure"))
+		{
+			setSuccess(true);
+		}
+		else return "editmodulesections";
+
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{bookmarkPage}");
+		BookmarkPage bmrkPage = (BookmarkPage) binding.getValue(context);
+
+		return bmrkPage.gotoMyBookmarks("editmodulesections", module.getModuleId());
+	}
+
+	public String saveAndAddBookmark()
+	{
+
+		setSuccess(false);
+		if(!saveHere().equals("failure"))
+		{
+			setSuccess(true);
+			FacesContext context = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{bookmarkPage}");
+			BookmarkPage bmrkPage = (BookmarkPage) binding.getValue(context);
+			bmrkPage.setSectionId(this.section.getSectionId().toString());
+		}
+		return "editmodulesections";
+
+	}
+
+	/*
+	 *  click of add creates a blank section
+	 */
+	public void addBlankSection()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map sessionMap = context.getExternalContext().getSessionMap();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo info = (MeleteSiteAndUserInfo) binding.getValue(context);
+		
+		try
+		{
+			Section s = new Section();
+			s.setContentType("notype");
+			s.setTextualContent(true);
+			// user info from session
+			s.setCreatedByFname(info.getCurrentUser().getFirstName());
+			s.setCreatedByLname(info.getCurrentUser().getLastName());
+			//reset flags
+			shouldRenderEditor=false;
+			shouldRenderLink=false;
+			shouldRenderLTI=false;
+			shouldRenderUpload=false;
+			shouldRenderNotype = true;
+			int mId = module.getModuleId().intValue();
+			logger.debug("mId in blank section" + mId);
+			Integer newSectionId = sectionService.insertSection(module,s);
+			s.setSectionId(newSectionId);
+
+			// refresh module
+			this.module = moduleService.getModule(mId);
+			sessionMap.put("currModule",module);
+			s.setModule(module);
+
+			// set edit page for this section
+			setEditInfo(s);
+		}
+		catch(Exception ex)
+		{
+			// do nothing
+		}
+	}	
 }

@@ -3,7 +3,7 @@
  * $URL$
  *
  ***********************************************************************************
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -24,89 +24,230 @@ package org.etudes.api.app.melete;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
-public interface ModuleObjService {
-	public abstract Integer getModuleId();
+public interface ModuleObjService
+{
 
-	public abstract void setModuleId(Integer moduleId);
-
-	public abstract String getTitle();
-
-	public abstract void setTitle(String title);
-
-	public abstract String getLearnObj();
-
-	public abstract void setLearnObj(String learnObj);
-
-	public abstract String getDescription();
-
-	public abstract void setDescription(String description);
-
-	public abstract String getKeywords();
-
-	public abstract void setKeywords(String keywords);
-
-	public abstract String getCreatedByFname();
-
-	public abstract void setCreatedByFname(String createdByFname);
-
-	public abstract String getCreatedByLname();
-
-	public abstract void setCreatedByLname(String createdByLname);
-
-    public abstract String getUserId();
-
-	public abstract void setUserId(String userId);
-
-	public abstract String getModifiedByFname();
-
-	public abstract void setModifiedByFname(String modifiedByFname);
-
-	public abstract String getModifiedByLname();
-
-	public abstract void setModifiedByLname(String modifiedByLname);
-
-	public abstract String getInstitute();
-
-	public abstract void setInstitute(String institute);
-
-	public abstract String getWhatsNext();
-
-	public abstract void setWhatsNext(String whatsNext);
-
-	public abstract Date getCreationDate();
-
-	public abstract void setCreationDate(Date creationDate);
-
-	public abstract Date getModificationDate();
-
-	public abstract void setModificationDate(Date modificationDate);
-
-        public abstract String getSeqXml();
-
-	public abstract void setSeqXml(String seqXml);
-
-
-	public abstract int getVersion();
-
-	public abstract void setVersion(int version);
-
-	public abstract Map getSections();
-
-	public abstract void setSections(Map sections);
-
-    public abstract org.etudes.api.app.melete.ModuleShdatesService getModuleshdate();
-
-    public abstract void setModuleshdate(org.etudes.api.app.melete.ModuleShdatesService moduleshdate);
-
-	public abstract org.etudes.api.app.melete.CourseModuleService getCoursemodule();
-
-    public abstract void setCoursemodule(org.etudes.api.app.melete.CourseModuleService coursemodule);
-
-	public abstract String toString();
-
+	/**
+	 * Compare module objects using equals method
+	 * 
+	 * @param other
+	 * @return true if objects are equal, false if not
+	 */
 	public abstract boolean equals(Object other);
 
+	/**
+	 * @return coursemoduleservice
+	 */
+	public abstract org.etudes.api.app.melete.CourseModuleService getCoursemodule();
+
+	/**
+	 * @return created by fname string
+	 */
+	public abstract String getCreatedByFname();
+
+	/**
+	 * @return created by lname string
+	 */
+	public abstract String getCreatedByLname();
+
+	/**
+	 * @return creation date
+	 */
+	public abstract Date getCreationDate();
+
+	/**
+	 * @return description
+	 */
+	public abstract String getDescription();
+
+	/**
+	 * @return institute
+	 */
+	public abstract String getInstitute();
+
+	/**
+	 * @return keywords
+	 */
+	public abstract String getKeywords();
+
+	/**
+	 * @return learnObj string
+	 */
+	public abstract String getLearnObj();
+
+	/**
+	 * @return
+	 */
+	public abstract Date getModificationDate();
+
+	/**
+	 * @return modified by name
+	 */
+	public abstract String getModifiedByFname();
+
+	/**
+	 * @return get modified by lname
+	 */
+	public abstract String getModifiedByLname();
+
+	/**
+	 * @return module id
+	 */
+	public abstract Integer getModuleId();
+
+	/**
+	 * @return moduleshdatesservice
+	 */
+	public abstract org.etudes.api.app.melete.ModuleShdatesService getModuleshdate();
+
+	/**
+	 * @return map of sections
+	 */
+	public abstract Map<Integer,SectionObjService> getSections();
+
+	/**
+	 * @return seqXml string
+	 */
+	public abstract String getSeqXml();
+
+	/**
+	 * @return title
+	 */
+	public abstract String getTitle();
+
+	/**
+	 * @return get user id
+	 */
+	public abstract String getUserId();
+
+	/**
+	 * @return version
+	 */
+	public abstract int getVersion();
+
+	/**
+	 * @return whats next
+	 */
+	public abstract String getWhatsNext();
+
+	/**
+	 * Compare module objects using hashcode
+	 * 
+	 * @return hashcode int value of object
+	 */
 	public abstract int hashCode();
+
+	/**
+	 * @param coursemodule
+	 *        coursemoduleservice to set
+	 */
+	public abstract void setCoursemodule(org.etudes.api.app.melete.CourseModuleService coursemodule);
+
+	/**
+	 * @param createdByFname
+	 */
+	public abstract void setCreatedByFname(String createdByFname);
+
+	/**
+	 * @param createdByLname
+	 */
+	public abstract void setCreatedByLname(String createdByLname);
+
+	/**
+	 * @param creationDate
+	 *        creation date
+	 */
+	public abstract void setCreationDate(Date creationDate);
+
+	/**
+	 * @param description
+	 */
+	public abstract void setDescription(String description);
+
+	/**
+	 * @param institute
+	 */
+	public abstract void setInstitute(String institute);
+
+	/**
+	 * @param keywords
+	 */
+	public abstract void setKeywords(String keywords);
+
+	/**
+	 * @param learnObj
+	 *        learning objectives
+	 */
+	public abstract void setLearnObj(String learnObj);
+
+	/**
+	 * @param modificationDate
+	 *        modification date
+	 */
+	public abstract void setModificationDate(Date modificationDate);
+
+	/**
+	 * @param modifiedByFname
+	 *        first name of author
+	 */
+	public abstract void setModifiedByFname(String modifiedByFname);
+
+	/**
+	 * @param modifiedByLname
+	 *        last name of author
+	 */
+	public abstract void setModifiedByLname(String modifiedByLname);
+
+	/**
+	 * @param moduleId
+	 *        the module id
+	 */
+	public abstract void setModuleId(Integer moduleId);
+
+	/**
+	 * @param moduleshdate
+	 *        moduleshdateservice to set
+	 */
+	public abstract void setModuleshdate(org.etudes.api.app.melete.ModuleShdatesService moduleshdate);
+
+	/**
+	 * @param sections
+	 *        map of sections to set
+	 */
+	public abstract void setSections(Map<Integer,SectionObjService> sections);
+
+	/**
+	 * @param seqXml
+	 *        sequence xml to set
+	 */
+	public abstract void setSeqXml(String seqXml);
+
+	/**
+	 * @param title
+	 *        title of section
+	 */
+	public abstract void setTitle(String title);
+
+	/**
+	 * @param userId
+	 *        user id
+	 */
+	public abstract void setUserId(String userId);
+
+	/**
+	 * @param version
+	 *        version to set
+	 */
+	public abstract void setVersion(int version);
+
+	/**
+	 * @param whatsNext
+	 */
+	public abstract void setWhatsNext(String whatsNext);
+
+	/**
+	 * @return string value of module object
+	 */
+	public abstract String toString();
 }

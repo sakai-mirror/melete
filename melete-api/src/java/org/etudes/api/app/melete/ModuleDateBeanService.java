@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -22,54 +22,113 @@
  *
  **********************************************************************************/
 package org.etudes.api.app.melete;
+
 import java.util.List;
 
-/**
- * Filename:
- * Description:
- * Author:
- * Date:
- * Copyright 2004, Foothill College
- */
-public interface ModuleDateBeanService {
-	public abstract boolean isSelected();
+public interface ModuleDateBeanService
+{
 
-	public abstract void setSelected(boolean selected);
-
-	public abstract boolean isDateFlag();
-
-	public abstract void setDateFlag(boolean dateFlag);
-
-	public abstract String getTruncTitle();
-
-	public abstract void setTruncTitle(String truncTitle);
-
-	public abstract int getModuleId();
-
-	public abstract void setModuleId(int moduleId);
-
-	public abstract org.etudes.api.app.melete.ModuleObjService getModule();
-
-	public abstract void setModule(
-			org.etudes.api.app.melete.ModuleObjService module);
-
-	public abstract org.etudes.api.app.melete.ModuleShdatesService getModuleShdate();
-
-	public abstract void setModuleShdate(
-			org.etudes.api.app.melete.ModuleShdatesService moduleShdate);
-
+	/**
+	 * @return course module
+	 */
 	public abstract org.etudes.api.app.melete.CourseModuleService getCmod();
 
-	public abstract void setCmod(
-			org.etudes.api.app.melete.CourseModuleService cmod);
+	/**
+	 * @return the module
+	 */
+	public abstract org.etudes.api.app.melete.ModuleObjService getModule();
 
-	public abstract List getSectionBeans();
+	/**
+	 * @return the module id
+	 */
+	public abstract int getModuleId();
 
-	public abstract void setSectionBeans(List sectionBeans);
+	/**
+	 * @return moduleshdatesservice object
+	 */
+	public abstract org.etudes.api.app.melete.ModuleShdatesService getModuleShdate();
 
-	public abstract void setRowClasses(String rowClasses);
-
+	/**
+	 * @return rowClasses string
+	 */
 	public abstract String getRowClasses();
 
+	/**
+	 * @return sectionBeans list
+	 */
+	public abstract List<SectionBeanService> getSectionBeans();
+
+	/**
+	 * @return truncTitle string
+	 */
+	public abstract String getTruncTitle();
+
+	/**
+	 * @return date flag
+	 */
+	public abstract boolean isDateFlag();
+
+	/**
+	 * @return selected flag
+	 */
+	public abstract boolean isSelected();
+
+	/**
+	 * @param cmod
+	 *        set course module object
+	 */
+	public abstract void setCmod(org.etudes.api.app.melete.CourseModuleService cmod);
+
+	/**
+	 * @param dateFlag
+	 *        the date flag
+	 */
+	public abstract void setDateFlag(boolean dateFlag);
+
+	/**
+	 * @param module
+	 *        the module
+	 */
+	public abstract void setModule(org.etudes.api.app.melete.ModuleObjService module);
+
+	/**
+	 * @param moduleId
+	 *        the module id
+	 */
+	public abstract void setModuleId(int moduleId);
+
+	/**
+	 * @param moduleShdate
+	 *        the moduleShdate object
+	 */
+	public abstract void setModuleShdate(org.etudes.api.app.melete.ModuleShdatesService moduleShdate);
+
+	/**
+	 * @param rowClasses
+	 *        the rowClasses string
+	 */
+	public abstract void setRowClasses(String rowClasses);
+
+	/**
+	 * @param sectionBeans
+	 *        the sectionBeans list
+	 */
+	public abstract void setSectionBeans(List<SectionBeanService> sectionBeans);
+
+	/**
+	 * @param selected
+	 *        the selected flag
+	 */
+	public abstract void setSelected(boolean selected);
+
+	/**
+	 * @param truncTitle
+	 *        the truncTitle string
+	 */
+	public abstract void setTruncTitle(String truncTitle);
+
+	/**
+	 * @return string value of moduledatebeanservice object
+	 */
 	public abstract String toString();
 }

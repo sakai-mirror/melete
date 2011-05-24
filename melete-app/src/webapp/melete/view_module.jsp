@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009,2010 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,9 +28,9 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Student View" toolCssHref="rtbc004.css">
-
-<script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
+<sakai:view title="Modules: Student View" toolCssHref="/etudes-melete-tool/rtbc004.css">
+<%@include file="meleterightscheck.jsp" %>
+<script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
 <h:form id="viewmoduleform">
  <f:subview id="top">
   	<jsp:include page="topnavbar.jsp?myMode=View"/>
@@ -52,9 +52,10 @@
 <tr>
 <td align="right">
 <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
- <h:graphicImage id="mybook_gif" value="images/my-bookmarks.png" alt="" styleClass="AuthImgClass" />
+ <h:graphicImage id="mybook_gif" value="/images/my-bookmarks.png" alt="" styleClass="AuthImgClass" />
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
  <f:param name="fromPage" value="view_module" />
+ <f:param name="fromModuleId" value="#{viewModulesPage.moduleId}" />
 </h:commandLink>				  
 </td>
 </tr>			               
@@ -68,7 +69,7 @@
 		<h:column rendered="#{viewModulesPage.printable}">
 			<h:outputLink id="printModuleLink" value="view_module" onclick="OpenPrintWindow(#{viewModulesPage.mdbean.moduleId},'Melete Print Window');" rendered="#{viewModulesPage.printable}">
 		    	<f:param id="printmoduleId" name="printModuleId" value="#{viewModulesPage.mdbean.moduleId}" />
-	  			<h:graphicImage id="printImgLink" value="images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
+	  			<h:graphicImage id="printImgLink" value="/images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 		 	</h:outputLink>
 		</h:column>
 	</h:panelGrid>
@@ -80,7 +81,7 @@
 		<h:outputText id="secs" value="#{msgs.view_module_student_content_section}" ></h:outputText>  
 		<h:dataTable id="tablesec"  value="#{viewModulesPage.mdbean.sectionBeans}" var="sectionBean" rowClasses="#{viewModulesPage.mdbean.rowClasses}" rendered="#{viewModulesPage.sectionSize > 0}" styleClass="SectionTableClass">
            	  <h:column>
-        		  <h:graphicImage id="bul_gif" value="images/bullet_black.gif" rendered="#{sectionBean.section.title != viewModulesPage.nullString && !viewModulesPage.autonumber}"/>
+        		  <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" rendered="#{sectionBean.section.title != viewModulesPage.nullString && !viewModulesPage.autonumber}"/>
 		          <h:commandLink id="viewSectionEditor"  action="#{viewModulesPage.viewSection}" rendered="#{sectionBean.section.title != viewModulesPage.nullString}" immediate="true">
 				      <h:outputText id="sec_seq" value="#{sectionBean.displaySequence}. " rendered="#{viewModulesPage.autonumber}"/>
 					  <h:outputText id="sectitleEditor" value="#{sectionBean.section.title}" > </h:outputText>

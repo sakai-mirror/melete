@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009,2010 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -27,7 +27,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Select Resource Item" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Select Resource Item" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
 <%@ page import="javax.faces.application.FacesMessage, java.util.ResourceBundle"%>
@@ -41,15 +41,18 @@
 			String infoMsg = bundle.getString("file_too_large");
 			FacesMessage msg = new FacesMessage(null, infoMsg);
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			facesContext.addMessage(null, msg);		
+			facesContext.addMessage(null, msg);				
 	   }
 %>
 
 <script language="javascript1.2">
 function fillupload()
 {
-		var k =document.getElementById("file1").value;
-		document.getElementById("ServerViewForm:filename").value=k;
+	if(document.getElementById("file1") != undefined)
+	{
+		var k = document.getElementById("file1").value;
+		document.getElementById("EditUploadServerViewForm:filename").value=k;
+	}
 }
 
 </script>
@@ -59,7 +62,7 @@ function fillupload()
     <f:subview id="top">
       <jsp:include page="topnavbar.jsp"/> 
     </f:subview>
-	<div class="meletePortletToolBarMessage"><img src="images/replace2.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.editcontentuploadserverview_selecting}" /></div>
+	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/replace2.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.editcontentuploadserverview_selecting}" /></div>
 <!-- This Begins the Main Text Area -->
 			<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 			<p><h:outputText id="Stext_2" value="#{msgs.editcontentuploadserverview_msg1}"/></p>
@@ -72,7 +75,8 @@ function fillupload()
 																			<INPUT TYPE="FILE" id="file1" NAME="file1" style="visibility:visible" onChange="javascript:fillupload()"/>
 						</td></tr>	
 						<tr><td  colspan="2"> 
-							<h:outputText id="note" value="#{msgs.editcontentuploadserverview_note} #{editSectionPage.maxUploadSize}MB."  styleClass="comment red"/>							<h:inputHidden id="filename" value="#{editSectionPage.hiddenUpload}" />
+							<h:outputText id="note" value="#{msgs.editcontentuploadserverview_note} #{editSectionPage.maxUploadSize}MB."  styleClass="comment red"/>				
+							<h:inputHidden id="filename" value="#{editSectionPage.hiddenUpload}" />
 							<h:outputText id="brval" value="<BR>" escape="false"/>
 							<h:outputText id="somespaces1" value=" " styleClass="MediumPaddingClass" />
 							<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{editSectionPage.section.openWindow}" rendered="#{editSectionPage.shouldRenderUpload}">

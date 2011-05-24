@@ -6,7 +6,7 @@
  * $Id: add_bookmark.jsp 64898 2009-11-24 22:26:14Z mallika@etudes.org $  
  ***********************************************************************************
  *
- * Copyright (c) 2010 Etudes, Inc.
+ * Copyright (c) 2010, 2011 Etudes, Inc.
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,8 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Bookmark It" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Bookmark It" toolCssHref="/etudes-melete-tool/rtbc004.css">
+<%@include file="meleterightscheck.jsp" %>
 
 <script type="text/javascript" language="javascript">
 function validate_required(value,alerttxt)
@@ -62,16 +63,19 @@ final BookmarkPage bookmarkPage = (BookmarkPage)facesContext.getApplication().ge
 bookmarkPage.setBookmark(null);
 String sectionId = (String)request.getParameter("sectionId");
 String sectionTitle = (String)request.getParameter("sectionTitle");
+
 if (sectionId != null)
 {
   bookmarkPage.setSectionId(sectionId);
+}  
+if (sectionTitle != null)
+{
   bookmarkPage.setSectionTitle(sectionTitle);
 }  
 %>
 
 <h:form id="AddBookmarkForm">
 <h:inputHidden id="sectionId" value="#{bookmarkPage.sectionId}"/>
-<h:inputHidden id="sectionTitle" value="#{bookmarkPage.sectionTitle}"/>
 <h:messages id="addbookmarkerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 <table cellspacing="0" cellpadding="10" width="100%" border="0" align="center">
 	<tr>
@@ -87,7 +91,7 @@ if (sectionId != null)
 				<tr>
 					<td class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_bookmark_title}" /> <span class="required">*</span></td>
 					<td class="col2" align="left" valign="top"><h:inputText id="title" size="45" value="#{bookmarkPage.bookmark.title}" required="true" styleClass="formtext" />
-				</td>
+					</td>
 				</tr>
                 
                 <tr>
@@ -110,7 +114,6 @@ if (sectionId != null)
 					<div class="actionBar" align="left">
 				
 				    <h:inputHidden id="sectionId" value="#{bookmarkPage.sectionId}"/>
-				    <h:inputHidden id="sectionTitle" value="#{bookmarkPage.sectionTitle}"/>
 				    
           	        <h:commandButton action="#{bookmarkPage.addBookmark}" value="#{msgs.im_done}" accesskey="#{msgs.done_access}" title="#{msgs.im_done_text}" styleClass="BottomImgReturn"  onclick="return validate_form();" />
           	        

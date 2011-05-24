@@ -92,6 +92,12 @@ a1:active 			{color : #000080;}
 /* Sets border color to light grey & background color to dull grey in Main Text tables */ 
 .maintabledata9 	{border-color:#FFFFFF;  background-color:#EEEEEE; } 
 
+.mainListTableCollapseWithBorder0 {
+      border: 0px solid #EAEAEA;
+      border-collapse: collapse;
+ 	  vertical-align: top;
+ 	  }
+
 .maintableCollapseWithBorder {
       border: 1px solid #EAEAEA;
       border-collapse: collapse;
@@ -311,7 +317,64 @@ td.MainTableClass     { white-space: nowrap;}
 .BottomImgRestore	{  	padding-left:2em;
 						background: #eee url('images/restore.png') .2em no-repeat;
 					}																																												
-
+.BottomImgPrev		{  	padding-left:2em;
+						background: #eee url('images/resultset_previous.png') .2em no-repeat;
+					}
+.BottomImgNext		{  	padding-left:2em;
+						background: #eee url('images/resultset_next.png') .2em no-repeat;
+					}
+.BottomImgTOC		{  	padding-left:2em;
+						background: #eee url('images/text_list_numbers.png') .2em no-repeat;
+					}	
+.BottomImgBookmarkIt	{  	padding-left:2em;
+						background: #eee url('images/bookmark-it.png') .2em no-repeat;
+					}
+.BottomImgMyBookmarks{  	padding-left:2em;
+						background: #eee url('images/bookmark.png') .2em no-repeat;
+					}			
+.TopImgManage		{  
+					padding-left:1.5em;
+					border:0;
+					color:#6066AC;
+					text-decoration: none; border-bottom:1px dashed #6066AC;
+					background: #eee url('images/folder_document.gif') .2em no-repeat;
+					}
+										
+.TopImgPreference	{  
+					padding-left:1.5em;
+					border:none;
+					color: #6066AC;
+					text-decoration: none; border-bottom:1px dashed #6066AC;
+					background: #eee url('images/user_preferences.png') .2em no-repeat;
+					}	
+					
+.TopImgView			{  
+					padding-left:1.5em;
+					border:none;
+					color: #6066AC;
+					text-decoration: none; border-bottom:1px dashed #6066AC;
+					background: #eee url('images/preview.png') .2em no-repeat;	
+					}	
+								
+.TopImgAuthor		{  
+					padding-left:1.5em;
+					border:none;
+					color: #6066AC;
+					text-decoration: none; border-bottom:1px dashed #6066AC;
+					background: #eee url('images/author.png') .2em no-repeat;	
+					}
+					
+.TopImgView:hover, .TopImgManage:hover, .TopImgPreference:hover,.TopImgAuthor:hover	{  
+					text-decoration: none; border-bottom:1px  solid white;
+					cursor:pointer;cursor:hand;
+					}								
+					
+.TopImgView:disabled, .TopImgManage:disabled, .TopImgPreference:disabled,.TopImgAuthor:disabled	{  
+					text-decoration: none; border-bottom:none;
+					color : black;
+					cursor: text;
+					}														
+																					
  /* list resources page styles */
 
 .TitleWid3 {   width:75%; }
@@ -411,3 +474,26 @@ vertical-align:top;
 	width:20%;
 }
 .authBarCol {font-size:90%;white-space:nowrap;}
+
+@media print  { .noprint  { display: none; } }
+
+.prereqAlert {
+	position:absolute;
+	top:50px;
+	border-left:medium double black;
+	border-right:medium double black;
+	border-bottom:medium double black;
+	border-top:medium double black;
+	height:100px;
+	z-index:1;	
+}
+.invalidAlert {
+	position:absolute;
+	top:50px;
+	border-left:medium double black;
+	border-right:medium double black;
+	border-bottom:medium double black;
+	border-top:medium double black;
+	height:100px;
+	z-index:1;		
+}

@@ -5,7 +5,7 @@
  * $Id: delete_bookmark.jsp 64898 2009-11-24 22:26:14Z mallika@etudes.org $  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,13 +28,13 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Delete bookmarks" toolCssHref="rtbc004.css">
-
+<sakai:view title="Modules: Delete bookmarks" toolCssHref="/etudes-melete-tool/rtbc004.css">
+<%@include file="meleterightscheck.jsp" %>
  <h:form id="DeleteBookmarkForm">
  	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
-	<div class="meletePortletToolBarMessage"><img src="images/Warning.gif" width="16" height="16" align="absbottom" border="0">
+	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/Warning.gif" width="16" height="16" align="absbottom" border="0">
 		     <h:outputText value="#{msgs.delete_bookmark_deletion_warning}" /></div>				
 		     		
   <table class="maintableCollapseWithBorder">
@@ -49,7 +49,7 @@
            <h:messages id="deleteBookmarkError" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
            <table class="deleteConfirmTable">
         	<tr>
-        		<td> <img src="images/Warning.gif" border="0">
+        		<td> <img src="/etudes-melete-tool/images/Warning.gif" border="0">
         		</td>
         		<td> 
         			<h:outputText value="#{msgs.delete_bookmark_message1}" />

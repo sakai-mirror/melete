@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -23,6 +23,7 @@
  **********************************************************************************/
 
 package org.etudes.tool.melete;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.component.app.melete.*;
@@ -35,265 +36,565 @@ import java.io.Serializable;
 import javax.faces.event.ActionEvent;
 
 import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
-//import com.sun.faces.util.Util;
-import org.etudes.api.app.melete.ModuleService;
-//import org.sakaiproject.jsf.ToolBean;
+import javax.faces.el.ValueBinding; //import com.sun.faces.util.Util;
+import org.etudes.api.app.melete.ModuleService; //import org.sakaiproject.jsf.ToolBean;
+import org.sakaiproject.thread_local.api.ThreadLocalManager;
 
-/**
- * @author Faculty
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
-/*
- *
- * Mallika - 1/26/07 - viewsection changes again, typeLink goes to view_section, typeEditor and typeUpload go to view_section_link
- * Mallika - 2/8/07 - consolidated view section pages
- * Mallika - 4/25/07 - Adding prev next
- * Rashmi - 5/10/07 - removed code from constructor
- * Mallika - 5/17/07 - Rearranged code to prevent null ptr exceptions
-*/
+public class ViewModulesPage implements Serializable
+{
 
+	public ModuleDateBeanService mdbean;
+	private Boolean autonumber;
+	private String emptyString = "";
+	/** identifier field */
+	private int moduleId;
+	private int moduleSeqNo;
+	private ModuleService moduleService;
+	private int nextSeqNo;
+	private ModuleDateBeanService nullMdbean = null;
+	private String nullString = null;
+	private ModuleDateBeanService prevMdbean;
+	private int prevSectionSize;
+	private int prevSeqNo;
+	private Boolean printable;
 
-public class ViewModulesPage implements Serializable/*,ToolBean*/ {
+	private int sectionSize;
+	/** Dependency: The logging service. */
+	protected Log logger = LogFactory.getLog(ViewModulesPage.class);
 
+	protected ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
+	// This needs to be set later using Utils.getBinding
+	String courseId;
 
-	  /** identifier field */
-      private int moduleId;
-      private int moduleSeqNo;
-      public ModuleDateBeanService mdbean;
-      private ModuleDateBeanService prevMdbean;
+	String userId;
 
-      private boolean instRole;
-      private int sectionSize;
-      private String role;
-      private String nullString = null;
-      private String emptyString = "";
-      private ModuleDateBeanService nullMdbean = null;
-      private int prevSectionSize;
-      private int prevSeqNo;
-      private int nextSeqNo;
-      private Boolean printable;
-      private Boolean autonumber;
+	public ViewModulesPage()
+	{
+		courseId = null;
+		userId = null;
+	}
 
-//    This needs to be set later using Utils.getBinding
-	  String courseId;
-	  String userId;
+	/**
+	 * @return empty string
+	 */
+	public String getEmptyString()
+	{
+		return emptyString;
+	}
 
+	/**
+	 * Get module date bean, previous sequence number, next sequence number and previous section size
+	 * 
+	 * @return mdbean module date bean
+	 */
+	public ModuleDateBeanService getMdbean()
+	{
+		// refresh the bean
+		String moduleIdfromOutside = (String) threadLocalManager.get("MELETE_MODULE_ID");
+		if (moduleIdfromOutside != null && new Integer(moduleIdfromOutside).intValue() != this.moduleId)
+		{
+			setMdbean(null);
+			setPrevMdbean(null);
+			setModuleId(new Integer(moduleIdfromOutside).intValue());
+			setModuleSeqNo(0);
+			setPrintable(null);
+			setAutonumber(null);
+		}
 
-	  private ModuleService moduleService;
-	   /** Dependency:  The logging service. */
-	  protected Log logger = LogFactory.getLog(ViewModulesPage.class);
+		if (this.mdbean == null)
+		{
+			try
+			{
+				FacesContext ctx = FacesContext.getCurrentInstance();
+				ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 
-	  public ViewModulesPage(){
-		  courseId = null;
-		  	userId = null;
-	  }
+				MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+				String courseId = mPage.getCurrentSiteId();
+				String userId = mPage.getCurrentUser().getId();
 
-     /**
-	   * @return Returns the ModuleService.
-	   */
-	  public ModuleService getModuleService() {
+				if (moduleIdfromOutside != null)
+				{
+					logger.debug("reading module id in view page from thread local :" + moduleIdfromOutside);
+					this.moduleId = new Integer(moduleIdfromOutside).intValue();
+					this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBean(userId, courseId, this.moduleId);
+					mPage.populateMeleteSession();
+					String backToOutside = (String) threadLocalManager.get("MELETE_NAVIGATE_BACK");
+					mPage.setNavigateCM(backToOutside);
+					
+					threadLocalManager.set("MELETE_MODULE_ID", null);
+					threadLocalManager.set("MELETE_NAVIGATE_BACK", null);
+				}
+				else
+				{
+					// normal processing if thread local has no value - rashmi
+					if (this.moduleId > 0)
+					{
+						this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBean(userId, courseId, this.moduleId);
+					}
+					else
+					{
+						this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBeanBySeq(userId, courseId, this.moduleSeqNo);
+					}
+				}
+				if (this.mdbean != null)
+				{
+					this.moduleId = this.mdbean.getModuleId();
+					this.moduleSeqNo = this.mdbean.getModule().getCoursemodule().getSeqNo();
+					this.prevSeqNo = getModuleService().getPrevSeqNo(userId, courseId, this.moduleSeqNo);
+					this.nextSeqNo = getModuleService().getNextSeqNo(userId, courseId, this.moduleSeqNo);
+				}
+				this.prevSectionSize = 0;
+				if ((this.prevSeqNo > 0) && (this.prevSeqNo != this.moduleSeqNo))
+				{
+					this.prevMdbean = (ModuleDateBeanService) getModuleService().getModuleDateBeanBySeq(userId, courseId, prevSeqNo);
+					if (this.prevMdbean != null)
+					{
+						if (this.prevMdbean.getSectionBeans() != null)
+						{
+							this.prevSectionSize = this.prevMdbean.getSectionBeans().size();
+						}
+					}
+				}
+
+			}
+			catch (Exception e)
+			{
+				logger.debug(e.toString());
+				e.printStackTrace();
+			}
+		}
+		return this.mdbean;
+	}
+
+	/**
+	 * @return module id
+	 */
+	public int getModuleId()
+	{
+		return this.moduleId;
+	}
+
+	/**
+	 * @return module seq no
+	 */
+	public int getModuleSeqNo()
+	{
+		return this.moduleSeqNo;
+	}
+
+	/**
+	 * @return Returns the ModuleService.
+	 */
+	public ModuleService getModuleService()
+	{
 		return moduleService;
-	  }
+	}
 
-	 /**
-	  * @param moduleService The moduleService to set.
-	  */
-	  public void setModuleService(ModuleService moduleService) {
+	/**
+	 * @return next seq no
+	 */
+	public int getNextSeqNo()
+	{
+		return this.nextSeqNo;
+	}
+
+	/**
+	 * @return null value for moduledatebean
+	 */
+	public ModuleDateBeanService getNullMdbean()
+	{
+		return nullMdbean;
+	}
+
+	/**
+	 * @return null value for string
+	 */
+	public String getNullString()
+	{
+		return nullString;
+	}
+
+	/**
+	 * @return previous module date bean
+	 */
+	public ModuleDateBeanService getPrevMdbean()
+	{
+		if (this.prevMdbean == null)
+		{
+			getMdbean();
+		}
+		return this.prevMdbean;
+	}
+
+	/**
+	 * @return prev section size
+	 */
+	public int getPrevSectionSize()
+	{
+		return this.prevSectionSize;
+	}
+
+	/**
+	 * @return prev seq no
+	 */
+	public int getPrevSeqNo()
+	{
+		return this.prevSeqNo;
+	}
+
+	/**
+	 * Get section size
+	 * 
+	 * @return Section size or 0, if there are no sections
+	 */
+	public int getSectionSize()
+	{
+		if (this.mdbean == null) getMdbean();
+
+		if (this.mdbean != null)
+		{
+			if (this.mdbean.getSectionBeans() != null)
+			{
+				this.sectionSize = this.mdbean.getSectionBeans().size();
+			}
+			else
+			{
+				this.sectionSize = 0;
+			}
+		}
+		else
+		{
+			this.sectionSize = 0;
+		}
+		return this.sectionSize;
+	}
+
+	/**
+	 * Go to next section, set all the values such as section id, module id, section and module
+	 * 
+	 * @return view_section
+	 */
+	public String goNextSection()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+
+		ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
+
+		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
+
+		SectionBeanService secBean = (SectionBeanService) this.mdbean.getSectionBeans().get(0);
+		vsPage.setSectionId(secBean.getSection().getSectionId());
+		vsPage.setModuleId(secBean.getSection().getModuleId());
+		vsPage.setModuleSeqNo(secBean.getSection().getModule().getCoursemodule().getSeqNo());
+		vsPage.setSection(null);
+		vsPage.setSection(secBean.getSection());
+		// added by rashmi on 6/14/05
+		vsPage.setModule(null);
+		vsPage.setAutonumber(null);
+
+		String retVal = "view_section";
+		return retVal;
+	}
+
+	/**
+	 * Go to previous or next module
+	 * 
+	 * @return view_module
+	 */
+	public String goPrevNext()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		this.moduleSeqNo = new Integer(((String) ctx.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue();
+		this.mdbean = null;
+		this.moduleId = 0;
+		return "view_module";
+	}
+
+	/**
+	 * Go to previous section, set all the values such as section id, module id, section and module
+	 * 
+	 * @return view_section
+	 */
+	public String goPrevSection()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+
+		ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
+
+		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
+
+		SectionBeanService secBean = (SectionBeanService) this.prevMdbean.getSectionBeans().get(this.prevMdbean.getSectionBeans().size() - 1);
+		vsPage.setSectionId(secBean.getSection().getSectionId());
+		vsPage.setModuleId(secBean.getSection().getModuleId());
+		vsPage.setModuleSeqNo(secBean.getSection().getModule().getCoursemodule().getSeqNo());
+		vsPage.setSection(null);
+		vsPage.setSection(secBean.getSection());
+		// added by rashmi on 6/14/05
+		vsPage.setModule(null);
+		vsPage.setAutonumber(null);
+		String retVal = "view_section";
+		return retVal;
+	}
+
+	/**
+	 * Go to previous whats next, set all the values such as prev sec id, prev mod id, module and next seq no
+	 * 
+	 * @return view_whats_next
+	 */
+	public String goPrevWhatsNext()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+
+		ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
+		ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(context);
+		if (this.prevMdbean == null) getMdbean();
+		if (this.prevMdbean != null)
+		{
+			if (this.prevMdbean.getSectionBeans() != null)
+			{
+				vnPage.setPrevSecId(((SectionBeanService) this.prevMdbean.getSectionBeans().get(this.prevMdbean.getSectionBeans().size() - 1)).getSection()
+						.getSectionId());
+			}
+			else
+			{
+				vnPage.setPrevSecId(0);
+			}
+			vnPage.setPrevModId(this.prevMdbean.getModule().getModuleId());
+			vnPage.setModule(null);
+			// vnPage.setModule(this.prevMdbean.getModule());
+		}
+		else
+		{
+			vnPage.setPrevSecId(0);
+		}
+
+		vnPage.setNextSeqNo(this.moduleSeqNo);
+
+		return "view_whats_next";
+
+	}
+
+	/**
+	 * Go to table of contents
+	 * 
+	 * @return list_modules_student or list_modules_inst page
+	 */
+	public String goTOC()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		mPage.setNavigateCM(null);
+		binding = Util.getBinding("#{listModulesPage}");
+		ListModulesPage listPage = (ListModulesPage) binding.getValue(context);
+		listPage.setViewModuleBeans(null);
+		listPage.setAutonumberMaterial(null);
+		return listPage.listViewAction();
+	}
+
+	/**
+	 * Go to whats next, set all the values such as prev sec id, prev mod id, module and next seq no
+	 * 
+	 * @return view_whats_next
+	 */
+	public String goWhatsNext()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+
+		ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
+		ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(context);
+		vnPage.setPrevSecId(0);
+		vnPage.setPrevModId(this.moduleId);
+
+		vnPage.setNextSeqNo(this.nextSeqNo);
+		vnPage.setModule(null);
+
+		// if (this.mdbean != null) vnPage.setModule(this.mdbean.getModule());
+
+		return "view_whats_next";
+
+	}
+
+	/**
+	 * Fetch autonumbering preference for course
+	 * 
+	 * @return true if autonumbering is allowed, false if not
+	 */
+	public boolean isAutonumber()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		try
+		{
+			if (autonumber == null)
+			{
+				ValueBinding binding = Util.getBinding("#{authorPreferences}");
+				AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
+				if (courseId == null) getCourseId();
+				autonumber = new Boolean(preferencePage.isMaterialAutonumber(courseId));
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			autonumber = false;
+		}
+		return autonumber.booleanValue();
+	}
+
+	/**
+	 * Fetch printable preference for course
+	 * 
+	 * @return true if printing is allowed, false if not
+	 */
+	public boolean isPrintable()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		try
+		{
+			if (printable == null)
+			{
+				ValueBinding binding = Util.getBinding("#{authorPreferences}");
+				AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
+				if (courseId == null) getCourseId();
+				printable = new Boolean(preferencePage.isMaterialPrintable(courseId));
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			printable = false;
+		}
+		return printable.booleanValue();
+	}
+
+	/**
+	 * @return view_module
+	 */
+	public String redirectToViewModule()
+	{
+		return "view_module";
+	}
+
+	/**
+	 * @param autonumber
+	 *        true if autonumbering is allowed, false if not
+	 */
+	public void setAutonumber(Boolean autonumber)
+	{
+		this.autonumber = autonumber;
+	}
+
+	/**
+	 * @param mdbean
+	 *        module date bean
+	 */
+	public void setMdbean(ModuleDateBeanService mdbean)
+	{
+		this.mdbean = mdbean;
+	}
+
+	/**
+	 * @param moduleId
+	 *        the module id
+	 */
+	public void setModuleId(int moduleId)
+	{
+		this.moduleId = moduleId;
+	}
+
+	/**
+	 * @param moduleSeqNo
+	 *        module seq no
+	 */
+	public void setModuleSeqNo(int moduleSeqNo)
+	{
+		this.moduleSeqNo = moduleSeqNo;
+	}
+
+	/**
+	 * @param moduleService
+	 *        The moduleService to set.
+	 */
+	public void setModuleService(ModuleService moduleService)
+	{
 		this.moduleService = moduleService;
-	  }
+	}
 
+	/**
+	 * @param prevMdbean
+	 *        previous module date bean
+	 */
+	public void setPrevMdbean(ModuleDateBeanService prevMdbean)
+	{
+		this.prevMdbean = prevMdbean;
+	}
 
-	  public String getNullString() {
-	  	return nullString;
-	  }
+	/**
+	 * @param printable
+	 *        true if printing is allowed, false if not
+	 */
+	public void setPrintable(Boolean printable)
+	{
+		this.printable = printable;
+	}
 
-	  public String getEmptyString() {
-	  	return emptyString;
-	  }
-
-	  public ModuleDateBeanService getNullMdbean() {
-		  return nullMdbean;
-	  }
-
-	  public int getModuleId() {
-        return this.moduleId;
-    }
-
-    public void setModuleId(int moduleId) {
-        this.moduleId = moduleId;
-    }
-    public int getModuleSeqNo() {
-        return this.moduleSeqNo;
-    }
-
-    public void setModuleSeqNo(int moduleSeqNo) {
-        this.moduleSeqNo = moduleSeqNo;
-    }
-
-    public int getPrevSeqNo() {
-    	return this.prevSeqNo;
-    }
-    public int getNextSeqNo() {
-    	return this.nextSeqNo;
-    }
-    public int getPrevSectionSize() {
-    	return this.prevSectionSize;
-    }
-
-    public ModuleDateBeanService getPrevMdbean()
-    {
-    	if (this.prevMdbean == null)
-    	{
-    		getMdbean();
-    	}
-    	return this.prevMdbean;
-    }
-    public void setPrevMdbean(ModuleDateBeanService prevMdbean){
-        this.prevMdbean = prevMdbean;
-    }
-
-    public ModuleDateBeanService getMdbean()
-    {
-      if (this.mdbean == null)
- 	  {
-    	try {
-    		FacesContext ctx = FacesContext.getCurrentInstance();
-        	logger.debug("get mdbean found req param value" + ctx.getExternalContext().getRequestParameterMap().get("vm_id"));
-
-        	ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-
-        	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
-        	String courseId = "";
-        	String userId = mPage.getCurrentUser().getId();
-        	String directvm_id = (String)ctx.getExternalContext().getRequestParameterMap().get("vm_id");
-        	if(directvm_id != null) this.moduleId=new Integer(directvm_id).intValue();
-        	String direct_cid = (String)ctx.getExternalContext().getRequestParameterMap().get("c_id");
-        	if(direct_cid != null) courseId = direct_cid;
-        	else courseId = getCourseId();
-
-    	/*String courseId = getCourseId();
-	String userId = getUserId();*/
-    	 if (this.moduleId > 0)
-    	  {
-  	  	    this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBean(userId, courseId,this.moduleId);
-    	  }
-    	  else
-    	  {
-    		this.mdbean = (ModuleDateBeanService) getModuleService().getModuleDateBeanBySeq(userId, courseId,this.moduleSeqNo);
-    	  }
-    	  if (this.mdbean != null)
-    	  {
-    	  this.moduleSeqNo = this.mdbean.getModule().getCoursemodule().getSeqNo();
-  	  	  this.prevSeqNo = getModuleService().getPrevSeqNo(courseId,this.moduleSeqNo,getInstRole());
-  	  	  this.nextSeqNo = getModuleService().getNextSeqNo(courseId,this.moduleSeqNo,getInstRole());
-    	  }
-  	  	  this.prevSectionSize = 0;
-  	  	  if ((this.prevSeqNo > 0)&&(this.prevSeqNo != this.moduleSeqNo))
-  	  	  {
-  	  	    this.prevMdbean = (ModuleDateBeanService) getModuleService().getModuleDateBeanBySeq(userId, courseId, prevSeqNo);
-  	  	    if (this.prevMdbean != null)
-  	  	    {
-  	  	    if (this.prevMdbean.getSectionBeans() != null)
-  	  	    {
-  	  	      this.prevSectionSize = this.prevMdbean.getSectionBeans().size();
-  	  	    }
-  	  	    }
-  	  	  }
-
-  	  	}
-  	  	catch (Exception e)
-          {
-  			logger.debug(e.toString());
-  			e.printStackTrace();
-          }
- 	  }
-  	  	return this.mdbean;
-    }
-
-    public void setMdbean(ModuleDateBeanService mdbean){
-      this.mdbean = mdbean;
-    }
-    public int getSectionSize() {
-    	if (this.mdbean == null) getMdbean();
-
-    	if (this.mdbean != null)
-    	{
-    	  if (this.mdbean.getSectionBeans() != null)
-    	  {
-    	  this.sectionSize = this.mdbean.getSectionBeans().size();
-    	  }
-    	  else
-    	  {
-    		this.sectionSize = 0;
-    	  }
-    	}
-    	else
-    	{
-    		this.sectionSize = 0;
-    	}
-        return this.sectionSize;
-    }
-
-    public boolean getInstRole()
-    {
-    	FacesContext context = FacesContext.getCurrentInstance();
-	  	Map sessionMap = context.getExternalContext().getSessionMap();
-	  	if ((String)sessionMap.get("role") !=null)
-	  		this.instRole = ((String)sessionMap.get("role")).equals("INSTRUCTOR");
-	  	else this.instRole = false;
-    	return instRole;
-    }
-
-    public void setInstRole(boolean instRole)
-    {
-    	this.instRole = instRole;
-    }
-
-    private String getCourseId()
-    {
-    	if (courseId == null)
-    	{
-    	FacesContext context = FacesContext.getCurrentInstance();
-      	Map sessionMap = context.getExternalContext().getSessionMap();
-    	courseId = (String)sessionMap.get("courseId");
-    	}
-    	return courseId;
-    }
-
-    private String getUserId()
-    {
-    	if (userId == null)
-    	{
-    	FacesContext context = FacesContext.getCurrentInstance();
-      	Map sessionMap = context.getExternalContext().getSessionMap();
-    	userId = (String)sessionMap.get("userId");
-    	}
-    	return userId;
-    }
-
-    /*
-     *
-     * modified by rashmi - 03/10/05
-     *  added seperate page for links and upload to show them in frame
-     */
-
-    public String viewSection()
+	/**
+	 * Populate view module page, setting module id, module sequence number
+	 * 
+	 * @param evt
+	 *        Action event
+	 */
+	public void viewModule(ActionEvent evt)
 	{
 
 		FacesContext ctx = FacesContext.getCurrentInstance();
+		UICommand cmdLink = (UICommand) evt.getComponent();
+		List cList = cmdLink.getChildren();
+		UIParameter param = new UIParameter();
+		for (int i = 0; i < cList.size(); i++)
+		{
+			Object obj = cList.get(i);
+			if (obj instanceof UIParameter)
+			{
+				param = (UIParameter) cList.get(i);
+			}
+		}
+
+		ValueBinding binding = Util.getBinding("#{viewModulesPage}");
+		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(ctx);
+		vmPage.setModuleId(((Integer) param.getValue()).intValue());
+		vmPage.setMdbean(null);
+		vmPage.setPrintable(null);
+		vmPage.setAutonumber(null);
+		try
+		{
+			ModuleService modServ = getModuleService();
+			CourseModule cMod = (CourseModule) modServ.getCourseModule(((Integer) param.getValue()).intValue(), getCourseId());
+			vmPage.setModuleSeqNo(cMod.getSeqNo());
+
+		}
+		catch (Exception e)
+		{
+			logger.debug(e.toString());
+		}
+	}
+
+	/**
+	 * Set up view section page with the right values for section id, module id, module sequene number and section
+	 * 
+	 * @return view_section
+	 */
+	public String viewSection()
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
 		UIViewRoot root = ctx.getViewRoot();
 		UIData table = null;
-		boolean isAuthor = getInstRole();
-
 		table = (UIData) root.findComponent("viewmoduleform").findComponent("tablesec");
 		ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
 
 		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
 
-		SectionBean secBean = (SectionBean) table.getRowData();
+		SectionBeanService secBean = (SectionBeanService) table.getRowData();
 		vsPage.resetValues();
 		vsPage.setSectionId(secBean.getSection().getSectionId());
 		vsPage.setModuleId(secBean.getSection().getModuleId());
@@ -302,216 +603,40 @@ public class ViewModulesPage implements Serializable/*,ToolBean*/ {
 		vsPage.setSection(secBean.getSection());
 		// added by rashmi on 6/14/05
 		vsPage.setModule(null);
-		//vsPage.setAutonumber(this.autonumber);
+		// vsPage.setAutonumber(this.autonumber);
 
 		String retVal = "view_section";
 		return retVal;
 	}
 
-
-    /*
-	 * add by rashmi to navigate to table of contents
+	/**
+	 * @return course id
 	 */
-
-    public String goTOC()
+	private String getCourseId()
 	{
-    	FacesContext context = FacesContext.getCurrentInstance();
-    	ValueBinding binding = Util.getBinding("#{listModulesPage}");
-    	ListModulesPage listPage = (ListModulesPage)
-            binding.getValue(context);
-    	listPage.setViewModuleBeans(null);
-    	listPage.setAutonumberMaterial(null);
-		if (getInstRole()) return "list_modules_inst";
-		else return "list_modules_student";
+		if (courseId == null)
+		{
+			FacesContext context = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+			courseId = mPage.getCurrentSiteId();
+		}
+		return courseId;
 	}
 
-    public String goNextSection()
-    {
-    	  FacesContext ctx = FacesContext.getCurrentInstance();
-
- 	    ValueBinding binding =
- 	            Util.getBinding("#{viewSectionsPage}");
-
- 	    ViewSectionsPage vsPage = (ViewSectionsPage)
- 	            binding.getValue(ctx);
-
- 	     SectionBean secBean = (SectionBean) this.mdbean.getSectionBeans().get(0);
- 	           vsPage.setSectionId(secBean.getSection().getSectionId());
- 	            vsPage.setModuleId(secBean.getSection().getModuleId());
- 	            vsPage.setModuleSeqNo(secBean.getSection().getModule().getCoursemodule().getSeqNo());
- 	           vsPage.setSection(null);
- 	            vsPage.setSection(secBean.getSection());
- 	            //added by rashmi on 6/14/05
- 	            vsPage.setModule(null);
- 	            vsPage.setAutonumber(null);
-
- 	    String retVal = "view_section";
- 	  	return retVal;
-    }
-    public String goPrevSection()
-    {
-    	  FacesContext ctx = FacesContext.getCurrentInstance();
-
- 	    ValueBinding binding =
- 	            Util.getBinding("#{viewSectionsPage}");
-
- 	    ViewSectionsPage vsPage = (ViewSectionsPage)
- 	            binding.getValue(ctx);
-
- 	     SectionBean secBean = (SectionBean) this.prevMdbean.getSectionBeans().get(this.prevMdbean.getSectionBeans().size()-1);
- 	            vsPage.setSectionId(secBean.getSection().getSectionId());
- 	            vsPage.setModuleId(secBean.getSection().getModuleId());
- 	            vsPage.setModuleSeqNo(secBean.getSection().getModule().getCoursemodule().getSeqNo());
- 	            vsPage.setSection(null);
- 	            vsPage.setSection(secBean.getSection());
- 	            //added by rashmi on 6/14/05
- 	            vsPage.setModule(null);
- 	            vsPage.setAutonumber(null);
- 	            String retVal = "view_section";
- 	    return retVal;
-    }
-    public String goPrevWhatsNext()
-    {
-    	FacesContext context = FacesContext.getCurrentInstance();
-
-    	ValueBinding binding =
-            Util.getBinding("#{viewNextStepsPage}");
-          ViewNextStepsPage vnPage = (ViewNextStepsPage)
-            binding.getValue(context);
-        if (this.prevMdbean == null) getMdbean();
-        if (this.prevMdbean != null)
-        {
-          if (this.prevMdbean.getSectionBeans() != null)
-          {
-    	    vnPage.setPrevSecId(((SectionBean)this.prevMdbean.getSectionBeans().get(this.prevMdbean.getSectionBeans().size()-1)).getSection().getSectionId());
-          }
-          else
-          {
-        	vnPage.setPrevSecId(0);
-          }
-          vnPage.setPrevModId(this.prevMdbean.getModule().getModuleId());
-          //vnPage.setModule(this.prevMdbean.getModule());
-        }
-        else
-        {
-        	vnPage.setPrevSecId(0);
-        }
-
-
-    	vnPage.setNextSeqNo(this.moduleSeqNo);
-
-
-    		return "view_whats_next";
-
-    }
-    public String goWhatsNext()
-    {
-    	FacesContext context = FacesContext.getCurrentInstance();
-    	int nextSeqNo = getModuleService().getNextSeqNo(getCourseId(),new Integer(((String)context.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue(),getInstRole());
-
-    	ValueBinding binding =
-            Util.getBinding("#{viewNextStepsPage}");
-          ViewNextStepsPage vnPage = (ViewNextStepsPage)
-            binding.getValue(context);
-    	vnPage.setPrevSecId(0);
-    	vnPage.setPrevModId(this.moduleId);
-
-    	vnPage.setNextSeqNo(this.nextSeqNo);
-
-        //if (this.mdbean != null) vnPage.setModule(this.mdbean.getModule());
-
-    		return "view_whats_next";
-
-    }
-
-    public String goPrevNext()
-    {
-    	FacesContext ctx = FacesContext.getCurrentInstance();
-    	this.moduleSeqNo = new Integer(((String)ctx.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue();
-    	this.mdbean = null;
-        this.moduleId = 0;
-        return "view_module";
-    }
-    public void viewModule(ActionEvent evt) {
-
-    	FacesContext ctx = FacesContext.getCurrentInstance();
-    	UICommand cmdLink = (UICommand)evt.getComponent();
-    	List cList = cmdLink.getChildren();
-    	UIParameter param = new UIParameter();
-    	for (int i=0; i< cList.size(); i++)
-    	{
-    		Object obj = cList.get(i);
-    		if (obj instanceof UIParameter)
-    		{
-    		  param = (UIParameter) cList.get(i);
-    		}
-    	}
-
-    	ValueBinding binding =
-            Util.getBinding("#{viewModulesPage}");
-         ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(ctx);
-         vmPage.setModuleId(((Integer)param.getValue()).intValue());
-         vmPage.setMdbean(null);
-         vmPage.setPrintable(null);
-         vmPage.setAutonumber(null);
-         try {
-	  		ModuleService modServ = getModuleService();
-	  		CourseModule cMod = (CourseModule)modServ.getCourseModule(((Integer)param.getValue()).intValue(),getCourseId());
-	  		vmPage.setModuleSeqNo(cMod.getSeqNo());
-
-		}
-		catch (Exception e)
+	/**
+	 * @return user id
+	 */
+	private String getUserId()
+	{
+		if (userId == null)
 		{
-	  		logger.debug(e.toString());
+			FacesContext context = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+			userId = mPage.getCurrentUser().getId();
 		}
-    }
-
-    public String redirectToViewModule(){
-    	return "view_module";
-    }
-
-    public boolean isPrintable()
-	  {
-		  FacesContext ctx = FacesContext.getCurrentInstance();
-		  try{
-			if(printable == null)
-			{
-		   ValueBinding binding = Util.getBinding("#{authorPreferences}");
-	 	   AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(ctx);
-	 	   if (courseId == null) getCourseId();
-	 	   printable = new Boolean(preferencePage.isMaterialPrintable(courseId));
-			}
-		  }
-		  catch(Exception e){e.printStackTrace();
-		  printable=false;}
-		  return printable.booleanValue();
-	  }
-
-    public void setPrintable(Boolean printable)
-    {
-    	this.printable = printable;
-    }
-
-    public boolean isAutonumber()
-	  {
-		  FacesContext ctx = FacesContext.getCurrentInstance();
-		  try{
-			if(autonumber == null)
-			{
-		   ValueBinding binding = Util.getBinding("#{authorPreferences}");
-	 	   AuthorPreferencePage preferencePage = (AuthorPreferencePage)binding.getValue(ctx);
-	 	   if (courseId == null) getCourseId();
-	 	   autonumber = new Boolean(preferencePage.isMaterialAutonumber(courseId));
-			}
-		  }
-		  catch(Exception e){e.printStackTrace();
-		  autonumber=false;}
-		  return autonumber.booleanValue();
-	  }
-
-    public void setAutonumber(Boolean autonumber)
-    {
-    	this.autonumber = autonumber;
-    }
+		return userId;
+	}
 
 }

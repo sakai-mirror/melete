@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008,2010 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -29,7 +29,7 @@
 
 
 <f:view>
-<sakai:view title="Modules: User Preference" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: User Preference" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
  <h:form id="UserPreferenceForm">
@@ -37,7 +37,7 @@
 	<f:subview id="top">
 			<jsp:include page="topnavbar.jsp?myMode=Preferences"/> 
 	</f:subview>
-   <div class="meletePortletToolBarMessage"><img src="images/user1_preferences.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.author_preference_user_preference}" /></div>
+   <div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/user1_preferences.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.author_preference_user_preference}" /></div>
 	
 	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>	  
     <table class="maintableCollapseWithBorder">          
@@ -84,8 +84,12 @@
 						</h:column>
 					
 		                <h:column>
-						<jsp:include page="licenseform.jsp"/>
-						 </h:column>	
+						<jsp:include page="licenseform.jsp"/>						 						 	
+						  <h:commandLink id="allLicenseButton"  action="#{authorPreferences.changeAllLicense}" >
+							<h:graphicImage id="replaceImg2" value="/images/replace2.gif" styleClass="AuthImgClass"/>
+							<h:outputText value="#{msgs.overwriteLicenseMsg}"/>
+				          </h:commandLink>
+				       </h:column> 	
 					 </h:panelGrid>
           	     </td>
           	    </tr> 

@@ -22,6 +22,7 @@
 
 package org.etudes.tool.meleteAdmin;
 
+import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.context.FacesContext;
@@ -62,8 +63,8 @@ public class MeleteAdminMain {
 		//to add super user check
 
 		try{
-			int delCourseCount = moduleService.cleanUpDeletedModules();
-			 delCourseCount += sectionService.cleanUpDeletedSections();
+			int delCourseCount = moduleService.cleanUpDeletedModules(UserDirectoryService.getCurrentUser().getId());
+			 delCourseCount += sectionService.cleanUpDeletedSections(UserDirectoryService.getCurrentUser().getId());
 			String successMsg = bundle.getString("cleanup_success");
 			successMsg = successMsg.concat(new Integer(delCourseCount).toString() + " " + bundle.getString("cleanup_success_2"));
 			addMessage(context, "Success Message", successMsg, FacesMessage.SEVERITY_INFO);

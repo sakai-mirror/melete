@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -23,19 +23,17 @@
  **********************************************************************************/
 package org.etudes.api.app.melete;
 
-public interface SectionResourceService {
+public interface SectionResourceService
+{
+	/**
+	 * @return Returns the resource.
+	 */
+	public abstract org.etudes.api.app.melete.MeleteResourceService getResource();
+
 	/**
 	 * @return Returns the section.
 	 */
 	public abstract org.etudes.api.app.melete.SectionObjService getSection();
-
-	/**
-	 * @param section The section to set.
-	 */
-	public abstract void setSection(
-			org.etudes.api.app.melete.SectionObjService section);
-
-	public abstract String toString();
 
 	/**
 	 * @return Returns the sectionId.
@@ -43,18 +41,22 @@ public interface SectionResourceService {
 	public abstract Integer getSectionId();
 
 	/**
-	 * @param sectionId The sectionId to set.
+	 * @param resource
+	 *        The resource to set.
+	 */
+	public abstract void setResource(org.etudes.api.app.melete.MeleteResourceService resource);
+
+	/**
+	 * @param section
+	 *        The section to set.
+	 */
+	public abstract void setSection(org.etudes.api.app.melete.SectionObjService section);
+
+	/**
+	 * @param sectionId
+	 *        The sectionId to set.
 	 */
 	public abstract void setSectionId(Integer sectionId);
 
-	/**
-	 * @return Returns the resource.
-	 */
-	public abstract org.etudes.api.app.melete.MeleteResourceService getResource();
-
-	/**
-	 * @param resource The resource to set.
-	 */
-	public abstract void setResource(
-			org.etudes.api.app.melete.MeleteResourceService resource);
+	public abstract String toString();
 }

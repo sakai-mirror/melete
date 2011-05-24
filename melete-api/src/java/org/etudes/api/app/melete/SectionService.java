@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -23,51 +23,350 @@
  **********************************************************************************/
 package org.etudes.api.app.melete;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-/**
- * Mallika - 4/20/05 - Added method to delete section
-* Revised by rashmi 4/26 add signature for sort sections
-* Mallika - 4/6/06 - Adding parameters for dirs to insertSection and editSection
-* Mallika - 8/1/06 - Adding method to delete sections
-* Rashmi - 8/10/06 - get max no of sections exisiting in a module
-* Rashmi - 8/22/06 - revised insertsection() and add insertsectionresource()
-* Rashmi - 8/23/06 - add license info methods
- */
-public interface SectionService{
+import java.util.Map;
 
-	public Integer insertSection(ModuleObjService module, SectionObjService section) throws Exception;
-	public void editSection(SectionObjService section, MeleteResourceService melResource) throws Exception;
-	public void editSection(SectionObjService section ) throws Exception;
-	public SectionObjService getSection(int sectionId);
+public interface SectionService
+{
+	/**
+	 * Change license for all sections with the preferred one.
+	 * 
+	 * @param courseId
+	 *        The course id
+	 * @param mup
+	 *        The Preferred license
+	 * @return count of affected sections
+	 * @throws Exception
+	 */
+	public int changeLicenseForAll(String courseId, MeleteUserPreferenceService mup) throws Exception;
 
-	/* this method inserts the association in between section and resource and updates melete resource object*/
-	public void insertSectionResource(SectionObjService section, MeleteResourceService melResource) throws Exception;
+	/**
+	 * Clean up database. Removes the orphaned deleted sections. Part of the melete admin tool to cleanup deleted modules and sections before deep delete.
+	 * 
+	 * @param userId
+	 *        The user Id
+	 * @return
+	 * @throws Exception
+	 */
+	public int cleanUpDeletedSections(String userId) throws Exception;
 
-	/* this method inserts the association and inserts a new melete resource*/
-	public void insertMeleteResource(SectionObjService section, MeleteResourceService melResource) throws Exception;
-	public void insertResource(MeleteResourceService melResource) throws Exception;
-	public void updateResource(MeleteResourceService melResource) throws Exception;
+	/**
+	 * Note: not in use anymore.
+	 * 
+	 * @param section
+	 * @param secResource
+	 * @throws Exception
+	 */
+	public void deassociateSectionResource(SectionObjService section, SectionResourceService secResource) throws Exception;
+
+	/**
+	 * Deletes the resource from database.
+	 * 
+	 * @param melResource
+	 *        MeleteResourceService object
+	 * 
+	 * @throws Exception
+	 *         "add_section_fail" MeleteException
+	 */
 	public void deleteResource(MeleteResourceService melResource) throws Exception;
 
-	// used by view pages -- Mallika pages
-   public void setSection(SectionObjService sec);
+	/**
+	 * Delete the resource which is in use by other sections
+	 * 
+	 * @param delResourceId
+	 *        The resource id
+	 * @throws Exception
+	 */
+	public void deleteResourceInUse(String delResourceId) throws Exception;
 
-   public List getSortSections(ModuleObjService module);
-   public String getSectionDisplaySequence(SectionObjService module);
+	/**
+	 * Delete section and its associated resource if not shared by other sections.
+	 * 
+	 * @param sec
+	 *        The section
+	 * @param courseId
+	 *        The site Id
+	 * @param userId
+	 *        The user Id
+	 * @throws Exception
+	 *         "delete_module_fail" MeleteException
+	 */
+	public void deleteSection(SectionObjService sec, String courseId, String userId) throws Exception;
 
-   public void deleteSection(SectionObjService sec, String courseId, String userId) throws Exception;
-   public void deleteSections(List sectionBeans, String courseId, String userId) throws Exception;
+	/**
+	 * Delete the section - resource association.
+	 * 
+	 * @param sectionId
+	 *        The section Id
+	 */
+	public void deleteSectionResourcebyId(String sectionId);
 
-   public ArrayList getMeleteLicenses();
-   public String[] getCCLicenseURL(boolean reqAttr, boolean allowCmrcl, int allowMod);
-   public SectionResourceService getSectionResource(String secResourceId);
-   public MeleteResourceService getMeleteResource(String selResourceId);
-   public void deassociateSectionResource(SectionObjService section, SectionResourceService secResource) throws Exception;
-   public void updateSectionResource(SectionObjService section, SectionResourceService secResource) throws Exception;
-   public List findResourceInUse(String selResourceId, String courseId);
-   public void deleteResourceInUse(String delResourceId) throws Exception;
-   public int cleanUpDeletedSections() throws Exception;
-   public SectionObjService getNextSection(String curr_id, String seqXML) throws Exception;
-   public SectionObjService getPrevSection(String curr_id, String seqXML) throws Exception;
+	/**
+	 * Delete a list of sections.
+	 * 
+	 * @param sectionBeans
+	 *        List of SectionBean objects
+	 * @param courseId
+	 *        The site Id
+	 * @param userId
+	 *        The user Id
+	 * @throws Exception
+	 *         "delete_module_fail" MeleteException
+	 */
+	public void deleteSections(List<SectionBeanService> sectionBeans, String courseId, String userId) throws Exception;
+
+	/**
+	 * Updates the section.
+	 * 
+	 * @param section
+	 *        The Section
+	 * @throws Exception
+	 */
+	public void editSection(SectionObjService section) throws Exception;
+
+	/**
+	 * Updates the section and the resource.
+	 * 
+	 * @param section
+	 *        The Section
+	 * @param melResource
+	 *        The Melete Resource
+	 * 
+	 * @throws Exception
+	 *         "add_section_fail" and "edit_section_multiple_users" MeleteException
+	 */
+	public void editSection(SectionObjService section, MeleteResourceService melResource) throws Exception;
+
+	/**
+	 * Find all sections where the resource is used.
+	 * 
+	 * @param selResourceId
+	 *        The resource id
+	 * @param courseId
+	 *        The site Id
+	 * @return a list of Object[] with 0 index as SectionObjService and 1 as SectionResource if resource found as uploaded/linked media
+	 * and a list of SectionObjService if found as embedded media.
+	 * 
+	 */
+	public List<?> findResourceInUse(String selResourceId, String courseId);
+
+	/**
+	 * Get the license URL. For all combinations there is a distinct creative commons license URL.
+	 * 
+	 * @param reqAttr
+	 *        require attribution part of license
+	 * @param allowCmrcl
+	 *        allow commercial use part of license
+	 * @param allowMod
+	 *        allow Modifications part of license
+	 * @return
+	 */
+	public String[] getCCLicenseURL(boolean reqAttr, boolean allowCmrcl, int allowMod);
+
+	/**
+	 * Get all available licenses
+	 * 
+	 * @return list of MeleteLicense objects
+	 */
+	public List<MeleteLicenseService> getMeleteLicenses();
+
+	/**
+	 * Get Melete Resource.
+	 * 
+	 * @param selResourceId
+	 *        The resource Id
+	 * @return
+	 */
+	public MeleteResourceService getMeleteResource(String selResourceId);
+
+	/**
+	 * Get the next section. Reads section sequence xml and returns the next section.
+	 * 
+	 * @param curr_id
+	 *        The current section id
+	 * @param seqXML
+	 *        The sequence XML
+	 * @return next section or null if its the last section of a module.
+	 * @throws Exception
+	 */
+	public SectionObjService getNextSection(String curr_id, String seqXML) throws Exception;
+
+	/**
+	 * Get the total number of active sections in a site. This doesn't count sections of the archived module.
+	 * 
+	 * @param courseId
+	 *        the site Id
+	 * @return count
+	 */
+	public int getNumberOfActiveSections(String courseId);
+
+	/**
+	 * Get number of sections viewed per user of a site.
+	 * 
+	 * @param courseId
+	 *        the site Id
+	 * @return Map <userId, count of sections> of all viewed sections
+	 */
+	public Map<String, Integer> getNumberOfSectionViewedByUserId(String courseId);
+
+	/**
+	 * Get all sections viewed so far in the site.
+	 * 
+	 * @param courseId
+	 *        the site Id
+	 * @return Map <sectionId, List of user ids> of all viewed sections
+	 */
+	public Map<Integer, List<String>> getNumberOfViewedSections(String courseId);
+
+	/**
+	 * Get the previous section. Reads the section sequence xml and returns the previous section.
+	 * 
+	 * @param curr_id
+	 *        The current section id
+	 * @param seqXML
+	 *        The sequence XML
+	 * @return previous section or null if its the first section of a module.
+	 * @throws Exception
+	 */
+	public SectionObjService getPrevSection(String curr_id, String seqXML) throws Exception;
+
+	/**
+	 * Get the section.
+	 * 
+	 * @param sectionId
+	 *        The section Id
+	 * @return
+	 */
+	public SectionObjService getSection(int sectionId);
+
+	/**
+	 * Get the display sequence of a section like "1.1 section 1", where section 1 is the first section of the first module.
+	 * 
+	 * @param section
+	 *        SectionObjService object
+	 * @return
+	 */
+	public String getSectionDisplaySequence(SectionObjService section);
+
+	/**
+	 * Get section Resource.
+	 * 
+	 * @param secResourceId
+	 *        The resource Id
+	 * @return
+	 */
+	public SectionResourceService getSectionResource(String secResourceId);
+
+	/**
+	 * Get section resource
+	 * 
+	 * @param sectionId
+	 *        The section id
+	 * @return
+	 */
+	public SectionResourceService getSectionResourcebyId(String sectionId);
+
+	/**
+	 * Get the section title
+	 * 
+	 * @param sectionId
+	 *        The section Id
+	 * @return
+	 */
+	public String getSectionTitle(int sectionId);
+
+	/**
+	 * Get all users view date information for a section.
+	 * 
+	 * @param sectionId
+	 *        the section id
+	 * @return a Map<userId, ViewDate> information for a section.
+	 * 
+	 * @throws Exception
+	 * 
+	 */
+	public Map<String, Date> getSectionViewDates(String sectionId) throws Exception;
+
+	/**
+	 * Get the list of sectionBeans. The display sequence shows the top section/subsection level by adding -'s like |- section 1
+	 * 
+	 * @param module
+	 *        The Module
+	 * @return a list of secBean objects
+	 */
+	public List<SectionBeanService> getSortSections(ModuleObjService module);
+
+	/**
+	 * Inserts the association and inserts a new melete resource
+	 * 
+	 * @param section
+	 * @param melResource
+	 * @throws Exception
+	 */
+	public void insertMeleteResource(SectionObjService section, MeleteResourceService melResource) throws Exception;
+
+	/**
+	 * Adds a melete resource.
+	 * 
+	 * @param melResource
+	 *        MeleteResourceService Object
+	 * 
+	 * @throws Exception
+	 *         "add_section_fail" MeleteException
+	 */
+	public void insertResource(MeleteResourceService melResource) throws Exception;
+
+	/**
+	 * Adds a section in the database and updates module's sequence XML.
+	 * 
+	 * @param module
+	 *        The module
+	 * @param section
+	 *        The section
+	 * @return
+	 * @throws Exception
+	 *         "add_section_fail" MeleteException
+	 */
+	public Integer insertSection(ModuleObjService module, SectionObjService section) throws Exception;
+
+	/**
+	 * this method inserts the association in between section and resource and updates melete resource object
+	 * 
+	 * @param section
+	 * @param melResource
+	 * @throws Exception
+	 */
+	public void insertSectionResource(SectionObjService section, MeleteResourceService melResource) throws Exception;
+
+	/**
+	 * Add section track information into database
+	 * 
+	 * @param stv
+	 *        SectionTrackViewObjService object
+	 */
+	public void insertSectionTrack(SectionTrackViewObjService stv);
+
+	/**
+	 * Updates the melete resource.
+	 * 
+	 * @param melResource
+	 *        MeleteResourceService object
+	 * 
+	 * @throws Exception
+	 *         "add_section_fail" MeleteException
+	 */
+	public void updateResource(MeleteResourceService melResource) throws Exception;
+
+	/**
+	 * Update sectionResource and change the resource associated with a section
+	 * 
+	 * @param section
+	 *        The section
+	 * @param secResource
+	 *        The section resource
+	 * @throws Exception
+	 */
+	public void updateSectionResource(SectionObjService section, SectionResourceService secResource) throws Exception;
+
 }

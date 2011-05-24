@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2009 Etudes, Inc.
+ * Copyright (c) 2009, 2010, 2011 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you
  * may not use this file except in compliance with the License. You may
@@ -24,16 +24,11 @@ package org.etudes.tool.melete;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIInput;
-import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
@@ -42,12 +37,12 @@ import javax.faces.model.SelectItem;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.etudes.component.app.melete.SectionBean;
-import org.etudes.component.app.melete.Module;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.ModuleService;
+import org.etudes.api.app.melete.SectionBeanService;
 import org.etudes.api.app.melete.SectionService;
 import org.etudes.api.app.melete.exception.MeleteException;
+import org.sakaiproject.util.ResourceLoader;
 
 public class SortModuleSectionPage implements Serializable{
 
@@ -75,16 +70,21 @@ public class SortModuleSectionPage implements Serializable{
 	protected SectionService sectionService;
 
 
-	/**
-	 *navigates manage modules page on cancel
+	
+	/** Reset values on list auth page and redirect
+	 * @return list_auth_modules
 	 */
 	public String cancel()
 	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage lPage = (ListAuthModulesPage) binding.getValue(context);
+		lPage.resetValues();
 		return "list_auth_modules";
 	}
 
-	/*
-	 * Reset all values
+	/**Reset all values
+	 * 
 	 */
 	public void resetValues()
 	{
@@ -103,8 +103,8 @@ public class SortModuleSectionPage implements Serializable{
 		currModule = null;
 	}
 
-	/*
-	 * get the current seq of modules
+	/**Get the current sequence of modules
+	 * @return list of select items with current sequence of modules
 	 */
 	public List getCurrList()
 	{
@@ -112,11 +112,11 @@ public class SortModuleSectionPage implements Serializable{
 			if(currModulesList == null)
 			{
 				FacesContext context = FacesContext.getCurrentInstance();
-				Map sessionMap = context.getExternalContext().getSessionMap();
-
-				String courseId = (String)sessionMap.get("courseId");
+				ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		    	
 				currModulesList = new ArrayList();
-				currModulesList = getModuleService().getModules(courseId);
+				currModulesList = getModuleService().getModules(mPage.getCurrentSiteId());
 				currList  = forSelectItemsList(currModulesList);
 			}
 		} catch(Exception e)
@@ -150,9 +150,11 @@ public class SortModuleSectionPage implements Serializable{
 		this.newList = newList;
 	}
 
-	/*
-	 * converts the coursemodule list to selectItems for displaying at
+	
+	/*Converts the coursemodule list to selectItems for displaying at
 	 * the list boxes in the JSF page
+	 * @param list list of coursemodule objects
+	 * @return list of selectItems
 	 */
 	private List forSelectItemsList(List list)
 	{
@@ -176,6 +178,11 @@ public class SortModuleSectionPage implements Serializable{
 		return selectList;
 	}
 
+	/**Converts the section list to selectItems for displaying at
+	 * the list boxes in the JSF page
+	 * @param list list of section objects
+	 * @return list of select items
+	 */
 	private List forSelectSectionsItemsList(List list)
 	{
 		List selectList = new ArrayList();
@@ -189,7 +196,7 @@ public class SortModuleSectionPage implements Serializable{
 		Iterator itr = list.iterator();
 		int countidx = 0;
 		while (itr.hasNext()) {
-			SectionBean secBean= (SectionBean) itr.next();
+			SectionBeanService secBean= (SectionBeanService) itr.next();
 			if (secBean != null)
 			{
 				String value = new Integer(countidx++).toString();
@@ -214,6 +221,9 @@ public class SortModuleSectionPage implements Serializable{
 	}
 
 
+	/** Determines number of sections or modules shown in the select list
+	 * @return list size to show
+	 */
 	public int getShowSize()
 	{
 		showSize = 6;
@@ -231,12 +241,16 @@ public class SortModuleSectionPage implements Serializable{
 	}
 
 
+	/** Move selected item to the top of the select list
+	 * @return modules_sort
+	 */
 	public String MoveItemAllUpAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+    	String courseId = mPage.getCurrentSiteId();
 		// if module is selected then throw message
 		logger.debug("values" + newSelectedModule );
 
@@ -271,12 +285,16 @@ public class SortModuleSectionPage implements Serializable{
 	}
 
 
+	/** Move item up by one in the select list
+	 * @return modules_sort
+	 */
 	public String MoveItemUpAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+    	String courseId = mPage.getCurrentSiteId();
 		// if module is selected then throw message
 	  	logger.debug("values" + newSelectedModule );
 
@@ -310,12 +328,16 @@ public class SortModuleSectionPage implements Serializable{
 		return "modules_sort";
 	}
 
+	/** Move item down by one in the select list
+	 * @return modules_sort
+	 */
 	public String MoveItemDownAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+    	String courseId = mPage.getCurrentSiteId();
 
 		try{
 			if(newSelectedModule != null)
@@ -346,12 +368,16 @@ public class SortModuleSectionPage implements Serializable{
 		return "modules_sort";
 	}
 
+	/** Move item to bottom of select list
+	 * @return modules_sort
+	 */
 	public String MoveItemAllDownAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		String courseId = (String)sessionMap.get("courseId");
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+    	String courseId = mPage.getCurrentSiteId();
 
 		try{
 			if(newSelectedModule != null)
@@ -382,6 +408,9 @@ public class SortModuleSectionPage implements Serializable{
 		return "modules_sort";
 	}
 
+	/** Reset values and redirect to sort section page
+	 * @return sections_sort
+	 */
 	public String gotoSortSections()
 	{
 		resetValues();
@@ -390,8 +419,9 @@ public class SortModuleSectionPage implements Serializable{
 		return "sections_sort";
 	}
 
-	/**
-	 * @return navigation for sort modules
+	
+	/** Reset values and redirect to sort modules page
+	 * @return modules_sort
 	 */
 	public String goToSortModules(){
 		resetValues();
@@ -412,13 +442,18 @@ public class SortModuleSectionPage implements Serializable{
 		this.formName = formName;
 	}
 
+	/** Get list of modules in a list of select items
+	 * @return list of select items with modules
+	 */
 	public List getAllModulesList()
 	{
 		if(allModules == null || allModulesList == null )
 		{
 			FacesContext context = FacesContext.getCurrentInstance();
-			Map sessionMap = context.getExternalContext().getSessionMap();
-			String courseId = (String)sessionMap.get("courseId");
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+	    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+	    	String courseId = mPage.getCurrentSiteId();
+	    	
 			allModules = new ArrayList();
 			allModules = moduleService.getModules(courseId);
 			if (allModules.size() > 0)
@@ -450,6 +485,10 @@ public class SortModuleSectionPage implements Serializable{
 		this.currModule = currModule;
 	}
 
+	/** Get sections of next module as a list of select items
+	 * @param event ValueChangeEvent
+	 * @throws AbortProcessingException
+	 */
 	public void nextModuleSections(ValueChangeEvent event)throws AbortProcessingException
 	{
 		UIInput moduleSelect = (UIInput)event.getComponent();
@@ -469,6 +508,9 @@ public class SortModuleSectionPage implements Serializable{
 		newSecList = null;
 	}
 
+	/** Get list of sections formatted with dashes in a list of select items
+	 * @return list of select items
+	 */
 	public List getCurrSecList()
 	{
 		try{
@@ -511,6 +553,9 @@ public class SortModuleSectionPage implements Serializable{
 		return newSecList;
 	}
 
+	/** Move section to the top of the select item list
+	 * @return sections_sort
+	 */
 	public String MoveSectionItemAllUpAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -526,7 +571,7 @@ public class SortModuleSectionPage implements Serializable{
 					return "sections_sort";
 				}
 				ModuleObjService  mod  = (ModuleObjService) allModules.get(new Integer(currModule).intValue() -1);
-				String sort_sec_id = ((SectionBean)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
+				String sort_sec_id = ((SectionBeanService)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
 				moduleService.sortSectionItem(mod,sort_sec_id, "allUp");
 				newSectionsList = sectionService.getSortSections(mod);
 				newSecList = forSelectSectionsItemsList(newSectionsList);
@@ -543,6 +588,10 @@ public class SortModuleSectionPage implements Serializable{
 		}
 		return "sections_sort";
 	}
+	
+	/** Move section item up by one in the select list
+	 * @return sections_sort
+	 */
 	public String MoveSectionItemUpAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -559,7 +608,7 @@ public class SortModuleSectionPage implements Serializable{
 					return "sections_sort";
 				}
 				ModuleObjService  mod  = (ModuleObjService) allModules.get(new Integer(currModule).intValue() -1);
-				String sort_sec_id = ((SectionBean)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
+				String sort_sec_id = ((SectionBeanService)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
 				moduleService.sortSectionItem(mod,sort_sec_id, "up");
 				newSectionsList = sectionService.getSortSections(mod);
 				newSecList = forSelectSectionsItemsList(newSectionsList);
@@ -577,6 +626,9 @@ public class SortModuleSectionPage implements Serializable{
 		return "sections_sort";
 	}
 
+	/** Move section item down by one in the select list
+	 * @return sections_sort
+	 */
 	public String MoveSectionItemDownAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -593,7 +645,7 @@ public class SortModuleSectionPage implements Serializable{
 					return "sections_sort";
 				}
 				ModuleObjService  mod  = (ModuleObjService) allModules.get(new Integer(currModule).intValue() -1);
-				String sort_sec_id = ((SectionBean)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
+				String sort_sec_id = ((SectionBeanService)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
 				moduleService.sortSectionItem(mod,sort_sec_id, "down");
 				newSectionsList = sectionService.getSortSections(mod);
 				newSecList = forSelectSectionsItemsList(newSectionsList);
@@ -611,6 +663,9 @@ public class SortModuleSectionPage implements Serializable{
 		return "sections_sort";
 	}
 
+	/** Move section item to the bottom of the select list
+	 * @return sections_sort
+	 */
 	public String MoveSectionItemAllDownAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -627,7 +682,7 @@ public class SortModuleSectionPage implements Serializable{
 					return "sections_sort";
 				}
 				ModuleObjService  mod  = (ModuleObjService) allModules.get(new Integer(currModule).intValue() -1);
-				String sort_sec_id = ((SectionBean)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
+				String sort_sec_id = ((SectionBeanService)newSectionsList.get(selIndex)).getSection().getSectionId().toString();
 				moduleService.sortSectionItem(mod,sort_sec_id, "allDown");
 				newSectionsList = sectionService.getSortSections(mod);
 				newSecList = forSelectSectionsItemsList(newSectionsList);

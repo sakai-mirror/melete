@@ -1,0 +1,278 @@
+/**********************************************************************************
+ *
+ * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-hbm/src/java/org/etudes/component/app/melete/SpecialAccess.java $
+ * $Id: SpecialAccess.java 60573 2009-05-19 20:17:20Z mallika@etudes.org $  
+ ***********************************************************************************
+ *
+ * Copyright (c) 2010,2011 Etudes, Inc.
+ *
+ * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ **********************************************************************************/
+package org.etudes.component.app.melete;
+
+import java.io.Serializable;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
+import java.util.Calendar;
+import java.util.Date;
+import org.etudes.api.app.melete.SpecialAccessObjService;
+
+/** @author Hibernate CodeGenerator */
+public class SpecialAccess implements Serializable, SpecialAccessObjService
+{
+
+	private int accessId;
+
+	/** nullable persistent field */
+	private Date endDate;
+
+	private org.etudes.component.app.melete.Module module;
+
+	/** nullable persistent field */
+	private int moduleId;
+
+	private boolean overrideEnd;
+
+	/** nullable persistent field */
+	private boolean overrideStart;
+
+	/** nullable persistent field */
+	private Date startDate;
+
+	private String userNames;
+
+	private String users;
+	private boolean valid;
+
+	protected boolean selected;
+
+	public SpecialAccess()
+	{
+		this.moduleId = 0;
+		this.module = null;
+		this.users = null;
+		this.startDate = null;
+		this.endDate = null;
+		this.overrideStart = false;
+		this.overrideEnd = false;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public int getAccessId()
+	{
+		return accessId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public Date getEndDate()
+	{
+		return this.endDate;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public org.etudes.api.app.melete.ModuleObjService getModule()
+	{
+		return module;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public int getModuleId()
+	{
+		return this.moduleId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public Date getStartDate()
+	{
+		return this.startDate;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public String getUserNames()
+	{
+		return this.userNames;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public String getUsers()
+	{
+		return users;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public boolean isOverrideEnd()
+	{
+		return this.overrideEnd;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public boolean isOverrideStart()
+	{
+		return this.overrideStart;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public boolean isSelected()
+	{
+		return selected;
+	}
+
+	/**
+	 * Determines if special access entry is valid, checks against module and special access dates
+	 * 
+	 * @return true if special access is valid, false otherwise
+	 */
+	public boolean isValid()
+	{
+		Calendar stCal = null;
+		Calendar enCal = null;
+		Date actualStartDate, actualEndDate;
+		if (overrideStart)
+			actualStartDate = getStartDate();
+		else
+			actualStartDate = getModule().getModuleshdate().getStartDate();
+		if (overrideEnd)
+			actualEndDate = getEndDate();
+		else
+			actualEndDate = getModule().getModuleshdate().getEndDate();
+		if (actualStartDate != null)
+		{
+			stCal = Calendar.getInstance();
+			stCal.setTime(actualStartDate);
+			if (stCal.get(Calendar.YEAR) > 9999)
+			{
+				return false;
+			}
+		}
+		if (actualEndDate != null)
+		{
+			enCal = Calendar.getInstance();
+			enCal.setTime(actualEndDate);
+			if (enCal.get(Calendar.YEAR) > 9999)
+			{
+				return false;
+			}
+		}
+		if ((actualStartDate != null) && (actualEndDate != null))
+		{
+			if (actualStartDate.compareTo(actualEndDate) >= 0)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setAccessId(int accessId)
+	{
+		this.accessId = accessId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setEndDate(Date endDate)
+	{
+		this.endDate = endDate;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setModule(org.etudes.api.app.melete.ModuleObjService module)
+	{
+		this.module = (Module) module;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setModuleId(int moduleId)
+	{
+		this.moduleId = moduleId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setOverrideEnd(boolean overrideEnd)
+	{
+		this.overrideEnd = overrideEnd;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setOverrideStart(boolean overrideStart)
+	{
+		this.overrideStart = overrideStart;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setSelected(boolean selected)
+	{
+		this.selected = selected;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setStartDate(Date startDate)
+	{
+		this.startDate = startDate;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setUserNames(String userNames)
+	{
+		this.userNames = userNames;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setUsers(String users)
+	{
+		this.users = users;
+	}
+}

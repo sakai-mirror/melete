@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,14 +28,14 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Delete Resource" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Delete Resource" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
  
  <h:form id="DeleteResourceForm">
 	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
-	 <div class="meletePortletToolBarMessage"><img src="images/Warning.gif" width="16" height="16" align="absbottom" border="0">
+	 <div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/Warning.gif" width="16" height="16" align="absbottom" border="0">
 		     <h:outputText value="#{msgs.delete_resource_deletion_warning}" /></div>
   <table class="maintableCollapseWithBorder">
        <!-- This Begins the Main Text Area -->
@@ -49,7 +49,7 @@
            <h:messages id="deleteResourceError" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
            <table class="deleteConfirmTable">
         	<tr>
-        		<td> <img src="images/Warning.gif" border="0">
+        		<td> <img src="/etudes-melete-tool/images/Warning.gif" border="0">
         		</td>
         		<td> 
         			<h:outputText value="#{msgs.delete_resource_message1}" />

@@ -23,75 +23,67 @@
 
 package org.etudes.tool.melete;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.etudes.component.app.melete.*;
-import org.etudes.api.app.melete.*;
+import org.etudes.api.app.melete.ModuleObjService;
+import org.etudes.api.app.melete.ModuleService;
 import org.sakaiproject.util.ResourceLoader;
 
-import javax.faces.application.Application;
-import javax.faces.application.FacesMessage;
-import javax.faces.component.html.*;
-import javax.faces.component.*;
-
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.io.*;
-
-import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ValueChangeEvent;
-
-import org.etudes.api.app.melete.ModuleService;
-import org.etudes.api.app.melete.SectionService;
-
-public class PrintModulePage implements Serializable
+public class PrintModulePage
 {
 
 	/** identifier field */
-
-	private ModuleObjService selectedModule;
 
 	private ModuleService moduleService;
 
 	private String printText;
 
-	/** Dependency:  The logging service. */
+	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(PrintModulePage.class);
 
+	/**
+	 * constructor
+	 */
 	public PrintModulePage()
 	{
 
 	}
 
-
+	/**
+	 * Fetch all module and its section content to show in print window.
+	 * 
+	 * @param moduleId
+	 *        The module Id
+	 */
 	public void processModule(Integer moduleId)
 	{
-		logger.debug("print process called");
+		// logger.debug("print process called");
 		printText = null;
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		try{
+		try
+		{
 			ModuleObjService printMod = moduleService.getModule(moduleId.intValue());
 			printText = moduleService.printModule(printMod);
-		}catch(Exception e)
+		}
+		catch (Exception e)
 		{
 			String msg = bundle.getString("print_module_fail");
-			printText= msg;
-			ctx.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"print_module_fail",msg));
+			printText = msg;
+			ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "print_module_fail", msg));
 		}
 	}
 
+	/**
+	 * Reset values.
+	 */
 	public void resetValues()
 	{
-		selectedModule = null;
 		printText = null;
 	}
-
 
 	/**
 	 * @return Returns the ModuleService.
@@ -102,7 +94,8 @@ public class PrintModulePage implements Serializable
 	}
 
 	/**
-	 * @param moduleService The moduleService to set.
+	 * @param moduleService
+	 *        The moduleService to set.
 	 */
 	public void setModuleService(ModuleService moduleService)
 	{

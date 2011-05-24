@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009 Etudes, Inc.
+ * Copyright (c) 2008,2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -47,37 +47,251 @@ import org.etudes.component.app.melete.ModuleShdates;
 import org.etudes.component.app.melete.ModuleDateBean;
 import org.etudes.api.app.melete.*;
 
-public abstract class ModulePage implements Serializable{
+public abstract class ModulePage implements Serializable
+{
 
-    protected ModuleObjService module;
-    private ModuleShdatesService moduleShdates;
-    protected ModuleDateBean mdBean;
+	private StringBuffer author;
+	private boolean calendarFlag;
+	private int currYear;
 
-    /** Dependency:  The logging service. */
-    protected Log logger = LogFactory.getLog(ModulePage.class);
+	// added by rashmi -- 11/24
+	private boolean editPageFlag;
+	private String formName;
+
+	private ModuleShdatesService moduleShdates;
+
+	// license form rendering
+	private boolean saveFlag;
+	private String season;
+	private ArrayList showDates;
+
+	private boolean success;
+	private int year;
+	/** Dependency: The logging service. */
+	protected Log logger = LogFactory.getLog(ModulePage.class);
+	protected ModuleDateBean mdBean;
+
+	protected ModuleObjService module;
+	protected int moduleNumber;
 	protected ModuleService moduleService;
 
-    // license form rendering
-    private boolean saveFlag;
+	public ModulePage()
+	{
+	}
 
-    private boolean success;
-    //added by rashmi -- 11/24
-    private boolean editPageFlag;
-    private ArrayList showDates;
+	/**
+	 * Reset value on list auth page and redirect
+	 * 
+	 * @return list_auth_modules
+	 */
+	public String backToModules()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
+		listPage.resetValues();
+		listPage.setModuleDateBeans(null);
+		return "list_auth_modules";
+	}
 
-    private StringBuffer author;
-    private int year;
-    private int currYear;
-    private String season;
+	/**
+	 * Reset value on list auth page and redirect
+	 * 
+	 * @return list_auth_modules
+	 */
+	public String cancel()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
+		listPage.resetValues();
+		listPage.setModuleDateBeans(null);
+		return "list_auth_modules";
+	}
 
-    private String formName;
-    protected int moduleNumber;
-    private boolean calendarFlag;
+	/**
+	 * Consolidate author name by concatenating first name and last name.
+	 * 
+	 * @return consolidated author name
+	 */
+	public String getAuthor()
+	{
+		if (author == null)
+		{
+			author = new StringBuffer();
+			FacesContext context = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+			author.append(mPage.getCurrentUser().getFirstName() + " ");
+			author.append(mPage.getCurrentUser().getLastName());
+		}
+		return author.toString();
+	}
 
-    public ModulePage(){}
+	/**
+	 * @return true if calendar tool is enabled in this course, false if not
+	 */
+	public boolean getCalendarFlag()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		return moduleService.checkCalendar(mPage.getCourse_id());
+	}
 
-   	/**
-	 * @return
+	/**
+	 * Return current year as a string
+	 * 
+	 * @return current year
+	 */
+	public String getCurrYear()
+	{
+		String yr = "";
+		if (currYear != 0)
+		{
+			yr = new Integer(currYear).toString();
+		}
+		else
+		{
+			Calendar c = Calendar.getInstance(TimeZone.getTimeZone("PST"));
+			currYear = c.get(Calendar.YEAR);
+			yr = new Integer(currYear).toString();
+		}
+		return yr;
+	}
+
+	public String getFormName()
+	{
+		return formName;
+	}
+
+	/**
+	 * Gets the module. if module instance is not created , create here and set the default values. set author name from session.
+	 * 
+	 * @return module object
+	 */
+	public ModuleObjService getModule()
+	{
+		if (null == module)
+		{
+			module = new Module();
+	
+			// get user information from session
+			FacesContext context = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+
+			module.setCreatedByFname(mPage.getCurrentUser().getFirstName());
+			module.setCreatedByLname(mPage.getCurrentUser().getLastName());
+			module.setInstitute("");
+
+			success = false;
+
+		}
+		return module;
+	}
+
+	/**
+	 * @return moduleDateBean object
+	 */
+	public ModuleDateBean getModuleDateBean()
+	{
+		return mdBean;
+	}
+
+	/**
+	 * Doesn't seem to be in use
+	 * 
+	 * @return moduleNumber
+	 */
+	public String getModuleNumber()
+	{
+		if (moduleNumber != 0) return new Integer(moduleNumber).toString();
+
+		CourseModule cm = (CourseModule) module.getCoursemodule();
+		if (cm == null)
+		{
+			return "0";
+		}
+
+		moduleNumber = cm.getSeqNo();
+
+		return new Integer(moduleNumber).toString();
+	}
+
+	/**
+	 * @return Returns the ModuleService.
+	 */
+	public ModuleService getModuleService()
+	{
+		return moduleService;
+	}
+
+	/**
+	 * @return moduleShdates object for this module
+	 */
+	public ModuleShdatesService getModuleShdates()
+	{
+		if (null == moduleShdates)
+		{
+			moduleShdates = new ModuleShdates();
+			/*
+			 * GregorianCalendar cal = new GregorianCalendar(); cal.set(Calendar.HOUR,8); cal.set(Calendar.MINUTE,0); cal.set(Calendar.SECOND,0); cal.set(Calendar.AM_PM,Calendar.AM); moduleShdates.setStartDate(cal.getTime()); cal.add(Calendar.YEAR, 1);
+			 * cal.set(Calendar.HOUR,11); cal.set(Calendar.MINUTE,59); cal.set(Calendar.SECOND,0); cal.set(Calendar.AM_PM,Calendar.PM); moduleShdates.setEndDate(cal.getTime());
+			 */}
+		return moduleShdates;
+	}
+
+	/**
+	 * Return term information such as Winter, Fall
+	 * 
+	 * @return term information
+	 */
+	public String getSeason()
+	{
+		if (season == null)
+		{
+			try
+			{
+
+				FacesContext context = FacesContext.getCurrentInstance();
+				ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+				MeleteSiteAndUserInfo ms = (MeleteSiteAndUserInfo) binding.getValue(context);
+				season = ms.getCourseTerm();
+				if (season == null) season = " ";
+
+			}
+			catch (Exception e)
+			{
+				season = " ";
+				logger.debug("sesaon is null prob some error in meleteSiteand user");
+			}
+		}
+		return season;
+	}
+
+	/**
+	 * This method calculates the next 5 yrs and populate the combo box of year in add_module.jsp page.
+	 * 
+	 * @return list of next 5 years.
+	 */
+	public ArrayList getShowDates()
+	{
+		if (showDates == null)
+		{
+			showDates = new ArrayList();
+			Calendar c = Calendar.getInstance(TimeZone.getTimeZone("PST"));
+			int yr = c.get(Calendar.YEAR);
+			currYear = yr;
+
+			for (int i = 0; i < 5; i++)
+				showDates.add(new SelectItem((new Integer(yr + i)).toString()));
+		}
+		return showDates;
+	}
+
+	/**
+	 * @return true if operation succeeded, false if not
 	 */
 	public boolean getSuccess()
 	{
@@ -85,387 +299,225 @@ public abstract class ModulePage implements Serializable{
 	}
 
 	/**
-	 * @param
+	 * Return year selected as a string
+	 * 
+	 * @return year
+	 */
+	public String getYear()
+	{
+		String yr = "";
+		if (year != 0)
+		{
+			yr = new Integer(year).toString();
+		}
+		else
+		{
+			try
+			{
+				FacesContext context = FacesContext.getCurrentInstance();
+				ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+				MeleteSiteAndUserInfo ms = (MeleteSiteAndUserInfo) binding.getValue(context);
+
+			}
+			catch (Exception e)
+			{
+				yr = " ";
+				logger.debug("error in getting yr ..prob becos of melete site and user");
+			}
+		}
+		return yr;
+	}
+
+	/**
+	 * Reset module number for edit page
+	 * 
+	 */
+	public void resetModuleNumber()
+	{
+		moduleNumber = 0;
+		editPageFlag = true;
+	}
+
+	/**
+	 * Method to reset module values to clear module
+	 * 
+	 */
+	public void resetModuleValues()
+	{
+		saveFlag = false;
+		success = false;
+		season = null;
+		moduleNumber = 0;
+		editPageFlag = false;
+	}
+
+	/**
+	 * Submits the form and sends module and moduleShdates instances to the db level for adding a new module.
+	 * 
+	 * @return confirm_module or edit_module
+	 */
+	public abstract String save();
+
+	/**
+	 * Not in use
+	 * 
+	 * @param author
+	 */
+	public void setAuthor(String author)
+	{
+	}
+
+	/**
+	 * @param formName
+	 *        name of form(add_module or edit_module)
+	 */
+	public void setFormName(String formName)
+	{
+		this.formName = formName;
+	}
+
+	/**
+	 * @param module
+	 *        module being added or edited
+	 */
+	public void setModule(ModuleObjService module)
+	{
+
+		this.module = module;
+
+	}
+
+	/**
+	 * @param mdBean
+	 *        moduleDateBean object
+	 */
+	public void setModuleDateBean(ModuleDateBean mdBean)
+	{
+		this.mdBean = mdBean;
+	}
+
+	/**
+	 * @param ModuleService
+	 *        The ModuleService to set.
+	 */
+	public void setModuleService(ModuleService moduleService)
+	{
+		this.moduleService = moduleService;
+	}
+
+	/**
+	 * @param moduleShdates
+	 *        moduleShdates object for this module
+	 */
+	public void setModuleShdates(ModuleShdatesService moduleShdates)
+	{
+		this.moduleShdates = moduleShdates;
+	}
+
+	/**
+	 * @param season
+	 *        term information
+	 */
+	public void setSeason(String season)
+	{
+		this.season = season;
+	}
+
+	/**
+	 * @param success
+	 *        value of success
 	 */
 	public void setSuccess(boolean success)
 	{
 		this.success = success;
 	}
 
-    /**
-     * @return list of next 5 years.
-     * This method calculates the next 5 yrs and populate the combo box of
-     * year in add_module.jsp page.
-     */
-    public ArrayList getShowDates()
-{
-	if(showDates == null)
+	/**
+	 * @param year
+	 *        year select by user
+	 */
+	public void setYear(String year)
 	{
-		showDates = new ArrayList();
-        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("PST"));
-        int yr = c.get(Calendar.YEAR);
-        currYear = yr;
-
-        for (int i=0; i < 5; i++) showDates.add(new SelectItem((new Integer(yr+i)).toString()));
+		this.year = (new Integer(year)).intValue();
 	}
-	return showDates;
-}
-    protected boolean validateDates(FacesContext context, ResourceLoader bundle, Date st, Date end)
-    {
-	   Calendar calstart = new GregorianCalendar();
-     	Calendar calend = new GregorianCalendar();
 
-     	boolean errorFlag = false;
-     	if ((st != null) || (end!= null))
-     	{
-     	  if (st != null)
-		  {
-     		calstart.setTime(st);
-			if (calstart.get(Calendar.YEAR) > 9999)
-			{
-				String errMsg = bundle.getString("year_toobig_error");
-				addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-				errorFlag = true;
-			}
-		  }
-     	  if (end != null)
-		  {
-     		calend.setTime(end);
-			if (calend.get(Calendar.YEAR) > 9999)
-			{
-				String errMsg = bundle.getString("year_toobig_error");
-				addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-				errorFlag = true;
-			}
-		  }
-
-  //      validation no 4 b
-     	  if ((end != null)&&(st != null))
-     	  {
-     	  if(end.compareTo(st) <= 0)
-     	  {
-     		String errMsg = "";
-	     	errMsg = bundle.getString("end_date_before_start");
-	     	addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-	     	errorFlag = true;
-     	  }
-     	  }
-     	}
-     	//If there is an error, validation fails and the method returns false
-     	//If there are no errors, validation passes and the method returns true;
-     	if (errorFlag == true) return false;
-     	return true;
-    }
-
-    protected void addMessage(FacesContext context, String msgName, String msgDetail, FacesMessage.Severity severity)
+	/**
+	 * Adds message to faces context
+	 * 
+	 * @param ctx
+	 *        FacesContext object
+	 * @param msgName
+	 *        Message name
+	 * @param msgDetail
+	 *        Message detail
+	 * @param severity
+	 *        Severity of message
+	 */
+	protected void addMessage(FacesContext context, String msgName, String msgDetail, FacesMessage.Severity severity)
 	{
 		FacesMessage msg = new FacesMessage(msgName, msgDetail);
 		msg.setSeverity(severity);
 		context.addMessage(null, msg);
 	}
-    /**
-     *
-     * This is the most critical function. It actually submits the form and sends
-     * module and moduleShdates instances to the db level for adding a new module.
-     *
-     * Config file will conatin the outcome values from this function to navigate to next page.
-     *
-     *  validations
-	 * 1.if learning obj or desc is present
-	 * 2. if license type is cc license or public domain then ensure that
-	 *  user has agreed to the license, hence we need to check licenseAgree flag is true
-	 *
-     **/
-
-    public abstract String save();
-
-
-    /**
-     * Gets the module. if module instance is not created , create here and set
-     * the default values. set author name and institution from session.
-     *
-     * add_module.jsp elements bind to the attributes of this
-     * instance.
-     *
-     * Revision - added learning objectives default value -- Rashmi 11/17
-     * get first name , institute etc from session -- Rashmi 11/22
-     *  set sucess, licenseCoders and agree to fix bug#19, #20 -- Rashmi 12/15
-     */
-
-    public ModuleObjService getModule() {
-        if (null == module) {
-  	      module = new Module();
-
-		// get user information from session
-	      FacesContext context = FacesContext.getCurrentInstance();
-	      Map sessionMap = context.getExternalContext().getSessionMap();
-	      module.setCreatedByFname((String)sessionMap.get("firstName"));
-	      module.setCreatedByLname((String)sessionMap.get("lastName"));
-	      module.setInstitute((String)sessionMap.get("institute"));
-
-	      success=false;
-
-	 }
-    return module;
-  }
-
-    /**
-     *
-     * consolidate author name by concatenating first name and last name.
-     * revised by rashmi to get name from sessionMap
-     */
-  public String getAuthor()
-  {
-	if(author == null)
-	{
-		author = new StringBuffer();
-	    FacesContext context = FacesContext.getCurrentInstance();
-	    Map sessionMap = context.getExternalContext().getSessionMap();
-		author.append((String)sessionMap.get("firstName") + " ");
-		author.append((String)sessionMap.get("lastName"));
-	}
-	return author.toString();
-  }
-  /**
-   *
-   * not required as the fields are disabled.
-   *
-   */
-  public void setAuthor(String author){ }
-
-  /**
-   *
-   * return yr selected.
-   * revised by rashmi - 3/21 to make season and yr readable
-   */
-  public String getYear(){
-	String yr="";
-	if(year != 0) {
-	 yr=new Integer(year).toString();
-	}
-	else
-	{
-		try{
-			FacesContext context = FacesContext.getCurrentInstance();
-			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-			MeleteSiteAndUserInfo ms = (MeleteSiteAndUserInfo)
-            binding.getValue(context);
-
-		} catch(Exception e)
-		{
-			yr=" ";
-			logger.debug("error in getting yr ..prob becos of melete site and user");
-		}
-	}
-	return yr;
-	}
-
-  public String getCurrYear(){
-	String yr="";
-	if(currYear != 0) {
-	 yr=new Integer(currYear).toString();
-	}else{
-		Calendar c = Calendar.getInstance(TimeZone.getTimeZone("PST"));
-		currYear = c.get(Calendar.YEAR);
-		 yr=new Integer(currYear).toString();
-	}
-	return yr;
-	}
-  /**
-   *
-   * set the year selected by user.
-   *
-   */
-  public void setYear(String year)
-	{
-	this.year = (new Integer(year)).intValue();
-      }
-
-   /**
-   *
-   * default season is "select season"
-   *
-   */
-
-  public String getSeason()
-  {
-	if(season == null)
-	{
-		try{
-
-			FacesContext context = FacesContext.getCurrentInstance();
-			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-			MeleteSiteAndUserInfo ms = (MeleteSiteAndUserInfo)binding.getValue(context);
-			season = ms.getCourseTerm();
-			if(season == null )
-				season = " ";
-
-		}catch(Exception e)
-		{
-			season=" ";
-			logger.debug("sesaon is null prob some error in meleteSiteand user");
-		}
-	}
-	return season;
-  }
-
-  /**
-   *
-   * set user's selection
-   *
-   */
-  public void setSeason(String season){
-	this.season = season;
- }
-  /**
-   *
-   * set module
-   * Revised by rashmi to show results in edit page 11/24
-   */
-  public void setModule(ModuleObjService module) {
-
-    this.module = module;
-
-  }
-
-  /**
-   *
-   * create an instance of moduleshdates.
-   * Revised to open a course for one year by default --Rashmi 12/6
-    * Revised on 12/20 Rashmi to set start default time as 8:00 am and
-   * end date time as 11:59 pm
-   */
-
-  public ModuleShdatesService getModuleShdates() {
-    if (null == moduleShdates) {
-     moduleShdates = new ModuleShdates();
-	/*       GregorianCalendar cal = new GregorianCalendar();
-	       cal.set(Calendar.HOUR,8);
-	       cal.set(Calendar.MINUTE,0);
-	       cal.set(Calendar.SECOND,0);
-	       cal.set(Calendar.AM_PM,Calendar.AM);
-	       moduleShdates.setStartDate(cal.getTime());
-	       cal.add(Calendar.YEAR, 1);
-	       cal.set(Calendar.HOUR,11);
-	       cal.set(Calendar.MINUTE,59);
-	       cal.set(Calendar.SECOND,0);
-	       cal.set(Calendar.AM_PM,Calendar.PM);
-	       moduleShdates.setEndDate(cal.getTime());
-	  */       }
-	    return moduleShdates;
-	  }
-
-  /**
-   *
-   * @return
-   *
-   */
-  public void setModuleShdates(ModuleShdatesService moduleShdates) {
-    this.moduleShdates = moduleShdates;
-  }
-
-
-
-public ModuleDateBean getModuleDateBean() {
-  	return mdBean;
-  }
-
-  public void setModuleDateBean(ModuleDateBean mdBean){
-  	this.mdBean = mdBean;
-  }
-
-  public String getFormName(){
-	return formName;
-	}
-
-  /**
-  * @param formName
-  */
-  public void setFormName(String formName){
-  	this.formName = formName;
-  }
-  
-  public boolean getCalendarFlag()
-  {
-	  return moduleService.checkCalendar();
-  }
-  
- /*
-   * to remove retained values
-   * Rashmi -- 12/21
-   */
-  public void resetModuleValues()
-  {
-                saveFlag = false;
-                 success= false;
-                  season=null;
-                  moduleNumber = 0;
-                  editPageFlag = false;
-  }
-
-  public void resetModuleNumber()
-	{
-  	moduleNumber = 0;
-  	editPageFlag = true;
-  	}
-
-  /*
-	 * get tentative seq# assigned to module. bug fix #211
-	 * Rashmi - 1/21
-	 */
-	public String getModuleNumber()
-	{
-		if(moduleNumber != 0 )
-			return new Integer(moduleNumber).toString();
-
-
-		CourseModule cm = (CourseModule) module.getCoursemodule();
-		if(cm == null)
-		{
-			return "0";
-		}
-
-
-			moduleNumber = cm.getSeqNo();
-
-		return new Integer(moduleNumber).toString();
-	}
-
-
-	public String backToModules()
-	{
-		  FacesContext context = FacesContext.getCurrentInstance();
-	        ValueBinding binding =Util.getBinding("#{listAuthModulesPage}");
-	        ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
-	        listPage.resetValues();
-	        listPage.setModuleDateBeans(null);
-		return "list_auth_modules";
-	}
 
 	/**
-	 * @return naviagtion rule on click of cancel button
+	 * Ensure that the dates do not have a year after 9999 and the end date is after the start date
+	 * 
+	 * @param context
+	 *        FacesContext object
+	 * @param bundle
+	 *        ResourceLoader object
+	 * @param st
+	 *        Start date
+	 * @param end
+	 *        End date
+	 * @return true if dates are valid, false otherwise
 	 */
-	public String cancel()
+	protected boolean validateDates(FacesContext context, ResourceLoader bundle, Date st, Date end)
 	{
-		FacesContext context = FacesContext.getCurrentInstance();
-        ValueBinding binding =Util.getBinding("#{listAuthModulesPage}");
-        ListAuthModulesPage listPage = (ListAuthModulesPage) binding.getValue(context);
-        listPage.resetValues();
-        listPage.setModuleDateBeans(null);
-		return "list_auth_modules";
-	}
-	/**
-	 * @return Returns the ModuleService.
-	 */
-	public ModuleService getModuleService() {
-		return moduleService;
-	}
-	/**
-	 * @param ModuleService The ModuleService to set.
-	 */
-	public void setModuleService(ModuleService moduleService) {
-		this.moduleService = moduleService;
+		Calendar calstart = new GregorianCalendar();
+		Calendar calend = new GregorianCalendar();
+
+		boolean errorFlag = false;
+		if ((st != null) || (end != null))
+		{
+			if (st != null)
+			{
+				calstart.setTime(st);
+				if (calstart.get(Calendar.YEAR) > 9999)
+				{
+					String errMsg = bundle.getString("year_toobig_error");
+					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
+					errorFlag = true;
+				}
+			}
+			if (end != null)
+			{
+				calend.setTime(end);
+				if (calend.get(Calendar.YEAR) > 9999)
+				{
+					String errMsg = bundle.getString("year_toobig_error");
+					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
+					errorFlag = true;
+				}
+			}
+
+			// validation no 4 b
+			if ((end != null) && (st != null))
+			{
+				if (end.compareTo(st) <= 0)
+				{
+					String errMsg = "";
+					errMsg = bundle.getString("end_date_before_start");
+					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
+					errorFlag = true;
+				}
+			}
+		}
+		// If there is an error, validation fails and the method returns false
+		// If there are no errors, validation passes and the method returns true;
+		if (errorFlag == true) return false;
+		return true;
 	}
 
-
- }
+}

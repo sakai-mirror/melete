@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009,2010 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -29,172 +29,116 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <f:view>
-<sakai:view title="Modules: Edit Module Sections" toolCssHref="rtbc004.css">
+<sakai:view title="Modules: Edit Module Sections" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
-<script type="text/javascript" language="javascript" src="js/sharedscripts.js"></script>
+<script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
 
-<%@ page import="org.sakaiproject.util.ResourceLoader"%>
+<%@ page import="org.sakaiproject.util.ResourceLoader, javax.faces.application.FacesMessage,org.etudes.tool.melete.AddResourcesPage, org.etudes.tool.melete.EditSectionPage"%>
 
 <% 
 	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-	String mensaje=bundle .getString("editmodulesections_uploading");
-	
+	String mensaje=bundle.getString("editmodulesections_uploading");
+
+	final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
+	final EditSectionPage eSectionPage = (EditSectionPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "editSectionPage");
+	if(eSectionPage.getSection() != null && eSectionPage.getSection().getSectionId() != null)
+	{
+		request.setAttribute("attr_sId",eSectionPage.getSection().getSectionId().toString());	
+	}
 %>
 
 <script type="text/javascript" language="javascript1.2">
-function fillupload()
-{
-		var k =document.getElementById("file1").value;
-		document.getElementById("EditSectionForm:filename").value=k;
-}
 
-function showupload()
+function saveEditor()
 {
-	defaultStatus = "Done";
-	var str=document.getElementById("EditSectionForm:contentType").value;
-	var sferyxdisplay = document.getElementById("EditSectionForm:contentEditorView:sferyxDisplay");  
-	
-	if(str.match("notype"))
-		{		
-			if(document.htmleditor != undefined && document.htmleditor != null)
-			{
-			document.htmleditor.style.visibility="hidden";
-			document.htmleditor.style.display="none";
-			}
-			if (document.getElementById("EditSectionForm:contentEditorView") != undefined && 
-			document.getElementById("EditSectionForm:contentEditorView") != null)
-			  {
-			     document.getElementById("EditSectionForm:contentEditorView").style.visibility="hidden";
-			     document.getElementById("EditSectionForm:contentEditorView").style.display="none";
-			  }
-				
-	}
-
-	if(!str.match("typeEditor"))
-	{		
-		if(document.htmleditor != undefined && document.htmleditor != null)
-			{
-				document.htmleditor.style.visibility="hidden";
-				document.htmleditor.style.display="none";
-			}
-			if (document.getElementById("EditSectionForm:contentEditorView") != undefined && 
-			document.getElementById("EditSectionForm:contentEditorView") != null)
-            {
-                  document.getElementById("EditSectionForm:contentEditorView").style.visibility="hidden";
-                  document.getElementById("EditSectionForm:contentEditorView").style.display="none";
-            }		
-	}
-}	
-
-function transferEditordata()
-{
+	var result = true;
 	var sferyxdisplay = document.getElementById("EditSectionForm:contentEditorView:sferyxDisplay");
 	if ((sferyxdisplay != undefined )&&(document.htmleditor!=undefined && document.htmleditor!= null))
-	{
-	  	var k = document.htmleditor.getContent();
-	  	 if(document.getElementById("EditSectionForm:contentEditorView:contentTextArea") != undefined && 
-	  	 document.getElementById("EditSectionForm:contentEditorView:contentTextArea") != null)
-			 {
-                document.getElementById("EditSectionForm:contentEditorView:contentTextArea").value=k;
-		document.htmleditor.uploadMultipartContent(true);
-         	}
+	{	  	
+		// document.htmleditor.saveToDefaultLocation();  
+		document.htmleditor.addAdditionalDynamicParameter('mode',document.getElementById("EditSectionForm:mode").value);
+        document.htmleditor.addAdditionalDynamicParameter('mId',document.getElementById("EditSectionForm:mId").value);
+        document.htmleditor.addAdditionalDynamicParameter('sId',document.getElementById("EditSectionForm:sId").value);
+        if(document.getElementById("EditSectionForm:rId") != undefined || document.getElementById("EditSectionForm:rId") != null)
+      	  document.htmleditor.addAdditionalDynamicParameter('resourceId',document.getElementById("EditSectionForm:rId").value);
+       document.htmleditor.addAdditionalDynamicParameter('uId',document.getElementById("EditSectionForm:uId").value);		  
+		
+		result = document.htmleditor.uploadMultipartContent(true);			    	
 	}	
+	return result;	
 }
 
 function showmessage()
 {
-		if (document.getElementById("file1").value.length  >  0)
+		if (document.getElementById("file1") != undefined && document.getElementById("file1").value.length  >  0)
 		   {
 		   window.defaultStatus="<%=mensaje%>";
 		   } 
   }
-
-function previewSec()
-{
-transferEditordata();
-window.open('editpreviewEditor.jsf');
-}
-function saveSection()
-{
-	var elementToGet = "EditSectionForm"+ ":" + "saveForBookmarkbutton";  
-	var form = document.forms['EditSectionForm'];  
-	if (form != null)
-	{
-	   var button = form.elements[elementToGet];  
-	   button.click();
-	 }
-	 else
-	 {
-	   //Do nothing
-	 }  
-}
 </script>
 
       <!-- This Begins the Main Text Area -->
-	<h:form id="EditSectionForm" enctype="multipart/form-data">	
+	<h:form id="EditSectionForm" enctype="multipart/form-data" onsubmit="if (saveEditor()){ return true;}else {return false;}"> 	
 			  <h:inputHidden id="formName" value="EditSectionForm"/>  
+			  <h:inputHidden id="mode" value="Edit"/>
+			  <h:inputHidden id="mId" value="#{editSectionPage.module.moduleId}"/>
+			  <h:inputHidden id="sId" value="#{editSectionPage.section.sectionId}"/>
+			  <h:inputHidden id="rId" value="#{editSectionPage.meleteResource.resourceId}" rendered="#{editSectionPage.meleteResource !=null}"/>
+			  <h:inputHidden id="uId" value="#{editSectionPage.currUserId}"/>
 		<!-- top nav bar -->
 		<f:subview id="top">
 			<jsp:include page="topnavbar.jsp"/> 
 		</f:subview>
-		<div class="meletePortletToolBarMessage"><img src="images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.editmodulesections_editing_section}" /> </div>
+		<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText id="captionText" value="#{msgs.editmodulesections_editing_section}" /> </div>
 		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-        <div class="right">
-          <h:outputLink id="bookmarkSectionLink" value="editmodulesections" onclick="saveSection();var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},'#{editSectionPage.section.title}','Melete Bookmark Window');w.focus();">
-	         <f:param id="sectionId" name="sectionId" value="#{editSectionPage.section.sectionId}" />
-	         <f:param id="sectionTitle" name="sectionTitle" value="#{editSectionPage.section.title}" />
-	         <h:graphicImage id="bul_gif" value="images/bookmark-it.png" alt="" styleClass="AuthImgClass"/>
-	         <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
-           </h:outputLink>		
-            <h:outputText value="|"/> 
-           <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}">
-             <h:graphicImage id="mybook_gif" value="images/my-bookmarks.png" alt="" styleClass="AuthImgClass"/>
-             <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
-             <f:param name="fromPage" value="editmodulesections" /> 
-           </h:commandLink>
-        </div>
+        <div id="errMsg1" style="color:red"><p> </p></div>
         <table class="maintableCollapseWithBorder">
      	   <tr>
             <td class="maintabledata3">
 				  <table class="maintableCollapseWithNoBorder">
                    <!-- table header -->
-	                   <tr>
-			            <td colspan="2" height="20" class="maintabledata2">            	   
-				     		<h:commandLink id="editPrevButton" onmousedown="transferEditordata();" action="#{editSectionPage.editPrevSection}" rendered="#{editSectionPage.hasPrev}">
-			 					 <h:outputText id="text4_4" value="#{msgs.editmodulesections_edit_prev}"/>
-							</h:commandLink> 
-							<h:outputText id="text4_5" value="#{msgs.editmodulesections_edit_prev}" rendered="#{!editSectionPage.hasPrev}"/>
-							&laquo;
-			     			<h:commandLink id="TOCButton"  onmousedown="transferEditordata();" action="#{editSectionPage.goTOC}">
-									<h:outputText id="toc" value="#{msgs.editmodulesections_TOC}" />
-								</h:commandLink>
-							&raquo;   
-				     		<h:commandLink id="editNextButton" onmousedown="transferEditordata();" action="#{editSectionPage.editNextSection}" rendered="#{editSectionPage.hasNext}">
-			 					 <h:outputText id="text4_2" value="#{msgs.editmodulesections_edit_next}"/>
-							</h:commandLink>
-							<h:outputText id="text4_6" value="#{msgs.editmodulesections_edit_next}" rendered="#{!editSectionPage.hasNext}"/>
-							  <h:outputText id="text4_3" value=" / "/>				
-				     		<h:commandLink onmousedown="transferEditordata();" action="#{editSectionPage.saveAndAddAnotherSection}">
-			 					 <h:outputText id="text5" value="#{msgs.editmodulesections_add_new}"/>
-							</h:commandLink> 						   	
-						</td>
-			          </tr>	
+                   <tr>
+			            <td width="100%" colspan="2" height="20" class="maintabledata2"> 
+				            <table  width="100%"> 
+			                   <tr >
+					            <td width="70%" >  
+					            	<h:commandButton id="editPrevButton" action="#{editSectionPage.editPrevSection}" disabled="#{!editSectionPage.hasPrev}" value="#{msgs.editmodulesections_edit_prev}" accesskey="#{msgs.prev_access}" title="#{msgs.im_prev_text}" styleClass="BottomImgPrev"/>          	   
+									<h:commandButton id="TOCButton" action="#{editSectionPage.goTOC}" value="#{msgs.editmodulesections_TOC}" accesskey="#{msgs.toc_access}" title="#{msgs.im_toc_text}" styleClass="BottomImgTOC"/>
+					       			<h:commandButton id="editNextButton" action="#{editSectionPage.editNextSection}" disabled="#{!editSectionPage.hasNext}" value="#{msgs.editmodulesections_edit_next}" accesskey="#{msgs.next_access}" title="#{msgs.im_next_text}" styleClass="BottomImgNext"/>
+						     	
+						            <h:outputText id="text4_3" value="  " styleClass="ExtraPaddingClass"/>	
+									<h:commandButton id="editAddNewButton" action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.editmodulesections_add_new}" accesskey="#{msgs.add_access}" title="#{msgs.im_save_text}" styleClass="BottomImgAdd"/>  			
+						        </td>
+						        <td class="right" width="30%" >    
+									 <h:commandButton id="bookmarkSectionLink" action="#{editSectionPage.saveAndAddBookmark}" value="#{msgs.bookmark_text}" 
+										 onclick="var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},document.getElementById('EditSectionForm:title').value,'Melete Bookmark Window');"
+										  accesskey="#{msgs.bookmark_access}" title="#{msgs.im_bmrk_text}" styleClass="BottomImgBookmarkIt">
+									</h:commandButton>
+						     		<h:commandButton id="myBookmarksLink" action="#{editSectionPage.gotoMyBookmarks}" value="#{msgs.my_bookmarks}" accesskey="#{msgs.mybookmarks_access}" title="#{msgs.im_mybmrks_text}" styleClass="BottomImgMyBookmarks"/>
+								</td>
+					          </tr>
+				          </table>
+			          </td>
+			          </tr>		
 			          <tr>
 			          	<td colspan="2" class="maintabledata9" >
 			     			<h:outputText id="text4" value="#{editSectionPage.module.title}" /> &raquo; <h:outputText id="text4_1" value="#{editSectionPage.section.title}" />
 			          	</td>
 			          </tr>	 
 	                   <!-- end table header -->
+	                         	 <tr>
+                                    <td class="col1" align="left" valign="top"><h:outputText id="text8" value="#{msgs.editmodulesections_author}"/></td>
+                                    <td class="col2" align="left" valign="top"><h:outputText value="#{editSectionPage.section.createdByFname}" styleClass="formtext"/>&nbsp;<h:outputText value="#{editSectionPage.section.createdByLname}" styleClass="formtext"/>
+                                    <h:outputText value="#{editSectionPage.section.creationDate}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm:ss a"/></h:outputText>
+                                    </td>
+                                  </tr>
+
                                    <tr>
                                     <td class="col1" align="left" valign="top"><h:outputText id="text7" value="#{msgs.editmodulesections_section_title}" /><span class="required">*</span></td>
                                     <td class="col2" align="left" valign="top">
 									<h:inputText id="title" value="#{editSectionPage.section.title}" size="45"  required="true" styleClass="formtext"/>
 									</td>
-                                  </tr>
-                                  <tr>
-                                    <td class="col1" align="left" valign="top"><h:outputText id="text8" value="#{msgs.editmodulesections_author}"/></td>
-                                    <td class="col2" align="left" valign="top"><h:outputText value="#{editSectionPage.section.createdByFname}" styleClass="formtext"/>&nbsp;<h:outputText value="#{editSectionPage.section.createdByLname}" styleClass="formtext"/></td>
-                                  </tr>
+                                  </tr>                           
 								  <tr>
                                     <td class="col1" align="left" valign="top"><h:outputText id="text9" value="#{msgs.editmodulesections_instructions}" /></td>
                                     <td class="col2" align="left" valign="top">
@@ -253,13 +197,17 @@ function saveSection()
 										</f:subview>	
 									</td></tr>	
 									<tr> 
-										 <td colspan="2"> 										
+										 <td colspan="2">
+						 									
 											 <f:subview id="contentEditorView" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
-												<jsp:include page="contentSferyxEditor.jsp?mode=Edit"/>
-												 <h:inputHidden id="contentTextArea" value="#{editSectionPage.contentEditor}" />
-												 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
+												<jsp:include page="contentSferyxEditor.jsp" />
+     											 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>
-											<sakai:inputRichText id="otherMeletecontentEditor" value="#{editSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{editSectionPage.FCK_CollId}" />											
+
+											<f:subview id="othereditor" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}">
+												<sakai:inputRichText id="otherMeletecontentEditor" value="#{editSectionPage.contentEditor}"  rows="50" cols="90" width="700" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderFCK}" collectionBase="#{editSectionPage.FCK_CollId}" />
+											</f:subview>										
+
 											</td>
 									  </tr>	
 								  <tr>
@@ -275,26 +223,18 @@ function saveSection()
               <tr>
                 <td>
                   <div class="actionBar" align="left">
-              		<h:commandButton id="submitsave" action="#{editSectionPage.save}" rendered="#{editSectionPage.shouldRenderEditor}" onclick="transferEditordata()" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
+                	<h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_done}" accesskey="#{msgs.done_access}" title="#{msgs.im_done_text}" styleClass="BottomImgFinish"/>
+              		<h:commandButton id="submitsave" action="#{editSectionPage.save}" rendered="#{editSectionPage.shouldRenderEditor}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
 					<h:commandButton id="submitsave1" action="#{editSectionPage.save}" rendered="#{editSectionPage.shouldRenderUpload}" onclick="showmessage()" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
 					<h:commandButton id="submitsave2" action="#{editSectionPage.save}" rendered="#{!editSectionPage.shouldRenderEditor && !editSectionPage.shouldRenderUpload}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
-					<h:commandButton id="previewEditor" action="#{editSectionPage.getPreviewPage}" onclick="transferEditordata()"  rendered="#{editSectionPage.shouldRenderEditor}" value="#{msgs.im_preview}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgPreview"/>
+					<h:commandButton id="previewEditor" action="#{editSectionPage.getPreviewPage}" rendered="#{editSectionPage.shouldRenderEditor}" value="#{msgs.im_preview}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgPreview"/>
 					<h:commandButton id="preview" action="#{editSectionPage.getPreviewPage}" rendered="#{editSectionPage.shouldRenderEditor == false}" value="#{msgs.im_preview}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgPreview"/>
-					<h:commandButton id="cancelButton" immediate="true" action="#{editSectionPage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+					
+					<h:commandButton id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd"/>
+				
        			 </div></td>
               </tr>
-              <tr>
-                <td height="20">&nbsp;</td>
-              </tr>
-              <tr>
-                <td>
-                    <div class="actionBar" align="left">
-                		<h:commandButton id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" onclick="transferEditordata()" styleClass="BottomImgAdd"/>
-						<h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_finish}" accesskey="#{msgs.finish_access}" title="#{msgs.im_finish_text}" onclick="transferEditordata()" styleClass="BottomImgFinish"/>
-						<h:commandButton id="saveForBookmarkbutton"  action="#{editSectionPage.save}" onclick="transferEditordata()" style="display: none; visibility: hidden;"/>
-								
-					</div></td>
-		          </tr>
+              
             </table>
 			
 			

@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  *  Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -23,15 +23,45 @@
  **********************************************************************************/
 package org.etudes.api.app.melete;
 
-import java.util.Set;
-
 import org.etudes.api.app.melete.MeleteUserPreferenceService;
-/*
-* author Rashmi - 10/11/06 
- */
-public interface MeleteAuthorPrefService{
-	public void insertUserChoice(MeleteUserPreferenceService mup) throws Exception;
-	public MeleteUserPreferenceService getUserChoice(String user_id);
-	public void insertUserSiteChoice(MeleteSitePreferenceService msp) throws Exception;
+
+public interface MeleteAuthorPrefService
+{
+	/**
+	 * Get user's preference at site level
+	 * 
+	 * @param site_id
+	 *        The Site Id
+	 * @return
+	 */
 	public MeleteSitePreferenceService getSiteChoice(String site_id);
+
+	/**
+	 * Get user's choice.
+	 * 
+	 * @param user_id
+	 *        The user Id
+	 * @return
+	 */
+	public MeleteUserPreferenceService getUserChoice(String user_id);
+
+	/**
+	 * Add user's preference for editor, expanded view, license choice etc
+	 * 
+	 * @param mup
+	 *        MeleteUserPreferenceService Object
+	 * @throws Exception
+	 *         "add_editorchoice_fail" MeleteException
+	 */
+	public void insertUserChoice(MeleteUserPreferenceService mup) throws Exception;
+
+	/**
+	 * Add site level preference like printable, auto numbering of modules
+	 * 
+	 * @param msp
+	 *        MeleteSitePreferenceService object
+	 * @throws Exception
+	 *         "add_editorchoice_fail" MeleteException
+	 */
+	public void insertUserSiteChoice(MeleteSitePreferenceService msp) throws Exception;
 }

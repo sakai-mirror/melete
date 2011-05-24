@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -25,43 +25,108 @@ package org.etudes.api.app.melete;
 
 import java.util.Date;
 
-/**
- * Filename:
- * Description:
- * Author:
- * Date:
- * Copyright 2004, Foothill College
- */
-public interface CourseModuleService {
-	public abstract String getCourseId();
-
-	public abstract void setCourseId(String courseId);
-
-	public abstract int getSeqNo();
-
-	public abstract void setSeqNo(int seqNo);
-
-	public abstract boolean isArchvFlag();
-
-	public abstract void setArchvFlag(boolean archvFlag);
-
-	public abstract boolean isDeleteFlag();
-
-	public abstract void setDeleteFlag(boolean deleteFlag);
-
-	public abstract Date getDateArchived();
-
-	public abstract void setDateArchived(Date dateArchived);
-
-
-	public abstract org.etudes.api.app.melete.ModuleObjService getModule();
-
-	public abstract void setModule(
-			org.etudes.api.app.melete.ModuleObjService module);
-
-	public abstract String toString();
-
+public interface CourseModuleService
+{
+	/**
+	 * 
+	 * @param other
+	 * @return
+	 */
 	public abstract boolean equals(Object other);
 
+	/**
+	 * Get the Site Id
+	 * 
+	 * @return
+	 */
+	public abstract String getCourseId();
+
+	/**
+	 * get the date when module was archived
+	 * 
+	 * @return
+	 */
+	public abstract Date getDateArchived();
+
+	/**
+	 * Get Module Object.
+	 * 
+	 * @return
+	 */
+	public abstract org.etudes.api.app.melete.ModuleObjService getModule();
+
+	/**
+	 * Get the sequence number of the module
+	 * 
+	 * @return
+	 */
+	public abstract int getSeqNo();
+
+	/**
+	 * 
+	 * @return
+	 */
 	public abstract int hashCode();
+
+	/**
+	 * Flag for archive. Module is archived if true.
+	 * 
+	 * @return
+	 */
+	public abstract boolean isArchvFlag();
+
+	/**
+	 * Flag for deleting the module. Module is deleted if flag is true. We deep delete module now.
+	 * 
+	 * @return
+	 */
+	public abstract boolean isDeleteFlag();
+
+	/**
+	 * Set the archive flag
+	 * 
+	 * @param archvFlag
+	 */
+	public abstract void setArchvFlag(boolean archvFlag);
+
+	/**
+	 * Sets the course Id
+	 * 
+	 * @param courseId
+	 */
+	public abstract void setCourseId(String courseId);
+
+	/**
+	 * Set Archive date
+	 * 
+	 * @param dateArchived
+	 */
+	public abstract void setDateArchived(Date dateArchived);
+
+	/**
+	 * Set delete flag
+	 * 
+	 * @param deleteFlag
+	 */
+	public abstract void setDeleteFlag(boolean deleteFlag);
+
+	/**
+	 * Set Module Object
+	 * 
+	 * @param module
+	 */
+	public abstract void setModule(org.etudes.api.app.melete.ModuleObjService module);
+
+	/**
+	 * Set the sequence number
+	 * 
+	 * @param seqNo
+	 */
+	public abstract void setSeqNo(int seqNo);
+
+	/**
+	 * 
+	 * @return
+	 */
+	public abstract String toString();
 }

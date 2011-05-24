@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2009 Etudes, Inc.
+ * Copyright (c) 2009, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -22,20 +22,24 @@
  *
  **********************************************************************************/
 package org.etudes.component.app.melete;
+
 import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.etudes.api.app.melete.ViewSecBeanService;
 
+public class ViewSecBean implements Serializable, ViewSecBeanService
+{
 
-/** @author Hibernate CodeGenerator */
-public class ViewSecBean implements Serializable {
+	protected boolean selected;
+	protected int sectionId;
+	protected String contentType;
+	protected String displaySequence;
+	protected String title;
 
-    protected boolean selected;
-    protected int sectionId;
-    protected String contentType;
-    protected String displaySequence;
-    protected String title;
-
-      
+	/** default constructor */
+	public ViewSecBean()
+	{
+	}
 
 	/**
 	 * @param selected
@@ -54,69 +58,92 @@ public class ViewSecBean implements Serializable {
 		this.title = title;
 	}
 
-	public boolean isSelected()
-    {
-    	return selected;
-    }
-
-    public void setSelected(boolean selected)
-    {
-    	this.selected = selected;
-    }
-    
-    public String getDisplaySequence()
-    {
-    	return displaySequence;
-    }
-
-    public void setDisplaySequence(String displaySequence)
-    {
-    	this.displaySequence = displaySequence;
-    }
-
-    
-
-    /** default constructor */
-    public ViewSecBean() {
-    }
-
-
-   
-
-
-    public String toString() {
-        return new ToStringBuilder(this)
-            .toString();
-    }
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getContentType()
 	{
 		return this.contentType;
 	}
 
-	public void setContentType(String contentType)
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getDisplaySequence()
 	{
-		this.contentType = contentType;
+		return displaySequence;
 	}
 
-	public String getTitle()
-	{
-		return this.title;
-	}
-
-	public void setTitle(String title)
-	{
-		this.title = title;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public int getSectionId()
 	{
 		return this.sectionId;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getTitle()
+	{
+		return this.title;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isSelected()
+	{
+		return selected;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setContentType(String contentType)
+	{
+		this.contentType = contentType;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setDisplaySequence(String displaySequence)
+	{
+		this.displaySequence = displaySequence;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setSectionId(int sectionId)
 	{
 		this.sectionId = sectionId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setSelected(boolean selected)
+	{
+		this.selected = selected;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setTitle(String title)
+	{
+		this.title = title;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toString()
+	{
+		return new ToStringBuilder(this).toString();
 	}
 
 }

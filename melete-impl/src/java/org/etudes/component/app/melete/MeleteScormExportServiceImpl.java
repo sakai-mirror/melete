@@ -31,20 +31,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.dom4j.DocumentHelper;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.dom4j.Namespace;
-import org.dom4j.QName;
+import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.MeleteExportService;
-import org.etudes.api.app.melete.MeleteSecurityService;
+import org.etudes.api.app.melete.ModuleDateBeanService;
+import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
-import org.etudes.api.app.melete.util.XMLHelper;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.util.Validator;
-import org.xml.sax.SAXException;
-import org.sakaiproject.entity.api.Entity;
 
 /**
  * SCORM 2004 3rd Edition Asset Export Implementation
@@ -58,6 +52,10 @@ import org.sakaiproject.entity.api.Entity;
  */
 public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImpl implements MeleteExportService{
 
+	/**
+	 * {@inheritDoc}
+	 * Initializes values for SCORM Package
+	 */
 	public void initValues()
 	{
 	   setMetaDataNameSpace("http://ltsc.ieee.org/xsd/LOM");
@@ -100,10 +98,10 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
                 String link_resource_id = meleteUtil.replace(linkData,ServerConfigurationService.getServerUrl()+"/access/content","");
 
                 // read resource and create a file
-                ArrayList link_content = new ArrayList();
+                ArrayList<String> link_content = new ArrayList<String>();
                 byte[] linkdata =setContentResourceData(link_resource_id, link_content);
                 if(linkdata == null) {resource =null;return;}
-                if(!((String)link_content.get(2)).equals(getMeleteCHService().MIME_TYPE_LINK))
+                if(!((String)link_content.get(2)).equals(MeleteCHService.MIME_TYPE_LINK))
                 {
                     logger.debug("link resource points to site res item as file. Include file in zip");
                     // Site resource item is file and not URL
@@ -133,7 +131,7 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
             //read the content to modify the path for images
 
             //replace image path and create image files
-            ArrayList rData = replaceImagePath(new String(content_data1), imagespath, resource,false,new HashSet<String>(),null);
+            ArrayList<?> rData = replaceImagePath(new String(content_data1), imagespath, resource,false,new HashSet<String>(),null);
             String modSecContent = (String)rData.get(0);
             //create the file
             File resfile = new File(resoucesDir+ "/"+fileName);
@@ -209,7 +207,7 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
                 MeleteResource meleteResource = (MeleteResource)section.getSectionResource().getResource();
                 if(meleteResource == null) return k;
                 String content_resource_id = meleteResource.getResourceId();
-                ArrayList content_data = new ArrayList();
+                ArrayList<String> content_data = new ArrayList<String>();
                 byte[] content_data1 =setContentResourceData(content_resource_id,content_data);
 
                 if(content_data1 == null || content_data == null) return k;
@@ -258,9 +256,10 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
      * @return - returns the list of manifest elements
      * @throws Exception
      */
-    @Override
-    public List generateOrganizationResourceItems(List modList,boolean allFlag, File packagedir,String maintitle, String courseId)throws Exception{
-    	     String probEncounteredSections ="";
+    public List<Element> generateOrganizationResourceItems(List<? extends ModuleObjService> modList, boolean allFlag, File packagedir,
+			String maintitle, String courseId) throws Exception
+	{
+		String probEncounteredSections = "";
         try{
             String packagedirpath = packagedir.getAbsolutePath();
             String resourcespath  = packagedirpath + File.separator + "resources";
@@ -273,7 +272,7 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
             Element organization = addOrganization(organizations);
             organizations.addAttribute("default", organization.attributeValue("identifier"));
 
-            Iterator modIter = modList.iterator();
+            Iterator<?> modIter = modList.iterator();
             int i = 0,k=0;
             //create item for each module and items under the module item for
             // scetions
@@ -370,10 +369,10 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
 
             }
             if (allFlag == true) resources = transferManageItems(resources, courseId, resoucesDir, k+1);
-            ArrayList manElements = new ArrayList();
+            ArrayList<Element> manElements = new ArrayList<Element>();
             manElements.add(organizations);
             manElements.add(resources);
-            manElements.add(probEncounteredSections);
+   //         manElements.add(probEncounteredSections);
             return manElements;
 
         }catch(Exception e){
@@ -384,21 +383,22 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
 
     public Element transferManageItems(Element resources, String courseId, File resoucesDir, int item_ref_num) throws Exception
 	{
-		String fromUploadsColl = Entity.SEPARATOR+"private"+ REFERENCE_ROOT+ Entity.SEPARATOR+courseId+Entity.SEPARATOR+"uploads"+Entity.SEPARATOR;
-		List fromContextList = meleteCHService.getMemberNamesCollection(fromUploadsColl);
+		String fromUploadsColl = meleteCHService.getUploadCollectionId(courseId);
+		List<String> fromContextList = meleteCHService.getMemberNamesCollection(fromUploadsColl);
 		if ((fromContextList != null)&&(fromContextList.size() > 0))
 		{
-		  List meleteResourceList = sectionDB.getAllMeleteResourcesOfCourse(courseId);
+		  List<String> meleteResourceList = sectionDB.getUploadMeleteResourcesOfCourse(courseId);
 		  if ((meleteResourceList != null)&&(meleteResourceList.size() > 0))
 		  {
 			  fromContextList.removeAll(meleteResourceList);
+		  }	  
 		  if ((fromContextList != null)&&(fromContextList.size() > 0))
 		  {
-			  ListIterator repIt = fromContextList.listIterator();
+			  ListIterator<String> repIt = fromContextList.listIterator();
 				while (repIt != null && repIt.hasNext())
 				{
 					String content_resource_id = (String) repIt.next();
-					ArrayList content_data = new ArrayList();
+					ArrayList<String> content_data = new ArrayList<String>();
 					logger.debug("calling secContent from create section");
 					Element resource = resources.addElement("resource");
 					resource.addAttribute("identifier","MANAGERESOURCE"+ item_ref_num);
@@ -406,7 +406,7 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
 	                resource.addAttribute("adlcp:scormType","asset");
 	                byte[] content_data1 =setContentResourceData(content_resource_id,content_data);
 					String sectionFileName = (String)content_data.get(0);
-					if(((String)content_data.get(2)).equals(getMeleteCHService().MIME_TYPE_LINK))
+					if(((String)content_data.get(2)).equals(MeleteCHService.MIME_TYPE_LINK))
 			 		{
 							String linkData = new String(content_data1);
 
@@ -415,10 +415,10 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
 				                String link_resource_id = meleteUtil.replace(linkData,ServerConfigurationService.getServerUrl()+"/access/content","");
 
 				                // read resource and create a file
-				                ArrayList link_content = new ArrayList();
+				                ArrayList<String> link_content = new ArrayList<String>();
 				                byte[] linkdata =setContentResourceData(link_resource_id, link_content);
 				                if(linkdata == null) {continue;}
-				                if(!((String)link_content.get(2)).equals(getMeleteCHService().MIME_TYPE_LINK))
+				                if(!((String)link_content.get(2)).equals(MeleteCHService.MIME_TYPE_LINK))
 				                {
 				                    logger.debug("link resource points to site res item as file. Include file in zip");
 				                    // Site resource item is file and not URL
@@ -454,7 +454,6 @@ public class MeleteScormExportServiceImpl extends MeleteAbstractExportServiceImp
 					item_ref_num++;
 
 				}//End while repIt
-		  }
 		  }
 		}
 		return resources;

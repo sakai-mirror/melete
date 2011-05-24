@@ -3,7 +3,7 @@
  * $URL$
  *
  ***********************************************************************************
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -23,38 +23,42 @@
 
 package org.etudes.tool.melete;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.etudes.component.app.melete.*;
-
-import java.util.*;
-
-import javax.faces.component.*;
-import javax.faces.event.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIData;
+import javax.faces.component.UIInput;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
-import javax.faces.application.FacesMessage;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
 
-// import com.sun.faces.util.Util;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.ModuleService;
+import org.etudes.api.app.melete.SectionBeanService;
 import org.etudes.api.app.melete.exception.MeleteException;
+import org.etudes.component.app.melete.ModuleDateBean;
+import org.etudes.component.app.melete.Section;
+import org.etudes.component.app.melete.SectionBean;
 import org.sakaiproject.util.ResourceLoader;
 
 /**
  * Gets the module beans for author
  *
- * @version 1.00 08 Mar 2005
- * @author Mallika M Thoppay
  */
-/*
- * @author Murthy Tanniru 08 Mar 2005 Fixed the bug #91 Section bread crumbs are not shown as links on edit module page Mallika - 1/9/07 - Adding
- * addContentAction method Mallika - 1/7/07 - Adding setmodule to addcontentaction Mallika - 2/13/07 - Adding the showTextOnly attributes Rashmi -
- * 3/6/07 - remove section breadcrumbs Mallika - 6/6/07 - Added multiple indent code Mallika - 6/26/07 - Added findIndent method
- */
+
 class SecModObj implements Comparable
 {
 	Integer modIndex, secIndex;
@@ -96,6 +100,7 @@ public class ListAuthModulesPage implements Serializable
 
 	/** identifier field */
 	private int showModuleId;
+    private int showInvalidModuleId;
 
 	private String formName;
 
@@ -103,12 +108,12 @@ public class ListAuthModulesPage implements Serializable
 
 	private boolean selectedSection;
 
-	private boolean nomodsFlag;
+	private Boolean nomodsFlag;
 
 	private boolean expandAllFlag;
 
 	private boolean autonumber;
-
+	
 	// This needs to be set later using Utils.getBinding
 	String courseId;
 
@@ -147,11 +152,17 @@ public class ListAuthModulesPage implements Serializable
 	private UIData table;
 	private UIData secTable;
 
+	/**
+	 * @return value of datatable (in which modules are rendered)
+	 */
 	public UIData getTable()
 	{
 		return table;
 	}
 
+	/**
+	 * @param table module datatable to set
+	 */
 	public void setTable(UIData table)
 	{
 		this.table = table;
@@ -161,10 +172,12 @@ public class ListAuthModulesPage implements Serializable
 	{
 
 		FacesContext context = FacesContext.getCurrentInstance();
-		Map sessionMap = context.getExternalContext().getSessionMap();
-		courseId = (String) sessionMap.get("courseId");
-		userId = (String) sessionMap.get("userId");
-		nomodsFlag = false;
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+    	
+		courseId = mPage.getCurrentSiteId();
+		userId = mPage.getCurrentUser().getId();
+		nomodsFlag = null;
 		setShowModuleId(-1);
 		count = 0;
 		selectedModIndex = -1;
@@ -174,7 +187,7 @@ public class ListAuthModulesPage implements Serializable
 
 		selectedSecIndex = -1;
 		sectionSelected = false;
-		ValueBinding binding = Util.getBinding("#{authorPreferences}");
+		binding = Util.getBinding("#{authorPreferences}");
 		AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
 		String expFlag = preferencePage.getUserView();
 		if (expFlag.equals("true"))
@@ -186,13 +199,18 @@ public class ListAuthModulesPage implements Serializable
 			expandAllFlag = false;
 		}
 		selectAllFlag = false;
+		listSize = 0;
 	}
 
+	/**
+	 * Reset all flags(expand,collapse,auto numbering) and set all indexes to -1 and lists to null
+	 * 
+	 */
 	public void resetValues()
 	{
 		setShowModuleId(-1);
 		errModuleIds = null;
-		nomodsFlag = false;
+		nomodsFlag = null;
 		count = 0;
 		selectedModIndex = -1;
 		moduleSelected = false;
@@ -202,16 +220,7 @@ public class ListAuthModulesPage implements Serializable
 		selectedSecIndex = -1;
 		sectionSelected = false;
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{deleteModulePage}");
-		DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
-		dmPage.setMdbean(null);
-		dmPage.setModuleSelected(false);
-		dmPage.setSection(null);
-		dmPage.setSectionSelected(false);
-		dmPage.setModules(null);
-		dmPage.setSectionBeans(null);
-
-		binding = Util.getBinding("#{authorPreferences}");
+		ValueBinding binding = Util.getBinding("#{authorPreferences}");
 		AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
 		String expFlag = preferencePage.getUserView();
 		if (expFlag.equals("true"))
@@ -229,12 +238,22 @@ public class ListAuthModulesPage implements Serializable
 		   autonumber = false;
 		}
 		selectAllFlag = false;
+		listSize = 0;
+		moduleDateBeans = null;
+		setShowInvalidModuleId(-1);
 	}
 
+	/**
+	 * @return autoNumbering preference value
+	 */
 	public boolean isAutonumber()
 	{
 		return autonumber;
 	};
+	
+	/** Set date flag of each module to false
+	 * 
+	 */
 	public void resetDateFlags()
 	{
 		resetSelectedLists();
@@ -263,28 +282,42 @@ public class ListAuthModulesPage implements Serializable
 		this.moduleService = moduleService;
 	}
 
+	/**
+	 * @return boolean value of trueFlag
+	 */
 	public boolean getTrueFlag()
 	{
 		return trueFlag;
 	}
 
+	/**
+	 * @param trueFlag boolean value of trueFlag
+	 */
 	public void setTrueFlag(boolean trueFlag)
 	{
 		this.trueFlag = trueFlag;
 	}
 
+	/**
+	 * @return value of nullList
+	 */
 	public List getNullList()
 	{
 		return nullList;
 	}
 
+	/**
+	 * @param nullList value of nullList
+	 */
 	public void setNullList(List nullList)
 	{
 		this.nullList = nullList;
 	}
 
-	/*
-	 * adding listener
+	
+	/**Method that triggers when a module is selected
+	 * @param event ValueChangeEvent object
+	 * @throws AbortProcessingException
 	 */
 	public void selectedModuleSection(ValueChangeEvent event) throws AbortProcessingException
 	{
@@ -315,6 +348,10 @@ public class ListAuthModulesPage implements Serializable
 		return;
 	}
 
+	/**Method that triggers when a section is selected
+	 * @param event ValueChangeEvent object
+	 * @throws AbortProcessingException
+	 */
 	public void selectedSection(ValueChangeEvent event) throws AbortProcessingException
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -344,6 +381,10 @@ public class ListAuthModulesPage implements Serializable
 		return;
 	}
 	
+	/**Method that triggers when all modules are selected
+	 * @param event ValueChangeEvent object
+	 * @throws AbortProcessingException
+	 */
 	public void selectAllModules(ValueChangeEvent event) throws AbortProcessingException
 	{
 		selectAllFlag= true;
@@ -365,24 +406,78 @@ public class ListAuthModulesPage implements Serializable
 		return;
 	}	
 
+	/** Reset selected module lists and selectAllFlag to false
+	 * 
+	 */
 	public void resetSelectedLists()
 	{
 		selectedModIndices = null;
 		selectedSecModIndices = null;
 		selectAllFlag = false;
 	}
+	
+	 /** Method to show invalid module
+	 * @return list_auth_modules
+	 */
+	public String showHideInvalid()
+	 {
+		 ModuleDateBean mdbean = null;
+		 FacesContext ctx = FacesContext.getCurrentInstance();
+		 UIViewRoot root = ctx.getViewRoot();
+		 UIData table = null;
+		 table = (UIData)
+		 root.findComponent("listauthmodulesform").findComponent("table");
 
+		 mdbean = (ModuleDateBean) table.getRowData();
+		 if (getShowInvalidModuleId() != mdbean.getModuleId())
+		 {
+			 setShowInvalidModuleId(mdbean.getModuleId());
+		 }
+
+		 return "list_auth_modules";
+	 }	
+
+
+	  /** Method to hide invalid modules
+	 * @return list_auth_modules
+	 */
+	public String hideInvalid()
+	  {
+		  setShowInvalidModuleId(-1);
+		  return "list_auth_modules";
+	  }
+	  	
+
+	/** Get list of modules, flag modules with invalid dates
+	 * @return list of ModuleDateBean objects
+	 */
 	public List getModuleDateBeans()
 	{
 		resetSelectedLists();
 		setCurrentDate(Calendar.getInstance().getTime());
 		FacesContext context = FacesContext.getCurrentInstance();
+		// reset courseid. Its getting lost when edit_module called from coursemap calls TOC
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+    	courseId = mPage.getCurrentSiteId();
 
-		boolean flagsReset = false;
+    	boolean flagsReset = false;
 		try
 		{
 			ModuleService modServ = getModuleService();
-			moduleDateBeans = modServ.getModuleDateBeans(userId, courseId);
+			// fetch beans
+			if (nomodsFlag == null || moduleDateBeans == null)
+				moduleDateBeans = modServ.getModuleDateBeans(userId, courseId);
+			
+			// for bug reports
+			if (moduleDateBeans == null || moduleDateBeans.size() == 0) 
+			{
+				listSize = 0;
+				nomodsFlag = true;
+				return moduleDateBeans;
+			}
+			// end
+			nomodsFlag = false;
 			listSize = moduleDateBeans.size();
 			Iterator itr = context.getMessages();
 			while (itr.hasNext())
@@ -431,93 +526,134 @@ public class ListAuthModulesPage implements Serializable
 		{
 			logger.debug(e.toString());
 		}
-		if (moduleDateBeans.size() == 0)
-		{
-			nomodsFlag = true;
 
-		}
-		else
-		{
-			nomodsFlag = false;
-		}
 		return moduleDateBeans;
 	}
 
+	/**
+	 * @return value of currentDate
+	 */
 	public Date getCurrentDate()
 	{
 		return currentDate;
 	}
 
+	/**
+	 * @param currentDate date value
+	 */
 	public void setCurrentDate(Date currentDate)
 	{
 		this.currentDate = currentDate;
 	}
 
+	/**
+	 * @param moduleDateBeansList list of ModuleDateBean objects
+	 */
 	public void setModuleDateBeans(List moduleDateBeansList)
 	{
 		moduleDateBeans = moduleDateBeansList;
 	}
 
+	/**
+	 * @return value of showModuleId
+	 */
 	public int getShowModuleId()
 	{
 		return this.showModuleId;
 	}
 
+	/**
+	 * @param moduleId integer value of moduleId
+	 */
 	public void setShowModuleId(int moduleId)
 	{
 		this.showModuleId = moduleId;
 	}
 
+	/**
+	 * @return boolean value of selectedSection
+	 */
 	public boolean getSelectedSection()
 	{
 		return selectedSection;
 	}
 
+	/**
+	 * @param selectedSection boolean value of selectedSection
+	 */
 	public void setSelectedSection(boolean selectedSection)
 	{
 		this.selectedSection = selectedSection;
 	}
 
+	/** Invokes getModuleDateBeans method to set nomodsFlag value
+	 * @return boolean value of nomodsFlag
+	 */
 	public boolean getNomodsFlag()
 	{
+		if(nomodsFlag == null) getModuleDateBeans();
 		return nomodsFlag;
 	}
 
+	/**
+	 * @param nomodsFlag boolean value
+	 */
 	public void setNomodsFlag(boolean nomodsFlag)
 	{
 		this.nomodsFlag = nomodsFlag;
 	}
 
+	/**
+	 * @return boolean value of expandAllFlag
+	 */
 	public boolean getExpandAllFlag()
 	{
 		return expandAllFlag;
 	}
 
+	/**
+	 * @param expandAllFlag boolean value
+	 */
 	public void setExpandAllFlag(boolean expandAllFlag)
 	{
 		this.expandAllFlag = expandAllFlag;
 	}
 	
+	/**
+	 * @return boolean value of selectAllFlag
+	 */
 	public boolean getSelectAllFlag()
 	{
 		return selectAllFlag;
 	}
 
+	/**
+	 * @param selectAllFlag boolean value
+	 */
 	public void setSelectAllFlag(boolean selectAllFlag)
 	{
 		this.selectAllFlag = selectAllFlag;
 	}	
 
+	/**
+	 * @return integer value of listSize
+	 */
 	public int getListSize()
 	{
 		return listSize;
 	}
 	
+	/**
+	 * @param listSize integer value
+	 */
 	public void setListSize(int listSize)
 	{
 		this.listSize = listSize;
 	}
 	
+	/** Method to expand or collapse individual modules' sections
+	 * @return list_auth_modules
+	 */
 	public String showHideSections()
 	{
 		resetSelectedLists();
@@ -545,6 +681,9 @@ public class ListAuthModulesPage implements Serializable
 		return "list_auth_modules";
 	}
 	
+	/** Method to expand or collapse all modules' sections
+	 * @return list_auth_modules
+	 */
 	public String expandCollapseAction()
 	{
 		resetSelectedLists();
@@ -561,9 +700,8 @@ public class ListAuthModulesPage implements Serializable
 		return "list_auth_modules";		
 	}
 	
-	
-	/*
-	 * Revised by Rashmi to include module number Revised by Rashmi to point to editmodulesections.jsp page instead of edit_section nav rule.
+	/**Reset lists and navigate to edit module or section page depending on what is selected
+	 * @return list_auth_modules or edit_module or editmodulesections
 	 */
 	public String editAction()
 	{
@@ -606,7 +744,7 @@ public class ListAuthModulesPage implements Serializable
 			if (moduleDateBeans != null && selectedModIndex > -1 && selectedSecIndex > -1)
 			{
 			ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selectedModIndex);
-			SectionBean secBean = (SectionBean) mdbean.getSectionBeans().get(selectedSecIndex);
+			SectionBeanService secBean = (SectionBeanService) mdbean.getSectionBeans().get(selectedSecIndex);
 			ValueBinding binding = Util.getBinding("#{editSectionPage}");
 			EditSectionPage esPage = (EditSectionPage) binding.getValue(ctx);
 			esPage.setEditInfo((Section) secBean.getSection());
@@ -628,8 +766,9 @@ public class ListAuthModulesPage implements Serializable
 		return "list_auth_modules";
 	}
 
-	/*
-	 * Revised by Rashmi on 1/21 to set module number to fix bug#211
+	
+	/**Reset selected lists and navigate to add module page
+	 * @return add_module
 	 */
 	public String AddModuleAction()
 	{
@@ -643,6 +782,9 @@ public class ListAuthModulesPage implements Serializable
 		return "add_module";
 	}
 
+	/** Reset selected lists and navigate to add section page
+	 * @return editmodulesections or list_auth_modules
+	 */
 	public String AddContentAction()
 	{
 		resetSelectedLists();
@@ -666,20 +808,23 @@ public class ListAuthModulesPage implements Serializable
 			if(selectedModIndex <= -1) selectedModIndex = 0;
 			ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selectedModIndex);
 
-			ValueBinding binding = Util.getBinding("#{addSectionPage}");
+			ValueBinding binding = Util.getBinding("#{editSectionPage}");
 			FacesContext context = FacesContext.getCurrentInstance();
-			AddSectionPage addPage = (AddSectionPage) binding.getValue(context);
-			addPage.setSection(null);
-			addPage.resetSectionValues();
-			addPage.setModule(mdbean.getModule());
-
+			EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
+			editPage.setSection(null);
+			editPage.resetSectionValues();
+			editPage.setModule(mdbean.getModule());
+			
 			Map sessionMap = context.getExternalContext().getSessionMap();
 			sessionMap.put("currModule", mdbean.getModule());
+			
+			editPage.addBlankSection();
+
 			count = 0;
 			moduleSelected = false;
 			// Mallika -3/24/05
 			sectionSelected = false;
-			return "addmodulesections";
+			return "editmodulesections";
 		}
 		if ((moduleSelected == false) && (sectionSelected == false))
 		{
@@ -692,6 +837,9 @@ public class ListAuthModulesPage implements Serializable
 		return "list_auth_modules";
 	}
 
+	/** Inactivate modules and display a message about modules that have been inactivated
+	 * @return list_auth_modules
+	 */
 	public String InactivateAction()
 	{
 
@@ -767,11 +915,17 @@ public class ListAuthModulesPage implements Serializable
 		return "list_auth_modules";
 	}
 
+	/**Redirect to edit module page
+	 * @return edit_module
+	 */
 	public String redirectToEditModule()
 	{
 		return "edit_module";
 	}
 
+	/** Redirect to edit module page with selected module id
+	 * @param evt ActionEvent object
+	 */
 	public void editModule(ActionEvent evt)
 	{
 		resetSelectedLists();
@@ -786,11 +940,17 @@ public class ListAuthModulesPage implements Serializable
 		emPage.resetModuleNumber();
 	}
 
+	/** Redirect to edit section page
+	 * @return editmodulesections
+	 */
 	public String redirectToEditSection()
 	{
 		return "editmodulesections";
 	}
 
+	/** Redirect to edit section page with selected section id
+	 * @param evt ActionEvent object
+	 */
 	public void editSection(ActionEvent evt)
 	{
 		resetSelectedLists();
@@ -800,7 +960,7 @@ public class ListAuthModulesPage implements Serializable
 	  	int selSecIndex = Integer.parseInt((String) params.get("secidx"));
 
 		ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selModIndex);
-		SectionBean secBean = (SectionBean) mdbean.getSectionBeans().get(selSecIndex);
+		SectionBeanService secBean = (SectionBeanService) mdbean.getSectionBeans().get(selSecIndex);
 
 		ValueBinding binding = Util.getBinding("#{editSectionPage}");
 		EditSectionPage esPage = (EditSectionPage) binding.getValue(ctx);
@@ -809,6 +969,9 @@ public class ListAuthModulesPage implements Serializable
 		esPage.setEditInfo((Section) secBean.getSection());
 	}
 
+	/** Redirect to delete confirmation page with selected modules or sections
+	 * @return delete_module or list_auth_modules
+	 */
 	public String deleteAction()
 	{
 
@@ -861,7 +1024,7 @@ public class ListAuthModulesPage implements Serializable
 		if (sectionSelected)
 		{
 			ModuleDateBean mdbean = null;
-			SectionBean secBean = null;
+			SectionBeanService secBean = null;
 			if (delSecBeans == null)
 			{
 				delSecBeans = new ArrayList();
@@ -881,7 +1044,7 @@ public class ListAuthModulesPage implements Serializable
 			{
 				SecModObj smObj = (SecModObj) i.next();
 				mdbean = (ModuleDateBean) moduleDateBeans.get((((Integer) smObj.getModObj())).intValue());
-				secBean = (SectionBean) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
+				secBean = (SectionBeanService) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
 				delSecBeans.add(secBean);
 			}
 
@@ -905,6 +1068,9 @@ public class ListAuthModulesPage implements Serializable
 		return "list_auth_modules";
 	}
 
+	/** Validate dates and save changes
+	 * @return list_auth_modules
+	 */
 	public String saveChanges()
 	{
 		resetSelectedLists();
@@ -994,29 +1160,41 @@ public class ListAuthModulesPage implements Serializable
 		return "list_auth_modules";
 	}
 
+	/** Redirect to list auth page
+	 * @return list_auth_modules
+	 */
 	public String cancelChanges()
 	{
 		return "list_auth_modules";
 	}
 
+	/** Redirect to view module page
+	 * @return view_module
+	 */
 	public String viewModule()
 	{
 		return "view_module";
 	}
 
+	/** Redirect to view section page
+	 * @return view_section
+	 */
 	public String viewSection()
 	{
 		return "view_section";
 	}
 
+	/** Redirect to list auth page
+	 * @return list_auth_modules
+	 */
 	public String viewPrereqs()
 	{
 		return "list_auth_modules";
 	}
 
-	/*
-	 * what's next revised by rashmi on Apr 7. add functionality for what's next. This method fetches the module and initialize moduleNextStepsPage
-	 * instance and navigate to module post steps page
+	
+	/** Reset selected lists and redirect to module_post_steps page
+	 * @return module_post_steps
 	 */
 	public String viewNextsteps()
 	{
@@ -1030,15 +1208,36 @@ public class ListAuthModulesPage implements Serializable
 		nextPage.setMdBean(mdbean);
 		return "module_post_steps";
 	}
+	
+	/** Reset selected lists and redirect to list of special accesses page
+	 * @return list_special_access
+	 */
+	public String specialAccessAction()
+	{
+		resetSelectedLists();
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		UIViewRoot root = ctx.getViewRoot();
+		UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
+		ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
+		ValueBinding binding = Util.getBinding("#{specialAccessPage}");
+		SpecialAccessPage specialAccessPage = (SpecialAccessPage) binding.getValue(ctx);
+		specialAccessPage.setModuleId(mdbean.getModule().getModuleId().intValue());
+		specialAccessPage.setSaList(null);
+		return "list_special_access";
+	}	
 
-	/*
-	 * added by rashmi on 8 Apr returns a string whose value is null for render comparison on the page for + icon or view icon for next steps
+	
+	/**
+	 * @return String value of isNull
 	 */
 	public String getIsNull()
 	{
 		return isNull;
 	}
 
+	/**Reset values, set selected flags to false, count to 0
+	 * and selectedSecModIndices to null
+	 */
 	private void resetSubSectionValues()
 	{
 		sectionSelected = false;
@@ -1047,7 +1246,12 @@ public class ListAuthModulesPage implements Serializable
 		selectedSecModIndices = null;
 	}
 
-	private boolean findIndent(SectionBean indentBean, List secBeans)
+	/** Get indentation level of a section
+	 * @param indentBean SectionBeanService object
+	 * @param secBeans list of section bean objects
+	 * @return true if indentation is less than 10 levels, false otherwise
+	 */
+	private boolean findIndent(SectionBeanService indentBean, List secBeans)
 	{
 		String pattern = "\\.";
 		int occurs = indentBean.getDisplaySequence().split(pattern).length - 1;
@@ -1061,7 +1265,7 @@ public class ListAuthModulesPage implements Serializable
 			String indDispSeq = indentBean.getDisplaySequence();
 			for (ListIterator i = secBeans.listIterator(); i.hasNext();)
 			{
-				SectionBean secBean = (SectionBean) i.next();
+				SectionBeanService secBean = (SectionBeanService) i.next();
 				String sbDispSeq = secBean.getDisplaySequence();
 				if (sbDispSeq.startsWith(indDispSeq))
 				{
@@ -1074,8 +1278,9 @@ public class ListAuthModulesPage implements Serializable
 		return true;
 	}
 
-	/*
-	 * added by rashmi - 4/10/07 On clicking Indent Right create subsections
+	
+	/** Indent this section by first checking if indentation is less than 10 levels
+	 * @return list_auth_modules
 	 */
 	public String CreateSubSectionAction()
 	{
@@ -1102,7 +1307,7 @@ public class ListAuthModulesPage implements Serializable
 		{
 			SecModObj smObj = null;
 			ModuleDateBean mdbean = null;
-			SectionBean secBean = null;
+			SectionBeanService secBean = null;
 			List indentSecBeans = null;
 			if (indentSecBeans == null)
 			{
@@ -1132,7 +1337,7 @@ public class ListAuthModulesPage implements Serializable
 				}
 				else
 				{
-					secBean = (SectionBean) mdbean.getSectionBeans().get(selIndex);
+					secBean = (SectionBeanService) mdbean.getSectionBeans().get(selIndex);
 					boolean indentOk = findIndent(secBean, mdbean.getSectionBeans());
 
 					// Only allow indent upto 10 levels
@@ -1177,7 +1382,7 @@ public class ListAuthModulesPage implements Serializable
 					{
 						smObj = (SecModObj) i.next();
 						mdbean = (ModuleDateBean) moduleDateBeans.get((((Integer) smObj.getModObj())).intValue());
-						secBean = (SectionBean) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
+						secBean = (SectionBeanService) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
 						boolean indentOk = findIndent(secBean, mdbean.getSectionBeans());
 
 						if (indentOk)
@@ -1199,9 +1404,15 @@ public class ListAuthModulesPage implements Serializable
 			}
 		}
 		resetSubSectionValues();
+		int saveShowId = showModuleId;
+		resetValues();
+		setShowModuleId(saveShowId);
 		return "list_auth_modules";
 	}
 
+	/** Bring section one level up in indentation
+	 * @return list_auth_modules
+	 */
 	public String BringSubSectionLevelUpAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -1234,7 +1445,7 @@ public class ListAuthModulesPage implements Serializable
 		{
 			SecModObj smObj = null;
 			ModuleDateBean mdbean = null;
-			SectionBean secBean = null;
+			SectionBeanService secBean = null;
 			List indentSecBeans = null;
 			if (indentSecBeans == null)
 			{
@@ -1253,7 +1464,7 @@ public class ListAuthModulesPage implements Serializable
 			{
 				smObj = (SecModObj) selectedSecModIndices.get(0);
 				mdbean = (ModuleDateBean) moduleDateBeans.get((((Integer) smObj.getModObj())).intValue());
-				secBean = (SectionBean) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
+				secBean = (SectionBeanService) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
 				if (checkTopLevelSection(secBean.getDisplaySequence()))
 				{
 					logger.debug("Top level section can't indent left more");
@@ -1292,7 +1503,7 @@ public class ListAuthModulesPage implements Serializable
 					{
 						smObj = (SecModObj) i.next();
 						mdbean = (ModuleDateBean) moduleDateBeans.get((((Integer) smObj.getModObj())).intValue());
-						secBean = (SectionBean) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
+						secBean = (SectionBeanService) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
 						indentSecBeans.add(secBean);
 					}
 					try
@@ -1309,9 +1520,16 @@ public class ListAuthModulesPage implements Serializable
 			}
 		}
 		resetSubSectionValues();
+		int saveShowId = showModuleId;
+		resetValues();
+		setShowModuleId(saveShowId);
 		return "list_auth_modules";
 	}
 
+	/** Check if the current section is at the top level
+	 * @param dispSeq Display sequence of section being checked
+	 * @return true if its a top level section, false otherwise
+	 */
 	private boolean checkTopLevelSection(String dispSeq)
 	{
 		String pattern = "\\.";
@@ -1320,7 +1538,10 @@ public class ListAuthModulesPage implements Serializable
 		return false;
 	}
 
-	// This method returns true of the user has selected sections in different modules
+	/** Check if selected sections are in different modules
+	 * @param selectedSecModIndices list of SecMod objects
+	 * @return true if sections are in different modules, false otherwise
+	 */
 	private boolean checkDifModules(List selectedSecModIndices)
 	{
 		Collections.sort(selectedSecModIndices);
@@ -1332,9 +1553,10 @@ public class ListAuthModulesPage implements Serializable
 			return false;
 	}
 
-	// indent code end
-
-	// sort code
+	
+	/** Move module or section one up in the list
+	 * @return list_auth_modules
+	 */
 	public String MoveItemUpAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -1377,7 +1599,7 @@ public class ListAuthModulesPage implements Serializable
 					resetSubSectionValues();
 					return "list_auth_modules";
 				}
-				SectionBean secBean = (SectionBean) mdbean.getSectionBeans().get(selIndex);
+				SectionBeanService secBean = (SectionBeanService) mdbean.getSectionBeans().get(selIndex);
 				moduleService.sortSectionItem(mdbean.getModule(), secBean.getSection().getSectionId().toString(), "up");
 			}
 		}
@@ -1392,6 +1614,9 @@ public class ListAuthModulesPage implements Serializable
 		return "list_auth_modules";
 	}
 
+	/** Move module or section one down in the list
+	 * @return list_auth_modules
+	 */
 	public String MoveItemDownAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -1433,7 +1658,7 @@ public class ListAuthModulesPage implements Serializable
 					resetSubSectionValues();
 					return "list_auth_modules";
 				}
-				SectionBean secBean = (SectionBean) mdbean.getSectionBeans().get(selIndex);
+				SectionBeanService secBean = (SectionBeanService) mdbean.getSectionBeans().get(selIndex);
 				moduleService.sortSectionItem((ModuleObjService) mdbean.getModule(), secBean.getSection().getSectionId().toString(), "down");
 			}
 		}
@@ -1447,7 +1672,9 @@ public class ListAuthModulesPage implements Serializable
 		return "list_auth_modules";
 	}
 
-	// copy modules and sections
+	/** Make a copy of the selected module
+	 * @return list_auth_modules
+	 */
 	public String duplicateAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -1468,11 +1695,13 @@ public class ListAuthModulesPage implements Serializable
 			String msg = bundle.getString("copy_fail");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 		}
-
+		resetValues();
 		return "list_auth_modules";
 	}
-	// copy code end
-
+	
+	/** Move sections from one module to another
+	 * @return list_auth_modules or move_section
+	 */
 	public String MoveSectionAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -1522,8 +1751,10 @@ public class ListAuthModulesPage implements Serializable
 
 		return "list_auth_modules";
 	}
-	// move sections code end
-
+	
+	/** Get module id to print
+	 * @return module id to print
+	 */
 	public Integer getPrintModuleId()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -1547,21 +1778,45 @@ public class ListAuthModulesPage implements Serializable
 		return 0;
 	}
 
-
+/** Add message to context
+	 * @param ctx FacesContext object
+	 * @param msgName Message name
+	 * @param msgDetail Message detail
+	 * @param severity Severity of message
+	 */
 	private void addMessage(FacesContext ctx, String msgName, String msgDetail, FacesMessage.Severity severity)
 	{
 		FacesMessage msg = new FacesMessage(msgName, msgDetail);
 		msg.setSeverity(severity);
 		ctx.addMessage(null, msg);
 	}
+	
+	/**
+	 * @return showInvalidModuleId module id of invalid module(used for popup)
+	 */
+	public int getShowInvalidModuleId() {
+		return showInvalidModuleId;
+	}
 
+	/**
+	 * @param showInvalidModuleId module id of invalid module
+	 */
+	public void setShowInvalidModuleId(int showInvalidModuleId) {
+		this.showInvalidModuleId = showInvalidModuleId;
+	}
 
-
+	/**
+	 * @return value of sec table(datatable in which sections are rendered)
+	 */
 	public UIData getSecTable()
 	{
 		return this.secTable;
 	}
 
+	/**
+	 * @param secTable
+	 *        section datatable to set
+	 */
 	public void setSecTable(UIData secTable)
 	{
 		this.secTable = secTable;

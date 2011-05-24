@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009,2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -23,15 +23,16 @@
  **********************************************************************************/
 package org.etudes.api.app.melete;
 
-import java.io.File;
-import org.dom4j.Document;
-
-
-/**
- * run import from site
- * @author Foothill College
- *
- */
-public interface MeleteImportfromSiteService{
+public interface MeleteImportfromSiteService
+{
+	/**
+	 * Imports all active and archived modules and un-referred meleteDocs items from old site to new site. Tries to bring one copy of module even on
+	 * running import from site multiple times.
+	 * 
+	 * @param fromContext
+	 *        The old Site Id
+	 * @param toContext
+	 *        The new Site Id
+	 */
 	public void copyModules(String fromContext, String toContext);
 }

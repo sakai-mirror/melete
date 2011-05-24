@@ -4,7 +4,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -22,71 +22,104 @@
  *
  **********************************************************************************/
 package org.etudes.component.app.melete;
+
 import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.etudes.api.app.melete.SectionBeanService;
+import org.etudes.api.app.melete.SectionObjService;
 
+public class SectionBean implements SectionBeanService, Serializable
+{
 
-/** @author Hibernate CodeGenerator */
-public class SectionBean implements Serializable {
+	protected boolean selected;
+	protected String truncTitle;
+	protected String displaySequence;
 
-    protected boolean selected;
-    protected String truncTitle;
-    protected String displaySequence;
+	/** nullable persistent field */
+	protected Section section;
 
-    /** nullable persistent field */
-    protected Section section;
+	/** default constructor */
+	public SectionBean()
+	{
+	}
 
+	/** full constructor */
+	public SectionBean(Section section)
+	{
+		this.section = (Section) section;
+	}
 
-    public boolean isSelected()
-    {
-    	return selected;
-    }
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#getDisplaySequence()
+	 */
+	public String getDisplaySequence()
+	{
+		return displaySequence;
+	}
 
-    public void setSelected(boolean selected)
-    {
-    	this.selected = selected;
-    }
-    public String getTruncTitle()
-    {
-    	return truncTitle;
-    }
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#getSection()
+	 */
+	public Section getSection()
+	{
+		return this.section;
+	}
 
-    public void setTruncTitle(String truncTitle)
-    {
-    	this.truncTitle = truncTitle;
-    }
-    public String getDisplaySequence()
-    {
-    	return displaySequence;
-    }
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#getTruncTitle()
+	 */
+	public String getTruncTitle()
+	{
+		return truncTitle;
+	}
 
-    public void setDisplaySequence(String displaySequence)
-    {
-    	this.displaySequence = displaySequence;
-    }
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#isSelected()
+	 */
+	public boolean isSelected()
+	{
+		return selected;
+	}
 
-      /** full constructor */
-    public SectionBean(Section section) {
-        this.section = (Section)section;
-    }
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#setDisplaySequence(java.lang.String)
+	 */
+	public void setDisplaySequence(String displaySequence)
+	{
+		this.displaySequence = displaySequence;
+	}
 
-    /** default constructor */
-    public SectionBean() {
-    }
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#setSection(org.etudes.component.app.melete.Section)
+	 */
+	public void setSection(SectionObjService section)
+	{
+		this.section = (Section) section;
+	}
 
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#setSelected(boolean)
+	 */
+	public void setSelected(boolean selected)
+	{
+		this.selected = selected;
+	}
 
-    public Section getSection() {
-        return this.section;
-    }
+	/* (non-Javadoc)
+	 * @see org.etudes.component.app.melete.SectionBeanService#setTruncTitle(java.lang.String)
+	 */
+	public void setTruncTitle(String truncTitle)
+	{
+		this.truncTitle = truncTitle;
+	}
 
-    public void setSection(Section section) {
-        this.section = (Section)section;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
 
-
-    public String toString() {
-        return new ToStringBuilder(this)
-            .toString();
-    }
+	public String toString()
+	{
+		return new ToStringBuilder(this).toString();
+	}
 
 }

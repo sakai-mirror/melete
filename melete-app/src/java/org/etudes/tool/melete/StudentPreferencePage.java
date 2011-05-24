@@ -3,7 +3,7 @@
  * $URL$
  *
  ***************************************************************************************
- * Copyright (c) 2008 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,6 +28,7 @@ import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.logging.Log;
@@ -36,66 +37,86 @@ import org.etudes.component.app.melete.MeleteUserPreference;
 import org.etudes.api.app.melete.MeleteAuthorPrefService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 
-public class StudentPreferencePage {
+public class StudentPreferencePage
+{
 
-  private String userView;
+	private MeleteAuthorPrefService authorPref;
 
-  private MeleteAuthorPrefService authorPref;
-  private MeleteUserPreference mup;
-  /** Dependency:  The logging service. */
+	private MeleteUserPreference mup;
+	private String userView;
+	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(StudentPreferencePage.class);
 
-  public StudentPreferencePage()
-  {
-  }
+	public StudentPreferencePage()
+	{
+	}
 
-  private void getUserChoice()
-  {
-   		FacesContext context = FacesContext.getCurrentInstance();
-  		Map sessionMap = context.getExternalContext().getSessionMap();
+	/**
+	 * @return student_preference page
+	 */
+	public String backToPrefsPage()
+	{
+		return "student_preference";
+	}
 
-  		mup = (MeleteUserPreference) getAuthorPref().getUserChoice((String)sessionMap.get("userId"));
+	/**
+	 * @return Returns the authorPref.
+	 */
+	public MeleteAuthorPrefService getAuthorPref()
+	{
+		return authorPref;
+	}
 
-  		if (mup==null)
-  		{
-  			userView = "true";
-  		}
-  		else
-  		{
-  			if (mup.isViewExpChoice() == true)
-  			{
-  			  userView = "true";
-  			}
-  			else
-  			{
-  				userView = "false";
-  			}
-  		}
-  	return;
-  	}
+	/**
+	 * @return mup melete user preference
+	 */
+	public MeleteUserPreference getMup()
+	{
+		return mup;
+	}
 
+	/**
+	 * @return userView true if expand is true, false if not
+	 */
+	public String getUserView()
+	{
+		getUserChoice();
+		return userView;
+	}
 
+	/**
+	 * @param authorPref
+	 *        The authorPref to set.
+	 */
+	public void setAuthorPref(MeleteAuthorPrefService authorPref)
+	{
+		this.authorPref = authorPref;
+	}
 
+	/**
+	 * @param mup
+	 *        melete user preference
+	 */
+	public void setMup(MeleteUserPreference mup)
+	{
+		this.mup = mup;
+	}
 
-public String getUserView() {
-	getUserChoice();
-	return userView;
-}
-/**
- * @param userView The userView to set.
- */
-public void setUserView(String userView) {
-	this.userView = userView;
-}
-public String setUserChoice()
-{
+	/**
+	 * Set user preference and save it
+	 * 
+	 * @return student_preference page
+	 */
+	public String setUserChoice()
+	{
 		FacesContext context = FacesContext.getCurrentInstance();
-		Map sessionMap = context.getExternalContext().getSessionMap();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-        if (mup == null)
-        {
-        	mup = new MeleteUserPreference();
-        }
+		if (mup == null)
+		{
+			mup = new MeleteUserPreference();
+		}
 		try
 		{
 			if (userView.equals("true"))
@@ -106,48 +127,58 @@ public String setUserChoice()
 			{
 				mup.setViewExpChoice(false);
 			}
-		mup.setUserId((String)sessionMap.get("userId"));
-		authorPref.insertUserChoice(mup);
+			mup.setUserId(mPage.getCurrentUser().getId());
+			authorPref.insertUserChoice(mup);
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			String errMsg = bundle.getString("Set_prefs_fail");
-			context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Set_prefs_fail",errMsg));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Set_prefs_fail", errMsg));
 			return "student_preference";
 		}
 
-	String successMsg = bundle.getString("Set_prefs_success");
-	context.addMessage (null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Set_prefs_success",successMsg));
+		String successMsg = bundle.getString("Set_prefs_success");
+		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Set_prefs_success", successMsg));
 
-	return "student_preference";
-}
+		return "student_preference";
+	}
 
-public String backToPrefsPage()
-{
-	return "student_preference";
-}
+	/**
+	 * @param userView
+	 *        The userView to set.
+	 */
+	public void setUserView(String userView)
+	{
+		this.userView = userView;
+	}
 
-/**
- * @return Returns the authorPref.
- */
-public MeleteAuthorPrefService getAuthorPref() {
-	return authorPref;
-}
-/**
- * @param authorPref The authorPref to set.
- */
-public void setAuthorPref(MeleteAuthorPrefService authorPref) {
-	this.authorPref = authorPref;
-}
+	/**
+	 * Gets users expand or collapse preference
+	 * 
+	 */
+	private void getUserChoice()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
 
+		mup = (MeleteUserPreference) getAuthorPref().getUserChoice(mPage.getCurrentUser().getId());
 
-
-
-public MeleteUserPreference getMup() {
-	return mup;
-}
-
-public void setMup(MeleteUserPreference mup) {
-	this.mup = mup;
-}
+		if (mup == null)
+		{
+			userView = "true";
+		}
+		else
+		{
+			if (mup.isViewExpChoice() == true)
+			{
+				userView = "true";
+			}
+			else
+			{
+				userView = "false";
+			}
+		}
+		return;
+	}
 }
