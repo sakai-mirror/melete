@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -48,7 +48,6 @@ public class DeleteResourcePage implements Serializable
 	private boolean warningFlag;
 	private String delResourceName;
 	private String delResourceId;
-	private String courseId;
 
 	/**
 	 * Default constructor
@@ -66,7 +65,6 @@ public class DeleteResourcePage implements Serializable
 		fromPage = "";
 		delResourceId = null;
 		delResourceName = null;
-		courseId = null;
 	}
 
 	/**
@@ -90,12 +88,30 @@ public class DeleteResourcePage implements Serializable
 	public void processDeletion(String delResourceId, String courseId)
 	{
 		this.delResourceId = delResourceId;
-		this.courseId = courseId;
 		List<?> res_in_use = sectionService.findResourceInUse(delResourceId, courseId);
 		if (res_in_use != null) logger.debug("res_in_use size " + res_in_use.size());
 		if (res_in_use != null && res_in_use.size() > 0) warningFlag = true;
 	}
 
+	/**
+	 * Checks the selected resource is used in the other sections. If yes, warns the user.
+	 * 
+	 * @param delResourceId
+	 *        The Resource Id
+	 * @param title
+	 *        The resource display name. Get it from meleteCHService
+	 * @param courseId
+	 *        The Site Id
+	 */
+	public void processDeletion(String delResourceId, String title, String courseId)
+	{
+		this.delResourceId = delResourceId;
+		this.delResourceName = title;
+		List<?> res_in_use = sectionService.findResourceInUse(delResourceId, courseId);
+		if (res_in_use != null) logger.debug("res_in_use size " + res_in_use.size());
+		if (res_in_use != null && res_in_use.size() > 0) warningFlag = true;
+	}
+	
 	/**
 	 * Set resource name
 	 * 

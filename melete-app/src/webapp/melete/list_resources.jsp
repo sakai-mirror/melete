@@ -109,8 +109,7 @@
 					 
 					 <h:commandLink id="deleteaction" actionListener="#{listResourcesPage.selectedResourceDeleteAction}"  action="#{listResourcesPage.redirectDeleteLink}" immediate="true" >
 				    		<f:param name="linkactionParam1" value="#{curr_resources.resource_id}" />
-				    		<f:param name="linkactionParam2" value="#{curr_resources.resource_title}" />
-				    		<h:graphicImage id="delgif" alt="" value="/images/delete.gif" styleClass="AuthImgClass" />
+				     		<h:graphicImage id="delgif" alt="" value="/images/delete.gif" styleClass="AuthImgClass" />
 							<h:outputText id="emp_space-2" value=" " />
 				    		<h:outputText id="deltext" value="#{msgs.list_resources_del}"  />
 					 </h:commandLink>	

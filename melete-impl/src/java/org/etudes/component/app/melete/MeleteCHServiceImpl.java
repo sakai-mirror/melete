@@ -181,7 +181,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				ResourcePropertiesEdit props = edit.getPropertiesEdit();
 				props.addProperty(ResourceProperties.PROP_DISPLAY_NAME, collectionName);
 				props.addProperty(ResourceProperties.PROP_DESCRIPTION, description);
-				props.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
+				props.addProperty(ContentHostingService.PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 				getContentservice().commitCollection(edit);
 				return edit.getId();
 			}
@@ -496,14 +496,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			while (memIt != null && memIt.hasNext())
 			{
 				ContentEntity ce = (ContentEntity) memIt.next();
-				if (ce.isResource())
-				{
-					String contentextension = ((ContentResource) ce).getContentType();
-					// if(contentextension.equals(MIME_TYPE_EDITOR))
-					// memIt.remove();
-				}
-				else
-					memIt.remove();
+				if (!ce.isResource()) memIt.remove();
 			}
 
 			return mem;
@@ -573,7 +566,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 		// resProperties.addProperty(ResourceProperties.PROP_IS_COLLECTION,Boolean.FALSE.toString());
 		resProperties.addProperty(ResourceProperties.PROP_DISPLAY_NAME, secResourceName);
 		resProperties.addProperty(ResourceProperties.PROP_DESCRIPTION, secResourceDescription);
-		resProperties.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
+		resProperties.addProperty(ContentHostingService.PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 
 		// Glenn said the property below may not need to be set either, will leave it in
 		// unless it creates problems
@@ -602,7 +595,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 		// resProperties.addProperty(ResourceProperties.PROP_IS_COLLECTION,Boolean.FALSE.toString());
 		resProperties.addProperty(ResourceProperties.PROP_DISPLAY_NAME, name);
 		resProperties.addProperty(ResourceProperties.PROP_DESCRIPTION, "embedded image");
-		resProperties.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
+		resProperties.addProperty(ContentHostingService.PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 		return resProperties;
 
 	}
@@ -636,7 +629,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			rp.clear();
 			rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, secResourceName);
 			rp.addProperty(ResourceProperties.PROP_DESCRIPTION, secResourceDescription);
-			rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
+			rp.addProperty(ContentHostingService.PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 			getContentservice().commitResource(edit);
 			edit = null;
 		}
@@ -657,7 +650,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	 * {@inheritDoc}
 	 */
 	public String addResourceItem(String name, String res_mime_type, String addCollId, byte[] secContentData, ResourcePropertiesEdit res)
-	throws Exception
+			throws Exception
 	{
 		ContentResource resource = null;
 		// Variable displayName is to preserve the user provided name
@@ -694,12 +687,12 @@ public class MeleteCHServiceImpl implements MeleteCHService
 					secContentData = checkURL.getBytes();
 				}
 				// name is escaped to create resource url
-				if (res_mime_type != MIME_TYPE_LINK) name = Validator.escapeResourceName(displayName);
+				name = Validator.escapeResourceName(displayName);
 				String finalName = addCollId + name;
-				if (finalName.length() > getContentservice().MAXIMUM_RESOURCE_ID_LENGTH)
+				if (finalName.length() > ContentHostingService.MAXIMUM_RESOURCE_ID_LENGTH)
 				{
 					// leaving room for CHS inserted duplicate filenames -1 -2 etc
-					int extraChars = finalName.length() - getContentservice().MAXIMUM_RESOURCE_ID_LENGTH + 3;
+					int extraChars = finalName.length() - ContentHostingService.MAXIMUM_RESOURCE_ID_LENGTH + 3;
 					name = name.substring(0, name.length() - extraChars);
 				}
 				resource = getContentservice().addResource(name, addCollId, MAXIMUM_ATTEMPTS_FOR_UNIQUENESS, res_mime_type, secContentData, res, 0);
@@ -717,7 +710,8 @@ public class MeleteCHServiceImpl implements MeleteCHService
 					}
 				}
 
-				if (logger.isDebugEnabled()) logger.debug("IN addResourceItem " + res.getProperty(ResourceProperties.PROP_DISPLAY_NAME) + " resourceId " + resource.getId());
+				if (logger.isDebugEnabled())
+					logger.debug("IN addResourceItem " + res.getProperty(ResourceProperties.PROP_DISPLAY_NAME) + " resourceId " + resource.getId());
 
 				// check if its duplicate file and edit the resource name if it is
 				String checkDup = resource.getUrl().substring(resource.getUrl().lastIndexOf("/") + 1);
@@ -726,6 +720,9 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				{
 					int lastDashIndex = checkDup.lastIndexOf("-");
 					int lastDotIndex = checkDup.lastIndexOf(".");
+					
+					// for titles with no file extension
+					if (lastDotIndex == -1) lastDotIndex = checkDup.length();
 					if ((lastDashIndex != -1) && (lastDotIndex != -1))
 					{
 						numberStr = checkDup.substring(lastDashIndex, lastDotIndex);
@@ -744,7 +741,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 						displayName = createDuplicateName(displayName, numberStr);
 						rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, displayName);
 						rp.addProperty(ResourceProperties.PROP_DESCRIPTION, desc);
-						rp.addProperty(getContentservice().PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
+						rp.addProperty(ContentHostingService.PROP_ALTERNATE_REFERENCE, REFERENCE_ROOT);
 						getContentservice().commitResource(edit);
 						edit = null;
 					}
@@ -824,12 +821,16 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	{
 		String dupName = null;
 		int index = name.lastIndexOf(".");
+		
+		// for files with no extension
+		if (index == -1) index = name.length();
 		String base = null;
 		String ext = null;
 		if (index > 0)
 		{
 			base = name.substring(0, index);
 			ext = name.substring(index);
+			if(ext == null) ext = "";
 		}
 		dupName = base + numberStr + ext;
 		return dupName;
@@ -1322,7 +1323,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 					{
 						try
 						{
-							String cName = java.net.URLDecoder.decode(fileName, "UTF-8");
+							java.net.URLDecoder.decode(fileName, "UTF-8");
 						}
 						catch (Exception decodex)
 						{

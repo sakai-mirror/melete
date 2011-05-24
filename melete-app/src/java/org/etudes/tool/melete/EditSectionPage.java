@@ -232,10 +232,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 		UICommand cmdLink = (UICommand)evt.getComponent();
 
 		List<?> cList = cmdLink.getChildren();
-		if(cList == null || cList.size() <2) return;
+		if(cList == null || cList.size() <1) return;
 		UIParameter param1 = (UIParameter) cList.get(0);
-	   	UIParameter param2 = (UIParameter) cList.get(1);
-
+		String delRes_id = (String) param1.getValue();
+		
 		binding =Util.getBinding("#{deleteResourcePage}");
 		DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
 		delResPage.resetValues();
@@ -246,8 +246,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		else if (section.getContentType().equals("typeLTI"))
 			delResPage.setFromPage("editContentLTIServerView");
 
-		delResPage.setResourceName((String)param2.getValue());
-		delResPage.processDeletion((String)param1.getValue(), mPage.getCurrentUser().getId());
+		delResPage.setResourceName(meleteCHService.getDisplayName(delRes_id));
+		delResPage.processDeletion(delRes_id, mPage.getCurrentUser().getId());
 		return;
 	}
 
