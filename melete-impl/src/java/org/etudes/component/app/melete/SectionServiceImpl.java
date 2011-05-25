@@ -548,6 +548,41 @@ public class SectionServiceImpl implements Serializable, SectionService
 	}
 
 	/**
+	 * Get sections in order
+	 */
+	public List<SectionObjService> getSections(ModuleObjService module)
+	{
+		try
+		{
+			Map<Integer,SectionObjService> sections = module.getSections();
+			List<SectionObjService> sectionsList = null;
+			SubSectionUtilImpl sutil = new SubSectionUtilImpl();
+			String startDispSeq = new Integer(module.getCoursemodule().getSeqNo()).toString();
+			sutil.traverseDom(module.getSeqXml(), startDispSeq);
+			List xmlSecList = sutil.getXmlSecList();
+			if (xmlSecList != null)
+			{
+				sectionsList = new ArrayList<SectionObjService>();
+				for (ListIterator k = xmlSecList.listIterator(); k.hasNext();)
+				{
+					SecLevelObj slObj = (SecLevelObj) k.next();
+					if (slObj != null)
+					{
+						SectionObjService sec = sections.get(new Integer(slObj.getSectionId()));
+						sectionsList.add(sec);
+					}
+				}
+			}
+			return sectionsList;
+		}
+		catch (Exception e)
+		{
+			logger.debug(e.toString());
+		}
+		return null;
+	}
+	
+	/**
 	 * Final initialization, once all dependencies are set.
 	 */
 	public void init()
