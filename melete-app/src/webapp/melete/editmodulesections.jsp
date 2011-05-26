@@ -81,8 +81,8 @@ function showmessage()
 	<h:form id="EditSectionForm" enctype="multipart/form-data" onsubmit="if (saveEditor()){ return true;}else {return false;}"> 	
 			  <h:inputHidden id="formName" value="EditSectionForm"/>  
 			  <h:inputHidden id="mode" value="Edit"/>
-			  <h:inputHidden id="mId" value="#{editSectionPage.module.moduleId}"/>
 			  <h:inputHidden id="sId" value="#{editSectionPage.section.sectionId}"/>
+			  <h:inputHidden id="mId" value="#{editSectionPage.module.moduleId}"/>
 			  <h:inputHidden id="rId" value="#{editSectionPage.meleteResource.resourceId}" rendered="#{editSectionPage.meleteResource !=null}"/>
 			  <h:inputHidden id="uId" value="#{editSectionPage.currUserId}"/>
 		<!-- top nav bar -->

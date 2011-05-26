@@ -298,6 +298,15 @@ public interface SectionService
 	public List<SectionBeanService> getSortSections(ModuleObjService module);
 
 	/**
+	 * Get the sections in the order specified in module xml sequence.
+	 * 
+	 * @param module
+	 *        Module Object
+	 * @return a list of sectionObjService objects
+	 */
+	public List<SectionObjService> getSections(ModuleObjService module);
+	
+	/**
 	 * Inserts the association and inserts a new melete resource
 	 * 
 	 * @param section

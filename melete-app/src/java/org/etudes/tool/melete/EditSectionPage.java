@@ -1243,13 +1243,14 @@ public class EditSectionPage extends SectionPage implements Serializable
 			shouldRenderNotype = true;
 			int mId = module.getModuleId().intValue();
 			logger.debug("mId in blank section" + mId);
-			Integer newSectionId = sectionService.insertSection(module,s);
-			s.setSectionId(newSectionId);
 
 			// refresh module
 			this.module = moduleService.getModule(mId);
 			sessionMap.put("currModule",module);
 			s.setModule(module);
+			
+			Integer newSectionId = sectionService.insertSection(module,s);
+			s.setSectionId(newSectionId);
 
 			// set edit page for this section
 			setEditInfo(s);

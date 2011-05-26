@@ -3813,8 +3813,7 @@ public class ModuleDB implements Serializable
 		java.sql.Timestamp currentTimestamp = null;
 		int navSeqNo = -1;
 		String sql;
-
-		try
+        try
 		{
 			dbConnection = SqlService.borrowConnection();
 			ResultSet rs, accRs = null;
@@ -3835,6 +3834,7 @@ public class ModuleDB implements Serializable
 			pstmt.setTimestamp(4, currentTimestamp);
 			rs = pstmt.executeQuery();
 			this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
+			//Check if any of these modules are blocked by CM. Add ones that are not blocked to resList
 			if (rs != null)
 			{
 				// Add them to resList
@@ -3852,7 +3852,7 @@ public class ModuleDB implements Serializable
 					}
 				}
 			}
-			// Get all access entries for user
+			// Get all access entries for user after/before this seq number
 			if (prevFlag)
 			{
 				sql = "select cm.seq_no, sa.module_id, sa.start_date, sa.end_date, sa.override_start, sa.override_end from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = sa.module_id and sa.users like ? and (sa.start_date is null or sa.end_date is null or sa.start_date < sa.end_date) order by cm.seq_no desc";
@@ -3867,6 +3867,7 @@ public class ModuleDB implements Serializable
 			accPstmt.setString(3, "%" + userId + "%");
 			accRs = accPstmt.executeQuery();
 			Map accMap = new HashMap();
+			//Check if any of these modules are blocked by CM. Add ones that are not blocked to accMap
 			if (accRs != null)
 			{
 				// Add them to accMap
@@ -3921,8 +3922,18 @@ public class ModuleDB implements Serializable
 					navSeqNo = ((Integer) ((Map.Entry) accMap.entrySet().iterator().next()).getKey()).intValue();
 				if ((resList.size() > 0) && (accMap.size() == 0)) navSeqNo = ((Integer) resList.get(0)).intValue();
 				if ((resList.size() > 0) && (accMap.size() > 0))
-					navSeqNo = Math.max(((Integer) ((Map.Entry) accMap.entrySet().iterator().next()).getKey()).intValue(), ((Integer) resList.get(0))
-							.intValue());
+				{
+					if (prevFlag)
+					{
+						navSeqNo = Math.max(((Integer) ((Map.Entry) accMap.entrySet().iterator().next()).getKey()).intValue(), ((Integer) resList
+								.get(0)).intValue());
+					}
+					else
+					{
+						navSeqNo = Math.min(((Integer) ((Map.Entry) accMap.entrySet().iterator().next()).getKey()).intValue(), ((Integer) resList
+								.get(0)).intValue());
+					}
+				}	
 			}
 			rs.close();
 			pstmt.close();

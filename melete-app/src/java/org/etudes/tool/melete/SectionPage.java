@@ -294,7 +294,7 @@ public abstract class SectionPage implements Serializable
 		{
 			module = (ModuleObjService) sessionMap.get("currModule");
 		}
-
+		else if (module == null) logger.info("Edit Section Page : get Module method fails to get module");
 		return module;
 	}
 
@@ -1305,13 +1305,17 @@ public abstract class SectionPage implements Serializable
 	{
 		// logger.debug("check meleteResource" + meleteResource + secResource);
 
-		if (formName.equals("EditSectionForm") && meleteResource == null)
+		if (formName.equals("EditSectionForm") && this.meleteResource == null)
 		{
 			if (secResource != null) this.meleteResource = (MeleteResource) this.secResource.getResource();
-			if (meleteResource == null) this.meleteResource = new MeleteResource();
+			if (this.meleteResource == null) 
+			{
+				this.meleteResource = new MeleteResource();
+				this.meleteResource.setResourceId("");
+			}
 		}
 
-		return meleteResource;
+		return this.meleteResource;
 	}
 
 	/**
