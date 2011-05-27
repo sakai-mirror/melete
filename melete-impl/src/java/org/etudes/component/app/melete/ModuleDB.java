@@ -1898,10 +1898,11 @@ public class ModuleDB implements Serializable
 	public int getNumberOfSectionsReadFromModule(String user_id, int module_id)
 	{
 		int count = 0;
+		Connection dbConnection = null;
 		try
 		{
 			ResultSet rs = null;
-			Connection dbConnection = SqlService.borrowConnection();
+			dbConnection = SqlService.borrowConnection();
 			String sql = "select sv.section_id,sv.view_date from melete_section_track_view sv,melete_section ms where sv.user_id = ? and sv.section_id = ms.section_id and ms.module_id = ? order by sv.view_date";
 			PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 			pstmt.setString(1, user_id);
@@ -1924,6 +1925,17 @@ public class ModuleDB implements Serializable
 		catch (Exception e)
 		{
 			// nothing
+		}
+		finally
+		{
+			try
+			{
+				if (dbConnection != null) SqlService.returnConnection(dbConnection);
+			}
+			catch (Exception e1)
+			{
+				if (logger.isErrorEnabled()) logger.error(e1);
+			}
 		}
 		return count;
 	}
