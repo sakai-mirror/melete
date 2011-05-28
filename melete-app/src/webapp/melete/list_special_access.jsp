@@ -83,11 +83,13 @@ function resetAllAcc()
 	</f:subview>
 	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/access.png" alt="" width="16" height="16" align="absbottom"><h:outputText value="#{msgs.list_special_access}" /> </div>
     
-	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
-	<h:outputText id="title" value="#{specialAccessPage.module.title}" styleClass="style6"/>
 	
 	<h:panelGrid columns="1" styleClass="maintableCollapseWithBorder">
 	<h:column>
+	<h:outputText id="title" value="#{specialAccessPage.module.title}" />
+	<h:outputText id="br" escape="false" value="<br>" />
+	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
+	
 	    <h:panelGrid columns="2" columnClasses="authBarCol" border="0" width="16%" >
 		<h:column>
 			<h:commandLink id="addAction" action="#{specialAccessPage.addAccessAction}" immediate="true">
