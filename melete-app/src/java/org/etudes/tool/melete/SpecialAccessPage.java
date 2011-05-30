@@ -173,6 +173,7 @@ public class SpecialAccessPage implements Serializable
 	 */
 	public String cancelDeleteAccess()
 	{
+		resetValues();
 		return "list_special_access";
 	}
 
@@ -215,7 +216,6 @@ public class SpecialAccessPage implements Serializable
 					sa = (SpecialAccess) saList.get(saId);
 					delAccs.add(sa.getAccessId());
 					accTitlesBuf.append(generateUserNames(sa.getUsers()));
-					accTitlesBuf.append(", ");
 				}
 				setDeleteAccessIds(delAccs);
 				accTitlesBuf.delete(accTitlesBuf.toString().length() - 2, accTitlesBuf.toString().length());
@@ -531,6 +531,9 @@ public class SpecialAccessPage implements Serializable
 	{
 		saList = null;
 		noAccFlag = true;
+		accessSelected = false;
+		deleteAccessIds = null;
+		deleteAccessTitles = null;
 		setShowInvalidAccessId(-1);
 	}
 
