@@ -142,7 +142,7 @@
 			             		  <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" /><h:outputText value="#{vmbean.blockedBy}" />
 			        	   </h:column> 	
 			        	   <h:column>
-			             		  <h:commandButton value="#{msgs.prerequisite_ok_msg}" action="#{listModulesPage.hidePrerequisite}" immediate="true" styleClass="BottomImgFinish"/>
+			             		  <h:commandButton value="#{msgs.prerequisite_ok_msg}" action="#{listModulesPage.hidePrerequisite}" styleClass="BottomImgFinish"/>
 			        	   </h:column>
 	 	 	  			 </h:panelGrid>   
 	        	   </h:column> 	

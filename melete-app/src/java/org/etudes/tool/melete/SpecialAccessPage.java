@@ -191,8 +191,11 @@ public class SpecialAccessPage implements Serializable
 		if (!accessSelected)
 		{
 			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-			String msg = bundle.getString("select_one_delete");
+			String msg = bundle.getString("select_one_sa_delete");
 			addMessage(ctx, "Select  One", msg, FacesMessage.SEVERITY_ERROR);
+			count = 0;
+			resetSelectedLists();
+			return "list_special_access";
 		}
 		// add end
 		// access selected
