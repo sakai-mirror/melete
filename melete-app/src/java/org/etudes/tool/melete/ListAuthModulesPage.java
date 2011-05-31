@@ -338,6 +338,7 @@ public class ListAuthModulesPage implements Serializable
 		String modId = selclientId.substring(0, selclientId.indexOf(':'));
 
 		selectedModIndex = Integer.parseInt(modId);
+		
 		if (selectedModIndices == null)
 		{
 			selectedModIndices = new ArrayList();
@@ -851,10 +852,7 @@ public class ListAuthModulesPage implements Serializable
 			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 			String msg = bundle.getString("select_module");
 			addMessage(ctx, "Select Module", msg, FacesMessage.SEVERITY_ERROR);
-			sectionSelected = false;
-			moduleSelected = false;
-			count = 0;
-			selectedSecModIndices = null;
+			resetSubSectionValues();
 			return "list_auth_modules";
 		}
 
@@ -1244,6 +1242,7 @@ public class ListAuthModulesPage implements Serializable
 		moduleSelected = false;
 		count = 0;
 		selectedSecModIndices = null;
+		moduleDateBeans = null;
 	}
 
 	/** Get indentation level of a section
@@ -1706,7 +1705,6 @@ public class ListAuthModulesPage implements Serializable
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-
 		try
 		{
 			if (count == 0 || moduleSelected)
