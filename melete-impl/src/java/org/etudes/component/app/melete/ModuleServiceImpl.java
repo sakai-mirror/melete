@@ -626,9 +626,20 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public void updateModuleDates(ModuleShdatesService modShdates) throws Exception
+	public void updateModuleDates(ModuleShdatesService modShdates, String courseId) throws Exception
 	{
 		moduledb.updateModuleShdates((ModuleShdates) modShdates);
+		try
+		{
+			if (modShdates.getAddtoSchedule() != null)
+			{
+				moduledb.updateCalendar((Module) modShdates.getModule(), (ModuleShdates)modShdates, courseId);
+			}
+		}
+		catch (Exception ex)
+		{
+			logger.debug("Exception thrown while updating calendar tool tables");
+		}
 	}
 
 	/**
