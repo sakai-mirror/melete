@@ -56,12 +56,11 @@
         			<br/> <br/>    			
         			<!--datatable or panelgrid to display res names -->
         			<h:outputText value="#{specialAccessPage.deleteAccessTitles}" styleClass="bold" escape="false"/>
-        			<br/> <br/>    
-        			
+        			<br/>  
         			<h:outputText value="#{msgs.delete_special_access_long1}" />
-        			<h:outputText value="#{msgs.delete_special_access_long2}"  styleClass="bold"/>
+        			<h:outputText value="#{msgs.delete_special_access_long2}" />
         			<h:outputText value="#{msgs.delete_special_access_long3}" />
-        			<h:outputText value="#{msgs.delete_special_access_long4}"  styleClass="bold"/>
+        			<h:outputText value="#{msgs.delete_special_access_long4}" />
         			<h:outputText value="#{msgs.delete_special_access_long5}" />
         		</td>
         	</tr>

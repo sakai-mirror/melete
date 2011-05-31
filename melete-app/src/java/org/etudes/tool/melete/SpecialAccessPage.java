@@ -218,7 +218,6 @@ public class SpecialAccessPage implements Serializable
 					accTitlesBuf.append(generateUserNames(sa.getUsers()));
 				}
 				setDeleteAccessIds(delAccs);
-				accTitlesBuf.delete(accTitlesBuf.toString().length() - 2, accTitlesBuf.toString().length());
 				setDeleteAccessTitles(accTitlesBuf.toString());
 			}
 		}
