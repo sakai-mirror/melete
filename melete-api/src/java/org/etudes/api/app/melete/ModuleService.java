@@ -421,7 +421,7 @@ public interface ModuleService
 	 * @throws Exception
 	 *         "edit_module_multiple_users" MeleteException and Hibernate Exception
 	 */
-	public void updateModuleDates(ModuleShdatesService modShdates) throws Exception;
+	public void updateModuleDates(ModuleShdatesService modShdates, String courseId) throws Exception;
 
 	/**
 	 * Update Module and ModuleShdates. Updates calendar tool.
