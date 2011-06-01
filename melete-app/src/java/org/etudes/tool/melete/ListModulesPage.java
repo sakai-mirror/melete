@@ -546,8 +546,7 @@ public class ListModulesPage implements Serializable
 	public String listViewAction()
 	{
 		if (isUserAuthor()) return "list_modules_inst";
-		if (isUserStudent()) return "list_modules_student";
-		return "list_modules_student";
+		else return "list_modules_student";
 	}
 
 	/**
@@ -808,7 +807,7 @@ public class ListModulesPage implements Serializable
 		{
 			table = (UIData) root.findComponent("listmodulesform").findComponent("StudentTable");
 		}
-		if (isUserStudent())
+		else
 		{
 			table = (UIData) root.findComponent("listmodulesStudentform").findComponent("table");
 		}
@@ -842,7 +841,7 @@ public class ListModulesPage implements Serializable
 			{
 				table = (UIData) root.findComponent("listmodulesform").findComponent("StudentTable");
 			}
-			if (isUserStudent())
+			else
 			{
 				table = (UIData) root.findComponent("listmodulesStudentform").findComponent("table");
 			}

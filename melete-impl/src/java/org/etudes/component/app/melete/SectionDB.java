@@ -428,7 +428,7 @@ public class SectionDB implements Serializable
 						logger.debug("module is not null so changing seq" + sectionsSeqXML);
 						SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
 						logger.debug("deleting section id from xmllist" + sectionId.toString());
-						sectionsSeqXML = SectionUtil.deleteSection(sectionsSeqXML, sectionId.toString());
+						if (sectionsSeqXML != null) sectionsSeqXML = SectionUtil.deleteSection(sectionsSeqXML, sectionId.toString());
 						// logger.debug("New sectionsseqxml is "+sectionsSeqXML);
 						affectedEntities = session.createQuery(updModuleStr).setInteger("moduleId", module.getModuleId()).setString("seqXml",
 								sectionsSeqXML).executeUpdate();
