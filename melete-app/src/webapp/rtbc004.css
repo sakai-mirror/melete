@@ -331,50 +331,72 @@ td.MainTableClass     { white-space: nowrap;}
 					}
 .BottomImgMyBookmarks{  	padding-left:2em;
 						background: #eee url('images/bookmark.png') .2em no-repeat;
-					}			
+					}
+								
 .TopImgManage		{  
 					padding-left:1.5em;
-					border:0;
-					color:#6066AC;
-					text-decoration: none; border-bottom:1px dashed #6066AC;
-					background: #eee url('images/folder_document.gif') .2em no-repeat;
+					border:none;
+					color:inherit;
+					background-color: inherit;
+					background:url('images/folder_document.gif') .2em no-repeat;
 					}
 										
 .TopImgPreference	{  
 					padding-left:1.5em;
 					border:none;
-					color: #6066AC;
-					text-decoration: none; border-bottom:1px dashed #6066AC;
-					background: #eee url('images/user_preferences.png') .2em no-repeat;
+					color: inherit;
+					background-color: inherit;
+					background:url('images/user_preferences.png') .2em no-repeat;
 					}	
 					
 .TopImgView			{  
 					padding-left:1.5em;
 					border:none;
-					color: #6066AC;
-					text-decoration: none; border-bottom:1px dashed #6066AC;
-					background: #eee url('images/preview.png') .2em no-repeat;	
+					color: inherit;
+					background-color: inherit;
+					background:url('images/preview.png') .2em no-repeat;	
 					}	
 								
 .TopImgAuthor		{  
 					padding-left:1.5em;
 					border:none;
-					color: #6066AC;
-					text-decoration: none; border-bottom:1px dashed #6066AC;
-					background: #eee url('images/author.png') .2em no-repeat;	
+					color: inherit;
+					background-color: inherit;
+					background:url('images/author.png') .2em no-repeat;	
 					}
-					
-.TopImgView:hover, .TopImgManage:hover, .TopImgPreference:hover,.TopImgAuthor:hover	{  
-					text-decoration: none; border-bottom:1px  solid white;
-					cursor:pointer;cursor:hand;
-					}								
 					
 .TopImgView:disabled, .TopImgManage:disabled, .TopImgPreference:disabled,.TopImgAuthor:disabled	{  
 					text-decoration: none; border-bottom:none;
 					color : black;
 					cursor: text;
 					}														
-																					
+.TopImgViewText 	{
+					padding-left:2em;			
+					background-color: inherit;
+					background:url('images/preview.png') .2em no-repeat;
+					padding-right:1em;
+					}			
+
+.TopImgAuthorText {
+					padding-left:1.5em;			
+					background-color: inherit;
+					background:url('images/author.png') .2em no-repeat;
+					padding-right:1em;
+					}	
+
+.TopImgManageText	{  
+					padding-left:1.7em;
+					background-color: inherit;
+					background:url('images/folder_document.gif') .2em no-repeat;
+					padding-right:1em;
+					}
+										
+.TopImgPreferenceText {  
+					padding-left:1.7em;
+					background-color: inherit;
+					background:url('images/user_preferences.png') .2em no-repeat;
+					padding-right:1em;
+					}																	
  /* list resources page styles */
 
 .TitleWid3 {   width:75%; }
