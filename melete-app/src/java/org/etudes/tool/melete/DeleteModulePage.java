@@ -308,13 +308,16 @@ public class DeleteModulePage implements Serializable/* ,ToolBean */
 				if (sectionBeans != null) CheckSectionsSelected();
 				moduleService.deleteModules(this.modules, getCourseId(), getUserId());
 
-				Iterator<Module> it = this.modules.iterator();
-				while (it.hasNext())
+				if (this.modules != null)
 				{
-					Module obj = (Module) it.next();
-					// Track the event
-					EventTrackingService.post(EventTrackingService.newEvent("melete.module.delete", ToolManager.getCurrentPlacement().getContext(),
-							true));
+					Iterator<Module> it = this.modules.iterator();
+					while (it.hasNext())
+					{
+						Module obj = (Module) it.next();
+						// Track the event
+						EventTrackingService.post(EventTrackingService.newEvent("melete.module.delete", ToolManager.getCurrentPlacement()
+								.getContext(), true));
+					}
 				}
 
 			}
@@ -323,14 +326,16 @@ public class DeleteModulePage implements Serializable/* ,ToolBean */
 				sectionService.deleteSections(this.sectionBeans, getCourseId(), getUserId());
 
 				Iterator<SectionBeanService> it = this.sectionBeans.iterator();
-				while (it.hasNext())
+				if (this.sectionBeans != null)
 				{
-					SectionBeanService obj = (SectionBeanService) it.next();
-					// Track the event
-					EventTrackingService.post(EventTrackingService.newEvent("melete.section.delete", ToolManager.getCurrentPlacement().getContext(),
-							true));
-				}
-
+					while (it.hasNext())
+					{
+						SectionBeanService obj = (SectionBeanService) it.next();
+						// Track the event
+						EventTrackingService.post(EventTrackingService.newEvent("melete.section.delete", ToolManager.getCurrentPlacement()
+								.getContext(), true));
+					}
+				}	
 			}
 		}
 		catch (MeleteException me)
@@ -564,6 +569,18 @@ public class DeleteModulePage implements Serializable/* ,ToolBean */
 	public void setFromPage(String fromPage)
 	{
 		this.fromPage = fromPage;
+	}
+
+	public int getModuleSize()
+	{
+		if (modules != null ) return modules.size();
+		else return 0;
+	}
+
+	public int getSectionBeansSize()
+	{
+		if (sectionBeans != null ) return sectionBeans.size();
+		else return 0;
 	}
 
 }

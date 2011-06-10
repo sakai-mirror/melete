@@ -1007,6 +1007,7 @@ public class ListAuthModulesPage implements Serializable
 			DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
 			// dmPage.setMdbean(mdbean);
 			dmPage.setModules(delMods);
+			dmPage.setSectionBeans(new ArrayList<SectionBeanService>());
 		//	List <> allActivenArchvModules = moduleService.getAllActivenArchvModules();
 			dmPage.setModuleSelected(true);
 			count = 0;
@@ -1051,7 +1052,7 @@ public class ListAuthModulesPage implements Serializable
 			dmPage.setSection((Section) secBean.getSection());
 			dmPage.setSectionBeans(delSecBeans);
 			dmPage.setSectionSelected(true);
-
+			dmPage.setModules(new ArrayList());
 			count = 0;
 			sectionSelected = false;
 			selectedSecModIndices = null;
