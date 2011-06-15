@@ -31,7 +31,6 @@ import org.etudes.api.app.melete.*;
 
 public class ViewModBean implements Serializable, ViewModBeanService
 {
-
 	private String blockedBy;
 
 	private String nextStepsNumber;
@@ -42,6 +41,8 @@ public class ViewModBean implements Serializable, ViewModBeanService
 
 	protected boolean dateFlag;
 
+	protected String description;
+
 	protected Date endDate;
 
 	/** identifier field */
@@ -51,6 +52,8 @@ public class ViewModBean implements Serializable, ViewModBeanService
 
 	protected boolean openLaterFlag;
 
+	protected boolean readComplete;
+	
 	protected Date readDate;
 
 	protected String rowClasses;
@@ -81,6 +84,7 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	 * @param moduleId
 	 * @param selected
 	 * @param dateFlag
+	 * @param description
 	 * @param visibleFlag
 	 * @param title
 	 * @param rowClasses
@@ -91,12 +95,13 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	 * @param seqXml
 	 * @param vsBeans
 	 */
-	public ViewModBean(int moduleId, boolean selected, boolean dateFlag, boolean visibleFlag, String title, String rowClasses, String whatsNext,
-			Date startDate, Date endDate, int seqNo, String seqXml, List<ViewSecBeanService> vsBeans)
+	public ViewModBean(int moduleId, boolean selected, boolean dateFlag, String description, boolean visibleFlag, String title, String rowClasses,
+			String whatsNext, Date startDate, Date endDate, int seqNo, String seqXml, List<ViewSecBeanService> vsBeans)
 	{
 		this.moduleId = moduleId;
 		this.selected = selected;
 		this.dateFlag = dateFlag;
+		this.description = description;
 		this.visibleFlag = visibleFlag;
 		this.title = title;
 		this.rowClasses = rowClasses;
@@ -118,6 +123,14 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	public String getBlockedBy()
 	{
 		return blockedBy;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getDescription()
+	{
+		return description;
 	}
 
 	/**
@@ -263,6 +276,14 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	/**
 	 * {@inheritDoc}
 	 */
+	public boolean isReadComplete()
+	{
+		return readComplete;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isSelected()
 	{
 		return selected;
@@ -295,6 +316,14 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	/**
 	 * {@inheritDoc}
 	 */
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setEndDate(Date endDate)
 	{
 		this.endDate = endDate;
@@ -322,6 +351,14 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	public void setNoOfSectionsRead(Integer noOfSectionsRead)
 	{
 		this.noOfSectionsRead = noOfSectionsRead;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setReadComplete(boolean readComplete)
+	{
+		this.readComplete = readComplete;
 	}
 
 	/**

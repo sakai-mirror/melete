@@ -30,13 +30,13 @@
 	 <h:commandLink id="prevReturnCm" action="#{meleteSiteAndUserInfo.returnToCM}" immediate="true" rendered="#{(meleteSiteAndUserInfo.navigateCM != null)}">
 		  <h:outputText  id="returnCmMsg" value="#{msgs.return_cm_msg}"></h:outputText>
      </h:commandLink> 
-     	<h:commandLink id="prevItem" action="#{viewModulesPage.goPrevSection}" immediate="true" rendered="#{((viewModulesPage.prevMdbean != viewModulesPage.nullMdbean)&&((viewModulesPage.prevMdbean.module.whatsNext == viewModulesPage.nullString)||(viewModulesPage.prevMdbean.module.whatsNext == viewModulesPage.emptyString))&&(viewModulesPage.moduleSeqNo > 1)&&(viewModulesPage.prevSectionSize > 0)&&(meleteSiteAndUserInfo.navigateCM == null))}">
+     	<h:commandLink id="prevItem" action="#{viewModulesPage.goPrevSection}" immediate="true" rendered="#{((viewModulesPage.prevMbean != null)&&((viewModulesPage.prevMbean.whatsNext == viewModulesPage.nullString)||(viewModulesPage.prevMbean.whatsNext == viewModulesPage.emptyString))&&(viewModulesPage.moduleSeqNo > 1)&&(viewModulesPage.prevSectionSize > 0)&&(meleteSiteAndUserInfo.navigateCM == null))}">
 			<h:outputText  id="prevItemMsg" value="#{msgs.view_navigate_mod_prev}"/>	
      	</h:commandLink>
-     	<h:commandLink id="goPrevWhatsNext" action="#{viewModulesPage.goPrevWhatsNext}" immediate="true" rendered="#{((viewModulesPage.prevMdbean != viewModulesPage.nullMdbean)&&(viewModulesPage.prevMdbean.module.whatsNext != viewModulesPage.nullString)&&(viewModulesPage.prevMdbean.module.whatsNext != viewModulesPage.emptyString)&&(viewModulesPage.moduleSeqNo > 1)&&(meleteSiteAndUserInfo.navigateCM == null))}">
+     	<h:commandLink id="goPrevWhatsNext" action="#{viewModulesPage.goPrevWhatsNext}" immediate="true" rendered="#{((viewModulesPage.prevMbean != null)&&(viewModulesPage.prevMbean.whatsNext != viewModulesPage.nullString)&&(viewModulesPage.prevMbean.whatsNext != viewModulesPage.emptyString)&&(viewModulesPage.moduleSeqNo > 1)&&(meleteSiteAndUserInfo.navigateCM == null))}">
 			<h:outputText  id="prevItemMsg2" value="#{msgs.view_navigate_mod_prev2}"/>	
      	</h:commandLink>
-     	<h:commandLink id="prevMod" action="#{viewModulesPage.goPrevNext}" immediate="true" rendered="#{((viewModulesPage.prevMdbean != viewModulesPage.nullMdbean)&&((viewModulesPage.prevMdbean.module.whatsNext == viewModulesPage.nullString)||(viewModulesPage.prevMdbean.module.whatsNext == viewModulesPage.emptyString))&&(viewModulesPage.moduleSeqNo > 1)&&(viewModulesPage.prevSectionSize == 0)&&(meleteSiteAndUserInfo.navigateCM == null))}">
+     	<h:commandLink id="prevMod" action="#{viewModulesPage.goPrevNext}" immediate="true" rendered="#{((viewModulesPage.prevMbean != null)&&((viewModulesPage.prevMbean.whatsNext == viewModulesPage.nullString)||(viewModulesPage.prevMbean.whatsNext == viewModulesPage.emptyString))&&(viewModulesPage.moduleSeqNo > 1)&&(viewModulesPage.prevSectionSize == 0)&&(meleteSiteAndUserInfo.navigateCM == null))}">
 			<h:outputText  id="prevItemMsg3" value="#{msgs.view_navigate_mod_prev3}"/>	
 			 <f:param name="modseqno" value="#{viewModulesPage.prevSeqNo}" />
      	</h:commandLink>
@@ -56,15 +56,15 @@
 		<h:commandLink id="nextItem" action="#{viewModulesPage.goNextSection}" immediate="true" rendered="#{(viewModulesPage.sectionSize > 0)}">
 		  <h:outputText  id="nextItemMsg1" value="#{msgs.view_navigate_mod_next}"></h:outputText>
      </h:commandLink>
-      <h:commandLink id="whatsNext" action="#{viewModulesPage.goWhatsNext}" immediate="true" rendered="#{((viewModulesPage.mdbean.module.whatsNext != viewModulesPage.nullString)&&(viewModulesPage.mdbean.module.whatsNext != viewModulesPage.emptyString)&&(viewModulesPage.sectionSize == 0))}">
+      <h:commandLink id="whatsNext" action="#{viewModulesPage.goWhatsNext}" immediate="true" rendered="#{((viewModulesPage.viewMbean.whatsNext != viewModulesPage.nullString)&&(viewModulesPage.viewMbean.whatsNext != viewModulesPage.emptyString)&&(viewModulesPage.sectionSize == 0))}">
 		  <h:outputText  id="nextItemMsg2" value="#{msgs.view_navigate_mod_next2}"></h:outputText>
 		   <f:param name="modseqno" value="#{viewModulesPage.moduleSeqNo}" />
      </h:commandLink>   
-     <h:commandLink id="nextMod" action="#{viewModulesPage.goPrevNext}" immediate="true" rendered="#{(((viewModulesPage.mdbean.module.whatsNext == viewModulesPage.nullString)||(viewModulesPage.mdbean.module.whatsNext == viewModulesPage.emptyString))&&(viewModulesPage.sectionSize == 0)&&(viewModulesPage.moduleSeqNo < viewModulesPage.nextSeqNo)&&(meleteSiteAndUserInfo.navigateCM == null))}">
+     <h:commandLink id="nextMod" action="#{viewModulesPage.goPrevNext}" immediate="true" rendered="#{(((viewModulesPage.viewMbean.whatsNext == viewModulesPage.nullString)||(viewModulesPage.viewMbean.whatsNext == viewModulesPage.emptyString))&&(viewModulesPage.sectionSize == 0)&&(viewModulesPage.moduleSeqNo < viewModulesPage.nextSeqNo)&&(meleteSiteAndUserInfo.navigateCM == null))}">
 			<h:outputText  id="nextItemMsg3" value="#{msgs.view_navigate_mod_next3}"/>	
 			 <f:param name="modseqno" value="#{viewModulesPage.nextSeqNo}" />
      	</h:commandLink>
-     <h:commandLink id="nextReturnCm" action="#{meleteSiteAndUserInfo.returnToCM}" immediate="true" rendered="#{(((viewModulesPage.mdbean.module.whatsNext == viewModulesPage.nullString)||(viewModulesPage.mdbean.module.whatsNext == viewModulesPage.emptyString))&&(viewModulesPage.sectionSize == 0)&&(viewModulesPage.moduleSeqNo < viewModulesPage.nextSeqNo || viewModulesPage.nextSeqNo == -1)&&(meleteSiteAndUserInfo.navigateCM != null))}">
+     <h:commandLink id="nextReturnCm" action="#{meleteSiteAndUserInfo.returnToCM}" immediate="true" rendered="#{(((viewModulesPage.viewMbean.whatsNext == viewModulesPage.nullString)||(viewModulesPage.viewMbean.whatsNext == viewModulesPage.emptyString))&&(viewModulesPage.sectionSize == 0)&&(viewModulesPage.moduleSeqNo < viewModulesPage.nextSeqNo || viewModulesPage.nextSeqNo == -1)&&(meleteSiteAndUserInfo.navigateCM != null))}">
 			 <h:outputText  id="nextReturnCmMsg" value="#{msgs.return_cm_msg}"></h:outputText>
      	</h:commandLink>	
    

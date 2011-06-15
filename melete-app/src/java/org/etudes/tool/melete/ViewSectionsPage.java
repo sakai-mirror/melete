@@ -540,8 +540,8 @@ public class ViewSectionsPage implements Serializable
 		FacesContext context = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{viewModulesPage}");
 		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
-		vmPage.setMdbean(null);
-		vmPage.setPrevMdbean(null);
+		vmPage.setViewMbean(null);
+		vmPage.setPrevMbean(null);
 		vmPage.setModuleId(currModuleId);
 		vmPage.setModuleSeqNo(0);
 		vmPage.setPrintable(null);
@@ -570,8 +570,8 @@ public class ViewSectionsPage implements Serializable
 		/*
 		 * if (nextMdBean != null) { vmPage.setModuleId(nextMdBean.getModuleId()); }
 		 */
-		vmPage.setMdbean(null);
-		vmPage.setPrevMdbean(null);
+		vmPage.setViewMbean(null);
+		vmPage.setPrevMbean(null);
 		vmPage.setModuleId(0);
 		vmPage.setModuleSeqNo(this.nextSeqNo);
 		vmPage.setPrintable(null);
@@ -605,8 +605,8 @@ public class ViewSectionsPage implements Serializable
 		vmPage.setModuleId(this.moduleId);
 		vmPage.setPrintable(null);
 		vmPage.setAutonumber(null);
-		vmPage.setMdbean(null);
-		vmPage.setPrevMdbean(null);
+		vmPage.setViewMbean(null);
+		vmPage.setPrevMbean(null);
 		vmPage.setModuleSeqNo(this.moduleSeqNo);
 
 		return "view_module";

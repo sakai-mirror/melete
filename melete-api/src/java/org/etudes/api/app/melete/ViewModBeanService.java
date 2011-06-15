@@ -38,6 +38,11 @@ public interface ViewModBeanService
 	public abstract String getBlockedBy();
 
 	/**
+	 * @return description
+	 */
+	public String getDescription();
+
+	/**
 	 * @return end date
 	 */
 	public abstract Date getEndDate();
@@ -98,6 +103,11 @@ public interface ViewModBeanService
 	public abstract boolean isDateFlag();
 
 	/**
+	 * @return if module is completely read by user
+	 */
+	public boolean isReadComplete();
+	
+	/**
 	 * @return selected boolean flag
 	 */
 	public abstract boolean isSelected();
@@ -120,6 +130,12 @@ public interface ViewModBeanService
 	public abstract void setDateFlag(boolean dateFlag);
 
 	/**
+	 * @param description
+	 *        the module description
+	 */
+	public abstract void setDescription(String description);
+	
+	/**
 	 * @param endDate
 	 *        the end date
 	 */
@@ -137,6 +153,12 @@ public interface ViewModBeanService
 	 */
 	public abstract void setNoOfSectionsRead(Integer noOfSectionsRead);
 
+	/**
+	 * @param readComplete
+	 * 		set if user has read all sections of a module
+	 */
+	public abstract void setReadComplete(boolean readComplete);
+	
 	/**
 	 * @param readDate
 	 *        set read date

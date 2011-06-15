@@ -567,7 +567,7 @@ public class BookmarkPage implements Serializable
 			{
 				ValueBinding binding = Util.getBinding("#{viewModulesPage}");
 				ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
-				vmPage.setMdbean(null);
+				vmPage.setViewMbean(null);
 			}
 			if (this.fromPage.equals("view_whats_next"))
 			{
