@@ -2148,18 +2148,15 @@ public class ModuleDB implements Serializable
 	 *        User id
 	 * @param courseId
 	 *        Course id
-	 * @param fromCourseMap
-	 *        Whether call is coming from courseMap, if not some queries need not be executed
 	 * @param filtered
 	 *        flag false value means invalid modules need to be picked up
 	 * @return list of modules
 	 * @throws HibernateException
 	 */
-	public List<ViewModBeanService> getViewModules(String userId, String courseId, boolean fromCourseMap, boolean filtered) throws Exception
+	public List<ViewModBeanService> getViewModules(String userId, String courseId, boolean filtered) throws Exception
 	{
 		Connection dbConnection = null;
 		List<ViewModBeanService> resList = new ArrayList<ViewModBeanService>();
-		Module mod = null;
 		Map<Integer, AccessDates> accMap = null;
 
 		try
@@ -2175,27 +2172,25 @@ public class ModuleDB implements Serializable
 			// MAP-32, if filtered don't pick up invalid modules, otherwise pick up all modules
 			if (filtered)
 			{
-				sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (d.start_date is NULL or d.end_date is NULL or d.start_date < d.end_date) and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
+				sql = "select m.module_id,c.seq_no,m.title as modTitle,m.description as modDesc,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (d.start_date is NULL or d.end_date is NULL or d.start_date < d.end_date) and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
 			}
 			else
 			{
-				sql = "select m.module_id,c.seq_no,m.title as modTitle,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
+				sql = "select m.module_id,c.seq_no,m.title as modTitle,m.description as modDesc, m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
 			}
 			PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 			pstmt.setString(1, courseId);
 			rs = pstmt.executeQuery();
 			ViewSecBean vsBean = null;
 			Map<Integer, ViewSecBean> vsBeanMap = null;
-			SubSectionUtilImpl ssuImpl;
-			StringBuffer rowClassesBuf;
-			List vsBeanList = null;
 			int prevModId = 0, prevSeqNo = 0;
 			int moduleId = 0, seqNo;
 			ViewModBean vmBean = null;
 			String seqXml, prevSeqXml = null;
-			java.sql.Timestamp startTimestamp, endTimestamp;
+
 			if (rs != null)
 			{
+				//Iterate through each record in the resultset
 				while (rs.next())
 				{
 					moduleId = rs.getInt("module_id");
@@ -2204,43 +2199,16 @@ public class ModuleDB implements Serializable
 
 					// Associate vsBeans to vmBean
 					// This means its a new module
-					// Does not execute for the first module
+					// This executes just once for each module
 					if ((prevModId != 0) && (moduleId != prevModId))
 					{
-						if (vsBeanMap != null)
-						{
-							if (vsBeanMap.size() > 0)
-							{
-								ssuImpl = new SubSectionUtilImpl();
-								ssuImpl.traverseDom(prevSeqXml, Integer.toString(prevSeqNo));
-								xmlSecList = ssuImpl.getXmlSecList();
-								rowClassesBuf = new StringBuffer();
-
-								// Comment for now
-								xmlSecList = correctSections(vsBeanMap, mod, xmlSecList);
-								vsBeanList = new ArrayList();
-								processViewSections(vsBeanMap, vsBeanList, xmlSecList, rowClassesBuf);
-								vmBean.setVsBeans(vsBeanList);
-								vmBean.setRowClasses(rowClassesBuf.toString());
-								Vector<Integer> noOfSections = new Vector<Integer>();
-								int count = 0;
-								if (fromCourseMap) vmBean.setReadDate(getReadDate(prevModId, vsBeanMap, userId, dbConnection, noOfSections));
-								count = (noOfSections.size() > 0) ? noOfSections.get(0) : 0;
-								vmBean.setNoOfSectionsRead(count);
-							}
-						}
-						else
-						{
-							if (fromCourseMap && vmBean != null)
-							{
-								vmBean.setReadDate(null);
-								vmBean.setNoOfSectionsRead(0);
-							}
-						}
+						associateSections(vsBeanMap, prevSeqXml, prevModId, prevSeqNo, vmBean, userId, dbConnection);
 						vsBeanMap = null;
 					}// End if ((prevModId != 0)&&(moduleId != prevModId))
 
 					// Populate each vsBean and add to vsBeanMap
+					// This executes for each record in the resultset
+					// It builds up the sections and adds them to vsBeanMap
 					int sectionId = rs.getInt("section_id");
 					if (sectionId != 0)
 					{
@@ -2254,74 +2222,11 @@ public class ModuleDB implements Serializable
 					}
 
 					// Populate vmBean
-					// This means its the first module or a new module
+					// This executes just once for each module
 					if ((prevModId == 0) || (moduleId != prevModId))
 					{
-						vmBean = new ViewModBean();
-						vmBean.setModuleId(moduleId);
-						vmBean.setSeqNo(seqNo);
-						vmBean.setTitle(rs.getString("modTitle"));
-						vmBean.setWhatsNext(rs.getString("whats_next"));
-						vmBean.setSeqXml(seqXml);
-
-						// what's next display seq number is number of top level sections + 1
-						SubSectionUtilImpl ssuImpl1 = new SubSectionUtilImpl();
-						int top = ssuImpl1.noOfTopLevelSections(seqXml);
-						top = top + 1;
-						String ns_number = new String(seqNo + ".");
-						ns_number = ns_number.concat(Integer.toString(top));
-						vmBean.setNextStepsNumber(ns_number);
-
-						startTimestamp = rs.getTimestamp("start_date");
-						endTimestamp = rs.getTimestamp("end_date");
-
-						// If special access is set up, use those dates; otherwise,
-						// use module dates
-						if ((accMap != null) && (accMap.size() > 0))
-						{
-							AccessDates ad = (AccessDates) accMap.get(moduleId);
-							if (ad != null)
-							{
-								if (ad.overrideStart) startTimestamp = ad.getAccStartTimestamp();
-								if (ad.overrideEnd) endTimestamp = ad.getAccEndTimestamp();
-							}
-						}
-
-						// Date flag is false for invalid modules
-						if ((startTimestamp != null) && (endTimestamp != null) && (startTimestamp.compareTo(endTimestamp) >= 0))
-							vmBean.setDateFlag(false);
-						else
-							vmBean.setDateFlag(true);
-
-						if (isVisible(startTimestamp, endTimestamp))
-						{
-							this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
-							if ((this.accessAdvisor != null)
-									&& (this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), SessionManager
-											.getCurrentSessionUserId())))
-							{
-								vmBean.setBlockedBy(this.accessAdvisor.message("sakai.melete", courseId, String.valueOf(moduleId), SessionManager
-										.getCurrentSessionUserId()));
-								vmBean.setVisibleFlag(false);
-							}
-							else
-							{
-								vmBean.setVisibleFlag(true);
-							}
-						}
-						else
-						{
-							vmBean.setVisibleFlag(false);
-						}
-
-						if (startTimestamp != null)
-						{
-							vmBean.setStartDate(new java.util.Date(startTimestamp.getTime() + (startTimestamp.getNanos() / 1000000)));
-						}
-						if (endTimestamp != null)
-						{
-							vmBean.setEndDate(new java.util.Date(endTimestamp.getTime() + (endTimestamp.getNanos() / 1000000)));
-						}
+						vmBean = populateVmBean(rs, accMap, courseId);
+						
 						// Add invalid modules if not filtered
 						// If filtered, do not add invalid modules
 						if ((!filtered) || (filtered && vmBean.isDateFlag() == true))
@@ -2338,35 +2243,7 @@ public class ModuleDB implements Serializable
 
 				// The last module will not have had its sections added
 				// so we do it here
-				if (vsBeanMap != null)
-				{
-					if (vsBeanMap.size() > 0)
-					{
-						ssuImpl = new SubSectionUtilImpl();
-						ssuImpl.traverseDom(prevSeqXml, Integer.toString(prevSeqNo));
-						xmlSecList = ssuImpl.getXmlSecList();
-						rowClassesBuf = new StringBuffer();
-
-						xmlSecList = correctSections(vsBeanMap, mod, xmlSecList);
-						vsBeanList = new ArrayList();
-						processViewSections(vsBeanMap, vsBeanList, xmlSecList, rowClassesBuf);
-						vmBean.setVsBeans(vsBeanList);
-						vmBean.setRowClasses(rowClassesBuf.toString());
-						Vector<Integer> noOfSections = new Vector<Integer>();
-						int count = 0;
-						if (fromCourseMap) vmBean.setReadDate(getReadDate(moduleId, vsBeanMap, userId, dbConnection, noOfSections));
-						count = (noOfSections.size() > 0) ? noOfSections.get(0) : 0;
-						vmBean.setNoOfSectionsRead(count);
-					}
-				}
-				else
-				{
-					if (fromCourseMap && vmBean != null)
-					{
-						vmBean.setReadDate(null);
-						vmBean.setNoOfSectionsRead(0);
-					}
-				}
+				associateSections(vsBeanMap, prevSeqXml, moduleId, prevSeqNo, vmBean, userId, dbConnection);
 				rs.close();
 				pstmt.close();
 			}
@@ -2393,27 +2270,172 @@ public class ModuleDB implements Serializable
 	}
 
 	/**
+	 * Associates sections with vmBean and adds tracking info to each section bean
+	 * 
+	 * @param vsBeanMap
+	 *        Map of sections
+	 * @param seqXml
+	 *        Sequence xml
+	 * @param moduleId
+	 *        Module Id
+	 * @param seqNo
+	 *        Sequence number
+	 * @param vmBean
+	 *        ViewModBean object
+	 * @param userId
+	 *        User Id
+	 * @param dbConnection
+	 *        Connection object
+	 * @throws SQLException
+	 */
+	protected void associateSections(Map vsBeanMap, String seqXml, int moduleId, int seqNo, ViewModBean vmBean, String userId, Connection dbConnection)
+			throws SQLException
+	{
+		if (vsBeanMap != null)
+		{
+			if (vsBeanMap.size() > 0)
+			{
+				SubSectionUtilImpl ssuImpl = new SubSectionUtilImpl();
+				ssuImpl.traverseDom(seqXml, Integer.toString(seqNo));
+				List xmlSecList = ssuImpl.getXmlSecList();
+				StringBuffer rowClassesBuf = new StringBuffer();
+
+				xmlSecList = correctSections(vsBeanMap, moduleId, xmlSecList);
+				List vsBeanList = new ArrayList();
+				processViewSections(vsBeanMap, vsBeanList, xmlSecList, rowClassesBuf);
+				vmBean.setRowClasses(rowClassesBuf.toString());
+				Map<Integer, Date> secTrackMap = new HashMap();
+				int count = 0;
+				vmBean.setReadDate(getReadDate(moduleId, vsBeanMap, userId, dbConnection, secTrackMap));
+				count = secTrackMap.size();
+				if (count > 0)
+				{
+					for (ListIterator<ViewSecBean> k = vsBeanList.listIterator(); k.hasNext();)
+					{
+						ViewSecBean vsBean = k.next();
+						if (vsBean != null)
+						{
+							vsBean.setViewDate(secTrackMap.get(vsBean.getSectionId()));
+						}
+					}
+				}
+				vmBean.setVsBeans(vsBeanList);
+				vmBean.setNoOfSectionsRead(count);
+			}
+		}
+		else
+		{
+			if (vmBean != null)
+			{
+				vmBean.setReadDate(null);
+				vmBean.setNoOfSectionsRead(0);
+			}
+		}
+	}
+
+	/**
+	 * Creates new vmBean, sets its properties and determines its visibility
+	 * 
+	 * @param rs
+	 *        ResultSet Object
+	 * @param accMap
+	 *        Access records
+	 * @param courseId
+	 *        Course Id
+	 * @return Newly created ViewModBean object
+	 * @throws SQLException
+	 */
+	protected ViewModBean populateVmBean(ResultSet rs, Map<Integer, AccessDates> accMap, String courseId) throws SQLException
+	{
+		ViewModBean vmBean = new ViewModBean();
+		int moduleId = rs.getInt("module_id");
+		vmBean.setModuleId(moduleId);
+		int seqNo = rs.getInt("seq_no");
+		vmBean.setSeqNo(seqNo);
+		vmBean.setTitle(rs.getString("modTitle"));
+		vmBean.setDescription(rs.getString("modDesc"));
+		vmBean.setWhatsNext(rs.getString("whats_next"));
+		String seqXml = rs.getString("seq_xml");
+		vmBean.setSeqXml(seqXml);
+
+		// what's next display seq number is number of top level sections + 1
+		SubSectionUtilImpl ssuImpl1 = new SubSectionUtilImpl();
+		int top = ssuImpl1.noOfTopLevelSections(seqXml);
+		top = top + 1;
+		String ns_number = new String(seqNo + ".");
+		ns_number = ns_number.concat(Integer.toString(top));
+		vmBean.setNextStepsNumber(ns_number);
+
+		java.sql.Timestamp startTimestamp = rs.getTimestamp("start_date");
+		java.sql.Timestamp endTimestamp = rs.getTimestamp("end_date");
+		// If special access is set up, use those dates; otherwise,
+		// use module dates
+		if ((accMap != null) && (accMap.size() > 0))
+		{
+			AccessDates ad = (AccessDates) accMap.get(moduleId);
+			if (ad != null)
+			{
+				if (ad.overrideStart) startTimestamp = ad.getAccStartTimestamp();
+				if (ad.overrideEnd) endTimestamp = ad.getAccEndTimestamp();
+			}
+		}
+
+		// Date flag is false for invalid modules
+		if ((startTimestamp != null) && (endTimestamp != null) && (startTimestamp.compareTo(endTimestamp) >= 0))
+			vmBean.setDateFlag(false);
+		else
+			vmBean.setDateFlag(true);
+		if (isVisible(startTimestamp, endTimestamp))
+		{
+			this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
+			if ((this.accessAdvisor != null)
+					&& (this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId())))
+			{
+				vmBean.setBlockedBy(this.accessAdvisor.message("sakai.melete", courseId, String.valueOf(moduleId), SessionManager
+						.getCurrentSessionUserId()));
+				vmBean.setVisibleFlag(false);
+			}
+			else
+			{
+				vmBean.setVisibleFlag(true);
+			}
+		}
+		else
+		{
+			vmBean.setVisibleFlag(false);
+		}
+
+		if (startTimestamp != null)
+		{
+			vmBean.setStartDate(new java.util.Date(startTimestamp.getTime() + (startTimestamp.getNanos() / 1000000)));
+		}
+		if (endTimestamp != null)
+		{
+			vmBean.setEndDate(new java.util.Date(endTimestamp.getTime() + (endTimestamp.getNanos() / 1000000)));
+		}
+		return vmBean;
+	}
+	
+	/**
 	 * Get list of modules with view status set
 	 * 
 	 * @param userId
 	 *        User id
 	 * @param courseId
 	 *        Course id
-	 * @param fromCourseMap
-	 *        Whether call is coming from courseMap, if not some queries need not be executed
 	 * @param filtered
 	 *        flag false value means invalid modules need to be picked up
 	 * @return list of modules
 	 * @throws HibernateException
 	 */
-	public List<ViewModBeanService> getViewModulesAndDates(String userId, String courseId, boolean fromCourseMap, boolean filtered) throws HibernateException
+	public List<ViewModBeanService> getViewModulesAndDates(String userId, String courseId, boolean filtered) throws HibernateException
 	{
 		List<ViewModBeanService> modList = null;
 		Module mod = null;
 
 		try
 		{
-			modList = getViewModules(userId, courseId, fromCourseMap, filtered);
+			modList = getViewModules(userId, courseId, filtered);
 		}
 		catch (Exception e)
 		{
@@ -2424,6 +2446,174 @@ public class ModuleDB implements Serializable
 
 	}
 
+	/**
+	 * 
+	 * @param userId
+	 * @param courseId
+	 * @param modId
+	 * @return
+	 * @throws Exception
+	 */
+	public ViewModBeanService getViewModBean(String userId, String courseId, int modId) throws Exception
+	{
+		Connection dbConnection = null;
+		ViewModBeanService vmBean = null;
+
+		try
+		{
+			dbConnection = SqlService.borrowConnection();
+			ResultSet rs = null;
+			String sql;
+
+			sql = "select m.module_id,c.seq_no,m.title as modTitle,m.description as modDesc,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where m.module_id = ? and (s.delete_flag=0 or s.delete_flag is NULL)";
+			PreparedStatement pstmt = dbConnection.prepareStatement(sql);
+			pstmt.setInt(1, modId);
+			rs = pstmt.executeQuery();
+			if (rs != null)
+			{
+				vmBean = getViewModBeanRs(rs, dbConnection, userId, courseId);
+				rs.close();
+				pstmt.close();
+			}
+		}
+		catch (Exception e)
+		{
+			if (logger.isErrorEnabled()) logger.error(e);
+			throw e;
+		}
+		finally
+		{
+			try
+			{
+				if (dbConnection != null) SqlService.returnConnection(dbConnection);
+			}
+			catch (Exception e1)
+			{
+				if (logger.isErrorEnabled()) logger.error(e1);
+				throw e1;
+			}
+		}
+		return vmBean;
+	}
+			
+	/**
+	 * Get ViewModBeanService object by sequence number
+	 * 
+	 * @param userId
+	 *        The user Id
+	 * @param courseId
+	 *        The course id
+	 * @param seqNo
+	 *        The sequence number
+	 * @return ViewModBeanService object
+	 * @throws Exception
+	 */
+	public ViewModBeanService getViewModBeanBySeq(String userId, String courseId, int seqNo) throws Exception
+	{
+		Connection dbConnection = null;
+		ViewModBeanService vmBean = null;
+		try
+		{
+			dbConnection = SqlService.borrowConnection();
+			ResultSet rs = null;
+			String sql;
+
+			sql = "select m.module_id,c.seq_no,m.title as modTitle,m.description as modDesc,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.seq_no = ? and (s.delete_flag=0 or s.delete_flag is NULL)";
+			PreparedStatement pstmt = dbConnection.prepareStatement(sql);
+			pstmt.setString(1, courseId);
+			pstmt.setInt(2, seqNo);
+			rs = pstmt.executeQuery();
+			if (rs != null)
+			{
+				vmBean = getViewModBeanRs(rs, dbConnection, userId, courseId);
+				rs.close();
+				pstmt.close();
+			}
+		}
+		catch (Exception e)
+		{
+			if (logger.isErrorEnabled()) logger.error(e);
+			throw e;
+		}
+		finally
+		{
+			try
+			{
+				if (dbConnection != null) SqlService.returnConnection(dbConnection);
+			}
+			catch (Exception e1)
+			{
+				if (logger.isErrorEnabled()) logger.error(e1);
+				throw e1;
+			}
+		}
+		return vmBean;
+	}
+
+	/**
+	 * Method that does the actual db work, associates sections and returns viewModBean object
+	 * 
+	 * @param rs
+	 *        ResultSet
+	 * @param dbConnection
+	 *        Connection object
+	 * @param userId
+	 *        The user id
+	 * @param courseId
+	 *        The course id
+	 * @return ViewModBean object
+	 * @throws Exception
+	 */
+	protected ViewModBean getViewModBeanRs(ResultSet rs, Connection dbConnection, String userId, String courseId) throws Exception
+	{
+		ViewSecBean vsBean = null;
+		Map<Integer, ViewSecBean> vsBeanMap = null;
+		int prevModId = 0;
+		int moduleId = 0, seqNo = 0;
+		String seqXml = null;
+		Map<Integer, AccessDates> accMap = null;
+		ViewModBean vmBean = null;
+
+		if (rs != null)
+		{
+			// Check the special access table to see if there are any records
+			// for this user in this course, do this only for students
+			accMap = getAccessRecords(userId, courseId, dbConnection);
+
+			// Iterate through result set
+			while (rs.next())
+			{
+				// Executes just once for entire result set
+				// to populate vmBean
+				if (prevModId == 0)
+				{
+					moduleId = rs.getInt("module_id");
+					seqNo = rs.getInt("seq_no");
+					seqXml = rs.getString("seq_xml");
+					vmBean = populateVmBean(rs, accMap, courseId);
+					prevModId = moduleId;
+				}
+
+				// Executes for each record in result set
+				// Populate each vsBean and add to vsBeanMap
+				int sectionId = rs.getInt("section_id");
+				if (sectionId != 0)
+				{
+					if (vsBeanMap == null) vsBeanMap = new LinkedHashMap<Integer, ViewSecBean>();
+
+					vsBean = new ViewSecBean();
+					vsBean.setSectionId(sectionId);
+					vsBean.setContentType(rs.getString("content_type"));
+					vsBean.setTitle(rs.getString("secTitle"));
+					vsBeanMap.put(new Integer(sectionId), vsBean);
+				}
+			}// End while
+			// Associates the section map with vmBean
+			associateSections(vsBeanMap, seqXml, moduleId, seqNo, vmBean, userId, dbConnection);
+		}
+		return vmBean;
+	}
+	
 	/**
 	 * Checks if the module is completely read by the user
 	 * 
@@ -3373,14 +3563,15 @@ public class ModuleDB implements Serializable
 	 * 
 	 * @param sectionMap
 	 *        Section map
-	 * @param mod
-	 *        Module object
+	 * @param moduleId
+	 *        The module id
 	 * @param xmlSecList
 	 *        Xml sequence list
 	 * @return Corrected list
 	 */
-	private List correctSections(Map sectionMap, Module mod, List xmlSecList)
+	private List correctSections(Map sectionMap, int moduleId, List xmlSecList)
 	{
+		Module mod = null;
 		SubSectionUtilImpl ssuImpl = new SubSectionUtilImpl();
 		String updSeqXml = null;
 		if (sectionMap == null || sectionMap.size() == 0) return null;
@@ -3434,6 +3625,7 @@ public class ModuleDB implements Serializable
 			{
 
 				updSeqXml = null;
+				mod = getModule(moduleId);
 				// Add sections to seqXml
 				if (newSecList != null)
 				{
@@ -3473,25 +3665,24 @@ public class ModuleDB implements Serializable
 						}
 					}
 				}// Remove sections from seqXml end
-
+				// Update module
+				if ((updSeqXml != null) && (updSeqXml.length() > 0))
+				{
+					mod.setSeqXml(updSeqXml);
+					try
+					{
+						updateModule(mod);
+					}
+					catch (Exception ex)
+					{
+						logger.error("CorrectSections - error in updating module " + ex.toString());
+					}
+					ssuImpl.traverseDom(mod.getSeqXml(), ((Integer) mod.getCoursemodule().getSeqNo()).toString());
+					xmlSecList = ssuImpl.getXmlSecList();
+					return xmlSecList;
+				}
 			}// end else if big condition
 
-			// Update module
-			if ((updSeqXml != null) && (updSeqXml.length() > 0))
-			{
-				mod.setSeqXml(updSeqXml);
-				try
-				{
-					updateModule(mod);
-				}
-				catch (Exception ex)
-				{
-					logger.error("CorrectSections - error in updating module " + ex.toString());
-				}
-				ssuImpl.traverseDom(mod.getSeqXml(), ((Integer) mod.getCoursemodule().getSeqNo()).toString());
-				xmlSecList = ssuImpl.getXmlSecList();
-				return xmlSecList;
-			}
 		}// end else sectionMap!= null
 		return null;
 	}
@@ -3743,12 +3934,12 @@ public class ModuleDB implements Serializable
 	 *        User id
 	 * @param dbConnection
 	 *        Db connection
-	 * @param noOfSections
-	 *        list of viewed sections
+	 * @param secTrackMap
+	 *        Map that contains section id and view date
 	 * @return max read date of all the module's sections or null
 	 * @throws SQLException
 	 */
-	private Date getReadDate(int moduleId, Map sectionMap, String userId, Connection dbConnection, Vector<Integer> noOfSections) throws SQLException
+	private Date getReadDate(int moduleId, Map sectionMap, String userId, Connection dbConnection, Map<Integer,Date> secTrackMap) throws SQLException
 	{
 		logger.debug("ModuleDB:get Read date");
 		Date viewDate = null;
@@ -3777,31 +3968,23 @@ public class ModuleDB implements Serializable
 			pstmt.setString(1, userId);
 			pstmt.setInt(2, moduleId);
 			rs = pstmt.executeQuery();
-			List trackSecList = new ArrayList();
-
+	
 			if (rs != null)
 			{
 				int sectionId;
 				while (rs.next())
 				{
 					sectionId = rs.getInt("section_id");
-					trackSecList.add(new Integer(sectionId));
 					viewTimestamp = rs.getTimestamp("view_date");
+					if (viewTimestamp != null) viewDate = new java.util.Date(viewTimestamp.getTime() + (viewTimestamp.getNanos() / 1000000));
+					secTrackMap.put(new Integer(sectionId), viewDate);
 				}
 			}
 			rs.close();
 			pstmt.close();
-			// the list size is the number of viewed sections from a module
-			noOfSections.add(trackSecList.size());
 
-			secList.removeAll(trackSecList);
-			if (secList.size() != 0)
-			{
-				viewDate = null;
-				return viewDate;
-			}
 		}
-		if (viewTimestamp != null) viewDate = new java.util.Date(viewTimestamp.getTime() + (viewTimestamp.getNanos() / 1000000));
+
 		return viewDate;
 	}
 
@@ -4035,7 +4218,8 @@ public class ModuleDB implements Serializable
 		ModuleShdates mshdate = (ModuleShdates) mod.getModuleshdate();
 		mdBean.setVisibleFlag(mshdate.isVisibleFlag());
 		mdBean.setDateFlag(!mshdate.isValid());
-		mdBean.setModuleId(mod.getModuleId().intValue());
+		int moduleId = mod.getModuleId().intValue();
+		mdBean.setModuleId(moduleId);
 		mdBean.setModule((Module) mod);
 		mdBean.setModuleShdate(mod.getModuleshdate());
 		mdBean.setCmod(mod.getCoursemodule());
@@ -4054,7 +4238,7 @@ public class ModuleDB implements Serializable
 				sectionBeanList = new ArrayList();
 				rowClassesBuf = new StringBuffer();
 
-				xmlSecList = correctSections(sectionMap, mod, xmlSecList);
+				xmlSecList = correctSections(sectionMap, moduleId, xmlSecList);
 				processSections(sectionMap, sectionBeanList, xmlSecList, rowClassesBuf);
 				mdBean.setSectionBeans(sectionBeanList);
 				mdBean.setRowClasses(rowClassesBuf.toString());

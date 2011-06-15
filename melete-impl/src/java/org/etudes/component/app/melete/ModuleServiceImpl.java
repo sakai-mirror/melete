@@ -402,13 +402,13 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<ViewModBeanService> getViewModules(String userId, String courseId, boolean fromCourseMap, boolean filtered)
+	public List<ViewModBeanService> getViewModules(String userId, String courseId, boolean filtered)
 	{
 		if (moduledb == null) moduledb = ModuleDB.getModuleDB();
 		List<ViewModBeanService> viewModuleBeans = null;
 		try
 		{
-			viewModuleBeans = moduledb.getViewModulesAndDates(userId, courseId, fromCourseMap, filtered);
+			viewModuleBeans = moduledb.getViewModulesAndDates(userId, courseId, filtered);
 		}
 		catch (HibernateException e)
 		{
@@ -418,6 +418,46 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 		return viewModuleBeans;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public ViewModBeanService getViewModBean(String userId, String courseId, int modId)
+	{
+		ViewModBeanService vmBean = null;
+		if (moduledb == null) moduledb = ModuleDB.getModuleDB();
+
+		try
+		{
+			vmBean = moduledb.getViewModBean(userId, courseId, modId);
+		}
+		catch (Exception e)
+		{
+			// e.printStackTrace();
+			logger.debug(e.toString());
+		}
+		return vmBean;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public ViewModBeanService getViewModBeanBySeq(String userId, String courseId, int seqNo)
+	{
+		ViewModBeanService vmBean = null;
+		if (moduledb == null) moduledb = ModuleDB.getModuleDB();
+
+		try
+		{
+			vmBean = moduledb.getViewModBeanBySeq(userId, courseId, seqNo);
+		}
+		catch (Exception e)
+		{
+			// e.printStackTrace();
+			logger.debug(e.toString());
+		}
+		return vmBean;
+	} 
+	    
 	public void init()
 	{
 		logger.info(this + ".init()");

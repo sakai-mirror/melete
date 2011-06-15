@@ -24,6 +24,8 @@
 package org.etudes.component.app.melete;
 
 import java.io.Serializable;
+import java.util.Date;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.etudes.api.app.melete.ViewSecBeanService;
 
@@ -35,6 +37,7 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 	protected String contentType;
 	protected String displaySequence;
 	protected String title;
+	private Date viewDate;
 
 	/** default constructor */
 	public ViewSecBean()
@@ -48,7 +51,7 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 	 * @param displaySequence
 	 * @param title
 	 */
-	public ViewSecBean(boolean selected, int sectionId, String contentType, String displaySequence, String title)
+	public ViewSecBean(boolean selected, int sectionId, String contentType, String displaySequence, String title, Date viewDate)
 	{
 		super();
 		this.selected = selected;
@@ -56,6 +59,7 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 		this.contentType = contentType;
 		this.displaySequence = displaySequence;
 		this.title = title;
+		this.viewDate = viewDate;
 	}
 
 	/**
@@ -88,6 +92,14 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 	public String getTitle()
 	{
 		return this.title;
+	}
+	
+	/*
+	 * {@inheritDoc}
+	 */
+	public Date getViewDate()
+	{
+		return this.viewDate;
 	}
 
 	/**
@@ -137,6 +149,14 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 	{
 		this.title = title;
 	}
+	
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setViewDate(Date viewDate)
+	{
+		this.viewDate = viewDate;
+	}	
 
 	/**
 	 * {@inheritDoc}

@@ -1,5 +1,7 @@
 package org.etudes.api.app.melete;
 
+import java.util.Date;
+
 public interface ViewSecBeanService
 {
 
@@ -22,6 +24,11 @@ public interface ViewSecBeanService
 	 * @return get section title
 	 */
 	public abstract String getTitle();
+	
+	/**
+	 * @return view date
+	 */
+	public abstract Date getViewDate();
 
 	/**
 	 * @return selected flag
@@ -57,5 +64,12 @@ public interface ViewSecBeanService
 	 *        set section title
 	 */
 	public abstract void setTitle(String title);
+	
+	
+	/**
+	 * @param viewDate
+	 *        view date
+	 */
+	public abstract void setViewDate(Date viewDate);
 
 }
