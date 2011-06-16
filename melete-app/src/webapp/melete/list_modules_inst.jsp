@@ -72,6 +72,8 @@
         <h:graphicImage id="exp_gif" alt="#{msgs.list_modules_inst_expand}" title="#{msgs.list_modules_inst_expand}" value="/images/expand.gif" rendered="#{((vmbean.moduleId != listModulesPage.showModuleId)&&(vmbean.vsBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}" styleClass="ExpClass"/>
         <h:graphicImage id="col_gif" alt="#{msgs.list_modules_inst_collapse}" title="#{msgs.list_modules_inst_collapse}" value="/images/collapse.gif" rendered="#{(((vmbean.moduleId == listModulesPage.showModuleId)&&(vmbean.vsBeans != listModulesPage.nullList))||((listModulesPage.expandAllFlag == listModulesPage.trueFlag)&&(vmbean.vsBeans != listModulesPage.nullList)))}" styleClass="ExpClass"/>
         </h:commandLink>   
+       <h:graphicImage id="moduleFinishStatus" url="/images/status_away.png" alt="#{msgs.list_modules_alt_progress}" title="#{msgs.list_modules_alt_progress}" styleClass="AuthImgClass" rendered="#{vmbean.readDate != null && !vmbean.readComplete}" />
+	   <h:graphicImage id="moduleFinishStatus1" url="/images/finish.gif" alt="#{msgs.list_modules_alt_complete}" title="#{msgs.list_modules_alt_complete}" styleClass="AuthImgClass" rendered="#{vmbean.readComplete}" /> 
        <h:outputText id="mod_seq" value="#{vmbean.seqNo}. " rendered="#{listModulesPage.autonumber}"/>
        <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}" immediate="true">
           <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
@@ -83,8 +85,11 @@
        </h:commandLink>
                 
            <h:dataTable id="tablesec" rendered="#{(((vmbean.moduleId == listModulesPage.showModuleId)||(listModulesPage.expandAllFlag == listModulesPage.trueFlag)))}"
-                  value="#{vmbean.vsBeans}" cellpadding="3"
-                  var="vsbean"  rowClasses="#{vmbean.rowClasses}"  width="95%" binding="#{listModulesPage.secTable}" summary="#{msgs.list_modules_inst_sections_summary}">
+                  value="#{vmbean.vsBeans}" cellpadding="1"
+                  var="vsbean"  rowClasses="#{vmbean.rowClasses}" columnClasses="ListSectionTableClassCol1,ListSectionTableClassCol2" width="95%" styleClass="secrow0" binding="#{listModulesPage.secTable}" summary="#{msgs.list_modules_inst_sections_summary}">
+                 <h:column>
+        		 	 <h:graphicImage id="moduleFinishStatus1" url="/images/finish.gif" alt="#{msgs.list_modules_alt_complete}" title="#{msgs.list_modules_alt_complete}" style="border:0" rendered="#{vmbean.readDate != null && !vmbean.readComplete && vsbean.viewDate != null}" />
+        		</h:column>
                    <h:column>                         
                <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}"/>
 	       <h:outputText id="sec_seq" value="#{vsbean.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>

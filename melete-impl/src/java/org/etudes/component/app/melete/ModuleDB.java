@@ -2308,6 +2308,8 @@ public class ModuleDB implements Serializable
 				int count = 0;
 				vmBean.setReadDate(getReadDate(moduleId, vsBeanMap, userId, dbConnection, secTrackMap));
 				count = secTrackMap.size();
+				if(count == vsBeanMap.size())vmBean.setReadComplete(true);
+				else vmBean.setReadComplete(false);
 				if (count > 0)
 				{
 					for (ListIterator<ViewSecBean> k = vsBeanList.listIterator(); k.hasNext();)
@@ -2329,6 +2331,7 @@ public class ModuleDB implements Serializable
 			{
 				vmBean.setReadDate(null);
 				vmBean.setNoOfSectionsRead(0);
+				vmBean.setReadComplete(true);
 			}
 		}
 	}

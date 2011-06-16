@@ -63,6 +63,8 @@
 <td>
 	<h:panelGrid id="moduleContentGrid" columns="2" width="100%" columnClasses="style6,right" border="0" cellpadding="5" rendered="#{viewModulesPage.viewMbean != null}">
 		<h:column>
+			<h:graphicImage id="moduleFinishStatus" url="/images/status_away.png" alt="#{msgs.list_modules_alt_progress}" title="#{msgs.list_modules_alt_progress}" styleClass="AuthImgClass" rendered="#{viewModulesPage.viewMbean.readDate != null && !viewModulesPage.viewMbean.readComplete}" />
+	   		<h:graphicImage id="moduleFinishStatus1" url="/images/finish.gif" alt="#{msgs.list_modules_alt_complete}" title="#{msgs.list_modules_alt_complete}" styleClass="AuthImgClass" rendered="#{viewModulesPage.viewMbean.readComplete}" /> 
 			<h:outputText id="mod_seq" value="#{viewModulesPage.viewMbean.seqNo}. " styleClass="bold" rendered="#{viewModulesPage.autonumber}"/>
 			<h:outputText id="title" value="#{viewModulesPage.viewMbean.title}" styleClass="bold" ></h:outputText>
 		</h:column>
@@ -79,13 +81,24 @@
 		</h:column>
 	<h:column>
 		<h:outputText id="secs" value="#{msgs.view_module_student_content_section}" ></h:outputText>  
-		<h:dataTable id="tablesec"  value="#{viewModulesPage.viewMbean.vsBeans}" var="sectionBean" rendered="#{viewModulesPage.sectionSize > 0}" styleClass="SectionTableClass">
+		<h:dataTable id="tablesec"  value="#{viewModulesPage.viewMbean.vsBeans}" var="sectionBean" columnClasses="SectionTableClassCol1,SectionTableClassCol2,SectionTableClassCol3" rendered="#{viewModulesPage.sectionSize > 0}" styleClass="SectionTableClass" width="55%">
            	  <h:column>
+        		  <h:graphicImage id="moduleFinishStatus1" url="/images/finish.gif" alt="#{msgs.list_modules_alt_complete}" title="#{msgs.list_modules_alt_complete}" styleClass="AuthImgClass" rendered="#{viewModulesPage.viewMbean.readDate != null && !viewModulesPage.viewMbean.readComplete && sectionBean.viewDate != null}" />
+        		</h:column>
+			  <h:column>	
         		  <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" rendered="#{sectionBean.title != viewModulesPage.nullString && !viewModulesPage.autonumber}"/>
 		          <h:commandLink id="viewSectionEditor"  action="#{viewModulesPage.viewSection}" rendered="#{sectionBean.title != viewModulesPage.nullString}" immediate="true">
 				      <h:outputText id="sec_seq" value="#{sectionBean.displaySequence}. " rendered="#{viewModulesPage.autonumber}"/>
 					  <h:outputText id="sectitleEditor" value="#{sectionBean.title}" > </h:outputText>
 				  </h:commandLink>
+			</h:column>
+			<h:column rendered="#{viewModulesPage.viewMbean.readDate != null}">				
+				<h:outputText id="viewDt" value="#{sectionBean.viewDate}" styleClass="italics">
+					<f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
+        	    </h:outputText>	
+        	    <f:facet name="header">
+               	   <h:outputText value="#{msgs.view_module_date_viewed}" styleClass="italics"/>
+              </f:facet>  
 			</h:column>
  		 </h:dataTable>        
 	</h:column>

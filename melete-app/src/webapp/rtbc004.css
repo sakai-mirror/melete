@@ -249,6 +249,15 @@ width :85%;}
 
 .SectionTableClass {vertical-align: top;}
 
+.SectionTableClassCol1 {width: 2%;vertical-align: top;}
+
+.SectionTableClassCol2 {width: 78%;vertical-align: top;}
+
+.SectionTableClassCol3 {width: 20%;vertical-align: top; white-space: nowrap;}
+
+.ListSectionTableClassCol1 {width:1%;vertical-align: top;}
+.ListSectionTableClassCol2 {width:99%;vertical-align: top;}
+
 .RedClass 			{color: #FF0000;  }
 
 .RedBorderClass {color:#FF0000;
