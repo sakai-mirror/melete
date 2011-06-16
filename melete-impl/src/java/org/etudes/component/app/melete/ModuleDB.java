@@ -4216,7 +4216,6 @@ public class ModuleDB implements Serializable
 
 		if (mod == null) mod = new Module();
 		ModuleShdates mshdate = (ModuleShdates) mod.getModuleshdate();
-		mdBean.setVisibleFlag(mshdate.isVisibleFlag());
 		mdBean.setDateFlag(!mshdate.isValid());
 		int moduleId = mod.getModuleId().intValue();
 		mdBean.setModuleId(moduleId);
