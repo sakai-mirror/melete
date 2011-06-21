@@ -823,7 +823,15 @@ public class SectionDB implements Serializable
 			q.setParameter("userId", stv.getUserId());
 			SectionTrackView find_sv = (SectionTrackView) q.uniqueResult();
 
-			if (find_sv == null) session.save(stv);
+			if (find_sv == null) 
+			{
+				session.save(stv);
+			}
+			else
+			{
+				find_sv.setViewDate(stv.getViewDate());
+				session.save(find_sv);
+			}
 			tx.commit();
 		}
 		catch (StaleObjectStateException sose)
