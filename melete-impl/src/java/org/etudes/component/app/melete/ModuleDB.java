@@ -2228,11 +2228,10 @@ public class ModuleDB implements Serializable
 						vmBean = populateVmBean(rs, accMap, courseId);
 						
 						// Add invalid modules if not filtered
-						// If filtered, do not add invalid modules
-						if ((!filtered) || (filtered && vmBean.isDateFlag() == true))
-						{
-							resList.add(vmBean);
-						}
+						// If filtered, do not add bad dates and no sections modules (invalid modules)
+						if (filtered && (!vmBean.isDateFlag() || vsBeanMap == null || vsBeanMap.size() <= 0)) continue;
+						resList.add(vmBean);
+						
 					}// end if ((prevModId == 0)||(moduleId != prevModId))
 
 					prevModId = moduleId;
