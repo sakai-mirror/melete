@@ -203,7 +203,7 @@ if (msg != null)
      <h:panelGrid border="0" columns="1" style="z-index:0;" rendered="#{mdbean.dateFlag || mdbean.sectionBeans == null}">   
 		 <h:column>    
 		     <h:commandLink id="showHideInvalid" action="#{listAuthModulesPage.showHideInvalid}" immediate="true">
-			    <h:graphicImage id="err_gif" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" styleClass="ExpClass"/>                     
+			    <h:graphicImage id="err_gif" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" styleClass="ExpClass"/>                     
 		     </h:commandLink> 
 				 <h:panelGrid id="invalidMsg" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="300px" styleClass="invalidAlert" rendered="#{listAuthModulesPage.showInvalidModuleId == mdbean.moduleId}" >   
 					<h:column>
