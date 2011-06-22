@@ -182,11 +182,11 @@
             </h:outputText>
                   <h:outputText id="startDate" 
                            value="#{vmbean.startDate}"    rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}">
-              <f:convertDateTime type="both" dateStyle="long"/>
+              <f:convertDateTime type="both" dateStyle="long" timeStyle="short"/>
             </h:outputText>
             <h:outputText id="startDate2" styleClass="italics" 
                            value="#{vmbean.startDate}"     rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag}">      
-              <f:convertDateTime type="both" dateStyle="long"/>
+              <f:convertDateTime type="both" dateStyle="long" timeStyle="short"/>
             </h:outputText>            
            </h:column>
             <h:column>
@@ -195,17 +195,17 @@
               </f:facet>  
                <h:outputText id="endDate0" 
                            value="-"    rendered="#{((vmbean.endDate == listModulesPage.nullDate))}">
-              <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
+               <f:convertDateTime type="both" dateStyle="long" timeStyle="short"/>
             </h:outputText>
               <h:outputText id="endDate"
                            value="#{vmbean.endDate}"
                               rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}">
-               <f:convertDateTime type="both" dateStyle="long"/>
+                <f:convertDateTime type="both" dateStyle="long" timeStyle="short"/>
             </h:outputText>
             <h:outputText id="endDate2" styleClass="italics" 
                            value="#{vmbean.endDate}"
                              rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag}">      
-               <f:convertDateTime type="both" dateStyle="long"/>
+               <f:convertDateTime type="both" dateStyle="long" timeStyle="short"/>
             </h:outputText>            
    	 </h:column>   
       <h:column> 

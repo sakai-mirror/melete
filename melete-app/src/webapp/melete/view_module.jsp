@@ -101,7 +101,7 @@
 				</h:column>
 				<h:column rendered="#{viewModulesPage.viewMbean.readDate != null}">
 					 <h:outputText id="viewDt" value="#{sectionBean.viewDate}" >
-						<f:convertDateTime type="both" dateStyle="long"/>
+						<f:convertDateTime type="both" dateStyle="long" timeStyle="short"/>
 	        	    </h:outputText>	
 	        	    <f:facet name="header">
 	        	    	<h:outputText id="viewDtheader" value="#{msgs.view_module_date_viewed}" />

@@ -190,7 +190,7 @@
             </h:outputText>
                 <h:outputText id="startDate" 
                            value="#{vmbean.startDate}" rendered="#{(vmbean.startDate != listModulesPage.nullDate)}">
-              <f:convertDateTime type="both" dateStyle="long"/>
+              <f:convertDateTime type="both" dateStyle="long" timeStyle="short"/>
             </h:outputText>
           </h:column>
       <h:column>
@@ -205,7 +205,7 @@
             </h:outputText>
                <h:outputText id="endDate"
                            value="#{vmbean.endDate}" rendered="#{(vmbean.endDate != listModulesPage.nullDate)}">
-              <f:convertDateTime type="both" dateStyle="long"/>
+              <f:convertDateTime type="both" dateStyle="long" timeStyle="short"/>
             </h:outputText>
          </h:column>
 		 <h:column>  
