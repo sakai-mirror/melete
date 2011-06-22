@@ -27,6 +27,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.etudes.api.app.melete.SectionTrackViewObjService;
+
 public interface SectionService
 {
 	/**
@@ -348,14 +350,19 @@ public interface SectionService
 	 */
 	public void insertSectionResource(SectionObjService section, MeleteResourceService melResource) throws Exception;
 
+	
 	/**
-	 * Add section track information into database
+	 * Insert new section tracking info or update section tracking info if it exists already
+	 * Before updating, store current tracking info to return and display
 	 * 
-	 * @param stv
-	 *        SectionTrackViewObjService object
+	 * @param sectionId
+	 *        Section id
+	 * @param userId
+	 *        User id
+	 * @return SectionTrackViewObjService object, if found or null
 	 */
-	public void insertSectionTrack(SectionTrackViewObjService stv);
-
+	public SectionTrackViewObjService insertSectionTrack(int sectionId, String userId);
+	
 	/**
 	 * Updates the melete resource.
 	 * 

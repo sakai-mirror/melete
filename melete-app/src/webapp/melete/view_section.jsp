@@ -40,7 +40,7 @@
 <table   class="maintableCollapseWithNoBorder">
 <tr>
 <td colspan="2" align="center">
-<h:inputHidden id="trackSection" value="#{viewSectionsPage.sectionTrack}" />
+
 <f:subview id="topmod">
  	<jsp:include page="view_navigate.jsp"/>
 </f:subview>
@@ -83,7 +83,9 @@
 <h:panelGrid id="sectionContentGrid" columns="1" width="100%" border="0" rendered="#{viewSectionsPage.section != null}">
 <h:column>
  	<h:outputText id="sec_seq" value="#{viewSectionsPage.sectionDisplaySequence}. " styleClass="bold style7" rendered="#{viewSectionsPage.autonumber}"/>
- 	<h:outputText id="title" value="#{viewSectionsPage.section.title}" styleClass="bold style7"></h:outputText>     
+ 	<h:outputText id="title" value="#{viewSectionsPage.section.title}" styleClass="bold style7"></h:outputText>
+ 	<h:outputText id="trackDateStr" value="#{viewSectionsPage.sectionTrackDateStr}"/>
+ 	     
 </h:column>
 <h:column>
 	<h:outputText value="#{msgs.view_section_student_instructions} " rendered="#{((viewSectionsPage.section.instr != viewSectionsPage.nullString)&&(viewSectionsPage.section.instr != viewSectionsPage.emptyString))}" styleClass="italics"/>
@@ -140,7 +142,7 @@
   			<jsp:include page="license_info.jsp"/>      
          </B></td></tr>
 	    </table>
-
+	   
 <script type="text/javascript">
 	window.onload=function(){
 	 var oIframe = document.getElementById("iframe3");

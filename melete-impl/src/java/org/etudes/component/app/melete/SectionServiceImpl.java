@@ -690,16 +690,18 @@ public class SectionServiceImpl implements Serializable, SectionService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void insertSectionTrack(SectionTrackViewObjService stv)
+	public SectionTrackView insertSectionTrack(int sectionId, String userId)
 	{
+		SectionTrackView returnStv = null;
 		try
 		{
-			sectiondb.insertSectionTrack(stv);
+			returnStv = sectiondb.insertSectionTrack(sectionId, userId);
 		}
 		catch (Exception ex)
 		{
-			logger.error("ViewSectionPage --add section track failed for user " + stv.getUserId() + " for section " + stv.getSectionId());
+			logger.error("ViewSectionPage --add/update section track failed for user " + userId + " for section " + sectionId);
 		}
+		return returnStv;
 	}
 
 	/**
