@@ -35,6 +35,7 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 	protected boolean selected;
 	protected int sectionId;
 	protected String contentType;
+	protected String displayClass;
 	protected String displaySequence;
 	protected String title;
 	private Date viewDate;
@@ -70,6 +71,11 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 		return this.contentType;
 	}
 
+	public String getDisplayClass()
+	{
+		return displayClass;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -85,7 +91,7 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 	{
 		return this.sectionId;
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -93,7 +99,7 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 	{
 		return this.title;
 	}
-	
+
 	/*
 	 * {@inheritDoc}
 	 */
@@ -118,6 +124,11 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 		this.contentType = contentType;
 	}
 
+	public void setDisplayClass(String displayClass)
+	{
+		this.displayClass = displayClass;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -133,14 +144,14 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 	{
 		this.sectionId = sectionId;
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
-	}
+	}	
 
 	/**
 	 * {@inheritDoc}
@@ -149,14 +160,14 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 	{
 		this.title = title;
 	}
-	
+
 	/*
 	 * {@inheritDoc}
 	 */
 	public void setViewDate(Date viewDate)
 	{
 		this.viewDate = viewDate;
-	}	
+	}
 
 	/**
 	 * {@inheritDoc}

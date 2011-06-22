@@ -11,6 +11,11 @@ public interface ViewSecBeanService
 	public abstract String getContentType();
 
 	/**
+	 * return the section display class
+	 * @return
+	 */
+	public abstract String getDisplayClass();
+	/**
 	 * @return displaySequence string
 	 */
 	public abstract String getDisplaySequence();
@@ -41,6 +46,12 @@ public interface ViewSecBeanService
 	 */
 	public abstract void setContentType(String contentType);
 
+	/**
+	 * 
+	 * @param displayClass
+	 */
+	public abstract void setDisplayClass(String displayClass);
+	
 	/**
 	 * @param displaySequence
 	 *        set displaySequence

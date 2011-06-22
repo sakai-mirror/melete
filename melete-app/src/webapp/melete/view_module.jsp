@@ -81,25 +81,32 @@
 		</h:column>
 	<h:column>
 		<h:outputText id="secs" value="#{msgs.view_module_student_content_section}" ></h:outputText>  
-		<h:dataTable id="tablesec"  value="#{viewModulesPage.viewMbean.vsBeans}" var="sectionBean" columnClasses="SectionTableClassCol1,SectionTableClassCol2,SectionTableClassCol3" rendered="#{viewModulesPage.sectionSize > 0}" styleClass="SectionTableClass" width="55%">
-           	  <h:column>
-        		  <h:graphicImage id="moduleFinishStatus1" url="/images/finish.gif" alt="#{msgs.list_modules_alt_complete}" title="#{msgs.list_modules_alt_complete}" styleClass="AuthImgClass" rendered="#{viewModulesPage.viewMbean.readDate != null && !viewModulesPage.viewMbean.readComplete && sectionBean.viewDate != null}" />
-        		</h:column>
-			  <h:column>	
-        		  <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" rendered="#{sectionBean.title != viewModulesPage.nullString && !viewModulesPage.autonumber}"/>
-		          <h:commandLink id="viewSectionEditor"  action="#{viewModulesPage.viewSection}" rendered="#{sectionBean.title != viewModulesPage.nullString}" immediate="true">
-				      <h:outputText id="sec_seq" value="#{sectionBean.displaySequence}. " rendered="#{viewModulesPage.autonumber}"/>
-					  <h:outputText id="sectitleEditor" value="#{sectionBean.title}" > </h:outputText>
-				  </h:commandLink>
-			</h:column>
-			<h:column rendered="#{viewModulesPage.viewMbean.readDate != null}">				
-				<h:outputText id="viewDt" value="#{sectionBean.viewDate}" styleClass="italics">
-					<f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
-        	    </h:outputText>	
-        	    <f:facet name="header">
-               	   <h:outputText value="#{msgs.view_module_date_viewed}" styleClass="italics"/>
-              </f:facet>  
-			</h:column>
+		<h:dataTable id="tablesec"  value="#{viewModulesPage.viewMbean.vsBeans}" var="sectionBean" headerClass="left" rendered="#{viewModulesPage.sectionSize > 0}" styleClass="SectionTableClass" width="80%">
+ 			  <h:column> 			  		
+ 					<h:panelGroup styleClass="readSection" style="width:100%;" rendered="#{sectionBean.viewDate != null}">
+	        		  <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" styleClass="#{sectionBean.displayClass}" rendered="#{sectionBean.title != viewModulesPage.nullString && !viewModulesPage.autonumber}"/>
+			          <h:commandLink id="viewSectionEditor"  action="#{viewModulesPage.viewSection}" styleClass="#{sectionBean.displayClass}" rendered="#{sectionBean.title != viewModulesPage.nullString}" immediate="true">
+					      <h:outputText id="sec_seq" value="#{sectionBean.displaySequence}. " rendered="#{viewModulesPage.autonumber}"/>
+						  <h:outputText id="sectitleEditor" value="#{sectionBean.title}" > </h:outputText>
+					  </h:commandLink>					 
+					 </h:panelGroup> 
+										  
+					 <h:panelGroup style="width:100%;" rendered="#{sectionBean.viewDate == null}" >					 
+	        		  <h:graphicImage id="bul_gif1" value="/images/bullet_black.gif" styleClass="#{sectionBean.displayClass}" rendered="#{sectionBean.title != viewModulesPage.nullString && !viewModulesPage.autonumber}"/>
+			          <h:commandLink id="viewSectionEditor1"  action="#{viewModulesPage.viewSection}" styleClass="#{sectionBean.displayClass}" rendered="#{sectionBean.title != viewModulesPage.nullString}" immediate="true">
+					      <h:outputText id="sec_seq1" value="#{sectionBean.displaySequence}. " rendered="#{viewModulesPage.autonumber}"/>
+						  <h:outputText id="sectitleEditor1" value="#{sectionBean.title}" > </h:outputText>
+					  </h:commandLink>
+					 </h:panelGroup> 									 
+				</h:column>
+				<h:column rendered="#{viewModulesPage.viewMbean.readDate != null}">
+					 <h:outputText id="viewDt" value="#{sectionBean.viewDate}" >
+						<f:convertDateTime type="both" dateStyle="long"/>
+	        	    </h:outputText>	
+	        	    <f:facet name="header">
+	        	    	<h:outputText id="viewDtheader" value="#{msgs.view_module_date_viewed}" />
+	        	    </f:facet>
+				</h:column>
  		 </h:dataTable>        
 	</h:column>
 	<h:column rendered="#{viewModulesPage.viewMbean.whatsNext != viewModulesPage.nullString}">

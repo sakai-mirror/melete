@@ -249,11 +249,9 @@ width :85%;}
 
 .SectionTableClass {vertical-align: top;}
 
-.SectionTableClassCol1 {width: 2%;vertical-align: top;}
+.SectionTableClassCol2 {width: 80%;vertical-align: top;}
 
-.SectionTableClassCol2 {width: 78%;vertical-align: top;}
-
-.SectionTableClassCol3 {width: 20%;vertical-align: top; white-space: nowrap;}
+.SectionTableClassCol3 {width: 20%;vertical-align: top; white-space: nowrap; text-align:left;}
 
 .ListSectionTableClassCol1 {width:1%;vertical-align: top;}
 .ListSectionTableClassCol2 {width:99%;vertical-align: top;}
@@ -408,6 +406,19 @@ white-space:nowrap;}
  .secrow8       {text-indent:180px;}
  .secrow9       {text-indent:200px;}
 
+ .seccol0       {margin-left:20px;}
+ .seccol1       {margin-left:40px;}
+ .seccol2       {margin-left:60px;}
+ .seccol3       {margin-left:80px;}
+ .seccol4       {margin-left:100px;}
+ .seccol5       {margin-left:120px;}
+ .seccol6       {margin-left:140px;}
+ .seccol7       {margin-left:160px;}
+ .seccol8       {margin-left:180px;}
+ .seccol9       {margin-left:200px;}
+ 
+  .readSection {width:100%;background-color:#CCFFCC;
+  				opacity:0.4;filter:alpha(opacity=40);}
   .BlueClass {
     color: #0000FF;
   }
@@ -486,7 +497,7 @@ vertical-align:top;
 
 @media print  { .noprint  { display: none; } }
 
-.prereqAlert {
+.prereqInvalidAlert {
 	position:absolute;
 	top:50px;
 	border-left:medium double black;
@@ -495,14 +506,4 @@ vertical-align:top;
 	border-top:medium double black;
 	height:100px;
 	z-index:1;	
-}
-.invalidAlert {
-	position:absolute;
-	top:50px;
-	border-left:medium double black;
-	border-right:medium double black;
-	border-bottom:medium double black;
-	border-top:medium double black;
-	height:100px;
-	z-index:1;		
 }

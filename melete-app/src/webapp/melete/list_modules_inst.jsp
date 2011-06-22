@@ -87,28 +87,44 @@
            <h:dataTable id="tablesec" rendered="#{(((vmbean.moduleId == listModulesPage.showModuleId)||(listModulesPage.expandAllFlag == listModulesPage.trueFlag)))}"
                   value="#{vmbean.vsBeans}" cellpadding="1"
                   var="vsbean"  rowClasses="#{vmbean.rowClasses}" columnClasses="ListSectionTableClassCol1,ListSectionTableClassCol2" width="95%" styleClass="secrow0" binding="#{listModulesPage.secTable}" summary="#{msgs.list_modules_inst_sections_summary}">
-                 <h:column>
-        		 	 <h:graphicImage id="moduleFinishStatus1" url="/images/finish.gif" alt="#{msgs.list_modules_alt_complete}" title="#{msgs.list_modules_alt_complete}" style="border:0" rendered="#{vmbean.readDate != null && !vmbean.readComplete && vsbean.viewDate != null}" />
-        		</h:column>
-                   <h:column>                         
-               <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}"/>
-	       <h:outputText id="sec_seq" value="#{vsbean.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>
-           <h:commandLink id="viewSectionEditor"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{vsbean.contentType == listModulesPage.typeLink}" immediate="true">
-                  <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
-               <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
-               <h:outputText id="sectitleEditor" value="#{vsbean.title}" rendered="#{vmbean.visibleFlag == true}" />
-               <h:outputText id="sectitleEditor2" value="#{vsbean.title}" styleClass="italics" rendered="#{vmbean.visibleFlag == false}" />
-             </h:commandLink>
-                       
-           <h:commandLink id="viewSectionLink"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}" rendered="#{vsbean.contentType != listModulesPage.typeLink}" immediate="true">
-                  <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
-               <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
-               <h:outputText id="sectitleLink" value="#{vsbean.title}" rendered="#{vmbean.visibleFlag == true}" />
-               <h:outputText id="sectitleLink2" value="#{vsbean.title}" styleClass="italics" rendered="#{vmbean.visibleFlag == false}"/>
-             </h:commandLink>   
-           
-            </h:column>
-          </h:dataTable>
+                 <h:column>   
+                  <h:panelGroup styleClass="readSection"  rendered="#{vsbean.viewDate != null}">
+	               <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}"/>
+		      	   <h:outputText id="sec_seq" value="#{vsbean.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>
+					<h:commandLink id="viewSectionEditor"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{vsbean.contentType == listModulesPage.typeLink}" immediate="true">
+	                  	<f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
+	                  	<f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
+	                 	<h:outputText id="sectitleEditor" value="#{vsbean.title}" rendered="#{vmbean.visibleFlag == true}" />
+	                 	<h:outputText id="sectitleEditor2" value="#{vsbean.title}" styleClass="italics" rendered="#{vmbean.visibleFlag == false}" />
+	                   </h:commandLink>
+	                  
+		           <h:commandLink id="viewSectionLink"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}" rendered="#{vsbean.contentType != listModulesPage.typeLink}" immediate="true">
+		                  <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
+			              <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
+			              <h:outputText id="sectitleLink" value="#{vsbean.title}" rendered="#{vmbean.visibleFlag == true}" />
+			              <h:outputText id="sectitleLink2" value="#{vsbean.title}" styleClass="italics" rendered="#{vmbean.visibleFlag == false}"/>
+		             </h:commandLink>
+		           </h:panelGroup>  
+		           
+		          <h:panelGroup rendered="#{vsbean.viewDate == null}">
+	               <h:graphicImage id="bul_gif1" value="/images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}"/>
+		      	   <h:outputText id="sec_seq1" value="#{vsbean.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>
+					<h:commandLink id="viewSectionEditor1"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{vsbean.contentType == listModulesPage.typeLink}" immediate="true">
+	                  	<f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
+	                  	<f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
+	                 	<h:outputText id="sectitleEditor1" value="#{vsbean.title}" rendered="#{vmbean.visibleFlag == true}" />
+	                 	<h:outputText id="sectitleEditor2_1" value="#{vsbean.title}" styleClass="italics" rendered="#{vmbean.visibleFlag == false}" />
+	                   </h:commandLink>
+	                  
+		           <h:commandLink id="viewSectionLink1"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}" rendered="#{vsbean.contentType != listModulesPage.typeLink}" immediate="true">
+		                  <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
+			              <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
+			              <h:outputText id="sectitleLink1" value="#{vsbean.title}" rendered="#{vmbean.visibleFlag == true}" />
+			              <h:outputText id="sectitleLink2_1" value="#{vsbean.title}" styleClass="italics" rendered="#{vmbean.visibleFlag == false}"/>
+		             </h:commandLink>
+		           </h:panelGroup>
+	            </h:column>
+	          </h:dataTable>
           <h:panelGrid id="nextsteps" columns="1" width="100%" rendered="#{vmbean.whatsNext != listModulesPage.isNull && ((listModulesPage.expandAllFlag == listModulesPage.trueFlag)||(vmbean.moduleId == listModulesPage.showModuleId))}">
 	          <h:column>
 		          <h:outputText id="emp_space6_bul" value="  " styleClass="NextStepsPaddingClass"/>
@@ -139,7 +155,7 @@
 	             		<h:commandLink id="showHidePrereqs" action="#{listModulesPage.showHidePrerequisite}" immediate="true">
 	       					<h:outputText value="#{msgs.list_modules_prereq}" styleClass="style3"/>         
 	       				</h:commandLink> 
-	       				<h:panelGrid id="preReqMsg" columns="1" border="1" rules="cols" bgcolor="#FFFFCC" cellpadding="5" width="300px" styleClass="prereqAlert" rendered="#{vmbean.blockedBy != null && listModulesPage.showPrerequisiteFlag == true && listModulesPage.showPrereqModuleId == vmbean.moduleId}" >   
+	       				<h:panelGrid id="preReqMsg" columns="1" border="1" rules="cols" bgcolor="#FFFFCC" cellpadding="5" width="300px" styleClass="prereqInvalidAlert" rendered="#{vmbean.blockedBy != null && listModulesPage.showPrerequisiteFlag == true && listModulesPage.showPrereqModuleId == vmbean.moduleId}" >   
 			               	<h:column>     	  
 			               		<h:outputText value="#{msgs.prerequisite_msg}" />
 			             	</h:column>
@@ -166,11 +182,11 @@
             </h:outputText>
                   <h:outputText id="startDate" 
                            value="#{vmbean.startDate}"    rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}">
-              <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
+              <f:convertDateTime type="both" dateStyle="long"/>
             </h:outputText>
             <h:outputText id="startDate2" styleClass="italics" 
                            value="#{vmbean.startDate}"     rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag}">      
-              <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
+              <f:convertDateTime type="both" dateStyle="long"/>
             </h:outputText>            
            </h:column>
             <h:column>
@@ -184,12 +200,12 @@
               <h:outputText id="endDate"
                            value="#{vmbean.endDate}"
                               rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}">
-               <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
+               <f:convertDateTime type="both" dateStyle="long"/>
             </h:outputText>
             <h:outputText id="endDate2" styleClass="italics" 
                            value="#{vmbean.endDate}"
                              rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag}">      
-               <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
+               <f:convertDateTime type="both" dateStyle="long"/>
             </h:outputText>            
    	 </h:column>   
       <h:column> 

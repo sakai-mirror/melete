@@ -2229,6 +2229,7 @@ public class ModuleDB implements Serializable
 						
 						// Add invalid modules if not filtered
 						// If filtered, do not add bad dates and no sections modules (invalid modules)
+						logger.debug("check all values : vmBean.getTitle(),vmBean.isDateFlag(), vsBeanMap and filtered " + vmBean.getTitle() + "," + vmBean.isDateFlag() + vsBeanMap + "," + filtered);
 						if (filtered && (!vmBean.isDateFlag() || vsBeanMap == null || vsBeanMap.size() <= 0)) continue;
 						resList.add(vmBean);
 						
@@ -4320,6 +4321,7 @@ public class ModuleDB implements Serializable
 						if (vsBean != null)
 						{
 							vsBean.setDisplaySequence(slObj.getDispSeq());
+							vsBean.setDisplayClass("seccol" + slObj.getLevel());
 							vsBeanList.add(vsBean);
 							rowClassesBuf.append("secrow" + slObj.getLevel() + ",");
 						}
