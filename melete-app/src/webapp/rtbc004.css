@@ -249,12 +249,9 @@ width :85%;}
 
 .SectionTableClass {vertical-align: top;}
 
-.SectionTableClassCol2 {width: 80%;vertical-align: top;}
+.SectionTableClassCol1 {width: 78%;vertical-align: top;}
 
-.SectionTableClassCol3 {width: 20%;vertical-align: top; white-space: nowrap; text-align:left;}
-
-.ListSectionTableClassCol1 {width:1%;vertical-align: top;}
-.ListSectionTableClassCol2 {width:99%;vertical-align: top;}
+.SectionTableClassCol2 {width: 22%;vertical-align: top; white-space: nowrap; text-align:left;}
 
 .RedClass 			{color: #FF0000;  }
 
@@ -417,8 +414,8 @@ white-space:nowrap;}
  .seccol8       {margin-left:180px;}
  .seccol9       {margin-left:200px;}
  
-  .readSection {width:100%;background-color:#CCFFCC;
-  				opacity:0.4;filter:alpha(opacity=40);}
+  .readSection {width:100%;background-color:#CCFFCC;}
+  
   .BlueClass {
     color: #0000FF;
   }
