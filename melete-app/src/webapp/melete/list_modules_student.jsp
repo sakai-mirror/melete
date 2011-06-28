@@ -86,11 +86,10 @@
           <h:outputText id="titleTxt2" value="#{vmbean.title}" rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag}"/>         
         
         <h:dataTable id="tablesec" rendered="#{((vmbean.moduleId == listModulesPage.showModuleId)||(listModulesPage.expandAllFlag == listModulesPage.trueFlag))}"
-                  value="#{vmbean.vsBeans}"  columnClasses="ListSectionTableClassCol1,ListSectionTableClassCol2"
+                  value="#{vmbean.vsBeans}" 
                   var="vsbean" rowClasses="#{vmbean.rowClasses}" width="95%" binding="#{listModulesPage.secTable}" styleClass="secrow0" summary="#{msgs.list_modules_stud_sections_summary}">
-             
-  			<h:column> 
-  			 <h:panelGroup styleClass="readSection"  rendered="#{vsbean.viewDate != null}">
+          <h:column> 
+  			 <h:panelGroup styleClass="readSection"  rendered="#{!vmbean.readComplete && vsbean.viewDate != null}">
               <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}"/>             
 	          <h:outputText id="sec_seq" value="#{vsbean.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>    
               <h:commandLink id="viewSectionEditor"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}"  rendered="#{((vsbean.contentType != listModulesPage.isNull && vsbean.contentType == listModulesPage.typeLink)&&(vmbean.visibleFlag == listModulesPage.trueFlag))}" immediate="true">
@@ -112,7 +111,7 @@
              <h:outputText id="sectitleEditorTxt2" value="#{vsbean.title}" rendered="#{vmbean.visibleFlag != listModulesPage.trueFlag}"/>
             </h:panelGroup>
             
-            <h:panelGroup rendered="#{vsbean.viewDate == null}">
+            <h:panelGroup  rendered="#{vmbean.readComplete || vsbean.viewDate == null}">
               <h:graphicImage id="bul_gif2" value="/images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}"/>             
 	          <h:outputText id="sec_seq2" value="#{vsbean.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>    
               <h:commandLink id="viewSectionEditor2"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}"  rendered="#{((vsbean.contentType != listModulesPage.isNull && vsbean.contentType == listModulesPage.typeLink)&&(vmbean.visibleFlag == listModulesPage.trueFlag))}" immediate="true">

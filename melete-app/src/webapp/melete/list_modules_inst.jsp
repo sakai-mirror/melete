@@ -86,9 +86,9 @@
                 
            <h:dataTable id="tablesec" rendered="#{(((vmbean.moduleId == listModulesPage.showModuleId)||(listModulesPage.expandAllFlag == listModulesPage.trueFlag)))}"
                   value="#{vmbean.vsBeans}" cellpadding="1"
-                  var="vsbean"  rowClasses="#{vmbean.rowClasses}" columnClasses="ListSectionTableClassCol1,ListSectionTableClassCol2" width="95%" styleClass="secrow0" binding="#{listModulesPage.secTable}" summary="#{msgs.list_modules_inst_sections_summary}">
+                  var="vsbean"  rowClasses="#{vmbean.rowClasses}" width="95%" styleClass="secrow0" binding="#{listModulesPage.secTable}" summary="#{msgs.list_modules_inst_sections_summary}">
                  <h:column>   
-                  <h:panelGroup styleClass="readSection"  rendered="#{vsbean.viewDate != null}">
+                  <h:panelGroup styleClass="readSection"  rendered="#{!vmbean.readComplete && vsbean.viewDate != null}">
 	               <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}"/>
 		      	   <h:outputText id="sec_seq" value="#{vsbean.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>
 					<h:commandLink id="viewSectionEditor"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{vsbean.contentType == listModulesPage.typeLink}" immediate="true">
@@ -106,7 +106,7 @@
 		             </h:commandLink>
 		           </h:panelGroup>  
 		           
-		          <h:panelGroup rendered="#{vsbean.viewDate == null}">
+		          <h:panelGroup rendered="#{vmbean.readComplete || vsbean.viewDate == null}">
 	               <h:graphicImage id="bul_gif1" value="/images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}"/>
 		      	   <h:outputText id="sec_seq1" value="#{vsbean.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>
 					<h:commandLink id="viewSectionEditor1"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{vsbean.contentType == listModulesPage.typeLink}" immediate="true">
