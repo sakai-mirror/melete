@@ -1743,6 +1743,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get next sequence number (after this module in the course) This method is invoked for instructors and students
+	 * It skips invalid modules.
 	 * 
 	 * @param userId
 	 *        User id
@@ -1760,7 +1761,7 @@ public class ModuleDB implements Serializable
 		{
 			if (meleteSecurityService.allowAuthor(courseId))
 			{
-				queryStr = "select min(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId=ms.moduleId and (ms.startDate is null or ms.endDate is null or ms.startDate < ms.endDate)";
+				queryStr = "select cm.seqNo, count(s.moduleId) from CourseModule cm, Section s, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId = s.moduleId and cm.moduleId=ms.moduleId and (ms.startDate is null or ms.endDate is null or ms.startDate < ms.endDate) group by cm order by cm.seqNo asc";
 			}
 			if (meleteSecurityService.allowStudent(courseId))
 			{
@@ -1774,12 +1775,19 @@ public class ModuleDB implements Serializable
 		try
 		{
 			Session session = hibernateUtil.currentSession();
-
+			Integer minsequence = 0;
+			Integer sectionCount = 0;
 			Query q = session.createQuery(queryStr);
 			q.setParameter("courseId", courseId);
 			q.setParameter("currSeqNo", currSeqNo);
-			Integer minsequence = (Integer) q.uniqueResult();
-
+			List<Object[]> res = q.list();
+			for(Iterator<Object[]> it=res.iterator();it.hasNext();)
+			{
+				 Object[] row = (Object[]) it.next();
+				 minsequence = (Integer) row[0];
+				 sectionCount = (Integer) row[1];
+				 if (sectionCount > 0) break;
+			}
 			// if no sequence is found then this is the last module
 			if (minsequence == null || minsequence.intValue() <= 0)
 			{
@@ -1942,6 +1950,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get prev sequence number (before this module in the course) This method is invoked for instructors and students
+	 * It skips invalid modules. 
 	 * 
 	 * @param userId
 	 * @param courseId
@@ -1957,7 +1966,7 @@ public class ModuleDB implements Serializable
 		{
 			if (meleteSecurityService.allowAuthor(courseId))
 			{
-				queryStr = "select max(cm.seqNo) from CourseModule cm, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId=ms.moduleId and (ms.startDate is null or ms.endDate is null or ms.startDate < ms.endDate)";
+				queryStr = "select cm.seqNo, count(s.moduleId) from CourseModule cm, ModuleShdates ms, Section s where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId = s.moduleId and cm.moduleId=ms.moduleId and (ms.startDate is null or ms.endDate is null or ms.startDate < ms.endDate) group by cm order by cm.seqNo desc";
 			}
 			if (meleteSecurityService.allowStudent(courseId))
 			{
@@ -1972,10 +1981,19 @@ public class ModuleDB implements Serializable
 		{
 			Session session = hibernateUtil.currentSession();
 
+			Integer maxsequence = 0;
+			Integer sectionCount = 0;
 			Query q = session.createQuery(queryStr);
 			q.setParameter("courseId", courseId);
 			q.setParameter("currSeqNo", currSeqNo);
-			Integer maxsequence = (Integer) q.uniqueResult();
+			List<Object[]> res = q.list();
+			for(Iterator<Object[]> it=res.iterator();it.hasNext();)
+			{
+				 Object[] row = (Object[]) it.next();
+				 maxsequence = (Integer) row[0];
+				 sectionCount = (Integer) row[1];
+				 if (sectionCount > 0) break;
+			}
 
 			// if no sequence is found then there is no module before this one
 			if (maxsequence == null || maxsequence.intValue() <= 0)
@@ -2229,7 +2247,6 @@ public class ModuleDB implements Serializable
 						
 						// Add invalid modules if not filtered
 						// If filtered, do not add bad dates and no sections modules (invalid modules)
-						logger.debug("check all values : vmBean.getTitle(),vmBean.isDateFlag(), vsBeanMap and filtered " + vmBean.getTitle() + "," + vmBean.isDateFlag() + vsBeanMap + "," + filtered);
 						if (filtered && (!vmBean.isDateFlag() || vsBeanMap == null || vsBeanMap.size() <= 0)) continue;
 						resList.add(vmBean);
 						
@@ -3993,6 +4010,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * This method returns next or prev seq number for students depending on how it is invoked. It takes into account blocked modules and special access
+	 * and invalid modules.
 	 * 
 	 * @param userId
 	 *        User id
@@ -4018,11 +4036,11 @@ public class ModuleDB implements Serializable
 			// First get all sequence numbers after this one from course module table
 			if (prevFlag)
 			{
-				sql = "select cm.seq_no, cm.module_id from melete_course_module cm,melete_module_shdates msh where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) order by cm.seq_no desc";
+				sql = "select cm.seq_no, cm.module_id, count(s.module_id) as secCount from melete_course_module cm,melete_module_shdates msh,melete_section s where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = s.module_id and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) group by cm.seq_no order by cm.seq_no desc";
 			}
 			else
 			{
-				sql = "select cm.seq_no, cm.module_id from melete_course_module cm,melete_module_shdates msh where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) order by cm.seq_no";
+				sql = "select cm.seq_no, cm.module_id, count(s.module_id) as secCount from melete_course_module cm,melete_module_shdates msh,melete_section s where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = s.module_id and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) group by cm.seq_no order by cm.seq_no";
 			}
 			PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 			pstmt.setString(1, courseId);
@@ -4039,6 +4057,9 @@ public class ModuleDB implements Serializable
 				while (rs.next())
 				{
 					int moduleId = rs.getInt("module_id");
+					// skip modules with no sections
+					int count = rs.getInt("secCount");
+					if (count <= 0) continue;
 					// Check to see if module is blocked via coursemap, only add to resList otherwise
 					if ((this.accessAdvisor != null) && (this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), userId)))
 					{
