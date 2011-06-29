@@ -81,7 +81,7 @@
 		</h:column>
 	<h:column>
 		<h:outputText id="secs" value="#{msgs.view_module_student_content_section}" ></h:outputText>  
-		<h:dataTable id="tablesec"  value="#{viewModulesPage.viewMbean.vsBeans}" var="sectionBean" columnClasses="SectionTableClassCol1,SectionTableClassCol2" rowClasses="row2,row1" headerClass="left" rendered="#{viewModulesPage.sectionSize > 0}" styleClass="SectionTableClass" width="80%">
+		<h:dataTable id="tablesec"  value="#{viewModulesPage.viewMbean.vsBeans}" var="sectionBean" columnClasses="SectionTableClassCol1,SectionTableClassCol2" rowClasses="row2,row1" headerClass="left" rendered="#{viewModulesPage.sectionSize > 0}" styleClass="SectionTableClass" width="98%">
  			  <h:column> 			  		
  					<h:panelGroup styleClass="readSection" style="width:100%;" rendered="#{!viewModulesPage.viewMbean.readComplete && sectionBean.viewDate != null}">
 	        		  <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" styleClass="#{sectionBean.displayClass}" rendered="#{sectionBean.title != viewModulesPage.nullString && !viewModulesPage.autonumber}"/>
@@ -91,7 +91,7 @@
 					  </h:commandLink>					 
 					 </h:panelGroup> 
 										  
-					 <h:panelGroup style="width:100%;" rendered="#{viewModulesPage.viewMbean.readComplete || sectionBean.viewDate == null}" >					 
+					 <h:panelGroup style="width:100%;" rendered="#{viewModulesPage.viewMbean.readComplete || sectionBean.viewDate == null}" >					
 	        		  <h:graphicImage id="bul_gif1" value="/images/bullet_black.gif" styleClass="#{sectionBean.displayClass}" rendered="#{sectionBean.title != viewModulesPage.nullString && !viewModulesPage.autonumber}"/>
 			          <h:commandLink id="viewSectionEditor1"  action="#{viewModulesPage.viewSection}" styleClass="#{sectionBean.displayClass}" rendered="#{sectionBean.title != viewModulesPage.nullString}" immediate="true">
 					      <h:outputText id="sec_seq1" value="#{sectionBean.displaySequence}. " rendered="#{viewModulesPage.autonumber}"/>
