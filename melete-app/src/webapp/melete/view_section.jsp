@@ -84,8 +84,9 @@
 <h:column>
  	<h:outputText id="sec_seq" value="#{viewSectionsPage.sectionDisplaySequence}. " styleClass="bold style7" rendered="#{viewSectionsPage.autonumber}"/>
  	<h:outputText id="title" value="#{viewSectionsPage.section.title}" styleClass="bold style7"></h:outputText>
- 	<h:outputText id="trackDateStr" value="#{viewSectionsPage.sectionTrackDateStr}"/>
- 	     
+</h:column>
+<h:column>
+	 	<h:outputText id="trackDateStr" value="#{viewSectionsPage.sectionTrackDateStr}" styleClass="italics"/>
 </h:column>
 <h:column>
 	<h:outputText value="#{msgs.view_section_student_instructions} " rendered="#{((viewSectionsPage.section.instr != viewSectionsPage.nullString)&&(viewSectionsPage.section.instr != viewSectionsPage.emptyString))}" styleClass="italics"/>
