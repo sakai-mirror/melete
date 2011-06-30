@@ -36,7 +36,6 @@ a1:active 			{color : #000080;}
 .tableheader 		{background: #EAEAEA;
 					font-family: Verdana, Arial, sans-serif;
 					font-size :83%;
-					font-weight : bold;
 					color : #000000;
 					text-align: left;
 					margin: 0 1em 0 0;
@@ -51,11 +50,9 @@ a1:active 			{color : #000080;}
 					height:20px;}
 
 /*Sets <th> to align:left*/
-.leftheader 		{background: #EAEAEA;
+.leftheader 		{
 					font-family: Verdana, Arial, sans-serif;
 					font-size : 83%;
-					font-weight : bold;
-					color : #000000;
 					text-align: left;}
 /* this group defines the comment, date, button, and navigation bar properties */
 .comment 			{background: #FFFFFF;
@@ -204,7 +201,7 @@ a1:active 			{color : #000080;}
 .ListDateClass {
 	font-size: 92%;
 	vertical-align: top;
-    width: 18%;  
+    width: 10%;  
     white-space: nowrap;	
   }
 
