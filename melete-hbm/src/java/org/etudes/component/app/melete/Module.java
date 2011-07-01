@@ -26,17 +26,13 @@ package org.etudes.component.app.melete;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.SectionObjService;
 
 public class Module implements Serializable, ModuleObjService
 {
-
 	/** nullable persistent field */
 	private org.etudes.component.app.melete.CourseModule coursemodule;
 
@@ -180,15 +176,29 @@ public class Module implements Serializable, ModuleObjService
 		this.deletedSections = deletedSections;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean equals(Object other)
+	@Override
+	public boolean equals(Object obj)
 	{
-		if ((this == other)) return true;
-		if (!(other instanceof Module)) return false;
-		Module castOther = (Module) other;
-		return new EqualsBuilder().append(this.getModuleId(), castOther.getModuleId()).isEquals();
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Module other = (Module) obj;
+		if (description == null)
+		{
+			if (other.description != null) return false;
+		}
+		else if (!description.equals(other.description)) return false;
+		if (keywords == null)
+		{
+			if (other.keywords != null) return false;
+		}
+		else if (!keywords.equals(other.keywords)) return false;
+		if (title == null)
+		{
+			if (other.title != null) return false;
+		}
+		else if (!title.equals(other.title)) return false;
+		return true;
 	}
 
 	/**
@@ -351,12 +361,15 @@ public class Module implements Serializable, ModuleObjService
 		return this.whatsNext;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public int hashCode()
 	{
-		return new HashCodeBuilder().append(getModuleId()).toHashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((keywords == null) ? 0 : keywords.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		return result;
 	}
 
 	/**
@@ -526,5 +539,4 @@ public class Module implements Serializable, ModuleObjService
 	{
 		return new ToStringBuilder(this).append("moduleId", getModuleId()).toString();
 	}
-
 }

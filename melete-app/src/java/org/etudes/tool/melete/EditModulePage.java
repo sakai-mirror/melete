@@ -145,7 +145,7 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 		// actual update
 		try
 		{
-			setModification();
+		//	setModification();
 			if (module.getKeywords() != null)
 			{
 				module.setKeywords(module.getKeywords().trim());
@@ -161,7 +161,7 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 			mdbean.setDateFlag(false);
 			ArrayList<ModuleDateBean> mdbeanList = new ArrayList<ModuleDateBean>();
 			mdbeanList.add(mdbean);
-			moduleService.updateProperties(mdbeanList, mPage.getCurrentSiteId());
+			moduleService.updateProperties(mdbeanList, mPage.getCurrentSiteId(),mPage.getCurrentUser().getId());
 
 			// add module to session
 			sessionMap.put("currModule", module);
@@ -204,6 +204,9 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 		{
 			callFromAddContent = false;
 		}
+		// refresh module and sh dates object
+		module = moduleService.getModule(module.getModuleId());
+		setModuleShdates(module.getModuleshdate());
 		return "edit_module";
 
 	}

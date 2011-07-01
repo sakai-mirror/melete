@@ -920,13 +920,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			String hrefVal = eleRes.attributeValue("href");
 			String nextsteps = new String(readData(unZippedDirPath, hrefVal));
 			module.setWhatsNext(nextsteps);
-			ModuleDateBean mdbean = new ModuleDateBean();
-			mdbean.setModuleId(module.getModuleId().intValue());
-			mdbean.setModule(module);
-			mdbean.setModuleShdate(module.getModuleshdate());
-			ArrayList<ModuleDateBean> mdbeanList = new ArrayList<ModuleDateBean>();
-			mdbeanList.add(mdbean);
-			moduleDB.updateModuleDateBeans(mdbeanList);
+			moduleDB.updateModuleNextSteps(module.getModuleId(), nextsteps);
 		}
 
 	}

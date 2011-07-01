@@ -324,7 +324,7 @@ public class ListModulesPage implements Serializable
 		try
 		{
 			if (nomodsFlag == null || viewModuleBeans == null)
-				viewModuleBeans = getModuleService().getViewModules(getUserId(), getCourseId(), false, true);
+				viewModuleBeans = getModuleService().getViewModules(getUserId(), getCourseId(), true);
 		}
 		catch (Exception e)
 		{
@@ -900,8 +900,8 @@ public class ListModulesPage implements Serializable
 			{
 				vmbean = (ViewModBean) viewModuleBeans.get(selModIndex);
 				vmPage.setModuleId(vmbean.getModuleId());
-				vmPage.setMdbean(null);
-				vmPage.setPrevMdbean(null);
+				vmPage.setViewMbean(null);
+				vmPage.setPrevMbean(null);
 				vmPage.setModuleSeqNo(vmbean.getSeqNo());
 				vmPage.setAutonumber(null);
 			}

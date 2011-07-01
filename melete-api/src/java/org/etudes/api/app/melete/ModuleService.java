@@ -291,13 +291,37 @@ public interface ModuleService
 	 *        User id
 	 * @param courseId
 	 *        Course id
-	 * @param fromCourseMap
-	 *        true if method is invoked from coursemap, false otherwise.If not invoked from course map, some queries may be skipped
 	 * @param filtered
 	 *        If false, return all modules including invalid ones. If true, do not return invalid modules.
 	 * @return List of modules
 	 */
-	public List<ViewModBeanService> getViewModules(String userId, String courseId, boolean fromCourseMap, boolean filtered);
+	public List<ViewModBeanService> getViewModules(String userId, String courseId, boolean filtered);
+
+	/**
+	 * Creates the ViewModBeanService class and sets the section display level and row classes etc
+	 * 
+	 * @param userId
+	 *        The user id
+	 * @param courseId
+	 *        The course id
+	 * @param modId
+	 *        The module id
+	 * @return ViewModBeanService object
+	 */
+	public ViewModBeanService getViewModBean(String userId, String courseId, int modId);
+
+	/**
+	 * Creates the ViewModBeanService class and sets the section display level and row classes etc
+	 * 
+	 * @param userId
+	 *        The user id
+	 * @param courseId
+	 *        The course id
+	 * @param seqNo
+	 *        The seq no
+	 * @return ViewModBeanService object
+	 */
+	public ViewModBeanService getViewModBeanBySeq(String userId, String courseId, int seqNo);
 
 	/**
 	 * Adds Module to the Database.
@@ -430,10 +454,12 @@ public interface ModuleService
 	 *        List of moduleDateBeans objects
 	 * @param courseId
 	 *        The course Id
+	 *  @param userId
+	 *  	The user Id      
 	 * @throws Exception
 	 *         edit_module_multiple_users MeleteException
 	 */
-	public void updateProperties(List<? extends ModuleDateBeanService>  moduleDateBeans, String courseId) throws Exception;
+	public void updateProperties(List<? extends ModuleDateBeanService>  moduleDateBeans, String courseId, String userId) throws Exception;
 
 	/**
 	 * Creates sequence XML for all modules of the site.
@@ -445,4 +471,15 @@ public interface ModuleService
 	 *         Hibernate Exception, MeleteException
 	 */
 	public boolean updateSeqXml(String courseId) throws Exception;
+	
+	/**
+	 * Updates module's what next information.
+	 * 
+	 * @param moduleId
+	 *   The module Id
+	 * @param nextSteps
+	 *   What's next string
+	 * @throws Exception
+	 */
+	public void updateModuleNextSteps(Integer moduleId, String nextSteps) throws Exception;
 }

@@ -186,16 +186,11 @@ public class ModuleNextStepsPage implements Serializable/* ,ToolBean */
 	public String steps()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		try
 		{
-			mdBean.setDateFlag(false);
-			ArrayList mdbeanList = new ArrayList();
-			mdbeanList.add(mdBean);
-			moduleService.updateProperties(mdbeanList, mPage.getCurrentSiteId());
-
+			String stepsText = mdBean.getModule().getWhatsNext().trim();
+			moduleService.updateModuleNextSteps(mdBean.getModuleId(), stepsText);
 			return "success";
 
 		}
