@@ -402,13 +402,13 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<ViewModBeanService> getViewModules(String userId, String courseId, boolean fromCourseMap, boolean filtered)
+	public List<ViewModBeanService> getViewModules(String userId, String courseId, boolean filtered)
 	{
 		if (moduledb == null) moduledb = ModuleDB.getModuleDB();
 		List<ViewModBeanService> viewModuleBeans = null;
 		try
 		{
-			viewModuleBeans = moduledb.getViewModulesAndDates(userId, courseId, fromCourseMap, filtered);
+			viewModuleBeans = moduledb.getViewModulesAndDates(userId, courseId, filtered);
 		}
 		catch (HibernateException e)
 		{
@@ -418,6 +418,46 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 		return viewModuleBeans;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public ViewModBeanService getViewModBean(String userId, String courseId, int modId)
+	{
+		ViewModBeanService vmBean = null;
+		if (moduledb == null) moduledb = ModuleDB.getModuleDB();
+
+		try
+		{
+			vmBean = moduledb.getViewModBean(userId, courseId, modId);
+		}
+		catch (Exception e)
+		{
+			// e.printStackTrace();
+			logger.debug(e.toString());
+		}
+		return vmBean;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public ViewModBeanService getViewModBeanBySeq(String userId, String courseId, int seqNo)
+	{
+		ViewModBeanService vmBean = null;
+		if (moduledb == null) moduledb = ModuleDB.getModuleDB();
+
+		try
+		{
+			vmBean = moduledb.getViewModBeanBySeq(userId, courseId, seqNo);
+		}
+		catch (Exception e)
+		{
+			// e.printStackTrace();
+			logger.debug(e.toString());
+		}
+		return vmBean;
+	} 
+	    
 	public void init()
 	{
 		logger.info(this + ".init()");
@@ -645,32 +685,17 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public void updateProperties(List<? extends ModuleDateBeanService> moduleDateBeans, String courseId) throws MeleteException
+	public void updateProperties(List<? extends ModuleDateBeanService> moduleDateBeans, String courseId, String userId) throws MeleteException
 	{
 		try
 		{
-			moduledb.updateModuleDateBeans(moduleDateBeans);
+			moduledb.updateModuleDateBeans(moduleDateBeans, courseId, userId);
 		}
 		catch (Exception ex)
 		{
 			logger.debug("multiple user exception in module business");
 			throw new MeleteException("edit_module_multiple_users");
-		}
-		for (ListIterator<?> i = moduleDateBeans.listIterator(); i.hasNext();)
-		{
-			ModuleDateBean mdbean = (ModuleDateBean) i.next();
-			try
-			{
-				if (((ModuleShdates) mdbean.getModuleShdate()).getAddtoSchedule() != null)
-				{
-					moduledb.updateCalendar((Module) mdbean.getModule(), (ModuleShdates) mdbean.getModuleShdate(), courseId);
-				}
-			}
-			catch (Exception ex)
-			{
-				logger.debug("Exception thrown while updating calendar tool tables");
-			}
-		}
+		}		
 	}
 
 	/**
@@ -722,4 +747,18 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 		return true;
 	}
 
+	/**
+	 *  {@inheritDoc}
+	 */
+	public void updateModuleNextSteps(Integer moduleId, String nextSteps) throws Exception
+	{
+		try
+		{
+			moduledb.updateModuleNextSteps(moduleId, nextSteps);
+		}
+		catch (Exception ex)
+		{
+			throw new MeleteException("edit_module_next_steps");
+		}	
+	}
 }

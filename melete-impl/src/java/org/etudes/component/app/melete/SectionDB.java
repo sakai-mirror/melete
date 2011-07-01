@@ -803,27 +803,53 @@ public class SectionDB implements Serializable
 
 	}
 
+	
 	/**
-	 * Adds tracking date only once for a section per user.
+	 * Insert new section tracking info or update section tracking info if it exists already
+	 * Before updating, store current tracking info to return and display
 	 * 
-	 * @param stv
-	 *        SectionTrackViewObjService object
+	 * @param sectionId
+	 *        Section id
+	 * @param userId
+	 *        User id
+	 * @return SectionTrackView object, if found or null
 	 * @throws Exception
 	 */
-	public void insertSectionTrack(SectionTrackViewObjService stv) throws Exception
+	public SectionTrackView insertSectionTrack(int sectionId, String userId) throws Exception
 	{
 		Transaction tx = null;
+		SectionTrackView returnStv = null;
 		try
 		{
 			Session session = hibernateUtil.currentSession();
 			tx = session.beginTransaction();
 
+			// Check to see if section tracking info exists for section and user
 			Query q = session.createQuery("select sv from SectionTrackView as sv where sv.sectionId = :sectionId and sv.userId =:userId");
-			q.setParameter("sectionId", stv.getSectionId());
-			q.setParameter("userId", stv.getUserId());
+			q.setParameter("sectionId", sectionId);
+			q.setParameter("userId", userId);
 			SectionTrackView find_sv = (SectionTrackView) q.uniqueResult();
 
-			if (find_sv == null) session.save(stv);
+			if (find_sv == null)
+			{
+				// If it doesn't exist, insert it
+				SectionTrackView stv = new SectionTrackView();
+				stv.setSectionId(sectionId);
+				stv.setUserId(userId);
+				stv.setViewDate(new java.util.Date());
+				session.save(stv);
+			}
+			else
+			{
+				// If it exists, retrieve current tracking info, store it in returnStv object
+				// Then update tracking info with new date
+				returnStv = new SectionTrackView();
+				returnStv.setSectionId(find_sv.getSectionId());
+				returnStv.setUserId(find_sv.getUserId());
+				returnStv.setViewDate(find_sv.getViewDate());
+				find_sv.setViewDate(new java.util.Date());
+				session.save(find_sv);
+			}
 			tx.commit();
 		}
 		catch (StaleObjectStateException sose)
@@ -856,8 +882,10 @@ public class SectionDB implements Serializable
 				throw he;
 			}
 		}
+		return returnStv;
 	}
 
+	
 	/**
 	 * add resource.
 	 * 

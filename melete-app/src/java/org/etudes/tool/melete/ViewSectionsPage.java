@@ -32,6 +32,8 @@ import javax.faces.application.Application;
 import javax.faces.component.html.*;
 import javax.faces.component.*;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 import java.util.Properties;
@@ -46,7 +48,7 @@ import javax.faces.event.ActionEvent;
 //import com.sun.faces.util.Util;
 import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.SectionService; //import org.sakaiproject.jsf.ToolBean;
-
+import org.etudes.api.app.melete.SectionTrackViewObjService;
 import org.etudes.api.app.melete.MeleteCHService;
 
 import org.sakaiproject.content.api.ContentResource;
@@ -96,13 +98,14 @@ public class ViewSectionsPage implements Serializable
 	private SectionService sectionService;
 
 	private String sectionTrack;
+	private String sectionTrackDateStr;
 	private org.w3c.dom.Document subSectionW3CDom;
 	private String typeEditor;
 	private String typeLink;
 	private String typeUpload;
+
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(ViewSectionsPage.class);
-
 	/** Dependency: The Melete Security service. */
 	protected MeleteSecurityService meleteSecurityService;
 	String courseId;
@@ -477,25 +480,30 @@ public class ViewSectionsPage implements Serializable
 	}
 
 	/**
-	 * Track section read info into database(used for activity meter)
+	 * Track section read info into database(used for activity meter) Insert info if it doesn't exist. If it exists, fetch current info and then update it
 	 * 
-	 * @return empty string
+	 * @return Current date in a formatted string if it exists, or an empty string if it doesn't exist
 	 */
-	public String getSectionTrack()
+	public String getSectionTrackDateStr()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		SectionTrackViewObjService stv = getSectionService().insertSectionTrack(this.sectionId, mPage.getCurrentUser().getId());
 
-		SectionTrackView stv = new SectionTrackView();
-		stv.setSectionId(this.sectionId);
-		stv.setUserId(mPage.getCurrentUser().getId());
-		stv.setViewDate(new java.util.Date());
-		getSectionService().insertSectionTrack(stv);
+		if (stv != null)
+		{
+			Date viewDate = stv.getViewDate();
+			if (viewDate != null)
+			{
+				DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
+				ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+				return " (" + bundle.getString("view_section_lastviewed") + " " + df.format(viewDate) + ")";
+			}
+		}
 		return "";
-
 	}
-
+	
 	/**
 	 * @return typeEditor string
 	 */
@@ -540,8 +548,8 @@ public class ViewSectionsPage implements Serializable
 		FacesContext context = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{viewModulesPage}");
 		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
-		vmPage.setMdbean(null);
-		vmPage.setPrevMdbean(null);
+		vmPage.setViewMbean(null);
+		vmPage.setPrevMbean(null);
 		vmPage.setModuleId(currModuleId);
 		vmPage.setModuleSeqNo(0);
 		vmPage.setPrintable(null);
@@ -570,8 +578,8 @@ public class ViewSectionsPage implements Serializable
 		/*
 		 * if (nextMdBean != null) { vmPage.setModuleId(nextMdBean.getModuleId()); }
 		 */
-		vmPage.setMdbean(null);
-		vmPage.setPrevMdbean(null);
+		vmPage.setViewMbean(null);
+		vmPage.setPrevMbean(null);
 		vmPage.setModuleId(0);
 		vmPage.setModuleSeqNo(this.nextSeqNo);
 		vmPage.setPrintable(null);
@@ -605,8 +613,8 @@ public class ViewSectionsPage implements Serializable
 		vmPage.setModuleId(this.moduleId);
 		vmPage.setPrintable(null);
 		vmPage.setAutonumber(null);
-		vmPage.setMdbean(null);
-		vmPage.setPrevMdbean(null);
+		vmPage.setViewMbean(null);
+		vmPage.setPrevMbean(null);
 		vmPage.setModuleSeqNo(this.moduleSeqNo);
 
 		return "view_module";
@@ -917,7 +925,7 @@ public class ViewSectionsPage implements Serializable
 	{
 		this.sectionDisplaySequence = sectionDisplaySequence;
 	}
-	
+
 	/**
 	 * Set section id
 	 * 
@@ -929,7 +937,7 @@ public class ViewSectionsPage implements Serializable
 		this.sectionId = sectionId;
 		logSectionReadEvent(sectionId);
 	}
-
+	
 	/**
 	 * @param sectionService
 	 *        The sectionService to set.
@@ -946,6 +954,11 @@ public class ViewSectionsPage implements Serializable
 	public void setSectionTrack(String sectionTrack)
 	{
 		this.sectionTrack = sectionTrack;
+	}
+
+	public void setSectionTrackDateStr(String sectionTrackDateStr)
+	{
+		this.sectionTrackDateStr = sectionTrackDateStr;
 	}
 
 	/**

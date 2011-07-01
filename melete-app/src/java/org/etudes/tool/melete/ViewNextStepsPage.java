@@ -169,8 +169,8 @@ public class ViewNextStepsPage implements Serializable
 		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
 		// vmPage.setModuleId(nextMdBean.getModuleId());
 		vmPage.setModuleId(0);
-		vmPage.setMdbean(null);
-		vmPage.setPrevMdbean(null);
+		vmPage.setViewMbean(null);
+		vmPage.setPrevMbean(null);
 		vmPage.setModuleSeqNo(nextSeqNo);
 		vmPage.setPrintable(null);
 		vmPage.setAutonumber(null);
@@ -195,13 +195,13 @@ public class ViewNextStepsPage implements Serializable
 			ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
 			vmPage.setModuleId(this.prevModId);
 			vmPage.setPrintable(null);
-			vmPage.setMdbean(null);
+			vmPage.setViewMbean(null);
 			vmPage.setAutonumber(null);
 			if (this.nextSeqNo > 1)
 			{
 				vmPage.setModuleSeqNo(prevSeqNo);
 			}
-			vmPage.setPrevMdbean(null);
+			vmPage.setPrevMbean(null);
 			return "view_module";
 
 		}

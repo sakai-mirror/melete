@@ -200,20 +200,23 @@ if (msg != null)
      <f:facet name="header">
        <h:outputText value="&nbsp;" escape="false"/>
      </f:facet>  
-     <h:panelGrid border="0" columns="1" style="z-index:0;" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag}">   
-	 <h:column>    
-     <h:commandLink id="showHideInvalid" action="#{listAuthModulesPage.showHideInvalid}" immediate="true">
-	    <h:graphicImage id="err_gif" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>                     
-     </h:commandLink> 
-	 <h:panelGrid id="invalidMsg" columns="1" border="1" bgcolor="#FFFFCC" cellpadding="5" width="300px" styleClass="invalidAlert" rendered="#{mdbean.dateFlag == listAuthModulesPage.trueFlag && listAuthModulesPage.showInvalidModuleId == mdbean.moduleId}" >   
-		<h:column>     	  
-		<h:outputText value="#{msgs.invalid_msg}" />
-		</h:column>
-		<h:column>
-		<h:commandButton value="#{msgs.invalid_ok_msg}" action="#{listAuthModulesPage.hideInvalid}" immediate="true" styleClass="BottomImgFinish"/>
-		</h:column>
-	  </h:panelGrid> 
-	  </h:column>
+     <h:panelGrid border="0" columns="1" style="z-index:0;" rendered="#{mdbean.dateFlag || mdbean.sectionBeans == null}">   
+		 <h:column>    
+		     <h:commandLink id="showHideInvalid" action="#{listAuthModulesPage.showHideInvalid}" immediate="true">
+			    <h:graphicImage id="err_gif" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" styleClass="ExpClass"/>                     
+		     </h:commandLink> 
+				 <h:panelGrid id="invalidMsg" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="300px" styleClass="prereqInvalidAlert" rendered="#{listAuthModulesPage.showInvalidModuleId == mdbean.moduleId}" >   
+					<h:column>
+					  	<h:outputText value="#{msgs.invalid_msg3}" rendered="#{mdbean.dateFlag && mdbean.sectionBeans == null}" />  
+						<h:outputText value="#{msgs.invalid_msg}" rendered="#{mdbean.dateFlag && mdbean.sectionBeans != null}" />
+						<h:outputText value="#{msgs.invalid_msg2}" rendered="#{mdbean.sectionBeans == null && !mdbean.dateFlag}" />						
+					</h:column>
+					<h:column>
+					<h:commandButton value="#{msgs.invalid_ok_msg}" action="#{listAuthModulesPage.hideInvalid}" immediate="true" styleClass="BottomImgFinish"/>
+					</h:column>
+				  </h:panelGrid> 
+				 
+		  </h:column>
 	  </h:panelGrid>             
     </h:column>                                  
     <h:column>
