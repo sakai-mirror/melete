@@ -139,7 +139,8 @@
        				</h:commandLink> 
        				<h:panelGrid id="preReqMsg" columns="1" border="1" rules="cols" bgcolor="#FFFFCC" cellpadding="5" width="300px" styleClass="prereqInvalidAlert" rendered="#{vmbean.blockedBy != null && listModulesPage.showPrerequisiteFlag == true && listModulesPage.showPrereqModuleId == vmbean.moduleId}" >   
 		               	<h:column>     	  
-		               		<h:outputText value="#{msgs.prerequisite_msg}" />
+		               			<h:outputText value="#{msgs.prerequisite_msg}" /> <h:outputText value="#{vmbean.blockedDetails}" />
+		               			<h:outputText value=":" />
 		             	</h:column>
 		             	<h:column>
 		             		  <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" /><h:outputText value="#{vmbean.blockedBy}" />

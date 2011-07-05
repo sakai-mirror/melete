@@ -32,10 +32,8 @@ import org.etudes.api.app.melete.*;
 public class ViewModBean implements Serializable, ViewModBeanService
 {
 	private String blockedBy;
-
-	private String nextStepsNumber;
-
-	private int vsBeansSize;
+	
+	protected String blockedDetails;
 
 	protected boolean closedBeforeFlag;
 
@@ -48,18 +46,20 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	/** identifier field */
 	protected int moduleId;
 
+	private String nextStepsNumber;
+
 	protected Integer noOfSectionsRead = 0;
 
 	protected boolean openLaterFlag;
 
 	protected boolean readComplete;
-	
+
 	protected Date readDate;
 
 	protected String rowClasses;
 
 	protected boolean selected;
-
+	
 	protected int seqNo;
 
 	protected String seqXml;
@@ -72,6 +72,8 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	protected boolean visibleFlag;
 
 	protected List<ViewSecBeanService> vsBeans;
+
+	private int vsBeansSize;
 
 	protected String whatsNext;
 
@@ -123,6 +125,11 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	public String getBlockedBy()
 	{
 		return blockedBy;
+	}
+
+	public String getBlockedDetails()
+	{
+		return blockedDetails;
 	}
 
 	/**
@@ -303,6 +310,11 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	public void setBlockedBy(String blockedBy)
 	{
 		this.blockedBy = blockedBy;
+	}
+
+	public void setBlockedDetails(String blockedDetails)
+	{
+		this.blockedDetails = blockedDetails;
 	}
 
 	/**
