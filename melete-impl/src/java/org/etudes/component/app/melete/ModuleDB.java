@@ -2411,9 +2411,9 @@ public class ModuleDB implements Serializable
 			if ((this.accessAdvisor != null)
 					&& (this.accessAdvisor.denyAccess("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId())))
 			{
-				vmBean.setBlockedDetails(" "
-						+ this.accessAdvisor.details("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId())
-						+ ":");
+				 String blockDetails = this.accessAdvisor.details("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId());
+				 if(blockDetails != null) vmBean.setBlockedDetails(" "+blockDetails);
+				 
 				vmBean.setBlockedBy(this.accessAdvisor.message("sakai.melete", courseId, String.valueOf(moduleId), SessionManager
 						.getCurrentSessionUserId()));
 				vmBean.setVisibleFlag(false);
