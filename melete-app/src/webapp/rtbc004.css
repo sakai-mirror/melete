@@ -330,7 +330,15 @@ td.MainTableClass     { white-space: nowrap;}
 					}
 .BottomImgMyBookmarks{  	padding-left:2em;
 						background: #eee url('images/bookmark.png') .2em no-repeat;
-					}			
+					}		
+.BottomImgOK		{  	padding-left:2em;
+						padding-right:1em;
+						background: #eee url('images/correct.png') .2em no-repeat;
+						border-style:outset;
+						border-width:3px;
+						border-color:#eee;
+						
+					}						
 .TopImgManage		{  
 					padding-left:1.5em;
 					border:0;
@@ -492,8 +500,7 @@ vertical-align:top;
 .prereqAlert {
 	position:absolute;
 	top:-70px;
-    left:-150px;
-    right:0;
+	left:-150px;
 	border-left:medium double black;
 	border-right:medium double black;
 	border-bottom:medium double black;
