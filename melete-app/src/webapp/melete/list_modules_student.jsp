@@ -31,7 +31,31 @@
 <sakai:view title="Modules: Student View" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
 <script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
+<script type="text/javascript" language="javascript">
 
+function showHideTable(index, show)
+{
+  var string2 = "listmodulesStudentform:table:" + index +":preReqMsg0";
+  var string2ele = document.getElementById(string2);
+  // show the box
+  if(string2ele != undefined && string2ele != null && string2ele.style.display == "none" && show.match("true")) 
+	{
+	string2ele.setAttribute("aria-hidden", "false");
+	string2ele.tabIndex = -1;
+	string2ele.style.display = "block";
+	string2ele.style.visibility = "visible";
+	string2ele.focus();	
+	}
+ else if(string2ele != undefined && string2ele != null && string2ele.style.display == "block" && !show.match("true"))
+	{
+	string2ele.setAttribute("aria-hidden", "true");
+	string2ele.tabIndex = 0;
+	string2ele.style.display = "none";
+	string2ele.style.visibility = "hidden";	
+	}
+}
+
+</script>
 <h:form id="listmodulesStudentform">
 	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp?myMode=View"/> 
@@ -129,17 +153,15 @@
              </f:facet>
              <h:panelGrid columns="1" style="z-index:0;" rendered="#{vmbean.blockedBy != null}">   
                	<h:column>    
-               		<h:commandLink id="showHidePrereqs-icon" action="#{listModulesPage.showHidePrerequisite}" immediate="true" rendered="#{vmbean.blockedBy != null}"> 	  
-               			<h:graphicImage id="pre-req" value="/images/lock.png" alt="#{msgs.list_modules_locked}" title="#{msgs.list_modules_locked}" styleClass="ExpClass"/>
-               		</h:commandLink>	
+          			<h:graphicImage id="pre-req" value="/images/lock.png" alt="#{msgs.list_modules_locked}" title="#{msgs.list_modules_locked}" rendered="#{vmbean.blockedBy != null}" onclick="showHideTable('#{listModulesPage.modTable.rowIndex}','true')" styleClass="ExpClass"/>
              	</h:column>
              	<h:column>
-             		<h:commandLink id="showHidePrereqs" action="#{listModulesPage.showHidePrerequisite}" rendered="#{vmbean.blockedBy != null}" immediate="true">
-       					<h:outputText value="#{msgs.list_modules_prereq}" styleClass="style3"/>         
-       				</h:commandLink> 
+             		  <h:outputLink value="#" onclick="showHideTable('#{listModulesPage.modTable.rowIndex}','true')">	
+             			<h:outputText id="pre-req-text" value="#{msgs.list_modules_prereq}" styleClass="style3"/>   
+       				</h:outputLink>	      				
    				  </h:column> 	
  	 	   		</h:panelGrid>	
- 				<h:panelGroup id="preReqMsg0" styleClass="alert1" rendered="#{vmbean.blockedBy != null && listModulesPage.showPrerequisiteFlag && listModulesPage.showPrereqModuleId == vmbean.moduleId}" >   
+ 				<h:panelGroup id="preReqMsg0" style="position:relative;z-index:1;visibility:hidden;display:none;" rendered="#{vmbean.blockedBy != null}" >   
 	   				<h:panelGrid id="preReqMsg" columns="1" border="1" rules="cols" bgcolor="#FFFFCC" cellpadding="5" width="390px" styleClass="prereqAlert" >   
 		               	<h:column>     	  
 		               			<h:outputText value="#{msgs.prerequisite_msg}" /> <h:outputText value="#{vmbean.blockedDetails}" />
@@ -149,7 +171,8 @@
 		             		  <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" /><h:outputText value="#{vmbean.blockedBy}" />
 		        	   </h:column> 	
 		        	   <h:column>
-	         			  <h:commandButton value="#{msgs.prerequisite_ok_msg}" action="#{listModulesPage.hidePrerequisite}" styleClass="BottomImgFinish"/>
+	         			  	<h:outputLabel value="#{msgs.prerequisite_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('#{listModulesPage.modTable.rowIndex}','false')" />
+	         			
 	    	   			</h:column>		        	  
 	 	  			 </h:panelGrid>  	 	  			        	  
  	  			 </h:panelGroup> 
@@ -167,11 +190,11 @@
            </f:facet>  
 			  <h:outputText id="startDate0" value="-" rendered="#{vmbean.startDate == null}" />
               
-              <h:outputText id="startDate" value="#{vmbean.startDate}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}">
+              <h:outputText id="startDate" value="#{vmbean.startDate}">
                 <f:convertDateTime pattern="MMM d, yyyy" />            
 	           </h:outputText>
-	           <h:outputText id="startDate_1" value="</br>" escape="false" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}"/>
-	           <h:outputText id="startDate_2" value="#{vmbean.startDate}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}">
+	           <h:outputText id="startDate_1" value="</br>" escape="false" />
+	           <h:outputText id="startDate_2" value="#{vmbean.startDate}" >
 	                <f:convertDateTime type="time" timeStyle="short" />
 	            </h:outputText>
           </h:column>
@@ -183,11 +206,11 @@
         </f:facet>
 			 <h:outputText id="endDate0" value="-" rendered="#{vmbean.endDate == null}" />
               
-              <h:outputText id="endDate" value="#{vmbean.endDate}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}">
+              <h:outputText id="endDate" value="#{vmbean.endDate}" >
                 <f:convertDateTime pattern="MMM d, yyyy" />            
 	           </h:outputText>
-	           <h:outputText id="endDate_1" value="</br>" escape="false" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}"/>
-	            <h:outputText id="endDate_2" value="#{vmbean.endDate}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}">
+	           <h:outputText id="endDate_1" value="</br>" escape="false" />
+	            <h:outputText id="endDate_2" value="#{vmbean.endDate}" >
 	                <f:convertDateTime type="time" timeStyle="short" />
 	            </h:outputText>           
          </h:column>
@@ -197,11 +220,11 @@
               </f:facet>  
                <h:outputText id="viewDate0" value="-" rendered="#{vmbean.readDate == null}" />
               
-              <h:outputText id="viewDate" value="#{vmbean.readDate}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}">
+              <h:outputText id="viewDate" value="#{vmbean.readDate}" >
                 <f:convertDateTime pattern="MMM d, yyyy" />            
 	           </h:outputText>
-	           <h:outputText id="viewDate_1" value="</br>" escape="false" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}"/>
-	            <h:outputText id="viewDate_2" value="#{vmbean.readDate}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}">
+	           <h:outputText id="viewDate_1" value="</br>" escape="false" />
+	            <h:outputText id="viewDate_2" value="#{vmbean.readDate}" >
 	                <f:convertDateTime type="time" timeStyle="short" />
 	            </h:outputText>               
    	 	</h:column>   
