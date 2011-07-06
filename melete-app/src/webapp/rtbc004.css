@@ -214,7 +214,6 @@ a1:active 			{color : #000080;}
  .ListModCheckClass {
    vertical-align: top;
 	width: 2%;
-	white-space:nowrap;
    }
    
  .ListDateInputClass {
