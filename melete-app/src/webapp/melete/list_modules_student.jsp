@@ -124,20 +124,23 @@
           <h:outputText  id="whatsNextMsg2" value="#{msgs.list_modules_stud_next_steps}" rendered="#{((vmbean.visibleFlag != listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&((listModulesPage.expandAllFlag == listModulesPage.trueFlag)||(vmbean.moduleId == listModulesPage.showModuleId)))}"/>
            </h:column>
            <h:column>   
-           <f:facet name="header">
+             <f:facet name="header">
                <h:outputText value="&nbsp;" escape="false"/>
              </f:facet>
-            <h:panelGrid columns="1" style="z-index:0;" rendered="#{vmbean.blockedBy != null}">   
+             <h:panelGrid columns="1" style="z-index:0;" rendered="#{vmbean.blockedBy != null}">   
                	<h:column>    
                		<h:commandLink id="showHidePrereqs-icon" action="#{listModulesPage.showHidePrerequisite}" immediate="true" rendered="#{vmbean.blockedBy != null}"> 	  
-               			<h:graphicImage id="pre-req" value="/images/lock.png" alt="#{msgs.list_modules_locked}" title="#{msgs.list_modules_locked}"  styleClass="ExpClass"/>
+               			<h:graphicImage id="pre-req" value="/images/lock.png" alt="#{msgs.list_modules_locked}" title="#{msgs.list_modules_locked}" styleClass="ExpClass"/>
                		</h:commandLink>	
              	</h:column>
              	<h:column>
-             		<h:commandLink id="showHidePrereqs" action="#{listModulesPage.showHidePrerequisite}" immediate="true">
+             		<h:commandLink id="showHidePrereqs" action="#{listModulesPage.showHidePrerequisite}" rendered="#{vmbean.blockedBy != null}" immediate="true">
        					<h:outputText value="#{msgs.list_modules_prereq}" styleClass="style3"/>         
        				</h:commandLink> 
-       				<h:panelGrid id="preReqMsg" columns="1" border="1" rules="cols" bgcolor="#FFFFCC" cellpadding="5" width="300px" styleClass="prereqInvalidAlert" rendered="#{vmbean.blockedBy != null && listModulesPage.showPrerequisiteFlag == true && listModulesPage.showPrereqModuleId == vmbean.moduleId}" >   
+   				  </h:column> 	
+ 	 	   		</h:panelGrid>	
+ 				<h:panelGroup id="preReqMsg0" styleClass="alert1" rendered="#{vmbean.blockedBy != null && listModulesPage.showPrerequisiteFlag && listModulesPage.showPrereqModuleId == vmbean.moduleId}" >   
+	   				<h:panelGrid id="preReqMsg" columns="1" border="1" rules="cols" bgcolor="#FFFFCC" cellpadding="5" width="390px" styleClass="prereqAlert" >   
 		               	<h:column>     	  
 		               			<h:outputText value="#{msgs.prerequisite_msg}" /> <h:outputText value="#{vmbean.blockedDetails}" />
 		               			<h:outputText value=":" />
@@ -146,11 +149,11 @@
 		             		  <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" /><h:outputText value="#{vmbean.blockedBy}" />
 		        	   </h:column> 	
 		        	   <h:column>
-		             		  <h:commandButton value="#{msgs.prerequisite_ok_msg}" action="#{listModulesPage.hidePrerequisite}" styleClass="BottomImgFinish"/>
-		        	   </h:column>
- 	 	  			 </h:panelGrid>   
-        	   </h:column> 	
- 	 	   </h:panelGrid>   
+	         			  <h:commandButton value="#{msgs.prerequisite_ok_msg}" action="#{listModulesPage.hidePrerequisite}" styleClass="BottomImgFinish"/>
+	    	   			</h:column>		        	  
+	 	  			 </h:panelGrid>  	 	  			        	  
+ 	  			 </h:panelGroup> 
+        	   
            <h:graphicImage id="closed_gif" value="/images/view_closed.gif" alt="#{msgs.list_modules_stud_closed}" title="#{msgs.list_modules_stud_closed}" rendered="#{vmbean.closedBeforeFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
            <h:graphicImage id="cal_gif" value="/images/cal.gif" alt="#{msgs.list_modules_stud_notyetopen}" title="#{msgs.list_modules_stud_notyetopen}" rendered="#{vmbean.openLaterFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
            <h:outputText id="brval" value="<BR>" escape="false" rendered="#{vmbean.openLaterFlag == listModulesPage.trueFlag}"/>
