@@ -336,8 +336,7 @@ td.MainTableClass     { white-space: nowrap;}
 						background: #eee url('images/correct.png') .2em no-repeat;
 						border-style:outset;
 						border-width:3px;
-						border-color:#eee;
-						
+						border-color:#eee;						
 					}						
 .TopImgManage		{  
 					padding-left:1.5em;
@@ -512,8 +511,8 @@ vertical-align:top;
 
 .invalidAlert {
 	position:absolute;
-	top:50px;
-  	border-left:medium double black;
+	top:-70px;
+	border-left:medium double black;
 	border-right:medium double black;
 	border-bottom:medium double black;
 	border-top:medium double black;
