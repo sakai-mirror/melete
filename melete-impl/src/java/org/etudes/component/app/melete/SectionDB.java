@@ -833,11 +833,11 @@ public class SectionDB implements Serializable
 			if (find_sv == null)
 			{
 				// If it doesn't exist, insert it
-				SectionTrackView stv = new SectionTrackView();
-				stv.setSectionId(sectionId);
-				stv.setUserId(userId);
-				stv.setViewDate(new java.util.Date());
-				session.save(stv);
+				find_sv = new SectionTrackView();
+				find_sv.setSectionId(sectionId);
+				find_sv.setUserId(userId);
+				find_sv.setViewDate(new java.util.Date());
+				session.save(find_sv);
 			}
 			else
 			{
