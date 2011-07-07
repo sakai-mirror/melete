@@ -848,7 +848,7 @@ public class SectionDB implements Serializable
 				returnStv.setUserId(find_sv.getUserId());
 				returnStv.setViewDate(find_sv.getViewDate());
 				find_sv.setViewDate(new java.util.Date());
-				session.save(find_sv);
+				session.update(find_sv);
 			}
 			tx.commit();
 		}
