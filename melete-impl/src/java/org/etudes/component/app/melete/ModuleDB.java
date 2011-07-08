@@ -2244,7 +2244,7 @@ public class ModuleDB implements Serializable
 					if ((prevModId == 0) || (moduleId != prevModId))
 					{
 						vmBean = populateVmBean(rs, accMap, courseId);
-						
+	
 						// Add invalid modules if not filtered
 						// If filtered, do not add bad dates and no sections modules (invalid modules)
 						if (filtered && (!vmBean.isDateFlag() || vsBeanMap == null || vsBeanMap.size() <= 0)) continue;
@@ -2316,8 +2316,8 @@ public class ModuleDB implements Serializable
 				ssuImpl.traverseDom(seqXml, Integer.toString(seqNo));
 				List xmlSecList = ssuImpl.getXmlSecList();
 				StringBuffer rowClassesBuf = new StringBuffer();
-
-				xmlSecList = correctSections(vsBeanMap, moduleId, xmlSecList);
+    // comment the below line. This should be called for instructors only and not students
+	//			xmlSecList = correctSections(vsBeanMap, moduleId, xmlSecList);
 				List vsBeanList = new ArrayList();
 				processViewSections(vsBeanMap, vsBeanList, xmlSecList, rowClassesBuf);
 				vmBean.setRowClasses(rowClassesBuf.toString());
