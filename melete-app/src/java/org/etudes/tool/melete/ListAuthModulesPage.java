@@ -100,7 +100,6 @@ public class ListAuthModulesPage implements Serializable
 
 	/** identifier field */
 	private int showModuleId;
-    private int showInvalidModuleId;
 
 	private String formName;
 
@@ -240,7 +239,6 @@ public class ListAuthModulesPage implements Serializable
 		selectAllFlag = false;
 		listSize = 0;
 		moduleDateBeans = null;
-		setShowInvalidModuleId(-1);
 	}
 
 	/**
@@ -417,38 +415,6 @@ public class ListAuthModulesPage implements Serializable
 		selectAllFlag = false;
 	}
 	
-	 /** Method to show invalid module
-	 * @return list_auth_modules
-	 */
-	public String showHideInvalid()
-	 {
-		 ModuleDateBean mdbean = null;
-		 FacesContext ctx = FacesContext.getCurrentInstance();
-		 UIViewRoot root = ctx.getViewRoot();
-		 UIData table = null;
-		 table = (UIData)
-		 root.findComponent("listauthmodulesform").findComponent("table");
-
-		 mdbean = (ModuleDateBean) table.getRowData();
-		 if (getShowInvalidModuleId() != mdbean.getModuleId())
-		 {
-			 setShowInvalidModuleId(mdbean.getModuleId());
-		 }
-
-		 return "list_auth_modules";
-	 }	
-
-
-	  /** Method to hide invalid modules
-	 * @return list_auth_modules
-	 */
-	public String hideInvalid()
-	  {
-		  setShowInvalidModuleId(-1);
-		  return "list_auth_modules";
-	  }
-	  	
-
 	/** Get list of modules, flag modules with invalid dates
 	 * @return list of ModuleDateBean objects
 	 */
@@ -1790,20 +1756,6 @@ public class ListAuthModulesPage implements Serializable
 		ctx.addMessage(null, msg);
 	}
 	
-	/**
-	 * @return showInvalidModuleId module id of invalid module(used for popup)
-	 */
-	public int getShowInvalidModuleId() {
-		return showInvalidModuleId;
-	}
-
-	/**
-	 * @param showInvalidModuleId module id of invalid module
-	 */
-	public void setShowInvalidModuleId(int showInvalidModuleId) {
-		this.showInvalidModuleId = showInvalidModuleId;
-	}
-
 	/**
 	 * @return value of sec table(datatable in which sections are rendered)
 	 */

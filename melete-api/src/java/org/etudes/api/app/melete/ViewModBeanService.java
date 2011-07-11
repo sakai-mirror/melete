@@ -26,9 +26,6 @@ package org.etudes.api.app.melete;
 import java.util.Date;
 import java.util.List;
 
-/**
- * 
- */
 public interface ViewModBeanService
 {
 
@@ -36,6 +33,8 @@ public interface ViewModBeanService
 	 * @return get blockedBy
 	 */
 	public abstract String getBlockedBy();
+
+	public String getBlockedDetails();
 
 	/**
 	 * @return description
@@ -106,7 +105,7 @@ public interface ViewModBeanService
 	 * @return if module is completely read by user
 	 */
 	public boolean isReadComplete();
-	
+
 	/**
 	 * @return selected boolean flag
 	 */
@@ -123,6 +122,8 @@ public interface ViewModBeanService
 	 */
 	public abstract void setBlockedBy(String blockedBy);
 
+	public void setBlockedDetails(String blockedDetails);
+
 	/**
 	 * @param dateFlag
 	 *        the date flag
@@ -134,7 +135,7 @@ public interface ViewModBeanService
 	 *        the module description
 	 */
 	public abstract void setDescription(String description);
-	
+
 	/**
 	 * @param endDate
 	 *        the end date
@@ -155,10 +156,10 @@ public interface ViewModBeanService
 
 	/**
 	 * @param readComplete
-	 * 		set if user has read all sections of a module
+	 *        set if user has read all sections of a module
 	 */
 	public abstract void setReadComplete(boolean readComplete);
-	
+
 	/**
 	 * @param readDate
 	 *        set read date

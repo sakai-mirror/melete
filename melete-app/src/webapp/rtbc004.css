@@ -214,7 +214,6 @@ a1:active 			{color : #000080;}
  .ListModCheckClass {
    vertical-align: top;
 	width: 2%;
-	white-space:nowrap;
    }
    
  .ListDateInputClass {
@@ -231,7 +230,6 @@ vertical-align: top;  }
 .ListClosedClass {
    vertical-align: top;	
 	width: 2%;
-	white-space:nowrap;
    }
     
 .ListPrintClass {
@@ -332,8 +330,14 @@ td.MainTableClass     { white-space: nowrap;}
 					}
 .BottomImgMyBookmarks{  	padding-left:2em;
 						background: #eee url('images/bookmark.png') .2em no-repeat;
-					}
-								
+					}		
+.BottomImgOK		{  	padding-left:2em;
+						padding-right:1em;
+						background: #eee url('images/correct.png') .2em no-repeat;
+						border-style:outset;
+						border-width:3px;
+						border-color:#eee;						
+					}						
 .TopImgManage		{  
 					padding-left:1.5em;
 					border:none;
@@ -513,13 +517,32 @@ vertical-align:top;
 
 @media print  { .noprint  { display: none; } }
 
-.prereqInvalidAlert {
+.prereqAlert {
 	position:absolute;
-	top:50px;
+	top:-70px;
+	left:-150px;
 	border-left:medium double black;
 	border-right:medium double black;
 	border-bottom:medium double black;
 	border-top:medium double black;
-	height:100px;
-	z-index:1;	
+	height:130px; 
+	z-index:2;		
+    width:390px;	
+}
+
+.invalidAlert {
+	position:absolute;
+	top:-70px;
+	border-left:medium double black;
+	border-right:medium double black;
+	border-bottom:medium double black;
+	border-top:medium double black;
+	height:130px; 
+	z-index:2;		
+    width:390px;	
+}
+
+.alert1 {
+	position:relative;
+	z-index:1;
 }
