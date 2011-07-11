@@ -829,6 +829,7 @@ public class ListModulesPage implements Serializable
 				vmPage.setPrevMbean(null);
 				vmPage.setModuleSeqNo(vmbean.getSeqNo());
 				vmPage.setAutonumber(null);
+				vmPage.getViewMbean();
 			}
 		}
 

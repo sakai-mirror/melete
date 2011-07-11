@@ -23,47 +23,43 @@
  **********************************************************************************/
 package org.etudes.tool.melete;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.etudes.component.app.melete.*;
-import org.etudes.api.app.melete.*;
-
-import javax.faces.application.Application;
-import javax.faces.component.html.*;
-import javax.faces.component.*;
-
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
-
 import java.util.Properties;
 
-import java.io.*;
-
-import javax.faces.context.FacesContext;
+import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIParameter;
+import javax.faces.component.html.HtmlCommandLink;
+import javax.faces.component.html.HtmlOutputText;
+import javax.faces.component.html.HtmlPanelGroup;
+import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 
-//import com.sun.faces.util.Util;
-import org.etudes.api.app.melete.ModuleService;
-import org.etudes.api.app.melete.SectionService; //import org.sakaiproject.jsf.ToolBean;
-import org.etudes.api.app.melete.SectionTrackViewObjService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.MeleteCHService;
-
+import org.etudes.api.app.melete.MeleteSecurityService;
+import org.etudes.api.app.melete.ModuleObjService;
+import org.etudes.api.app.melete.ModuleService;
+import org.etudes.api.app.melete.SectionObjService;
+import org.etudes.api.app.melete.SectionResourceService;
+import org.etudes.api.app.melete.SectionService;
+import org.etudes.api.app.melete.SectionTrackViewObjService;
+import org.etudes.simpleti.SakaiSimpleLTI;
+import org.etudes.util.HtmlHelper;
+import org.imsglobal.simplelti.SimpleLTIUtil;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
-import org.sakaiproject.util.ResourceLoader;
-
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.tool.cover.ToolManager;
-import org.etudes.simpleti.SakaiSimpleLTI;
-import org.imsglobal.simplelti.SimpleLTIUtil;
-
+import org.sakaiproject.util.ResourceLoader;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.etudes.util.HtmlHelper;
 
 public class ViewSectionsPage implements Serializable
 {
@@ -554,7 +550,7 @@ public class ViewSectionsPage implements Serializable
 		vmPage.setModuleSeqNo(0);
 		vmPage.setPrintable(null);
 		vmPage.setAutonumber(null);
-
+		vmPage.getViewMbean();
 		return "view_module";
 	}
 
@@ -584,7 +580,7 @@ public class ViewSectionsPage implements Serializable
 		vmPage.setModuleSeqNo(this.nextSeqNo);
 		vmPage.setPrintable(null);
 		vmPage.setAutonumber(null);
-
+		vmPage.getViewMbean();
 		return "view_module";
 	}
 
@@ -616,7 +612,8 @@ public class ViewSectionsPage implements Serializable
 		vmPage.setViewMbean(null);
 		vmPage.setPrevMbean(null);
 		vmPage.setModuleSeqNo(this.moduleSeqNo);
-
+		vmPage.getViewMbean();
+		
 		return "view_module";
 	}
 

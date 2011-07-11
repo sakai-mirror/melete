@@ -570,6 +570,7 @@ public class ViewModulesPage implements Serializable
 		{
 			logger.debug(e.toString());
 		}
+		vmPage.getViewMbean();
 	}
 
 	/**

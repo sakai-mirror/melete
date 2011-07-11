@@ -23,38 +23,23 @@
  **********************************************************************************/
 package org.etudes.tool.melete;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.etudes.component.app.melete.*;
-import org.etudes.api.app.melete.*;
-import org.sakaiproject.util.ResourceLoader;
+import java.io.Serializable;
+import java.util.List;
 
 import javax.faces.application.Application;
-import javax.faces.component.html.*;
-import javax.faces.component.*;
-
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.io.*;
-
+import javax.faces.component.UIParameter;
+import javax.faces.component.html.HtmlCommandLink;
+import javax.faces.component.html.HtmlOutputText;
+import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 
-//import com.sun.faces.util.Util;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.ModuleService;
-import org.etudes.api.app.melete.SectionService; //import org.sakaiproject.jsf.ToolBean;
-
-//Adding to test
-import org.sakaiproject.content.api.ContentHostingService;
-import org.sakaiproject.content.api.ContentResource;
-import org.sakaiproject.entity.api.ResourceProperties;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.sakaiproject.util.ResourceLoader;
 
 public class ViewNextStepsPage implements Serializable
 {
@@ -76,9 +61,6 @@ public class ViewNextStepsPage implements Serializable
 
 	public ViewNextStepsPage()
 	{
-
-		FacesContext context = FacesContext.getCurrentInstance();
-		Map sessionMap = context.getExternalContext().getSessionMap();
 		courseId = null;
 		userId = null;
 	}
@@ -174,6 +156,7 @@ public class ViewNextStepsPage implements Serializable
 		vmPage.setModuleSeqNo(nextSeqNo);
 		vmPage.setPrintable(null);
 		vmPage.setAutonumber(null);
+		vmPage.getViewMbean();
 		return "view_module";
 	}
 
@@ -202,6 +185,7 @@ public class ViewNextStepsPage implements Serializable
 				vmPage.setModuleSeqNo(prevSeqNo);
 			}
 			vmPage.setPrevMbean(null);
+			vmPage.getViewMbean();
 			return "view_module";
 
 		}

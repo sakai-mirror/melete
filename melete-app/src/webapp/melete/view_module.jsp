@@ -41,9 +41,6 @@
 <!--Page Content-->
 		 <tr>
 			<td align="center">			
-			<!-- The getmdbean method correctly determines the prev and next seq nos in the backing bean -->
-			<!-- The hidden field below has been added just to get the getmdbean method to execute first -->
-		    <h:inputHidden id="hacktitle" value="#{viewModulesPage.viewMbean.title}"/>
 			<f:subview id="topmod">
 			  <jsp:include page="view_navigate_mod.jsp"/>
 			</f:subview>
