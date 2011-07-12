@@ -106,17 +106,14 @@ function showEdateCal()
          	  <tr>
                 <td class="col1" align="left" valign="top"> <h:outputText value="#{msgs.add_module_module_title}" /> <span class="required">*</span></td>
                 <td  class="col2" align="left" valign="top">
-					<h:inputText id="title" size="45" value="#{addModulePage.module.title}" required="true" styleClass="formtext" />
-					
+					<h:inputText id="title" size="45" value="#{addModulePage.module.title}" required="true" styleClass="formtext" validator="#{addModulePage.validateField}" />
 				</td>
               </tr>
 			 
               <tr>
                 <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_descr_over_object}" /> </td>
                 <td  class="col2" align="left" valign="top">
-				<h:inputTextarea id="description" cols="45" rows="5" value="#{addModulePage.module.description}" styleClass="formtext" >
-					<f:validateLength maximum="500" minimum="1"/>
-				</h:inputTextarea>	
+					<h:inputTextarea id="description" cols="45" rows="5" value="#{addModulePage.module.description}" styleClass="formtext" validator="#{addModulePage.validateField}" />
 				</td>
               </tr>
 			  
@@ -124,9 +121,7 @@ function showEdateCal()
                 <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_keywords}" />				
                  </td>
                 <td  class="col2" align="left" valign="top">
-				<h:inputTextarea id="keywords" cols="45" rows="3" value="#{addModulePage.module.keywords}"  styleClass="formtext" >
-						<f:validateLength maximum="250" minimum="1" />
-				</h:inputTextarea>		
+					<h:inputTextarea id="keywords" cols="45" rows="3" value="#{addModulePage.module.keywords}"  styleClass="formtext" validator="#{addModulePage.validateField}" />
 				</td>
               </tr>
 			  

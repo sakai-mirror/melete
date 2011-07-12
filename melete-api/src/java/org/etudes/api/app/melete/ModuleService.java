@@ -29,6 +29,9 @@ import org.etudes.api.app.melete.exception.MeleteException;
 
 public interface ModuleService
 {
+	public static final int MAX_DESC_LENGTH = 500;
+	public static final int MAX_TITLE_LENGTH = 250;
+	
 	/**
 	 * Apply base date to all module start and end dates
 	 * 

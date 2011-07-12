@@ -38,6 +38,7 @@ import org.etudes.component.app.melete.SectionResource;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.SectionObjService;
+import org.etudes.api.app.melete.SectionService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.etudes.api.app.melete.exception.UserErrorException;
 
@@ -258,8 +259,26 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-
-		// validation 1: modality is required.
+		if( section.getTitle() == null || section.getTitle().trim().length() == 0)
+		{			
+			String errMsg = bundle.getString("title_reqd");
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "title_reqd", errMsg));
+			return "failure";
+		}
+		if( section.getTitle() != null && section.getTitle().trim().length() > SectionService.MAX_TITLE_INSTR_LENGTH)
+		{			
+			String errMsg = bundle.getString("invalid_title_len");
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_title_len", errMsg));
+			return "failure";
+		}	
+		if( section.getInstr() != null && section.getInstr().trim().length() > SectionService.MAX_TITLE_INSTR_LENGTH)
+		{
+			String errMsg = bundle.getString("invalid_instructions_len");
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_instructions_len", errMsg));
+			return "failure";
+		}	
+		
+		// validation 1a: modality is required.
 		if (!validateModality())
 		{
 			String errMsg = bundle.getString("add_section_modality_reqd");
@@ -354,9 +373,12 @@ public class EditSectionPage extends SectionPage implements Serializable
 	    				if (meleteResource != null && meleteResource.getResourceId() != null && meleteResource.getResourceId().trim().length() != 0)
 	    				{
 	    					if (logger.isDebugEnabled()) logger.debug("Ist step of edit - check meleteResource" + meleteResource.getResourceId());
-	    					// validation 4: check link url title
+	    					// validation 4a: check link url title
 	    					if (section.getContentType().equals("typeLink") && (secResourceName == null || secResourceName.trim().length() == 0))
 	    						throw new UserErrorException("URL_title_reqd");
+	    					// validation 4b: check link url title length
+	    					if (section.getContentType().equals("typeLink") && (secResourceName != null && secResourceName.trim().length() > SectionService.MAX_URL_LENGTH))
+	    						throw new UserErrorException("add_section_url_title_len");
 	    					getMeleteCHService().checkResource(meleteResource.getResourceId());
 	    					editMeleteCollectionResource(meleteResource.getResourceId());
 	    				}
@@ -861,6 +883,12 @@ public class EditSectionPage extends SectionPage implements Serializable
 					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "URL_title_reqd", errMsg));
 					return "editContentLinkServerView";
 				}
+				if(newURLTitle != null && newURLTitle.length() > SectionService.MAX_URL_LENGTH)
+				{
+					errMsg = bundle.getString("add_section_url_title_len");
+					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "add_section_url_title_len", errMsg));
+					return "editContentLinkServerView";
+				}
 				secResourceName = newURLTitle;
 				createLinkUrl();
 				String res_mime_type = MeleteCHService.MIME_TYPE_LINK;
@@ -939,6 +967,12 @@ public class EditSectionPage extends SectionPage implements Serializable
 				{
 					errMsg = bundle.getString("URL_title_reqd");
 					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "URL_title_reqd", errMsg));
+					return "editContentLTIServerView";
+				}
+				if(newURLTitle != null && newURLTitle.length() > SectionService.MAX_URL_LENGTH)
+				{
+					errMsg = bundle.getString("add_section_url_title_len");
+					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "add_section_url_title_len", errMsg));
 					return "editContentLTIServerView";
 				}
 				secResourceName = newURLTitle;

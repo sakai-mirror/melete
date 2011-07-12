@@ -136,15 +136,13 @@ function showmessage()
                                    <tr>
                                     <td class="col1" align="left" valign="top"><h:outputText id="text7" value="#{msgs.editmodulesections_section_title}" /><span class="required">*</span></td>
                                     <td class="col2" align="left" valign="top">
-									<h:inputText id="title" value="#{editSectionPage.section.title}" size="45"  required="true" styleClass="formtext"/>
+									<h:inputText id="title" value="#{editSectionPage.section.title}" size="45" styleClass="formtext" />
 									</td>
                                   </tr>                           
 								  <tr>
                                     <td class="col1" align="left" valign="top"><h:outputText id="text9" value="#{msgs.editmodulesections_instructions}" /></td>
                                     <td class="col2" align="left" valign="top">
-										  <h:inputTextarea id="instr" cols="45" rows="5" value="#{editSectionPage.section.instr}" styleClass="formtext">
-											<f:validateLength maximum="250" minimum="1"/>
-									</h:inputTextarea>
+										  <h:inputTextarea id="instr" cols="45" rows="5" value="#{editSectionPage.section.instr}" styleClass="formtext" />
 									</td>
                                   </tr>
                                   <tr>

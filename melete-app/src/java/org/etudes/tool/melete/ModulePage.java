@@ -520,4 +520,32 @@ public abstract class ModulePage implements Serializable
 		return true;
 	}
 
+	public void validateField(FacesContext context, UIComponent toValidate, Object value)
+	{
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+
+		String check = (String) value;
+
+		// title no more than 200 characters
+		if (toValidate.getClientId(context).indexOf("title") != -1 && check != null && check.trim().length() > ModuleService.MAX_TITLE_LENGTH)
+		{
+			((UIInput) toValidate).setValid(false);
+			String errMsg = bundle.getString("invalid_title_len");
+			context.addMessage(toValidate.getClientId(context), new FacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_title_len", errMsg));
+		}
+		// description no more than 500 characters
+		if (toValidate.getClientId(context).indexOf("description") != -1 && check != null && check.trim().length() > ModuleService.MAX_DESC_LENGTH)
+		{
+			((UIInput) toValidate).setValid(false);
+			String errMsg = bundle.getString("invalid_description_len");
+			context.addMessage(toValidate.getClientId(context), new FacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_description_len", errMsg));
+		}
+		// keywords no more than 250 characters
+		if (toValidate.getClientId(context).indexOf("keywords") != -1 && check != null && check.trim().length() > ModuleService.MAX_TITLE_LENGTH)
+		{
+			((UIInput) toValidate).setValid(false);
+			String errMsg = bundle.getString("invalid_keywords_len");
+			context.addMessage(toValidate.getClientId(context), new FacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_keywords_len", errMsg));
+		}
+	}
 }
