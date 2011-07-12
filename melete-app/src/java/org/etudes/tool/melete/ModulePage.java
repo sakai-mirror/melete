@@ -525,7 +525,14 @@ public abstract class ModulePage implements Serializable
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 
 		String check = (String) value;
-
+	
+		// title is required
+		if (toValidate.getClientId(context).indexOf("title") != -1 && check.trim().length() == 0)
+		{			
+			((UIInput) toValidate).setValid(false);
+			String errMsg = bundle.getString("title_reqd");
+			context.addMessage(toValidate.getClientId(context), new FacesMessage(FacesMessage.SEVERITY_ERROR, "title_reqd", errMsg));
+		}
 		// title no more than 200 characters
 		if (toValidate.getClientId(context).indexOf("title") != -1 && check != null && check.trim().length() > ModuleService.MAX_TITLE_LENGTH)
 		{
