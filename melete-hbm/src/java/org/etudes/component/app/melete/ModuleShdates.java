@@ -24,19 +24,16 @@
 package org.etudes.component.app.melete;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.Calendar;
-
+import java.util.Date;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.etudes.api.app.melete.ModuleShdatesService;
+import org.etudes.util.api.AccessAdvisor;
 import org.sakaiproject.component.cover.ComponentManager;
 import org.sakaiproject.tool.cover.SessionManager;
-import org.etudes.api.app.melete.*;
-import org.etudes.util.api.AccessAdvisor;
 
 public class ModuleShdates implements Serializable, ModuleShdatesService
 {
-
 	/** nullable persistent field */
 	private Boolean addtoSchedule;
 
@@ -102,6 +99,34 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 		this.module = null;
 	}
 
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		ModuleShdates other = (ModuleShdates) obj;
+		if (addtoSchedule == null)
+		{
+			if (other.addtoSchedule != null) return false;
+		}
+		else if (!addtoSchedule.equals(other.addtoSchedule)) return false;
+		if (endDate == null && other.endDate != null) return false;
+		else if (endDate != null && other.endDate == null) return false;
+		else if (endDate != null && other.endDate != null && endDate.compareTo(other.endDate) != 0) return false;	
+			
+		if (moduleId == null)
+		{
+			if (other.moduleId != null) return false;
+		}
+		else if (!moduleId.equals(other.moduleId)) return false;
+		if (startDate == null && other.startDate != null) return false;
+		else if (startDate != null && other.startDate == null) return false;
+		else if (startDate != null && other.startDate != null && startDate.compareTo(other.startDate) != 0) return false;	
+		
+		return true;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -164,6 +189,18 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 	public int getVersion()
 	{
 		return this.version;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((addtoSchedule == null) ? 0 : addtoSchedule.hashCode());
+		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
+		result = prime * result + ((moduleId == null) ? 0 : moduleId.hashCode());
+		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
+		return result;
 	}
 
 	/**
@@ -300,49 +337,6 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 	public String toString()
 	{
 		return new ToStringBuilder(this).append("moduleId", getModuleId()).toString();
-	}
-
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((addtoSchedule == null) ? 0 : addtoSchedule.hashCode());
-		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
-		result = prime * result + ((moduleId == null) ? 0 : moduleId.hashCode());
-		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		ModuleShdates other = (ModuleShdates) obj;
-		if (addtoSchedule == null)
-		{
-			if (other.addtoSchedule != null) return false;
-		}
-		else if (!addtoSchedule.equals(other.addtoSchedule)) return false;
-		if (endDate == null)
-		{
-			if (other.endDate != null) return false;
-		}
-		else if (endDate.compareTo(other.endDate) != 0) return false;		
-		if (moduleId == null)
-		{
-			if (other.moduleId != null) return false;
-		}
-		else if (!moduleId.equals(other.moduleId)) return false;
-		if (startDate == null)
-		{
-			if (other.startDate != null) return false;
-		}
-		else if (startDate.compareTo(other.startDate) != 0) return false;
-		
-		return true;
 	}
 
 }
