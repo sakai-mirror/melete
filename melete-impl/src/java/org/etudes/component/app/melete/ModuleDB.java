@@ -1543,6 +1543,67 @@ public class ModuleDB implements Serializable
 	}
 
 	/**
+	 * Get the maximum date of all modules in the course(may be start or end)
+	 * 
+	 * @param course_id
+	 *        Course id
+	 * @return Maximum(latest) start or end date of course
+	 */
+	public Date getMaxStartDate(String course_id)
+	{
+		Date maxStartDate = null;
+		try
+		{
+			List modList = getModules(course_id);
+			Iterator i = modList.iterator();
+			List dateList = new ArrayList();
+
+			// Create a list of just the non-null dates
+			while (i.hasNext())
+			{
+				Module mod = (Module) i.next();
+				if (mod.getModuleshdate() != null)
+				{
+					if (mod.getModuleshdate().getStartDate() != null)
+					{
+						dateList.add(mod.getModuleshdate().getStartDate());
+					}
+					if (mod.getModuleshdate().getEndDate() != null)
+					{
+						dateList.add(mod.getModuleshdate().getEndDate());
+					}
+				}
+			}
+
+			if (dateList != null)
+			{
+				if (dateList.size() > 0)
+				{
+					i = dateList.iterator();
+					if (i.hasNext())
+					{
+						maxStartDate = (Date) i.next();
+						while (i.hasNext())
+						{
+							Date modDate = (Date) i.next();
+							if (modDate.after(maxStartDate))
+							{
+								maxStartDate = modDate;
+							}
+						}
+					}
+				}
+			}
+		}
+		catch (Exception he)
+		{
+			logger.error(he.toString());
+			he.printStackTrace();
+		}
+		return maxStartDate;
+	}
+
+	/**
 	 * Get module from module id
 	 * 
 	 * @param moduleId
