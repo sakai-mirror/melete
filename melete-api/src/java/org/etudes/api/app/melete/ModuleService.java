@@ -165,14 +165,25 @@ public interface ModuleService
 	public int getCourseModuleSize(String courseId);
 
 	/**
-	 * Gets the earliest start date(if defined) of all the modules. If start date exists for the modules gets the earliest start 
-	 * date of all modules else returns null
+	 * Gets the earliest start date or end date(if defined) of all the modules. Returns null if dates don't exist 
+	 * 
 	 * 
 	 * @param course_id
 	 *        Course id
 	 * @return 
 	 */
 	public Date getMinStartDate(String course_id);
+	
+	/**
+	 * Gets the latest start date or end date(if defined) of all the modules. Returns null if dates don't exist 
+	 * 
+	 * 
+	 * @param course_id
+	 *        Course id
+	 * @return 
+	 */
+	public Date getMaxStartDate(String course_id);
+	
 
 	/**
 	 * Gets the Module.
@@ -291,13 +302,37 @@ public interface ModuleService
 	 *        User id
 	 * @param courseId
 	 *        Course id
-	 * @param fromCourseMap
-	 *        true if method is invoked from coursemap, false otherwise.If not invoked from course map, some queries may be skipped
 	 * @param filtered
 	 *        If false, return all modules including invalid ones. If true, do not return invalid modules.
 	 * @return List of modules
 	 */
-	public List<ViewModBeanService> getViewModules(String userId, String courseId, boolean fromCourseMap, boolean filtered);
+	public List<ViewModBeanService> getViewModules(String userId, String courseId, boolean filtered);
+
+	/**
+	 * Creates the ViewModBeanService class and sets the section display level and row classes etc
+	 * 
+	 * @param userId
+	 *        The user id
+	 * @param courseId
+	 *        The course id
+	 * @param modId
+	 *        The module id
+	 * @return ViewModBeanService object
+	 */
+	public ViewModBeanService getViewModBean(String userId, String courseId, int modId);
+
+	/**
+	 * Creates the ViewModBeanService class and sets the section display level and row classes etc
+	 * 
+	 * @param userId
+	 *        The user id
+	 * @param courseId
+	 *        The course id
+	 * @param seqNo
+	 *        The seq no
+	 * @return ViewModBeanService object
+	 */
+	public ViewModBeanService getViewModBeanBySeq(String userId, String courseId, int seqNo);
 
 	/**
 	 * Adds Module to the Database.

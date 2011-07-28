@@ -36,7 +36,6 @@ a1:active 			{color : #000080;}
 .tableheader 		{background: #EAEAEA;
 					font-family: Verdana, Arial, sans-serif;
 					font-size :83%;
-					font-weight : bold;
 					color : #000000;
 					text-align: left;
 					margin: 0 1em 0 0;
@@ -51,11 +50,9 @@ a1:active 			{color : #000080;}
 					height:20px;}
 
 /*Sets <th> to align:left*/
-.leftheader 		{background: #EAEAEA;
+.leftheader 		{
 					font-family: Verdana, Arial, sans-serif;
 					font-size : 83%;
-					font-weight : bold;
-					color : #000000;
 					text-align: left;}
 /* this group defines the comment, date, button, and navigation bar properties */
 .comment 			{background: #FFFFFF;
@@ -204,7 +201,7 @@ a1:active 			{color : #000080;}
 .ListDateClass {
 	font-size: 92%;
 	vertical-align: top;
-    width: 18%;  
+    width: 10%;  
     white-space: nowrap;	
   }
 
@@ -217,7 +214,6 @@ a1:active 			{color : #000080;}
  .ListModCheckClass {
    vertical-align: top;
 	width: 2%;
-	white-space:nowrap;
    }
    
  .ListDateInputClass {
@@ -234,7 +230,6 @@ vertical-align: top;  }
 .ListClosedClass {
    vertical-align: top;	
 	width: 2%;
-	white-space:nowrap;
    }
     
 .ListPrintClass {
@@ -248,6 +243,10 @@ text-align: left;
 width :85%;} 
 
 .SectionTableClass {vertical-align: top;}
+
+.SectionTableClassCol1 {width: 78%;vertical-align: top;}
+
+.SectionTableClassCol2 {width: 22%;vertical-align: top; white-space: nowrap; text-align:left;}
 
 .RedClass 			{color: #FF0000;  }
 
@@ -331,7 +330,14 @@ td.MainTableClass     { white-space: nowrap;}
 					}
 .BottomImgMyBookmarks{  	padding-left:2em;
 						background: #eee url('images/bookmark.png') .2em no-repeat;
-					}			
+					}		
+.BottomImgOK		{  	padding-left:2em;
+						padding-right:1em;
+						background: #eee url('images/correct.png') .2em no-repeat;
+						border-style:outset;
+						border-width:3px;
+						border-color:#eee;						
+					}						
 .TopImgManage		{  
 					padding-left:1.5em;
 					border:0;
@@ -399,6 +405,19 @@ white-space:nowrap;}
  .secrow8       {text-indent:180px;}
  .secrow9       {text-indent:200px;}
 
+ .seccol0       {margin-left:20px;}
+ .seccol1       {margin-left:40px;}
+ .seccol2       {margin-left:60px;}
+ .seccol3       {margin-left:80px;}
+ .seccol4       {margin-left:100px;}
+ .seccol5       {margin-left:120px;}
+ .seccol6       {margin-left:140px;}
+ .seccol7       {margin-left:160px;}
+ .seccol8       {margin-left:180px;}
+ .seccol9       {margin-left:200px;}
+ 
+  .readSection {width:100%;background-color:#CCFFCC;}
+  
   .BlueClass {
     color: #0000FF;
   }
@@ -479,21 +498,30 @@ vertical-align:top;
 
 .prereqAlert {
 	position:absolute;
-	top:50px;
+	top:-70px;
+	left:-150px;
 	border-left:medium double black;
 	border-right:medium double black;
 	border-bottom:medium double black;
 	border-top:medium double black;
-	height:100px;
-	z-index:1;	
+	height:130px; 
+	z-index:2;		
+    width:390px;	
 }
+
 .invalidAlert {
 	position:absolute;
-	top:50px;
+	top:-70px;
 	border-left:medium double black;
 	border-right:medium double black;
 	border-bottom:medium double black;
 	border-top:medium double black;
-	height:100px;
-	z-index:1;		
+	height:130px; 
+	z-index:2;		
+    width:390px;	
+}
+
+.alert1 {
+	position:relative;
+	z-index:1;
 }

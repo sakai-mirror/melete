@@ -24,6 +24,8 @@
 package org.etudes.component.app.melete;
 
 import java.io.Serializable;
+import java.util.Date;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.etudes.api.app.melete.ViewSecBeanService;
 
@@ -33,8 +35,10 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 	protected boolean selected;
 	protected int sectionId;
 	protected String contentType;
+	protected String displayClass;
 	protected String displaySequence;
 	protected String title;
+	private Date viewDate;
 
 	/** default constructor */
 	public ViewSecBean()
@@ -48,7 +52,7 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 	 * @param displaySequence
 	 * @param title
 	 */
-	public ViewSecBean(boolean selected, int sectionId, String contentType, String displaySequence, String title)
+	public ViewSecBean(boolean selected, int sectionId, String contentType, String displaySequence, String title, Date viewDate)
 	{
 		super();
 		this.selected = selected;
@@ -56,6 +60,7 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 		this.contentType = contentType;
 		this.displaySequence = displaySequence;
 		this.title = title;
+		this.viewDate = viewDate;
 	}
 
 	/**
@@ -64,6 +69,11 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 	public String getContentType()
 	{
 		return this.contentType;
+	}
+
+	public String getDisplayClass()
+	{
+		return displayClass;
 	}
 
 	/**
@@ -81,13 +91,21 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 	{
 		return this.sectionId;
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	public String getTitle()
 	{
 		return this.title;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public Date getViewDate()
+	{
+		return this.viewDate;
 	}
 
 	/**
@@ -106,6 +124,11 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 		this.contentType = contentType;
 	}
 
+	public void setDisplayClass(String displayClass)
+	{
+		this.displayClass = displayClass;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -121,14 +144,14 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 	{
 		this.sectionId = sectionId;
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
-	}
+	}	
 
 	/**
 	 * {@inheritDoc}
@@ -136,6 +159,14 @@ public class ViewSecBean implements Serializable, ViewSecBeanService
 	public void setTitle(String title)
 	{
 		this.title = title;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setViewDate(Date viewDate)
+	{
+		this.viewDate = viewDate;
 	}
 
 	/**

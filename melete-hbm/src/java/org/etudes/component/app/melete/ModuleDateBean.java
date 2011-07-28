@@ -54,8 +54,6 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService
 
 	protected String truncTitle;
 
-	protected boolean visibleFlag;
-
 	/** default constructor */
 	public ModuleDateBean()
 	{
@@ -151,13 +149,6 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService
 		return selected;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isVisibleFlag()
-	{
-		return visibleFlag;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -237,14 +228,6 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService
 	public void setTruncTitle(String truncTitle)
 	{
 		this.truncTitle = truncTitle;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setVisibleFlag(boolean visibleFlag)
-	{
-		this.visibleFlag = visibleFlag;
 	}
 
 	/**

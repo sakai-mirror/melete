@@ -43,9 +43,9 @@
 			<td align="center">			
 			<!-- The getmdbean method correctly determines the prev and next seq nos in the backing bean -->
 			<!-- The hidden field below has been added just to get the getmdbean method to execute first -->
-		    <h:inputHidden id="hacktitle" value="#{viewModulesPage.mdbean.module.title}"/>
+		    <h:inputHidden id="hacktitle" value="#{viewModulesPage.viewMbean.title}"/>
 			<f:subview id="topmod">
-			<jsp:include page="view_navigate_mod.jsp"/>
+			  <jsp:include page="view_navigate_mod.jsp"/>
 			</f:subview>
 			</td>
 		</tr>      
@@ -61,39 +61,53 @@
 </tr>			               
 <tr>
 <td>
-	<h:panelGrid id="moduleContentGrid" columns="2" width="100%" columnClasses="style6,right" border="0" cellpadding="5" rendered="#{viewModulesPage.mdbean != null && viewModulesPage.mdbean.module != null}">
+	<h:panelGrid id="moduleContentGrid" columns="2" width="100%" columnClasses="style6,right" border="0" cellpadding="5" rendered="#{viewModulesPage.viewMbean != null}">
 		<h:column>
-			<h:outputText id="mod_seq" value="#{viewModulesPage.mdbean.cmod.seqNo}. " styleClass="bold" rendered="#{viewModulesPage.autonumber}"/>
-			<h:outputText id="title" value="#{viewModulesPage.mdbean.module.title}" styleClass="bold" ></h:outputText>
+			<h:graphicImage id="moduleFinishStatus" url="/images/status_away.png" alt="#{msgs.list_modules_alt_progress}" title="#{msgs.list_modules_alt_progress}" styleClass="AuthImgClass" rendered="#{viewModulesPage.viewMbean.readDate != null && !viewModulesPage.viewMbean.readComplete}" />
+	   		<h:graphicImage id="moduleFinishStatus1" url="/images/finish.gif" alt="#{msgs.list_modules_alt_complete}" title="#{msgs.list_modules_alt_complete}" styleClass="AuthImgClass" rendered="#{viewModulesPage.viewMbean.readComplete}" /> 
+			<h:outputText id="mod_seq" value="#{viewModulesPage.viewMbean.seqNo}. " styleClass="bold" rendered="#{viewModulesPage.autonumber}"/>
+			<h:outputText id="title" value="#{viewModulesPage.viewMbean.title}" styleClass="bold" ></h:outputText>
 		</h:column>
 		<h:column rendered="#{viewModulesPage.printable}">
-			<h:outputLink id="printModuleLink" value="view_module" onclick="OpenPrintWindow(#{viewModulesPage.mdbean.moduleId},'Melete Print Window');" rendered="#{viewModulesPage.printable}">
-		    	<f:param id="printmoduleId" name="printModuleId" value="#{viewModulesPage.mdbean.moduleId}" />
+			<h:outputLink id="printModuleLink" value="view_module" onclick="OpenPrintWindow(#{viewModulesPage.viewMbean.moduleId},'Melete Print Window');" rendered="#{viewModulesPage.printable}">
+		    	<f:param id="printmoduleId" name="printModuleId" value="#{viewModulesPage.viewMbean.moduleId}" />
 	  			<h:graphicImage id="printImgLink" value="/images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 		 	</h:outputLink>
 		</h:column>
 	</h:panelGrid>
-	<h:panelGrid id="moduleContentGrid1" columns="1" width="97%" border="0" cellpadding="3" rendered="#{viewModulesPage.mdbean != null && viewModulesPage.mdbean.module != null}">
+	<h:panelGrid id="moduleContentGrid1" columns="1" width="97%" border="0" cellpadding="3" rendered="#{viewModulesPage.viewMbean != null }">
 		<h:column>
-			<h:outputText id="description" value="#{viewModulesPage.mdbean.module.description}"  rendered="#{((viewModulesPage.mdbean.module.description != viewModulesPage.nullString)&&(viewModulesPage.mdbean.module.description != viewModulesPage.emptyString))}" />
+			<h:outputText id="description" value="#{viewModulesPage.viewMbean.description}"  rendered="#{((viewModulesPage.viewMbean.description != viewModulesPage.nullString)&&(viewModulesPage.viewMbean.description != viewModulesPage.emptyString))}" />
 		</h:column>
 	<h:column>
 		<h:outputText id="secs" value="#{msgs.view_module_student_content_section}" ></h:outputText>  
-		<h:dataTable id="tablesec"  value="#{viewModulesPage.mdbean.sectionBeans}" var="sectionBean" rowClasses="#{viewModulesPage.mdbean.rowClasses}" rendered="#{viewModulesPage.sectionSize > 0}" styleClass="SectionTableClass">
-           	  <h:column>
-        		  <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" rendered="#{sectionBean.section.title != viewModulesPage.nullString && !viewModulesPage.autonumber}"/>
-		          <h:commandLink id="viewSectionEditor"  action="#{viewModulesPage.viewSection}" rendered="#{sectionBean.section.title != viewModulesPage.nullString}" immediate="true">
-				      <h:outputText id="sec_seq" value="#{sectionBean.displaySequence}. " rendered="#{viewModulesPage.autonumber}"/>
-					  <h:outputText id="sectitleEditor" value="#{sectionBean.section.title}" > </h:outputText>
-				  </h:commandLink>
-			</h:column>
+		<h:dataTable id="tablesec"  value="#{viewModulesPage.viewMbean.vsBeans}" var="sectionBean" columnClasses="SectionTableClassCol1,SectionTableClassCol2" rowClasses="row2,row1" headerClass="leftheader" rendered="#{viewModulesPage.sectionSize > 0}" styleClass="SectionTableClass" width="98%">
+ 			  <h:column> 			  		
+ 					<h:panelGroup style="width:100%;">
+	        		 
+			          <h:commandLink id="viewSectionEditor"  action="#{viewModulesPage.viewSection}" styleClass="#{sectionBean.displayClass}" rendered="#{sectionBean.title != viewModulesPage.nullString}" immediate="true">
+					      <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" rendered="#{!viewModulesPage.autonumber}" styleClass="AuthImgClass"/>
+					      <h:outputText id="sec_seq" value="#{sectionBean.displaySequence}. " rendered="#{viewModulesPage.autonumber}"/>
+						  <h:outputText id="sectitleEditor" value="#{sectionBean.title}" > </h:outputText>
+					  </h:commandLink>					 
+					 </h:panelGroup> 													 
+				</h:column>
+				<h:column>
+					 <h:outputText id="viewDt" value="#{sectionBean.viewDate}" rendered="#{sectionBean.viewDate != null}">
+						<f:convertDateTime type="both" dateStyle="long" timeStyle="short"/>
+	        	    </h:outputText>	
+	        	    <h:outputText id="viewDt1" value="-" rendered="#{sectionBean.viewDate == null}" />
+	        	    <f:facet name="header">
+	        	    	<h:outputText id="viewDtheader" value="#{msgs.view_module_date_viewed}" />
+	        	    </f:facet>
+				</h:column>
  		 </h:dataTable>        
 	</h:column>
-	<h:column rendered="#{viewModulesPage.mdbean.module.whatsNext != viewModulesPage.nullString}">
+	<h:column rendered="#{viewModulesPage.viewMbean.whatsNext != viewModulesPage.nullString}">
 		<h:outputText value="#{msgs.view_module_student_whats_next}" styleClass="bold style7"></h:outputText>		
 	</h:column>
-	<h:column rendered="#{viewModulesPage.mdbean.module.whatsNext != viewModulesPage.nullString}">
-		<h:outputText id="whatsnext" value="#{viewModulesPage.mdbean.module.whatsNext}"/>
+	<h:column rendered="#{viewModulesPage.viewMbean.whatsNext != viewModulesPage.nullString}">
+		<h:outputText id="whatsnext" value="#{viewModulesPage.viewMbean.whatsNext}"/>
 	</h:column>	
 	</h:panelGrid>	
 </td>
@@ -102,9 +116,8 @@
 <tr>
 	<td align="center">
 		<f:subview id="bottommod">
-			<jsp:include page="view_navigate_mod.jsp"/>
-		</f:subview>	  
-		
+		  <jsp:include page="view_navigate_mod.jsp"/>
+		</f:subview>		
 	</td>	
 		</tr>
 		<tr><td class="maintabledata5">&nbsp;   </td></tr>    

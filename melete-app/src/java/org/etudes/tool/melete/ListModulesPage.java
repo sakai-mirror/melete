@@ -80,8 +80,6 @@ public class ListModulesPage implements Serializable
 	private UIData secTable;
 	/** identifier field */
 	private int showModuleId;
-	private int showPrereqModuleId;
-	private boolean showPrerequisiteFlag;
 	private boolean trueFlag = true;
 	private String typeEditor;
 
@@ -277,14 +275,6 @@ public class ListModulesPage implements Serializable
 	}
 
 	/**
-	 * @return module id for which to show prereqs
-	 */
-	public int getShowPrereqModuleId()
-	{
-		return showPrereqModuleId;
-	}
-
-	/**
 	 * @return true boolean value
 	 */
 	public boolean getTrueFlag()
@@ -324,7 +314,7 @@ public class ListModulesPage implements Serializable
 		try
 		{
 			if (nomodsFlag == null || viewModuleBeans == null)
-				viewModuleBeans = getModuleService().getViewModules(getUserId(), getCourseId(), false, true);
+				viewModuleBeans = getModuleService().getViewModules(getUserId(), getCourseId(), true);
 		}
 		catch (Exception e)
 		{
@@ -419,16 +409,6 @@ public class ListModulesPage implements Serializable
 	}
 
 	/**
-	 * @return hide prerequisite dialog and return list_modules_inst or list_modules_student page
-	 */
-	public String hidePrerequisite()
-	{
-		showPrerequisiteFlag = false;
-		setShowPrereqModuleId(-1);
-		return listViewAction();
-	}
-
-	/**
 	 * @return value of auto numbering for course
 	 */
 	public boolean isAutonumber()
@@ -484,14 +464,6 @@ public class ListModulesPage implements Serializable
 			printable = false;
 		}
 		return printable;
-	}
-
-	/**
-	 * @return value to show prerequisites flag
-	 */
-	public boolean isShowPrerequisiteFlag()
-	{
-		return showPrerequisiteFlag;
 	}
 
 	/**
@@ -600,9 +572,7 @@ public class ListModulesPage implements Serializable
 		}
 
 		setShowModuleId(-1);
-		setBookmarkSectionId(-1);
-		setShowPrereqModuleId(-1);
-		showPrerequisiteFlag = false;
+		setBookmarkSectionId(-1);	
 	}
 
 	/**
@@ -732,24 +702,6 @@ public class ListModulesPage implements Serializable
 	}
 
 	/**
-	 * @param showPrereqModuleId
-	 *        module id for prereqs
-	 */
-	public void setShowPrereqModuleId(int showPrereqModuleId)
-	{
-		this.showPrereqModuleId = showPrereqModuleId;
-	}
-
-	/**
-	 * @param showPrerequisiteFlag
-	 *        the show prerequisites flag to set
-	 */
-	public void setShowPrerequisiteFlag(boolean showPrerequisiteFlag)
-	{
-		this.showPrerequisiteFlag = showPrerequisiteFlag;
-	}
-
-	/**
 	 * @param trueFlag
 	 *        set true flag
 	 */
@@ -792,33 +744,6 @@ public class ListModulesPage implements Serializable
 	public void setViewModuleBeans(List viewModuleBeansList)
 	{
 		viewModuleBeans = viewModuleBeansList;
-	}
-
-	/**
-	 * @return show prerequisite dialog and return list_modules_inst or list_modules_student page
-	 */
-	public String showHidePrerequisite()
-	{
-		ViewModBean vmbean = null;
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIViewRoot root = ctx.getViewRoot();
-		UIData table = null;
-		if (isUserAuthor())
-		{
-			table = (UIData) root.findComponent("listmodulesform").findComponent("StudentTable");
-		}
-		else
-		{
-			table = (UIData) root.findComponent("listmodulesStudentform").findComponent("table");
-		}
-		vmbean = (ViewModBean) table.getRowData();
-		if (getShowPrereqModuleId() != vmbean.getModuleId())
-		{
-			setShowPrereqModuleId(vmbean.getModuleId());
-			showPrerequisiteFlag = true;
-		}
-
-		return listViewAction();
 	}
 
 	/**
@@ -900,8 +825,8 @@ public class ListModulesPage implements Serializable
 			{
 				vmbean = (ViewModBean) viewModuleBeans.get(selModIndex);
 				vmPage.setModuleId(vmbean.getModuleId());
-				vmPage.setMdbean(null);
-				vmPage.setPrevMdbean(null);
+				vmPage.setViewMbean(null);
+				vmPage.setPrevMbean(null);
 				vmPage.setModuleSeqNo(vmbean.getSeqNo());
 				vmPage.setAutonumber(null);
 			}
