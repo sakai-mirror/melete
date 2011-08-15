@@ -235,6 +235,14 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	{
 		return moduledb.getMinStartDate(course_id);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getMaxStartDate(String course_id)
+	{
+		return moduledb.getMaxStartDate(course_id);
+	}
 
 	/**
 	 * {@inheritDoc}
