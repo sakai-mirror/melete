@@ -405,10 +405,12 @@ public interface ModuleService
 	 *        List of CourseModule objects
 	 * @param courseId
 	 *        The courseId
+	 * @param userId
+	 *        The UserId        
 	 * @throws Exception
 	 *         MeleteException
 	 */
-	public void restoreModules(List<? extends CourseModuleService> modules, String courseId) throws Exception;
+	public void restoreModules(List<? extends CourseModuleService> modules, String courseId, String userId) throws Exception;
 
 	/**
 	 * Note: No longer in use

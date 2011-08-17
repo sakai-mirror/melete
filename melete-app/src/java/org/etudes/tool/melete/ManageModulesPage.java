@@ -311,7 +311,8 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 		try
 		{
 			String courseId = mPage.getCurrentSiteId();
-			getModuleService().restoreModules(restoreModulesList, courseId);
+			String userId = mPage.getCurrentUser().getId();
+			getModuleService().restoreModules(restoreModulesList, courseId, userId);
 			count = 0;
 		}
 		catch (Exception me)

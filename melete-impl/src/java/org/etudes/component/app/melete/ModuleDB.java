@@ -2962,7 +2962,7 @@ public class ModuleDB implements Serializable
 	 *        Course id
 	 * @throws MeleteException
 	 */
-	public void restoreModules(List restoreModules, String courseId) throws MeleteException
+	public void restoreModules(List restoreModules, String courseId, String userId) throws MeleteException
 	{
 		try
 		{
@@ -2998,17 +2998,22 @@ public class ModuleDB implements Serializable
 					moduleShdate.setStartDate(null);
 					moduleShdate.setEndDate(null);
 
-					// 3a.set start date as restored_date and end_date as 1 yr more
-					/*
-					 * GregorianCalendar cal = new GregorianCalendar(); cal.set(Calendar.HOUR,8); cal.set(Calendar.MINUTE,0); cal.set(Calendar.SECOND,0); cal.set(Calendar.AM_PM,Calendar.AM); moduleShdate.setStartDate(cal.getTime()); cal.add(Calendar.YEAR,
-					 * 1); cal.set(Calendar.HOUR,11); cal.set(Calendar.MINUTE,59); cal.set(Calendar.SECOND,0); cal.set(Calendar.AM_PM,Calendar.PM); moduleShdate.setEndDate(cal.getTime());
-					 */
+					//fetch module object and update modification date
+					q = session.createQuery("select mod from Module mod where mod.moduleId =:moduleId");
+					q.setParameter("moduleId", coursemodule.getModule().getModuleId());
 
+					Module module = (Module) (q.uniqueResult());
+					User user = UserDirectoryService.getUser(userId);
+					module.setModificationDate(new java.util.Date());
+					module.setModifiedByFname(user.getFirstName());
+					module.setModifiedByLname(user.getLastName());
+					
 					// 4a. begin transaction
 					tx = session.beginTransaction();
 					// 4b save all objects
 					session.saveOrUpdate(coursemodule1);
 					session.saveOrUpdate(moduleShdate);
+					session.saveOrUpdate(module);
 					// 4c.commit transaction
 					tx.commit();
 				}
@@ -3369,36 +3374,6 @@ public class ModuleDB implements Serializable
 		}
 	}
 
-	/**
-	 * Compares the objects before saving. If any module property like title, desc, keywords or dates are different then returns true
-	 * 
-	 * @param checkModule
-	 * @param checkModuleDates
-	 * @param session
-	 * @return
-	 */
-	protected boolean compareModule(ModuleObjService checkModule, ModuleShdatesService checkModuleDates, Session session)
-	{
-		try
-		{
-			// fetch module from database
-			String queryString = "select module from Module as module where module.moduleId = :moduleId";
-			Module mod = (Module) session.createQuery(queryString).setParameter("moduleId", checkModule.getModuleId()).uniqueResult();
-
-			queryString = "select moduleshdate from ModuleShdates as moduleshdate where moduleshdate.module.moduleId = :moduleId";
-			ModuleShdates mDate = (ModuleShdates) session.createQuery(queryString).setParameter("moduleId", checkModule.getModuleId()).uniqueResult();
-
-			// compare them. If both are same then not modified
-			if (mod.equals(checkModule) && mDate.equals(checkModuleDates)) return false;
-
-		}
-		catch (HibernateException he)
-		{
-			logger.error(he.toString());
-		}
-		return true;
-	}
-	
 	/**
 	 * Update moduledatebean objects
 	 * 

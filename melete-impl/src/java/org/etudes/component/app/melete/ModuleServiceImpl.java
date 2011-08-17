@@ -584,12 +584,12 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public void restoreModules(List modules, String courseId) throws Exception
+	public void restoreModules(List modules, String courseId, String userId) throws Exception
 	{
 
 		try
 		{
-			moduledb.restoreModules(modules, courseId);
+			moduledb.restoreModules(modules, courseId, userId);
 		}
 		catch (Exception ex)
 		{
