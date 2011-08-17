@@ -118,21 +118,6 @@ function showEdateCal()
 			 	</td>
 	  		 </tr>
               <tr>
-                <td  class="col1" align="left" valign="top"> <h:outputText value="#{msgs.edit_module_created_by}" /> </td>
-                <td   class="col2" align="left" valign="top">
-					<h:outputText value="#{editModulePage.module.createdByFname}"></h:outputText>&nbsp;<h:outputText value="#{editModulePage.module.createdByLname}"></h:outputText>&nbsp;&nbsp;
-					<h:outputText value="#{editModulePage.module.creationDate}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm:ss a"/></h:outputText>
-				</td>
-              </tr>
-              <tr>
-                <td   class="col1" align="left" valign="top"> <h:outputText value="#{msgs.edit_module_modified_by}" /> </td>
-                <td  class="col2" align="left" valign="top">
-					<h:outputText value="#{editModulePage.module.modifiedByFname}"></h:outputText>&nbsp;<h:outputText value="#{editModulePage.module.modifiedByLname}"></h:outputText>&nbsp;&nbsp;
-					<h:outputText value="#{editModulePage.module.modificationDate}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm:ss a"/></h:outputText>
-					</br> 
-				</td>
-              </tr>       
-              <tr>
                 <td  class="col1" align="left" valign="top"> <h:outputText value="#{msgs.edit_module_module_title}" /> <span class="required">*</span>  </td>
                 <td  class="col2" align="left" valign="top">  
 						<h:inputText id="title" size="45" value="#{editModulePage.module.title}" styleClass="formtext" required="true" validator="#{editModulePage.validateField}"/>											
@@ -154,14 +139,7 @@ function showEdateCal()
 							
 				</td>
               </tr>
-       	 	   <tr>
-                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.edit_module_term_year}" /></td>
-               <td  class="col2" align="left" valign="top">
-					<h:outputText id="season" value="#{editModulePage.season}"/>
-				  	 <h:outputText id="year" value="#{editModulePage.year}" />
-				   </td>
-              </tr>
-			  <tr>
+       	 	  <tr>
                 <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.edit_module_start_date}" /></td>
                 <td  class="col2" align="left" valign="top">					
 					  <a name="startCalender"></a><h:inputText id="startDate" 
@@ -204,7 +182,23 @@ function showEdateCal()
    </td>
   </tr>
 </table>
-<p><span class="required">*</span>&nbsp; <h:outputText value="#{msgs.edit_module_required}" /> </p>
+<table class="maintableCollapseWithNoBorder">
+	<tr>
+		<td rowspan="2" class="left">
+			<span class="required">*</span>&nbsp; <h:outputText value="#{msgs.edit_module_required}" />
+		</td>
+		<td align="right" class="footnoteDates">
+			<h:outputText value="#{msgs.edit_module_created_by}"/> <h:outputText value="#{editModulePage.module.createdByFname}"/>&nbsp;<h:outputText value="#{editModulePage.module.createdByLname}"/><h:outputText value=","/>&nbsp;
+			<h:outputText value="#{editModulePage.module.creationDate}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
+		</td>
+	</tr>
+	<tr>
+		<td align="right" class="footnoteDates">
+			<h:outputText value="#{msgs.edit_module_modified_by}"/> <h:outputText value="#{editModulePage.module.modifiedByFname}"/>&nbsp;<h:outputText value="#{editModulePage.module.modifiedByLname}"/><h:outputText value=","/>&nbsp;
+			<h:outputText value="#{editModulePage.module.modificationDate}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
+		</td>
+	</tr>
+</table>
   </h:form>
 </sakai:view>
 </f:view>

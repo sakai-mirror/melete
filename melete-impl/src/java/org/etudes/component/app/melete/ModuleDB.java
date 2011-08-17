@@ -233,8 +233,12 @@ public class ModuleDB implements Serializable
 			{
 				module.setCreationDate(new java.util.Date());
 				module.setUserId(userId);
-				// module.setModificationDate(new java.util.Date());
-
+				module.setModificationDate(new java.util.Date());
+				User user = UserDirectoryService.getUser(userId);
+				module.setCreatedByFname(user.getFirstName());
+				module.setCreatedByLname(user.getLastName());
+				module.setModifiedByFname(user.getFirstName());
+				module.setModifiedByLname(user.getLastName());
 				// assign sequence number
 				int seq = assignSequenceNumber(session, courseId);
 
@@ -804,6 +808,8 @@ public class ModuleDB implements Serializable
 					Section copySection = new Section(toCopySection);
 					copySection.setCreatedByFname(firstName);
 					copySection.setCreatedByLname(lastName);
+					copySection.setModifiedByFname(firstName);
+					copySection.setModifiedByLname(lastName);
 					copySection.setModule(copyMod);
 					copySection.setTitle(copySection.getTitle() + " (" + bundle.getString("Copied") + " " + shortTime.format(new Date()) + " )");
 					// insert section

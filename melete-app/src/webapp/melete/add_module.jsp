@@ -124,20 +124,7 @@ function showEdateCal()
 					<h:inputTextarea id="keywords" cols="45" rows="3" value="#{addModulePage.module.keywords}"  styleClass="formtext" validator="#{addModulePage.validateField}" />
 				</td>
               </tr>
-			  
-              <tr>
-                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_added_by}" /></td>
-                <td  class="col2" align="left" valign="top">
-				<h:outputText value="#{addModulePage.author}"  styleClass="formtext"/></td>
-              </tr>
-			  <tr>
-                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_term_year}" /></td>
-                <td  class="col2" align="left" valign="top">
-					<h:outputText id="season" value="#{addModulePage.season}"/>				 
-				   </td>
-              </tr>
-			   
-              <tr>
+		     <tr>
                 <td class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_start_date}" />
 				</td>
                 <td  class="col2" align="left" valign="top">

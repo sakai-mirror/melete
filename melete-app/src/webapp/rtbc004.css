@@ -178,7 +178,10 @@ a1:active 			{color : #000080;}
 .required			{color: #990000; font-weight:800; font-size:80%;} /* For required fields */
 .blue				{color: #0066CC; }  /* For warning messages */
 .styleblk                       {color: #000000; } /*Black*/
-
+.footnoteDates		{
+					 font-style: italic;
+					 font-size: 71%;
+					}
 /*Styles put in by developers*/
 .underlineClass {text-decoration: underline;}
 .style6 			{font-size: 116%;}	  /*  */
