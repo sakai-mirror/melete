@@ -546,7 +546,17 @@ vertical-align:top;
 	z-index:2;		
     width:390px;	
 }
-
+.invalidAlertSmall {
+	position:absolute;
+	top:-100px;
+	border-left:medium double black;
+	border-right:medium double black;
+	border-bottom:medium double black;
+	border-top:medium double black;
+	height:70px; 
+	z-index:2;		
+    width:250px;	
+}
 .alert1 {
 	position:relative;
 	z-index:1;

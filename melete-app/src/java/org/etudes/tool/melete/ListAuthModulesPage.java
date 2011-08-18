@@ -96,8 +96,6 @@ public class ListAuthModulesPage implements Serializable
 
 	private List moduleDateBeans = null;
 
-	private List errModuleIds = null;
-
 	/** identifier field */
 	private int showModuleId;
 
@@ -208,7 +206,6 @@ public class ListAuthModulesPage implements Serializable
 	public void resetValues()
 	{
 		setShowModuleId(-1);
-		errModuleIds = null;
 		nomodsFlag = null;
 		count = 0;
 		selectedModIndex = -1;
@@ -249,20 +246,6 @@ public class ListAuthModulesPage implements Serializable
 		return autonumber;
 	};
 	
-	/** Set date flag of each module to false
-	 * 
-	 */
-	public void resetDateFlags()
-	{
-		resetSelectedLists();
-		for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();)
-		{
-			ModuleDateBean mdbean = (ModuleDateBean) i.next();
-			mdbean.setDateFlag(false);
-		}
-
-	}
-
 	/**
 	 * @return Returns the ModuleService.
 	 */
@@ -428,8 +411,7 @@ public class ListAuthModulesPage implements Serializable
     	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
     	courseId = mPage.getCurrentSiteId();
 
-    	boolean flagsReset = false;
-		try
+    	try
 		{
 			ModuleService modServ = getModuleService();
 			// fetch beans
@@ -446,48 +428,6 @@ public class ListAuthModulesPage implements Serializable
 			// end
 			nomodsFlag = false;
 			listSize = moduleDateBeans.size();
-			Iterator itr = context.getMessages();
-			while (itr.hasNext())
-			{
-				String msg = ((FacesMessage) itr.next()).getDetail();
-				if (msg.equals("Input data is not in the correct format."))
-				{
-					resetDateFlags();
-					flagsReset = true;
-				}
-				else
-				{
-					break;
-				}
-			}
-			// selectedModIndices = new ArrayList();
-			for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();)
-			{
-				ModuleDateBean mdbean = (ModuleDateBean) i.next();
-				// If there is an invalid format message, don't set lollipop
-				if (flagsReset == false)
-				{
-					if (errModuleIds != null)
-					{
-						if (errModuleIds.size() > 0)
-						{
-							for (ListIterator l = errModuleIds.listIterator(); l.hasNext();)
-							{
-								ModuleDateBean errmdbean = (ModuleDateBean) l.next();
-								if (errmdbean.getModuleId() == mdbean.getModuleId())
-								{
-									mdbean.setDateFlag(true);
-									mdbean.getModuleShdate().setStartDate(errmdbean.getModuleShdate().getStartDate());
-									mdbean.getModuleShdate().setEndDate(errmdbean.getModuleShdate().getEndDate());
-								}
-							}
-
-						}
-					}
-				}
-
-
-			}
 		}
 		catch (Exception e)
 		{
@@ -645,6 +585,7 @@ public class ListAuthModulesPage implements Serializable
 				setExpandAllFlag(false);
 			}
 		}
+		saveModuleDates();
 		return "list_auth_modules";
 	}
 	
@@ -654,7 +595,7 @@ public class ListAuthModulesPage implements Serializable
 	public String expandCollapseAction()
 	{
 		resetSelectedLists();
-	
+	    saveModuleDates();
 		if (getExpandAllFlag() == false)
 		{		
 		  setExpandAllFlag(true);
@@ -673,6 +614,7 @@ public class ListAuthModulesPage implements Serializable
 	public String editAction()
 	{
 		resetSelectedLists();
+		if (!saveModuleDates()) return "list_auth_modules";
 		FacesContext ctx = FacesContext.getCurrentInstance();
 
 		if (count >= 2)
@@ -740,6 +682,7 @@ public class ListAuthModulesPage implements Serializable
 	public String AddModuleAction()
 	{
 		resetSelectedLists();
+		if (!saveModuleDates()) return "list_auth_modules";
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{addModulePage}");
 
@@ -755,6 +698,7 @@ public class ListAuthModulesPage implements Serializable
 	public String AddContentAction()
 	{
 		resetSelectedLists();
+		if (!saveModuleDates()) return "list_auth_modules";
 		FacesContext ctx = FacesContext.getCurrentInstance();
 
 		if (count >= 2)
@@ -809,10 +753,10 @@ public class ListAuthModulesPage implements Serializable
 	 */
 	public String InactivateAction()
 	{
-
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		List selModBeans = null;
 		ModuleDateBean mdbean = null;
+		if (!saveModuleDates()) return "list_auth_modules";
 		if (sectionSelected)
 		{
 			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
@@ -884,6 +828,7 @@ public class ListAuthModulesPage implements Serializable
 	 */
 	public String redirectToEditModule()
 	{
+		if (!saveModuleDates()) return "list_auth_modules";
 		return "edit_module";
 	}
 
@@ -909,6 +854,7 @@ public class ListAuthModulesPage implements Serializable
 	 */
 	public String redirectToEditSection()
 	{
+		if (!saveModuleDates()) return "list_auth_modules";
 		return "editmodulesections";
 	}
 
@@ -938,12 +884,11 @@ public class ListAuthModulesPage implements Serializable
 	 */
 	public String deleteAction()
 	{
-
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		List delMods = null;
 		List delSecBeans = null;
-
 		count = 0;
+		if (!saveModuleDates()) return "list_auth_modules";
 
 		// added by rashmi
 		if (!moduleSelected && !sectionSelected)
@@ -1032,18 +977,12 @@ public class ListAuthModulesPage implements Serializable
 		resetSelectedLists();
 		return "list_auth_modules";
 	}
-
-	/** Validate dates and save changes
-	 * @return list_auth_modules
-	 */
-	public String saveChanges()
+	
+	public boolean saveModuleDates()
 	{
-		resetSelectedLists();
 		FacesContext ctx = null;
 		ResourceLoader bundle = null;
-		boolean dateErrFlag = false;
 		boolean yearTooBigFlag = false;
-		errModuleIds = new ArrayList();
 		try
 		{
 			Iterator moduleIter = moduleDateBeans.iterator();
@@ -1054,74 +993,38 @@ public class ListAuthModulesPage implements Serializable
 			while (moduleIter.hasNext())
 			{
 				ModuleDateBean mdbean = (ModuleDateBean) moduleIter.next();
-				mdbean.setDateFlag(false);
-				if (mdbean.getModuleShdate().getStartDate() != null)
+				if (!mdbean.getModuleShdate().isStartDateValid() || !mdbean.getModuleShdate().isEndDateValid())
 				{
-					stCal = Calendar.getInstance();
-					stCal.setTime(mdbean.getModuleShdate().getStartDate());
-					if (stCal.get(Calendar.YEAR) > 9999)
-					{
 					  yearTooBigFlag = true;
-					  mdbean.setDateFlag(true);
-					}
+					  break;
 				}
-				if (mdbean.getModuleShdate().getEndDate() != null)
-				{
-					enCal = Calendar.getInstance();
-					enCal.setTime(mdbean.getModuleShdate().getEndDate());
-					if (enCal.get(Calendar.YEAR) > 9999)
-					{
-					  yearTooBigFlag = true;
-					  mdbean.setDateFlag(true);
-					}
-				}
-				if ((mdbean.getModuleShdate().getStartDate() != null)&&(mdbean.getModuleShdate().getEndDate() != null))
-				{
-				  if (mdbean.getModuleShdate().getStartDate().compareTo(mdbean.getModuleShdate().getEndDate()) >= 0)
-				  {
-					dateErrFlag = true;
-					mdbean.setDateFlag(true);
-					/*
-					 * addDateErrorMessage(ctx); return "list_auth_modules";
-					 */
-				  }
-
-			     }
-				if (mdbean.isDateFlag() == true)
-				  {
-					  errModuleIds.add(mdbean);
-				  }
 			}
-            getModuleService().updateProperties(moduleDateBeans, courseId, userId);
-
-
-			if ((yearTooBigFlag == true)||(dateErrFlag == true))
+           			
+			if (yearTooBigFlag == true)
 			{
-			  if (yearTooBigFlag == true)
-			  {
-			  String msg = bundle.getString("year_toobig_error");
-			  addMessage(ctx, "Year Error", msg, FacesMessage.SEVERITY_ERROR);
-			  }
-			  if (dateErrFlag == true)
-			  {
-				String msg = bundle.getString("date_error");
-				addMessage(ctx, "Date Error", msg, FacesMessage.SEVERITY_ERROR);
-			  }
+			   return false;
 			}
-			else
-			{
-				String msg = bundle.getString("changes_saved");
-				addMessage(ctx, "Changes Saved", msg, FacesMessage.SEVERITY_INFO);
-			}
-			}
-
+			
+			//Only update modules if all the years are of current format and 4 digits long
+			getModuleService().updateProperties(moduleDateBeans, courseId, userId);
+		}
 		catch (Exception e)
 		{
 			logger.debug(e.toString());
 			String msg = bundle.getString("list_auth_modules_fail");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
-			return "list_auth_modules";
-		}
+			return false;
+		}		
+		return true;
+	}
+
+	/** Validate dates and save changes
+	 * @return list_auth_modules
+	 */
+	public String saveChanges()
+	{
+		resetSelectedLists();
+		saveModuleDates();
 		return "list_auth_modules";
 	}
 
@@ -1164,6 +1067,7 @@ public class ListAuthModulesPage implements Serializable
 	public String viewNextsteps()
 	{
 		resetSelectedLists();
+		if (!saveModuleDates()) return "list_auth_modules";
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		UIViewRoot root = ctx.getViewRoot();
 		UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
@@ -1180,6 +1084,7 @@ public class ListAuthModulesPage implements Serializable
 	public String specialAccessAction()
 	{
 		resetSelectedLists();
+		if (!saveModuleDates()) return "list_auth_modules";
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		UIViewRoot root = ctx.getViewRoot();
 		UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
@@ -1252,7 +1157,8 @@ public class ListAuthModulesPage implements Serializable
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-
+		if (!saveModuleDates()) return "list_auth_modules";
+		
 		// if module is selected then throw message
 		if (moduleSelected)
 		{
@@ -1383,7 +1289,8 @@ public class ListAuthModulesPage implements Serializable
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-
+		if (!saveModuleDates()) return "list_auth_modules";
+		
 		if (count == 0)
 		{
 			String msg = bundle.getString("list_select_one_indent");
@@ -1529,7 +1436,8 @@ public class ListAuthModulesPage implements Serializable
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		// if module is selected then throw message
 		logger.debug("values" + moduleSelected + count + selectedModIndices + selectedSecModIndices + sectionSelected);
-
+		if (!saveModuleDates()) return "list_auth_modules";
+		
 		if (count != -1)
 		{
 			String msg = bundle.getString("select_one_move");
@@ -1587,6 +1495,7 @@ public class ListAuthModulesPage implements Serializable
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		if (!saveModuleDates()) return "list_auth_modules";
 		// if module is selected then throw message
 		if (count != 1)
 		{
@@ -1645,7 +1554,8 @@ public class ListAuthModulesPage implements Serializable
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-
+		if (!saveModuleDates()) return "list_auth_modules";
+		
 		try
 		{
 			resetSelectedLists();
@@ -1672,6 +1582,7 @@ public class ListAuthModulesPage implements Serializable
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		if (!saveModuleDates()) return "list_auth_modules";
 		try
 		{
 			if (count == 0 || moduleSelected)
@@ -1724,7 +1635,7 @@ public class ListAuthModulesPage implements Serializable
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-
+		
 		try
 		{
 			resetSelectedLists();

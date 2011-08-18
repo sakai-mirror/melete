@@ -186,7 +186,7 @@ public class BookmarkPage implements Serializable
 	public void editSection(ActionEvent evt)
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
-
+		
 		UICommand cmdLink = (UICommand) evt.getComponent();
 
 		List<?> cList = cmdLink.getChildren();
@@ -454,6 +454,9 @@ public class BookmarkPage implements Serializable
 	{
 		resetValues();
 		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding lamBinding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage lamPage = (ListAuthModulesPage) lamBinding.getValue(context);
+		if (!lamPage.saveModuleDates()) return "list_auth_modules";
 		setFromPage((String) context.getExternalContext().getRequestParameterMap().get("fromPage"));
 		String fromModuleIdStr = (String) context.getExternalContext().getRequestParameterMap().get("fromModuleId");
 		if (fromModuleIdStr != null)
@@ -491,6 +494,10 @@ public class BookmarkPage implements Serializable
 	 */
 	public String redirectEditSection()
 	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ValueBinding lamBinding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage lamPage = (ListAuthModulesPage) lamBinding.getValue(ctx);
+		if (!lamPage.saveModuleDates()) return "list_auth_modules";
 		return "editmodulesections";
 	}
 

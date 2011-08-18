@@ -77,11 +77,23 @@ public interface ModuleShdatesService
 	 * @return int value of hashCode
 	 */
 	public abstract int hashCode();
+	
+	/**
+	 * @return true if dates are good(start date before end date or either/both dates are null), false otherwise
+	 */
+	public abstract boolean isDateFlag();
+	
 
 	/**
-	 * @return valid flag
+	 * @return true if start date year is less than or equal to 9999, false otherwise
 	 */
-	public boolean isValid();
+	public boolean isStartDateValid();
+	
+	/**
+	 * @return true if end date year is less than or equal to 9999, false otherwise
+	 */
+	public boolean isEndDateValid();
+	
 
 	/**
 	 * @return visibleFlag value of visible flag

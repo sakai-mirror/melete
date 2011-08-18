@@ -113,7 +113,12 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 		else if (!addtoSchedule.equals(other.addtoSchedule)) return false;
 		if (endDate == null && other.endDate != null) return false;
 		else if (endDate != null && other.endDate == null) return false;
-		else if (endDate != null && other.endDate != null && endDate.compareTo(other.endDate) != 0) return false;	
+		else if (endDate != null && other.endDate != null)
+		{
+			endDate = (Date) endDate;
+			other.endDate = (Date) other.endDate;
+			if (endDate.compareTo(other.endDate) != 0) return false;	
+		}
 			
 		if (moduleId == null)
 		{
@@ -122,7 +127,19 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 		else if (!moduleId.equals(other.moduleId)) return false;
 		if (startDate == null && other.startDate != null) return false;
 		else if (startDate != null && other.startDate == null) return false;
-		else if (startDate != null && other.startDate != null && startDate.compareTo(other.startDate) != 0) return false;	
+		else if (startDate != null && other.startDate != null)
+		{
+			startDate = (Date) startDate;
+			other.startDate = (Date) other.startDate;
+			try
+			{
+			if (startDate.compareTo(other.startDate) != 0) return false;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 		
 		return true;
 	}
@@ -206,10 +223,27 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isValid()
+	public boolean isDateFlag()
+	{
+		if (isStartDateValid() && isEndDateValid())
+		{	
+		  if ((getStartDate() != null) && (getEndDate() != null))
+		  {
+			if (getStartDate().compareTo(getEndDate()) >= 0)
+			{
+				return true;
+			}
+		  }
+		}
+		return false;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isStartDateValid()
 	{
 		Calendar stCal = null;
-		Calendar enCal = null;
 		if (getStartDate() != null)
 		{
 			stCal = Calendar.getInstance();
@@ -219,6 +253,15 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 				return false;
 			}
 		}
+		return true;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isEndDateValid()
+	{
+		Calendar enCal = null;
 		if (getEndDate() != null)
 		{
 			enCal = Calendar.getInstance();
@@ -228,15 +271,8 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 				return false;
 			}
 		}
-		if ((getStartDate() != null) && (getEndDate() != null))
-		{
-			if (getStartDate().compareTo(getEndDate()) >= 0)
-			{
-				return false;
-			}
-		}
 		return true;
-	}
+	}	
 
 	/**
 	 * {@inheritDoc}

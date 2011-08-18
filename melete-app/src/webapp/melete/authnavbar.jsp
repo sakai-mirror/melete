@@ -27,7 +27,7 @@
 
 <h:panelGrid columns="8" border="0" columnClasses="authBarCol" cellspacing="5" width="64%">
 	<h:column>
-		<h:commandLink id="addAction" action="#{listAuthModulesPage.AddModuleAction}" immediate="true">
+		<h:commandLink id="addAction" action="#{listAuthModulesPage.AddModuleAction}">
 		    <h:graphicImage id="addModuleImg" value="/images/document_add.gif" styleClass="AuthImgClass"/>
 	  		<h:outputText  value="#{msgs.authnavbar_add_module}"/>
 		</h:commandLink>

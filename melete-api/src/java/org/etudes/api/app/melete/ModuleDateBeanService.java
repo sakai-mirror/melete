@@ -63,11 +63,7 @@ public interface ModuleDateBeanService
 	 */
 	public abstract String getTruncTitle();
 
-	/**
-	 * @return date flag
-	 */
-	public abstract boolean isDateFlag();
-
+	
 	/**
 	 * @return selected flag
 	 */
@@ -78,12 +74,6 @@ public interface ModuleDateBeanService
 	 *        set course module object
 	 */
 	public abstract void setCmod(org.etudes.api.app.melete.CourseModuleService cmod);
-
-	/**
-	 * @param dateFlag
-	 *        the date flag
-	 */
-	public abstract void setDateFlag(boolean dateFlag);
 
 	/**
 	 * @param module

@@ -158,7 +158,6 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 			mdbean.setModuleId(getModule().getModuleId().intValue());
 			mdbean.setModule((Module) getModule());
 			mdbean.setModuleShdate((ModuleShdates) getModuleShdates());
-			mdbean.setDateFlag(false);
 			ArrayList<ModuleDateBean> mdbeanList = new ArrayList<ModuleDateBean>();
 			mdbeanList.add(mdbean);
 			moduleService.updateProperties(mdbeanList, mPage.getCurrentSiteId(),mPage.getCurrentUser().getId());

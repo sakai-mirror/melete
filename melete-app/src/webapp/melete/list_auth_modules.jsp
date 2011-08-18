@@ -144,9 +144,9 @@ function resetAllMod()
 	}
 }
 
-function showHideTable(index, show)
+function showHideTable(index, invMsg, show)
 {
-  var string2 = "listauthmodulesform:table:" + index +":invalidMsg0";
+  var string2 = "listauthmodulesform:table:" + index +":"+invMsg;
   var string2ele = document.getElementById(string2);
   // show the box
   if(string2ele != undefined && string2ele != null && string2ele.style.display == "none" && show.match("true")) 
@@ -222,17 +222,17 @@ if (msg != null)
 	     <f:facet name="header">
 	       <h:outputText value="&nbsp;" escape="false"/>
 	     </f:facet>  
-	     	    <h:graphicImage id="err_gif" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" rendered="#{mdbean.dateFlag || mdbean.sectionBeans == null}" onclick="showHideTable('#{listAuthModulesPage.table.rowIndex}','true')"  styleClass="ExpClass"/>
+	     	    <h:graphicImage id="err_gif" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" rendered="#{mdbean.moduleShdate.dateFlag || mdbean.sectionBeans == null}" onclick="showHideTable('#{listAuthModulesPage.table.rowIndex}','invalidMsg0','true')"  styleClass="ExpClass"/>
 	          
-		   <h:panelGroup id="invalidMsg0" style="position:relative;z-index:1;visibility:hidden;display:none;" rendered="#{mdbean.dateFlag || mdbean.sectionBeans == null}" >
+		   <h:panelGroup id="invalidMsg0" style="position:relative;z-index:1;visibility:hidden;display:none;" rendered="#{mdbean.moduleShdate.dateFlag || mdbean.sectionBeans == null}" >
 			 <h:panelGrid id="invalidMsg" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="390px" styleClass="invalidAlert" >   
 				<h:column>
-				  	<h:outputText value="#{msgs.invalid_msg3}" rendered="#{mdbean.dateFlag && mdbean.sectionBeans == null}" />  
-					<h:outputText value="#{msgs.invalid_msg}" rendered="#{mdbean.dateFlag && mdbean.sectionBeans != null}" />
-					<h:outputText value="#{msgs.invalid_msg2}" rendered="#{mdbean.sectionBeans == null && !mdbean.dateFlag}" />						
+				  	<h:outputText value="#{msgs.invalid_msg3}" rendered="#{mdbean.moduleShdate.dateFlag && mdbean.sectionBeans == null}" />  
+					<h:outputText value="#{msgs.invalid_msg}" rendered="#{mdbean.moduleShdate.dateFlag && mdbean.sectionBeans != null}" />
+					<h:outputText value="#{msgs.invalid_msg2}" rendered="#{mdbean.sectionBeans == null && !mdbean.moduleShdate.dateFlag}" />						
 				</h:column>
 				<h:column>
-					<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('#{listAuthModulesPage.table.rowIndex}','false')" />
+					<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('#{listAuthModulesPage.table.rowIndex}','invalidMsg0','false')" />
 				</h:column>
 			  </h:panelGrid>
 			</h:panelGroup>				 
@@ -250,7 +250,7 @@ if (msg != null)
    <h:column>
  	<f:facet name="header">
  	 <h:panelGroup>
-      <h:commandLink id="expandCollapseAction" action="#{listAuthModulesPage.expandCollapseAction}" immediate="true">
+      <h:commandLink id="expandCollapseAction" action="#{listAuthModulesPage.expandCollapseAction}">
      	<h:graphicImage id="exp_all_gif" alt="#{msgs.list_auth_modules_authoring_expand_all}" title="#{msgs.list_auth_modules_authoring_expand}" value="/images/expand-collapse.gif"   rendered="#{listAuthModulesPage.expandAllFlag != listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
         <h:graphicImage id="col_all_gif" alt="#{msgs.list_auth_modules_authoring_collapse_all}" title="#{msgs.list_auth_modules_authoring_collapse}" value="/images/collapse-expand.gif"   rendered="#{listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag}" styleClass="ExpClass"/>
       </h:commandLink>  
@@ -295,7 +295,18 @@ if (msg != null)
             <h:outputLink id="viewsdateCal" onclick="showSdateCal(#{listAuthModulesPage.table.rowIndex})" value="#">
             <h:graphicImage id="sdateCal" value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="ListDatePickerClass"/>
            </h:outputLink> 
-           
+            <h:graphicImage id="err_gifst" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" rendered="#{mdbean.moduleShdate.startDateValid == false}" onclick="showHideTable('#{listAuthModulesPage.table.rowIndex}','invalidMsgSt0','true')"  styleClass="ExpClass"/>
+	          
+		   <h:panelGroup id="invalidMsgSt0" style="position:relative;z-index:1;visibility:hidden;display:none;" rendered="#{mdbean.moduleShdate.startDateValid == false}" >
+			 <h:panelGrid id="invalidMsgSt" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="250px" styleClass="invalidAlertSmall" >   
+				<h:column>
+				  	<h:outputText value="#{msgs.invalid_msg4}" rendered="#{mdbean.moduleShdate.startDateValid == false}" />  
+				</h:column>
+				<h:column>
+					<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('#{listAuthModulesPage.table.rowIndex}','invalidMsgSt0','false')" />
+				</h:column>
+			  </h:panelGrid>
+			</h:panelGroup>		
          </h:column>         
         <h:column>
                <f:facet name="header">
@@ -309,7 +320,18 @@ if (msg != null)
              <h:outputLink id="viewedateCal" onclick="showEdateCal(#{listAuthModulesPage.table.rowIndex})" value="#">
             <h:graphicImage id="edateCal" value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="ListDatePickerClass"/>
            </h:outputLink>
-           
+            <h:graphicImage id="err_gifen" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" rendered="#{mdbean.moduleShdate.endDateValid == false}" onclick="showHideTable('#{listAuthModulesPage.table.rowIndex}','invalidMsgEn0','true')"  styleClass="ExpClass"/>
+	          
+		   <h:panelGroup id="invalidMsgEn0" style="position:relative;z-index:1;visibility:hidden;display:none;" rendered="#{mdbean.moduleShdate.endDateValid == false}" >
+			 <h:panelGrid id="invalidMsgEn" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="250px" styleClass="invalidAlertSmall" >   
+				<h:column>
+				  	<h:outputText value="#{msgs.invalid_msg5}" rendered="#{mdbean.moduleShdate.endDateValid == false}" />  
+				</h:column>
+				<h:column>
+					<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('#{listAuthModulesPage.table.rowIndex}','invalidMsgEn0','false')" />
+				</h:column>
+			  </h:panelGrid>
+			</h:panelGroup>	
          </h:column>
          <h:column>
            <h:outputText id="emp_space6" value="  " styleClass="ExtraPaddingClass" />
@@ -327,7 +349,7 @@ if (msg != null)
 		  	  <h:graphicImage id="duplicateImg" value="/images/page_copy.png" alt="#{msgs.list_auth_modules_alt_duplicate}" title="#{msgs.list_auth_modules_alt_duplicate}" styleClass="AuthImgClass"/>
 		  </h:commandLink>
 		     <h:outputText id="emp_space5" value="  " styleClass="ExtraPaddingClass" />
-		     <h:outputLink id="printModuleLink" value="list_auth_modules" onclick="OpenPrintWindow(#{listAuthModulesPage.printModuleId},'Melete Print Window');">
+		     <h:outputLink id="printModuleLink" value="list_auth_modules" onclick="document.forms['listauthmodulesform'].submit();OpenPrintWindow(#{listAuthModulesPage.printModuleId},'Melete Print Window');">
 		       	<h:graphicImage id="printImgLink" value="/images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 		  </h:outputLink>  	  	   
 		    <h:outputText id="emp_space7" value="  " styleClass="ExtraPaddingClass" />

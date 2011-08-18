@@ -99,7 +99,7 @@ public class LicensePage
 
 	/**
 	 * Initialize values.
-	 * 
+	 *
 	 * @param formName
 	 *        The formName
 	 * @param melResource
@@ -121,13 +121,13 @@ public class LicensePage
 			setCopyright_year(melResource.getCopyrightYear());
 		}
 		else
-			setLicenseCodes("0");
+			setLicenseCodes("4");
 		resetFlags();
 	}
 
 	/**
 	 * Initialize values.
-	 * 
+	 *
 	 * @param formName
 	 *        The formName
 	 * @param mup
@@ -150,7 +150,7 @@ public class LicensePage
 		else
 		{
 			setInitialValues();
-			setLicenseCodes("0");
+			setLicenseCodes("4");
 		}
 		resetFlags();
 	}
@@ -179,7 +179,7 @@ public class LicensePage
 
 	/**
 	 * Get all licenses to show in the dropdown.
-	 * 
+	 *
 	 * @return
 	 */
 	public ArrayList<SelectItem> getLicenseTypes()
@@ -217,7 +217,7 @@ public class LicensePage
 
 	/**
 	 * Show/Hides different license based on the user selection.
-	 * 
+	 *
 	 * @param event
 	 *        ValueChangeEvent
 	 * @throws AbortProcessingException
@@ -248,7 +248,7 @@ public class LicensePage
 
 	/**
 	 * Set values based on license type selected.
-	 * 
+	 *
 	 * @param meleteSectionResource
 	 *        MeleteResource
 	 * @return
@@ -310,7 +310,7 @@ public class LicensePage
 
 	/**
 	 * Sets user preference based on license selected.
-	 * 
+	 *
 	 * @param mup
 	 *        MeleteUserPreference
 	 * @return
@@ -378,7 +378,7 @@ public class LicensePage
 
 	/**
 	 * Based on license selected it sets all rendering flags.
-	 * 
+	 *
 	 * @param licenseCodes
 	 */
 	public void setLicenseCodes(String licenseCodes)
@@ -408,7 +408,7 @@ public class LicensePage
 
 	/**
 	 * Gets all license codes.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getLicenseCodes()
@@ -418,7 +418,7 @@ public class LicensePage
 
 	/**
 	 * Looks for the required fields.
-	 * 
+	 *
 	 * @throws UserErrorException
 	 */
 	public void checkForRequiredFields() throws UserErrorException
@@ -430,7 +430,7 @@ public class LicensePage
 
 	/**
 	 * Check the word length for copyright owner and year. They can't be more than 255 characters long
-	 * 
+	 *
 	 * @throws UserErrorException
 	 */
 	public void validateLicenseLengths() throws UserErrorException
@@ -441,7 +441,7 @@ public class LicensePage
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getAllowCmrcl()
@@ -458,7 +458,7 @@ public class LicensePage
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getAllowMod()
@@ -475,7 +475,7 @@ public class LicensePage
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getReqAttr()
@@ -493,7 +493,7 @@ public class LicensePage
 
 	/**
 	 * Returns true if license is Creative commons
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isShouldRenderCC()
@@ -503,7 +503,7 @@ public class LicensePage
 
 	/**
 	 * Returns true if license is copyright of author
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isShouldRenderCopyright()

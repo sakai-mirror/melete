@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="org.etudes.tool.melete.PrintModulePage,javax.faces.application.FacesMessage, java.util.ResourceBundle"%>
+<%@ page import="org.etudes.tool.melete.PrintModulePage,org.etudes.tool.melete.ListAuthModulesPage,javax.faces.application.FacesMessage, java.util.ResourceBundle"%>
 <!--
  ***********************************************************************************
  * $URL$
@@ -52,6 +52,8 @@
 		<tr><td colspan="2" height="20" class="maintabledata5">&nbsp;</td></tr>	
 		  <tr><td>
 			<%
+ListAuthModulesPage lamPage = (ListAuthModulesPage) facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "listAuthModulesPage");
+lamPage.saveModuleDates();
 final PrintModulePage printModulePage = (PrintModulePage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "printModulePage");
 String selected_module_id = (String)request.getParameter("printModuleId");
 

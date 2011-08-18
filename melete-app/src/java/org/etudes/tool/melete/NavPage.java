@@ -180,6 +180,9 @@ public class NavPage implements Serializable
 	public String manageAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
+		ValueBinding lamBinding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage lamPage = (ListAuthModulesPage) lamBinding.getValue(ctx);
+		if (!lamPage.saveModuleDates()) return "list_auth_modules";
 		String goToPage = checkCallFrom();
 		if ("#".equals(goToPage))
 		{
@@ -209,6 +212,9 @@ public class NavPage implements Serializable
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map sessionMap = ctx.getExternalContext().getSessionMap();
+		ValueBinding lamBinding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage lamPage = (ListAuthModulesPage) lamBinding.getValue(ctx);
+		if (!lamPage.saveModuleDates()) return "list_auth_modules";
 		String goToPage = checkCallFrom();
 		cancelCMReturn();
 		if ("#".equals(goToPage))
@@ -258,6 +264,9 @@ public class NavPage implements Serializable
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map sessionMap = ctx.getExternalContext().getSessionMap();
+		ValueBinding lamBinding = Util.getBinding("#{listAuthModulesPage}");
+		ListAuthModulesPage lamPage = (ListAuthModulesPage) lamBinding.getValue(ctx);
+		if (!lamPage.saveModuleDates()) return "list_auth_modules";
 		String goToPage = checkCallFrom();
 		cancelCMReturn();
 		if ("#".equals(goToPage))
