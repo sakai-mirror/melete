@@ -43,49 +43,6 @@
 <script language="javascript">
 function newWindow(newContent){
   winContent = window.open(newContent, 'nextWin', 'right=0, top=20,width=750,height=600, toolbar=no,scrollbars=yes, resizable=no') }
-function showSdateCal()
-{
-  var string2 = "AddSpecialAccessForm:startDate";
-  //alert(string2);
-  var string2val = document.getElementById(string2).value;
-  var dt;
-    if((null == string2val) || (string2val.length == 0)) dt = new Date();
-  else dt = new Date(document.getElementById(string2).value);
-  
-   if (!isNaN(dt))
-  { 
-    var cal2 = new calendar2(document.getElementById(string2));
-    cal2.popup();
-    document.getElementById(string2).select();
-  }
-  else
-  {
-    alert('<%=mensaje%>');
-     document.getElementById(string2).select();
-  }
-}
-function showEdateCal()
-{
-  var string2 = "AddSpecialAccessForm:endDate";
-  //alert(string2);
-  // var dt = new Date(document.getElementById(string2).value);
-  var string2val = document.getElementById(string2).value;
-  var dt;
-    if((null == string2val) || (string2val.length == 0)) dt = new Date();
-  else dt = new Date(document.getElementById(string2).value);
-  
-   if (!isNaN(dt))
-  { 
-    var cal2 = new calendar2(document.getElementById(string2));
-    cal2.popup();
-    document.getElementById(string2).select();
-  }
-  else
-  {
-    alert('<%=mensaje%>');
-     document.getElementById(string2).select();
-  }
-} 
 </script>
 
 <h:form id="AddSpecialAccessForm">
@@ -128,12 +85,23 @@ function showEdateCal()
 					  </h:inputHidden>
 					  
 					  <a name="startCalender"></a> <h:inputText id="startDate" 
-                           value="#{specialAccessPage.specialAccess.startDate}" size="22" styleClass="formtext">
+                           value="#{specialAccessPage.specialAccess.startDate}" size="22" styleClass="formtext" onchange="showInvalid('AddSpecialAccessForm:err_gifst');">
 		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
         		    </h:inputText>
-		            <h:outputLink id="viewsdateCal" onclick="showSdateCal()" value="#startCalender" >
+		            <h:outputLink id="viewsdateCal" onclick="showSdateCal('AddSpecialAccessForm:startDate')" value="#startCalender" >
         	    		<h:graphicImage id="sdateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            			</h:outputLink>
+                    <h:graphicImage id="err_gifst" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}"  style="visibility:hidden;" onclick="showHideTable('AddSpecialAccessForm:invalidMsgSt0','true')"  styleClass="ExpClass"/>
+	          	    <h:panelGroup id="invalidMsgSt0" style="position:relative;z-index:1;visibility:hidden;display:none;" >
+			        <h:panelGrid id="invalidMsgSt" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="250px" styleClass="invalidAlertSmall" >   
+				      <h:column>
+				  	  <h:outputText value="#{msgs.invalid_msg4}"  />  
+				      </h:column>
+				      <h:column>
+					  <h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('AddSpecialAccessForm:invalidMsgSt0','false')" />
+				      </h:column>
+			        </h:panelGrid>
+			        </h:panelGroup>	           			
 					 </td>
               </tr>
 			  
@@ -141,13 +109,24 @@ function showEdateCal()
                 <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_special_access_end_date}" /></td>
                 <td>
                 <a name="endCalender"></a><h:inputText id="endDate" 
-                           value="#{specialAccessPage.specialAccess.endDate}" size="22" styleClass="formtext">
+                           value="#{specialAccessPage.specialAccess.endDate}" size="22" styleClass="formtext" onchange="showInvalid('AddSpecialAccessForm:err_gifen');">
              			  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
           		 </h:inputText>
-          <h:outputLink id="viewedateCal" onclick="showEdateCal()" value="#endCalender">
+          <h:outputLink id="viewedateCal" onclick="showEdateCal('AddSpecialAccessForm:endDate')" value="#endCalender">
             <h:graphicImage id="edateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            </h:outputLink>
-					 </td>
+           <h:graphicImage id="err_gifen" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('AddSpecialAccessForm:invalidMsgEn0','true')"  styleClass="ExpClass"/>
+	             <h:panelGroup id="invalidMsgEn0" style="position:relative;z-index:1;visibility:hidden;display:none;">
+			     <h:panelGrid id="invalidMsgEn" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="250px" styleClass="invalidAlertSmall" >   
+				 <h:column>
+				  	<h:outputText value="#{msgs.invalid_msg5}"  />  
+				 </h:column>
+				 <h:column>
+					<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('AddSpecialAccessForm:invalidMsgEn0','false')" />
+				 </h:column>
+			     </h:panelGrid>
+			     </h:panelGroup>
+			 </td>
               </tr>			  
              	
 		</table>

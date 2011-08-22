@@ -308,3 +308,71 @@ function cal_error (str_message) {
 	//alert (str_message);
 	return null;
 }
+
+function showSdateCal(string2)
+{
+  var string2val = document.getElementById(string2).value;
+  var dt;
+    if((null == string2val) || (string2val.length == 0)) dt = new Date();
+  else dt = new Date(document.getElementById(string2).value);
+  
+   if (!isNaN(dt))
+  { 
+    var cal2 = new calendar2(document.getElementById(string2));
+    cal2.popup();
+    document.getElementById(string2).select();
+  }
+  else
+  {
+    alert('<%=mensaje%>');
+     document.getElementById(string2).select();
+  }
+}
+
+function showEdateCal(string2)
+{
+  var string2val = document.getElementById(string2).value;
+  var dt;
+    if((null == string2val) || (string2val.length == 0)) dt = new Date();
+  else dt = new Date(document.getElementById(string2).value);
+  
+   if (!isNaN(dt))
+  { 
+   var cal2 = new calendar2(document.getElementById(string2));
+   cal2.popup();
+   document.getElementById(string2).select();
+   }
+  else
+  {
+    alert('<%=mensaje%>');
+     document.getElementById(string2).select();
+  }
+} 
+
+function showHideTable(string2, show)
+{
+ var string2ele = document.getElementById(string2);
+  // show the box
+  if(string2ele != undefined && string2ele != null && string2ele.style.display == "none" && show.match("true")) 
+	{
+	string2ele.setAttribute("aria-hidden", "false");
+	string2ele.tabIndex = -1;
+	string2ele.style.display = "block";
+	string2ele.style.visibility = "visible";
+	string2ele.focus();	
+	}
+ else if(string2ele != undefined && string2ele != null && string2ele.style.display == "block" && !show.match("true"))
+	{
+	string2ele.setAttribute("aria-hidden", "true");
+	string2ele.tabIndex = 0;
+	string2ele.style.display = "none";
+	string2ele.style.visibility = "hidden";	
+	}
+}
+
+function showInvalid(string2)
+{
+	var string2ele = document.getElementById(string2);
+	string2ele.style.visibility = "visible";
+}
+
