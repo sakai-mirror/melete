@@ -128,19 +128,6 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 		// validation
 		module.setTitle(module.getTitle().trim());
 
-		// validation no 3
-		Date st = getModuleShdates().getStartDate();
-		Date end = getModuleShdates().getEndDate();
-
-		// validation no 4 b
-		boolean dateResult = validateDates(context, bundle, st, end);
-		if (dateResult == false) return "failure";
-
-		/*
-		 * if ((end != null) && (st != null)) { if (end.compareTo(st) <= 0) { errMsg = ""; errMsg = bundle.getString("end_date_before_start"); FacesMessage msg = new FacesMessage(errMsg); msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-		 * context.addMessage(null, msg); return "failure"; } }
-		 */
-
 		// rashmi added validations end
 		// actual update
 		try

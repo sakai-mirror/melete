@@ -370,9 +370,17 @@ function showHideTable(string2, show)
 	}
 }
 
-function showInvalid(string2)
+function showInvalid(string2, invIcon)
 {
 	var string2ele = document.getElementById(string2);
-	string2ele.style.visibility = "visible";
+	dt = new Date(document.getElementById(string2).value);
+	if (!isNaN(dt))
+	{
+		if (dt.getFullYear() > 9999)
+		{
+	      var invIconEle = document.getElementById(invIcon);
+	      invIconEle.style.visibility = "visible";
+		}
+	}	
 }
 

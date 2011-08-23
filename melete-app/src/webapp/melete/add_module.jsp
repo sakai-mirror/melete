@@ -86,7 +86,7 @@ function newWindow(newContent){
 				</td>
                 <td  class="col2" align="left" valign="top">
 					  <a name="startCalender"></a> <h:inputText id="startDate" 
-                           value="#{addModulePage.moduleShdates.startDate}" size="22" styleClass="formtext" onchange="showInvalid('AddModuleForm:err_gifst');">
+                           value="#{addModulePage.moduleShdates.startDate}" size="22" styleClass="formtext" onchange="showInvalid('AddModuleForm:startDate','AddModuleForm:err_gifst');">
 		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
         		    </h:inputText>
 		            <h:outputLink id="viewsdateCal" onclick="showSdateCal('AddModuleForm:startDate')" value="#startCalender" >
@@ -110,7 +110,7 @@ function newWindow(newContent){
                 <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_end_date}" /></td>
                 <td  class="col2" align="left" valign="top">
 				<a name="endCalender"></a><h:inputText id="endDate" 
-                           value="#{addModulePage.moduleShdates.endDate}" size="22" styleClass="formtext" onchange="showInvalid('AddModuleForm:err_gifen');">
+                           value="#{addModulePage.moduleShdates.endDate}" size="22" styleClass="formtext" onchange="showInvalid('AddModuleForm:endDate','AddModuleForm:err_gifen');">
              			  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
           		 </h:inputText>
           <h:outputLink id="viewedateCal" onclick="showEdateCal('AddModuleForm:endDate')" value="#endCalender">

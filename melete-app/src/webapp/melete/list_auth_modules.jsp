@@ -217,7 +217,7 @@ if (msg != null)
              <h:outputText id="t4" value="#{msgs.list_auth_modules_start_date}" />
              </f:facet>             
                 <h:inputText id="startDate"
-                           value="#{mdbean.moduleShdate.startDate}" onchange="showInvalid('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':err_gifst');">
+                           value="#{mdbean.moduleShdate.startDate}" onchange="showInvalid('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':startDate','listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':err_gifst');">
             <f:convertDateTime type="both" dateStyle="medium" timeStyle="short"/>
             </h:inputText>
             <h:outputLink id="viewsdateCal" onclick="showSdateCal('listauthmodulesform:table:'+#{listAuthModulesPage.table.rowIndex}+':startDate')" value="#">
@@ -242,7 +242,7 @@ if (msg != null)
              </f:facet>
              
             <h:inputText id="endDate" 
-                           value="#{mdbean.moduleShdate.endDate}" onchange="showInvalid('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':err_gifen');">
+                           value="#{mdbean.moduleShdate.endDate}" onchange="showInvalid('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':endDate','listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':err_gifen');">
                <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
             </h:inputText>
              <h:outputLink id="viewedateCal" onclick="showEdateCal('listauthmodulesform:table:'+#{listAuthModulesPage.table.rowIndex}+':endDate')" value="#">

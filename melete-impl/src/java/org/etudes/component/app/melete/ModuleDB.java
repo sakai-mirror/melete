@@ -242,6 +242,9 @@ public class ModuleDB implements Serializable
 				// assign sequence number
 				int seq = assignSequenceNumber(session, courseId);
 
+				if (!moduleshowdates.isStartDateValid()) moduleshowdates.setStartDate(null);
+				if (!moduleshowdates.isEndDateValid()) moduleshowdates.setEndDate(null);
+				
 				moduleshowdates.setModule(module);
 
 				tx = session.beginTransaction();
@@ -3404,6 +3407,15 @@ public class ModuleDB implements Serializable
 				ModuleShdates mDate = (ModuleShdates) session.createQuery(queryString).setParameter("moduleId", checkModule.getModuleId())
 						.uniqueResult();
 
+				//If any date is > 9999, this check sets the date to the module's previous date
+				if (!checkModuleDates.isStartDateValid())
+				{
+					checkModuleDates.setStartDate(mDate.getStartDate());
+				}
+				if (!checkModuleDates.isEndDateValid())
+				{
+					checkModuleDates.setEndDate(mDate.getEndDate());
+				}
 				// compare them. If both are same then not modified
 				logger.debug("module is same " + mod.equals(checkModule));
 				logger.debug("moduleDates is same " + mDate.equals(checkModuleDates));

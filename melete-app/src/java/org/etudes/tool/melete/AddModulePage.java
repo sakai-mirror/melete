@@ -62,8 +62,6 @@ public class AddModulePage extends ModulePage implements Serializable
 
 	public String save()
 	{
-		Date st = getModuleShdates().getStartDate();
-
 		setSuccess(false);
 		if (moduleService == null) moduleService = getModuleService();
 
@@ -73,13 +71,6 @@ public class AddModulePage extends ModulePage implements Serializable
 
 		// validation
 		module.setTitle(module.getTitle().trim());
-
-		// validation no 3
-		Date end = getModuleShdates().getEndDate();
-
-		// validation to limit year to 4 digits
-		boolean dateResult = validateDates(context, bundle, st, end);
-		if (dateResult == false) return "add_module";
 
 		// get course info
 		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");

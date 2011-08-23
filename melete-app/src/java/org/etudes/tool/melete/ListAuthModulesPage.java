@@ -980,32 +980,10 @@ public class ListAuthModulesPage implements Serializable
 	
 	public boolean saveModuleDates()
 	{
-		FacesContext ctx = null;
-		ResourceLoader bundle = null;
-		boolean yearTooBigFlag = false;
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		try
 		{
-			Iterator moduleIter = moduleDateBeans.iterator();
-			ctx = FacesContext.getCurrentInstance();
-			bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-			Calendar stCal = null;
-			Calendar enCal = null;
-			while (moduleIter.hasNext())
-			{
-				ModuleDateBean mdbean = (ModuleDateBean) moduleIter.next();
-				if (!mdbean.getModuleShdate().isStartDateValid() || !mdbean.getModuleShdate().isEndDateValid())
-				{
-					  yearTooBigFlag = true;
-					  break;
-				}
-			}
-           			
-			if (yearTooBigFlag == true)
-			{
-			   return false;
-			}
-			
-			//Only update modules if all the years are of current format and 4 digits long
 			getModuleService().updateProperties(moduleDateBeans, courseId, userId);
 		}
 		catch (Exception e)

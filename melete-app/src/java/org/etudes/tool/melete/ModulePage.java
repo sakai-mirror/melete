@@ -460,66 +460,6 @@ public abstract class ModulePage implements Serializable
 		context.addMessage(null, msg);
 	}
 
-	/**
-	 * Ensure that the dates do not have a year after 9999 and the end date is after the start date
-	 * 
-	 * @param context
-	 *        FacesContext object
-	 * @param bundle
-	 *        ResourceLoader object
-	 * @param st
-	 *        Start date
-	 * @param end
-	 *        End date
-	 * @return true if dates are valid, false otherwise
-	 */
-	protected boolean validateDates(FacesContext context, ResourceLoader bundle, Date st, Date end)
-	{
-		Calendar calstart = new GregorianCalendar();
-		Calendar calend = new GregorianCalendar();
-
-		boolean errorFlag = false;
-		if ((st != null) || (end != null))
-		{
-			if (st != null)
-			{
-				calstart.setTime(st);
-				if (calstart.get(Calendar.YEAR) > 9999)
-				{
-					String errMsg = bundle.getString("year_toobig_error");
-					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-					errorFlag = true;
-				}
-			}
-			if (end != null)
-			{
-				calend.setTime(end);
-				if (calend.get(Calendar.YEAR) > 9999)
-				{
-					String errMsg = bundle.getString("year_toobig_error");
-					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-					errorFlag = true;
-				}
-			}
-
-			// validation no 4 b
-			if ((end != null) && (st != null))
-			{
-				if (end.compareTo(st) <= 0)
-				{
-					String errMsg = "";
-					errMsg = bundle.getString("end_date_before_start");
-					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-					errorFlag = true;
-				}
-			}
-		}
-		// If there is an error, validation fails and the method returns false
-		// If there are no errors, validation passes and the method returns true;
-		if (errorFlag == true) return false;
-		return true;
-	}
-
 	public void validateField(FacesContext context, UIComponent toValidate, Object value)
 	{
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
