@@ -126,9 +126,11 @@ public interface SectionService
 	 * 
 	 * @param section
 	 *        The Section
+	 * @param userId
+	 * 		The user Id       
 	 * @throws Exception
 	 */
-	public void editSection(SectionObjService section) throws Exception;
+	public void editSection(SectionObjService section, String userId) throws Exception;
 
 	/**
 	 * Updates the section and the resource.
@@ -137,11 +139,14 @@ public interface SectionService
 	 *        The Section
 	 * @param melResource
 	 *        The Melete Resource
-	 * 
+	 * @param userId
+	 * 		The user Id
+	 * @param modifyCR
+	 * 		Composed content has been modified or not
 	 * @throws Exception
 	 *         "add_section_fail" and "edit_section_multiple_users" MeleteException
 	 */
-	public void editSection(SectionObjService section, MeleteResourceService melResource) throws Exception;
+	public void editSection(SectionObjService section, MeleteResourceService melResource, String userId, Boolean modifyCR) throws Exception;
 
 	/**
 	 * Find all sections where the resource is used.

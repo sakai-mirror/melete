@@ -1063,6 +1063,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		section.setTextualContent(true);
 		section.setCreatedByFname(firstName);
 		section.setCreatedByLname(lastName);
+		section.setModifiedByFname(firstName);
+		section.setModifiedByLname(lastName);
 		section.setContentType("notype");
 
 		if (!sectionTitleFlag) section.setTitle("Untitled Section");
@@ -1206,6 +1208,9 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		section.setTextualContent(true);
 		section.setCreatedByFname(firstName);
 		section.setCreatedByLname(lastName);
+		section.setModifiedByFname(firstName);
+		section.setModifiedByLname(lastName);
+		
 		section.setContentType("notype");
 
 		if (!sectionTitleFlag) section.setTitle("Untitled Section");

@@ -48,6 +48,7 @@ import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.SectionTrackViewObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
+import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.entity.api.Reference;
@@ -170,7 +171,7 @@ public class SectionDB implements Serializable
 	 * @throws Exception
 	 *         "edit_section_multiple_users" and "add_section_fail" MeleteException
 	 */
-	public Integer editSection(Section section) throws Exception
+	public Integer editSection(Section section, String userId) throws Exception
 	{
 		try
 		{
@@ -179,17 +180,31 @@ public class SectionDB implements Serializable
 			try
 			{
 				// refresh section object
-				Section findSection = getSection(section.getSectionId().intValue());								
+				String queryString = "select section from Section as section where section.sectionId = :sectionId";
+				Query query = session.createQuery(queryString);
+				query.setParameter("sectionId", section.getSectionId());
+				Section findSection = (Section) query.uniqueResult();
+			
+				//compare before saving
+				if(findSection.equals(section))
+				{
+					logger.debug("2 sections are equal...no modification");			
+				}
+				else
+				{
+					// update modification details only when there is modification
+					User user = UserDirectoryService.getUser(userId);
+					findSection.setModifiedByFname(user.getFirstName());
+					findSection.setModifiedByLname(user.getLastName());
+					findSection.setModificationDate(new java.util.Date());
+				}
 				findSection.setAudioContent(section.isAudioContent());
 				findSection.setContentType(section.getContentType());
-				findSection.setInstr(section.getInstr());
-				findSection.setModifiedByFname(section.getModifiedByFname());
-				findSection.setModifiedByLname(section.getModifiedByLname());
+				findSection.setInstr(section.getInstr());				
 				findSection.setOpenWindow(section.isOpenWindow());
 				findSection.setTextualContent(section.isTextualContent());
 				findSection.setTitle(section.getTitle());
-				findSection.setVideoContent(section.isVideoContent());
-				findSection.setModificationDate(new java.util.Date());
+				findSection.setVideoContent(section.isVideoContent());			
 
 				hibernateUtil.ensureSectionHasNonNull(findSection);
 
@@ -243,11 +258,13 @@ public class SectionDB implements Serializable
 	 *        Section
 	 * @param melResource
 	 *        MeleteResource
+	 * @param  userId
+	 * 		The user Id      
 	 * @throws Exception
 	 *         "edit_section_multiple_users" and "add_section_fail" MeleteException
 	 */
 
-	public void editSection(Section section, MeleteResource melResource) throws Exception
+	public void editSection(Section section, MeleteResource melResource, String userId, Boolean modifyCR) throws Exception
 	{
 		try
 		{
@@ -256,42 +273,91 @@ public class SectionDB implements Serializable
 			Transaction tx = null;
 			try
 			{
-				hibernateUtil.ensureSectionHasNonNull(section);
+				// fetch from database now
+				Section findSection = null;
+				SectionResource findSecResource = null;
+				MeleteResource findMelResource = null;
+				boolean melResExists = false, secResExists = false;
+				String queryString = "from Section section where section.sectionId=:sectionId";
+				List result_list = session.createQuery(queryString).setParameter("sectionId", section.getSectionId()).list();
+				if (result_list != null && result_list.size() > 0) findSection = (Section) result_list.get(0);
 
-				// set default values for not-null fields
-				// SectionResource secResource = (SectionResource)section.getSectionResource();
-				if (secResource == null) secResource = new SectionResource();
+				queryString = "from SectionResource sectionresource where sectionresource.sectionId=:sectionId";
+				result_list = session.createQuery(queryString).setParameter("sectionId", section.getSectionId()).list();
+				if (result_list != null && result_list.size() > 0) findSecResource = (SectionResource) result_list.get(0);
 
-				secResource.setSection(section);
-				secResource.setResource(melResource);
-				section.setModificationDate(new java.util.Date());
-				section.setSectionResource(secResource);
+				if (findSecResource != null) findMelResource = (MeleteResource) findSecResource.getResource();
+				if (findMelResource != null)
+				{
+					queryString = "from MeleteResource meleteresource where meleteresource.resourceId=:resourceId";
+					result_list = session.createQuery(queryString).setParameter("resourceId", findMelResource.getResourceId()).list();
+					if (result_list != null && result_list.size() > 0) findMelResource = (MeleteResource) result_list.get(0);
+				}
 
-				// save object
-				if (!session.isOpen()) session = hibernateUtil.currentSession();
-				session.evict(section);
+				// compare
+				if (!section.equals(findSection) || (melResource != null && !melResource.equals(findMelResource)) || modifyCR)
+				{
+					// modification details
+					User user = UserDirectoryService.getUser(userId);
+					findSection.setModifiedByFname(user.getFirstName());
+					findSection.setModifiedByLname(user.getLastName());
+					findSection.setModificationDate(new java.util.Date());									
+				}
+
+				// if new associated resource is different than old one, fetch from db
+				if (melResource != null)
+				{
+					queryString = "from MeleteResource meleteresource where meleteresource.resourceId=:resourceId";
+					result_list = session.createQuery(queryString).setParameter("resourceId", melResource.getResourceId()).list();
+					if (result_list != null && result_list.size() > 0) findMelResource = (MeleteResource) result_list.get(0);
+				}
+
+				// save data
+				if (melResource != null && findMelResource == null)
+				{
+					melResExists = true;
+					findMelResource = new MeleteResource();
+					findMelResource.setResourceId(melResource.getResourceId());
+				}
 				tx = session.beginTransaction();
 				if (melResource != null)
 				{
-					String queryString = "from MeleteResource meleteresource where meleteresource.resourceId=:resourceId";
-					Query query = session.createQuery(queryString);
-					query.setParameter("resourceId", melResource.getResourceId());
-					List result_list = query.list();
-					if (result_list != null && result_list.size() != 0)
-					{
-						MeleteResource newMelResource = (MeleteResource) result_list.get(0);
-						newMelResource.setLicenseCode(melResource.getLicenseCode());
-						newMelResource.setCcLicenseUrl(melResource.getCcLicenseUrl());
-						newMelResource.setReqAttr(melResource.isReqAttr());
-						newMelResource.setAllowCmrcl(melResource.isAllowCmrcl());
-						newMelResource.setAllowMod(melResource.getAllowMod());
-						newMelResource.setCopyrightYear(melResource.getCopyrightYear());
-						newMelResource.setCopyrightOwner(melResource.getCopyrightOwner());
-						session.saveOrUpdate(newMelResource);
-					}
+					findMelResource.setLicenseCode(melResource.getLicenseCode());
+					findMelResource.setCcLicenseUrl(melResource.getCcLicenseUrl());
+					findMelResource.setReqAttr(melResource.isReqAttr());
+					findMelResource.setAllowCmrcl(melResource.isAllowCmrcl());
+					findMelResource.setAllowMod(melResource.getAllowMod());
+					findMelResource.setCopyrightYear(melResource.getCopyrightYear());
+					findMelResource.setCopyrightOwner(melResource.getCopyrightOwner());
+					if (melResExists)session.save(findMelResource);
+					else session.update(findMelResource);
 				}
-				session.saveOrUpdate(secResource);
-				session.saveOrUpdate(section);
+				else findMelResource = null;
+				
+				// set default values for not-null fields
+				if (findSecResource == null)
+				{
+					secResExists = true;
+					findSecResource = new SectionResource();
+				}
+
+				findSecResource.setSection(findSection);
+				findSecResource.setResource(findMelResource);
+				if (secResExists) session.save(findSecResource);
+				else session.update(findSecResource);
+
+				// section object
+				findSection.setAudioContent(section.isAudioContent());
+				findSection.setContentType(section.getContentType());
+				findSection.setInstr(section.getInstr());				
+				findSection.setOpenWindow(section.isOpenWindow());
+				findSection.setTextualContent(section.isTextualContent());
+				findSection.setTitle(section.getTitle());
+				findSection.setVideoContent(section.isVideoContent());				
+				findSection.setSectionResource(findSecResource);
+
+				hibernateUtil.ensureSectionHasNonNull(findSection);
+				session.saveOrUpdate(findSection);
 				session.flush();
 				tx.commit();
 
@@ -299,7 +365,6 @@ public class SectionDB implements Serializable
 					logger.debug("commit transaction and edit section :" + section.getModuleId() + "," + section.getTitle());
 				// updateExisitingResource(secResource);
 				return;
-
 			}
 			catch (StaleObjectStateException sose)
 			{

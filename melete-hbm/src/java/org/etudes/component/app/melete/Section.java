@@ -166,6 +166,37 @@ public class Section implements Serializable, SectionObjService
 		this.modificationDate = modificationDate;
 	}
 
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Section other = (Section) obj;
+		if (audioContent != other.audioContent) return false;
+		if (contentType == null)
+		{
+			if (other.contentType != null) return false;
+		}
+		else if (!contentType.equals(other.contentType)) return false;
+		if (deleteFlag != other.deleteFlag) return false;
+		if (instr == null)
+		{
+			if (other.instr != null) return false;
+		}
+		else if (!instr.equals(other.instr)) return false;
+		if (moduleId != other.moduleId) return false;
+		if (openWindow != other.openWindow) return false;
+		if (textualContent != other.textualContent) return false;
+		if (title == null)
+		{
+			if (other.title != null) return false;
+		}
+		else if (!title.equals(other.title)) return false;
+		if (videoContent != other.videoContent) return false;
+		return true;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -278,6 +309,23 @@ public class Section implements Serializable, SectionObjService
 		return this.version;
 	}
 
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (audioContent ? 1231 : 1237);
+		result = prime * result + ((contentType == null) ? 0 : contentType.hashCode());
+		result = prime * result + (deleteFlag ? 1231 : 1237);
+		result = prime * result + ((instr == null) ? 0 : instr.hashCode());
+		result = prime * result + moduleId;
+		result = prime * result + (openWindow ? 1231 : 1237);
+		result = prime * result + (textualContent ? 1231 : 1237);
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + (videoContent ? 1231 : 1237);
+		return result;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */

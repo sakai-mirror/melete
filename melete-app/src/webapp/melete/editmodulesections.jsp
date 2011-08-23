@@ -126,13 +126,6 @@ function showmessage()
 			          	</td>
 			          </tr>	 
 	                   <!-- end table header -->
-	                         	 <tr>
-                                    <td class="col1" align="left" valign="top"><h:outputText id="text8" value="#{msgs.editmodulesections_author}"/></td>
-                                    <td class="col2" align="left" valign="top"><h:outputText value="#{editSectionPage.section.createdByFname}" styleClass="formtext"/>&nbsp;<h:outputText value="#{editSectionPage.section.createdByLname}" styleClass="formtext"/>
-                                    <h:outputText value="#{editSectionPage.section.creationDate}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm:ss a"/></h:outputText>
-                                    </td>
-                                  </tr>
-
                                    <tr>
                                     <td class="col1" align="left" valign="top"><h:outputText id="text7" value="#{msgs.editmodulesections_section_title}" /><span class="required">*</span></td>
                                     <td class="col2" align="left" valign="top">
@@ -234,9 +227,25 @@ function showmessage()
               </tr>
               
             </table>
-			
-			
-	   <p><span class="required">*</span>&nbsp; <h:outputText value="#{msgs.editmodulesections_required}" /></p>
+			<table class="maintableCollapseWithNoBorder">
+			<tr>
+				<td rowspan="2" class="left">
+					<span class="required">*</span>&nbsp; <h:outputText value="#{msgs.edit_module_required}" />
+				</td>
+				<td align="right" class="footnoteDates">
+					<h:outputText value="#{msgs.editmodulesections_author}"/>&nbsp;<h:outputText value="#{editSectionPage.section.createdByFname}" />&nbsp;<h:outputText value="#{editSectionPage.section.createdByLname}"/><h:outputText value=","/>&nbsp;
+                    <h:outputText value="#{editSectionPage.section.creationDate}" styleClass="italics"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
+                             
+				</td>
+			</tr>
+			<tr>
+				<td align="right" class="footnoteDates">
+					<h:outputText value="#{msgs.editmodulesections_author_edit}"/>&nbsp;<h:outputText value="#{editSectionPage.section.modifiedByFname}" />&nbsp;<h:outputText value="#{editSectionPage.section.modifiedByLname}" /><h:outputText value=","/>&nbsp;
+                    <h:outputText value="#{editSectionPage.section.modificationDate}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
+                </td>
+			</tr>
+		</table>	
+	  
   </h:form>
 	 
 

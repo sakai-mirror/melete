@@ -285,7 +285,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "add_section_modality_reqd", errMsg));
 			return "failure";
 		}
-
+		Boolean modifyContentResource = false;
 		ValueBinding binding =  Util.getBinding("#{licensePage}");
 		 LicensePage lPage = (LicensePage)binding.getValue(context);
 		 lPage.setFormName(formName);
@@ -301,7 +301,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			{
 				lPage.checkForRequiredFields();
 			}
-
+			
 			// validation 3: if upload a new file check fileName format -- move to uploadSectionContent()
 			// validation 3-1: if typeEditor and saved by sferyx then check for error messages
 			if (section.getContentType().equals("typeEditor"))
@@ -314,23 +314,31 @@ public class EditSectionPage extends SectionPage implements Serializable
 				if(save_err != null && !save_err.isEmpty() && save_err.containsKey(errKey))
 				{
 					ArrayList<String> errs = save_err.get(errKey);
-					for(String err:errs)
+					for (String err : errs)
 					{
+						// for sferyx saved data
+						if (err.equals("ModifiedData"))
+						{
+							modifyContentResource = true;
+							continue;
+						}
 					String errMsg = resourcesPage.getMessageText(err);
 					context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, err, errMsg));
 					}
 					resourcesPage.removeFromHm_Msgs(errKey);
-					return "failure";
+					if (context.getMessages().hasNext()) return "failure";
 				}
 			}
 
 			// save section
 			if (logger.isDebugEnabled()) logger.debug("EditSectionpage:save section" + section.getContentType());
-
+			
 			if (section.getContentType().equals("notype"))
 			{
 				meleteResource = null;
-				sectionService.editSection(section);
+				sectionService.editSection(section, getCurrUserId());
+				//refresh section
+				this.section = sectionService.getSection(section.getSectionId());
 			}
 			else{
 				shouldRenderContentTypeSelect = false;
@@ -365,7 +373,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	      					throw new MeleteException("section_html_null");
 	    				}
 	    				getMeleteCHService().checkResource(meleteResource.getResourceId());
-    					editMeleteCollectionResource(meleteResource.getResourceId());
+	    				modifyContentResource = editMeleteCollectionResource(meleteResource.getResourceId());
 	    			}
 	    			//The condition below was put in to handle ME-639
 	    			else
@@ -380,7 +388,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	    					if (section.getContentType().equals("typeLink") && (secResourceName != null && secResourceName.trim().length() > SectionService.MAX_URL_LENGTH))
 	    						throw new UserErrorException("add_section_url_title_len");
 	    					getMeleteCHService().checkResource(meleteResource.getResourceId());
-	    					editMeleteCollectionResource(meleteResource.getResourceId());
+	    					modifyContentResource = editMeleteCollectionResource(meleteResource.getResourceId());
 	    				}
 	    				else
 	    				{
@@ -394,7 +402,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 	    					//change section type to notype
 	    					section.setContentType("notype");
 	    					//insert just into section table	    					
-	    					sectionService.editSection(section);
+	    					sectionService.editSection(section, getCurrUserId());
+	    					//refresh section
+	    					this.section = sectionService.getSection(section.getSectionId());
 	    					//Track the event
 	    					EventTrackingService.post(EventTrackingService.newEvent("melete.section.edit", ToolManager.getCurrentPlacement().getContext(), true));
 
@@ -418,18 +428,22 @@ public class EditSectionPage extends SectionPage implements Serializable
 					meleteResource.setResourceId(newResourceId);
 					if (logger.isDebugEnabled()) logger.debug("new resource id" + newResourceId + meleteResource);
 					/* here create association and insert new resource */
-					sectionService.insertSectionResource(section, meleteResource);
+		//			sectionService.insertSectionResource(section, meleteResource);
+					sectionService.editSection(section, meleteResource, getCurrUserId(), modifyContentResource);
 				}
 
 				// step 3: edit license information
 				if(meleteResource != null && meleteResource.getResourceId() != null && meleteResource.getResourceId().length() != 0)
 				{
 				meleteResource = lPage.processLicenseInformation(meleteResource);
-				sectionService.updateResource(meleteResource);
+			//	sectionService.updateResource(meleteResource);
 				}
-				sectionService.insertSectionResource(section, meleteResource);
+			//	sectionService.insertSectionResource(section, meleteResource);
+				sectionService.editSection(section, meleteResource, getCurrUserId(), modifyContentResource);
 			}
-
+			//refresh section
+			this.section = sectionService.getSection(section.getSectionId());
+			
 			//Track the event
 			EventTrackingService.post(EventTrackingService.newEvent("melete.section.edit", ToolManager.getCurrentPlacement().getContext(), true));
 
@@ -444,6 +458,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		catch (MeleteException mex)
 		{
 			logger.debug("error in updating section " + mex.toString());
+			mex.printStackTrace();
 			String errMsg = bundle.getString(mex.getMessage());
 			// uncomment it after sferyx brings uploadfile limit param
 			/*if(mex.getMessage().equals("embed_image_size_exceed"))
@@ -462,6 +477,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		catch (Exception ex)
 		{
 			logger.debug("error in updating section " + ex.toString());
+			ex.printStackTrace();
 			String errMsg = bundle.getString("add_section_fail");
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "add_section_fail", errMsg));
 		//	ex.printStackTrace();
@@ -1260,7 +1276,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		Map sessionMap = context.getExternalContext().getSessionMap();
 		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 		MeleteSiteAndUserInfo info = (MeleteSiteAndUserInfo) binding.getValue(context);
-		
+
 		try
 		{
 			Section s = new Section();
@@ -1269,6 +1285,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 			// user info from session
 			s.setCreatedByFname(info.getCurrentUser().getFirstName());
 			s.setCreatedByLname(info.getCurrentUser().getLastName());
+			s.setModifiedByFname(info.getCurrentUser().getFirstName());
+			s.setModifiedByLname(info.getCurrentUser().getLastName());
 			//reset flags
 			shouldRenderEditor=false;
 			shouldRenderLink=false;

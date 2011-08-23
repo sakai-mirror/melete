@@ -703,7 +703,13 @@ public class AddResourcesPage implements ServletContextListener
 			// for sections collection is module_id
 			if (resourceId.indexOf("/private/meleteDocs/") != -1 && resourceId.indexOf("/uploads/") != -1)
 				throw new MeleteException("section_html_null");
-			getMeleteCHService().editResource(courseId, resourceId, revisedData);
+			Boolean modify = getMeleteCHService().editResource(courseId, resourceId, revisedData);
+			// if content is modified then add to messages
+			if(modify)
+			{
+				String k = sectionId + "-" + userId;
+				addToHm_Msgs(k, "ModifiedData");
+			}
 		}
 		catch (Exception ex)
 		{

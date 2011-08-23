@@ -775,10 +775,10 @@ public abstract class SectionPage implements Serializable
 	 * @param resourceId
 	 *        The Resource Id
 	 */
-	public void editMeleteCollectionResource(String resourceId) throws MeleteException
+	public Boolean editMeleteCollectionResource(String resourceId) throws MeleteException
 	{
 		// if (logger.isDebugEnabled()) logger.debug("edit resource function");
-
+		Boolean modify = null;
 		try
 		{
 			// if (logger.isDebugEnabled()) logger.debug("editing properties for " + resourceId);
@@ -802,7 +802,7 @@ public abstract class SectionPage implements Serializable
 					// getMeleteCHService().editResource(resourceId, contentEditor);
 					throw me;
 				}
-				getMeleteCHService().editResource(resourceId, contentEditor);
+				modify =getMeleteCHService().editResource(resourceId, contentEditor);
 			}
 			// sferyx saves thru save.jsp
 			else if (section.getContentType().equals("typeEditor") && authPage.isShouldRenderSferyx())
@@ -816,7 +816,8 @@ public abstract class SectionPage implements Serializable
 					&& (section.getContentType().equals("typeLink") || section.getContentType().equals("typeUpload") || section.getContentType()
 							.equals("typeLTI")))
 			{
-				getMeleteCHService().editResourceProperties(resourceId, secResourceName, secResourceDescription);
+				modify = getMeleteCHService().editResourceProperties(resourceId, secResourceName, secResourceDescription);
+				logger.debug("modify :" + modify);
 			}
 		}
 		catch (MeleteException me)
@@ -833,6 +834,8 @@ public abstract class SectionPage implements Serializable
 			}
 			throw new MeleteException("add_section_fail");
 		}
+
+		return modify;
 	}
 
 	/**
