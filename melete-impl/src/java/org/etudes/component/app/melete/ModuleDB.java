@@ -462,7 +462,10 @@ public class ModuleDB implements Serializable
 			SectionBeanService secBean = null;
 			try
 			{
-				String sectionsSeqXML = module.getSeqXml();
+				String queryString = "select module from Module as module where module.moduleId = :moduleId";
+				Module mod = (Module) session.createQuery(queryString).setParameter("moduleId", module.getModuleId()).uniqueResult();
+
+				String sectionsSeqXML = mod.getSeqXml();
 				if (sectionsSeqXML == null) throw new MeleteException("indent_left_fail");
 				SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
 				if (secBeans.size() == 1)
@@ -487,11 +490,11 @@ public class ModuleDB implements Serializable
 					}
 				}
 
-				module.setSeqXml(sectionsSeqXML);
+				mod.setSeqXml(sectionsSeqXML);
 
 				// save object
 				tx = session.beginTransaction();
-				session.saveOrUpdate(module);
+				session.saveOrUpdate(mod);
 				tx.commit();
 
 				if (logger.isDebugEnabled()) logger.debug("commiting transaction and left indenting multiple sections");
@@ -886,7 +889,11 @@ public class ModuleDB implements Serializable
 			SectionBeanService secBean = null;
 			try
 			{
-				String sectionsSeqXML = module.getSeqXml();
+				//get module object again
+				String queryString = "select module from Module as module where module.moduleId = :moduleId";
+				Module mod = (Module) session.createQuery(queryString).setParameter("moduleId", module.getModuleId()).uniqueResult();
+
+				String sectionsSeqXML = mod.getSeqXml();
 				if (sectionsSeqXML == null) throw new MeleteException("indent_right_fail");
 				SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
 
@@ -898,11 +905,11 @@ public class ModuleDB implements Serializable
 					sectionsSeqXML = SectionUtil.MakeSubSection(sectionsSeqXML, section_id.toString());
 				}
 
-				module.setSeqXml(sectionsSeqXML);
+				mod.setSeqXml(sectionsSeqXML);
 
 				// save object
 				tx = session.beginTransaction();
-				session.saveOrUpdate(module);
+				session.saveOrUpdate(mod);
 				tx.commit();
 
 				if (logger.isDebugEnabled()) logger.debug("commiting transaction and indenting multiple sections");
