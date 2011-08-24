@@ -168,24 +168,6 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService
 			actualEndDate = getEndDate();
 		else
 			actualEndDate = getModule().getModuleshdate().getEndDate();
-		if (actualStartDate != null)
-		{
-			stCal = Calendar.getInstance();
-			stCal.setTime(actualStartDate);
-			if (stCal.get(Calendar.YEAR) > 9999)
-			{
-				return false;
-			}
-		}
-		if (actualEndDate != null)
-		{
-			enCal = Calendar.getInstance();
-			enCal.setTime(actualEndDate);
-			if (enCal.get(Calendar.YEAR) > 9999)
-			{
-				return false;
-			}
-		}
 		if ((actualStartDate != null) && (actualEndDate != null))
 		{
 			if (actualStartDate.compareTo(actualEndDate) >= 0)

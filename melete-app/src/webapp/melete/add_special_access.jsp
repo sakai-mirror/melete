@@ -83,9 +83,14 @@ function newWindow(newContent){
 					  <h:inputHidden id="modEndDate" value="#{specialAccessPage.endDate}">
 					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
 					  </h:inputHidden>
-					  
+					  <h:inputHidden id="prevStartDate" value="#{specialAccessPage.specialAccess.startDate}">
+					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+					  </h:inputHidden>
+					  <h:inputHidden id="prevEndDate" value="#{specialAccessPage.specialAccess.endDate}">
+					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+					  </h:inputHidden>
 					  <a name="startCalender"></a> <h:inputText id="startDate" 
-                           value="#{specialAccessPage.specialAccess.startDate}" size="22" styleClass="formtext" onchange="showInvalid('AddSpecialAccessForm:err_gifst');">
+                           value="#{specialAccessPage.specialAccess.startDate}" size="22" styleClass="formtext" onchange="showInvalid('AddSpecialAccessForm:startDate','AddSpecialAccessForm:err_gifst');">
 		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
         		    </h:inputText>
 		            <h:outputLink id="viewsdateCal" onclick="showSdateCal('AddSpecialAccessForm:startDate')" value="#startCalender" >
@@ -109,7 +114,7 @@ function newWindow(newContent){
                 <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_special_access_end_date}" /></td>
                 <td>
                 <a name="endCalender"></a><h:inputText id="endDate" 
-                           value="#{specialAccessPage.specialAccess.endDate}" size="22" styleClass="formtext" onchange="showInvalid('AddSpecialAccessForm:err_gifen');">
+                           value="#{specialAccessPage.specialAccess.endDate}" size="22" styleClass="formtext" onchange="showInvalid('AddSpecialAccessForm:endDate','AddSpecialAccessForm:err_gifen');">
              			  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
           		 </h:inputText>
           <h:outputLink id="viewedateCal" onclick="showEdateCal('AddSpecialAccessForm:endDate')" value="#endCalender">
@@ -142,9 +147,15 @@ function newWindow(newContent){
         if (document.getElementById("AddSpecialAccessForm:accessId").value != "0")
         {
             if (document.getElementById("AddSpecialAccessForm:overrideStart").value != "true")
-        		document.getElementById("AddSpecialAccessForm:startDate").value = document.getElementById("AddSpecialAccessForm:modStartDate").value;
+            {
+                document.getElementById("AddSpecialAccessForm:startDate").value = document.getElementById("AddSpecialAccessForm:modStartDate").value;
+                document.getElementById("AddSpecialAccessForm:prevStartDate").value = document.getElementById("AddSpecialAccessForm:modStartDate").value;
+            }    
         	if (document.getElementById("AddSpecialAccessForm:overrideEnd").value != "true")
+        	{	
         		document.getElementById("AddSpecialAccessForm:endDate").value = document.getElementById("AddSpecialAccessForm:modEndDate").value;
+        		document.getElementById("AddSpecialAccessForm:prevEndDate").value = document.getElementById("AddSpecialAccessForm:modEndDate").value;
+        	}	
         }              
     </script>    
 	</h:form>

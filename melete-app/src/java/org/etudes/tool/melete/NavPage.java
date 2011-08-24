@@ -212,15 +212,15 @@ public class NavPage implements Serializable
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		ValueBinding lamBinding = Util.getBinding("#{listAuthModulesPage}");
-		ListAuthModulesPage lamPage = (ListAuthModulesPage) lamBinding.getValue(ctx);
-		if (!lamPage.saveModuleDates()) return "list_auth_modules";
 		String goToPage = checkCallFrom();
 		cancelCMReturn();
 		if ("#".equals(goToPage))
 		{
 			if (getIsInstructor())
 			{
+				ValueBinding lamBinding = Util.getBinding("#{listAuthModulesPage}");
+				ListAuthModulesPage lamPage = (ListAuthModulesPage) lamBinding.getValue(ctx);
+				if (!lamPage.saveModuleDates()) return "list_auth_modules";
 				ValueBinding binding = Util.getBinding("#{licensePage}");
 				LicensePage lPage = (LicensePage) binding.getValue(ctx);
 				lPage.resetValues();

@@ -30,7 +30,7 @@
 <sakai:view title="Modules: List Special Access" toolCssHref="/etudes-melete-tool/rtbc004.css">
 
 <%@include file="accesscheck.jsp" %>
-
+<script type="text/javascript" language="JavaScript" src="/etudes-melete-tool/js/calendar2.js"></script>
 <script type="text/javascript" language="javascript">
 
 function selectAll()
@@ -117,21 +117,17 @@ function resetAllAcc()
      <f:facet name="header">
        <h:outputText value="&nbsp;" escape="false"/>
      </f:facet>  
-     <h:panelGrid columns="1" style="z-index:0;" rendered="#{saObj.valid == false}">   
-	 <h:column>    
-     <h:commandLink id="showHideInvalid" action="#{specialAccessPage.showHideInvalid}" immediate="true">
-	    <h:graphicImage id="err_gif" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" rendered="#{saObj.valid == false}" styleClass="ExpClass"/>                     
-     </h:commandLink> 
-	 <h:panelGrid id="invalidMsg" columns="1" border="1" rules="cols" bgcolor="#FFFFCC" cellpadding="5" width="300px" styleClass="invalidAlert" rendered="#{saObj.valid == false && specialAccessPage.showInvalidAccessId == saObj.accessId}" >   
-		<h:column>     	  
-		<h:outputText value="#{msgs.invalid_access_msg}" />
-		</h:column>
-		<h:column>
-		<h:commandButton value="#{msgs.invalid_ok_msg}" action="#{specialAccessPage.hideInvalid}" immediate="true" styleClass="BottomImgFinish"/>
-		</h:column>
-	  </h:panelGrid> 
-	  </h:column>
-	  </h:panelGrid>             
+     <h:graphicImage id="err_gif" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" rendered="#{saObj.valid == false}" onclick="showHideTable('listspecialaccessform:table:' + #{specialAccessPage.table.rowIndex} +':invalidMsg0','true')"  styleClass="ExpClass"/>
+	 <h:panelGroup id="invalidMsg0" style="position:relative;z-index:1;visibility:hidden;display:none;" rendered="#{saObj.valid == false}" >
+			 <h:panelGrid id="invalidMsg" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="390px" styleClass="invalidAlert" >   
+				<h:column>
+				  	<h:outputText value="#{msgs.invalid_access_msg}" />
+				</h:column>
+				<h:column>
+					<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('listspecialaccessform:table:' + #{specialAccessPage.table.rowIndex} +':invalidMsg0','false')" />
+				</h:column>
+			  </h:panelGrid>
+	</h:panelGroup>	                   
     </h:column>   
    <h:column>
      <f:facet name="header">

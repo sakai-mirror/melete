@@ -454,9 +454,12 @@ public class BookmarkPage implements Serializable
 	{
 		resetValues();
 		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding lamBinding = Util.getBinding("#{listAuthModulesPage}");
-		ListAuthModulesPage lamPage = (ListAuthModulesPage) lamBinding.getValue(context);
-		if (!lamPage.saveModuleDates()) return "list_auth_modules";
+		if (getInstRole())
+		{
+			ValueBinding lamBinding = Util.getBinding("#{listAuthModulesPage}");
+			ListAuthModulesPage lamPage = (ListAuthModulesPage) lamBinding.getValue(context);
+			if (!lamPage.saveModuleDates()) return "list_auth_modules";
+		}
 		setFromPage((String) context.getExternalContext().getRequestParameterMap().get("fromPage"));
 		String fromModuleIdStr = (String) context.getExternalContext().getRequestParameterMap().get("fromModuleId");
 		if (fromModuleIdStr != null)

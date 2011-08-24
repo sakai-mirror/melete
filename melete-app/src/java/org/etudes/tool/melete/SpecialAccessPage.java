@@ -33,6 +33,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.component.html.*;
 import javax.faces.component.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -83,7 +86,6 @@ public class SpecialAccessPage implements Serializable
 	private List saList;
 
 	private List selectedAccIndices = null;
-	private int showInvalidAccessId;
 	/** identifier field */
 	private SpecialAccessObjService specialAccess;
 	private SpecialAccessService specialAccessService;
@@ -135,14 +137,9 @@ public class SpecialAccessPage implements Serializable
 
 		if (specialAccessService == null) specialAccessService = getSpecialAccessService();
 
-		Date st = this.specialAccess.getStartDate();
-		Date end = this.specialAccess.getEndDate();
-
-		boolean dateResult = validateDates(context, bundle, st, end);
-		if (dateResult == false) return "failure";
-
 		if (getUsers() != null)
 		{
+			this.specialAccess = validateDates(context, this.specialAccess);
 			try
 			{
 				specialAccessService.insertSpecialAccess(this.saList, this.specialAccess, getModule());
@@ -390,14 +387,6 @@ public class SpecialAccessPage implements Serializable
 	}
 
 	/**
-	 * @return invalid access id
-	 */
-	public int getShowInvalidAccessId()
-	{
-		return showInvalidAccessId;
-	}
-
-	/**
 	 * Create new special access entry with the current module id, dates and override flags set to false
 	 * 
 	 * @return specialAccess specialAccessObjService object
@@ -488,15 +477,6 @@ public class SpecialAccessPage implements Serializable
 	}
 
 	/**
-	 * @return list_special_access
-	 */
-	public String hideInvalid()
-	{
-		setShowInvalidAccessId(-1);
-		return "list_special_access";
-	}
-
-	/**
 	 * @return the noAccFlag
 	 */
 	public boolean isNoAccFlag()
@@ -533,7 +513,6 @@ public class SpecialAccessPage implements Serializable
 		accessSelected = false;
 		deleteAccessIds = null;
 		deleteAccessTitles = null;
-		setShowInvalidAccessId(-1);
 	}
 
 	/**
@@ -706,15 +685,6 @@ public class SpecialAccessPage implements Serializable
 	}
 
 	/**
-	 * @param showInvalidAccessId
-	 *        invalid access id
-	 */
-	public void setShowInvalidAccessId(int showInvalidAccessId)
-	{
-		this.showInvalidAccessId = showInvalidAccessId;
-	}
-
-	/**
 	 * @param specialAccess
 	 *        specialAccessObjService object
 	 */
@@ -772,28 +742,6 @@ public class SpecialAccessPage implements Serializable
 	}
 
 	/**
-	 * Sets showInvalidAccessId to set invalid popup on list page
-	 * 
-	 * @return list_special_access
-	 */
-	public String showHideInvalid()
-	{
-		ModuleDateBean mdbean = null;
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIViewRoot root = ctx.getViewRoot();
-		UIData table = null;
-		table = (UIData) root.findComponent("listspecialaccessform").findComponent("table");
-
-		SpecialAccess saObj = (SpecialAccess) table.getRowData();
-		if (getShowInvalidAccessId() != saObj.getAccessId())
-		{
-			setShowInvalidAccessId(saObj.getAccessId());
-		}
-
-		return "list_special_access";
-	}
-
-	/**
 	 * Adds message to faces context
 	 * 
 	 * @param ctx
@@ -840,26 +788,23 @@ public class SpecialAccessPage implements Serializable
 
 		return selectList;
 	}
-
+	
 	/**
-	 * Ensure that the dates do not have a year after 9999 and the end date is after the start date
+	 * Ensure that the dates do not have a year after 9999
 	 * 
 	 * @param context
 	 *        FacesContext object
-	 * @param bundle
-	 *        ResourceLoader object
-	 * @param st
-	 *        Start date
-	 * @param end
-	 *        End date
-	 * @return true if dates are valid, false otherwise
+	 * @param specialAccess
+	 *        SpecialAccess object
+	 * @return SpecialAccessObjService object with dates corrected
 	 */
-	private boolean validateDates(FacesContext context, ResourceLoader bundle, Date st, Date end)
+	private SpecialAccessObjService validateDates(FacesContext context, SpecialAccessObjService specialAccess)
 	{
 		Calendar calstart = new GregorianCalendar();
 		Calendar calend = new GregorianCalendar();
 
-		boolean errorFlag = false;
+		Date st = specialAccess.getStartDate();
+		Date end = specialAccess.getEndDate();
 		if ((st != null) || (end != null))
 		{
 			if (st != null)
@@ -867,9 +812,16 @@ public class SpecialAccessPage implements Serializable
 				calstart.setTime(st);
 				if (calstart.get(Calendar.YEAR) > 9999)
 				{
-					String errMsg = bundle.getString("year_toobig_error");
-					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-					errorFlag = true;
+					Map params = context.getExternalContext().getRequestParameterMap();
+					String prevStartDateStr = (String) params.get("AddSpecialAccessForm:prevStartDate");
+					try
+					{
+					  specialAccess.setStartDate(getDateFromString(prevStartDateStr));
+					}
+					catch (ParseException e)
+					{
+						specialAccess.setStartDate(this.module.getModuleshdate().getStartDate());
+					}
 				}
 			}
 			if (end != null)
@@ -877,28 +829,31 @@ public class SpecialAccessPage implements Serializable
 				calend.setTime(end);
 				if (calend.get(Calendar.YEAR) > 9999)
 				{
-					String errMsg = bundle.getString("year_toobig_error");
-					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-					errorFlag = true;
-				}
-			}
-
-			// validation no 4 b
-			if ((end != null) && (st != null))
-			{
-				if (end.compareTo(st) <= 0)
-				{
-					String errMsg = "";
-					errMsg = bundle.getString("end_date_before_start");
-					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-					errorFlag = true;
+					Map params = context.getExternalContext().getRequestParameterMap();
+					String prevEndDateStr = (String) params.get("AddSpecialAccessForm:prevEndDate");
+					try
+					{
+					  specialAccess.setEndDate(getDateFromString(prevEndDateStr));
+					}
+					catch (ParseException e)
+					{
+						specialAccess.setEndDate(this.module.getModuleshdate().getEndDate());
+					}
 				}
 			}
 		}
-		// If there is an error, validation fails and the method returns false
-		// If there are no errors, validation passes and the method returns true;
-		if (errorFlag == true) return false;
-		return true;
-	}
 
+		return specialAccess;
+	}	
+	
+	public Date getDateFromString(String dateStr) throws ParseException{
+		Date date = null;
+		try {
+			SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.MEDIUM);
+	        date = sdf.parse(dateStr);
+		} catch (ParseException e) {
+			throw e;
+		}
+		return date;
+	}	
 }

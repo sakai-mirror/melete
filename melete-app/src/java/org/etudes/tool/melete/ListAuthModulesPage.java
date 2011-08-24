@@ -45,6 +45,7 @@ import javax.faces.event.ValueChangeEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.etudes.api.app.melete.MeleteSecurityService;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.SectionBeanService;
@@ -52,6 +53,7 @@ import org.etudes.api.app.melete.exception.MeleteException;
 import org.etudes.component.app.melete.ModuleDateBean;
 import org.etudes.component.app.melete.Section;
 import org.etudes.component.app.melete.SectionBean;
+import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.util.ResourceLoader;
 
 /**
@@ -145,6 +147,11 @@ public class ListAuthModulesPage implements Serializable
 
 	// added by rashmi on apr 8
 	private String isNull = null;
+	
+	private boolean isInstructor;
+	
+	/** Dependency: The Melete Security service. */
+	protected MeleteSecurityService meleteSecurityService;
 
 	private UIData table;
 	private UIData secTable;
@@ -980,19 +987,22 @@ public class ListAuthModulesPage implements Serializable
 	
 	public boolean saveModuleDates()
 	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		try
+		if (getIsInstructor())
 		{
-			getModuleService().updateProperties(moduleDateBeans, courseId, userId);
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+			try
+			{
+				getModuleService().updateProperties(moduleDateBeans, courseId, userId);
+			}
+			catch (Exception e)
+			{
+				logger.debug(e.toString());
+				String msg = bundle.getString("list_auth_modules_fail");
+				addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
+				return false;
+			}
 		}
-		catch (Exception e)
-		{
-			logger.debug(e.toString());
-			String msg = bundle.getString("list_auth_modules_fail");
-			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
-			return false;
-		}		
 		return true;
 	}
 
@@ -1631,6 +1641,30 @@ public class ListAuthModulesPage implements Serializable
 		}
 		return 0;
 	}
+	
+	/**
+	 * Check if the current user has permission as author.
+	 * 
+	 * @return true if the current user has permission to perform this action, false if not.
+	 */
+	public boolean getIsInstructor()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+
+		try
+		{
+			return meleteSecurityService.allowAuthor(ToolManager.getCurrentPlacement().getContext());
+		}
+		catch (Exception e)
+		{
+			String errMsg = bundle.getString("auth_failed");
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "auth_failed", errMsg));
+			logger.warn(e.toString());
+		}
+		return false;
+	}
+	
 
 /** Add message to context
 	 * @param ctx FacesContext object
@@ -1643,6 +1677,15 @@ public class ListAuthModulesPage implements Serializable
 		FacesMessage msg = new FacesMessage(msgName, msgDetail);
 		msg.setSeverity(severity);
 		ctx.addMessage(null, msg);
+	}
+	
+	/**
+	 * @param meleteSecurityService
+	 *        The meleteSecurityService to set.
+	 */
+	public void setMeleteSecurityService(MeleteSecurityService meleteSecurityService)
+	{
+		this.meleteSecurityService = meleteSecurityService;
 	}
 	
 	/**
