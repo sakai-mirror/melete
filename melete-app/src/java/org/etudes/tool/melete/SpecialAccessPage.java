@@ -814,13 +814,20 @@ public class SpecialAccessPage implements Serializable
 				{
 					Map params = context.getExternalContext().getRequestParameterMap();
 					String prevStartDateStr = (String) params.get("AddSpecialAccessForm:prevStartDate");
-					try
+					if ((prevStartDateStr.equals("null") || (prevStartDateStr.trim().equals("")) || (prevStartDateStr.trim().length() == 0)))
 					{
-					  specialAccess.setStartDate(getDateFromString(prevStartDateStr));
+						specialAccess.setStartDate(null);
 					}
-					catch (ParseException e)
+					else
 					{
-						specialAccess.setStartDate(this.module.getModuleshdate().getStartDate());
+						try
+						{
+							specialAccess.setStartDate(getDateFromString(prevStartDateStr));
+						}
+						catch (ParseException e)
+						{
+							specialAccess.setStartDate(getModule().getModuleshdate().getStartDate());
+						}
 					}
 				}
 			}
@@ -831,13 +838,20 @@ public class SpecialAccessPage implements Serializable
 				{
 					Map params = context.getExternalContext().getRequestParameterMap();
 					String prevEndDateStr = (String) params.get("AddSpecialAccessForm:prevEndDate");
-					try
+					if ((prevEndDateStr.equals("null") || (prevEndDateStr.trim().equals("")) || (prevEndDateStr.trim().length() == 0)))
 					{
-					  specialAccess.setEndDate(getDateFromString(prevEndDateStr));
+						specialAccess.setEndDate(null);
 					}
-					catch (ParseException e)
+					else
 					{
-						specialAccess.setEndDate(this.module.getModuleshdate().getEndDate());
+						try
+						{
+							specialAccess.setEndDate(getDateFromString(prevEndDateStr));
+						}
+						catch (ParseException e)
+						{
+							specialAccess.setEndDate(this.module.getModuleshdate().getEndDate());
+						}
 					}
 				}
 			}
