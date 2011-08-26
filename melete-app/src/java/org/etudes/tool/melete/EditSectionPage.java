@@ -323,11 +323,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 							continue;
 						}
 					String errMsg = resourcesPage.getMessageText(err);
-					context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, err, errMsg));
-					}
-					resourcesPage.removeFromHm_Msgs(errKey);
-					if (context.getMessages().hasNext()) return "failure";
+					context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, err, errMsg));					
+					}		
+					resourcesPage.removeFromHm_Msgs(errKey);					
 				}
+				if (context.getMessages().hasNext()) return "failure";
 			}
 
 			// save section
