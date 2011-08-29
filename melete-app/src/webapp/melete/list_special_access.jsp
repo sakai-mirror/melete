@@ -160,7 +160,7 @@ function resetAllAcc()
             </h:outputText>
                   <h:outputText id="startDate" 
                            value="#{saObj.startDate}"    rendered="#{((saObj.startDate != null)&&(saObj.overrideStart == true))}">
-              <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
+              <f:convertDateTime type="both" dateStyle="medium" timeStyle="short"/>
             </h:outputText>
               </h:column>         
         <h:column>
@@ -178,7 +178,7 @@ function resetAllAcc()
               <h:outputText id="endDate"
                            value="#{saObj.endDate}"
                               rendered="#{((saObj.endDate != null)&&(saObj.overrideEnd == true))}">
-               <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
+               <f:convertDateTime type="both" dateStyle="medium" timeStyle="short"/>
             </h:outputText>
          </h:column>         
     </h:dataTable>   
