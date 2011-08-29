@@ -185,7 +185,7 @@ if (msg != null)
       <h:outputText id="t2" value="#{msgs.list_auth_modules_title}" />
      </h:panelGroup>        
     </f:facet>					
-     <h:commandLink id="showHideSections" action="#{listAuthModulesPage.showHideSections}" immediate="true">
+     <h:commandLink id="showHideSections" action="#{listAuthModulesPage.showHideSections}">
         <h:graphicImage id="exp_gif" alt="#{msgs.list_auth_modules_authoring_expand}" value="/images/expand.gif" rendered="#{((mdbean.moduleId != listAuthModulesPage.showModuleId)&&(mdbean.sectionBeans != listAuthModulesPage.nullList)&&(listAuthModulesPage.expandAllFlag != listAuthModulesPage.trueFlag))}" styleClass="ExpClass"/>
         <h:graphicImage id="col_gif" alt="#{msgs.list_auth_modules_authoring_collapse}" value="/images/collapse.gif" rendered="#{(((mdbean.moduleId == listAuthModulesPage.showModuleId)&&(mdbean.sectionBeans != listAuthModulesPage.nullList))||((listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag)&&(mdbean.sectionBeans != listAuthModulesPage.nullList)))}" styleClass="ExpClass"/>
      </h:commandLink>         
