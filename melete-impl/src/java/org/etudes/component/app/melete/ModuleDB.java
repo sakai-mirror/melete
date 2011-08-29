@@ -4838,7 +4838,7 @@ public class ModuleDB implements Serializable
 			Date endDate = moduleshdates1.getEndDate();
 			String startEventId = moduleshdates1.getStartEventId();
 			String endEventId = moduleshdates1.getEndEventId();
-
+			
 			CalendarService cService = org.sakaiproject.calendar.cover.CalendarService.getInstance();
 			String calendarId = cService.calendarReference(courseId, SiteService.MAIN_CONTAINER);
 			try
@@ -4847,6 +4847,31 @@ public class ModuleDB implements Serializable
 
 				if (addtoSchedule == true)
 				{
+					//Fix for ME-1426, when start date is after end date, do not add events to calendar
+					if ((startDate != null)&&(endDate != null)&&(startDate.after(endDate)))
+					{
+						if (startEventId != null)
+						{
+							logger.debug("REMOVING start event for null start date");
+							deleteCalendarEvent(c, startEventId);
+							moduleshdates1.setStartEventId(null);
+						}
+						else
+						{
+							moduleshdates1.setStartEventId(null);
+						}
+						if (endEventId != null)
+						{
+							logger.debug("REMOVING end event for null end date");
+							deleteCalendarEvent(c, endEventId);
+							moduleshdates1.setEndEventId(null);
+						}
+						else
+						{
+							moduleshdates1.setEndEventId(null);
+						}
+						return moduleshdates1;
+					}
 					if (startDate == null)
 					{
 						if (startEventId != null)
