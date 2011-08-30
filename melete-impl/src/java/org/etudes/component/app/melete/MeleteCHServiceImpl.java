@@ -629,11 +629,11 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			}
 			edit = getContentservice().editResource(selResourceIdFromList);
 			ResourcePropertiesEdit rp = edit.getPropertiesEdit();
-			if (!rp.getProperty(ResourceProperties.PROP_DISPLAY_NAME).equals(secResourceName)
-					|| !rp.getProperty(ResourceProperties.PROP_DESCRIPTION).equals(secResourceDescription))
-			{
-				modify = true;
-			}
+			if (rp.getProperty(ResourceProperties.PROP_DISPLAY_NAME) != null)
+				modify = (rp.getProperty(ResourceProperties.PROP_DISPLAY_NAME).compareTo(secResourceName) == 0) ? false : true;
+			if (rp.getProperty(ResourceProperties.PROP_DESCRIPTION) != null)
+				modify = modify ||( (rp.getProperty(ResourceProperties.PROP_DESCRIPTION).compareTo(secResourceDescription) == 0) ? false : true);
+			
 			rp.clear();
 			rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, secResourceName);
 			rp.addProperty(ResourceProperties.PROP_DESCRIPTION, secResourceDescription);
@@ -644,6 +644,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 		catch (Exception e)
 		{
 			logger.error("edit res properties:" + e.toString());
+			e.printStackTrace();
 		}
 		finally
 		{
@@ -1147,7 +1148,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				else modify = true;		*/
 				
 				// compare arrays
-				modify = Arrays.equals(originalData, data);
+				modify = !Arrays.equals(originalData, data);
 				edit.setContent(data);
 				// edit.setContentLength((long)data.length);
 				getContentservice().commitResource(edit);
@@ -1209,7 +1210,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				else modify = true;		*/	
 				
 				// compare arrays
-				modify = Arrays.equals(originalData, data);
+				modify = !Arrays.equals(originalData, data);
 				edit.setContent(data);
 				// edit.setContentLength((long)data.length);
 				getContentservice().commitResource(edit);
