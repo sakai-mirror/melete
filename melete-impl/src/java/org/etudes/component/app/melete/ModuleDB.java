@@ -3397,90 +3397,95 @@ public class ModuleDB implements Serializable
 
 		Session session = hibernateUtil.currentSession();
 		
-		for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();)
-		{
-			tx = null;
-			ModuleDateBean mdbean = (ModuleDateBean) i.next();
-			// Saving all modules (irrespective of dateFlag) as we now save modules with start date after end date also
-			try
-			{
-				Module checkModule = (Module) mdbean.getModule();
-				ModuleShdates checkModuleDates = (ModuleShdates) mdbean.getModuleShdate();
-				logger.debug("checking for " + checkModule.getTitle());
-				String queryString = "select module from Module as module where module.moduleId = :moduleId";
-				Module mod = (Module) session.createQuery(queryString).setParameter("moduleId", checkModule.getModuleId()).uniqueResult();
+		if ((moduleDateBeans != null) && (moduleDateBeans.size() > 0)) {
+			for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();) {
+				tx = null;
+				ModuleDateBean mdbean = (ModuleDateBean) i.next();
+				// Saving all modules (irrespective of dateFlag) as we now save
+				// modules with start date after end date also
+				try {
+					Module checkModule = (Module) mdbean.getModule();
+					ModuleShdates checkModuleDates = (ModuleShdates) mdbean
+							.getModuleShdate();
+					logger.debug("checking for " + checkModule.getTitle());
+					String queryString = "select module from Module as module where module.moduleId = :moduleId";
+					Module mod = (Module) session
+							.createQuery(queryString)
+							.setParameter("moduleId", checkModule.getModuleId())
+							.uniqueResult();
 
-				queryString = "select moduleshdate from ModuleShdates as moduleshdate where moduleshdate.module.moduleId = :moduleId";
-				ModuleShdates mDate = (ModuleShdates) session.createQuery(queryString).setParameter("moduleId", checkModule.getModuleId())
-						.uniqueResult();
+					queryString = "select moduleshdate from ModuleShdates as moduleshdate where moduleshdate.module.moduleId = :moduleId";
+					ModuleShdates mDate = (ModuleShdates) session
+							.createQuery(queryString)
+							.setParameter("moduleId", checkModule.getModuleId())
+							.uniqueResult();
 
-				//If any date is > 9999, this check sets the date to the module's previous date
-				if (!checkModuleDates.isStartDateValid())
-				{
-					checkModuleDates.setStartDate(mDate.getStartDate());
+					// If any date is > 9999, this check sets the date to the
+					// module's previous date
+					if (!checkModuleDates.isStartDateValid()) {
+						checkModuleDates.setStartDate(mDate.getStartDate());
+					}
+					if (!checkModuleDates.isEndDateValid()) {
+						checkModuleDates.setEndDate(mDate.getEndDate());
+					}
+					// compare them. If both are same then not modified
+					logger.debug("module is same " + mod.equals(checkModule));
+					logger.debug("moduleDates is same "
+							+ mDate.equals(checkModuleDates));
+					if (mod.equals(checkModule)
+							&& mDate.equals(checkModuleDates)) {
+						logger.debug("MODULE AND SH DATES BOTH ARE EQUAL SO NO DB UPDATE for:"
+								+ mod.getTitle());
+						continue;
+					}
+
+					if (checkModuleDates.getAddtoSchedule() != null) {
+						checkModuleDates = updateCalendar(
+								checkModule.getTitle(), checkModuleDates,
+								courseId);
+					}
+					tx = session.beginTransaction();
+					logger.debug("update module and sh dates " + mod.getTitle());
+					// refresh object and Getting the set of show hides dates
+					// associated with this module
+					mDate.setStartDate(checkModuleDates.getStartDate());
+					mDate.setEndDate(checkModuleDates.getEndDate());
+					mDate.setAddtoSchedule(checkModuleDates.getAddtoSchedule());
+					mDate.setEndEventId(checkModuleDates.getEndEventId());
+					mDate.setStartEventId(checkModuleDates.getStartEventId());
+					session.saveOrUpdate(mDate);
+					// refresh object
+
+					mod.setCoursemodule(checkModule.getCoursemodule());
+					mod.setDescription(checkModule.getDescription());
+					mod.setKeywords(checkModule.getKeywords());
+					mod.setModificationDate(new Date());
+					User user = UserDirectoryService.getUser(userId);
+					mod.setModifiedByFname(user.getFirstName());
+					mod.setModifiedByLname(user.getLastName());
+					mod.setTitle(checkModule.getTitle());
+					mod.setModuleshdate(mDate);
+
+					// Update module properties
+					session.saveOrUpdate(mod);
+					tx.commit();
+					// session.flush();
+				} catch (StaleObjectStateException sose) {
+					if (tx != null)
+						tx.rollback();
+					logger.error("stale object exception" + sose.toString());
+					sose.printStackTrace();
+					throw new MeleteException("edit_module_multiple_users");
+				} catch (HibernateException he) {
+					logger.error(he.toString());
+					throw he;
+				} catch (Exception e) {
+					if (tx != null)
+						tx.rollback();
+					logger.error(e.toString());
+					throw e;
 				}
-				if (!checkModuleDates.isEndDateValid())
-				{
-					checkModuleDates.setEndDate(mDate.getEndDate());
-				}
-				// compare them. If both are same then not modified
-				logger.debug("module is same " + mod.equals(checkModule));
-				logger.debug("moduleDates is same " + mDate.equals(checkModuleDates));
-				if (mod.equals(checkModule) && mDate.equals(checkModuleDates))
-				{
-					logger.debug("MODULE AND SH DATES BOTH ARE EQUAL SO NO DB UPDATE for:" + mod.getTitle());
-					continue;
-				}
-
-				if (checkModuleDates.getAddtoSchedule() != null)
-				{
-					checkModuleDates = updateCalendar(checkModule.getTitle(), checkModuleDates, courseId);
-				}
-				tx = session.beginTransaction();
-				logger.debug("update module and sh dates " + mod.getTitle());
-				// refresh object and Getting the set of show hides dates associated with this module
-				mDate.setStartDate(checkModuleDates.getStartDate());
-				mDate.setEndDate(checkModuleDates.getEndDate());
-				mDate.setAddtoSchedule(checkModuleDates.getAddtoSchedule());
-				mDate.setEndEventId(checkModuleDates.getEndEventId());
-				mDate.setStartEventId(checkModuleDates.getStartEventId());
-				session.saveOrUpdate(mDate);
-				// refresh object
-
-				mod.setCoursemodule(checkModule.getCoursemodule());
-				mod.setDescription(checkModule.getDescription());
-				mod.setKeywords(checkModule.getKeywords());
-				mod.setModificationDate(new Date());
-				User user = UserDirectoryService.getUser(userId);
-				mod.setModifiedByFname(user.getFirstName());
-				mod.setModifiedByLname(user.getLastName());
-				mod.setTitle(checkModule.getTitle());
-				mod.setModuleshdate(mDate);
-
-				// Update module properties
-				session.saveOrUpdate(mod);
-				tx.commit();
-				// session.flush();
 			}
-			catch (StaleObjectStateException sose)
-			{
-				if (tx != null) tx.rollback();
-				logger.error("stale object exception" + sose.toString());
-				sose.printStackTrace();
-				throw new MeleteException("edit_module_multiple_users");
-			}
-			catch (HibernateException he)
-			{
-				logger.error(he.toString());
-				throw he;
-			}
-			catch (Exception e)
-			{
-				if (tx != null) tx.rollback();
-				logger.error(e.toString());
-				throw e;
-			}
-
 		}
 		try
 		{
