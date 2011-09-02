@@ -34,6 +34,7 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIData;
 import javax.faces.component.UIInput;
 import javax.faces.component.UIViewRoot;
@@ -1075,12 +1076,19 @@ public class ListAuthModulesPage implements Serializable
 		if (!saveModuleDates()) return "list_auth_modules";
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		UIViewRoot root = ctx.getViewRoot();
-		UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
-		ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
-		ValueBinding binding = Util.getBinding("#{specialAccessPage}");
-		SpecialAccessPage specialAccessPage = (SpecialAccessPage) binding.getValue(ctx);
-		specialAccessPage.setModuleId(mdbean.getModule().getModuleId().intValue());
-		specialAccessPage.setSaList(null);
+		if (root != null)
+		{
+			UIComponent listAuthForm = (UIComponent) root.findComponent("listauthmodulesform");
+			if (listAuthForm != null)
+			{
+				UIData table = (UIData) listAuthForm.findComponent("table");
+				ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
+				ValueBinding binding = Util.getBinding("#{specialAccessPage}");
+				SpecialAccessPage specialAccessPage = (SpecialAccessPage) binding.getValue(ctx);
+				specialAccessPage.setModuleId(mdbean.getModule().getModuleId().intValue());
+				specialAccessPage.setSaList(null);
+			}
+		}
 		return "list_special_access";
 	}	
 
