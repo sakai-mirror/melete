@@ -446,6 +446,13 @@ public class LicensePage
 	 */
 	public String getAllowCmrcl()
 	{
+		if (allowCmrcl != null)
+		{
+			if (allowCmrcl.trim().equals("null"))
+			{
+				allowCmrcl = null;
+			}
+		}
 		return allowCmrcl;
 	}
 
@@ -463,6 +470,13 @@ public class LicensePage
 	 */
 	public String getAllowMod()
 	{
+		if (allowMod != null)
+		{
+			if (allowMod.trim().equals("null"))
+			{
+				allowMod = null;
+			}
+		}
 		return allowMod;
 	}
 
