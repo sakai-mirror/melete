@@ -46,11 +46,6 @@
 	   }
 %>
 <script language="javascript1.2">
-function fillupload()
-{
-	//var k =document.getElementById("file1").value;		
-	//document.getElementById("AddSectionForm:ContentUploadView:filename").value=k;
-}
 function loadInputs()
 {
   var str=document.getElementById("FileUploadForm:numitems").value;
@@ -397,7 +392,7 @@ function validateFileName(divID, sourceID)
 	       <td colspan="2">
 	       <span class="required">* Required</span>
 	       <br>
-	       <h:outputText id="note" value="#{msgs.file_upload_view_note} #{addResourcesPage.maxUploadSize}MB."  styleClass="comment red"/>							<h:inputHidden id="filename" value="#{addSectionPage.hiddenUpload}" />						
+	       <h:outputText id="note" value="#{msgs.file_upload_view_note} #{addResourcesPage.maxUploadSize}MB."  styleClass="comment red"/>						
 		   <br>
 	       </td>
 	     </tr>
