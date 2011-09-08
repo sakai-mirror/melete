@@ -225,6 +225,15 @@ public interface MeleteCHService
 	public String getCollectionId(String courseId, String contentType, Integer modId);
 
 	/**
+	 * Get the module id where the section belongs.
+	 * 
+	 * @param sectionId
+	 *        The section Id
+	 * @return
+	 */
+	public Integer getContainingModule(String sectionId);
+	
+	/**
 	 * Get display name of a resource
 	 * 
 	 * @param resourceId

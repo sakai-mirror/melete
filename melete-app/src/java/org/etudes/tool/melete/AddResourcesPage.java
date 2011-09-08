@@ -665,8 +665,6 @@ public class AddResourcesPage implements ServletContextListener
 	 *        The Site Id
 	 * @param resourceId
 	 *        The resource Id
-	 * @param moduleId
-	 *        The Module Id
 	 * @param sectionId
 	 *        The section Id
 	 * @param userId
@@ -676,12 +674,12 @@ public class AddResourcesPage implements ServletContextListener
 	 * @param htmlContentData
 	 *        Composed content
 	 */
-	public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, String moduleId, String sectionId, String userId,
+	public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, String sectionId, String userId,
 			Map<String, String> newEmbeddedResources, String htmlContentData) throws Exception
-			{
+	{
 		ArrayList<String> errs = new ArrayList<String>();
 		String revisedData = getMeleteCHService().findLocalImagesEmbeddedInEditor(courseId, errs, newEmbeddedResources, htmlContentData);
-		logger.debug("resource id in save section html method:" + resourceId + moduleId + sectionId);
+
 		// add messages to hashmap
 		if (errs.size() > 0)
 		{
@@ -712,10 +710,11 @@ public class AddResourcesPage implements ServletContextListener
 			String secResourceName = getMeleteCHService().getTypeEditorSectionName(new Integer(sectionId));
 			ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(true, secResourceName, "compose content");
 			String newResourceId = getMeleteCHService().addResourceItem(secResourceName, MeleteCHService.MIME_TYPE_EDITOR,
-					getMeleteCHService().getCollectionId(courseId, "typeEditor", new Integer(moduleId)), secContentData, res);
+					getMeleteCHService().getCollectionId(courseId, "typeEditor", getMeleteCHService().getContainingModule(sectionId)),
+					secContentData, res);
 			addtoMeleteResource(sectionId, newResourceId);
 		}
-			}
+	}
 
 	/**
 	 * 
@@ -729,6 +728,7 @@ public class AddResourcesPage implements ServletContextListener
 		String data = null;
 		try
 		{
+			if (sectionId == null || sectionId.length() == 0) return data;
 			String resourceId = getMeleteCHService().getSectionResource(sectionId);
 			logger.debug("resource id in AddResource getdata method:" + resourceId);
 			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");

@@ -32,7 +32,6 @@
 			final AddResourcesPage aResourcePage = (AddResourcesPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "addResourcesPage");
 				
 			String status = (String)request.getAttribute("upload.status");
-		
 			if( status != null && status.equalsIgnoreCase("ok"))
 			{	
 			String collId = aResourcePage.getCollectionId(request.getParameter("courseId"));
@@ -80,7 +79,7 @@
 		{
 			if(request.getParameter("html_content") != null)
 			{			
-				aResourcePage.saveSectionHtmlItem(collId, request.getParameter("courseId"), request.getParameter("resourceId"), request.getParameter("mId"), request.getParameter("sId"), request.getParameter("uId"),newEmbeddedResources, request.getParameter("html_content") );
+				aResourcePage.saveSectionHtmlItem(collId, request.getParameter("courseId"), request.getParameter("resourceId"), request.getParameter("sId"), request.getParameter("uId"),newEmbeddedResources, request.getParameter("html_content") );
 			}				
 		}  catch (Exception ex) {
 			String exKey = request.getParameter("sId") + "-"+ request.getParameter("uId"); 

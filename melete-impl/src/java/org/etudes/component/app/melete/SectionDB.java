@@ -1466,6 +1466,7 @@ public class SectionDB implements Serializable
 	{
 		try
 		{
+			if (sectionId == null || sectionId.length() == 0) return null;
 			Session session = hibernateUtil.currentSession();
 			String queryString = "from SectionResource sectionresource where sectionresource.sectionId=:sectionId";
 			Query query = session.createQuery(queryString);
@@ -1478,7 +1479,7 @@ public class SectionDB implements Serializable
 		}
 		catch (Exception ex)
 		{
-			logger.error(ex.toString());
+	//		logger.error(ex.toString());
 			ex.printStackTrace();
 			return null;
 		}
