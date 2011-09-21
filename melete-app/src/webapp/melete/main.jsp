@@ -48,9 +48,10 @@ if(meleteSiteAndUserInfo.checkMeleteRights())
 	 }
 	}
 }
-else navpageurl = "noAccess.jsf";			
+else navpageurl = "noAccess.jsf";	
+response.sendRedirect(response.encodeRedirectURL(navpageurl));		
 %>
 <br />
-<jsp:forward page="<%=navpageurl%>"/>
+
 </body>
 </html> 
