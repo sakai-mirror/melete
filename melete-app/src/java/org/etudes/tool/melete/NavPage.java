@@ -180,9 +180,6 @@ public class NavPage implements Serializable
 	public String manageAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		ValueBinding lamBinding = Util.getBinding("#{listAuthModulesPage}");
-		ListAuthModulesPage lamPage = (ListAuthModulesPage) lamBinding.getValue(ctx);
-		if (!lamPage.saveModuleDates()) return "list_auth_modules";
 		String goToPage = checkCallFrom();
 		if ("#".equals(goToPage))
 		{
@@ -218,9 +215,6 @@ public class NavPage implements Serializable
 		{
 			if (getIsInstructor())
 			{
-				ValueBinding lamBinding = Util.getBinding("#{listAuthModulesPage}");
-				ListAuthModulesPage lamPage = (ListAuthModulesPage) lamBinding.getValue(ctx);
-				if (!lamPage.saveModuleDates()) return "list_auth_modules";
 				ValueBinding binding = Util.getBinding("#{licensePage}");
 				LicensePage lPage = (LicensePage) binding.getValue(ctx);
 				lPage.resetValues();
@@ -264,9 +258,6 @@ public class NavPage implements Serializable
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		ValueBinding lamBinding = Util.getBinding("#{listAuthModulesPage}");
-		ListAuthModulesPage lamPage = (ListAuthModulesPage) lamBinding.getValue(ctx);
-		if (!lamPage.saveModuleDates()) return "list_auth_modules";
 		String goToPage = checkCallFrom();
 		cancelCMReturn();
 		if ("#".equals(goToPage))
@@ -316,6 +307,12 @@ public class NavPage implements Serializable
 			ValueBinding binding = Util.getBinding("#{addModulePage}");
 			AddModulePage aPage = (AddModulePage) binding.getValue(ctx);
 			return aPage.autoSave();
+		}
+		else if ("listAuth".equals(callFrom))
+		{
+			ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+			ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(ctx);
+			return lamPage.saveChanges();
 		}
 		threadLocalManager.set("MELETE_SAVE_FROM", "");
 		return "#";

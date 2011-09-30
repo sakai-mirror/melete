@@ -1007,14 +1007,14 @@ public class ListAuthModulesPage implements Serializable
 		return true;
 	}
 
-	/** Validate dates and save changes
-	 * @return list_auth_modules
+	/** Resets lists and save changes
+	 * @return page that request came from
 	 */
 	public String saveChanges()
 	{
 		resetSelectedLists();
 		saveModuleDates();
-		return "list_auth_modules";
+		return "#";
 	}
 
 	/** Redirect to list auth page
