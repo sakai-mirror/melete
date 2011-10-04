@@ -26,6 +26,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 <f:view>
 <sakai:view title="Modules: Delete Module" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
@@ -37,7 +38,11 @@ function showProcessMessage()
  document.getElementById("DeleteModuleForm:delButton").style.visibility="hidden"; 
 }
 </script>
+<t:saveState id="dmpmodules" value="#{deleteModulePage.modules}" />
+<t:saveState id="dmpsecbeans" value="#{deleteModulePage.sectionBeans}" />
  <h:form id="DeleteModuleForm">
+  <h:inputHidden id="modsel" value="#{deleteModulePage.moduleSelected}"/>
+   <h:inputHidden id="secsel" value="#{deleteModulePage.sectionSelected}"/>
 	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
