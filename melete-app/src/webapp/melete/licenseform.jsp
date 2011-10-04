@@ -33,7 +33,8 @@
  </h:column>
  <h:column>
  <h:selectOneMenu id="licenseCodes" value="#{licensePage.licenseCodes}" valueChangeListener="#{licensePage.hideLicense}" onchange="saveEditor(); this.form.submit();" >
-	 <f:selectItems value="#{licensePage.licenseTypes}" />							
+	 <f:selectItems value="#{licensePage.licenseTypes}" />		
+	 <f:attribute name="sectionId" value="#{licensePage.sectionId}" />						
  </h:selectOneMenu>
  <h:outputText value="          " styleClass="ExtraPaddingClass" />
 <h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="/images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>

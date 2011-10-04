@@ -35,7 +35,9 @@
  	<h:form id="previewForm" > 	
  	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
-	</f:subview>		
+	</f:subview>	
+
+		
 	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/note_view.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.edit_preview_previewing_section}" /></div>
      <table class="maintableCollapseWithBorder">          
 		  <tr>
@@ -58,17 +60,15 @@
 						<h:outputText id="sec2" value="#{editSectionPage.section.instr}" rendered="#{editSectionPage.renderInstr}"></h:outputText>
 			  </td></tr>
 			  <tr><td>
-		      <h:inputHidden id="contentType" value="#{editSectionPage.section.contentType}"/>
-			 
-	            <h:outputLink id="viewSectionLink"  value="#{editSectionPage.previewContentData}" target="_blank" rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLTI) && editSectionPage.section.openWindow == true}">
+	            <h:outputLink id="viewSectionLink"  value="#{editSectionPage.previewContentData}" target="_blank" rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLTI) && editSectionPage.section.openWindow}">
                 <h:outputText id="sectitleLink" 
                            value="#{editSectionPage.secResourceName}">
                 </h:outputText>
                 </h:outputLink>	
                     <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{editSectionPage.previewContentData}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
-               	    border=\"0\" frameborder= \"0\"></iframe>" rendered="#{(editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLink|| editSectionPage.shouldRenderLTI) && editSectionPage.section.openWindow == false}" escape="false" />			
+               	    border=\"0\" frameborder= \"0\"></iframe>" rendered="#{(editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLink|| editSectionPage.shouldRenderLTI) && !editSectionPage.section.openWindow}" escape="false" />			
 		      
-		      <h:outputText id="contentTextFrame" rendered="#{editSectionPage.shouldRenderEditor && editSectionPage.contentWithHtml == true}" >
+		      <h:outputText id="contentTextFrame" rendered="#{editSectionPage.shouldRenderEditor && editSectionPage.contentWithHtml}" >
 					<f:verbatim>
 					<iframe id="iframe3" name="iframe3" src="${editSectionPage.previewContentData}" width="100%" height="700px" style="visibility:visible" scrolling= "auto" border="0" frameborder= "0">
 					</iframe>
@@ -76,13 +76,15 @@
 				</h:outputText>
 				
 				<!-- render typeEditor content without form tags -->
-				<h:outputText value="#{editSectionPage.previewContentData}" escape="false" rendered="#{editSectionPage.shouldRenderEditor && editSectionPage.contentWithHtml == false}"/>
+				<h:outputText value="#{editSectionPage.previewContentData}" escape="false" rendered="#{editSectionPage.shouldRenderEditor && !editSectionPage.contentWithHtml}"/>
 				
 		      </td></tr>
 	       
 			<tr><td>
 				<div class="actionBar" align="left">
-						<h:commandButton id="return" action="#{editSectionPage.returnBack}" value="#{msgs.im_return}" accesskey="#{msgs.return_access}" title="#{msgs.im_return_text}" styleClass="BottomImgReturn"/>
+						<h:commandButton id="return" actionListener="#{editSectionPage.returnBack}" action="editmodulesections" value="#{msgs.im_return}" accesskey="#{msgs.return_access}" title="#{msgs.im_return_text}" styleClass="BottomImgReturn">
+								<f:attribute name="sectionId" value="#{editSectionPage.editId}" />								
+						</h:commandButton>
 	   	        </div></td>
               </tr>
               			

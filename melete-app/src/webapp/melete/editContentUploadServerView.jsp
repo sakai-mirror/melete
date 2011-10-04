@@ -34,6 +34,7 @@
 
 <% 
 	String status = (String)request.getAttribute("upload.status");
+	System.out.println("Status at upload page:" + status);
 		if( status != null && !status.equalsIgnoreCase("ok"))
 		{
 			final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
@@ -45,23 +46,12 @@
 	   }
 %>
 
-<script language="javascript1.2">
-function fillupload()
-{
-	if(document.getElementById("file1") != undefined)
-	{
-		var k = document.getElementById("file1").value;
-		document.getElementById("EditUploadServerViewForm:filename").value=k;
-	}
-}
-
-</script>
-
 <h:form id="EditUploadServerViewForm" enctype="multipart/form-data">	
 <!-- top nav bar -->
     <f:subview id="top">
       <jsp:include page="topnavbar.jsp"/> 
     </f:subview>
+	
 	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/replace2.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.editcontentuploadserverview_selecting}" /></div>
 <!-- This Begins the Main Text Area -->
 			<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
@@ -69,25 +59,28 @@ function fillupload()
     		<table class="maintableCollapseWithBorder">
 				<tr><td>  					 
 <!--replace with local part Begin -->
-					<table class="maintableCollapseWithNoBorder" >
+				<table class="maintableCollapseWithNoBorder" >
 						<tr><td height="20" colspan="2" class="maintabledata8"> <h:outputText id="Stext_add" value="#{msgs.editcontentuploadserverview_replace}" styleClass="bold"/> 									 
 						 <tr><td height="20" colspan="2"> <h:outputText id="Stext3" value="#{msgs.editcontentuploadserverview_upload}"/> 				
-																			<INPUT TYPE="FILE" id="file1" NAME="file1" style="visibility:visible" onChange="javascript:fillupload()"/>
+								<INPUT TYPE="FILE" id="file1" NAME="file1" style="visibility:visible" />
 						</td></tr>	
 						<tr><td  colspan="2"> 
-							<h:outputText id="note" value="#{msgs.editcontentuploadserverview_note} #{editSectionPage.maxUploadSize}MB."  styleClass="comment red"/>				
-							<h:inputHidden id="filename" value="#{editSectionPage.hiddenUpload}" />
-							<h:outputText id="brval" value="<BR>" escape="false"/>
-							<h:outputText id="somespaces1" value=" " styleClass="MediumPaddingClass" />
-							<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{editSectionPage.section.openWindow}" rendered="#{editSectionPage.shouldRenderUpload}">
-	                        </h:selectBooleanCheckbox>
-		                    <h:outputText id="editlinkText_8" value="#{msgs.editcontentlinkserverview_openwindow}" rendered="#{editSectionPage.shouldRenderUpload}"/>
-													
-					</td></tr>	
+							<h:outputText id="note" value="#{msgs.editcontentuploadserverview_note} #{listResourcesPage.maxUploadSize}MB."  styleClass="comment red"/>				
+						</td></tr>
+						<tr><td  colspan="2"> 
+							<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{listResourcesPage.openWindow}" />
+	                        <h:outputText id="editlinkText_8" value="#{msgs.editcontentlinkserverview_openwindow}"/>
+						</td></tr>	
 					</table>
 			       	<div class="actionBar" align="left">
-		          		<h:commandButton id="addButton" action="#{editSectionPage.setServerFile}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
-		          	 	<h:commandButton id="cancelButton" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+		          		<h:commandLink id="addButton" actionListener="#{listResourcesPage.addNewFile}" action="#{listResourcesPage.setServerFile}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue">
+		          				<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />
+		          				<h:outputText value="#{msgs.im_continue}" />
+					    </h:commandLink>    	   		
+		          	 	<h:commandLink id="cancelButton" immediate="true" action="#{listResourcesPage.cancelServerFile}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
+		          	 			<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />
+		          				<h:outputText  value="#{msgs.im_cancel}"/>
+		          	 	</h:commandLink>
         			 </div>
 					 </td></tr>        
 		   
@@ -101,8 +94,15 @@ function fillupload()
 											</f:subview>
 																																												
 									<div class="actionBar" align="left">
-					          	   	<h:commandButton id="addButton_1" action="#{editSectionPage.setServerFile}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
-					          	 	<h:commandButton id="cancelButton_1" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+					         <h:commandLink id="addButton_1" action="editmodulesections"  accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue">
+		          				<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />
+		          				<h:outputText value="#{msgs.im_continue}" />		          								          	
+					    </h:commandLink>    	   		
+		          	 	<h:commandLink id="cancelButton_1" immediate="true" action="#{listResourcesPage.cancelServerFile}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
+		          	 			<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />
+		          				<h:outputText  value="#{msgs.im_cancel}"/>
+		          	 	</h:commandLink>
+					         
 							    </div>									
 						  </td>
 			            </tr>

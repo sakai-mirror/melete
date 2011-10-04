@@ -204,8 +204,9 @@ if (msg != null)
                              
               <h:commandLink id="editSec" actionListener="#{listAuthModulesPage.editSection}"  action="#{listAuthModulesPage.redirectToEditSection}">
                 <f:param name="modidx" value="#{listAuthModulesPage.table.rowIndex}" />
-               <f:param name="secidx" value="#{listAuthModulesPage.secTable.rowIndex}" />   
-                 <h:outputText id="sectitle" 
+               <f:param name="secidx" value="#{listAuthModulesPage.secTable.rowIndex}" />  
+                <f:param name="sectionId" value="#{sectionBean.section.sectionId}" />
+                <h:outputText id="sectitle" 
                             value="#{sectionBean.section.title}">
                 </h:outputText>
               </h:commandLink>

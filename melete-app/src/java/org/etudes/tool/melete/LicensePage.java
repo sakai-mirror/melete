@@ -51,7 +51,8 @@ public class LicensePage
 	public String formName;
 	private ArrayList<SelectItem> licenseTypes;
 	private String licenseCodes;
-
+	private String sectionId="";
+	
 	// constants
 	public final static String NO_CODE = "0";
 	public final static String Copyright_CODE = "1";
@@ -73,7 +74,7 @@ public class LicensePage
 	private MeleteResource melResource;
 
 	// THis property is set to false from NavPage
-	private boolean callFromSection;
+	private boolean callFromSection = true;
 
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(LicensePage.class);
@@ -105,9 +106,10 @@ public class LicensePage
 	 * @param melResource
 	 *        MeleteResource
 	 */
-	public void setInitialValues(String formName, MeleteResource melResource)
+	public void setInitialValues(String formName, String sectionId, MeleteResource melResource)
 	{
 		this.formName = formName;
+		this.sectionId = sectionId;
 		setInitialValues();
 		this.melResource = melResource;
 
@@ -228,7 +230,8 @@ public class LicensePage
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		// UIViewRoot root = ctx.getViewRoot();
 		UIInput licenseSelect = (UIInput) event.getComponent();
-
+		sectionId = (String) event.getComponent().getAttributes().get("sectionId");
+		
 		shouldRenderCC = licenseSelect.getValue().equals(CC_CODE);
 		shouldRenderCopyright = licenseSelect.getValue().equals(Copyright_CODE);
 		shouldRenderPublicDomain = licenseSelect.getValue().equals(PD_CODE);
@@ -571,6 +574,24 @@ public class LicensePage
 	public void setCopyright_year(String copyright_year)
 	{
 		this.copyright_year = copyright_year;
+	}
+
+	/**
+	 * The sectionId 
+	 * @return
+	 */
+	public String getSectionId()
+	{
+		return sectionId;
+	}
+
+	/**
+	 * 
+	 * @param sectionId
+	 */
+	public void setSectionId(String sectionId)
+	{
+		this.sectionId = sectionId;
 	}
 
 	/**

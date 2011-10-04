@@ -24,25 +24,31 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+
 <%@include file="accesscheck.jsp" %>
+
+<t:saveState id="fromPage" value="#{listResourcesPage.fromPage}" />
+<t:saveState id="sectionId" value="#{listResourcesPage.sectionId}" />
+	
 <h:panelGrid styleClass="maintableCollapseWithNoBorder" >											
 <h:column>		                    	
          <h:panelGrid id="selresPanel" columns="1" width="100%" rendered="#{listResourcesPage.callFromSection}" >
          	<h:column>	
     			<h:outputText value="#{msgs.edit_list_resources_selected_res} "  rendered="#{listResourcesPage.renderSelectedResource}" styleClass="blue" />
-				<h:outputText value="#{listResourcesPage.secResourceName}" rendered="#{listResourcesPage.renderSelectedResource}" styleClass="bold"/>
+				<h:outputText value="#{listResourcesPage.selectedResourceName}" rendered="#{listResourcesPage.renderSelectedResource}" styleClass="bold"/>
 				<h:outputText value="#{msgs.edit_list_resources_selected_res_1}"  rendered="#{listResourcesPage.renderSelectedResource}" styleClass="blue"/>
 			</h:column>		
 	      	<h:column>
   				<h:outputText id="Stext3" value="#{msgs.edit_list_resources_select}" styleClass="bold"/> 
 			</h:column>
 	        <h:column>
-				<h:outputText value="#{msgs.list_resources_currently}" rendered="#{listResourcesPage.renderSelectedResource}" /><h:outputText value="#{listResourcesPage.secResourceName}" rendered="#{listResourcesPage.renderSelectedResource}" />
+				<h:outputText value="#{msgs.list_resources_currently}" rendered="#{listResourcesPage.renderSelectedResource}" /><h:outputText value="#{listResourcesPage.selectedResourceName}" rendered="#{listResourcesPage.renderSelectedResource}" />
 	        </h:column>											
           </h:panelGrid>
 
                  <!-- navigation with showing 15 recs --> 
-                <h:panelGrid id="selresNavigationPanel" columns="2"  width="100%" border="0" columnClasses="TitleWid4,ActionWid2" rendered="#{listResourcesPage.listNav.displayNav}" summary="#{msgs.list_resources_nav_summary}">
+                <h:panelGrid id="selresNavigationPanel" columns="2"  width="100%" border="0" columnClasses="TitleWid4,ActionWid2" summary="#{msgs.list_resources_nav_summary}">
                 <h:column/>
                 <h:column>
                   <h:outputText id="nav_spaces_left1" value="" styleClass="ExtraPaddingClass" />
@@ -60,7 +66,7 @@
 								<f:selectItem itemValue="30" itemLabel="#{msgs.list_resources_show30}"/>	
 								<f:selectItem itemValue="100" itemLabel="#{msgs.list_resources_show100}"/>	
 								<f:selectItem itemValue="-1" itemLabel="#{msgs.list_resources_showall}"/>	
-		 </h:selectOneMenu>
+			 </h:selectOneMenu>
 		 <h:outputText id="nav_spaces" value="" styleClass="ExtraPaddingClass" />
 				<h:commandLink id="next_nav" action="#{listResourcesPage.listNav.goNext}" rendered="#{listResourcesPage.listNav.displayNext}">
 							 <h:graphicImage id="rightImg" value="/images/nav_right.jpg" alt="#{msgs.list_resources_next}" title="#{msgs.list_resources_next}" style="border:0 none;vertical-align:middle;" />
@@ -99,16 +105,16 @@
 				    <f:facet name="header">
 							 <h:outputText id="t2" value="#{msgs.list_resources_actions2}" />
 					 </f:facet>
-					 <h:commandLink id="linkaction" actionListener="#{listResourcesPage.selectedResourceAction}"  action="#{listResourcesPage.redirectLink}" rendered="#{listResourcesPage.callFromSection}" immediate="true">
-				     <f:param name="linkactionParam" value="#{curr_resources.resource_id}" />
-						<h:graphicImage id="linkgif" alt="" value="/images/link2me.png" styleClass="AuthImgClass" rendered="#{listResourcesPage.callFromSection}" />
-				     	<h:outputText id="emp_space-3" value=" " rendered="#{listResourcesPage.callFromSection}" />
+					 <h:commandLink id="linkaction" actionListener="#{listResourcesPage.selectedResourceAction}"  rendered="#{listResourcesPage.callFromSection}" immediate="true">
+				    	<f:param name="selResourceIdFromList" value="#{curr_resources.resource_id}" />
+				    	<h:graphicImage id="linkgif" alt="" value="/images/link2me.png" styleClass="AuthImgClass"  />
+				     	<h:outputText id="emp_space-3" value=" "  />
 						<h:outputText value="#{msgs.list_resources_link}" />
 					 </h:commandLink>	
 					  <h:outputText id="emp_space-1" value="     "  styleClass="ExtraPaddingClass" rendered="#{listResourcesPage.callFromSection}" />
 					 
 					 <h:commandLink id="deleteaction" actionListener="#{listResourcesPage.selectedResourceDeleteAction}"  action="#{listResourcesPage.redirectDeleteLink}" immediate="true" >
-				    		<f:param name="linkactionParam1" value="#{curr_resources.resource_id}" />
+				    		<f:param name="selResourceIdFromList" value="#{curr_resources.resource_id}" />
 				     		<h:graphicImage id="delgif" alt="" value="/images/delete.gif" styleClass="AuthImgClass" />
 							<h:outputText id="emp_space-2" value=" " />
 				    		<h:outputText id="deltext" value="#{msgs.list_resources_del}"  />

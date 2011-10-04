@@ -20,7 +20,9 @@
  ********************************************************************************/
 package org.etudes.api.app.melete;
 
-public interface MeleteResourceService
+import java.io.Serializable;
+
+public interface MeleteResourceService extends Serializable
 {
 	/**
 	 * Get resource's license allow Modifications attribute

@@ -34,6 +34,7 @@ import java.util.Map;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
+import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
@@ -78,20 +79,19 @@ public abstract class SectionPage implements Serializable
 	private StringBuffer author;
 	protected String contentEditor;
 	protected String previewContentData;
-	protected String hiddenUpload;
 	protected String checkUploadChange;
 	private boolean success = false;
 	private boolean renderInstr = false;
 
 	public String serverLocation;
 	public String formName;
-	protected String uploadFileName;
+	
 	// rendering flags
-	protected boolean shouldRenderEditor = false;
-	protected boolean shouldRenderLink = false;
-	protected boolean shouldRenderLTI = false;
-	protected boolean shouldRenderUpload = false;
-	protected boolean shouldRenderNotype = false;
+	protected boolean shouldRenderEditor = true;
+	protected boolean shouldRenderLink = true;
+	protected boolean shouldRenderLTI = true;
+	protected boolean shouldRenderUpload = true;
+	protected boolean shouldRenderNotype = true;
 
 	protected boolean shouldLTIDisplayAdvanced = false;
 
@@ -148,7 +148,6 @@ public abstract class SectionPage implements Serializable
 		module = null;
 		section = null;
 		contentEditor = null;
-		hiddenUpload = null;
 		checkUploadChange = null;
 		serverLocation = "http://localhost:8080";
 		secResourceName = null;
@@ -157,8 +156,7 @@ public abstract class SectionPage implements Serializable
 		secResource = null;
 		meleteResource = null;
 		allContentTypes = null;
-		contentWithHtml = null;
-		uploadFileName = null;
+		contentWithHtml = null;	
 	}
 
 	/**
@@ -362,20 +360,6 @@ public abstract class SectionPage implements Serializable
 	}
 
 	/**
-	 * get the max uploads size allowed for the course.
-	 */
-	public int getMaxUploadSize()
-	{
-
-		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
-		int sz = mPage.getMaxUploadSize();
-
-		return sz;
-	}
-
-	/**
 	 * concatenates first name and last name of the creator of this section.
 	 * 
 	 * @return author name
@@ -398,114 +382,6 @@ public abstract class SectionPage implements Serializable
 	public void setContentEditor(String contentEditor)
 	{
 		this.contentEditor = contentEditor;
-	}
-
-	/**
-	 * Get the uploaded file display name
-	 * 
-	 * @return
-	 */
-	public String getHiddenUpload()
-	{
-		try
-		{
-			if (section != null && hiddenUpload == null && meleteResource != null && meleteResource.getResourceId() != null)
-			{
-				ContentResource cr = getMeleteCHService().getResource(meleteResource.getResourceId());
-				if (cr != null)
-				{
-					hiddenUpload = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
-					checkUploadChange = hiddenUpload;
-				}
-			}
-			else if (hiddenUpload != null)
-			{
-				hiddenUpload = hiddenUpload.substring(hiddenUpload.lastIndexOf(File.separator) + 1);
-			}
-
-		}
-		catch (Exception ex)
-		{
-			logger.debug("error accessing hidden upload field");
-		}
-		return hiddenUpload;
-	}
-
-	/**
-	 * @param hiddenUpload
-	 */
-	public void setHiddenUpload(String hiddenUpload)
-	{
-		this.hiddenUpload = hiddenUpload;
-	}
-
-	/**
-	 * show hides the input boxes to specify the uploaded file name, link or writing new content. based on the user radio button selection.
-	 * 
-	 * @param event
-	 * @throws AbortProcessingException
-	 */
-	public void showHideContent(ValueChangeEvent event) throws AbortProcessingException
-	{
-		FacesContext context = FacesContext.getCurrentInstance();
-
-		UIInput contentTypeRadio = (UIInput) event.getComponent();
-
-		shouldRenderEditor = contentTypeRadio.getValue().equals("typeEditor");
-		shouldRenderLink = contentTypeRadio.getValue().equals("typeLink");
-		shouldRenderUpload = contentTypeRadio.getValue().equals("typeUpload");
-		shouldRenderNotype = contentTypeRadio.getValue().equals("notype");
-		shouldRenderLTI = contentTypeRadio.getValue().equals("typeLTI");
-
-		selResourceIdFromList = null;
-		secResourceName = null;
-		secResourceDescription = null;
-		setMeleteResource(null);
-		oldType = section.getContentType();
-
-		ValueBinding binding = Util.getBinding("#{authorPreferences}");
-		AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
-		preferencePage.setEditorFlags();
-		preferencePage.setDisplaySferyx(false);
-
-		if (contentTypeRadio.findComponent(getFormName()).findComponent("uploadPath") != null)
-		{
-			contentTypeRadio.findComponent(getFormName()).findComponent("uploadPath").setRendered(shouldRenderUpload);
-			contentTypeRadio.findComponent(getFormName()).findComponent("BrowsePath").setRendered(shouldRenderUpload);
-		}
-
-		if (contentTypeRadio.findComponent(getFormName()).findComponent("link") != null)
-		{
-			contentTypeRadio.findComponent(getFormName()).findComponent("link").setRendered(shouldRenderLink);
-		}
-
-		if (contentTypeRadio.findComponent(getFormName()).findComponent("ContentLTIView") != null)
-		{
-			contentTypeRadio.findComponent(getFormName()).findComponent("ContentLTIView").setRendered(shouldRenderLTI);
-		}
-
-		this.contentEditor = new String("Compose content here");
-		if (contentTypeRadio.findComponent(getFormName()).findComponent("othereditor:otherMeletecontentEditor") != null)
-		{
-			setFCKCollectionAttrib();
-			contentTypeRadio.findComponent(getFormName()).findComponent("othereditor:otherMeletecontentEditor").setRendered(
-					shouldRenderEditor && preferencePage.isShouldRenderFCK());
-		}
-
-		if (contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView") != null)
-		{
-			preferencePage.setDisplaySferyx(shouldRenderEditor && preferencePage.isShouldRenderSferyx());
-			contentTypeRadio.findComponent(getFormName()).findComponent("contentEditorView").setRendered(
-					shouldRenderEditor && preferencePage.isShouldRenderSferyx());
-		}
-
-		if (contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm") != null)
-		{
-			section.setContentType((String) contentTypeRadio.getValue());
-			contentTypeRadio.findComponent(getFormName()).findComponent("ResourceListingForm").setRendered(false);
-		}
-
-		setLicenseInfo();
 	}
 
 	/**
@@ -711,7 +587,6 @@ public abstract class SectionPage implements Serializable
 				res_mime_type = MeleteCHService.MIME_TYPE_LINK;
 				Util.validateLink(getLinkUrl());
 				if ((secResourceName == null) || (secResourceName.trim().length() == 0)) throw new MeleteException("URL_title_reqd");
-				if ((secResourceName != null) && (secResourceName.trim().length() > SectionService.MAX_URL_LENGTH)) throw new MeleteException("add_section_url_title_len");
 				secContentData = new byte[linkUrl.length()];
 				secContentData = linkUrl.getBytes();
 			}
@@ -730,14 +605,6 @@ public abstract class SectionPage implements Serializable
 				res_mime_type = MeleteCHService.MIME_TYPE_LTI;
 				secContentData = new byte[ltiDescriptor.length()];
 				secContentData = ltiDescriptor.getBytes();
-			}
-			if (section.getContentType().equals("typeUpload"))
-			{
-				res_mime_type = uploadSectionContent("file1");
-				/*
-				 * if (logger.isDebugEnabled()) logger.debug("new names for upload content is" + res_mime_type + "," + secResourceName);
-				 */
-				if (res_mime_type == null) throw new MeleteException("select_or_cancel");
 			}
 			ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag, secResourceName, secResourceDescription);
 			/*
@@ -871,9 +738,9 @@ public abstract class SectionPage implements Serializable
 		this.section = null;
 		contentEditor = null;
 		setSuccess(false);
-		hiddenUpload = null;
+	
 		checkUploadChange = null;
-		uploadFileName = null;
+	
 		secResource = null;
 		secResourceName = null;
 		secResourceDescription = null;
@@ -926,7 +793,6 @@ public abstract class SectionPage implements Serializable
 		displayCurrLink = null;
 		secResourceName = null;
 		secResourceDescription = null;
-		uploadFileName = null;
 		setLicenseCodes(null);
 	}
 
@@ -955,7 +821,7 @@ public abstract class SectionPage implements Serializable
 				ValueBinding binding = Util.getBinding("#{licensePage}");
 
 				LicensePage lPage = (LicensePage) binding.getValue(ctx);
-				lPage.setInitialValues(formName, selectedResource);
+				lPage.setInitialValues(formName, section.getSectionId().toString(), selectedResource);
 
 				// render selected file name
 				selectedResourceName = secResourceName;
@@ -1103,60 +969,6 @@ public abstract class SectionPage implements Serializable
 	}
 
 	/**
-	 * Upload content using apache.
-	 */
-	public String uploadSectionContent(String fieldname) throws Exception
-	{
-		try
-		{
-			FacesContext context = FacesContext.getCurrentInstance();
-			org.apache.commons.fileupload.FileItem fi = (org.apache.commons.fileupload.FileItem) context.getExternalContext().getRequestMap().get(
-					fieldname);
-
-			if (fi != null && fi.getName() != null && fi.getName().length() != 0)
-			{
-
-				Util.validateUploadFileName(fi.getName());
-				// filename on the client
-				secResourceName = fi.getName();
-				if (secResourceName.indexOf("/") != -1)
-				{
-					secResourceName = secResourceName.substring(secResourceName.lastIndexOf("/") + 1);
-				}
-				if (secResourceName.indexOf("\\") != -1)
-				{
-					secResourceName = secResourceName.substring(secResourceName.lastIndexOf("\\") + 1);
-				}
-				if (logger.isDebugEnabled()) logger.debug("Rsrc name is " + secResourceName);
-				if (logger.isDebugEnabled()) logger.debug("upload section content data " + (int) fi.getSize());
-				this.secContentData = new byte[(int) fi.getSize()];
-				InputStream is = fi.getInputStream();
-				is.read(this.secContentData);
-
-				String secContentMimeType = fi.getContentType();
-				if (logger.isDebugEnabled()) logger.debug("file upload success" + secContentMimeType);
-				return secContentMimeType;
-			}
-			else
-			{
-				logger.debug("File being uploaded is NULL");
-				return null;
-			}
-		}
-		catch (MeleteException me)
-		{
-			logger.debug("file upload FAILED" + me.toString());
-			throw me;
-		}
-		catch (Exception e)
-		{
-			logger.error("file upload FAILED" + e.toString());
-			return null;
-		}
-
-	}
-
-	/**
 	 * @return Returns the SectionService.
 	 */
 	public SectionService getSectionService()
@@ -1218,6 +1030,18 @@ public abstract class SectionPage implements Serializable
 	 */
 	public String getSecResourceDescription()
 	{
+		try
+		{
+			if (meleteResource != null && meleteResource.getResourceId() != null)
+			{
+				ContentResource cr = getMeleteCHService().getResource(meleteResource.getResourceId());
+				secResourceDescription = (String) cr.getProperties().get(ResourceProperties.PROP_DESCRIPTION);
+			}
+		}
+		catch (Exception e)
+		{
+
+		}
 		return secResourceDescription;
 	}
 
@@ -1235,6 +1059,18 @@ public abstract class SectionPage implements Serializable
 	 */
 	public String getSecResourceName()
 	{
+		try
+		{
+			if (meleteResource != null && meleteResource.getResourceId() != null)
+			{
+				ContentResource cr = getMeleteCHService().getResource(meleteResource.getResourceId());
+				secResourceName = (String) cr.getProperties().get(ResourceProperties.PROP_DISPLAY_NAME);
+			}
+		}
+		catch (Exception e)
+		{
+
+		}
 		return secResourceName;
 	}
 
@@ -1261,7 +1097,30 @@ public abstract class SectionPage implements Serializable
 	 * @return
 	 */
 	public String getPreviewContentData()
-	{
+	{		
+		try
+		{
+		contentWithHtml = false;
+		previewContentData = "";
+		logger.debug("getPreviewContentData :" + section +"," + meleteResource);
+		
+		if (meleteResource != null && meleteResource.getResourceId() != null)
+		   {
+			   if (this.section.getContentType().equals("typeEditor"))
+			   {
+				   this.previewContentData = contentEditor;
+				   if(Util.FindNestedHTMLTags(contentEditor))
+				   {
+					   this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
+					   contentWithHtml = true;
+				   }
+			   }
+			   else this.previewContentData = getMeleteCHService().getResourceUrl(meleteResource.getResourceId());
+		   }
+		} catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		return previewContentData;
 	}
 
@@ -1383,24 +1242,6 @@ public abstract class SectionPage implements Serializable
 		ListResourcesPage listResPage = (ListResourcesPage) binding.getValue(ctx);
 		selResourceIdFromList = listResPage.getSelResourceIdFromList();
 		return selResourceIdFromList;
-	}
-
-	/**
-	 * @return Returns the uploadFileName.
-	 */
-	public String getUploadFileName()
-	{
-		if (secResourceName != null && secResourceName.length() != 0) uploadFileName = secResourceName;
-		return uploadFileName;
-	}
-
-	/**
-	 * @param uploadFileName
-	 *        The uploadFileName to set.
-	 */
-	public void setUploadFileName(String uploadFileName)
-	{
-		this.uploadFileName = uploadFileName;
 	}
 
 	/**

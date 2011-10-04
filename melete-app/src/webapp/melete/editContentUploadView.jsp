@@ -24,23 +24,24 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+
 <%@include file="accesscheck.jsp" %>
 
-
-<h:panelGrid id="uploadView" columns="2" columnClasses="col1,col2" width="100%" border="0">
+<h:panelGrid id="uploadView" columns="2" columnClasses="col1,col2" width="100%" border="0" rendered="#{editSectionPage.shouldRenderUpload}">
 	<h:column>
 		<h:outputText id="edituploadText1" value="#{msgs.editcontentuploadview_file_uploaded}" />
 	</h:column>
 	<h:column>			
 		<h:commandLink id="serverViewButton"  action="#{editSectionPage.gotoServerView}" >
+			<f:param name="sectionId" value="#{editSectionPage.editId}" />
 			<h:graphicImage id="replaceImg2" value="/images/replace2.gif" styleClass="AuthImgClass"/>
 			<h:outputText value="#{msgs.editcontentuploadview_replace}"/>
-        </h:commandLink>		
+	    </h:commandLink>		
 	</h:column>
 	<h:column/>		
 	<h:column> 
-	 	<h:outputText id="edituploadText2" value="#{editSectionPage.uploadFileName}" rendered="#{editSectionPage.uploadFileName != null}" styleClass="bold"/>	
-		<h:outputText id="edituploadText3" value="#{msgs.editcontentuploadview_nofile}" rendered="#{editSectionPage.uploadFileName == null}" styleClass="bold"/>
+	 	<h:outputText id="edituploadText2" value="#{editSectionPage.secResourceName}" rendered="#{editSectionPage.secResourceName != null}" styleClass="bold"/>	
+		<h:outputText id="edituploadText3" value="#{msgs.editcontentuploadview_nofile}" rendered="#{editSectionPage.secResourceName == null}" styleClass="bold"/>
 	</h:column>
 	<h:column/>		
 	 <h:column>     	
@@ -48,5 +49,5 @@
 		  </h:selectBooleanCheckbox>
 		  <h:outputText id="editlinkText_8" value="#{msgs.editcontentlinkserverview_openwindow}" rendered="#{editSectionPage.shouldRenderUpload}"/>
         </h:column>     
-   </h:panelGrid>
+  </h:panelGrid>
 	

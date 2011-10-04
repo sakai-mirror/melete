@@ -23,11 +23,10 @@
  **********************************************************************************/
 package org.etudes.component.app.melete;
 
-import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.etudes.api.app.melete.MeleteResourceService;
 
-public class MeleteResource implements Serializable, MeleteResourceService
+public class MeleteResource implements MeleteResourceService
 {
 
 	/** persistent field */

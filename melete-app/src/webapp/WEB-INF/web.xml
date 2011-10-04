@@ -29,7 +29,7 @@
 	<description>Etudes Melete</description>
 	<context-param>
 		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
-		<param-value>server</param-value>
+		<param-value>client</param-value>
 	</context-param>
 	<context-param>
 		<param-name>com.sun.faces.validateXml</param-name>
@@ -49,6 +49,7 @@
 		<filter-name>sakai.request</filter-name>
 		<filter-class>org.sakaiproject.util.RequestFilter</filter-class>
 	</filter>
+	
 	<filter-mapping>
 		<filter-name>sakai.request</filter-name>
 		<servlet-name>Faces Servlet</servlet-name>
@@ -56,6 +57,7 @@
 		<dispatcher>FORWARD</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
+	
 	<!--added per chuck-->
 	<listener>
 		<listener-class>org.sakaiproject.util.ContextLoaderListener</listener-class>
