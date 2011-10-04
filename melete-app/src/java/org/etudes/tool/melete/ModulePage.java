@@ -65,7 +65,7 @@ public abstract class ModulePage implements Serializable
 	private String season;
 	private ArrayList showDates;
 
-	private boolean success;
+	private boolean success = true;
 	private int year;
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(ModulePage.class);

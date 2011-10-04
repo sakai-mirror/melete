@@ -27,6 +27,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: Edit Module" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -45,8 +46,9 @@
 function newWindow(newContent){
   winContent = window.open(newContent, 'nextWin', 'right=0, top=20,width=750,height=600, toolbar=no,scrollbars=yes, resizable=no') }
 </script>
-
+<t:saveState id="empfirsec" value="#{editModulePage.firstSection}" />
  <h:form id="EditModuleForm">
+ <h:inputHidden id="modid" value="#{editModulePage.module.moduleId}"/>
  	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/>
 	</f:subview>

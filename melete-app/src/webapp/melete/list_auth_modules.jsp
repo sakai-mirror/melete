@@ -97,6 +97,8 @@ function resetAllMod()
 </script>
 
 <h:form id="listauthmodulesform">
+<h:inputHidden id="lamexp" value="#{listAuthModulesPage.expandAllFlag}" />
+
 <%
 
 if (msg != null)
@@ -191,7 +193,7 @@ if (msg != null)
      </h:commandLink>         
       <h:outputText id="mod_seq" value="#{mdbean.cmod.seqNo}. " />      
       <h:commandLink id="editMod" actionListener="#{listAuthModulesPage.editModule}"  action="#{listAuthModulesPage.redirectToEditModule}">     
-             <f:param name="modidx" value="#{listAuthModulesPage.table.rowIndex}" />
+             <f:param name="editmodid" value="#{mdbean.moduleId}" />
                    <h:outputText id="title2" value="#{mdbean.module.title}">
                </h:outputText>
       </h:commandLink>
@@ -203,11 +205,9 @@ if (msg != null)
                <h:outputText id="disp_seq" value="#{sectionBean.displaySequence}. " />
                              
               <h:commandLink id="editSec" actionListener="#{listAuthModulesPage.editSection}"  action="#{listAuthModulesPage.redirectToEditSection}">
-                <f:param name="modidx" value="#{listAuthModulesPage.table.rowIndex}" />
-               <f:param name="secidx" value="#{listAuthModulesPage.secTable.rowIndex}" />  
-                <f:param name="sectionId" value="#{sectionBean.section.sectionId}" />
-                <h:outputText id="sectitle" 
-                            value="#{sectionBean.section.title}">
+               <f:param name="editsecmodid" value="#{mdbean.moduleId}" />  
+               <f:param name="editsecid" value="#{sectionBean.section.sectionId}" /> 
+              <h:outputText id="sectitle" value="#{sectionBean.section.title}">
                 </h:outputText>
               </h:commandLink>
             </h:column>

@@ -59,7 +59,7 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 	protected Log logger = LogFactory.getLog(EditModulePage.class);
 	private boolean callFromAddContent = false;
 	private boolean showLicenseFlag = true;
-	private boolean hasSections = false;
+	private boolean hasSections = true;
 	private SectionObjService firstSection = null;
 	protected ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
 
@@ -424,6 +424,11 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 		return "editmodulesections";
 	}
 
+	public SectionObjService getFirstSection()
+	{
+		return this.firstSection;
+	}
+	
 	/**
 	 * @param firstSection
 	 *        the firstSection to set

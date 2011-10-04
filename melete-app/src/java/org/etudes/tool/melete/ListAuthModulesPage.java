@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -98,6 +99,8 @@ public class ListAuthModulesPage implements Serializable
 	protected Log logger = LogFactory.getLog(ListAuthModulesPage.class);
 
 	private List moduleDateBeans = null;
+	
+	private Map mdbeansMap = null;
 
 	/** identifier field */
 	private int showModuleId;
@@ -110,7 +113,7 @@ public class ListAuthModulesPage implements Serializable
 
 	private Boolean nomodsFlag;
 
-	private boolean expandAllFlag;
+	private boolean expandAllFlag = true;
 
 	private boolean autonumber;
 	
@@ -182,29 +185,32 @@ public class ListAuthModulesPage implements Serializable
     	
 		courseId = mPage.getCurrentSiteId();
 		userId = mPage.getCurrentUser().getId();
-		nomodsFlag = null;
-		setShowModuleId(-1);
-		count = 0;
-		selectedModIndex = -1;
-		moduleSelected = false;
-		selectedModIndices = null;
-		selectedSecModIndices = null;
+		
+		Map params = context.getExternalContext().getRequestParameterMap();
+		if (((String) params.get("listauthmodulesform:lamexp")) == null) {
+			nomodsFlag = null;
+			setShowModuleId(-1);
+			count = 0;
+			selectedModIndex = -1;
+			moduleSelected = false;
+			selectedModIndices = null;
+			selectedSecModIndices = null;
 
-		selectedSecIndex = -1;
-		sectionSelected = false;
-		binding = Util.getBinding("#{authorPreferences}");
-		AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
-		String expFlag = preferencePage.getUserView();
-		if (expFlag.equals("true"))
-		{
-			expandAllFlag = true;
+			selectedSecIndex = -1;
+			sectionSelected = false;
+			selectAllFlag = false;
+			listSize = 0;
+			binding = Util.getBinding("#{authorPreferences}");
+			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding
+					.getValue(context);
+			String expFlag = preferencePage.getUserView();
+			if (expFlag.equals("true")) {
+				expandAllFlag = true;
+			} else {
+				expandAllFlag = false;
+			}
 		}
-		else
-		{
-			expandAllFlag = false;
-		}
-		selectAllFlag = false;
-		listSize = 0;
+		
 	}
 
 	/**
@@ -244,6 +250,7 @@ public class ListAuthModulesPage implements Serializable
 		selectAllFlag = false;
 		listSize = 0;
 		moduleDateBeans = null;
+		mdbeansMap = null;
 	}
 
 	/**
@@ -431,8 +438,16 @@ public class ListAuthModulesPage implements Serializable
 			{
 				listSize = 0;
 				nomodsFlag = true;
+				mdbeansMap = null;
 				return moduleDateBeans;
 			}
+			
+			if (moduleDateBeans != null && moduleDateBeans.size() > 0)
+			{
+				mdbeansMap = getMdbeansMap(moduleDateBeans);
+			}
+			
+			
 			// end
 			nomodsFlag = false;
 			listSize = moduleDateBeans.size();
@@ -848,14 +863,40 @@ public class ListAuthModulesPage implements Serializable
 		resetSelectedLists();
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map params = ctx.getExternalContext().getRequestParameterMap();
-		int selModIndex = Integer.parseInt((String) params.get("modidx"));
+		int selModId = Integer.parseInt((String) params.get("editmodid"));
 
-		ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selModIndex);
+		ModuleDateBean mdbean = (ModuleDateBean) mdbeansMap.get(selModId);
 		ValueBinding binding = Util.getBinding("#{editModulePage}");
 		EditModulePage emPage = (EditModulePage) binding.getValue(ctx);
 		emPage.setEditInfo(mdbean);
 		emPage.resetModuleNumber();
 	}
+	
+	protected Map getMdbeansMap(List moduleDateBeans)
+	{
+		if ((moduleDateBeans == null)||(moduleDateBeans.size() == 0)) return null;
+		Map mdbeansMap = new LinkedHashMap<Integer, ModuleDateBean>();
+
+		for (Iterator itr = moduleDateBeans.listIterator(); itr.hasNext();)
+		{
+			ModuleDateBean mdbean = (ModuleDateBean) itr.next();
+		    mdbeansMap.put(mdbean.getModuleId(), mdbean);
+		}	
+		return mdbeansMap;
+	}
+	
+	protected Map getSecbeansMap(List sectionBeans)
+	{
+		if ((sectionBeans == null)||(sectionBeans.size() == 0)) return null;
+		Map secbeansMap = new LinkedHashMap<Integer,SectionBean>();
+
+		for (Iterator itr = sectionBeans.listIterator(); itr.hasNext();)
+		{
+			SectionBean secbean = (SectionBean) itr.next();
+		    secbeansMap.put(secbean.getSection().getSectionId(), secbean);
+		}	
+		return secbeansMap;
+	}	
 
 	/** Redirect to edit section page
 	 * @return editmodulesections
@@ -874,11 +915,12 @@ public class ListAuthModulesPage implements Serializable
 		resetSelectedLists();
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map params = ctx.getExternalContext().getRequestParameterMap();
-	  	int selModIndex = Integer.parseInt((String) params.get("modidx"));
-	  	int selSecIndex = Integer.parseInt((String) params.get("secidx"));
+	  	int selModId = Integer.parseInt((String) params.get("editsecmodid"));
+	  	int selSecId = Integer.parseInt((String) params.get("editsecid"));
 
-		ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selModIndex);
-		SectionBeanService secBean = (SectionBeanService) mdbean.getSectionBeans().get(selSecIndex);
+		ModuleDateBean mdbean = (ModuleDateBean) mdbeansMap.get(selModId);
+		Map secbeansMap = getSecbeansMap(mdbean.getSectionBeans());
+		SectionBeanService secBean = (SectionBeanService)secbeansMap.get(selSecId);
 
 		ValueBinding binding = Util.getBinding("#{editSectionPage}");
 		EditSectionPage esPage = (EditSectionPage) binding.getValue(ctx);
