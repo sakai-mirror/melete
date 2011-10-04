@@ -33,7 +33,7 @@
 <%@include file="accesscheck.jsp" %>
 <script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
 
-<%@ page import="org.sakaiproject.util.ResourceLoader, javax.faces.application.FacesMessage,org.etudes.tool.melete.AddResourcesPage, org.etudes.tool.melete.EditSectionPage"%>
+<%@ page import="org.sakaiproject.util.ResourceLoader, javax.faces.application.FacesMessage,org.etudes.tool.melete.AddResourcesPage, org.etudes.tool.melete.AuthorPreferencePage, org.etudes.tool.melete.EditSectionPage"%> 
 
 <% 
 	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
@@ -45,6 +45,8 @@
 	{
 		request.setAttribute("attr_sId",eSectionPage.getSection().getSectionId().toString());	
 	}
+  final AuthorPreferencePage authorPreferencePage = (AuthorPreferencePage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "authorPreferences");
+	
 %>
 
 <script type="text/javascript" language="javascript1.2">
@@ -57,7 +59,6 @@ function saveEditor()
 	{	  	
 		// document.htmleditor.saveToDefaultLocation();  
 		document.htmleditor.addAdditionalDynamicParameter('mode',document.getElementById("EditSectionForm:mode").value);
-        document.htmleditor.addAdditionalDynamicParameter('mId',document.getElementById("EditSectionForm:mId").value);
         document.htmleditor.addAdditionalDynamicParameter('sId',document.getElementById("EditSectionForm:sId").value);
         if(document.getElementById("EditSectionForm:rId") != undefined || document.getElementById("EditSectionForm:rId") != null)
       	  document.htmleditor.addAdditionalDynamicParameter('resourceId',document.getElementById("EditSectionForm:rId").value);
@@ -82,7 +83,6 @@ function showmessage()
 			  <h:inputHidden id="formName" value="EditSectionForm"/>  
 			  <h:inputHidden id="mode" value="Edit"/>
 			  <h:inputHidden id="sId" value="#{editSectionPage.section.sectionId}"/>
-			  <h:inputHidden id="mId" value="#{editSectionPage.module.moduleId}"/>
 			  <h:inputHidden id="rId" value="#{editSectionPage.meleteResource.resourceId}" rendered="#{editSectionPage.meleteResource !=null}"/>
 			  <h:inputHidden id="uId" value="#{editSectionPage.currUserId}"/>
 		<!-- top nav bar -->
@@ -191,7 +191,10 @@ function showmessage()
 										 <td colspan="2">
 						 									
 											 <f:subview id="contentEditorView" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
-												<jsp:include page="contentSferyxEditor.jsp" />
+												<%if (authorPreferencePage.isShouldRenderSferyx() && eSectionPage.getShouldRenderEditor())
+                                               { %>
+													<jsp:include page="contentSferyxEditor.jsp" />
+												<%} %> 
      											 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>
 

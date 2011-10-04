@@ -269,6 +269,17 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	/**
 	 * {@inheritDoc}
 	 */
+	public Integer getContainingModule(String sectionId)
+	{
+		if (sectionId == null) return null;
+		Section s = sectiondb.getSection(new Integer(sectionId).intValue());
+		if (s != null) return s.getModuleId();
+		return null;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getUploadCollectionId(String courseId)
 	{
 		try

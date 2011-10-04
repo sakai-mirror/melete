@@ -54,7 +54,6 @@ import org.etudes.api.app.melete.exception.UserErrorException;
 import org.etudes.component.app.melete.MeleteResource;
 import org.etudes.component.app.melete.MeleteUserPreference;
 import org.etudes.component.app.melete.Module;
-import org.etudes.component.app.melete.Section;
 import org.etudes.component.app.melete.SectionResource;
 import org.imsglobal.basiclti.BasicLTIUtil;
 import org.imsglobal.simplelti.SimpleLTIUtil;
@@ -283,18 +282,18 @@ public abstract class SectionPage implements Serializable
 	 */
 	public ModuleObjService getModule()
 	{
-		FacesContext context = FacesContext.getCurrentInstance();
-		Map<?, ?> sessionMap = context.getExternalContext().getSessionMap();
-
 		if (module == null && section != null && section.getModule() != null)
 		{
 			module = (Module) section.getModule();
 		}
-		else if (module == null && sessionMap.containsKey("currModule"))
+
+		// fetch from db if unable to get in the previous statement
+		if (module == null && section != null)
 		{
-			module = (ModuleObjService) sessionMap.get("currModule");
+			module = moduleService.getModule(section.getModuleId());
 		}
-		else if (module == null) logger.info("Edit Section Page : get Module method fails to get module");
+		if (module == null) logger.info("Edit Section Page : get Module method fails to get module for the section" + section);
+		
 		return module;
 	}
 
@@ -310,22 +309,21 @@ public abstract class SectionPage implements Serializable
 	public SectionObjService getSection()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+	
 		if (null == this.section)
 		{
-			if (logger.isDebugEnabled()) logger.debug("get section is null so creating one");
-			this.section = new Section();
-			this.section.setContentType("notype");
-			// user info from session
-			this.section.setCreatedByFname(mPage.getCurrentUser().getFirstName());
-			this.section.setCreatedByLname(mPage.getCurrentUser().getLastName());
-			this.section.setTextualContent(true);
-			shouldRenderEditor = false;
-			shouldRenderLink = false;
-			shouldRenderLTI = false;
-			shouldRenderUpload = false;
-			shouldRenderNotype = true;
+			try
+			{
+			if (logger.isDebugEnabled()) logger.info("get section is null in edit page");
+		/*	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+			String errMsg = bundle.getString("add_section_load_error");
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "add_section_load_error", errMsg));
+			context.getExternalContext().redirect("list_auth_modules.jsf");	*/
+			}
+			catch (Exception e)
+			{
+				logger.debug("get section is null in edit page" + e.getMessage());
+			}
 		}
 
 		return this.section;
