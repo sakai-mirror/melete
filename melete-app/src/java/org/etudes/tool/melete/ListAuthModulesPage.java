@@ -1013,7 +1013,6 @@ public class ListAuthModulesPage implements Serializable
 			dmPage.setSection((Section) secBean.getSection());
 			dmPage.setSectionBeans(delSecBeans);
 			dmPage.setSectionSelected(true);
-			dmPage.setModules(new ArrayList());
 			count = 0;
 			sectionSelected = false;
 			selectedSecModIndices = null;
