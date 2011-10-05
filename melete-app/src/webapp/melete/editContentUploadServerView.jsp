@@ -80,7 +80,7 @@
 		          				<f:attribute name="sectionId" value="#{listResourcesPage.sectionId}" />		          			
 					    </h:commandButton>    
 					      		
-		          	 	<h:commandButton id="cancelButton" immediate="true" value="#{msgs.im_cancel}" action="#{listResourcesPage.cancelServerFile}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
+		          	 	<h:commandButton id="cancelButton" immediate="true" value="#{msgs.im_cancel}" actionListener="#{listResourcesPage.cancelServerFile}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
 		          	 			<f:attribute name="sectionId" value="#{listResourcesPage.sectionId}" />			          				
 		          	 	</h:commandButton>
         			 </div>

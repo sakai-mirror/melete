@@ -27,6 +27,8 @@
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <%@include file="accesscheck.jsp" %>
+<t:saveState id="fromPage" value="#{listResourcesPage.fromPage}" />
+<t:saveState id="sectionId" value="#{listResourcesPage.sectionId}" />
 	
 <h:panelGrid styleClass="maintableCollapseWithNoBorder" >											
 <h:column>		                    	
@@ -99,7 +101,7 @@
 							 <h:outputText id="t2" value="#{msgs.list_resources_actions2}" />
 					 </f:facet>
 					 <h:commandLink id="linkaction" actionListener="#{listResourcesPage.selectedResourceAction}" >
-				    	<f:attribute name="selectedId" value="#{curr_resources.resource_id}" />
+				    	<h:outputText value="#{curr_resources.resource_id}" style="visibility:hidden;display:none"/>
 				    	<h:graphicImage id="linkgif" alt="" value="/images/link2me.png" styleClass="AuthImgClass"  />
 				     	<h:outputText id="emp_space-3" value=" "  />
 						<h:outputText value="#{msgs.list_resources_link}" />

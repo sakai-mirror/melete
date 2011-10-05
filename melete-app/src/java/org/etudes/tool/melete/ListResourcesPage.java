@@ -32,6 +32,8 @@ import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UICommand;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIOutput;
 import javax.faces.component.UIInput;
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
@@ -265,6 +267,7 @@ public class ListResourcesPage
 	public ListResourcesPage()
 	{
 		logger.debug("ListResourcesPage constructor");
+		displayResourcesList = new ArrayList<DisplaySecResources>();
 	}
 
 	/**
@@ -390,16 +393,13 @@ public class ListResourcesPage
 			if (currSiteResourcesList == null) getCurrSiteResourcesList();
 			if (currSiteResourcesList != null)
 			{
-		//		int fromIndex = getListNav().getCurrIndex();
-		//		int toIndex = getListNav().getEndIndex();
-
-//				logger.debug("from and to index and total size" + fromIndex + "," + toIndex + "," + currSiteResourcesList.size());
-				displayResourcesList = null;
-				if (fromIndex >= 0 && toIndex > fromIndex && fromIndex <= currSiteResourcesList.size() && toIndex <= currSiteResourcesList.size())
+				displayResourcesList = currSiteResourcesList.subList(fromIndex, toIndex);
+	
+			/*	if (fromIndex >= 0 && toIndex > fromIndex && fromIndex <= currSiteResourcesList.size() && toIndex <= currSiteResourcesList.size())
 				{
 					displayResourcesList = (List<DisplaySecResources>) currSiteResourcesList.subList(fromIndex, toIndex);
 		//			logger.debug("displayResourcesList" + displayResourcesList.size());
-				}
+				}*/
 			}
 		}
 		catch (Exception e)
@@ -558,8 +558,11 @@ public class ListResourcesPage
 
 		try
 		{
-			setSelResourceIdFromList((String) evt.getComponent().getAttributes().get("selectedId"));
-			if (sectionId != null && sectionId.length() != 0)
+			UIOutput u = (UIOutput)evt.getComponent().getChildren().get(0);
+			String s = (String)u.getValue();
+			logger.debug("selected by user:" + s);
+			setSelResourceIdFromList(s);
+			if (sectionId != null && sectionId.length() != 0 && selResourceIdFromList != null && selResourceIdFromList.length() != 0)
 			{
 				SectionObjService sec = sectionService.getSection(Integer.parseInt(sectionId));
 				MeleteResourceService mres = sectionService.getMeleteResource(getSelResourceIdFromList());
@@ -581,6 +584,8 @@ public class ListResourcesPage
 	 */
 	public void selectedResourceDeleteAction(ActionEvent evt)
 	{
+		try
+		{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
@@ -595,11 +600,16 @@ public class ListResourcesPage
 		
 		binding = Util.getBinding("#{deleteResourcePage}");
 		DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
-		delResPage.resetValues();
 		delResPage.setFromPage(this.fromPage);
+		delResPage.setSectionId(sectionId);
 		delResPage.setResourceName(meleteCHService.getDisplayName(delRes_id));
+		delResPage.setDelResourceId(delRes_id);
 		delResPage.processDeletion(delRes_id, courseId);
-		return;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -655,6 +665,7 @@ public class ListResourcesPage
 	 */
 	public void setSectionId(String sectionId)
 	{
+		logger.debug("sectionId set in list resource page is:" + sectionId);
 		this.sectionId = sectionId;
 	}
 
@@ -761,14 +772,6 @@ public class ListResourcesPage
 			org.apache.commons.fileupload.FileItem fi = (org.apache.commons.fileupload.FileItem) context.getExternalContext().getRequestMap().get(
 					"file1");
 
-			if (fi != null && fi.getSize() > getMaxUploadSize())
-			{
-				logger.debug("fi is not null and is large file");
-				ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-				String errMsg = bundle.getString("file_too_large");
-				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "file_too_large", errMsg));
-				return;
-			}
 			if (fi != null && fi.getName() != null && fi.getName().length() != 0)
 			{
 
@@ -832,9 +835,17 @@ public class ListResourcesPage
 	 * 
 	 * @return
 	 */
-	public String cancelServerFile()
+	public void cancelServerFile(ActionEvent evt)
 	{
-		return "editmodulesections";
+		try
+		{
+			String secId = (String) evt.getComponent().getAttributes().get("sectionId");
+			FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + secId);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**

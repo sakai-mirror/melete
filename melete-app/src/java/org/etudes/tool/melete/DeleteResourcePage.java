@@ -29,6 +29,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.ActionEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,12 +49,18 @@ public class DeleteResourcePage implements Serializable
 	private boolean warningFlag;
 	private String delResourceName;
 	private String delResourceId;
+	private String sectionId;
 
 	/**
 	 * Default constructor
 	 */
 	public DeleteResourcePage()
 	{
+		warningFlag = false;
+		fromPage = "";
+		delResourceId = null;
+		delResourceName = null;
+		sectionId="";
 	}
 
 	/**
@@ -65,6 +72,16 @@ public class DeleteResourcePage implements Serializable
 		fromPage = "";
 		delResourceId = null;
 		delResourceName = null;
+		sectionId="";
+	}
+
+	/**
+	 * Get the from Page
+	 * @return
+	 */
+	public String getFromPage()
+	{
+		return fromPage;
 	}
 
 	/**
@@ -131,6 +148,7 @@ public class DeleteResourcePage implements Serializable
 		ValueBinding binding = Util.getBinding("#{listResourcesPage}");
 		ListResourcesPage listResPage = (ListResourcesPage) binding.getValue(ctx);
 		listResPage.setFromPage(this.fromPage);
+		listResPage.setSectionId(sectionId);
 		listResPage.refreshCurrSiteResourcesList();
 	}
 
@@ -139,9 +157,11 @@ public class DeleteResourcePage implements Serializable
 	 * 
 	 * @return navigate back to start page
 	 */
-	public String deleteResource()
+	public void deleteResource(ActionEvent evt)
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
+		fromPage = (String) evt.getComponent().getAttributes().get("fromPage");
+		sectionId = (String) evt.getComponent().getAttributes().get("sectionId");
 		try
 		{
 			if (delResourceId != null)
@@ -149,28 +169,14 @@ public class DeleteResourcePage implements Serializable
 				// delete from content resource
 				sectionService.deleteResourceInUse(this.delResourceId);
 				meleteCHService.removeResource(this.delResourceId);
-				logger.debug("delete resource is done now move back to page");
-			}
-			if (fromPage.startsWith("edit"))
-			{
-				ValueBinding binding = Util.getBinding("#{editSectionPage}");
-				EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
-				if (editPage.meleteResource != null && editPage.meleteResource.getResourceId() != null
-						&& editPage.meleteResource.getResourceId().equals(delResourceId))
-				{
-					logger.debug("remove resource from cache");
-					if (editPage.secResource != null) editPage.secResource.setResource(null);
-					editPage.meleteResource = null;
-					editPage.resetMeleteResourceValues();
-				}
-				refreshCurrSiteResourcesList();
-			}
-			else if (fromPage.startsWith("manage"))
-			{
-				refreshCurrSiteResourcesList();
 			}
 
-			return fromPage;
+			if (sectionId != null && sectionId.length() != 0)
+				sectionService.deleteSectionResourcebyId(sectionId);
+			else
+				sectionId = "";
+
+			context.getExternalContext().redirect(fromPage + "?fromPage=" + fromPage + "&sectionId=" + sectionId);
 		}
 		catch (Exception e)
 		{
@@ -179,7 +185,6 @@ public class DeleteResourcePage implements Serializable
 			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 			String errMsg = bundle.getString("delete_resource_fail");
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), errMsg));
-			return "#";
 		}
 	}
 
@@ -188,9 +193,19 @@ public class DeleteResourcePage implements Serializable
 	 * 
 	 * @return
 	 */
-	public String cancelDeleteResource()
+	public void cancelDeleteResource(ActionEvent evt)
 	{
-		return fromPage;
+		try
+		{
+			FacesContext context = FacesContext.getCurrentInstance();
+			fromPage = (String) evt.getComponent().getAttributes().get("fromPage");
+			sectionId = (String) evt.getComponent().getAttributes().get("sectionId");
+			context.getExternalContext().redirect(fromPage + "?fromPage=" + fromPage + "&sectionId=" + sectionId);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -242,6 +257,43 @@ public class DeleteResourcePage implements Serializable
 	public String getDelResourceName()
 	{
 		return this.delResourceName;
+	}
+
+	/**
+	 * Get the resourceId of the resource being deleted
+	 * @return
+	 */
+	public String getDelResourceId()
+	{
+		return delResourceId;
+	}
+
+	/**
+	 * Set the resourceId to delete
+	 * @param delResourceId
+	 */
+	public void setDelResourceId(String delResourceId)
+	{
+		this.delResourceId = delResourceId;
+	}
+
+	/**
+	 * Get the sectionId if the parameter is being passed around for edit section pages.
+	 * @return
+	 */
+	public String getSectionId()
+	{
+		return sectionId;
+	}
+
+	/**
+	 * Set the sectionid. This is to pass the parameter back to edit section pages
+	 * 
+	 * @param sectionId
+	 */
+	public void setSectionId(String sectionId)
+	{
+		this.sectionId = sectionId;
 	}
 
 }

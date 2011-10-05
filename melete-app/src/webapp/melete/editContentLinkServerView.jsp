@@ -30,9 +30,15 @@
 <f:view>
 <sakai:view title="Modules: Select Resource Item" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
-<t:saveState id="newlinkUrl" value="#{listResourcesPage.newLinkUrl}" />
-<t:saveState id="newURLTitle" value="#{listResourcesPage.newURLTitle}" />
-<t:saveState id="openWindow" value="#{listResourcesPage.openWindow}" />
+<script type="text/javascript" language="javascript1.2">
+
+function fillTitle()
+{
+	var u = document.getElementById("EditServerViewForm:link").value;
+	document.getElementById("EditServerViewForm:link_title").value = u;
+}
+
+</script>
 
 <h:form id="EditServerViewForm" enctype="multipart/form-data">	
 	<!-- top nav bar -->
@@ -40,6 +46,12 @@
 	  <jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
 	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/replace2.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.editcontentlinkserverview_selecting}"/></div>
+	
+	<t:saveState id="newlinkUrl" value="#{listResourcesPage.newLinkUrl}" />
+	<t:saveState id="newURLTitle" value="#{listResourcesPage.newURLTitle}" />
+	<t:saveState id="openWindow" value="#{listResourcesPage.openWindow}" />
+	<t:saveState id="fromPage" value="#{listResourcesPage.fromPage}" />
+	<t:saveState id="sectionId" value="#{listResourcesPage.sectionId}" />
 	
 <!-- This Begins the Main Text Area -->
 	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
@@ -52,7 +64,7 @@
 				 <tr><td height="20" colspan="2"> 
 													<h:outputText id="editlinkText6" value="#{msgs.editcontentlinkserverview_provide}" />
 													<h:outputText id="editlinkText7" value=" " styleClass="ExtraPaddingClass"/>
-													 <h:inputText id="link" value="#{listResourcesPage.newLinkUrl}" size="40" /> 	
+													 <h:inputText id="link" value="#{listResourcesPage.newLinkUrl}" size="40" onchange="fillTitle()" /> 	
 				</td></tr>	
 				<tr><td height="20" colspan="2"> 
 													<h:outputText id="editlinkText_6" value="#{msgs.resources_proper_pan_URL}" /> <h:outputText value="*" styleClass="required"/>
@@ -69,14 +81,13 @@
 				</table> 
 
 		 	<div class="actionBar" align="left">
-		          		<h:commandLink id="addButton" actionListener="#{listResourcesPage.addNewUrl}" action="editmodulesections" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue">
-		          				<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />
-		          				<h:outputText value="#{msgs.im_continue}" />
-					    </h:commandLink>    	   		
-		          	 	<h:commandLink id="cancelButton" immediate="true" action="#{listResourcesPage.cancelServerFile}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
-		          	 			<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />
-		          				<h:outputText  value="#{msgs.im_cancel}"/>
-		          	 	</h:commandLink>
+		          		<h:commandButton id="addButton" actionListener="#{listResourcesPage.addNewUrl}" value="#{msgs.im_continue}" action="#{listResourcesPage.setServerFile}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue">
+		          				<f:attribute name="sectionId" value="#{listResourcesPage.sectionId}" />		          			
+					    </h:commandButton>    
+					      		
+		          	 	<h:commandButton id="cancelButton" immediate="true" value="#{msgs.im_cancel}" actionListener="#{listResourcesPage.cancelServerFile}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
+		          	 			<f:attribute name="sectionId" value="#{listResourcesPage.sectionId}" />			          				
+		          	 	</h:commandButton>
         			 </div>
 					 </td></tr>        
 		   

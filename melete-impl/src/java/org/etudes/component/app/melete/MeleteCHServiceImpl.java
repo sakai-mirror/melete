@@ -905,15 +905,17 @@ public class MeleteCHServiceImpl implements MeleteCHService
 		{
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
-			ContentResourceEdit cr = getContentservice().editResource(resourceId);
+			ContentResource cr = getContentservice().getResource(resourceId);
 			logger.debug("prop name" + cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
 			String dispName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
-			getContentservice().cancelResource(cr);
+
+			cr = null;
 			return dispName;
 		}
 		catch (Exception e)
 		{
 			logger.debug("error in reading resource properties in edit section" + e);
+			e.printStackTrace();
 		}
 		finally
 		{
