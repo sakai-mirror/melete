@@ -89,17 +89,7 @@
 												<jsp:include page="list_resources.jsp"/> 
 											</f:subview>
 																																												
-									<div class="actionBar" align="left">
-					         <h:commandLink id="addButton_1" action="editmodulesections"  accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue">
-		          				<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />
-		          				<h:outputText value="#{msgs.im_continue}" />		          								          	
-					    </h:commandLink>    	   		
-		          	 	<h:commandLink id="cancelButton_1" immediate="true" action="#{listResourcesPage.cancelServerFile}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
-		          	 			<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />
-		          				<h:outputText  value="#{msgs.im_cancel}"/>
-		          	 	</h:commandLink>
-					         
-							    </div>										
+															
 			  </td>
             </tr>
             </table>					

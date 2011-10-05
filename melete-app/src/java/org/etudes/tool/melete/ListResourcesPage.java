@@ -32,10 +32,13 @@ import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UICommand;
+import javax.faces.component.UIInput;
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,7 +63,7 @@ public class ListResourcesPage
 	public class DisplaySecResources implements Comparable<DisplaySecResources>
 	{
 		String resource_gif;
-		String resource_id;
+		String resource_id="";
 		String resource_title;
 		String resource_url;
 		boolean typeLink;
@@ -231,10 +234,9 @@ public class ListResourcesPage
 		}
 	};
 	public String fromPage;
-	public String selectedResourceName;
 	private boolean callFromSection = true;
 	private List<DisplaySecResources> displayResourcesList;
-	private RemoteFilesListingNav listNav;
+//	private RemoteFilesListingNav listNav;
 	private boolean renderSelectedResource = false;
 	private String selResourceIdFromList="";
 	private boolean sortAscFlag = true;
@@ -245,10 +247,17 @@ public class ListResourcesPage
 	protected SectionService sectionService;
 	protected ServerConfigurationService serverConfigurationService;
 
-	private String sectionId;
+	private String sectionId="";
 	private String newLinkUrl;
 	private String newURLTitle;
 	private boolean openWindow = false;
+	
+	private int fromIndex=0;
+	private int toIndex=0;
+	private int totalSize=0;
+	private String chunkSize="30";
+	private boolean prevListingFlag = true;
+	private boolean nextListingFlag = true;
 	
 	/**
 	 * Default constructor
@@ -280,7 +289,9 @@ public class ListResourcesPage
 				currSiteResourcesList = new ArrayList<DisplaySecResources>();
 
 				List<?> allmembers = null;
-				if (this.fromPage == null) return null;
+				if (this.fromPage == null) fromPage = (String)ctx.getExternalContext().getRequestParameterMap().get("fromPage");
+				//show all resources if fromPage is still null
+				if (this.fromPage == null) fromPage = "manage_content";
 
 				// to create list of resource whose type is typeUpload
 				if (this.fromPage.equals("ContentUploadServerView") || this.fromPage.equals("editContentUploadServerView"))
@@ -304,8 +315,8 @@ public class ListResourcesPage
 				}
 
 				if (allmembers == null)
-				{
-					return null;
+				{					
+					return null;					
 				}
 				Iterator<?> allmembers_iter = allmembers.iterator();
 				String serverUrl = ServerConfigurationService.getServerUrl();
@@ -334,9 +345,31 @@ public class ListResourcesPage
 					currSiteResourcesList.add(new DisplaySecResources(displayName, cr.getId(), rUrl, rType, rgif, rTypeLTI));
 				}
 				java.util.Collections.sort(currSiteResourcesList);
-				getListNav().setTotalSize(currSiteResourcesList.size() + 1);
-				getListNav().resetCurrIndex();
+//				getListNav().setTotalSize(currSiteResourcesList.size() + 1);
+//				getListNav().resetCurrIndex();
+				totalSize = currSiteResourcesList.size() + 1;
+				if (ctx.getExternalContext().getRequestParameterMap().get("sectionId") != null)
+				{
+					sectionId = (String)ctx.getExternalContext().getRequestParameterMap().get("sectionId");				
+				}
+				if (ctx.getExternalContext().getRequestParameterMap().get("fromIndex") != null)
+				{
+					String t = (String)ctx.getExternalContext().getRequestParameterMap().get("fromIndex");
+					fromIndex = Integer.parseInt(t);
+				}
+				if (ctx.getExternalContext().getRequestParameterMap().get("chunkSize") != null)
+				{
+					this.chunkSize = (String)ctx.getExternalContext().getRequestParameterMap().get("chunkSize");				
+				}
+				if (ctx.getExternalContext().getRequestParameterMap().get("sortAscFlag") != null)
+				{
+					String s = (String)ctx.getExternalContext().getRequestParameterMap().get("sortAscFlag");	
+					sortAscFlag = new Boolean(s).booleanValue();
+				}
+				toIndex = fromIndex + Integer.parseInt(chunkSize);
+				if (toIndex >= (totalSize - 1)) toIndex = totalSize - 1;
 			}
+			sortList();
 		}
 		catch (Exception e)
 		{
@@ -357,10 +390,10 @@ public class ListResourcesPage
 			if (currSiteResourcesList == null) getCurrSiteResourcesList();
 			if (currSiteResourcesList != null)
 			{
-				int fromIndex = getListNav().getCurrIndex();
-				int toIndex = getListNav().getEndIndex();
+		//		int fromIndex = getListNav().getCurrIndex();
+		//		int toIndex = getListNav().getEndIndex();
 
-				logger.debug("from and to index and total size" + fromIndex + "," + toIndex + "," + currSiteResourcesList.size());
+//				logger.debug("from and to index and total size" + fromIndex + "," + toIndex + "," + currSiteResourcesList.size());
 				displayResourcesList = null;
 				if (fromIndex >= 0 && toIndex > fromIndex && fromIndex <= currSiteResourcesList.size() && toIndex <= currSiteResourcesList.size())
 				{
@@ -387,15 +420,21 @@ public class ListResourcesPage
 	/**
 	 * @return Returns the listNav(30 resources on a page).
 	 */
-	public RemoteFilesListingNav getListNav()
+	/*public RemoteFilesListingNav getListNav()
 	{
 		if (listNav == null)
 		{
-			listNav = new RemoteFilesListingNav(0, 0, 30);
+			String chunkSize="30";
+			if (FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("chunkSize") != null)
+			{
+				chunkSize = (String)FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("chunkSize");
+			}
+			
+			listNav = new RemoteFilesListingNav(0, 0, Integer.parseInt(chunkSize));
 		}
 
 		return listNav;
-	}
+	}*/
 
 	/**
 	 * @return Returns the meleteCHService.
@@ -403,14 +442,6 @@ public class ListResourcesPage
 	public MeleteCHService getMeleteCHService()
 	{
 		return meleteCHService;
-	}
-
-	/**
-	 * @return resource name that is selected
-	 */
-	public String getSelectedResourceName()
-	{
-		return selectedResourceName;
 	}
 
 	/**
@@ -469,16 +500,6 @@ public class ListResourcesPage
 	}
 
 	/**
-	 * Redirects user to page they came from
-	 * 
-	 * @return value of page they came from(list_resources or section listing pages)
-	 */
-	public String redirectLink()
-	{
-		return this.fromPage;
-	}
-
-	/**
 	 * Refresh the list.
 	 */
 	public void refreshCurrSiteResourcesList()
@@ -494,47 +515,62 @@ public class ListResourcesPage
 	 * @param evt
 	 *        ActionEvent object
 	 */
+//	public void selectedResourceAction(ActionEvent evt)
+//	{
+//		logger.debug("checking if coming to link2me action");
+//		FacesContext ctx = FacesContext.getCurrentInstance();
+//		UICommand cmdLink = (UICommand) evt.getComponent();
+//		List<?> cList = cmdLink.getChildren();
+//
+//		/*
+//		 * String selclientId = cmdLink.getClientId(ctx); selclientId = selclientId.substring(selclientId.indexOf(':') + 1); selclientId = selclientId.substring(selclientId.indexOf(':') + 1); selclientId = selclientId.substring(selclientId.indexOf(':') +
+//		 * 1); String resId = selclientId.substring(0, selclientId.indexOf(':')); int selResIndex = Integer.parseInt(resId); selResIndex = selResIndex + fromIndex; this.selResourceIdFromList = ((DisplaySecResources)
+//		 * currSiteResourcesList.get(selResIndex)).getResource_id();
+//		 */
+//		// this.sectionId =(String) ((UIParameter) cList.get(2)).getValue();
+//		try
+//		{
+//			if (cList != null && cList.size() > 1)
+//			{
+//				UIParameter param1 = (UIParameter) cList.get(0);
+//				this.selResourceIdFromList = (String) param1.getValue();
+//				logger.debug("selected resource id by user is " + this.selResourceIdFromList + "," + sectionId);
+//				
+//				if (sectionId != null && sectionId.length() != 0)
+//				{
+//					SectionObjService sec = sectionService.getSection(Integer.parseInt(sectionId));
+//					MeleteResourceService mres = sectionService.getMeleteResource(getSelResourceIdFromList());
+//					sectionService.insertMeleteResource(sec, mres);
+//				}
+//			}
+//			FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + sectionId);
+//		}
+//		catch (Exception e)
+//		{
+//			e.printStackTrace();
+//		}
+//		return;
+//	}
+	
 	public void selectedResourceAction(ActionEvent evt)
 	{
 		logger.debug("checking if coming to link2me action");
-		UICommand cmdLink = (UICommand) evt.getComponent();
-		List<?> cList = cmdLink.getChildren();
-		if (cList == null || cList.size() < 1) return;
-		UIParameter param1 = (UIParameter) cList.get(0);
-		this.selResourceIdFromList = (String) param1.getValue();
-		
-		/*
-		 * 	String selclientId = cmdLink.getClientId(ctx);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		String resId = selclientId.substring(0, selclientId.indexOf(':'));
-		int selResIndex = Integer.parseInt(resId);
-		selResIndex = selResIndex + getListNav().getCurrIndex();
-		this.selResourceIdFromList = ((DisplaySecResources) currSiteResourcesList.get(selResIndex)).getResource_id();
-		this.secResourceName = ((DisplaySecResources) currSiteResourcesList.get(selResIndex)).getResource_title();
-		 */
-	//	this.sectionId =(String) ((UIParameter) cList.get(2)).getValue();
-		logger.debug("selected resource id by user is " + this.selResourceIdFromList +","+ sectionId);
+
 		try
 		{
-			SectionObjService sec = sectionService.getSection(Integer.parseInt(sectionId));
-			MeleteResourceService mres = sectionService.getMeleteResource(getSelResourceIdFromList());
-			sectionService.insertMeleteResource(sec, mres);
-			
-			ContentResource cr = meleteCHService.getResource(getSelResourceIdFromList());
-			selectedResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
-			if (selectedResourceName.length() > 50) selectedResourceName = selectedResourceName.substring(0, 50) + "...";
+			setSelResourceIdFromList((String) evt.getComponent().getAttributes().get("selectedId"));
+			if (sectionId != null && sectionId.length() != 0)
+			{
+				SectionObjService sec = sectionService.getSection(Integer.parseInt(sectionId));
+				MeleteResourceService mres = sectionService.getMeleteResource(getSelResourceIdFromList());
+				sectionService.insertMeleteResource(sec, mres);
+			}
+			FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + sectionId);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-		this.renderSelectedResource = true;
-		logger.debug("selected resource id by user is " + this.selResourceIdFromList);
-
-		// ctx.renderResponse();
-		return;
 	}
 
 	/**
@@ -585,15 +621,6 @@ public class ListResourcesPage
 	}
 
 	/**
-	 * @param listNav
-	 *        The listNav to set.
-	 */
-	public void setListNav(RemoteFilesListingNav listNav)
-	{
-		this.listNav = listNav;
-	}
-
-	/**
 	 * @param meleteCHService
 	 *        meleteChService to set
 	 */
@@ -629,15 +656,6 @@ public class ListResourcesPage
 	public void setSectionId(String sectionId)
 	{
 		this.sectionId = sectionId;
-	}
-		
-	/**
-	 * @param secResourceName
-	 *        resource name to select
-	 */
-	public void setSelectedResourceName(String selectedResourceName)
-	{
-		this.selectedResourceName = selectedResourceName;
 	}
 
 	/**
@@ -681,12 +699,13 @@ public class ListResourcesPage
 	 * 
 	 * @return the list resources page
 	 */
-	public String sortResourcesAsc()
+	public void sortResourcesAsc(ActionEvent evt)
 	{
 		sortAscFlag = false;
-		listNav.resetCurrIndex();
-		sortList();
-		return "#";
+		try
+		{
+		FacesContext.getCurrentInstance().getExternalContext().redirect(fromPage +"?fromPage=" + fromPage + "&sectionId=" + sectionId + "&chunkSize=" + chunkSize + "&sortAscFlag=" + sortAscFlag);
+		} catch (Exception e) {e.getMessage();}
 	}
 
 	/**
@@ -694,12 +713,13 @@ public class ListResourcesPage
 	 * 
 	 * @return the list resources page
 	 */
-	public String sortResourcesDesc()
+	public void sortResourcesDesc(ActionEvent evt)
 	{
 		sortAscFlag = true;
-		listNav.resetCurrIndex();
-		sortList();
-		return "#";
+		try
+		{
+		FacesContext.getCurrentInstance().getExternalContext().redirect(fromPage +"?fromPage=" + fromPage + "&sectionId=" + sectionId + "&chunkSize=" + chunkSize + "&sortAscFlag=" + sortAscFlag);
+		} catch (Exception e) {e.getMessage();}
 	}
 
 	/**
@@ -722,9 +742,9 @@ public class ListResourcesPage
 	{
 		setRenderSelectedResource(false);
 		setSelResourceIdFromList(null);
-		setSelectedResourceName(null);
+//		setSelectedResourceName(null);
 		setSortAscFlag(true);
-		setListNav(null);
+	//	setListNav(null);
 		refreshCurrSiteResourcesList();
 	}
 
@@ -785,7 +805,8 @@ public class ListResourcesPage
 					sectionService.insertMeleteResource(section, newResource);
 				}
 			}
-
+			 String secId = (String) evt.getComponent().getAttributes().get("sectionId");
+			 FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId="+secId);
 		}
 		catch (Exception e)
 		{
@@ -832,7 +853,8 @@ public class ListResourcesPage
 			}
 			if (newLinkUrl != null && newURLTitle != null && newLinkUrl.length() != 0 && newURLTitle.length() != 0)
 			{
-				//if ((newURLTitle != null) && (newURLTitle.trim().length() > SectionService.MAX_URL_LENGTH)) throw new MeleteException("add_section_url_title_len");
+				if (newURLTitle.trim().length() > SectionService.MAX_URL_LENGTH)
+					newURLTitle = newURLTitle.substring(0, SectionService.MAX_URL_LENGTH);
 				byte[] secContentData = new byte[newLinkUrl.length()];
 				secContentData = newLinkUrl.getBytes();
 				String res_mime_type = MeleteCHService.MIME_TYPE_LINK;
@@ -955,5 +977,171 @@ public class ListResourcesPage
 	public void setOpenWindow(boolean openWindow)
 	{
 		this.openWindow = openWindow;
+	}
+
+	/**
+	 * Get the listing start index
+	 * @return
+	 */
+	public int getFromIndex()
+	{
+		return fromIndex;
+	}
+
+	/**
+	 * Set the listing start index
+	 * @param fromIndex
+	 */
+	public void setFromIndex(int fromIndex)
+	{
+		this.fromIndex = fromIndex;
+	}
+
+	/**
+	 * Get the listing end index. set according to the chunk size
+	 * @return
+	 */
+	public int getToIndex()
+	{
+		return toIndex;
+	}
+
+	/**
+	 * Set listing end index
+	 * @param toIndex
+	 */
+	public void setToIndex(int toIndex)
+	{
+		this.toIndex = toIndex;
+	}
+
+	/**
+	 * Get the total listing size
+	 * @return
+	 */
+	public int getTotalSize()
+	{
+		return totalSize;
+	}
+
+	/**
+	 * Set the listing size
+	 * @param totalSize
+	 */
+	public void setTotalSize(int totalSize)
+	{
+		this.totalSize = totalSize;
+	}
+
+	/**
+	 * Get the chunk size for pagination
+	 * @return
+	 */
+	public String getChunkSize()
+	{
+		if (Integer.parseInt(chunkSize) == (totalSize -1)) return "-1";
+		return chunkSize;
+	}
+
+	/**
+	 * Set the chunk size for pagination
+	 * @param chunkSize
+	 */
+	public void setChunkSize(String chunkSize)
+	{
+		this.chunkSize = chunkSize;
+	}
+
+	/**
+	 * Change the pagination size. Refreshes the page and starts with new chunk size.
+	 * 
+	 * @param event
+	 * @throws AbortProcessingException
+	 */
+	public void changeChunkSize(ValueChangeEvent event) throws AbortProcessingException
+	{
+		logger.debug("section id at change shunk size:" + sectionId);
+		UIInput chunkSelect = (UIInput) event.getComponent();
+
+		this.chunkSize = (String) chunkSelect.getValue();
+		// -1 implies all resources need to be displayed
+		if (this.chunkSize.equals("-1")) this.chunkSize = Integer.toString(totalSize - 1);
+		try
+		{
+		FacesContext.getCurrentInstance().getExternalContext().redirect(fromPage +"?fromPage=" + fromPage + "&sectionId=" + sectionId + "&chunkSize=" + chunkSize);
+		} catch (Exception e) {e.getMessage();}
+	}
+
+	/**
+	 * Process start and end indices for the previous page
+	 * 
+	 * @return the start page
+	 */
+	public void goPrev(ActionEvent evt)
+	{		
+		fromIndex = fromIndex - Integer.parseInt(chunkSize);
+		if (fromIndex < 0) fromIndex = 0;
+
+		try
+		{
+		FacesContext.getCurrentInstance().getExternalContext().redirect(fromPage +"?fromPage=" + fromPage + "&sectionId=" + sectionId + "&chunkSize=" + chunkSize + "&fromIndex=" + fromIndex);
+		} catch (Exception e) {e.getMessage();}
+	}
+
+	/**
+	 * Process start and end indices for the next page
+	 * 
+	 * @return the start page
+	 */
+	public void goNext(ActionEvent evt)
+	{
+		fromIndex = fromIndex + Integer.parseInt(chunkSize);
+	
+		try
+		{
+		FacesContext.getCurrentInstance().getExternalContext().redirect(fromPage +"?fromPage=" + fromPage + "&sectionId=" + sectionId + "&chunkSize=" + chunkSize + "&fromIndex=" + fromIndex);
+		} catch (Exception e) {e.getMessage();}
+	}
+	
+	/**
+	 * Show navigation prev button
+	 * @return true if shown listing is from middle
+	 */
+	public boolean isPrevListingFlag()
+	{	
+		if (currSiteResourcesList == null) getCurrSiteResourcesList();
+		if (fromIndex == 0)	prevListingFlag = false;
+		else prevListingFlag = true;
+		return prevListingFlag;
+	}
+
+	/**
+	 * Show navigation next button
+	 * @return true if more listing is to show
+	 */
+	public boolean isNextListingFlag()
+	{
+		if (toIndex < (totalSize - 1))nextListingFlag = true;
+		else nextListingFlag = false;
+		return nextListingFlag;
+	}
+
+	/**
+	 * Get the display start index
+	 * @return
+	 */
+	public String getDisplayFromIndex()
+	{
+		if (currSiteResourcesList == null) getCurrSiteResourcesList();
+		return new Integer(fromIndex + 1).toString();
+	}
+
+	/**
+	 * Get the display end index
+	 * @return
+	 */
+	public String getDisplayEndIndex()
+	{
+		return new Integer(toIndex).toString();
 	}
 }

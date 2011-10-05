@@ -27,24 +27,13 @@
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <%@include file="accesscheck.jsp" %>
-
-<t:saveState id="fromPage" value="#{listResourcesPage.fromPage}" />
-<t:saveState id="sectionId" value="#{listResourcesPage.sectionId}" />
 	
 <h:panelGrid styleClass="maintableCollapseWithNoBorder" >											
 <h:column>		                    	
-         <h:panelGrid id="selresPanel" columns="1" width="100%" rendered="#{listResourcesPage.callFromSection}" >
-         	<h:column>	
-    			<h:outputText value="#{msgs.edit_list_resources_selected_res} "  rendered="#{listResourcesPage.renderSelectedResource}" styleClass="blue" />
-				<h:outputText value="#{listResourcesPage.selectedResourceName}" rendered="#{listResourcesPage.renderSelectedResource}" styleClass="bold"/>
-				<h:outputText value="#{msgs.edit_list_resources_selected_res_1}"  rendered="#{listResourcesPage.renderSelectedResource}" styleClass="blue"/>
-			</h:column>		
+         <h:panelGrid id="selresPanel" columns="1" width="100%" rendered="#{listResourcesPage.callFromSection}" >	
 	      	<h:column>
   				<h:outputText id="Stext3" value="#{msgs.edit_list_resources_select}" styleClass="bold"/> 
-			</h:column>
-	        <h:column>
-				<h:outputText value="#{msgs.list_resources_currently}" rendered="#{listResourcesPage.renderSelectedResource}" /><h:outputText value="#{listResourcesPage.selectedResourceName}" rendered="#{listResourcesPage.renderSelectedResource}" />
-	        </h:column>											
+			</h:column>	   									
           </h:panelGrid>
 
                  <!-- navigation with showing 15 recs --> 
@@ -52,26 +41,30 @@
                 <h:column/>
                 <h:column>
                   <h:outputText id="nav_spaces_left1" value="" styleClass="ExtraPaddingClass" />
-	          <h:outputText value="#{msgs.list_resources_viewing}" /><h:outputText value="#{listResourcesPage.listNav.displayStartIndex}" /><h:outputText value=" - " /><h:outputText value="#{listResourcesPage.listNav.displayEndIndex}" /> <h:outputText value=" "/><h:outputText value="#{msgs.list_resources_of}" /> <h:outputText value="#{listResourcesPage.listNav.totalSize -1}" /> 		
+	          <h:outputText value="#{msgs.list_resources_viewing}" />
+	          <h:outputText value="#{listResourcesPage.displayFromIndex}" />
+	          <h:outputText value=" - " /><h:outputText value="#{listResourcesPage.displayEndIndex}" />
+	           <h:outputText value=" "/><h:outputText value="#{msgs.list_resources_of}" /> 
+	           <h:outputText value="#{listResourcesPage.totalSize -1}" /> 		
 	          <h:outputText id="nav_spaces_right" value="" styleClass="ExtraPaddingClass" />
                 </h:column>
                 <h:column/>
    	        <h:column>
-   		  <h:graphicImage id="leftImg_disable" value="/images/nav_left_disable.jpg" alt="#{msgs.list_resources_previous}" style="border:0 none;vertical-align:middle;" rendered="#{!listResourcesPage.listNav.displayPrev}" />
-		  <h:commandLink id="prev_nav"  action="#{listResourcesPage.listNav.goPrev}" rendered="#{listResourcesPage.listNav.displayPrev}">		
+   		  <h:graphicImage id="leftImg_disable" value="/images/nav_left_disable.jpg" alt="#{msgs.list_resources_previous}" style="border:0 none;vertical-align:middle;" rendered="#{!listResourcesPage.prevListingFlag}" />
+		  <h:commandLink id="prev_nav"  actionListener="#{listResourcesPage.goPrev}" rendered="#{listResourcesPage.prevListingFlag}">		
 						 <h:graphicImage id="leftImg" value="/images/nav_left.jpg" alt="#{msgs.list_resources_previous2}" title="#{msgs.list_resources_previous2}" style="border:0 none;vertical-align:middle;"/>
 		   </h:commandLink>		 
 		   	 <h:outputText id="nav_spaces_left" value="" styleClass="ExtraPaddingClass" />
-		  <h:selectOneMenu id="chunkSize"  valueChangeListener="#{listResourcesPage.listNav.changeChunkSize}" onchange="this.form.submit();">
+		  <h:selectOneMenu id="chunkSize"  value="#{listResourcesPage.chunkSize}" valueChangeListener="#{listResourcesPage.changeChunkSize}" onchange="this.form.submit();">
 								<f:selectItem itemValue="30" itemLabel="#{msgs.list_resources_show30}"/>	
 								<f:selectItem itemValue="100" itemLabel="#{msgs.list_resources_show100}"/>	
 								<f:selectItem itemValue="-1" itemLabel="#{msgs.list_resources_showall}"/>	
 			 </h:selectOneMenu>
 		 <h:outputText id="nav_spaces" value="" styleClass="ExtraPaddingClass" />
-				<h:commandLink id="next_nav" action="#{listResourcesPage.listNav.goNext}" rendered="#{listResourcesPage.listNav.displayNext}">
+				<h:commandLink id="next_nav" actionListener="#{listResourcesPage.goNext}" rendered="#{listResourcesPage.nextListingFlag}">
 							 <h:graphicImage id="rightImg" value="/images/nav_right.jpg" alt="#{msgs.list_resources_next}" title="#{msgs.list_resources_next}" style="border:0 none;vertical-align:middle;" />
 			   </h:commandLink>	 
-			   <h:graphicImage id="rightImg_disable" value="/images/nav_right_disable.jpg" alt="#{msgs.list_resources_next2}" title="#{msgs.list_resources_next2}" style="border:0 none;vertical-align:middle;" rendered="#{!listResourcesPage.listNav.displayNext}"/> 
+			   <h:graphicImage id="rightImg_disable" value="/images/nav_right_disable.jpg" alt="#{msgs.list_resources_next2}" title="#{msgs.list_resources_next2}" style="border:0 none;vertical-align:middle;" rendered="#{!listResourcesPage.nextListingFlag}"/> 
    	      </h:column>											
               </h:panelGrid>
                <!-- navigation ends -->            		 
@@ -80,10 +73,10 @@
 				  <h:column>
 					   <f:facet name="header">
 							<h:panelGroup>
-								<h:commandLink id="ascType" action="#{listResourcesPage.sortResourcesAsc}" immediate="true" rendered="#{listResourcesPage.sortAscFlag}">
+								<h:commandLink id="ascType" actionListener="#{listResourcesPage.sortResourcesAsc}" immediate="true" rendered="#{listResourcesPage.sortAscFlag}">
 								    <h:graphicImage id="asc_Type_img" alt="#{msgs.manage_res_list_alt_asc}" title="#{msgs.manage_res_list_alt_asc}" value="/images/sortascending.gif" styleClass="ExpClass"/>
 								 </h:commandLink>     
-								 <h:commandLink id="descType" action="#{listResourcesPage.sortResourcesDesc}" immediate="true" rendered="#{!listResourcesPage.sortAscFlag}">
+								 <h:commandLink id="descType" actionListener="#{listResourcesPage.sortResourcesDesc}" immediate="true" rendered="#{!listResourcesPage.sortAscFlag}">
 								    <h:graphicImage id="des_Type_img" alt="#{msgs.manage_res_list_alt_desc}" title="#{msgs.manage_res_list_alt_desc}" value="/images/sortdescending.gif" styleClass="ExpClass"/>
 								 </h:commandLink>        
 					            
@@ -105,16 +98,16 @@
 				    <f:facet name="header">
 							 <h:outputText id="t2" value="#{msgs.list_resources_actions2}" />
 					 </f:facet>
-					 <h:commandLink id="linkaction" actionListener="#{listResourcesPage.selectedResourceAction}"  rendered="#{listResourcesPage.callFromSection}" immediate="true">
-				    	<f:param name="selResourceIdFromList" value="#{curr_resources.resource_id}" />
+					 <h:commandLink id="linkaction" actionListener="#{listResourcesPage.selectedResourceAction}" >
+				    	<f:attribute name="selectedId" value="#{curr_resources.resource_id}" />
 				    	<h:graphicImage id="linkgif" alt="" value="/images/link2me.png" styleClass="AuthImgClass"  />
 				     	<h:outputText id="emp_space-3" value=" "  />
 						<h:outputText value="#{msgs.list_resources_link}" />
 					 </h:commandLink>	
-					  <h:outputText id="emp_space-1" value="     "  styleClass="ExtraPaddingClass" rendered="#{listResourcesPage.callFromSection}" />
+					  <h:outputText id="emp_space-1" value="     "  styleClass="ExtraPaddingClass" />
 					 
 					 <h:commandLink id="deleteaction" actionListener="#{listResourcesPage.selectedResourceDeleteAction}"  action="#{listResourcesPage.redirectDeleteLink}" immediate="true" >
-				    		<f:param name="selResourceIdFromList" value="#{curr_resources.resource_id}" />
+				    		<f:param name="selectedId" value="#{curr_resources.resource_id}" />
 				     		<h:graphicImage id="delgif" alt="" value="/images/delete.gif" styleClass="AuthImgClass" />
 							<h:outputText id="emp_space-2" value=" " />
 				    		<h:outputText id="deltext" value="#{msgs.list_resources_del}"  />

@@ -25,10 +25,13 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
-
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 <f:view>
 <sakai:view title="Modules: Select Resource Item" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
+
+<t:saveState id="fromPage" value="#{listResourcesPage.fromPage}" />
+<t:saveState id="sectionId" value="#{listResourcesPage.sectionId}" />
 
 <%@ page import="javax.faces.application.FacesMessage, java.util.ResourceBundle"%>
 
@@ -73,14 +76,13 @@
 						</td></tr>	
 					</table>
 			       	<div class="actionBar" align="left">
-		          		<h:commandLink id="addButton" actionListener="#{listResourcesPage.addNewFile}" action="#{listResourcesPage.setServerFile}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue">
-		          				<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />
-		          				<h:outputText value="#{msgs.im_continue}" />
-					    </h:commandLink>    	   		
-		          	 	<h:commandLink id="cancelButton" immediate="true" action="#{listResourcesPage.cancelServerFile}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
-		          	 			<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />
-		          				<h:outputText  value="#{msgs.im_cancel}"/>
-		          	 	</h:commandLink>
+		          		<h:commandButton id="addButton" actionListener="#{listResourcesPage.addNewFile}" value="#{msgs.im_continue}" action="#{listResourcesPage.setServerFile}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue">
+		          				<f:attribute name="sectionId" value="#{listResourcesPage.sectionId}" />		          			
+					    </h:commandButton>    
+					      		
+		          	 	<h:commandButton id="cancelButton" immediate="true" value="#{msgs.im_cancel}" action="#{listResourcesPage.cancelServerFile}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
+		          	 			<f:attribute name="sectionId" value="#{listResourcesPage.sectionId}" />			          				
+		          	 	</h:commandButton>
         			 </div>
 					 </td></tr>        
 		   
@@ -92,18 +94,7 @@
 											<f:subview id="UploadResourceListingForm" >	
 												<jsp:include page="list_resources.jsp"/> 
 											</f:subview>
-																																												
-									<div class="actionBar" align="left">
-					         <h:commandLink id="addButton_1" action="editmodulesections"  accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue">
-		          				<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />
-		          				<h:outputText value="#{msgs.im_continue}" />		          								          	
-					    </h:commandLink>    	   		
-		          	 	<h:commandLink id="cancelButton_1" immediate="true" action="#{listResourcesPage.cancelServerFile}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
-		          	 			<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />
-		          				<h:outputText  value="#{msgs.im_cancel}"/>
-		          	 	</h:commandLink>
-					         
-							    </div>									
+								
 						  </td>
 			            </tr>
 			           	</table>					

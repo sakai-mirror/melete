@@ -587,6 +587,8 @@ public abstract class SectionPage implements Serializable
 				res_mime_type = MeleteCHService.MIME_TYPE_LINK;
 				Util.validateLink(getLinkUrl());
 				if ((secResourceName == null) || (secResourceName.trim().length() == 0)) throw new MeleteException("URL_title_reqd");
+				if (secResourceName.trim().length() > SectionService.MAX_URL_LENGTH)
+					secResourceName = secResourceName.substring(0, SectionService.MAX_URL_LENGTH);
 				secContentData = new byte[linkUrl.length()];
 				secContentData = linkUrl.getBytes();
 			}
@@ -680,7 +682,7 @@ public abstract class SectionPage implements Serializable
 			if (resourceId != null
 					&& (section.getContentType().equals("typeLink") || section.getContentType().equals("typeUpload") || section.getContentType()
 							.equals("typeLTI")))
-			{
+			{				
 				modify = getMeleteCHService().editResourceProperties(resourceId, secResourceName, secResourceDescription);
 				logger.debug("modify :" + modify);
 			}
