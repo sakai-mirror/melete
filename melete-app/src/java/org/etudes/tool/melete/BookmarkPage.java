@@ -62,6 +62,10 @@ public class BookmarkPage implements Serializable
 	private String deleteBookmarkTitle;
 
 	private int fromModuleId;
+	
+	private int fromSectionId;
+	
+	private int fromModuleSeqNo;
 
 	private String fromPage;
 
@@ -351,6 +355,23 @@ public class BookmarkPage implements Serializable
 	{
 		return fromModuleId;
 	}
+	
+	/**
+	 * @return the fromSectionId
+	 */
+	public int getFromSectionId()
+	{
+		return fromSectionId;
+	}
+		
+	
+	/**
+	 * @return the fromModuleSeqNo
+	 */
+	public int getFromModuleSeqNo()
+	{
+		return fromModuleSeqNo;
+	}
 
 	/**
 	 * Get the start page
@@ -454,17 +475,30 @@ public class BookmarkPage implements Serializable
 	{
 		resetValues();
 		FacesContext context = FacesContext.getCurrentInstance();
-		if (getInstRole())
+		setFromPage((String) context.getExternalContext().getRequestParameterMap().get("fromPage"));
+		if (getInstRole() && this.fromPage != null && this.fromPage.equals("list_auth_modules"))
 		{
 			ValueBinding lamBinding = Util.getBinding("#{listAuthModulesPage}");
 			ListAuthModulesPage lamPage = (ListAuthModulesPage) lamBinding.getValue(context);
-			if (!lamPage.saveModuleDates()) return "list_auth_modules";
+			if (!lamPage.saveModuleDates()) 
+			{
+				return "list_auth_modules";
+			}
 		}
-		setFromPage((String) context.getExternalContext().getRequestParameterMap().get("fromPage"));
 		String fromModuleIdStr = (String) context.getExternalContext().getRequestParameterMap().get("fromModuleId");
 		if (fromModuleIdStr != null)
 		{
 			setFromModuleId(Integer.parseInt(fromModuleIdStr));
+		}
+		String fromModuleSeqNoStr = (String) context.getExternalContext().getRequestParameterMap().get("fromModuleSeqNo");
+		if (fromModuleSeqNoStr != null)
+		{
+			setFromModuleSeqNo(Integer.parseInt(fromModuleSeqNoStr));
+		}
+		String fromSectionIdStr = (String) context.getExternalContext().getRequestParameterMap().get("fromSectionId");
+		if (fromSectionIdStr != null)
+		{
+			setFromSectionId(Integer.parseInt(fromSectionIdStr));
 		}
 		return "list_bookmarks";
 	}
@@ -481,6 +515,16 @@ public class BookmarkPage implements Serializable
 		resetValues();
 		setFromPage(from);
 		setFromModuleId(fromModuleId);
+		return "list_bookmarks";
+	}
+
+	
+	public String gotoMyBookmarks(String from, int fromModuleId, int fromSectionId)
+	{
+		resetValues();
+		setFromPage(from);
+		setFromModuleId(fromModuleId);
+		setFromSectionId(fromSectionId);
 		return "list_bookmarks";
 	}
 
@@ -567,23 +611,71 @@ public class BookmarkPage implements Serializable
 			}
 			if (this.fromPage.equals("view_section"))
 			{
+				String fromModuleIdStr = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromModuleId");
+				if (fromModuleIdStr != null)
+				{
+					setFromModuleId(Integer.parseInt(fromModuleIdStr));
+				}
+				String fromModuleSeqNoStr = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromModuleSeqNo");
+				if (fromModuleSeqNoStr != null)
+				{
+					setFromModuleSeqNo(Integer.parseInt(fromModuleSeqNoStr));
+				}
+				String fromSectionIdStr = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromSectionId");
+				if (fromSectionIdStr != null)
+				{
+					setFromSectionId(Integer.parseInt(fromSectionIdStr));
+				}
 				ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
 				ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(context);
 				vsPage.resetValues();
 				vsPage.setSection(null);
 				vsPage.setModule(null);
+				vsPage.setModuleId(this.fromModuleId);
+				vsPage.setModuleSeqNo(this.fromModuleSeqNo);
+				vsPage.setSectionId(this.fromSectionId);
 			}
 			if (this.fromPage.equals("view_module"))
 			{
+				String fromModuleIdStr = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromModuleId");
+				if (fromModuleIdStr != null)
+				{
+					setFromModuleId(Integer.parseInt(fromModuleIdStr));
+				}
+				String fromModuleSeqNoStr = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromModuleSeqNo");
+				if (fromModuleSeqNoStr != null)
+				{
+					setFromModuleSeqNo(Integer.parseInt(fromModuleSeqNoStr));
+				}
 				ValueBinding binding = Util.getBinding("#{viewModulesPage}");
 				ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
 				vmPage.setViewMbean(null);
+				vmPage.setModuleId(this.fromModuleId);
+				vmPage.setModuleSeqNo(this.fromModuleSeqNo);
 			}
 			if (this.fromPage.equals("view_whats_next"))
 			{
+				String fromModuleIdStr = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromModuleId");
+				if (fromModuleIdStr != null)
+				{
+					setFromModuleId(Integer.parseInt(fromModuleIdStr));
+				}
+				String fromModuleSeqNoStr = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromModuleSeqNo");
+				if (fromModuleSeqNoStr != null)
+				{
+					setFromModuleSeqNo(Integer.parseInt(fromModuleSeqNoStr));
+				}
+				String fromSectionIdStr = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromSectionId");
+				if (fromSectionIdStr != null)
+				{
+					setFromSectionId(Integer.parseInt(fromSectionIdStr));
+				}
 				ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
 				ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(context);
 				vnPage.setModule(null);
+				vnPage.setPrevSecId(this.fromSectionId);
+				vnPage.setPrevModId(this.fromModuleId);
+				vnPage.setNextSeqNo(this.fromModuleSeqNo);
 			}
 		}
 		else
@@ -644,6 +736,24 @@ public class BookmarkPage implements Serializable
 	{
 		this.fromModuleId = fromModuleId;
 	}
+	
+	/**
+	 * @param fromSectionId
+	 *        the fromSectionId to set
+	 */
+	public void setFromSectionId(int fromSectionId)
+	{
+		this.fromSectionId = fromSectionId;
+	}	
+	
+	/**
+	 * @param fromModuleSeqNo
+	 *        the fromModuleSeqNo to set
+	 */
+	public void setFromModuleSeqNo(int fromModuleSeqNo)
+	{
+		this.fromModuleSeqNo = fromModuleSeqNo;
+	}	
 
 	/**
 	 * Set the start page

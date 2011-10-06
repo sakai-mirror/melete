@@ -107,7 +107,7 @@ public class ListModulesPage implements Serializable
 		// context.getViewRoot().setTransient(true);
 		Map sessionMap = context.getExternalContext().getSessionMap();
 		Map params = context.getExternalContext().getRequestParameterMap();
-		if (((String) params.get("listmodulesform:lmexp")) == null) {
+		if ((((String) params.get("listmodulesform:lmexp")) == null)||(((String) params.get("listmodulesStudentform:lmexp")) == null)) {
 		courseId = null;
 		userId = null;
 		nomodsFlag = null;

@@ -677,14 +677,13 @@ public class ViewSectionsPage implements Serializable
 	/**
 	 * @return list_bookmarks page
 	 */
-	public String gotoMyBookmarks()
+	/*public String gotoMyBookmarks()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{bookmarkPage}");
 		BookmarkPage bPage = (BookmarkPage) binding.getValue(context);
-
-		return bPage.gotoMyBookmarks("view_section", this.moduleId);
-	}
+		return bPage.gotoMyBookmarks("view_section", this.moduleId, this.sectionId);
+	}*/
 
 	/**
 	 * @return view_whats_next page

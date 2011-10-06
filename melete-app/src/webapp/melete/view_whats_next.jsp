@@ -61,6 +61,8 @@
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />
  <f:param name="fromPage" value="view_whats_next" />
  <f:param name="fromModuleId" value="#{viewNextStepsPage.prevModId}" />
+ <f:param name="fromSectionId" value="#{viewNextStepsPage.prevSecId}" />
+ <f:param name="fromModuleSeqNo" value="#{viewNextStepsPage.nextSeqNo}" />
 </h:commandLink>				  
 </td>
 </tr>

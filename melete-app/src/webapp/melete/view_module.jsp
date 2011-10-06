@@ -58,6 +58,7 @@
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
  <f:param name="fromPage" value="view_module" />
  <f:param name="fromModuleId" value="#{viewModulesPage.moduleId}" />
+ <f:param name="fromModuleSeqNo" value="#{viewModulesPage.moduleSeqNo}" />
 </h:commandLink>				  
 </td>
 </tr>			               
