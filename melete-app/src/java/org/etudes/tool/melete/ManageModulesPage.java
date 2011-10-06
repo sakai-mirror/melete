@@ -248,6 +248,11 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 		ValueBinding binding = Util.getBinding("#{manageResourcesPage}");
 		ManageResourcesPage managePage = (ManageResourcesPage) binding.getValue(context);
 		managePage.resetValues();
+		
+		binding =Util.getBinding("#{listResourcesPage}");
+		ListResourcesPage listResPage = (ListResourcesPage) binding.getValue(context);
+		listResPage.setFromPage("manage_content");
+		listResPage.setSectionId("");
 		return "manage_content";
 	}
 

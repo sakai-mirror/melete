@@ -316,7 +316,7 @@
           <description>Nav page</description>
           <managed-bean-name>navPage</managed-bean-name>
           <managed-bean-class>org.etudes.tool.melete.NavPage</managed-bean-class>
-          <managed-bean-scope>request</managed-bean-scope>
+          <managed-bean-scope>session</managed-bean-scope>
           <!-- a service dependency property - for the MeleteSecurityService -->
 		  <managed-property>
 			<description>Service Dependency: MeleteSecurityService</description>
@@ -489,7 +489,20 @@
 	    	            <description>Service Dependency: Melete CH service</description>
 	    	            <property-name>meleteCHService</property-name>
 	    	            <value>#{Components["org.etudes.api.app.melete.MeleteCHService"]}</value>
-            </managed-property>   
+            </managed-property>  
+            <managed-property>
+			<property-name>fromPage</property-name>
+			<value>#{param.fromPage}</value>
+		</managed-property>  
+         <managed-property>
+			<property-name>delResourceId</property-name>
+			<value>#{param.delResourceId}</value>
+		</managed-property>   
+		 <managed-property>
+			<property-name>sectionId</property-name>
+			<value>#{param.sectionId}</value>
+		</managed-property>   
+		    
       </managed-bean>  	
  
  <managed-bean>

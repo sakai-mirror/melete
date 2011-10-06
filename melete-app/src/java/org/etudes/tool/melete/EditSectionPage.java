@@ -231,41 +231,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 	}
 
 	/**
-	 * Delete the selected resource.
-	 * @param evt
-	 * ActionEvent
+	 * Save the section.Validates modality and license required fields. Track section edit event.
 	 */
-	public void selectedResourceDeleteAction(ActionEvent evt)
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-    	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
-     	
-		UICommand cmdLink = (UICommand)evt.getComponent();
-
-		List<?> cList = cmdLink.getChildren();
-		if(cList == null || cList.size() <1) return;
-		UIParameter param1 = (UIParameter) cList.get(0);
-		String delRes_id = (String) param1.getValue();
-		
-		binding =Util.getBinding("#{deleteResourcePage}");
-		DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
-		delResPage.resetValues();
-		if(section.getContentType().equals("typeUpload"))
-			delResPage.setFromPage("editContentUploadServerView");
-		else if (section.getContentType().equals("typeLink"))
-			delResPage.setFromPage("editContentLinkServerView");
-		else if (section.getContentType().equals("typeLTI"))
-			delResPage.setFromPage("editContentLTIServerView");
-
-		delResPage.setResourceName(meleteCHService.getDisplayName(delRes_id));
-		delResPage.processDeletion(delRes_id, mPage.getCurrentUser().getId());
-		return;
-	}
-
-/**
- * Save the section.Validates modality and license required fields. Track section edit event.
- */
 	public String saveHere()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();

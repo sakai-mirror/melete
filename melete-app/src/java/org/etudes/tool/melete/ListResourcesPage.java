@@ -257,7 +257,7 @@ public class ListResourcesPage
 	private int fromIndex=0;
 	private int toIndex=0;
 	private int totalSize=0;
-	private String chunkSize="30";
+	private String chunkSize="-1";
 	private boolean prevListingFlag = true;
 	private boolean nextListingFlag = true;
 	
@@ -369,7 +369,9 @@ public class ListResourcesPage
 					String s = (String)ctx.getExternalContext().getRequestParameterMap().get("sortAscFlag");	
 					sortAscFlag = new Boolean(s).booleanValue();
 				}
-				toIndex = fromIndex + Integer.parseInt(chunkSize);
+				int c = Integer.parseInt(chunkSize);
+				if (c == -1) c = totalSize - 1;
+				toIndex = fromIndex + c;
 				if (toIndex >= (totalSize - 1)) toIndex = totalSize - 1;
 			}
 			sortList();
@@ -515,58 +517,33 @@ public class ListResourcesPage
 	 * @param evt
 	 *        ActionEvent object
 	 */
-//	public void selectedResourceAction(ActionEvent evt)
-//	{
-//		logger.debug("checking if coming to link2me action");
-//		FacesContext ctx = FacesContext.getCurrentInstance();
-//		UICommand cmdLink = (UICommand) evt.getComponent();
-//		List<?> cList = cmdLink.getChildren();
-//
-//		/*
-//		 * String selclientId = cmdLink.getClientId(ctx); selclientId = selclientId.substring(selclientId.indexOf(':') + 1); selclientId = selclientId.substring(selclientId.indexOf(':') + 1); selclientId = selclientId.substring(selclientId.indexOf(':') +
-//		 * 1); String resId = selclientId.substring(0, selclientId.indexOf(':')); int selResIndex = Integer.parseInt(resId); selResIndex = selResIndex + fromIndex; this.selResourceIdFromList = ((DisplaySecResources)
-//		 * currSiteResourcesList.get(selResIndex)).getResource_id();
-//		 */
-//		// this.sectionId =(String) ((UIParameter) cList.get(2)).getValue();
-//		try
-//		{
-//			if (cList != null && cList.size() > 1)
-//			{
-//				UIParameter param1 = (UIParameter) cList.get(0);
-//				this.selResourceIdFromList = (String) param1.getValue();
-//				logger.debug("selected resource id by user is " + this.selResourceIdFromList + "," + sectionId);
-//				
-//				if (sectionId != null && sectionId.length() != 0)
-//				{
-//					SectionObjService sec = sectionService.getSection(Integer.parseInt(sectionId));
-//					MeleteResourceService mres = sectionService.getMeleteResource(getSelResourceIdFromList());
-//					sectionService.insertMeleteResource(sec, mres);
-//				}
-//			}
-//			FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + sectionId);
-//		}
-//		catch (Exception e)
-//		{
-//			e.printStackTrace();
-//		}
-//		return;
-//	}
-	
 	public void selectedResourceAction(ActionEvent evt)
 	{
 		logger.debug("checking if coming to link2me action");
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		UICommand cmdLink = (UICommand) evt.getComponent();
+		List<?> cList = cmdLink.getChildren();
+
+		/*
+		 * String selclientId = cmdLink.getClientId(ctx); selclientId = selclientId.substring(selclientId.indexOf(':') + 1); selclientId = selclientId.substring(selclientId.indexOf(':') + 1); selclientId = selclientId.substring(selclientId.indexOf(':') +
+		 * 1); String resId = selclientId.substring(0, selclientId.indexOf(':')); int selResIndex = Integer.parseInt(resId); selResIndex = selResIndex + fromIndex; this.selResourceIdFromList = ((DisplaySecResources)
+		 * currSiteResourcesList.get(selResIndex)).getResource_id();
+		 */
 
 		try
 		{
-			UIOutput u = (UIOutput)evt.getComponent().getChildren().get(0);
-			String s = (String)u.getValue();
-			logger.debug("selected by user:" + s);
-			setSelResourceIdFromList(s);
-			if (sectionId != null && sectionId.length() != 0 && selResourceIdFromList != null && selResourceIdFromList.length() != 0)
+			if (cList != null && cList.size() > 1)
 			{
-				SectionObjService sec = sectionService.getSection(Integer.parseInt(sectionId));
-				MeleteResourceService mres = sectionService.getMeleteResource(getSelResourceIdFromList());
-				sectionService.insertMeleteResource(sec, mres);
+				UIParameter param1 = (UIParameter) cList.get(0);
+				this.selResourceIdFromList = (String) param1.getValue();
+				logger.debug("selected resource id by user is " + this.selResourceIdFromList + "," + sectionId);
+				
+				if (sectionId != null && sectionId.length() != 0)
+				{
+					SectionObjService sec = sectionService.getSection(Integer.parseInt(sectionId));
+					MeleteResourceService mres = sectionService.getMeleteResource(getSelResourceIdFromList());
+					sectionService.insertMeleteResource(sec, mres);
+				}
 			}
 			FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + sectionId);
 		}
@@ -574,8 +551,9 @@ public class ListResourcesPage
 		{
 			e.printStackTrace();
 		}
+		return;
 	}
-
+	
 	/**
 	 * Sets delete resource page with selected resource values
 	 * 
@@ -598,13 +576,7 @@ public class ListResourcesPage
 		UIParameter param1 = (UIParameter) cList.get(0);
 		String delRes_id = (String) param1.getValue();
 		
-		binding = Util.getBinding("#{deleteResourcePage}");
-		DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
-		delResPage.setFromPage(this.fromPage);
-		delResPage.setSectionId(sectionId);
-		delResPage.setResourceName(meleteCHService.getDisplayName(delRes_id));
-		delResPage.setDelResourceId(delRes_id);
-		delResPage.processDeletion(delRes_id, courseId);
+		ctx.getExternalContext().redirect("delete_resource.jsf?fromPage=" + fromPage + "&delResourceId="+ delRes_id + "&sectionId=" + sectionId);
 		}
 		catch (Exception e)
 		{
@@ -1077,10 +1049,11 @@ public class ListResourcesPage
 		this.chunkSize = (String) chunkSelect.getValue();
 		// -1 implies all resources need to be displayed
 		if (this.chunkSize.equals("-1")) this.chunkSize = Integer.toString(totalSize - 1);
-		try
+		FacesContext.getCurrentInstance().renderResponse();
+		/*try
 		{
 		FacesContext.getCurrentInstance().getExternalContext().redirect(fromPage +"?fromPage=" + fromPage + "&sectionId=" + sectionId + "&chunkSize=" + chunkSize);
-		} catch (Exception e) {e.getMessage();}
+		} catch (Exception e) {e.getMessage();}*/
 	}
 
 	/**
@@ -1089,8 +1062,10 @@ public class ListResourcesPage
 	 * @return the start page
 	 */
 	public void goPrev(ActionEvent evt)
-	{		
-		fromIndex = fromIndex - Integer.parseInt(chunkSize);
+	{	
+		int c = Integer.parseInt(chunkSize);
+		if (c == -1) c = totalSize - 1;
+		fromIndex = fromIndex - c;
 		if (fromIndex < 0) fromIndex = 0;
 
 		try
@@ -1106,7 +1081,9 @@ public class ListResourcesPage
 	 */
 	public void goNext(ActionEvent evt)
 	{
-		fromIndex = fromIndex + Integer.parseInt(chunkSize);
+		int c = Integer.parseInt(chunkSize);
+		if (c == -1) c = totalSize - 1;
+		fromIndex = fromIndex + c;
 	
 		try
 		{

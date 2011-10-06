@@ -26,10 +26,15 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
-<sakai:view title="Modules: Manage Content" toolCssHref="/etudes-melete-tool/rtbc004.css">
+<sakai:view title="Modules: Select Resource Item" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
+
+<t:saveState id="fromPage" value="#{listResourcesPage.fromPage}" />
+<t:saveState id="sectionId" value="#{listResourcesPage.sectionId}" />
+
 
  <h:form id="ManageContentForm">
 	 <f:subview id="top">

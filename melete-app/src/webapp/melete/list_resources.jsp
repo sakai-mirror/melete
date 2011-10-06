@@ -27,9 +27,7 @@
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <%@include file="accesscheck.jsp" %>
-<t:saveState id="fromPage" value="#{listResourcesPage.fromPage}" />
-<t:saveState id="sectionId" value="#{listResourcesPage.sectionId}" />
-	
+<t:saveState id="chunkSize1" value="#{listResourcesPage.chunkSize}" />	
 <h:panelGrid styleClass="maintableCollapseWithNoBorder" >											
 <h:column>		                    	
          <h:panelGrid id="selresPanel" columns="1" width="100%" rendered="#{listResourcesPage.callFromSection}" >	
@@ -57,7 +55,7 @@
 						 <h:graphicImage id="leftImg" value="/images/nav_left.jpg" alt="#{msgs.list_resources_previous2}" title="#{msgs.list_resources_previous2}" style="border:0 none;vertical-align:middle;"/>
 		   </h:commandLink>		 
 		   	 <h:outputText id="nav_spaces_left" value="" styleClass="ExtraPaddingClass" />
-		  <h:selectOneMenu id="chunkSize"  value="#{listResourcesPage.chunkSize}" valueChangeListener="#{listResourcesPage.changeChunkSize}" onchange="this.form.submit();">
+		  <h:selectOneMenu id="chunkSize"  value="#{listResourcesPage.chunkSize}" valueChangeListener="#{listResourcesPage.changeChunkSize}" >
 								<f:selectItem itemValue="30" itemLabel="#{msgs.list_resources_show30}"/>	
 								<f:selectItem itemValue="100" itemLabel="#{msgs.list_resources_show100}"/>	
 								<f:selectItem itemValue="-1" itemLabel="#{msgs.list_resources_showall}"/>	
@@ -100,15 +98,15 @@
 				    <f:facet name="header">
 							 <h:outputText id="t2" value="#{msgs.list_resources_actions2}" />
 					 </f:facet>
-					 <h:commandLink id="linkaction" actionListener="#{listResourcesPage.selectedResourceAction}" >
-				    	<h:outputText value="#{curr_resources.resource_id}" style="visibility:hidden;display:none"/>
+					 <h:commandLink id="linkaction" actionListener="#{listResourcesPage.selectedResourceAction}" rendered="#{listResourcesPage.callFromSection}">
+				    	<f:param name="selectedId" value="#{curr_resources.resource_id}" />
 				    	<h:graphicImage id="linkgif" alt="" value="/images/link2me.png" styleClass="AuthImgClass"  />
 				     	<h:outputText id="emp_space-3" value=" "  />
 						<h:outputText value="#{msgs.list_resources_link}" />
 					 </h:commandLink>	
 					  <h:outputText id="emp_space-1" value="     "  styleClass="ExtraPaddingClass" />
 					 
-					 <h:commandLink id="deleteaction" actionListener="#{listResourcesPage.selectedResourceDeleteAction}"  action="#{listResourcesPage.redirectDeleteLink}" immediate="true" >
+					 <h:commandLink id="deleteaction" actionListener="#{listResourcesPage.selectedResourceDeleteAction}" immediate="true" >
 				    		<f:param name="selectedId" value="#{curr_resources.resource_id}" />
 				     		<h:graphicImage id="delgif" alt="" value="/images/delete.gif" styleClass="AuthImgClass" />
 							<h:outputText id="emp_space-2" value=" " />
