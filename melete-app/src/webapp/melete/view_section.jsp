@@ -34,6 +34,11 @@
 <script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
 <t:saveState id="vspmod" value="#{viewSectionsPage.module}" />
 <t:saveState id="vspsec" value="#{viewSectionsPage.section}" />
+<t:saveState id="vspmid" value="#{viewSectionsPage.moduleId}" />
+<t:saveState id="vsppsi" value="#{viewSectionsPage.prevSecId}" />
+<t:saveState id="vspnsi" value="#{viewSectionsPage.nextSecId}" />
+<t:saveState id="vspnso" value="#{viewSectionsPage.nextSeqNo}" />
+<t:saveState id="vspmso" value="#{viewSectionsPage.moduleSeqNo}" />
 
 <h:form id="viewsectionform"> 
 	<f:subview id="top">

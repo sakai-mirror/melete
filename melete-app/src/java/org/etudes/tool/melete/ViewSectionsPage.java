@@ -824,6 +824,16 @@ public class ViewSectionsPage implements Serializable
 		this.moduleId = moduleId;
 	}
 
+	public void setPrevSecId(int prevSecId)
+	{
+		this.prevSecId = prevSecId;
+	}
+
+	public void setNextSecId(int nextSecId)
+	{
+		this.nextSecId = nextSecId;
+	}
+
 	/**
 	 * @param moduleSeqNo
 	 *        module sequence number
@@ -831,6 +841,11 @@ public class ViewSectionsPage implements Serializable
 	public void setModuleSeqNo(int moduleSeqNo)
 	{
 		this.moduleSeqNo = moduleSeqNo;
+	}
+	
+	public void setNextSeqNo(int nextSeqNo)
+	{
+		this.nextSeqNo = nextSeqNo;
 	}
 
 	/**
