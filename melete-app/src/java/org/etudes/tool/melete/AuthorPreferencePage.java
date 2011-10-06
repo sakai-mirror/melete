@@ -514,15 +514,6 @@ public class AuthorPreferencePage
 			return "author_preference";
 			// return "pref_editor";
 		}
-		// go to confirm page
-		ValueBinding binding = Util.getBinding("#{licensePage}");
-		LicensePage lPage = (LicensePage) binding.getValue(context);
-		displayLicenseCode = lPage.getLicenseCodes();
-		displayYear = lPage.getCopyright_year();
-		displayOwner = lPage.getCopyright_owner();
-		displayAllowCmrcl = (lPage.getAllowCmrcl() != null && lPage.getAllowCmrcl().equals("true")) ? true : false;
-		displayAllowMod = (lPage.getAllowMod() != null) ? new Integer(lPage.getAllowMod()) : 0;
-
 		return "confirm_license";
 	}
 
@@ -703,6 +694,23 @@ public class AuthorPreferencePage
 	 */
 	public String getDisplayLicenseCode()
 	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+
+		mup = getMup(mPage.getCurrentUser().getId());
+
+		binding = Util.getBinding("#{licensePage}");
+		LicensePage lPage = (LicensePage) binding.getValue(context);
+		if (lPage.getLicenseCodes() == null)
+		{
+			lPage.setInitialValues(this.formName, mup);
+		}
+		displayLicenseCode = lPage.getLicenseCodes();
+		displayYear = lPage.getCopyright_year();
+		displayOwner = lPage.getCopyright_owner();
+		displayAllowCmrcl = (lPage.getAllowCmrcl() != null && lPage.getAllowCmrcl().equals("true")) ? true : false;
+		displayAllowMod = (lPage.getAllowMod() != null) ? new Integer(lPage.getAllowMod()) : 0;
 		return displayLicenseCode;
 	}
 

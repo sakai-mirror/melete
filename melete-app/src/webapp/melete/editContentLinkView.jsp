@@ -29,7 +29,7 @@
 	  	<h:outputText id="editlinkText1" value="#{msgs.editcontentlinkview_link1}"/>	
 	  </h:column>
 	  <h:column>	
-		<h:commandLink id="serverLinkButton"  action="#{editSectionPage.gotoServerLinkView}" styleClass="a1">
+		<h:commandLink id="serverLinkButton"  actionListener="#{editSectionPage.setServerUrlListener}" >
 			<f:param name="sectionId" value="#{editSectionPage.editId}" />
 			<h:graphicImage id="replaceLinkImg2" value="/images/replace2.gif" styleClass="AuthImgClass"/>
 			<h:outputText value="#{msgs.editcontentlinkview_replace}"/>

@@ -685,21 +685,11 @@ public class LicensePage
 	 */
 	public boolean isCallFromSection()
 	{
-		if (this.formName != null)
-		{
-			if (this.formName.equals("UserPreferenceForm"))
-			{
-				callFromSection = false;
-			}
-			else
-			{
-				callFromSection = true;
-			}
-		}
-		else
-		{
+		if (this.formName != null && this.formName.equals("EditSectionForm"))
 			callFromSection = true;
-		}
+		else
+			callFromSection = false;
+
 		return callFromSection;
 	}
 

@@ -404,6 +404,10 @@
               <property-name>sectionService</property-name>
               <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
         </managed-property>
+        <managed-property>
+			<property-name>formName</property-name>
+			<value>#{param.formName}</value>
+		</managed-property> 
 </managed-bean> 
 
 <managed-bean>
@@ -544,6 +548,14 @@
             <property-name>sectionService</property-name>
             <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
         </managed-property>
+         <managed-property>
+			<property-name>fromPage</property-name>
+			<value>#{param.fromPage}</value>
+		</managed-property>  
+        <managed-property>
+			<property-name>sectionId</property-name>
+			<value>#{param.sectionId}</value>
+		</managed-property>  		
 </managed-bean>
 		  	     
     <!-- i18n -->

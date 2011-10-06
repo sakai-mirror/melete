@@ -32,7 +32,7 @@
 		<h:outputText id="edituploadText1" value="#{msgs.editcontentuploadview_file_uploaded}" />
 	</h:column>
 	<h:column>			
-		<h:commandLink id="serverViewButton"  action="#{editSectionPage.gotoServerView}" >
+		<h:commandLink id="serverViewButton" actionListener="#{editSectionPage.setServerFileListener}" >
 			<f:param name="sectionId" value="#{editSectionPage.editId}" />
 			<h:graphicImage id="replaceImg2" value="/images/replace2.gif" styleClass="AuthImgClass"/>
 			<h:outputText value="#{msgs.editcontentuploadview_replace}"/>

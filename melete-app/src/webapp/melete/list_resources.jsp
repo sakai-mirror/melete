@@ -28,6 +28,8 @@
 
 <%@include file="accesscheck.jsp" %>
 <t:saveState id="chunkSize1" value="#{listResourcesPage.chunkSize}" />	
+<t:saveState id="sortAscFlag1" value="#{listResourcesPage.sortAscFlag}" />
+
 <h:panelGrid styleClass="maintableCollapseWithNoBorder" >											
 <h:column>		                    	
          <h:panelGrid id="selresPanel" columns="1" width="100%" rendered="#{listResourcesPage.callFromSection}" >	
@@ -55,7 +57,7 @@
 						 <h:graphicImage id="leftImg" value="/images/nav_left.jpg" alt="#{msgs.list_resources_previous2}" title="#{msgs.list_resources_previous2}" style="border:0 none;vertical-align:middle;"/>
 		   </h:commandLink>		 
 		   	 <h:outputText id="nav_spaces_left" value="" styleClass="ExtraPaddingClass" />
-		  <h:selectOneMenu id="chunkSize"  value="#{listResourcesPage.chunkSize}" valueChangeListener="#{listResourcesPage.changeChunkSize}" >
+		  <h:selectOneMenu id="chunkSize"  value="#{listResourcesPage.chunkSize}" valueChangeListener="#{listResourcesPage.changeChunkSize}" onchange="this.form.submit();">
 								<f:selectItem itemValue="30" itemLabel="#{msgs.list_resources_show30}"/>	
 								<f:selectItem itemValue="100" itemLabel="#{msgs.list_resources_show100}"/>	
 								<f:selectItem itemValue="-1" itemLabel="#{msgs.list_resources_showall}"/>	
@@ -69,7 +71,7 @@
               </h:panelGrid>
                <!-- navigation ends -->            		 
    
-			 <h:dataTable id="table"  value="#{listResourcesPage.displayResourcesList}"  var="curr_resources"  border="0" headerClass="tableheader2" columnClasses="TitleWid3,ActionWid" rowClasses="row1,row2"  width="100%" summary="#{msgs.list_resources_summary}">
+			 <h:dataTable id="table"  value="#{listResourcesPage.displayResourcesList}"  var="curr_resources" binding="#{listResourcesPage.table}" border="0" headerClass="tableheader2" columnClasses="TitleWid3,ActionWid" rowClasses="row1,row2"  width="100%" summary="#{msgs.list_resources_summary}">
 				  <h:column>
 					   <f:facet name="header">
 							<h:panelGroup>
@@ -99,16 +101,14 @@
 							 <h:outputText id="t2" value="#{msgs.list_resources_actions2}" />
 					 </f:facet>
 					 <h:commandLink id="linkaction" actionListener="#{listResourcesPage.selectedResourceAction}" rendered="#{listResourcesPage.callFromSection}">
-				    	<f:param name="selectedId" value="#{curr_resources.resource_id}" />
-				    	<h:graphicImage id="linkgif" alt="" value="/images/link2me.png" styleClass="AuthImgClass"  />
+				     	<h:graphicImage id="linkgif" alt="" value="/images/link2me.png" styleClass="AuthImgClass"  />
 				     	<h:outputText id="emp_space-3" value=" "  />
 						<h:outputText value="#{msgs.list_resources_link}" />
 					 </h:commandLink>	
 					  <h:outputText id="emp_space-1" value="     "  styleClass="ExtraPaddingClass" />
 					 
 					 <h:commandLink id="deleteaction" actionListener="#{listResourcesPage.selectedResourceDeleteAction}" immediate="true" >
-				    		<f:param name="selectedId" value="#{curr_resources.resource_id}" />
-				     		<h:graphicImage id="delgif" alt="" value="/images/delete.gif" styleClass="AuthImgClass" />
+				       		<h:graphicImage id="delgif" alt="" value="/images/delete.gif" styleClass="AuthImgClass" />
 							<h:outputText id="emp_space-2" value=" " />
 				    		<h:outputText id="deltext" value="#{msgs.list_resources_del}"  />
 					 </h:commandLink>	

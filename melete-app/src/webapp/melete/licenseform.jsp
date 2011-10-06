@@ -25,7 +25,15 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 <%@include file="accesscheck.jsp" %>
+
+<t:saveState id="codes" value="#{licensePage.licenseCodes}" />
+<t:saveState id="formName1" value="#{licensePage.formName}" />
+<t:saveState id="author" value="#{licensePage.copyright_owner}" />
+<t:saveState id="year" value="#{licensePage.copyright_year}" />
+<t:saveState id="cmrcl" value="#{licensePage.allowCmrcl}" />
+<t:saveState id="modifications" value="#{licensePage.allowMod}" />
 
 <h:panelGrid id="SectionView" columns="2" width="100%" columnClasses="col1,col2" rendered="#{licensePage.callFromSection}">
 <h:column>
@@ -33,8 +41,7 @@
  </h:column>
  <h:column>
  <h:selectOneMenu id="licenseCodes" value="#{licensePage.licenseCodes}" valueChangeListener="#{licensePage.hideLicense}" onchange="saveEditor(); this.form.submit();" >
-	 <f:selectItems value="#{licensePage.licenseTypes}" />		
-	 <f:attribute name="sectionId" value="#{licensePage.sectionId}" />						
+	 <f:selectItems value="#{licensePage.licenseTypes}" />							
  </h:selectOneMenu>
  <h:outputText value="          " styleClass="ExtraPaddingClass" />
 <h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="/images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>

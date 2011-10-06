@@ -312,8 +312,8 @@ public abstract class SectionPage implements Serializable
 		{
 			try
 			{
-			if (logger.isDebugEnabled()) logger.info("get section is null in edit page");
-		/*	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		/*	if (logger.isDebugEnabled()) logger.info("get section is null in edit page");
+			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 			String errMsg = bundle.getString("add_section_load_error");
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "add_section_load_error", errMsg));
 			context.getExternalContext().redirect("list_auth_modules.jsf");	*/
@@ -1065,8 +1065,8 @@ public abstract class SectionPage implements Serializable
 		{
 			if (meleteResource != null && meleteResource.getResourceId() != null)
 			{
-				ContentResource cr = getMeleteCHService().getResource(meleteResource.getResourceId());
-				secResourceName = (String) cr.getProperties().get(ResourceProperties.PROP_DISPLAY_NAME);
+				ContentResource cr = meleteCHService.getResource(meleteResource.getResourceId());
+				secResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
 			}
 		}
 		catch (Exception e)
@@ -1166,11 +1166,12 @@ public abstract class SectionPage implements Serializable
 	 */
 	public MeleteResource getMeleteResource()
 	{
-		// logger.debug("check meleteResource" + meleteResource + secResource);
+	//	 logger.debug("check meleteResource" + meleteResource + secResource);
 
-		if (formName.equals("EditSectionForm") && this.meleteResource == null)
+		if (this.meleteResource == null)
 		{
-			if (secResource != null) this.meleteResource = (MeleteResource) this.secResource.getResource();
+			setSecResource(sectionService.getSectionResourcebyId(this.section.getSectionId().toString()));
+			setMeleteResource((MeleteResource)sectionService.getMeleteResource(secResource.getResource().getResourceId()));
 			if (this.meleteResource == null) 
 			{
 				this.meleteResource = new MeleteResource();

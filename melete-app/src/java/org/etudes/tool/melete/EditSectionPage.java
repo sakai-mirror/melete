@@ -364,7 +364,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	    						throw new UserErrorException("URL_title_reqd");
 	    					// validation 4b: check link url title length
 	    					if (section.getContentType().equals("typeLink") && (secResourceName != null && secResourceName.trim().length() > SectionService.MAX_URL_LENGTH))
-	    						throw new UserErrorException("add_section_url_title_len");
+	    						secResourceName = secResourceName.substring(0,SectionService.MAX_URL_LENGTH);
 	    					getMeleteCHService().checkResource(meleteResource.getResourceId());
 	    					modifyContentResource = editMeleteCollectionResource(meleteResource.getResourceId());
 	    				}
@@ -647,7 +647,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		try
 		{
-			saveHere();
+			if(saveHere().equals("failure"))
+			{
+				return;
+			}
 			String edit = (String) event.getComponent().getAttributes().get("sectionId");
 			logger.debug("getPreviewPageListener:" + edit);
 			setEditIdParam(edit);
@@ -806,12 +809,17 @@ public class EditSectionPage extends SectionPage implements Serializable
 	 */
 	public void setServerFileListener(ActionEvent evt)
 	{
-		logger.debug("set server listener called");
-		 String edit = (String) evt.getComponent().getAttributes().get("sectionId");
-		 logger.debug("set server listener  action:" + edit);
-		 setEditIdParam(edit);	
+		try
+		{
+		FacesContext.getCurrentInstance().getExternalContext().redirect("editContentUploadServerView.jsf?fromPage=editContentUploadServerView&sectionId=" + editId);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
+	
 	/**
 	 * Navigate to select a link resource.
 	 * @return
@@ -848,35 +856,25 @@ public class EditSectionPage extends SectionPage implements Serializable
 	}
 
 	/**
-	 * Associate section with the user selected resource item.
-	 * @return
+	 * 
+	 * @param evt
 	 */
 	public void setServerUrlListener(ActionEvent evt)
 	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		String errMsg = null;
-		if (logger.isDebugEnabled()) logger.debug("selected resource properties" + selectedResourceName + " , " + selectedResourceDescription);
-		selResourceIdFromList = getSelResourceIdFromList();
-
 		try
 		{
-			 String edit = (String) evt.getComponent().getAttributes().get("sectionId");
-			 logger.debug("return back action from setserver url:" + edit);
-			 setEditIdParam(edit);	 
+		FacesContext.getCurrentInstance().getExternalContext().redirect("editContentLinkServerView.jsf?fromPage=editContentLinkServerView&sectionId=" + editId);
 		}
 		catch (Exception e)
 		{
-			if (e.getMessage() != null)
-			{
-			  errMsg = bundle.getString(e.getMessage());
-			  ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), errMsg));
-			}
-	
+			e.printStackTrace();
 		}
-	
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String setServerUrl()
 	{
 		return "editmodulesections";
