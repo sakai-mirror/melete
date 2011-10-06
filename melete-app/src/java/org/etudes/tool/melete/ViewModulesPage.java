@@ -503,6 +503,16 @@ public class ViewModulesPage implements Serializable
 	{
 		this.moduleSeqNo = moduleSeqNo;
 	}
+	
+	public void setPrevSeqNo(int prevSeqNo)
+	{
+		this.prevSeqNo = prevSeqNo;
+	}
+	
+	public void setNextSeqNo(int nextSeqNo)
+	{
+		this.nextSeqNo = nextSeqNo;
+	}
 
 	/**
 	 * @param moduleService

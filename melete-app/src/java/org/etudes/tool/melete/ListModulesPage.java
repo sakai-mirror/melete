@@ -33,6 +33,8 @@ import javax.faces.component.*;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -49,6 +51,7 @@ import org.sakaiproject.util.ResourceLoader; //import com.sun.faces.util.Util;
 import java.sql.Timestamp;
 import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.MeleteSecurityService;
+import org.etudes.api.app.melete.SectionBeanService;
 import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzGroup;
 import javax.faces.event.*;
@@ -62,7 +65,7 @@ public class ListModulesPage implements Serializable
 	private BookmarkService bookmarkService;
 
 	private boolean closedModulesFlag;
-	private boolean expandAllFlag;
+	private boolean expandAllFlag = true;
 	private String formName;
 	private String isNull = null;
 	private ListDataModel modDataModel;
@@ -87,6 +90,7 @@ public class ListModulesPage implements Serializable
 	private String typeUpload;
 
 	private List viewModuleBeans = null;
+	private Map vmbeansMap = null;
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(ListModulesPage.class);
 	/** Dependency: The Melete Security service. */
@@ -99,10 +103,11 @@ public class ListModulesPage implements Serializable
 
 	public ListModulesPage()
 	{
-
 		FacesContext context = FacesContext.getCurrentInstance();
 		// context.getViewRoot().setTransient(true);
 		Map sessionMap = context.getExternalContext().getSessionMap();
+		Map params = context.getExternalContext().getRequestParameterMap();
+		if (((String) params.get("listmodulesform:lmexp")) == null) {
 		courseId = null;
 		userId = null;
 		nomodsFlag = null;
@@ -121,6 +126,7 @@ public class ListModulesPage implements Serializable
 			expandAllFlag = false;
 		}
 		setBookmarkSectionId(-1);
+		}
 	}
 
 	/**
@@ -340,6 +346,10 @@ public class ListModulesPage implements Serializable
 					closedModulesFlag = true;
 					break;
 				}
+			}
+			if (viewModuleBeans != null && viewModuleBeans.size() > 0)
+			{
+				vmbeansMap = getVmbeansMap(viewModuleBeans);
 			}
 		}
 		return viewModuleBeans;
@@ -793,18 +803,14 @@ public class ListModulesPage implements Serializable
 		ViewModBean vmbean = null;
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map params = ctx.getExternalContext().getRequestParameterMap();
-		int selModIndex;
-		if (params != null && params.containsKey("modidx"))
+		int selModId = 0;
+		if (params != null && params.containsKey("viewmodid"))
 		{
-			String modidxStr = (String) params.get("modidx");
+			String modidxStr = (String) params.get("viewmodid");
 			// This condition was added to fix ME-809 bug report issue
 			if ((modidxStr != null) && (modidxStr.length() > 0) && (!(modidxStr.equals("null"))))
 			{
-				selModIndex = Integer.parseInt(modidxStr);
-			}
-			else
-			{
-				selModIndex = 0;
+				selModId = Integer.parseInt(modidxStr);
 			}
 		}
 		else
@@ -823,7 +829,7 @@ public class ListModulesPage implements Serializable
 		{
 			if ((viewModuleBeans != null) && (viewModuleBeans.size() > 0))
 			{
-				vmbean = (ViewModBean) viewModuleBeans.get(selModIndex);
+				vmbean = (ViewModBean) vmbeansMap.get(selModId);
 				vmPage.setModuleId(vmbean.getModuleId());
 				vmPage.setViewMbean(null);
 				vmPage.setPrevMbean(null);
@@ -844,28 +850,28 @@ public class ListModulesPage implements Serializable
 		FacesContext ctx = FacesContext.getCurrentInstance();
 
 		Map params = ctx.getExternalContext().getRequestParameterMap();
-		int selModIndex, selSecIndex;
-		if (params != null && params.containsKey("modidx") && params.containsKey("secidx"))
+		int selModId = 0, selSecId = 0;
+		if (params != null && params.containsKey("viewmodid") && params.containsKey("viewsecid"))
 		{
-			String modidxStr = (String) params.get("modidx");
+			String modidxStr = (String) params.get("viewmodid");
 			// This condition was added to fix ME-809 bug report issue
 			if ((modidxStr != null) && (modidxStr.length() > 0) && (!(modidxStr.equals("null"))))
 			{
-				selModIndex = Integer.parseInt(modidxStr);
+				selModId = Integer.parseInt(modidxStr);
 			}
 			else
 			{
-				selModIndex = 0;
+				selModId = 0;
 			}
-			String secidxStr = (String) params.get("secidx");
+			String secidxStr = (String) params.get("viewsecid");
 			// This condition was added to fix ME-809 bug report issue
 			if ((secidxStr != null) && (secidxStr.length() > 0) && (!(secidxStr.equals("null"))))
 			{
-				selSecIndex = Integer.parseInt(secidxStr);
+				selSecId = Integer.parseInt(secidxStr);
 			}
 			else
 			{
-				selSecIndex = 0;
+				selSecId = 0;
 			}
 
 		}
@@ -887,10 +893,10 @@ public class ListModulesPage implements Serializable
 		{
 			if ((viewModuleBeans != null) && (viewModuleBeans.size() > 0))
 			{
-				vmBean = (ViewModBean) viewModuleBeans.get(selModIndex);
-				// Fix for ArrayIndexOutofBoundsException: -1
-				if ((selSecIndex < 0) || (selSecIndex >= vmBean.getVsBeans().size())) selSecIndex = 0;
-				vsBean = (ViewSecBean) vmBean.getVsBeans().get(selSecIndex);
+				vmBean = (ViewModBean) vmbeansMap.get(selModId);
+				Map vsbeansMap = getVsbeansMap(vmBean.getVsBeans());
+				vsBean = (ViewSecBean)vsbeansMap.get(selSecId);
+
 				modSeqNo = vmBean.getSeqNo();
 			}
 		}
@@ -910,6 +916,32 @@ public class ListModulesPage implements Serializable
 
 		vsPage.setModuleSeqNo(modSeqNo);
 	}
+	
+	protected Map getVmbeansMap(List vmBeans)
+	{
+		if ((vmBeans == null)||(vmBeans.size() == 0)) return null;
+		Map vmbeansMap = new LinkedHashMap<Integer, ViewModBean>();
+
+		for (Iterator itr = vmBeans.listIterator(); itr.hasNext();)
+		{
+			ViewModBean vmbean = (ViewModBean) itr.next();
+		    vmbeansMap.put(vmbean.getModuleId(), vmbean);
+		}	
+		return vmbeansMap;
+	}
+	
+	protected Map getVsbeansMap(List vsBeans)
+	{
+		if ((vsBeans == null)||(vsBeans.size() == 0)) return null;
+		Map vsbeansMap = new LinkedHashMap<Integer,ViewSecBean>();
+
+		for (Iterator itr = vsBeans.listIterator(); itr.hasNext();)
+		{
+			ViewSecBean vsbean = (ViewSecBean) itr.next();
+		    vsbeansMap.put(vsbean.getSectionId(), vsbean);
+		}	
+		return vsbeansMap;
+	}		
 
 	/**
 	 * @param ctx

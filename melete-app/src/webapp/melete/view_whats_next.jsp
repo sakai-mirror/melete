@@ -26,11 +26,16 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: Student View" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
 <a name="newanchor"></a>
+<t:saveState id="vnspmod" value="#{viewNextStepsPage.module}" />
+<t:saveState id="vnsppmod" value="#{viewNextStepsPage.prevModId}" />
+<t:saveState id="vnsppsec" value="#{viewNextStepsPage.prevSecId}" />
+<t:saveState id="vnspnso" value="#{viewNextStepsPage.nextSeqNo}" />
 <h:form id="viewNSsectionform">   
 	<f:subview id="top">
 	  <jsp:include page="topnavbar.jsp?myMode=View"/> 

@@ -57,6 +57,7 @@ function showHideTable(index, show)
 
 </script>
 <h:form id="listmodulesStudentform">
+<h:inputHidden id="lmexp" value="#{listModulesPage.expandAllFlag}" />
 	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp?myMode=View"/> 
 	</f:subview>
