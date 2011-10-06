@@ -25,19 +25,23 @@
 -->
 
 <%
+String fromPage = (String)request.getParameter("AddBookmarkForm:bpfpage");
 final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 final BookmarkPage bookmarkPage = (BookmarkPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "bookmarkPage");
 bookmarkPage.resetValues();
 %>
+
 <html>
 <body>
+
 <script language="javascript">
 alert("Bookmark saved");
 var elementToGet = "ManageBookmarksForm"+ ":" + "refreshButton";  
 var form = window.opener.document.forms['ManageBookmarksForm'];  
 if (form != null)
 {
-   var button = form.elements[elementToGet];  
+	form.elements['ManageBookmarksForm:bpfpageparam'].value='<%=fromPage%>';
+    var button = form.elements[elementToGet];  
     button.click();
  }
  else

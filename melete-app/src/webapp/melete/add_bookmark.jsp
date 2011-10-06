@@ -27,6 +27,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: Bookmark It" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -56,26 +57,34 @@ function validate_form()
 
 }
 </script>
+<t:saveState id="bpbmark" value="#{bookmarkPage.bookmark}" />
 
+		
 <%
 final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 final BookmarkPage bookmarkPage = (BookmarkPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "bookmarkPage");
-bookmarkPage.setBookmark(null);
+//bookmarkPage.setBookmark(null);
 String sectionId = (String)request.getParameter("sectionId");
 String sectionTitle = (String)request.getParameter("sectionTitle");
+String fromPage = (String)request.getParameter("fromPage");
 
 if (sectionId != null)
 {
-  bookmarkPage.setSectionId(sectionId);
+	bookmarkPage.setSectionId(sectionId);
 }  
 if (sectionTitle != null)
 {
   bookmarkPage.setSectionTitle(sectionTitle);
 }  
+if (fromPage != null)
+{
+	bookmarkPage.setFromPage(fromPage);
+}
 %>
 
 <h:form id="AddBookmarkForm">
 <h:inputHidden id="sectionId" value="#{bookmarkPage.sectionId}"/>
+<h:inputHidden id="bpfpage" value="#{bookmarkPage.fromPage}" />
 <h:messages id="addbookmarkerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 <table cellspacing="0" cellpadding="10" width="100%" border="0" align="center">
 	<tr>

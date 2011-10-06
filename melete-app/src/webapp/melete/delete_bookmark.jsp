@@ -26,11 +26,14 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: Delete bookmarks" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
+<t:saveState id="bpfpage" value="#{bookmarkPage.fromPage}" />
  <h:form id="DeleteBookmarkForm">
+ <h:inputHidden id="delbmid" value="#{bookmarkPage.deleteBookmarkId}"/>
  	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>

@@ -57,7 +57,7 @@
 </td>
 <tr>
 <td colspan="2" align="right">										
-  <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','Melete Bookmark Window');">
+  <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','','Melete Bookmark Window');">
 		    	<f:param id="sectionId" name="sectionId" value="#{viewSectionsPage.section.sectionId}" />
 	  			<f:param id="sectionTitle" name="sectionTitle" value="#{viewSectionsPage.section.title}" />
 	  			<h:graphicImage id="bul_gif" value="/images/bookmark-it.png" alt="" styleClass="AuthImgClass"/>

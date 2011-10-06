@@ -28,14 +28,16 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: List of bookmarks" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
 <script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
-
+<t:saveState id="bpfpage" value="#{bookmarkPage.fromPage}" />
  <h:form id="ManageBookmarksForm">
- 	<!-- top nav bar -->
+ <h:inputHidden id="bpfpageparam" value="#{bookmarkPage.fromPage}" />
+   	<!-- top nav bar -->
 		<f:subview id="top">
 				<jsp:include page="topnavbar.jsp"/> 
 		</f:subview>
@@ -82,7 +84,7 @@
 					 <h:outputText id="bmnotes" value="#{bookmark.briefNotes}"/>					 
 					</h:column>
 					<h:column>
-					 <h:outputLink id="editBookmarkLink" value="list_bookmarks" onclick="OpenBookmarkWindow(#{bookmark.sectionId},'#{bookmark.title}','Melete Bookmark Window');">
+					 <h:outputLink id="editBookmarkLink" value="list_bookmarks" onclick="OpenBookmarkWindow(#{bookmark.sectionId},'#{bookmark.title}','#{bookmarkPage.fromPage}','Melete Bookmark Window');">
 		    	       <f:param id="sectionId" name="sectionId" value="#{bookmark.sectionId}" />
 		    	       <f:param id="sectionTitle" name="sectionTitle" value="#{bookmark.title}" />
 						  <h:graphicImage id="editgif" alt="" value="/images/document_edit.gif" styleClass="AuthImgClass" />
