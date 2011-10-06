@@ -3017,8 +3017,11 @@ else
 							if (sec.getSectionResource() != null)
 							{
 								secRes = sectionDB.getSectionResourcebyId(sec.getSectionId().toString());
+								if(secRes.getResource() != null && secRes.getResource().getResourceId() != null && secRes.getResource().getResourceId().length() != 0)
+								{
 								melRes = sectionDB.getMeleteResource(secRes.getResource().getResourceId());
 								printText.append("<p><i>" + getLicenseInformation(melRes) + "</i></p>");
+								}
 							}
 							if (sec.getInstr() != null && sec.getInstr().length() != 0)
 								printText.append("<p> <i>Instructions:</i> " + sec.getInstr() + "</p>");
