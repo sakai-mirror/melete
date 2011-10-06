@@ -143,8 +143,8 @@ function showHideTable(index, show)
           
           <h:commandLink id="whatsNext" action="#{listModulesPage.goWhatsNext}" immediate="true" rendered="#{((vmbean.visibleFlag == listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&((listModulesPage.expandAllFlag == listModulesPage.trueFlag)||(vmbean.moduleId == listModulesPage.showModuleId)))}">
 		    <h:outputText  id="whatsNextMsg" value="#{msgs.list_modules_stud_next_steps}" />
-		    <f:param name="modidx2" value="#{listModulesPage.modTable.rowIndex}" />
-		    <f:param name="modseqno" value="#{vmbean.seqNo}" />
+		    <f:param name="viewmodid" value="#{vmbean.moduleId}" />  
+            <f:param name="viewmodseqno" value="#{vmbean.seqNo}" />
           </h:commandLink>  
           <h:outputText  id="whatsNextMsg2" value="#{msgs.list_modules_stud_next_steps}" rendered="#{((vmbean.visibleFlag != listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&((listModulesPage.expandAllFlag == listModulesPage.trueFlag)||(vmbean.moduleId == listModulesPage.showModuleId)))}"/>
            </h:column>

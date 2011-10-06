@@ -362,44 +362,35 @@ public class ListModulesPage implements Serializable
 	{
 		ViewModBean vmBean = null;
 		FacesContext ctx = FacesContext.getCurrentInstance();
-
 		Map params = ctx.getExternalContext().getRequestParameterMap();
-		int selModIndex = 0, modSeqNo = -1;
-
+		int selModId = 0, selModSeqNo = 0;
 		if (params != null)
 		{
-			String modidxStr = (String) params.get("modidx2");
+			String modidxStr = (String) params.get("viewmodid");
 			// This condition was added to fix ME-809 bug report issue
 			if ((modidxStr != null) && (modidxStr.length() > 0) && (!(modidxStr.equals("null"))))
 			{
-				selModIndex = Integer.parseInt(modidxStr);
+				selModId = Integer.parseInt(modidxStr);
 			}
-			else
+			String modseqStr = (String) params.get("viewmodseqno");
+			// This condition was added to fix ME-809 bug report issue
+			if ((modseqStr != null) && (modseqStr.length() > 0) && (!(modseqStr.equals("null"))))
 			{
-				selModIndex = 0;
-			}
-			String modSeqStr = (String) params.get("modseqno");
-			if ((modSeqStr != null) && (modSeqStr.length() > 0) && (!(modSeqStr.equals("null"))))
-			{
-				modSeqNo = Integer.parseInt(modSeqStr);
-			}
-			else
-			{
-				modSeqNo = -1;
+				selModSeqNo = Integer.parseInt(modseqStr);
 			}
 		}
-
+		
 		ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
 		ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(ctx);
-		vnPage.setModule(null);
+		
 		if (isUserAuthor() || isUserStudent())
 		{
-			if ((viewModuleBeans != null) && (viewModuleBeans.size() > 0))
+			if ((vmbeansMap != null) && (vmbeansMap.size() > 0))
 			{
-				vmBean = (ViewModBean) viewModuleBeans.get(selModIndex);
+				vmBean = (ViewModBean) vmbeansMap.get(selModId);
 			}
-		}
-		int nextSeqNo = getModuleService().getNextSeqNo(getUserId(), getCourseId(), new Integer(modSeqNo));
+		}		
+		int nextSeqNo = getModuleService().getNextSeqNo(getUserId(), getCourseId(), new Integer(selModSeqNo));
 		vnPage.setNextSeqNo(nextSeqNo);
 		// vnPage.setModule(getModuleService().getModule(vmBean.getModuleId()));
 		if ((vmBean.getVsBeans() == null) || (vmBean.getVsBeans().size() == 0))

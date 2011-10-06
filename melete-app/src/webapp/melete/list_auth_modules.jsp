@@ -206,7 +206,7 @@ if (msg != null)
                              
               <h:commandLink id="editSec" actionListener="#{listAuthModulesPage.editSection}"  action="#{listAuthModulesPage.redirectToEditSection}">
                <f:param name="editsecmodid" value="#{mdbean.moduleId}" />  
-               <f:param name="editsecid" value="#{sectionBean.section.sectionId}" /> 
+               <f:param name="sectionId" value="#{sectionBean.section.sectionId}" /> 
               <h:outputText id="sectitle" value="#{sectionBean.section.title}">
                 </h:outputText>
               </h:commandLink>

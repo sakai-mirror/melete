@@ -916,7 +916,7 @@ public class ListAuthModulesPage implements Serializable
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map params = ctx.getExternalContext().getRequestParameterMap();
 	  	int selModId = Integer.parseInt((String) params.get("editsecmodid"));
-	  	int selSecId = Integer.parseInt((String) params.get("editsecid"));
+	  	int selSecId = Integer.parseInt((String) params.get("sectionId"));
 
 		ModuleDateBean mdbean = (ModuleDateBean) mdbeansMap.get(selModId);
 		Map secbeansMap = getSecbeansMap(mdbean.getSectionBeans());
