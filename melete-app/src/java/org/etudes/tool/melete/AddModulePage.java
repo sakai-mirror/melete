@@ -30,6 +30,7 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.ActionEvent;
 
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.tool.cover.ToolManager;
@@ -56,13 +57,8 @@ public class AddModulePage extends ModulePage implements Serializable
 		resetModuleValues();
 	}
 
-	/**
-	 * saves the module into database. Validates the dates provided by the user. If keyword is not provided then keyword = title. Tracks add module event
-	 */
-
-	public String save()
+	private void actualSave()
 	{
-		setSuccess(false);
 		if (moduleService == null) moduleService = getModuleService();
 
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -95,32 +91,49 @@ public class AddModulePage extends ModulePage implements Serializable
 			sessionMap.put("currModule", module);
 			// Track the event
 			EventTrackingService.post(EventTrackingService.newEvent("melete.module.new", ToolManager.getCurrentPlacement().getContext(), true));
-
+			setSuccess(true);
 		}
 		catch (Exception ex)
 		{
 			// logger.error("mbusiness insert module failed:" + ex.toString());
 			String errMsg = bundle.getString("add_module_fail");
 			addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-			return "add_module";
+			return;
 		}
-		setSuccess(true);
-		return "confirm_addmodule";
+	}
+	/**
+	 * saves the module into database. Validates the dates provided by the user. If keyword is not provided then keyword = title. Tracks add module event
+	 */
+
+	public String save()
+	{
+		setSuccess(false);
+		actualSave();	
+		FacesContext context = FacesContext.getCurrentInstance();
+		if (context.getMessages().hasNext()) return "failure";
+		return "list_auth_modules";
 	}
 
 	/**
 	 * Adds the blank section and resets and initializes objects.
 	 */
-	public String addContentSections()
+	public void addContentSections(ActionEvent evt)
 	{
+		actualSave();
 		FacesContext context = FacesContext.getCurrentInstance();
+		if (context.getMessages().hasNext()) return;
 		ValueBinding binding = Util.getBinding("#{editSectionPage}");
 		EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
-		editPage.resetSectionValues();
 		editPage.setModule(module);
-		editPage.addBlankSection();
-
-		return "editmodulesections";
+		Integer newSecId = editPage.addBlankSection();
+		try
+		{
+			if (newSecId != null) context.getExternalContext().redirect("editmodulesections.jsf?sectionId=" + newSecId.toString());
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**

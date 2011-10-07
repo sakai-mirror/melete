@@ -362,7 +362,7 @@ public class SectionDB implements Serializable
 				tx.commit();
 
 				if (logger.isDebugEnabled())
-					logger.debug("commit transaction and edit section :" + section.getModuleId() + "," + section.getTitle());
+					logger.debug("commit transaction and edit section :" + section.getSectionId() + "," + section.getTitle());
 				// updateExisitingResource(secResource);
 				return;
 			}

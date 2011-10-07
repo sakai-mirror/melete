@@ -718,10 +718,9 @@ public class ListAuthModulesPage implements Serializable
 	/** Reset selected lists and navigate to add section page
 	 * @return editmodulesections or list_auth_modules
 	 */
-	public String AddContentAction()
+	public void AddContentAction(ActionEvent evt)
 	{
-		resetSelectedLists();
-		if (!saveModuleDates()) return "list_auth_modules";
+		if (!saveModuleDates()) return ;
 		FacesContext ctx = FacesContext.getCurrentInstance();
 
 		if (count >= 2)
@@ -733,9 +732,17 @@ public class ListAuthModulesPage implements Serializable
 
 			moduleSelected = false;
 			sectionSelected = false;
-			return "list_auth_modules";
+			return ;
 		}
 		count = 0;
+		
+		if ((moduleSelected == false) && (sectionSelected == false))
+		{
+			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+			String msg = bundle.getString("select_one_add");
+			addMessage(ctx, "Select  One", msg, FacesMessage.SEVERITY_ERROR);
+			return;
+		}
 		// module selected
 		if (moduleSelected || sectionSelected)
 		{
@@ -745,30 +752,23 @@ public class ListAuthModulesPage implements Serializable
 			ValueBinding binding = Util.getBinding("#{editSectionPage}");
 			FacesContext context = FacesContext.getCurrentInstance();
 			EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
-			editPage.setSection(null);
-			editPage.resetSectionValues();
 			editPage.setModule(mdbean.getModule());
-			
-			Map sessionMap = context.getExternalContext().getSessionMap();
-			sessionMap.put("currModule", mdbean.getModule());
-			
-			editPage.addBlankSection();
+			Integer newSecId = editPage.addBlankSection();
 
 			count = 0;
 			moduleSelected = false;
 			// Mallika -3/24/05
 			sectionSelected = false;
-			return "editmodulesections";
+			try
+			{
+				if (newSecId != null) ctx.getExternalContext().redirect("editmodulesections.jsf?sectionId=" + newSecId.toString());
+			}
+			catch (Exception e)
+			{
+				return;
+			}
 		}
-		if ((moduleSelected == false) && (sectionSelected == false))
-		{
-			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-			String msg = bundle.getString("select_one_add");
-			addMessage(ctx, "Select  One", msg, FacesMessage.SEVERITY_ERROR);
-		}
-		moduleSelected = false;
-		sectionSelected = false;
-		return "list_auth_modules";
+		return;
 	}
 
 	/** Inactivate modules and display a message about modules that have been inactivated
@@ -912,21 +912,21 @@ public class ListAuthModulesPage implements Serializable
 	 */
 	public void editSection(ActionEvent evt)
 	{
+		if (!saveModuleDates()) return;
 		resetSelectedLists();
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map params = ctx.getExternalContext().getRequestParameterMap();
-	  	int selModId = Integer.parseInt((String) params.get("editsecmodid"));
-	  	int selSecId = Integer.parseInt((String) params.get("sectionId"));
+		int selModId = Integer.parseInt((String) params.get("editsecmodid"));
+		int selSecId = Integer.parseInt((String) params.get("sectionId"));
 
-		ModuleDateBean mdbean = (ModuleDateBean) mdbeansMap.get(selModId);
-		Map secbeansMap = getSecbeansMap(mdbean.getSectionBeans());
-		SectionBeanService secBean = (SectionBeanService)secbeansMap.get(selSecId);
-
-		ValueBinding binding = Util.getBinding("#{editSectionPage}");
-		EditSectionPage esPage = (EditSectionPage) binding.getValue(ctx);
-		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		sessionMap.put("currModule", ((Section) secBean.getSection()).getModule());
-		esPage.setEditInfo((Section) secBean.getSection());
+		try
+		{
+			ctx.getExternalContext().redirect("editmodulesections.jsf?sectionId=" + selSecId);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/** Redirect to delete confirmation page with selected modules or sections

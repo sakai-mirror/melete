@@ -33,7 +33,7 @@
 		</h:commandLink>
 	</h:column>
 	<h:column>
-		<h:commandLink id="addContAction" action="#{listAuthModulesPage.AddContentAction}">
+		<h:commandLink id="addContAction" actionListener="#{listAuthModulesPage.AddContentAction}">
 	  		<h:graphicImage id="addContentImg" value="/images/document_add.gif" styleClass="AuthImgClass"/>
 	  		<h:outputText  value="#{msgs.authnavbar_add_content}"/>
 		</h:commandLink>

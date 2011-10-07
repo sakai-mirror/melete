@@ -141,6 +141,7 @@ function newWindow(newContent){
 		</table>
   		<div class="actionBar" align="left">
           	<h:commandButton action="#{addModulePage.save}" value="#{msgs.im_add_button}" accesskey="#{msgs.add_access}" title="#{msgs.im_add_button_text}" styleClass="BottomImgAdd"/>
+			<h:commandButton id="sectionButton"  actionListener="#{addModulePage.addContentSections}" value="#{msgs.im_add_content_sections}" tabindex="" accesskey="#{msgs.add_access}" title="#{msgs.im_add_content_sections_text}" styleClass="BottomImgAdd" />
 			<h:commandButton id="cancelButton" immediate="true" action="#{addModulePage.cancel}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
 	       </div>
         </td></tr>		

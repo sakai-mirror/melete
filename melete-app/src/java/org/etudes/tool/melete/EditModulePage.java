@@ -32,6 +32,7 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.ActionEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -221,7 +222,7 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 	/**
 	 * Creates a new section.
 	 */
-	public String addContentSections()
+	public void addContentSections(ActionEvent evt)
 	{
 		if (!getSuccess())
 		{
@@ -234,7 +235,7 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 			else
 			{
 				callFromAddContent = false;
-				return "edit_module";
+				return;
 			}
 		}
 		// Revision -- 12/20 - to remove retaintion of values
@@ -244,11 +245,18 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 
 		ValueBinding binding = Util.getBinding("#{editSectionPage}");
 		EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
-		editPage.setSection(null);
-		editPage.resetSectionValues();
 		editPage.setModule(module);
-		editPage.addBlankSection();
-		return "editmodulesections";
+		Integer newSecId = editPage.addBlankSection();
+		try
+		{
+			if (newSecId != null) context.getExternalContext().redirect("editmodulesections.jsf?sectionId=" + newSecId.toString());
+		}
+		catch (Exception e)
+		{
+			return;
+		}
+		
+		return;
 	}
 
 	/**
@@ -404,7 +412,7 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 	 * If edit module is invoked from CM, then pass the return address to section page.
 	 * @return
 	 */
-	public String editSection()
+	public void editSection(ActionEvent evt)
 	{
 		callFromAddContent = false;
 		if (!getSuccess())
@@ -412,16 +420,21 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 			if (!savehere().equals("failure"))
 				setSuccess(true);
 			else
-				return "edit_module";
+				return ;
 		}
 
 		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{editSectionPage}");
-		EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
 		Map sessionMap = context.getExternalContext().getSessionMap();
 		sessionMap.put("currModule", module);
-		editPage.setEditInfo(firstSection);
-		return "editmodulesections";
+		
+		try
+		{
+			context.getExternalContext().redirect("editmodulesections.jsf?sectionId=" + firstSection.getSectionId().toString());
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	public SectionObjService getFirstSection()

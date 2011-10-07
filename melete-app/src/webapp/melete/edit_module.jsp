@@ -65,11 +65,11 @@ function newWindow(newContent){
 					<h:commandLink id="TOCButton"  action="#{editModulePage.gotoTOC}">
 						<h:outputText id="toc" value="#{msgs.edit_module_TOC}" />
 					</h:commandLink> &raquo;  <h:outputText value="#{editModulePage.module.title}" /> &raquo;
-					<h:commandLink id="editFirstSection" action="#{editModulePage.editSection}" rendered="#{editModulePage.hasSections}">
+					<h:commandLink id="editFirstSection" actionListener="#{editModulePage.editSection}" rendered="#{editModulePage.hasSections}">						
 					     <h:outputText id="editSectionText" value="#{msgs.edit_module_edit_sections}"/>				     
 					 </h:commandLink> 	
 					<h:outputText id="editSectionText_1" value=" / " rendered="#{editModulePage.hasSections}" />
-				  	<h:commandLink id="addSection" action="#{editModulePage.addContentSections}">
+				  	<h:commandLink id="addSection" actionListener="#{editModulePage.addContentSections}">
 					   <h:outputText id="addSectionText" value="#{msgs.edit_module_add_content_sections}"/>
 				  </h:commandLink> 				  
 			 	</td>
@@ -155,7 +155,7 @@ function newWindow(newContent){
  	<div class="actionBar" align="left">
  	  <h:commandButton id="returnButton"  action="#{editModulePage.goDone}" value="#{msgs.im_done}" tabindex="" accesskey="#{msgs.done_access}" title="#{msgs.im_done_text}" styleClass="BottomImgReturn" />
   	  <h:commandButton id="submitsave" action="#{editModulePage.save}" value="#{msgs.im_save}" tabindex="" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
-  	  <h:commandButton id="sectionButton" action="#{editModulePage.addContentSections}" value="#{msgs.im_add_content_sections}" tabindex="" accesskey="#{msgs.add_access}" title="#{msgs.im_add_content_sections_text}" styleClass="BottomImgAdd"/>
+  	  <h:commandButton id="sectionButton" actionListener="#{editModulePage.addContentSections}" value="#{msgs.im_add_content_sections}" tabindex="" accesskey="#{msgs.add_access}" title="#{msgs.im_add_content_sections_text}" styleClass="BottomImgAdd"/>
   	  <h:commandButton id="cancelButton" action="#{editModulePage.cancel}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
   	</div>
    </td>

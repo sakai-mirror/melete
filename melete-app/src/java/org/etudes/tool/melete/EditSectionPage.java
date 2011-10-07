@@ -791,19 +791,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 	}*/
 
 	/**
-	 * navigate to upload screen.
-	 */
-	public String gotoServerView()
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	ValueBinding binding =Util.getBinding("#{listResourcesPage}");
-		ListResourcesPage listResPage = (ListResourcesPage) binding.getValue(ctx);
-		listResPage.setSectionId(editId);
-		listResPage.setFromPage("editContentUploadServerView");
-		return "editContentUploadServerView";
-	}
-
-	/**
 	 * 
 	 * @param evt
 	 */
@@ -811,50 +798,34 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		try
 		{
-		FacesContext.getCurrentInstance().getExternalContext().redirect("editContentUploadServerView.jsf?fromPage=editContentUploadServerView&sectionId=" + editId);
+			sectionService.editSection(section, getCurrUserId());
+			FacesContext.getCurrentInstance().getExternalContext().redirect(
+					"editContentUploadServerView.jsf?fromPage=editContentUploadServerView&sectionId=" + editId);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}	
+
+	/**
+	 * 
+	 * @param evt
+	 */
+	public void setServerLTIListener(ActionEvent evt)
+	{
+		try
+		{
+			sectionService.editSection(section, getCurrUserId());
+			FacesContext.getCurrentInstance().getExternalContext().redirect(
+					"editContentLTIServerView.jsf?fromPage=editContentLTIServerView&sectionId=" + editId);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
-
 	
-	/**
-	 * Navigate to select a link resource.
-	 * @return
-	 */
-	public String gotoServerLinkView()
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	ValueBinding binding =Util.getBinding("#{listResourcesPage}");
-		ListResourcesPage listResPage = (ListResourcesPage) binding.getValue(ctx);
-		listResPage.setFromPage("editContentLinkServerView");
-		listResPage.setSectionId(editId);
-		return "editContentLinkServerView";
-	}
-
-	/**
-	 * Navigate to LTI resources list
-	 * @return
-	 */
-	public String gotoServerLTIView()
-	{
-		gotoServerLinkView();
-		setLTIUrl(null);
-		setLTIPassword(null);
-		setLTIKey(null);
-		setLTIDisplay("Basic");
-		setLTIDescriptor(null);
-		newURLTitle ="";
-		FacesContext ctx = FacesContext.getCurrentInstance();
-	  	ValueBinding binding =Util.getBinding("#{listResourcesPage}");
-		ListResourcesPage listResPage = (ListResourcesPage) binding.getValue(ctx);
-		listResPage.setFromPage("editContentLTIServerView");
-		listResPage.resetValues();
-		return "editContentLTIServerView";
-	}
-
 	/**
 	 * 
 	 * @param evt
@@ -863,7 +834,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		try
 		{
-		FacesContext.getCurrentInstance().getExternalContext().redirect("editContentLinkServerView.jsf?fromPage=editContentLinkServerView&sectionId=" + editId);
+			sectionService.editSection(section, getCurrUserId());
+			FacesContext.getCurrentInstance().getExternalContext().redirect(
+					"editContentLinkServerView.jsf?fromPage=editContentLinkServerView&sectionId=" + editId);
 		}
 		catch (Exception e)
 		{
@@ -883,65 +856,52 @@ public class EditSectionPage extends SectionPage implements Serializable
 	 * Associate section with LTI resource selected.
 	 * @return
 	 */
-	public String setServerLTI()
+	public void setServerLTI(ActionEvent evt)
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		String errMsg = null;
-		if (logger.isDebugEnabled()) logger.debug("selected resource properties" + selectedResourceName + " , " + selectedResourceDescription);
+		logger.debug("set server LTI:" + getLTIDescriptor());
 		selResourceIdFromList = getSelResourceIdFromList();
 
 		try
 		{
 			// new link provided
-			if (selResourceIdFromList == null)
+			if (getLTIDescriptor() != null && getLTIDescriptor().length() != 0 )
 			{
 				if (getLTIDescriptor().equals("http://") || getLTIDescriptor().equals("https://"))
 				{
 					errMsg = bundle.getString("select_or_cancel");
 					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "select_or_cancel", errMsg));
-					return "editContentLTIServerView";
+					return;
 				}
 				setLicenseInfo();
 				if(newURLTitle == null || newURLTitle.length() == 0)
 				{
-					errMsg = bundle.getString("URL_title_reqd");
-					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "URL_title_reqd", errMsg));
-					return "editContentLTIServerView";
+					newURLTitle = getLTIDescriptor();
 				}
 				if(newURLTitle != null && newURLTitle.length() > SectionService.MAX_URL_LENGTH)
 				{
-					errMsg = bundle.getString("add_section_url_title_len");
-					ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "add_section_url_title_len", errMsg));
-					return "editContentLTIServerView";
+					newURLTitle = newURLTitle.substring(0,SectionService.MAX_URL_LENGTH );
 				}
 				secResourceName = newURLTitle;
 				createLTIDescriptor();
 				String res_mime_type = MeleteCHService.MIME_TYPE_LTI;
 				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, secResourceDescription);
-		//		if (containCollectionId == null) containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
+
 				containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
 				String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type, containCollectionId, getSecContentData(),
 						res);
-				selectedResource = new MeleteResource();
-				selectedResource.setResourceId(newResourceId);
-				sectionService.insertResource(selectedResource);
-				currLinkUrl = secResourceName;
+								
+				MeleteResourceService newResource = new MeleteResource();
+				newResource.setResourceId(newResourceId);
+				
+				logger.debug("CHK ids in lti set:" + editId + ", from attribute" + evt.getComponent().getAttributes().get("sectionId"));
+				SectionObjService section = sectionService.getSection(Integer.parseInt(editId));
+				sectionService.editSection(section, newResource, getCurrUserId(), true);
+				ctx.getExternalContext().redirect("editmodulesections.jsf?sectionId=" + editId);
 			}
-			else
-			{
-				processSelectedResource(selResourceIdFromList);
-
-				// pick from server list
-				/*secResourceName = selectedResourceName;
-				secResourceDescription = selectedResourceDescription;
-				//setLicenseCodes(m_selected_license);
-				ContentResource cr = getMeleteCHService().getResource(selResourceIdFromList);
-				if(cr.getContentLength() > 0)
-					currLinkUrl = new String(cr.getContent());*/
-			}
-			meleteResource = selectedResource;
-			ctx.renderResponse();
+			
 		}
 		catch (Exception e)
 		{
@@ -952,23 +912,26 @@ public class EditSectionPage extends SectionPage implements Serializable
 			  errMsg = bundle.getString(e.getMessage());
 			  ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), errMsg));
 			}
-			return "editContentLTIServerView";
-		}
-		return "editmodulesections";
+			return;
+		}		
 	}
 
 	/**
-	 * Cancel selected file.
+	 * Cancel LTI selected file.
+	 * 
 	 * @return
 	 */
-	public String cancelServerFile()
+	public void cancelServerFile(ActionEvent evt)
 	{
-		selectedResource = null;
-		selResourceIdFromList = null;
-		setLinkUrl(currLinkUrl);
-		selectedResourceName = null;
-		selectedResourceDescription = null;
-		return "editmodulesections";
+		try
+		{
+			String secId = (String) evt.getComponent().getAttributes().get("sectionId");
+			FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + secId);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -1201,15 +1164,15 @@ public class EditSectionPage extends SectionPage implements Serializable
 	}
 
 	/*
-	 *  click of add creates a blank section
+	 * click of add creates a blank section
 	 */
-	public void addBlankSection()
+	public Integer addBlankSection()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		Map sessionMap = context.getExternalContext().getSessionMap();
 		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 		MeleteSiteAndUserInfo info = (MeleteSiteAndUserInfo) binding.getValue(context);
-
+		Integer newSectionId = null;
 		try
 		{
 			Section s = new Section();
@@ -1220,31 +1183,32 @@ public class EditSectionPage extends SectionPage implements Serializable
 			s.setCreatedByLname(info.getCurrentUser().getLastName());
 			s.setModifiedByFname(info.getCurrentUser().getFirstName());
 			s.setModifiedByLname(info.getCurrentUser().getLastName());
-			//reset flags
-			shouldRenderEditor=false;
-			shouldRenderLink=false;
-			shouldRenderLTI=false;
-			shouldRenderUpload=false;
+			// reset flags
+			shouldRenderEditor = false;
+			shouldRenderLink = false;
+			shouldRenderLTI = false;
+			shouldRenderUpload = false;
 			shouldRenderNotype = true;
 			int mId = module.getModuleId().intValue();
 			logger.debug("mId in blank section" + mId);
 
-			Integer newSectionId = sectionService.insertSection(module,s);
+			newSectionId = sectionService.insertSection(module, s);
 			s.setSectionId(newSectionId);
 
 			// refresh module and refresh seqxml. It has newly added section id
 			this.module = moduleService.getModule(mId);
-			sessionMap.put("currModule",module);
+			sessionMap.put("currModule", module);
 			s.setModule(module);
-			
+
 			// set edit page for this section
 			setEditId(newSectionId.toString());
 			setEditInfo(s);
 		}
-		catch(Exception ex)
+		catch (Exception ex)
 		{
 			// do nothing
 		}
+		return newSectionId;
 	}	
 	
 		public String getEditId()

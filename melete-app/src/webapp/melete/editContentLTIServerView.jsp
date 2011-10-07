@@ -20,6 +20,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: Select Resource Item" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -31,7 +32,9 @@ function contentChangeSubmit()
            document.getElementById("EditLtiServerViewForm:contentChange").value = "true";
 }
 </script>
-
+	<t:saveState id="editId" value="#{editSectionPage.editId}" />	
+	<t:saveState id="fromPage" value="#{listResourcesPage.fromPage}" />
+	<t:saveState id="sectionId" value="#{listResourcesPage.sectionId}" />
 <h:form id="EditLtiServerViewForm" enctype="multipart/form-data">	
 <!-- top nav bar -->
     <f:subview id="top">
@@ -67,15 +70,16 @@ function contentChangeSubmit()
                                                         <jsp:include page="lti_advanced_edit.jsp"/>
                                                 </f:subview>
                         </td></tr>                        
-					 	<tr><td colspan="2"> 
-							<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{editSectionPage.section.openWindow}" />												
-							<h:outputText id="editLTIText_8" value="#{msgs.editcontentlinkserverview_openwindow}" />	
-					</td></tr>	
+					 
 					</table> </td></tr>       
 					<tr><td>
 						<div class="actionBar" align="left">
-							 <h:commandButton id="addButton_1" action="#{editSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
-					     	<h:commandButton id="cancelButton_1" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>		
+							 <h:commandButton id="addButton_1" actionListener="#{editSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue">
+								 <f:attribute name="sectionId" value="#{editSectionPage.editId}" />
+						 	</h:commandButton>
+					     	<h:commandButton id="cancelButton_1" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
+					     		<f:attribute name="sectionId" value="#{editSectionPage.editId}" />
+						 	</h:commandButton>		
 						</div></td></tr>
 	<!-- new link end -->				            		
 						<!-- start main -->
@@ -84,10 +88,7 @@ function contentChangeSubmit()
 									<f:subview id="ResourceListingForm" >
 										<jsp:include page="list_resources.jsp"/> 
 									</f:subview>	
-									<div class="actionBar" align="left">
-						 			 	<h:commandButton id="addButton" action="#{editSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
-					    				 <h:commandButton id="cancelButton" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
-					     			</div>	
+
 					     </td></tr>
 					    </table>					
 	<!--end  main -->	

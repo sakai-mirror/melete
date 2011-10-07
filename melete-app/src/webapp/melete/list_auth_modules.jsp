@@ -204,7 +204,7 @@ if (msg != null)
               <h:selectBooleanCheckbox value="#{sectionBean.selected}"  valueChangeListener="#{listAuthModulesPage.selectedSection}"/> 
                <h:outputText id="disp_seq" value="#{sectionBean.displaySequence}. " />
                              
-              <h:commandLink id="editSec" actionListener="#{listAuthModulesPage.editSection}"  action="#{listAuthModulesPage.redirectToEditSection}">
+              <h:commandLink id="editSec" actionListener="#{listAuthModulesPage.editSection}">
                <f:param name="editsecmodid" value="#{mdbean.moduleId}" />  
                <f:param name="sectionId" value="#{sectionBean.section.sectionId}" /> 
               <h:outputText id="sectitle" value="#{sectionBean.section.title}">
