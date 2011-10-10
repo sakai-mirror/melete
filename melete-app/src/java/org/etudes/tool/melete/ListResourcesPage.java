@@ -366,7 +366,7 @@ public class ListResourcesPage
 			
 			totalSize = currSiteResourcesList.size() + 1;
 			int c = Integer.parseInt(chunkSize);
-			if (c == -1) c = totalSize - 1;
+			if (c == -1) c = totalSize -1;
 			toIndex = fromIndex + c;
 			if (toIndex >= (totalSize - 1)) toIndex = totalSize - 1;
 			sortList();
@@ -501,38 +501,28 @@ public class ListResourcesPage
 	 * @param evt
 	 *        ActionEvent object
 	 */
-	public void selectedResourceAction(ActionEvent evt)
+	public String link2meAction()
 	{
-		logger.debug("checking if coming to link2me action" + fromIndex);
+		logger.debug("checking if coming to link2me action2");
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		try
 		{
-			UIData seltable = null;
-			UIViewRoot root = ctx.getViewRoot();
-			if (fromPage.equals("editContentUploadServerView"))
-				seltable = (UIData) root.findComponent("EditUploadServerViewForm:UploadResourceListingForm").findComponent("table");
-			else if (fromPage.equals("editContentLinkServerView"))
-				seltable = (UIData) root.findComponent("EditServerViewForm:LinkResourceListingForm").findComponent("table");
-			else if (fromPage.equals("editContentLTIServerView"))
-				seltable = (UIData) root.findComponent("EditLtiServerViewForm:ResourceListingForm").findComponent("table");
-			DisplaySecResources dr = (DisplaySecResources) seltable.getRowData();
-			selResourceIdFromList = dr.getResource_id();
+			selResourceIdFromList = getSelResourceIdFromList();
 			logger.debug("res id selected:" + selResourceIdFromList);
 			if (sectionId != null && sectionId.length() != 0)
 			{
 				SectionObjService sec = sectionService.getSection(Integer.parseInt(sectionId));
 				MeleteResourceService mres = sectionService.getMeleteResource(getSelResourceIdFromList());
-		//		sectionService.insertMeleteResource(sec, mres);
 				sectionService.editSection(sec, mres, getCurrUserId(), true);
 			}
-			
+
 			FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + sectionId);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-		return;
+		return fromPage;
 	}
 	
 	/**
@@ -541,23 +531,12 @@ public class ListResourcesPage
 	 * @param evt
 	 *        ActionEvent object
 	 */
-	public void selectedResourceDeleteAction(ActionEvent evt)
+	public String selectedResourceDeleteAction()
 	{
 		try
 		{
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIData seltable = null;
-		UIViewRoot root = ctx.getViewRoot();
-		if (fromPage.equals("editContentUploadServerView"))
-			seltable = (UIData) root.findComponent("EditUploadServerViewForm:UploadResourceListingForm").findComponent("table");
-		else if (fromPage.equals("editContentLinkServerView"))
-			seltable = (UIData) root.findComponent("EditServerViewForm:LinkResourceListingForm").findComponent("table");
-		else if (fromPage.equals("editContentLTIServerView"))
-			seltable = (UIData) root.findComponent("EditLtiServerViewForm:ResourceListingForm").findComponent("table");
-		else if (fromPage.equals("manage_content"))
-			seltable = (UIData) root.findComponent("ManageContentForm:DeleteResourceView").findComponent("table"); 
-		DisplaySecResources dr = (DisplaySecResources) seltable.getRowData();
-		String delRes_id =  dr.getResource_id();
+		String delRes_id = getSelResourceIdFromList();
 	
 		ctx.getExternalContext().redirect("delete_resource.jsf?fromPage=" + fromPage + "&delResourceId="+ delRes_id + "&sectionId=" + sectionId);
 		}
@@ -565,6 +544,7 @@ public class ListResourcesPage
 		{
 			e.printStackTrace();
 		}
+		return fromPage;
 	}
 
 	/**
@@ -1055,9 +1035,9 @@ public class ListResourcesPage
 		// -1 implies all resources need to be displayed
 		if (this.chunkSize.equals("-1")) this.chunkSize = Integer.toString(totalSize - 1);
 		int c = Integer.parseInt(chunkSize);
-		if (c == -1) c = totalSize - 1;
+		if (c == -1) c = totalSize -1;
 		toIndex = fromIndex + c;
-		if (toIndex >= (totalSize - 1)) toIndex = totalSize - 1;
+		if (toIndex > (totalSize - 1)) toIndex = totalSize - 1;
 		FacesContext.getCurrentInstance().renderResponse();
 	}
 
@@ -1069,7 +1049,7 @@ public class ListResourcesPage
 	public void goPrev(ActionEvent evt)
 	{	
 		int c = Integer.parseInt(chunkSize);
-		if (c == -1) c = totalSize - 1;
+		if (c == -1) c = totalSize -1;
 		fromIndex = fromIndex - c;
 		if (fromIndex < 0) fromIndex = 0;
 
@@ -1087,7 +1067,7 @@ public class ListResourcesPage
 	public void goNext(ActionEvent evt)
 	{
 		int c = Integer.parseInt(chunkSize);
-		if (c == -1) c = totalSize - 1;
+		if (c == -1) c = totalSize -1;
 		fromIndex = fromIndex + c;
 	
 		try

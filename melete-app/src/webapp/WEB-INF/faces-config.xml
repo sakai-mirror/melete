@@ -555,7 +555,11 @@
         <managed-property>
 			<property-name>sectionId</property-name>
 			<value>#{param.sectionId}</value>
-		</managed-property>  		
+		</managed-property>  
+		 <managed-property>
+			<property-name>selResourceIdFromList</property-name>
+			<value>#{param.selResourceIdFromList}</value>
+		</managed-property> 		
 </managed-bean>
 		  	     
     <!-- i18n -->

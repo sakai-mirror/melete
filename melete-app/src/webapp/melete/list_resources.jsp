@@ -30,6 +30,7 @@
 <t:saveState id="chunkSize1" value="#{listResourcesPage.chunkSize}" />	
 <t:saveState id="sortAscFlag1" value="#{listResourcesPage.sortAscFlag}" />
 
+
 <h:panelGrid styleClass="maintableCollapseWithNoBorder" >											
 <h:column>		                    	
          <h:panelGrid id="selresPanel" columns="1" width="100%" rendered="#{listResourcesPage.callFromSection}" >	
@@ -100,14 +101,18 @@
 				    <f:facet name="header">
 							 <h:outputText id="t2" value="#{msgs.list_resources_actions2}" />
 					 </f:facet>
-					 <h:commandLink id="linkaction" actionListener="#{listResourcesPage.selectedResourceAction}" rendered="#{listResourcesPage.callFromSection}">
+					 <h:commandLink id="linkaction" action="#{listResourcesPage.link2meAction}" rendered="#{listResourcesPage.callFromSection}">
+				     	<f:param name="selResourceIdFromList" value="#{curr_resources.resource_id}" />
+				     	<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />
 				     	<h:graphicImage id="linkgif" alt="" value="/images/link2me.png" styleClass="AuthImgClass"  />
 				     	<h:outputText id="emp_space-3" value=" "  />
 						<h:outputText value="#{msgs.list_resources_link}" />
 					 </h:commandLink>	
 					  <h:outputText id="emp_space-1" value="     "  styleClass="ExtraPaddingClass" />
 					 
-					 <h:commandLink id="deleteaction" actionListener="#{listResourcesPage.selectedResourceDeleteAction}" immediate="true" >
+					 <h:commandLink id="deleteaction" action="#{listResourcesPage.selectedResourceDeleteAction}" immediate="true">
+					 		<f:param name="selResourceIdFromList" value="#{curr_resources.resource_id}" />
+				     		<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />
 				       		<h:graphicImage id="delgif" alt="" value="/images/delete.gif" styleClass="AuthImgClass" />
 							<h:outputText id="emp_space-2" value=" " />
 				    		<h:outputText id="deltext" value="#{msgs.list_resources_del}"  />
