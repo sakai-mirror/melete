@@ -279,13 +279,14 @@ public class ListResourcesPage
 	 * 
 	 * @return Returns the currSiteResourcesList.
 	 */
-	public List<DisplaySecResources> getCurrSiteResourcesList()
+	public void getCurrSiteResourcesList()
 	{
 		try
 		{
 			FacesContext ctx = FacesContext.getCurrentInstance();
-			if (currSiteResourcesList == null)
+			if (currSiteResourcesList == null || currSiteResourcesList.size() == 0)
 			{
+				logger.debug("create original list");
 				ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 				MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
 				String uploadCollId = getMeleteCHService().getUploadCollectionId(mPage.getCurrentSiteId());
@@ -294,10 +295,7 @@ public class ListResourcesPage
 				currSiteResourcesList = new ArrayList<DisplaySecResources>();
 
 				List<?> allmembers = null;
-		/*		if (this.fromPage == null) fromPage = (String)ctx.getExternalContext().getRequestParameterMap().get("fromPage");
-				//show all resources if fromPage is still null
-				if (this.fromPage == null) fromPage = "manage_content";*/
-
+		
 				// to create list of resource whose type is typeUpload
 				if (this.fromPage.equals("ContentUploadServerView") || this.fromPage.equals("editContentUploadServerView"))
 				{
@@ -321,7 +319,7 @@ public class ListResourcesPage
 
 				if (allmembers == null)
 				{					
-					return null;					
+					return;					
 				}
 				Iterator<?> allmembers_iter = allmembers.iterator();
 				String serverUrl = ServerConfigurationService.getServerUrl();
@@ -372,12 +370,19 @@ public class ListResourcesPage
 			toIndex = fromIndex + c;
 			if (toIndex >= (totalSize - 1)) toIndex = totalSize - 1;
 			sortList();
+		//	currSiteResourcesList = currSiteResourcesList.subList(fromIndex, toIndex);
+			for(int i=fromIndex; i <toIndex; i++)
+			{
+				displayResourcesList.add(currSiteResourcesList.get(i));
+			}
+	
 		}
 		catch (Exception e)
 		{
 			logger.warn("error in creating list for server residing files" + e.toString());
+			e.printStackTrace();
 		}
-		return currSiteResourcesList;
+		return;
 	}
 
 	/**
@@ -387,24 +392,6 @@ public class ListResourcesPage
 	 */
 	public List<DisplaySecResources> getDisplayResourcesList()
 	{
-		try
-		{
-			if (currSiteResourcesList == null) getCurrSiteResourcesList();
-			if (currSiteResourcesList != null)
-			{
-				displayResourcesList = currSiteResourcesList.subList(fromIndex, toIndex);
-	
-			/*	if (fromIndex >= 0 && toIndex > fromIndex && fromIndex <= currSiteResourcesList.size() && toIndex <= currSiteResourcesList.size())
-				{
-					displayResourcesList = (List<DisplaySecResources>) currSiteResourcesList.subList(fromIndex, toIndex);
-		//			logger.debug("displayResourcesList" + displayResourcesList.size());
-				}*/
-			}
-		}
-		catch (Exception e)
-		{
-			logger.debug("error in creating displayList for server residing files" + e.toString());
-		}
 		return displayResourcesList;
 	}
 
@@ -516,7 +503,7 @@ public class ListResourcesPage
 	 */
 	public void selectedResourceAction(ActionEvent evt)
 	{
-		logger.debug("checking if coming to link2me action");
+		logger.debug("checking if coming to link2me action" + fromIndex);
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		try
 		{
@@ -1067,11 +1054,11 @@ public class ListResourcesPage
 		this.chunkSize = (String) chunkSelect.getValue();
 		// -1 implies all resources need to be displayed
 		if (this.chunkSize.equals("-1")) this.chunkSize = Integer.toString(totalSize - 1);
+		int c = Integer.parseInt(chunkSize);
+		if (c == -1) c = totalSize - 1;
+		toIndex = fromIndex + c;
+		if (toIndex >= (totalSize - 1)) toIndex = totalSize - 1;
 		FacesContext.getCurrentInstance().renderResponse();
-		/*try
-		{
-		FacesContext.getCurrentInstance().getExternalContext().redirect(fromPage +"?fromPage=" + fromPage + "&sectionId=" + sectionId + "&chunkSize=" + chunkSize);
-		} catch (Exception e) {e.getMessage();}*/
 	}
 
 	/**
