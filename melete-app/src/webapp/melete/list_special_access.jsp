@@ -25,6 +25,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: List Special Access" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -76,8 +77,10 @@ function resetAllAcc()
 }
 
 </script>
-
+<t:saveState id="spModId" value="#{specialAccessPage.moduleId}"/>
 <h:form id="listspecialaccessform">
+
+			    
     <f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
@@ -92,7 +95,7 @@ function resetAllAcc()
 	
 	    <h:panelGrid columns="2" columnClasses="authBarCol" border="0" width="16%" >
 		<h:column>
-			<h:commandLink id="addAction" action="#{specialAccessPage.addAccessAction}" immediate="true">
+			<h:commandLink id="addAction" action="#{specialAccessPage.addAccessAction}">
 			    <h:graphicImage id="addAccessImg" value="/images/document_add.gif" styleClass="AuthImgClass"/>
 		  		<h:outputText  value="#{msgs.list_special_access_add}"/>
 			</h:commandLink>
@@ -147,6 +150,7 @@ function resetAllAcc()
      <f:param name="accidx" value="#{specialAccessPage.table.rowIndex}" />
      <h:outputText id="title2" value="#{saObj.userNames}" escape="false"></h:outputText>
      </h:commandLink>
+    
      </h:column>      
        <h:column>
         <f:facet name="header">
@@ -180,10 +184,12 @@ function resetAllAcc()
                               rendered="#{((saObj.endDate != null)&&(saObj.overrideEnd == true))}">
                <f:convertDateTime type="both" dateStyle="medium" timeStyle="short"/>
             </h:outputText>
+        
          </h:column>         
     </h:dataTable>   
    <h:inputHidden id="listSize" value="#{specialAccessPage.listSize}"/>   
-   <div class="actionBar" align="left">				
+   <div class="actionBar" align="left">			
+   	
 	<h:commandButton id="returnButton"  immediate="true" action="#{specialAccessPage.returnAction}" value="#{msgs.im_return}" tabindex="" accesskey="#{msgs.return_access}" title="#{msgs.im_return_text}" styleClass="BottomImgReturn" />
    </div>	
 	
