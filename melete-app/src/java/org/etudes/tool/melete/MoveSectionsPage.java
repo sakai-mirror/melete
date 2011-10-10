@@ -130,6 +130,16 @@ public class MoveSectionsPage implements Serializable
 	{
 		return moduleService;
 	}
+	
+	/**
+	 * Get the list of to sections to move
+	 * 
+	 * @return
+	 */
+	public List<SectionBean> getSectionBeans()
+	{
+		return this.sectionBeans;
+	}	
 
 	/**
 	 * @return the selectId
