@@ -35,11 +35,14 @@
 <%@include file="meleterightscheck.jsp" %>
 <script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
 <t:saveState id="bpfpage" value="#{bookmarkPage.fromPage}" />
+ <t:saveState id="bpfromSectionId" value="#{bookmarkPage.fromSectionId}" />
+ 
  <h:form id="ManageBookmarksForm">
  <h:inputHidden id="bpfpageparam" value="#{bookmarkPage.fromPage}" />
  <h:inputHidden id="fromModuleId" value="#{bookmarkPage.fromModuleId}" />
  <h:inputHidden id="fromModuleSeqNo" value="#{bookmarkPage.fromModuleSeqNo}" />
  <h:inputHidden id="fromSectionId" value="#{bookmarkPage.fromSectionId}" />
+ 
    	<!-- top nav bar -->
 		<f:subview id="top">
 				<jsp:include page="topnavbar.jsp"/> 

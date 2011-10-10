@@ -1144,7 +1144,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		ValueBinding binding = Util.getBinding("#{bookmarkPage}");
 		BookmarkPage bmrkPage = (BookmarkPage) binding.getValue(context);
 
-		return bmrkPage.gotoMyBookmarks("editmodulesections", module.getModuleId());
+		return bmrkPage.gotoMyBookmarks("editmodulesections", module.getModuleId(), editId);
 	}
 
 	public String saveAndAddBookmark()
