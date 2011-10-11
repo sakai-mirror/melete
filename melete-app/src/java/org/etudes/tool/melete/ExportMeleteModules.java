@@ -94,6 +94,13 @@ public class ExportMeleteModules
 	 */
 	public ExportMeleteModules()
 	{
+		modList = null;
+		availableModules = null;
+		selectedModules = null;
+		noFlag = false;
+		selectFormat = "IMS";
+		selectedModules = new ArrayList<String>(0);
+		selectedModules.add("all");
 	}
 
 	/**

@@ -929,22 +929,27 @@
      <navigation-case>
 		  <from-outcome>restore_modules</from-outcome>
 		  <to-view-id>/melete/restore_modules.jsp</to-view-id>
+		   <redirect/>
      </navigation-case>
      <navigation-case>
 		  <from-outcome>importexportmodules</from-outcome>
 		  <to-view-id>/melete/importexportmodules.jsp</to-view-id>
+		   <redirect/>
      </navigation-case>
             <navigation-case>
       <from-outcome>list_modules_inst</from-outcome>
       <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
+       <redirect/>
       </navigation-case>
         <navigation-case>
       <from-outcome>list_modules_student</from-outcome>
       <to-view-id>/melete/list_modules_student.jsp</to-view-id>
+       <redirect/>
       </navigation-case>
     <navigation-case>
       <from-outcome>list_auth_modules</from-outcome>
       <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
+       <redirect/>
        </navigation-case>
     <navigation-case>
       <from-outcome>modules_author_manage</from-outcome>
@@ -953,6 +958,7 @@
       <navigation-case>
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
+       <redirect/>
      </navigation-case> 
      <navigation-case>
 		  <from-outcome>manage_content</from-outcome>
@@ -975,18 +981,22 @@
    	<navigation-case>
    		<from-outcome>list_modules_inst</from-outcome>
    		<to-view-id>/melete/list_modules_inst.jsp</to-view-id>
+   		 <redirect/>
    	</navigation-case>
    	<navigation-case>
    		<from-outcome>list_auth_modules</from-outcome>
    		<to-view-id>/melete/list_auth_modules.jsp</to-view-id>
+   		 <redirect/>
    	</navigation-case>
    	<navigation-case>
    		<from-outcome>modules_author_manage</from-outcome>
    		<to-view-id>/melete/modules_author_manage.jsp</to-view-id>
+   		 <redirect/>
    	</navigation-case>
    	<navigation-case>
    		<from-outcome>author_preference</from-outcome>
    		<to-view-id>/melete/author_preference.jsp</to-view-id>
+   		 <redirect/>
    	</navigation-case>
    	<navigation-case>
 		  <from-outcome>file_upload_view</from-outcome>
@@ -1075,22 +1085,27 @@
      <navigation-case>
       <from-outcome>list_modules_inst</from-outcome>
       <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
+       <redirect/>
       </navigation-case>
         <navigation-case>
       <from-outcome>list_modules_student</from-outcome>
       <to-view-id>/melete/list_modules_student.jsp</to-view-id>
+       <redirect/>
       </navigation-case>
     <navigation-case>
       <from-outcome>list_auth_modules</from-outcome>
       <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
+       <redirect/>
        </navigation-case>
       <navigation-case>
 		  <from-outcome>modules_author_manage</from-outcome>
 		  <to-view-id>/melete/modules_author_manage.jsp</to-view-id>
+		   <redirect/>
      </navigation-case>
       <navigation-case>
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
+       <redirect/>
      </navigation-case> 
        <navigation-case>
       <from-outcome>delete_module</from-outcome>
@@ -1226,6 +1241,7 @@
      <navigation-case>
 		   <from-outcome>add_module</from-outcome>
         <to-view-id>/melete/add_module.jsp</to-view-id>
+        <redirect/>
       </navigation-case>          
       <navigation-case>
 		   <from-outcome>delete_module</from-outcome>
@@ -1250,18 +1266,22 @@
      <navigation-case>
 		   <from-outcome>list_modules_inst</from-outcome>
         <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
+        <redirect/>
       </navigation-case>          
     <navigation-case>
 		   <from-outcome>list_modules_student</from-outcome>
         <to-view-id>/melete/list_modules_student.jsp</to-view-id>
+      <redirect/>
       </navigation-case>                                 
    <navigation-case>
 		   <from-outcome>modules_author_manage</from-outcome>
         <to-view-id>/melete/modules_author_manage.jsp</to-view-id>
+        <redirect/>
       </navigation-case>     
        <navigation-case>
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
+      <redirect/>
      </navigation-case>     
      <navigation-case>
 		   <from-outcome>addmodulesections</from-outcome>
@@ -1598,26 +1618,32 @@
 		<navigation-case>
 			<from-outcome>modules_author_manage</from-outcome>
 			<to-view-id>/melete/modules_author_manage.jsp</to-view-id>
+			 <redirect/>
 		</navigation-case>
 		<navigation-case>
 		   <from-outcome>list_auth_modules</from-outcome>
         <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
+         <redirect/>
       </navigation-case>        
        <navigation-case>
 		   <from-outcome>list_modules_inst</from-outcome>
         <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
+         <redirect/>
       </navigation-case>          
     <navigation-case>
 		   <from-outcome>list_modules_student</from-outcome>
         <to-view-id>/melete/list_modules_student.jsp</to-view-id>
+         <redirect/>
       </navigation-case>                                 
    <navigation-case>
 		   <from-outcome>modules_author_manage</from-outcome>
         <to-view-id>/melete/modules_author_manage.jsp</to-view-id>
+         <redirect/>
       </navigation-case>
        <navigation-case>
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
+       <redirect/>
      </navigation-case> 	
 			
    </navigation-rule>            
@@ -1639,18 +1665,22 @@
      <navigation-case>
 			<from-outcome>modules_author_manage</from-outcome>
 			<to-view-id>/melete/modules_author_manage.jsp</to-view-id>
+			 <redirect/>
 		</navigation-case>
 		<navigation-case>
 		   <from-outcome>list_auth_modules</from-outcome>
         <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
+         <redirect/>
       </navigation-case>        
        <navigation-case>
 		   <from-outcome>list_modules_inst</from-outcome>
         <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
+         <redirect/>
       </navigation-case>   
        <navigation-case>
 		   <from-outcome>list_modules_student</from-outcome>
         <to-view-id>/melete/list_modules_student.jsp</to-view-id>
+         <redirect/>
       </navigation-case>                                      
  </navigation-rule>      
    
@@ -1659,48 +1689,29 @@
 		 <navigation-case>
       		<from-outcome>author_preference</from-outcome>
       		<to-view-id>/melete/author_preference.jsp</to-view-id>
+      		 <redirect/>
      	</navigation-case> 
         <navigation-case>
 			<from-outcome>modules_author_manage</from-outcome>
 			<to-view-id>/melete/modules_author_manage.jsp</to-view-id>
+			 <redirect/>
 		</navigation-case>
 		<navigation-case>
 		   <from-outcome>list_auth_modules</from-outcome>
  	       <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
+ 	        <redirect/>
       </navigation-case>        
        <navigation-case>
 		   <from-outcome>list_modules_inst</from-outcome>
     	    <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
+    	     <redirect/>
       </navigation-case>   
        <navigation-case>
 		   <from-outcome>list_modules_student</from-outcome>
         	<to-view-id>/melete/list_modules_student.jsp</to-view-id>
+        	 <redirect/>
       </navigation-case>                                      
  </navigation-rule> 
-   
-   <navigation-rule>
-		<from-view-id>/melete/pref_editor.jsp</from-view-id>
-		<navigation-case>
-			<from-outcome>pref_editor</from-outcome>
-			<to-view-id>/melete/pref_editor.jsp</to-view-id>
-		</navigation-case>
-		 <navigation-case>
-      <from-outcome>author_preference</from-outcome>
-      <to-view-id>/melete/author_preference.jsp</to-view-id>
-     </navigation-case> 
-     <navigation-case>
-			<from-outcome>modules_author_manage</from-outcome>
-			<to-view-id>/melete/modules_author_manage.jsp</to-view-id>
-		</navigation-case>
-		<navigation-case>
-		   <from-outcome>list_auth_modules</from-outcome>
-        <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
-      </navigation-case>        
-       <navigation-case>
-		   <from-outcome>list_modules_inst</from-outcome>
-        <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
-      </navigation-case>    	
- </navigation-rule>  
  
 <navigation-rule>
     <from-view-id>/melete/move_section.jsp</from-view-id>   
