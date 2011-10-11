@@ -26,10 +26,12 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: Sort Modules" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
+<t:saveState id="sort1" value="#{sortModuleSectionPage.newSelectedModule}" />
 
 <h:form id="SortModuleForm">
 <!-- top nav bar -->
@@ -70,13 +72,13 @@
 									<th class="tableheader">&nbsp;</th>
 							  		<tr>
 									 <td width="47%" align="left">
-										 <h:selectOneListbox id="modulecurrList" disabled="true" size="#{sortModuleSectionPage.showSize}" style="width:100%">
+										 <h:selectOneListbox id="modulecurrList" value="1" disabled="true" size="#{sortModuleSectionPage.showSize}" style="width:100%">
 													 <f:selectItems value="#{sortModuleSectionPage.currList}" />							
 										 </h:selectOneListbox>
 									   </td>
 							        <td width="3%"></td>
 	                    			<td width="47%" valign="top">
-										 <h:selectOneListbox id="modulenewList" value="#{sortModuleSectionPage.newSelectedModule}" size="#{sortModuleSectionPage.showSize}" style="width:100%">
+										 <h:selectOneListbox id="modulenewList" value="#{sortModuleSectionPage.newSelectedModule}" valueChangeListener="#{sortModuleSectionPage.changeSelectedModule}" size="#{sortModuleSectionPage.showSize}" style="width:100%">
 												 <f:selectItems value="#{sortModuleSectionPage.newList}" />							
 										 </h:selectOneListbox>	 
 								 	 </td>                       

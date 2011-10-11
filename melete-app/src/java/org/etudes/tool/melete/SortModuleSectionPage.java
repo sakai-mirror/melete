@@ -133,6 +133,7 @@ public class SortModuleSectionPage implements Serializable{
 		try{
 			if(newModulesList == null)
 			{
+				if(currModulesList == null)getCurrList();
 				newModulesList = currModulesList;
 				newList  = forSelectItemsList(newModulesList);
 			}
@@ -240,7 +241,6 @@ public class SortModuleSectionPage implements Serializable{
 		return showSize;
 	}
 
-
 	/** Move selected item to the top of the select list
 	 * @return modules_sort
 	 */
@@ -280,6 +280,10 @@ public class SortModuleSectionPage implements Serializable{
 			FacesMessage msg =new FacesMessage(ErrMsg);
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			ctx.addMessage (null, msg);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 		return "modules_sort";
 	}
@@ -512,6 +516,29 @@ public class SortModuleSectionPage implements Serializable{
 		newSecList = null;
 	}
 
+	/**
+	 * Store the user picked module for sort from the list 
+	 * 
+	 * @param event
+	 * @throws AbortProcessingException
+	 */
+	public void changeSelectedModule(ValueChangeEvent event) throws AbortProcessingException
+	{
+		UIInput moduleSelect = (UIInput) event.getComponent();
+		newSelectedModule = (String) moduleSelect.getValue();
+	}
+	
+	/**
+	 * Store the user picked section for sort from the list
+	 * @param event
+	 * @throws AbortProcessingException
+	 */
+	public void changeSelectedSection(ValueChangeEvent event)throws AbortProcessingException
+	{
+		UIInput sectionSelect = (UIInput)event.getComponent();
+		newSelectedSection = (String)sectionSelect.getValue();	
+	}
+	
 	/** Get list of sections formatted with dashes in a list of select items
 	 * @return list of select items
 	 */
@@ -543,6 +570,7 @@ public class SortModuleSectionPage implements Serializable{
 		try{
 			if(newSectionsList == null)
 			{
+				if (currSectionsList == null) getCurrSecList();
 				newSectionsList = currSectionsList;
 				newSecList  = forSelectSectionsItemsList(newSectionsList);
 			}
@@ -589,6 +617,10 @@ public class SortModuleSectionPage implements Serializable{
 			FacesMessage msg =new FacesMessage(ErrMsg);
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			ctx.addMessage (null, msg);
+		}
+		catch (Exception me)
+		{
+		me.printStackTrace();
 		}
 		return "sections_sort";
 	}
