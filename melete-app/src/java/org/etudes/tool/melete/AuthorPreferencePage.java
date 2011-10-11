@@ -243,6 +243,7 @@ public class AuthorPreferencePage
 	 */
 	public boolean isShouldRenderEditorPanel()
 	{
+		resetValues();
 		int count = ServerConfigurationService.getInt("melete.wysiwyg.editor.count", 0);
 		if (count > 0) shouldRenderEditorPanel = true;
 		return shouldRenderEditorPanel;
