@@ -1160,29 +1160,7 @@ public abstract class SectionPage implements Serializable
 	{
 		this.contentservice = contentservice;
 	}
-
-	/**
-	 * @return Returns the meleteResource.
-	 */
-	public MeleteResource getMeleteResource()
-	{
-		// logger.debug("check meleteResource" + meleteResource + secResource);
-
-		if (this.meleteResource == null)
-		{
-			setSecResource(sectionService.getSectionResourcebyId(this.section.getSectionId().toString()));
-			if (secResource != null && secResource.getResource() != null)
-				setMeleteResource((MeleteResource) sectionService.getMeleteResource(secResource.getResource().getResourceId()));
-			if (this.meleteResource == null)
-			{
-				this.meleteResource = new MeleteResource();
-				this.meleteResource.setResourceId("");
-			}
-		}
-
-		return this.meleteResource;
-	}
-
+	
 	/**
 	 * @param meleteResource
 	 *        The meleteResource to set.

@@ -26,6 +26,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: Preview Section" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -37,7 +38,7 @@
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>	
 
-		
+	<t:saveState id="workId" value="#{editSectionPage.editId}" />	
 	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/note_view.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.edit_preview_previewing_section}" /></div>
      <table class="maintableCollapseWithBorder">          
 		  <tr>
@@ -82,7 +83,7 @@
 	       
 			<tr><td>
 				<div class="actionBar" align="left">
-						<h:commandButton id="return" actionListener="#{editSectionPage.returnBack}" action="editmodulesections" value="#{msgs.im_return}" accesskey="#{msgs.return_access}" title="#{msgs.im_return_text}" styleClass="BottomImgReturn">
+						<h:commandButton id="return" actionListener="#{editSectionPage.returnBack}"  value="#{msgs.im_return}" accesskey="#{msgs.return_access}" title="#{msgs.im_return_text}" styleClass="BottomImgReturn">
 								<f:attribute name="sectionId" value="#{editSectionPage.editId}" />								
 						</h:commandButton>
 	   	        </div></td>

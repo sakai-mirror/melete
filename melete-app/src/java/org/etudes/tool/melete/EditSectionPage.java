@@ -640,6 +640,44 @@ public class EditSectionPage extends SectionPage implements Serializable
 	}
 
 	/**
+	 * @return Returns the meleteResource.
+	 */
+	public MeleteResource getMeleteResource()
+	{
+		// logger.debug("check meleteResource" + meleteResource + secResource);
+		try
+		{
+			if (this.meleteResource == null)
+			{
+				if (section == null && editId != null && editId.length() != 0)
+				{
+					SectionObjService s = sectionService.getSection(Integer.parseInt(editId));
+					setEditInfo(s);
+				}
+				setSecResource(sectionService.getSectionResourcebyId(this.section.getSectionId().toString()));
+				if (secResource != null && secResource.getResource() != null)
+					setMeleteResource((MeleteResource) sectionService.getMeleteResource(secResource.getResource().getResourceId()));
+				if (this.meleteResource == null)
+				{
+					this.meleteResource = new MeleteResource();
+					this.meleteResource.setResourceId("");
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			try
+			{
+				FacesContext.getCurrentInstance().getExternalContext().redirect("list_auth_modules");
+			}
+			catch (Exception ex)
+			{
+			}
+		}
+		return this.meleteResource;
+	}
+
+	/**
 	 *  preview Listener
 	 * @return
 	 */
@@ -653,8 +691,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			}
 			String edit = (String) event.getComponent().getAttributes().get("sectionId");
 			logger.debug("getPreviewPageListener:" + edit);
-			setEditIdParam(edit);
-			FacesContext.getCurrentInstance().getExternalContext().redirect("editpreview.jsf?sectionId=" + editId);
+			FacesContext.getCurrentInstance().getExternalContext().redirect("editpreview.jsf?sectionId=" + edit);
 		}
 		catch (Exception e)
 		{
@@ -677,13 +714,14 @@ public class EditSectionPage extends SectionPage implements Serializable
 	 public void returnBack(ActionEvent event) {
 		 try
 			{
-				String edit = (String) event.getComponent().getAttributes().get("sectionId");
-				setEditIdParam(edit);
+				editId = (String) event.getComponent().getAttributes().get("sectionId");
+				logger.debug("return back: edit is" + editId);
 				FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + editId);
 			}
 			catch (Exception e)
 			{
 				logger.debug("preview return exception:" + e.getMessage());
+				e.printStackTrace();
 			}	 
 	    }
 	
