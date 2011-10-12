@@ -244,15 +244,6 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 	 */
 	public String goToManageContent()
 	{
-		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{manageResourcesPage}");
-		ManageResourcesPage managePage = (ManageResourcesPage) binding.getValue(context);
-		managePage.resetValues();
-		
-		binding =Util.getBinding("#{listResourcesPage}");
-		ListResourcesPage listResPage = (ListResourcesPage) binding.getValue(context);
-		listResPage.setFromPage("manage_content");
-		listResPage.setSectionId("");
 		return "manage_content";
 	}
 
@@ -271,10 +262,6 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 	 */
 	public String importExportModules()
 	{
-		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{exportMeleteModules}");
-		ExportMeleteModules exportModules = (ExportMeleteModules) binding.getValue(context);
-		exportModules.resetValues();
 		return "importexportmodules";
 	}
 
