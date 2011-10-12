@@ -22,8 +22,6 @@
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <%@include file="accesscheck.jsp" %>
-<t:saveState id="ltiurltitle" value="#{editSectionPage.newURLTitle}" />
-<t:saveState id="ltidescriptor1" value="#{editSectionPage.LTIDescriptor}" />
 
 <h:panelGrid width="77%" border="0" columns="2" columnClasses="col1b,col2">											
 <h:column>

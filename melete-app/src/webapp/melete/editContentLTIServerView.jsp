@@ -26,15 +26,11 @@
 <sakai:view title="Modules: Select Resource Item" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
-<script language="javascript1.2">
-function contentChangeSubmit()
-{
-           document.getElementById("EditLtiServerViewForm:contentChange").value = "true";
-}
-</script>
 	<t:saveState id="editId" value="#{editSectionPage.editId}" />	
 	<t:saveState id="fromPage" value="#{listResourcesPage.fromPage}" />
 	<t:saveState id="sectionId" value="#{listResourcesPage.sectionId}" />
+	<t:saveState id="ltidisp" value="#{editSectionPage.shouldLTIDisplayAdvanced}" />	
+	
 <h:form id="EditLtiServerViewForm" enctype="multipart/form-data">	
 <!-- top nav bar -->
     <f:subview id="top">
@@ -53,10 +49,9 @@ function contentChangeSubmit()
 					<tr> <td class="col1"><h:outputText id="format_text" value="#{msgs.editcontentltiserverview_format}"/>
 					</td>
                     <td class="col2">
-                            <h:inputHidden id="contentChange" value=""/>
-                            <h:selectOneMenu id="LTIDisplay" value="#{editSectionPage.LTIDisplay}" 
+                               <h:selectOneMenu id="LTIDisplay" value="#{editSectionPage.LTIDisplay}" 
                                     valueChangeListener="#{editSectionPage.toggleLTIDisplay}" 
-                                    onchange="contentChangeSubmit();this.form.submit();"
+                                    onchange="this.form.submit();"
                                     immediate="true" >
                             <f:selectItem itemValue="Basic" itemLabel="#{msgs.addmodulesections_basic_lti}"/>
                             <f:selectItem itemValue="Advanced" itemLabel="#{msgs.addmodulesections_advanced_lti}"/>
@@ -69,8 +64,13 @@ function contentChangeSubmit()
                                                 <f:subview id="LTIAdvanced" rendered="#{editSectionPage.shouldLTIDisplayAdvanced}">
                                                         <jsp:include page="lti_advanced_edit.jsp"/>
                                                 </f:subview>
-                        </td></tr>                        
-					 
+                        </td></tr>          
+                        <t:saveState id="ltiurl1" value="#{editSectionPage.LTIUrl}" />
+						<t:saveState id="tltiurltitle" value="#{editSectionPage.newURLTitle}" />
+						<t:saveState id="ltikey1" value="#{editSectionPage.LTIKey}" />
+						<t:saveState id="ltipswd" value="#{editSectionPage.LTIPassword}" />              
+						<t:saveState id="tltidescriptor1" value="#{editSectionPage.LTIDescriptor}" />
+	
 					</table> </td></tr>       
 					<tr><td>
 						<div class="actionBar" align="left">

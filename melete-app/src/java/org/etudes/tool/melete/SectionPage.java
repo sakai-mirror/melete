@@ -156,7 +156,14 @@ public abstract class SectionPage implements Serializable
 		secResource = null;
 		meleteResource = null;
 		allContentTypes = null;
-		contentWithHtml = null;	
+		contentWithHtml = null;
+		shouldRenderEditor = true;
+		shouldRenderLink = true;
+		shouldRenderLTI = true;
+		shouldRenderUpload = true;
+		shouldRenderNotype = true;
+		shouldLTIDisplayAdvanced = false;
+
 	}
 
 	/**
@@ -422,6 +429,8 @@ public abstract class SectionPage implements Serializable
 	public void toggleLTIDisplay(ValueChangeEvent event) throws AbortProcessingException
 	{
 		// Nothing to do - because the setter handles it all
+		UIInput LTITypeRadio = (UIInput) event.getComponent();
+		shouldLTIDisplayAdvanced = LTITypeRadio.getValue().equals("Advanced");
 	}
 
 	/**
@@ -937,7 +946,7 @@ public abstract class SectionPage implements Serializable
 	 */
 	public String getLTIDescriptor()
 	{
-		if (ltiDescriptor == null) ltiDescriptor = "";
+	//	if (ltiDescriptor == null) ltiDescriptor = "";
 		return ltiDescriptor;
 	}
 
@@ -947,6 +956,7 @@ public abstract class SectionPage implements Serializable
 	 */
 	public void setLTIDescriptor(String ltiDescriptor)
 	{
+		logger.debug("SETTING descriptor:" + ltiDescriptor);
 		this.ltiDescriptor = ltiDescriptor;
 	}
 
@@ -1318,6 +1328,11 @@ public abstract class SectionPage implements Serializable
 		this.currLTIDescriptor = currLTIDescriptor;
 	}
 
+	public void setShouldLTIDisplayAdvanced(boolean shouldLTIDisplayAdvanced)
+	{
+		this.shouldLTIDisplayAdvanced = shouldLTIDisplayAdvanced;
+	}
+
 	/**
 	 * @return Returns the selectedResource.
 	 */
@@ -1384,6 +1399,7 @@ public abstract class SectionPage implements Serializable
 	 */
 	public void setNewURLTitle(String newURLTitle)
 	{
+		logger.debug("new url title:" + newURLTitle );
 		this.newURLTitle = newURLTitle;
 	}
 
