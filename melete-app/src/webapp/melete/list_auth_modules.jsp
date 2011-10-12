@@ -94,11 +94,12 @@ function resetAllMod()
 	  document.getElementById("listauthmodulesform:table:allmodcheck").checked=false;
 	}
 }
+
 </script>
 
 <h:form id="listauthmodulesform">
 <h:inputHidden id="lamexp" value="#{listAuthModulesPage.expandAllFlag}" />
-
+<h:inputHidden id="lamshmodid" value="#{listAuthModulesPage.showModuleId}"/>
 <%
 
 if (msg != null)
@@ -173,8 +174,8 @@ if (msg != null)
        <h:selectBooleanCheckbox id="allmodcheck" value="#{listAuthModulesPage.selectAllFlag}" onclick="selectAll()" valueChangeListener="#{listAuthModulesPage.selectAllModules}"  rendered="#{listAuthModulesPage.nomodsFlag == false}"/>   
     </h:panelGroup> 
      </f:facet> 
-      
-	   <h:selectBooleanCheckbox id="modCheck" value="#{mdbean.selected}" onclick="resetAllMod()" valueChangeListener="#{listAuthModulesPage.selectedModuleSection}" />
+     
+	   <h:selectBooleanCheckbox title="#{mdbean.moduleIdStr}" id="modCheck" value="#{mdbean.selected}" onclick="resetAllMod()" valueChangeListener="#{listAuthModulesPage.selectedModule}" />
      
     </h:column>               
    <h:column>
@@ -201,7 +202,10 @@ if (msg != null)
                   value="#{mdbean.sectionBeans}" cellpadding="2" border="0" 
                   var="sectionBean" rowClasses="#{mdbean.rowClasses}" width="95%" binding="#{listAuthModulesPage.secTable}" summary="#{msgs.list_auth_modules_sections_summary}">
                <h:column>
-              <h:selectBooleanCheckbox value="#{sectionBean.selected}"  valueChangeListener="#{listAuthModulesPage.selectedSection}"/> 
+              <h:inputHidden id="hacksecid" value="#{sectionBean.section.sectionId}"/>
+             
+               <h:selectBooleanCheckbox title="#{sectionBean.section.title}" id="secCheck" value="#{sectionBean.selected}" valueChangeListener="#{listAuthModulesPage.selectedSection}"/> 
+               
                <h:outputText id="disp_seq" value="#{sectionBean.displaySequence}. " />
                              
               <h:commandLink id="editSec" actionListener="#{listAuthModulesPage.editSection}">

@@ -53,7 +53,7 @@ import org.sakaiproject.util.ResourceLoader;
 public class DeleteModulePage implements Serializable/* ,ToolBean */
 {
 	protected ModuleDateBeanService mdbean;
-	protected SectionObjService section;
+	//protected SectionObjService section;
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(DeleteModulePage.class);
 	protected ModuleService moduleService;
@@ -74,7 +74,7 @@ public class DeleteModulePage implements Serializable/* ,ToolBean */
 	public DeleteModulePage()
 	{
 		this.mdbean = null;
-		this.section = null;
+		//this.section = null;
 		this.modules = null;
 		this.sectionBeans = null;
 		sameModuleSectionSelected = false;
@@ -131,20 +131,20 @@ public class DeleteModulePage implements Serializable/* ,ToolBean */
 	 * @param section
 	 *        SectionObjService
 	 */
-	public void setSection(SectionObjService section)
+	/*public void setSection(SectionObjService section)
 	{
 		this.section = section;
-	}
+	}*/
 
 	/**
 	 * Get SectionObjService
 	 * 
 	 * @return
 	 */
-	public SectionObjService getSection()
+	/*public SectionObjService getSection()
 	{
 		return this.section;
-	}
+	}*/
 
 	/**
 	 * Set the list of sections to be deleted
@@ -282,7 +282,7 @@ public class DeleteModulePage implements Serializable/* ,ToolBean */
 		// reset delete page members
 		setMdbean(null);
 		setModuleSelected(false);
-		setSection(null);
+		//setSection(null);
 		setSectionSelected(false);
 		setModules(null);
 		setSectionBeans(null);
