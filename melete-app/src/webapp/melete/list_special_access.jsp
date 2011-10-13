@@ -138,7 +138,7 @@ function resetAllAcc()
        <h:selectBooleanCheckbox id="allacccheck" value="#{specialAccessPage.selectAllFlag}" onclick="selectAll()" valueChangeListener="#{specialAccessPage.selectAllAccess}" rendered="#{specialAccessPage.noAccFlag == false}" />   
       </h:panelGroup> 
      </f:facet>   
-    <h:selectBooleanCheckbox id="accCheck" value="#{saObj.selected}" onclick="resetAllAcc()" valueChangeListener="#{specialAccessPage.selectedAccess}" />
+    <h:selectBooleanCheckbox id="accCheck" title="#{saObj.accessIdStr}" value="#{saObj.selected}" onclick="resetAllAcc()" valueChangeListener="#{specialAccessPage.selectedAccess}" />
      </h:column>               
    <h:column>
  	<f:facet name="header">
@@ -147,7 +147,7 @@ function resetAllAcc()
      </h:panelGroup>        
     </f:facet>	
      <h:commandLink id="editAcc" actionListener="#{specialAccessPage.editSpecialAccess}"  action="#{specialAccessPage.redirectToEditSpecialAccess}">     				
-     <f:param name="accidx" value="#{specialAccessPage.table.rowIndex}" />
+     <f:param name="accid" value="#{saObj.accessId}" />
      <h:outputText id="title2" value="#{saObj.userNames}" escape="false"></h:outputText>
      </h:commandLink>
     

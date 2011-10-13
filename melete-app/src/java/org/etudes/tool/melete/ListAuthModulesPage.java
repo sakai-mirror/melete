@@ -396,8 +396,7 @@ public class ListAuthModulesPage implements Serializable
 			for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();) {
 				ModuleDateBean mdbean = (ModuleDateBean) i.next();
 				mdbean.setSelected(true);
-				selectedModIds.add(new Integer(k));
-				k++;
+				selectedModIds.add(new Integer(mdbean.getModuleId()));
 			}
 			count = moduleDateBeans.size();
 			if (count == 1)

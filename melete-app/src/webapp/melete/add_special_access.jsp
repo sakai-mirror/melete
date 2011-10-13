@@ -48,6 +48,7 @@ function newWindow(newContent){
 
 <t:saveState id="sapsp" value="#{specialAccessPage.specialAccess}" />
 <t:saveState id="spModId" value="#{specialAccessPage.moduleId}"/>
+<t:saveState id="spSaList" value="#{specialAccessPage.saList}"/>
 <h:form id="AddSpecialAccessForm">
 
 	<f:subview id="top">

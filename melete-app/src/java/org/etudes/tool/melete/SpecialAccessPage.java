@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.io.*;
 
 import javax.faces.context.FacesContext;
@@ -84,8 +85,9 @@ public class SpecialAccessPage implements Serializable
 	private int moduleId;
 	private boolean noAccFlag;
 	private List saList;
+	private Map saMap = null;
 
-	private List selectedAccIndices = null;
+	private List selectedAccIds = null;
 	/** identifier field */
 	private SpecialAccessObjService specialAccess;
 	private SpecialAccessService specialAccessService;
@@ -136,7 +138,6 @@ public class SpecialAccessPage implements Serializable
 		// SpecialAccess specialAccess = new SpecialAccess();
 
 		if (specialAccessService == null) specialAccessService = getSpecialAccessService();
-
 		if (getUsers() != null)
 		{
 			this.specialAccess = validateDates(context, this.specialAccess);
@@ -184,6 +185,8 @@ public class SpecialAccessPage implements Serializable
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		List delAccs = null;
 		count = 0;
+		
+		if ((saList == null)||(saList.size() == 0)) return "list_special_access";
 
 		// added by rashmi
 		if (!accessSelected)
@@ -204,18 +207,29 @@ public class SpecialAccessPage implements Serializable
 			{
 				delAccs = new ArrayList();
 			}
-			if (selectedAccIndices != null)
+			if (selectedAccIds != null)
 			{
 				StringBuffer accTitlesBuf = new StringBuffer();
-				for (ListIterator i = selectedAccIndices.listIterator(); i.hasNext();)
+				for (ListIterator i = selectedAccIds.listIterator(); i.hasNext();)
 				{
 					int saId = ((Integer) i.next()).intValue();
-					sa = (SpecialAccess) saList.get(saId);
-					delAccs.add(sa.getAccessId());
-					accTitlesBuf.append(generateUserNames(sa.getUsers()));
+					sa = (SpecialAccess) saMap.get(saId);
+					if (sa != null) 
+ {
+						delAccs.add(sa.getAccessId());
+						accTitlesBuf.append(generateUserNames(sa.getUsers()));
+					}
 				}
-				setDeleteAccessIds(delAccs);
-				setDeleteAccessTitles(accTitlesBuf.toString());
+				if ((delAccs != null) && (delAccs.size() > 0)) {
+					setDeleteAccessIds(delAccs);
+					setDeleteAccessTitles(accTitlesBuf.toString());
+				}
+				else 
+				{
+					count = 0;
+					resetSelectedLists();
+					return "list_special_access";
+				}
 			}
 		}
 
@@ -256,10 +270,13 @@ public class SpecialAccessPage implements Serializable
 	 */
 	public void editSpecialAccess(ActionEvent evt)
 	{
+		if ((saList == null)||(saList.size() == 0)) return;
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map params = ctx.getExternalContext().getRequestParameterMap();
-		int selAccIndex = Integer.parseInt((String) params.get("accidx"));
-		setSpecialAccess((SpecialAccess) this.saList.get(selAccIndex));
+		int selAccId = Integer.parseInt((String) params.get("accid"));
+		SpecialAccess sa = (SpecialAccess) this.saMap.get(selAccId);
+		if (sa == null) return;
+		setSpecialAccess(sa);
 
 	}
 
@@ -358,10 +375,10 @@ public class SpecialAccessPage implements Serializable
 		if (saList == null)
 		{
 			saList = specialAccessService.getSpecialAccess(this.moduleId);
-			listSize = saList.size();
+			if (saList != null) listSize = saList.size();
 
 			StringBuffer userNameBuf = new StringBuffer();
-			if (saList.size() > 0)
+			if ((saList != null)&&(saList.size() > 0))
 			{
 				noAccFlag = false;
 				for (ListIterator i = saList.listIterator(); i.hasNext();)
@@ -369,10 +386,12 @@ public class SpecialAccessPage implements Serializable
 					SpecialAccess saObj = (SpecialAccess) i.next();
 					saObj.setUserNames(generateUserNames(saObj.getUsers()));
 				}
+				saMap = getSaMap(saList);
 			}
 			else
 			{
 				noAccFlag = true;
+				saMap = null;
 			}
 		}
 		return saList;
@@ -498,7 +517,7 @@ public class SpecialAccessPage implements Serializable
 	 */
 	public void resetSelectedLists()
 	{
-		selectedAccIndices = null;
+		selectedAccIds = null;
 		selectAllFlag = false;
 	}
 
@@ -509,6 +528,7 @@ public class SpecialAccessPage implements Serializable
 	public void resetValues()
 	{
 		saList = null;
+		saMap = null;
 		noAccFlag = true;
 		accessSelected = false;
 		deleteAccessIds = null;
@@ -538,18 +558,17 @@ public class SpecialAccessPage implements Serializable
 	 */
 	public void selectAllAccess(ValueChangeEvent event) throws AbortProcessingException
 	{
+		if ((saList == null)||(saList.size() == 0)) return;
 		selectAllFlag = true;
-		int k = 0;
-		if (selectedAccIndices == null)
+		if (selectedAccIds == null)
 		{
-			selectedAccIndices = new ArrayList();
+			selectedAccIds = new ArrayList();
 		}
 		for (ListIterator i = saList.listIterator(); i.hasNext();)
 		{
 			SpecialAccess sa = (SpecialAccess) i.next();
 			sa.setSelected(true);
-			selectedAccIndices.add(new Integer(k));
-			k++;
+			selectedAccIds.add(new Integer(sa.getAccessId()));
 		}
 		count = saList.size();
 		if (count == 1) selectedAccIndex = 0;
@@ -575,20 +594,32 @@ public class SpecialAccessPage implements Serializable
 				count++;
 			else
 				count--;
+			
+			String title = (String) acc_Selected.getAttributes().get("title");
+			if (title != null) {
+				int selectedAccId = Integer.parseInt(title);
+				
+				if (selectedAccIds == null)
+				{
+					selectedAccIds = new ArrayList();
+				}
+				selectedAccIds.add(new Integer(selectedAccId));
+				accessSelected = true;
+			}	
 
-			String selclientId = acc_Selected.getClientId(context);
+			/*String selclientId = acc_Selected.getClientId(context);
 			if (logger.isDebugEnabled()) logger.debug("Sel client ID is " + selclientId);
 			selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
 			selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
 			String accessId = selclientId.substring(0, selclientId.indexOf(':'));
 
 			selectedAccIndex = Integer.parseInt(accessId);
-			if (selectedAccIndices == null)
+			if (selectedAccIds == null)
 			{
-				selectedAccIndices = new ArrayList();
+				selectedAccIds = new ArrayList();
 			}
-			selectedAccIndices.add(new Integer(selectedAccIndex));
-			accessSelected = true;
+			selectedAccIds.add(new Integer(selectedAccIndex));
+			accessSelected = true;*/
 		}
 		return;
 	}
@@ -858,6 +889,19 @@ public class SpecialAccessPage implements Serializable
 		}
 
 		return specialAccess;
+	}	
+	
+	protected Map getSaMap(List saList)
+	{
+		if ((saList == null)||(saList.size() == 0)) return null;
+		Map saMap = new LinkedHashMap<Integer, SpecialAccess>();
+
+		for (Iterator itr = saList.listIterator(); itr.hasNext();)
+		{
+			SpecialAccess saObj = (SpecialAccess) itr.next();
+		    saMap.put(saObj.getAccessId(), saObj);
+		}	
+		return saMap;
 	}	
 	
 	public Date getDateFromString(String dateStr) throws ParseException{

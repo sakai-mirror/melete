@@ -204,7 +204,7 @@ if (msg != null)
                <h:column>
               <h:inputHidden id="hacksecid" value="#{sectionBean.section.sectionId}"/>
              
-               <h:selectBooleanCheckbox title="#{sectionBean.section.title}" id="secCheck" value="#{sectionBean.selected}" valueChangeListener="#{listAuthModulesPage.selectedSection}"/> 
+               <h:selectBooleanCheckbox id="secCheck" value="#{sectionBean.selected}" valueChangeListener="#{listAuthModulesPage.selectedSection}"/> 
                
                <h:outputText id="disp_seq" value="#{sectionBean.displaySequence}. " />
                              

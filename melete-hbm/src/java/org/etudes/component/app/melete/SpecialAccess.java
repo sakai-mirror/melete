@@ -35,6 +35,8 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService
 {
 
 	private int accessId;
+	
+	protected String accessIdStr;
 
 	/** nullable persistent field */
 	private Date endDate;
@@ -76,6 +78,10 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService
 	public int getAccessId()
 	{
 		return accessId;
+	}
+	
+	public String getAccessIdStr() {
+		return Integer.toString(this.accessId);
 	}
 
 	/*
