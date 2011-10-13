@@ -1313,15 +1313,16 @@ public class ListAuthModulesPage implements Serializable
 	/** Bring section one level up in indentation
 	 * @return list_auth_modules
 	 */
-	public String BringSubSectionLevelUpAction()
-	{
+	public String BringSubSectionLevelUpAction() {
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		if (!saveModuleDates()) return "list_auth_modules";
-		if ((moduleDateBeans == null)||(moduleDateBeans.size() == 0)) return "list_auth_modules";
-		
-		if (count == 0)
-		{
+		ResourceLoader bundle = new ResourceLoader(
+				"org.etudes.tool.melete.bundle.Messages");
+		if (!saveModuleDates())
+			return "list_auth_modules";
+		if ((moduleDateBeans == null) || (moduleDateBeans.size() == 0))
+			return "list_auth_modules";
+
+		if (count == 0) {
 			String msg = bundle.getString("list_select_one_indent");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 			resetSubSectionValues();
@@ -1329,8 +1330,7 @@ public class ListAuthModulesPage implements Serializable
 		}
 
 		// if module is selected then throw message
-		if (moduleSelected)
-		{
+		if (moduleSelected) {
 			String msg = bundle.getString("list_select_indent");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 			resetSubSectionValues();
@@ -1339,94 +1339,95 @@ public class ListAuthModulesPage implements Serializable
 
 		// section selected
 		/*
-		 * if(sectionSelected && count != 1) { String msg = bundle.getString("list_select_one_indent"); addMessage(ctx,"Error
-		 * Message",msg,FacesMessage.SEVERITY_ERROR); resetSubSectionValues(); return "list_auth_modules"; }
+		 * if(sectionSelected && count != 1) { String msg =
+		 * bundle.getString("list_select_one_indent"); addMessage(ctx,"Error
+		 * Message
+		 * ",msg,FacesMessage.SEVERITY_ERROR); resetSubSectionValues(); return "
+		 * list_auth_modules"; }
 		 */
 
-		if (sectionSelected == true)
-		{
-			if ((secObjMap == null)||(secObjMap.size() == 0)) return "list_auth_modules";
+		if (sectionSelected == true) {
+			if ((secObjMap == null) || (secObjMap.size() == 0))
+				return "list_auth_modules";
 			SecModObj smObj = null;
 			ModuleDateBean mdbean = null;
 			SectionBeanService secBean = null;
 			List indentSecBeans = null;
-			if (indentSecBeans == null)
-			{
+			if (indentSecBeans == null) {
 				indentSecBeans = new ArrayList();
 			}
-			
-			if (selectedSecIds == null) 
-			{
+
+			if (selectedSecIds == null) {
 				resetSubSectionValues();
 				return "list_auth_modules";
 			}
 			// If one section is selected, we check if its the top level section
 			// If multiple sections are selected, we indent those that we can
 			// and leave the others alone
-			if (selectedSecIds.size() == 1)
-			{
+			if (selectedSecIds.size() == 1) {
 				smObj = (SecModObj) secObjMap.get(selectedSecIds.get(0));
-				mdbean = (ModuleDateBean) smObj.getMdBean();
-				secBean = (SectionBeanService) smObj.getSecBean();
-				if (checkTopLevelSection(secBean.getDisplaySequence()))
-				{
-					logger.debug("Top level section can't indent left more");
-					resetSubSectionValues();
-					return "list_auth_modules";
+				if ((smObj != null) && (smObj.getMdBean() != null)
+						&& (smObj.getSecBean() != null))
+					{
+					mdbean = (ModuleDateBean) smObj.getMdBean();
+					secBean = (SectionBeanService) smObj.getSecBean();
+					if (checkTopLevelSection(secBean.getDisplaySequence())) {
+						logger.debug("Top level section can't indent left more");
+						resetSubSectionValues();
+						return "list_auth_modules";
+					}
+					try {
+						indentSecBeans.add(secBean);
+						moduleService.bringOneLevelUp(mdbean.getModule(),
+								indentSecBeans);
+					} catch (MeleteException me) {
+						logger.debug(me.toString());
+						String msg = bundle.getString("indent_left_fail");
+						addMessage(ctx, "Error Message", msg,
+								FacesMessage.SEVERITY_ERROR);
+					}
 				}
-				try
-				{
-					indentSecBeans.add(secBean);
-					moduleService.bringOneLevelUp(mdbean.getModule(), indentSecBeans);
-				}
-				catch (MeleteException me)
-				{
-					logger.debug(me.toString());
-					String msg = bundle.getString("indent_left_fail");
-					addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
-				}
-			}
-			else
-			{
+			} else {
 				// Multiple indent code
 				boolean res = checkDifModules(selectedSecIds);
-				if (res == true)
-				{
+				if (res == true) {
 					String msg = bundle.getString("list_select_in_onemodule");
-					addMessage(ctx, "Select Indent", msg, FacesMessage.SEVERITY_ERROR);
+					addMessage(ctx, "Select Indent", msg,
+							FacesMessage.SEVERITY_ERROR);
 					resetSubSectionValues();
 					return "list_auth_modules";
-				}
-				else
-				{
+				} else {
 					mdbean = null;
 					secBean = null;
 
-					for (ListIterator i = selectedSecIds.listIterator(); i.hasNext();)
-					{
-						Integer sectionId = (Integer) i.next();	
+					for (ListIterator i = selectedSecIds.listIterator(); i
+							.hasNext();) {
+						Integer sectionId = (Integer) i.next();
 						smObj = (SecModObj) secObjMap.get(sectionId);
-						if ((smObj != null)&&(smObj.getMdBean() != null)&&(smObj.getSecBean()!=null))
-						{
+						if ((smObj != null) && (smObj.getMdBean() != null)
+								&& (smObj.getSecBean() != null)) {
 							mdbean = smObj.getMdBean();
 							secBean = smObj.getSecBean();
 							indentSecBeans.add(secBean);
-							try
-							{
-								moduleService.bringOneLevelUp(mdbean.getModule(), indentSecBeans);
-							}
-							catch (MeleteException me)
-							{
-								logger.debug(me.toString());
-								String msg = bundle.getString("indent_left_fail");
-								addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
-							}
 						}
 					}
+					if ((indentSecBeans != null)
+							&& (indentSecBeans.size() != 0)) {
+						try {
+							moduleService.bringOneLevelUp(mdbean.getModule(),
+									indentSecBeans);
+						} catch (MeleteException me) {
+							logger.debug(me.toString());
+							String msg = bundle.getString("indent_left_fail");
+							addMessage(ctx, "Error Message", msg,
+									FacesMessage.SEVERITY_ERROR);
+						}
+					}
+
 				}
 			}
 		}
-		
+
 		resetSubSectionValues();
 		int saveShowId = showModuleId;
 		resetValues();
