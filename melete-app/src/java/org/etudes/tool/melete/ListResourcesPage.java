@@ -31,13 +31,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UICommand;
-import javax.faces.component.UIComponent;
 import javax.faces.component.UIData;
-import javax.faces.component.UIOutput;
 import javax.faces.component.UIInput;
-import javax.faces.component.UIParameter;
-import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
@@ -51,7 +46,6 @@ import org.etudes.api.app.melete.MeleteResourceService;
 import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.SectionService;
 import org.etudes.component.app.melete.MeleteResource;
-import org.etudes.component.app.melete.ModuleDateBean;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.content.cover.ContentTypeImageService;
@@ -295,7 +289,7 @@ public class ListResourcesPage
 				currSiteResourcesList = new ArrayList<DisplaySecResources>();
 
 				List<?> allmembers = null;
-		
+				if (this.fromPage == null) return;
 				// to create list of resource whose type is typeUpload
 				if (this.fromPage.equals("ContentUploadServerView") || this.fromPage.equals("editContentUploadServerView"))
 				{
@@ -503,7 +497,6 @@ public class ListResourcesPage
 	 */
 	public String link2meAction()
 	{
-		logger.debug("checking if coming to link2me action2");
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		try
 		{
@@ -740,12 +733,12 @@ public class ListResourcesPage
 					SectionObjService section = sectionService.getSection(Integer.parseInt(sectionId));
 
 					section.setOpenWindow(openWindow);
-				//	sectionService.insertMeleteResource(section, newResource);
-					sectionService.editSection(section, newResource, getCurrUserId(), true);
+					sectionService.insertMeleteResource(section, newResource);
+				//	sectionService.editSection(section, newResource, getCurrUserId(), true);
 				}
 			}
-			 String secId = (String) evt.getComponent().getAttributes().get("sectionId");
-			 FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId="+secId);
+	//		 String secId = (String) evt.getComponent().getAttributes().get("sectionId");
+			 FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId="+sectionId);
 		}
 		catch (Exception e)
 		{
@@ -761,8 +754,6 @@ public class ListResourcesPage
 	 */
 	public String setServerFile()
 	{
-		FacesContext context = FacesContext.getCurrentInstance();
-		logger.debug("CHK facesMessage " + context.getMessages());
 		return "editmodulesections";
 	}
 
@@ -775,8 +766,8 @@ public class ListResourcesPage
 	{
 		try
 		{
-			String secId = (String) evt.getComponent().getAttributes().get("sectionId");
-			FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + secId);
+	//		String secId = (String) evt.getComponent().getAttributes().get("sectionId");
+			FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + sectionId);
 		}
 		catch (Exception e)
 		{
@@ -935,6 +926,17 @@ public class ListResourcesPage
 	 */
 	public boolean isOpenWindow()
 	{
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		if (facesContext.getExternalContext().getRequestParameterMap().get("showMessage") != null)
+		{
+			String show = (String) facesContext.getExternalContext().getRequestParameterMap().get("showMessage");
+
+			if (show == null || show.length() == 0) return openWindow;
+
+			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+			String errMsg = bundle.getString("file_too_large");
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "file_too_large", errMsg));
+		}
 		return openWindow;
 	}
 

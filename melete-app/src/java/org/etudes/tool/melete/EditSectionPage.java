@@ -1262,7 +1262,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		public void setEditIdParam(String editIdParam)
 		{
 			logger.debug("SETTING EDITID PARAM :" + editIdParam );
-			if(editIdParam != null && editIdParam.length() > 0)
+			if(editIdParam != null && editIdParam.length() > 0 && !editIdParam.equals("null"))
 			{
 				setEditId(editIdParam);
 				SectionObjService sec = sectionService.getSection(Integer.parseInt(editIdParam));
