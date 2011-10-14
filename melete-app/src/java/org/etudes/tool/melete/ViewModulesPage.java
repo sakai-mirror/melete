@@ -513,6 +513,11 @@ public class ViewModulesPage implements Serializable
 	{
 		this.nextSeqNo = nextSeqNo;
 	}
+	
+	public void setPrevSectionSize(int prevSectionSize)
+	{
+		this.prevSectionSize = prevSectionSize;
+	}
 
 	/**
 	 * @param moduleService

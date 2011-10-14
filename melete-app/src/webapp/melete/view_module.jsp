@@ -36,6 +36,8 @@
 <t:saveState id="vmppsn" value="#{viewModulesPage.prevSeqNo}" />
 <t:saveState id="vmpmsn" value="#{viewModulesPage.moduleSeqNo}" />
 <t:saveState id="vmpnsn" value="#{viewModulesPage.nextSeqNo}" />
+<t:saveState id="vmppss" value="#{viewModulesPage.prevSectionSize}" />
+
 <h:form id="viewmoduleform">
  <f:subview id="top">
   	<jsp:include page="topnavbar.jsp?myMode=View"/>
