@@ -548,6 +548,11 @@
             <property-name>sectionService</property-name>
             <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
         </managed-property>
+        <managed-property>
+            <description>Service Dependency: User preference service</description>
+            <property-name>authorPrefService</property-name>
+            <value>#{Components["org.etudes.api.app.melete.MeleteAuthorPrefService"]}</value>
+        </managed-property>
          <managed-property>
 			<property-name>fromPage</property-name>
 			<value>#{param.fromPage}</value>

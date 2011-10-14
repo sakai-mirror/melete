@@ -309,7 +309,10 @@ public class SectionDB implements Serializable
 				{
 					queryString = "from MeleteResource meleteresource where meleteresource.resourceId=:resourceId";
 					result_list = session.createQuery(queryString).setParameter("resourceId", melResource.getResourceId()).list();
-					if (result_list != null && result_list.size() > 0) findMelResource = (MeleteResource) result_list.get(0);
+					if (result_list != null && result_list.size() > 0)
+						findMelResource = (MeleteResource) result_list.get(0);
+					else
+						findMelResource = null;
 				}
 
 				// save data

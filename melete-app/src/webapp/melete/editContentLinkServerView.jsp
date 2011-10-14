@@ -82,11 +82,11 @@ function fillTitle()
 
 		 	<div class="actionBar" align="left">
 		          		<h:commandButton id="addButton" actionListener="#{listResourcesPage.addNewUrl}" value="#{msgs.im_continue}" action="#{listResourcesPage.setServerFile}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue">
-		          				<f:attribute name="sectionId" value="#{listResourcesPage.sectionId}" />		          			
+		          				<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />		          			
 					    </h:commandButton>    
 					      		
 		          	 	<h:commandButton id="cancelButton" immediate="true" value="#{msgs.im_cancel}" actionListener="#{listResourcesPage.cancelServerFile}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
-		          	 			<f:attribute name="sectionId" value="#{listResourcesPage.sectionId}" />			          				
+		          	 			<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />			          				
 		          	 	</h:commandButton>
         			 </div>
 					 </td></tr>        

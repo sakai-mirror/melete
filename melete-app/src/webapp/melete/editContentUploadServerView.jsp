@@ -79,12 +79,13 @@
 						</td></tr>	
 					</table>
 			       	<div class="actionBar" align="left">
-		          		<h:commandButton id="addButton" actionListener="#{listResourcesPage.addNewFile}" value="#{msgs.im_continue}" action="#{listResourcesPage.setServerFile}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue" />
-		          	
-		          			
+		          		<h:commandButton id="addButton" actionListener="#{listResourcesPage.addNewFile}" value="#{msgs.im_continue}" action="#{listResourcesPage.setServerFile}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue">
+		          				<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />		          			
+					    </h:commandButton> 		          			
 					      		
-		          	 	<h:commandButton id="cancelButton" immediate="true" value="#{msgs.im_cancel}" actionListener="#{listResourcesPage.cancelServerFile}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
-		          	 		
+		          	 	<h:commandButton id="cancelButton" immediate="true" value="#{msgs.im_cancel}" actionListener="#{listResourcesPage.cancelServerFile}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
+		          	 		<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />		          			
+					    </h:commandButton> 
         			 </div>
 					 </td></tr>        
 		   

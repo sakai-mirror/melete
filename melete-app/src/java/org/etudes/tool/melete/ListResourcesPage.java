@@ -41,11 +41,13 @@ import javax.faces.event.ValueChangeEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.etudes.api.app.melete.MeleteAuthorPrefService;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.MeleteResourceService;
 import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.SectionService;
 import org.etudes.component.app.melete.MeleteResource;
+import org.etudes.component.app.melete.MeleteUserPreference;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.content.cover.ContentTypeImageService;
@@ -244,6 +246,7 @@ public class ListResourcesPage
 	protected Log logger = LogFactory.getLog(ListResourcesPage.class);
 	protected MeleteCHService meleteCHService;
 	protected SectionService sectionService;
+	protected MeleteAuthorPrefService authorPrefService;
 	protected ServerConfigurationService serverConfigurationService;
 
 	private String sectionId="";
@@ -280,7 +283,6 @@ public class ListResourcesPage
 			FacesContext ctx = FacesContext.getCurrentInstance();
 			if (currSiteResourcesList == null || currSiteResourcesList.size() == 0)
 			{
-				logger.debug("create original list");
 				ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 				MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
 				String uploadCollId = getMeleteCHService().getUploadCollectionId(mPage.getCurrentSiteId());
@@ -330,7 +332,7 @@ public class ListResourcesPage
 					{
 						String contentextension = cr.getContentType();
 						rgif = ContentTypeImageService.getContentTypeImage(contentextension);
-						// logger.debug("image provided for" + displayName +" is " +rgif);
+		
 						if (rgif.startsWith("sakai"))
 							rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
 						else if (rgif.startsWith("/sakai")) rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));
@@ -373,7 +375,7 @@ public class ListResourcesPage
 		}
 		catch (Exception e)
 		{
-			logger.warn("error in creating list for server residing files" + e.toString());
+			logger.debug("error in creating list for server residing files" + e.toString());
 			e.printStackTrace();
 		}
 		return;
@@ -593,7 +595,6 @@ public class ListResourcesPage
 	 */
 	public void setSectionId(String sectionId)
 	{
-		logger.debug("sectionId set in list resource page is:" + sectionId);
 		this.sectionId = sectionId;
 	}
 
@@ -615,6 +616,11 @@ public class ListResourcesPage
 		this.sectionService = sectionService;
 	}
 	
+	public void setAuthorPrefService(MeleteAuthorPrefService authorPrefService)
+	{
+		this.authorPrefService = authorPrefService;
+	}
+
 	/**
 	 * @param serverConfigurationService
 	 *        The ServerConfigurationService to set.
@@ -688,6 +694,25 @@ public class ListResourcesPage
 	}
 
 	/**
+	 * 
+	 * @param newResource
+	 * @return
+	 */
+	private MeleteResourceService setDefaultLicense(MeleteResourceService newResource)
+	{
+		MeleteUserPreference mup = (MeleteUserPreference) authorPrefService.getUserChoice(getCurrUserId());
+		newResource.setLicenseCode(mup.getLicenseCode());
+		newResource.setAllowCmrcl(mup.isAllowCmrcl());
+		newResource.setAllowMod(mup.getAllowMod());
+		newResource.setCcLicenseUrl(mup.getCcLicenseUrl());
+		newResource.setCopyrightOwner(mup.getCopyrightOwner());
+		newResource.setCopyrightYear(mup.getCopyrightYear());
+		newResource.setReqAttr(mup.isReqAttr());
+
+		return newResource;
+	}
+	
+	/**
 	 * Add the newly provided local file
 	 * 
 	 * @param evt
@@ -720,7 +745,7 @@ public class ListResourcesPage
 				is.read(secContentData);
 
 				String secContentMimeType = fi.getContentType();
-				if (logger.isDebugEnabled()) logger.debug("file upload success" + secContentMimeType);
+
 				if (secContentMimeType != null)
 				{
 					ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, "");
@@ -729,12 +754,13 @@ public class ListResourcesPage
 							secContentData, res);
 					MeleteResourceService newResource = new MeleteResource();
 					newResource.setResourceId(newResourceId);
-
+					//set default license information
+					newResource = setDefaultLicense(newResource);
 					SectionObjService section = sectionService.getSection(Integer.parseInt(sectionId));
 
 					section.setOpenWindow(openWindow);
-					sectionService.insertMeleteResource(section, newResource);
-				//	sectionService.editSection(section, newResource, getCurrUserId(), true);
+				//	sectionService.insertMeleteResource(section, newResource);
+					sectionService.editSection(section, newResource, getCurrUserId(), true);
 				}
 			}
 	//		 String secId = (String) evt.getComponent().getAttributes().get("sectionId");
@@ -802,13 +828,14 @@ public class ListResourcesPage
 
 				MeleteResourceService newResource = new MeleteResource();
 				newResource.setResourceId(newResourceId);
-
+				// set default license information
+				newResource = setDefaultLicense(newResource);
 				SectionObjService section = sectionService.getSection(Integer.parseInt(sectionId));
 
 				section.setOpenWindow(openWindow);
-				//sectionService.insertMeleteResource(section, newResource);
 				sectionService.editSection(section, newResource, getCurrUserId(), true);
 			}
+			FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + sectionId);
 		}
 		catch (Exception e)
 		{
