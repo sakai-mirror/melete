@@ -41,8 +41,6 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService
 	/** identifier field */
 	protected int moduleId;
 
-	protected String moduleIdStr;
-	
 	/** nullable persistent field */
 	protected ModuleShdates moduleShdate;
 
@@ -91,10 +89,6 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService
 	public int getModuleId()
 	{
 		return this.moduleId;
-	}
-
-	public String getModuleIdStr() {
-		return Integer.toString(this.moduleId);
 	}
 
 	/**

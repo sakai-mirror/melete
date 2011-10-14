@@ -175,7 +175,7 @@ if (msg != null)
     </h:panelGroup> 
      </f:facet> 
      
-	   <h:selectBooleanCheckbox title="#{mdbean.moduleIdStr}" id="modCheck" value="#{mdbean.selected}" onclick="resetAllMod()" valueChangeListener="#{listAuthModulesPage.selectedModule}" />
+	   <h:selectBooleanCheckbox title="#{mdbean.module.moduleIdStr}" id="modCheck" value="#{mdbean.selected}" onclick="resetAllMod()" valueChangeListener="#{listAuthModulesPage.selectedModule}" />
      
     </h:column>               
    <h:column>

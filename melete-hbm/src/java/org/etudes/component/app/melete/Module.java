@@ -70,6 +70,9 @@ public class Module implements Serializable, ModuleObjService
 
 	/** identifier field */
 	private Integer moduleId;
+	
+	protected String moduleIdStr;
+	
 
 	/** nullable persistent field */
 	private org.etudes.component.app.melete.ModuleShdates moduleshdate;
@@ -303,6 +306,13 @@ public class Module implements Serializable, ModuleObjService
 	public Integer getModuleId()
 	{
 		return this.moduleId;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getModuleIdStr() {
+		return Integer.toString(this.moduleId);
 	}
 
 	/**

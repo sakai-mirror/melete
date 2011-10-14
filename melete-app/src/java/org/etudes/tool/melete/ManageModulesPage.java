@@ -27,8 +27,11 @@ package org.etudes.tool.melete;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIInput;
@@ -52,6 +55,8 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 {
 
 	private List<CourseModuleService> archiveModulesList;
+	
+	private Map archiveModulesMap = null;
 
 	private List<CourseModuleService> restoreModulesList;
 	
@@ -75,6 +80,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 		count = 0;
 		restoreModulesList = new ArrayList<CourseModuleService>();
 		archiveModulesList = null;
+		archiveModulesMap = null;
 		selectAllFlag = false;
 	}
 
@@ -96,6 +102,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 	public String cancelRestoreModules()
 	{
 		archiveModulesList = null;
+		archiveModulesMap = null;
 		restoreModulesList = null;
 		count = 0;
 		return "modules_author_manage";
@@ -135,6 +142,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 
 		// 2. clear archivelist
 		archiveModulesList = null;
+		archiveModulesMap = null;
 
 		return "delete_module";
 	}
@@ -154,6 +162,11 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 				MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
 
 				archiveModulesList = getModuleService().getArchiveModules(mPage.getCurrentSiteId());
+				
+				if ((archiveModulesList != null)&&(archiveModulesList.size() > 0))
+				{
+					archiveModulesMap = getArchiveModulesMap(archiveModulesList);
+				}
 			}
 		}
 		catch (Exception e)
@@ -163,6 +176,19 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 		listSize = archiveModulesList.size();
 		return archiveModulesList;
 	}
+	
+	protected Map getArchiveModulesMap(List archiveModulesList)
+	{
+		if ((archiveModulesList == null)||(archiveModulesList.size() == 0)) return null;
+		Map archiveModulesMap = new LinkedHashMap<Integer, CourseModuleService>();
+
+		for (Iterator itr = archiveModulesList.listIterator(); itr.hasNext();)
+		{
+			CourseModuleService cm = (CourseModuleService) itr.next();
+		    archiveModulesMap.put(cm.getModuleId(), cm);
+		}	
+		return archiveModulesMap;
+	}	
 
 	/**
 	 * Returns boolean false to not render restore commandlink if modules are not present
@@ -271,6 +297,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 	public void resetValues()
 	{
 		archiveModulesList = null;
+		archiveModulesMap = null;
 		restoreModulesList = null;
 		count = 0;
 		selectAllFlag = false;
@@ -317,6 +344,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 
 		// 2. clear archivelist
 		archiveModulesList = null;
+		archiveModulesMap = null;
 
 		String confMsg = bundle.getString("restore_modules_msg");
 		addMessage(context, "Info", confMsg, FacesMessage.SEVERITY_INFO);
@@ -341,18 +369,16 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 
 		if (((Boolean) mod_Selected.getValue()).booleanValue() == true)
 		{
-			String selclientId = mod_Selected.getClientId(context);
-			selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-			selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-
-			String modId = selclientId.substring(0, selclientId.indexOf(':'));
-			int selectedModIndex = Integer.parseInt(modId);
-
+			String title = (String) mod_Selected.getAttributes().get("title");
+			if (title != null) {
+				int selectedModId = Integer.parseInt(title);
+			
 			if (restoreModulesList == null) restoreModulesList = new ArrayList<CourseModuleService>();
 
-			CourseModuleService cm = archiveModulesList.get(selectedModIndex);
+			CourseModuleService cm = (CourseModuleService) archiveModulesMap.get(selectedModId);
 			restoreModulesList.add(cm);
 			count++;
+			}
 
 		}
 		return;

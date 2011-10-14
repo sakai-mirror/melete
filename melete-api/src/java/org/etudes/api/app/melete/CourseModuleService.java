@@ -54,6 +54,13 @@ public interface CourseModuleService
 	 * @return
 	 */
 	public abstract org.etudes.api.app.melete.ModuleObjService getModule();
+	
+	/**
+	 * Get Module id
+	 * 
+	 * @return
+	 */
+	public abstract Integer getModuleId();
 
 	/**
 	 * Get the sequence number of the module
