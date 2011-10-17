@@ -449,6 +449,10 @@
             <property-name>sectionService</property-name>
             <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
         </managed-property>
+         <managed-property>
+			<property-name>fromSectionId</property-name>
+			<value>#{param.fromSectionId}</value>
+		</managed-property>   
 </managed-bean>   
 
 <managed-bean>

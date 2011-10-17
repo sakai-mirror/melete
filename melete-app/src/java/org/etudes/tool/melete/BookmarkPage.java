@@ -681,7 +681,7 @@ public class BookmarkPage implements Serializable
 			{
 				try
 				{
-				context.getExternalContext().redirect("editmodulesections.jsf?sectionId=" + fromSectionId);
+					context.getExternalContext().redirect("editmodulesections.jsf?sectionId=" + fromSectionId);
 				}
 				catch (Exception e)
 				{
