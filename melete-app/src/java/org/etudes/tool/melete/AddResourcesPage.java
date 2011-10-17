@@ -82,6 +82,17 @@ public class AddResourcesPage implements ServletContextListener
 	 */
 	public String getNumberItems()
 	{
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		if (facesContext.getExternalContext().getRequestParameterMap().get("showMessage") != null)
+		{
+			String show = (String) facesContext.getExternalContext().getRequestParameterMap().get("showMessage");
+
+			if (show == null || show.length() == 0) return numberItems;
+
+			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+			String errMsg = bundle.getString("file_too_large");
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "file_too_large", errMsg));
+		}
 		return this.numberItems;
 	}
 
