@@ -264,9 +264,9 @@ public class ViewModulesPage implements Serializable
 	/**
 	 * Go to next section, set all the values such as section id, module id, section and module
 	 * 
-	 * @return view_section
+	 * 
 	 */
-	public String goNextSection()
+	public void goNextSection(ActionEvent evt)
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 
@@ -284,50 +284,89 @@ public class ViewModulesPage implements Serializable
 		// added by rashmi on 6/14/05
 		vsPage.setModule(null);
 		vsPage.setAutonumber(null);
-
-		String retVal = "view_section";
-		return retVal;
+		
+		try
+		{
+			ctx.getExternalContext().redirect("view_section.jsf?moduleId="+sec.getModuleId()+"&sectionId="+secBean.getSectionId()+"&moduleSeqNo="+sec.getModule().getCoursemodule().getSeqNo());
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**
 	 * Go to previous or next module
 	 * 
-	 * @return view_module
+	 * 
 	 */
-	public String goPrevNext()
+	public void goPrevNext(ActionEvent evt)
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		this.moduleSeqNo = new Integer(((String) ctx.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue();
 		this.viewMbean = null;
 		this.moduleId = 0;
-		return "view_module";
+		try
+		{
+			ctx.getExternalContext().redirect("view_module.jsf?modSeqNo="+this.moduleSeqNo);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**
 	 * Go to previous section, set all the values such as section id, module id, section and module
 	 * 
-	 * @return view_section
+	 * 
 	 */
-	public String goPrevSection()
+	public void goPrevSection(ActionEvent evt)
 	{
+		String retVal;
 		FacesContext ctx = FacesContext.getCurrentInstance();
 
 		ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
 
 		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
+		
+		if (this.prevMbean != null)
+		{
 
-		ViewSecBeanService secBean = (ViewSecBeanService) this.prevMbean.getVsBeans().get(this.prevMbean.getVsBeans().size() - 1);
-		SectionObjService sec = sectionService.getSection(secBean.getSectionId());
-		vsPage.setSectionId(secBean.getSectionId());
-		vsPage.setModuleId(sec.getModuleId());
-		vsPage.setModuleSeqNo(sec.getModule().getCoursemodule().getSeqNo());
-		vsPage.setSection(null);
-		vsPage.setSection(sec);
-		// added by rashmi on 6/14/05
-		vsPage.setModule(null);
-		vsPage.setAutonumber(null);
-		String retVal = "view_section";
-		return retVal;
+			ViewSecBeanService secBean = (ViewSecBeanService) this.prevMbean.getVsBeans().get(this.prevMbean.getVsBeans().size() - 1);
+			SectionObjService sec = sectionService.getSection(secBean.getSectionId());
+			if (sec != null)
+			{
+				vsPage.setSectionId(secBean.getSectionId());
+				vsPage.setModuleId(sec.getModuleId());
+				vsPage.setModuleSeqNo(sec.getModule().getCoursemodule().getSeqNo());
+				vsPage.setSection(null);
+				vsPage.setSection(sec);
+				// added by rashmi on 6/14/05
+				vsPage.setModule(null);
+				vsPage.setAutonumber(null);
+				retVal = "view_section.jsf?moduleId=" + sec.getModuleId() + "&sectionId=" + secBean.getSectionId() + "&moduleSeqNo="
+						+ sec.getModule().getCoursemodule().getSeqNo();
+			}
+			else
+			{
+				this.viewMbean = null;
+				retVal = "view_module.jsf?modId=" + this.moduleId;
+			}
+		}
+		else
+		{
+			retVal = "view_module.jsf?modId=" + this.moduleId;
+		}
+
+		try
+		{
+			ctx.getExternalContext().redirect(retVal);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**
@@ -591,9 +630,9 @@ public class ViewModulesPage implements Serializable
 	/**
 	 * Set up view section page with the right values for section id, module id, module sequene number and section
 	 * 
-	 * @return view_section
+	 * 
 	 */
-	public String viewSection()
+	public void viewSection()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		UIViewRoot root = ctx.getViewRoot();
@@ -616,7 +655,14 @@ public class ViewModulesPage implements Serializable
 		// vsPage.setAutonumber(this.autonumber);
 
 		String retVal = "view_section";
-		return retVal;
+		try
+		{
+			ctx.getExternalContext().redirect("view_section.jsf?moduleId="+sec.getModuleId()+"&sectionId="+secBean.getSectionId()+"&moduleSeqNo="+sec.getModule().getCoursemodule().getSeqNo());
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**

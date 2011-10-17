@@ -32,11 +32,17 @@
 final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 final ViewModulesPage vmPage = (ViewModulesPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "viewModulesPage");
 
-String moduleId = (String)request.getParameter("printModuleId");
+String moduleId = (String)request.getParameter("modId");
 
 if (moduleId != null)
 {
 	vmPage.setModuleId(Integer.parseInt(moduleId));
+}
+
+String moduleSeqNo = (String)request.getParameter("modSeqNo");
+if (moduleSeqNo != null)
+{
+	vmPage.setModuleSeqNo(Integer.parseInt(moduleSeqNo));
 }
 %>
 <f:view>
@@ -87,7 +93,7 @@ if (moduleId != null)
 		</h:column>
 		<h:column rendered="#{viewModulesPage.printable}">
 			<h:outputLink id="printModuleLink" value="view_module" onclick="OpenPrintWindow(#{viewModulesPage.viewMbean.moduleId},'Melete Print Window');" rendered="#{viewModulesPage.printable}">
-		    	<f:param id="printmoduleId" name="printModuleId" value="#{viewModulesPage.viewMbean.moduleId}" />
+		    	<f:param id="modId" name="modId" value="#{viewModulesPage.viewMbean.moduleId}" />
 	  			<h:graphicImage id="printImgLink" value="/images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 		 	</h:outputLink>
 		</h:column>
@@ -102,7 +108,7 @@ if (moduleId != null)
  			  <h:column> 			  		
  					<h:panelGroup style="width:100%;">
 	        		 
-			          <h:commandLink id="viewSectionEditor"  action="#{viewModulesPage.viewSection}" styleClass="#{sectionBean.displayClass}" rendered="#{sectionBean.title != viewModulesPage.nullString}" immediate="true">
+			          <h:commandLink id="viewSectionEditor"  actionListener="#{viewModulesPage.viewSection}" styleClass="#{sectionBean.displayClass}" rendered="#{sectionBean.title != viewModulesPage.nullString}" immediate="true">
 					      <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" rendered="#{!viewModulesPage.autonumber}" styleClass="AuthImgClass"/>
 					      <h:outputText id="sec_seq" value="#{sectionBean.displaySequence}. " rendered="#{viewModulesPage.autonumber}"/>
 						  <h:outputText id="sectitleEditor" value="#{sectionBean.title}" > </h:outputText>

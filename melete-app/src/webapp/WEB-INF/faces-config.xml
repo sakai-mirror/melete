@@ -1261,15 +1261,7 @@
       <navigation-case>
 		   <from-outcome>delete_module</from-outcome>
         <to-view-id>/melete/delete_module.jsp</to-view-id>
-      </navigation-case>        
-     <navigation-case>
-		   <from-outcome>view_module</from-outcome>
-        <to-view-id>/melete/view_module.jsp</to-view-id>
-      </navigation-case>     
-     <navigation-case>
-		   <from-outcome>view_section</from-outcome>
-        <to-view-id>/melete/view_section.jsp</to-view-id>
-      </navigation-case>        
+      </navigation-case>              
       <navigation-case>
 		   <from-outcome>module_post_steps</from-outcome>
         <to-view-id>/melete/module_post_steps.jsp</to-view-id>

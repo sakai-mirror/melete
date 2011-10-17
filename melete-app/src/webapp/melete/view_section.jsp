@@ -40,6 +40,11 @@ if ((moduleId != null) &&(secId != null))
 	vsPage.setModuleId(Integer.parseInt(moduleId));
 	vsPage.setSectionId(Integer.parseInt(secId));
 }
+String modSeqNo = (String)request.getParameter("moduleSeqNo");
+if (modSeqNo != null)
+{
+	vsPage.setModuleSeqNo(Integer.parseInt(modSeqNo));
+}
 %>
 <f:view>
 <sakai:view title="Modules: Student View" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -68,7 +73,7 @@ if ((moduleId != null) &&(secId != null))
 <!-- breadcrumbs -->
 <h:panelGrid id="crumbsItem" columns="1"  style=" border-width:medium; border-color: #E2E4E8">
 	<h:column>
-		<h:commandLink id="moduleItem" action="#{viewSectionsPage.goCurrentModule}" immediate="true" >
+		<h:commandLink id="moduleItem" actionListener="#{viewSectionsPage.goCurrentModule}" immediate="true" >
 			<h:outputText id="modTitle" value="#{viewSectionsPage.module.title}"/>			
      	</h:commandLink>
      <h:outputText id="sep" value=" &raquo; "  escape="false" /> <h:outputText id="secTitle" value="#{viewSectionsPage.section.title}" />

@@ -1047,31 +1047,6 @@ public class ListAuthModulesPage implements Serializable
 		return "list_auth_modules";
 	}
 
-	/** Redirect to view module page
-	 * @return view_module
-	 */
-	public String viewModule()
-	{
-		return "view_module";
-	}
-
-	/** Redirect to view section page
-	 * @return view_section
-	 */
-	public String viewSection()
-	{
-		return "view_section";
-	}
-
-	/** Redirect to list auth page
-	 * @return list_auth_modules
-	 */
-	public String viewPrereqs()
-	{
-		return "list_auth_modules";
-	}
-
-	
 	/** Reset selected lists and redirect to module_post_steps page
 	 * @return module_post_steps
 	 */

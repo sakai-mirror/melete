@@ -320,7 +320,9 @@ public class ListModulesPage implements Serializable
 		try
 		{
 			if (nomodsFlag == null || viewModuleBeans == null)
+			{
 				viewModuleBeans = getModuleService().getViewModules(getUserId(), getCourseId(), true);
+			}	
 		}
 		catch (Exception e)
 		{
@@ -827,6 +829,15 @@ public class ListModulesPage implements Serializable
 				vmPage.setModuleSeqNo(vmbean.getSeqNo());
 				vmPage.setAutonumber(null);
 				vmPage.getViewMbean();
+
+				try
+				{
+					ctx.getExternalContext().redirect("view_module.jsf?modId=" + vmbean.getModuleId() + "&modSeqNo=" + vmbean.getSeqNo());
+				}
+				catch (Exception e)
+				{
+					return;
+				}
 			}
 		}
 
@@ -906,6 +917,15 @@ public class ListModulesPage implements Serializable
 		}
 
 		vsPage.setModuleSeqNo(modSeqNo);
+		try
+		{
+			ctx.getExternalContext().redirect("view_section.jsf?moduleId="+vmBean.getModuleId()+"&sectionId="+vsBean.getSectionId()+"&moduleSeqNo="+modSeqNo);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
+		
 	}
 	
 	protected Map getVmbeansMap(List vmBeans)

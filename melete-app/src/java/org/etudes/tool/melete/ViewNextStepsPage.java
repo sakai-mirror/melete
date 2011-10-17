@@ -139,9 +139,9 @@ public class ViewNextStepsPage implements Serializable
 	/**
 	 * Get next module
 	 * 
-	 * @return view_module
+	 * 
 	 */
-	public String goNextModule()
+	public void goNextModule(ActionEvent evt)
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		// this.module = null;
@@ -157,15 +157,23 @@ public class ViewNextStepsPage implements Serializable
 		vmPage.setPrintable(null);
 		vmPage.setAutonumber(null);
 		vmPage.getViewMbean();
-		return "view_module";
+		try
+		{
+			context.getExternalContext().redirect("view_module.jsf?modSeqNo="+nextSeqNo);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
+		return;
 	}
 
 	/**
 	 * Get item(module or section) before this what's next entry
 	 * 
-	 * @return view_module or view_section
+	 * 
 	 */
-	public String goPrevItem()
+	public void goPrevItem(ActionEvent evt)
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		courseId = getCourseId();
@@ -186,7 +194,15 @@ public class ViewNextStepsPage implements Serializable
 			}
 			vmPage.setPrevMbean(null);
 			vmPage.getViewMbean();
-			return "view_module";
+			try
+			{
+				context.getExternalContext().redirect("view_module.jsf?modId="+this.prevModId+"&modSeqNo="+prevSeqNo);
+			}
+			catch (Exception e)
+			{
+				return;
+			}
+			return;
 
 		}
 		else
@@ -211,7 +227,14 @@ public class ViewNextStepsPage implements Serializable
 			// added by rashmi on 6/14/05
 			vsPage.setModule(null);
 			vsPage.setAutonumber(null);
-			return "view_section";
+			try
+			{
+				context.getExternalContext().redirect("view_section.jsf?moduleId="+this.prevModId+"&sectionId="+this.prevSecId+"&moduleSeqNo="+this.moduleSeqNo);
+			}
+			catch (Exception e)
+			{
+				return;
+			}
 		}
 	}
 

@@ -93,7 +93,6 @@ public class ViewSectionsPage implements Serializable
 
 	private SectionService sectionService;
 
-	private String sectionTrack;
 	private String sectionTrackDateStr;
 	private org.w3c.dom.Document subSectionW3CDom;
 	private String typeEditor;
@@ -482,19 +481,22 @@ public class ViewSectionsPage implements Serializable
 	 */
 	public String getSectionTrackDateStr()
 	{
-		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
-		SectionTrackViewObjService stv = getSectionService().insertSectionTrack(this.sectionId, mPage.getCurrentUser().getId());
-
-		if (stv != null)
+		if (this.sectionId != 0)
 		{
-			Date viewDate = stv.getViewDate();
-			if (viewDate != null)
+			FacesContext context = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+			SectionTrackViewObjService stv = getSectionService().insertSectionTrack(this.sectionId, mPage.getCurrentUser().getId());
+
+			if (stv != null)
 			{
-				DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
-				ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-				return " (" + bundle.getString("view_section_lastviewed") + " " + df.format(viewDate) + ")";
+				Date viewDate = stv.getViewDate();
+				if (viewDate != null)
+				{
+					DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
+					ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+					return " (" + bundle.getString("view_section_lastviewed") + " " + df.format(viewDate) + ")";
+				}
 			}
 		}
 		return "";
@@ -535,9 +537,9 @@ public class ViewSectionsPage implements Serializable
 	/**
 	 * Go to the current module(module that this section belongs to) page
 	 * 
-	 * @return view_module page
+	 * 
 	 */
-	public String goCurrentModule()
+	public void goCurrentModule(ActionEvent evt)
 	{
 		int currModuleId = this.moduleId;
 		resetValues();
@@ -551,15 +553,23 @@ public class ViewSectionsPage implements Serializable
 		vmPage.setPrintable(null);
 		vmPage.setAutonumber(null);
 		vmPage.getViewMbean();
-		return "view_module";
+		try
+		{
+			context.getExternalContext().redirect("view_module.jsf?modId="+currModuleId);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
+		return ;
 	}
 
 	/**
 	 * Go to next module page
 	 * 
-	 * @return view_module page
+	 * 
 	 */
-	public String goNextModule()
+	public void goNextModule(ActionEvent evt)
 	{
 		resetValues();
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -581,15 +591,23 @@ public class ViewSectionsPage implements Serializable
 		vmPage.setPrintable(null);
 		vmPage.setAutonumber(null);
 		vmPage.getViewMbean();
-		return "view_module";
+		try
+		{
+			context.getExternalContext().redirect("view_module.jsf?modSeqNo="+this.nextSeqNo);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
+		return;
 	}
 
 	/**
 	 * Go to previous module
 	 * 
-	 * @return view_module page
+	 * 
 	 */
-	public String goPrevModule()
+	public void goPrevModule(ActionEvent evt)
 	{
 		resetValues();
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -613,16 +631,24 @@ public class ViewSectionsPage implements Serializable
 		vmPage.setPrevMbean(null);
 		vmPage.setModuleSeqNo(this.moduleSeqNo);
 		vmPage.getViewMbean();
+		try
+		{
+			context.getExternalContext().redirect("view_module.jsf?modId="+this.moduleId+"&modSeqNo="+this.moduleSeqNo);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 		
-		return "view_module";
+		return;
 	}
 
 	/**
 	 * Go to previous or next section
 	 * 
-	 * @return view_section page
+	 * 
 	 */
-	public String goPrevNext()
+	public void goPrevNext(ActionEvent evt)
 	{
 		resetValues();
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -644,7 +670,14 @@ public class ViewSectionsPage implements Serializable
 			}
 		}
 		this.module = null;
-		return "view_section";
+		try
+		{
+			context.getExternalContext().redirect("view_section.jsf?moduleId="+moduleIdStr+"&sectionId="+sectionIdStr);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**
@@ -652,7 +685,7 @@ public class ViewSectionsPage implements Serializable
 	 */
 	public String gotoAddBookmark()
 	{
-		return "add_bookmark";
+		return "view_section";
 	}
 
 	/**
@@ -956,15 +989,6 @@ public class ViewSectionsPage implements Serializable
 	public void setSectionService(SectionService sectionService)
 	{
 		this.sectionService = sectionService;
-	}
-
-	/**
-	 * @param sectionTrack
-	 *        section display sequence
-	 */
-	public void setSectionTrack(String sectionTrack)
-	{
-		this.sectionTrack = sectionTrack;
 	}
 
 	public void setSectionTrackDateStr(String sectionTrackDateStr)
