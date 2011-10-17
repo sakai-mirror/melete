@@ -354,7 +354,14 @@ public class SpecialAccessPage implements Serializable
 	 */
 	public ModuleObjService getModule()
 	{
-		return this.moduleService.getModule(this.moduleId);
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		if (ctx.getExternalContext().getRequestParameterMap().get("editmodid") != null)
+		{
+			String selectedModId = (String)ctx.getExternalContext().getRequestParameterMap().get("editmodid");
+			moduleId = Integer.parseInt(selectedModId);
+			setSaList(null);
+		}
+		return this.moduleService.getModule(this.moduleId);		
 	}
 
 	/**

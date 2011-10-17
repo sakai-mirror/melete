@@ -53,6 +53,7 @@ import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.SectionBeanService;
 import org.etudes.api.app.melete.exception.MeleteException;
+import org.etudes.component.app.melete.Module;
 import org.etudes.component.app.melete.ModuleDateBean;
 import org.etudes.component.app.melete.Section;
 import org.etudes.component.app.melete.SectionBean;
@@ -809,11 +810,15 @@ public class ListAuthModulesPage implements Serializable
 		return "edit_module";
 	}
 
-	/** Redirect to edit module page with selected module id
-	 * @param evt ActionEvent object
+	/**
+	 * Redirect to edit module page with selected module id
+	 * 
+	 * @param evt
+	 *        ActionEvent object
 	 */
 	public void editModule(ActionEvent evt)
 	{
+		if (!saveModuleDates()) return;
 		resetSelectedLists();
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map params = ctx.getExternalContext().getRequestParameterMap();
@@ -824,6 +829,14 @@ public class ListAuthModulesPage implements Serializable
 		EditModulePage emPage = (EditModulePage) binding.getValue(ctx);
 		emPage.setEditInfo(mdbean);
 		emPage.resetModuleNumber();
+		try
+		{
+			FacesContext.getCurrentInstance().getExternalContext().redirect("edit_module.jsf?editmodid=" + selModId);
+		}
+		catch (Exception e)
+		{
+			e.getMessage();
+		}
 	}
 	
 	protected Map getMdbeansMap(List moduleDateBeans)
@@ -1062,24 +1075,29 @@ public class ListAuthModulesPage implements Serializable
 	/** Reset selected lists and redirect to module_post_steps page
 	 * @return module_post_steps
 	 */
-	public String viewNextsteps()
+	public void viewNextsteps(ActionEvent evt)
 	{
 		resetSelectedLists();
-		if (!saveModuleDates()) return "list_auth_modules";
+		if (!saveModuleDates()) return;
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		UIViewRoot root = ctx.getViewRoot();
 		UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
 		ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
-		ValueBinding binding = Util.getBinding("#{moduleNextStepsPage}");
-		ModuleNextStepsPage nextPage = (ModuleNextStepsPage) binding.getValue(ctx);
-		nextPage.setMdBean(mdbean);
-		return "module_post_steps";
+		Integer selModId = mdbean.getModuleId();
+		try
+		{
+			ctx.getExternalContext().redirect("module_post_steps.jsf?editmodid=" + selModId.toString());
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 	
 	/** Reset selected lists and redirect to list of special accesses page
 	 * @return list_special_access
 	 */
-	public String specialAccessAction()
+/*	public String specialAccessAction()
 	{
 		resetSelectedLists();
 		if (!saveModuleDates()) return "list_auth_modules";
@@ -1099,8 +1117,26 @@ public class ListAuthModulesPage implements Serializable
 			}
 		}
 		return "list_special_access";
-	}	
+	}	*/
 
+	public void specialAccessAction(ActionEvent evt)
+	{
+		resetSelectedLists();
+		if (!saveModuleDates()) return;
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		UIViewRoot root = ctx.getViewRoot();
+		UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
+		ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
+		Integer selModId = mdbean.getModuleId();
+		try
+		{
+			ctx.getExternalContext().redirect("list_special_access.jsf?editmodid=" + selModId.toString());
+		}
+		catch (Exception e)
+		{
+			return;
+		}
+	}
 	
 	/**
 	 * @return String value of isNull

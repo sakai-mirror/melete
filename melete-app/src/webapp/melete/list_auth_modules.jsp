@@ -193,10 +193,9 @@ if (msg != null)
         <h:graphicImage id="col_gif" alt="#{msgs.list_auth_modules_authoring_collapse}" value="/images/collapse.gif" rendered="#{(((mdbean.moduleId == listAuthModulesPage.showModuleId)&&(mdbean.sectionBeans != listAuthModulesPage.nullList))||((listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag)&&(mdbean.sectionBeans != listAuthModulesPage.nullList)))}" styleClass="ExpClass"/>
      </h:commandLink>         
       <h:outputText id="mod_seq" value="#{mdbean.cmod.seqNo}. " />      
-      <h:commandLink id="editMod" actionListener="#{listAuthModulesPage.editModule}"  action="#{listAuthModulesPage.redirectToEditModule}">     
-             <f:param name="editmodid" value="#{mdbean.moduleId}" />
-                   <h:outputText id="title2" value="#{mdbean.module.title}">
-               </h:outputText>
+      <h:commandLink id="editMod" actionListener="#{listAuthModulesPage.editModule}">     
+         <f:param name="editmodid" value="#{mdbean.moduleId}" />
+         <h:outputText id="title2" value="#{mdbean.module.title}" />
       </h:commandLink>
       <h:dataTable id="tablesec" rendered="#{((mdbean.moduleId == listAuthModulesPage.showModuleId)||(listAuthModulesPage.expandAllFlag == listAuthModulesPage.trueFlag))}"
                   value="#{mdbean.sectionBeans}" cellpadding="2" border="0" 
@@ -268,12 +267,12 @@ if (msg != null)
          </h:column>
          <h:column>
            <h:outputText id="emp_space6" value="  " styleClass="ExtraPaddingClass" />
-           <h:commandLink id="viewNextsteps" action="#{listAuthModulesPage.viewNextsteps}" >
+           <h:commandLink id="viewNextsteps" actionListener="#{listAuthModulesPage.viewNextsteps}" >
 			   <h:graphicImage id="vns_gif" value="/images/add.gif" alt="#{msgs.list_auth_modules_alt_add_steps}" title="#{msgs.list_auth_modules_alt_add_steps}" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext == listAuthModulesPage.isNull}"/>      
 			   <h:graphicImage id="vns1_gif" value="/images/view_next.gif" alt="#{msgs.list_auth_modules_alt_next_steps}" title="#{msgs.list_auth_modules_alt_next_steps}" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext != listAuthModulesPage.isNull}"/>        		   
            </h:commandLink>
           <h:outputText id="emp_space8" value="  " styleClass="ExtraPaddingClass" />
-           <h:commandLink id="specialAccess" action="#{listAuthModulesPage.specialAccessAction}" >
+           <h:commandLink id="specialAccess" actionListener="#{listAuthModulesPage.specialAccessAction}" >
 			   <h:graphicImage id="acc_gif" value="/images/access_add.png" alt="#{msgs.list_auth_modules_alt_add_access}" title="#{msgs.list_auth_modules_alt_add_access}" styleClass="AddImgClass" rendered="#{mdbean.saFlag == false}"/>
 			   <h:graphicImage id="acc_view_gif" value="images/access_view.png" alt="#{msgs.list_auth_modules_alt_view_access}" title="#{msgs.list_auth_modules_alt_view_access}" styleClass="AddImgClass" rendered="#{mdbean.saFlag == true}"/>            
 			 </h:commandLink>           

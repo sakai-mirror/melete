@@ -476,7 +476,12 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 			threadLocalManager.set("MELETE_MODULE_ID", null);
 			threadLocalManager.set("MELETE_NAVIGATE_BACK", null);
 		}
-
+		if (ctx.getExternalContext().getRequestParameterMap().get("editmodid") != null)
+		{
+			String selectedModId = (String)ctx.getExternalContext().getRequestParameterMap().get("editmodid");
+			this.mdBean = (ModuleDateBean) moduleService.getModuleDateBean(userId, courseId, Integer.parseInt(selectedModId));
+			setEditInfo(this.mdBean);
+		}
 		return super.getModule();
 	}
 
