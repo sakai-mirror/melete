@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="org.etudes.tool.melete.ViewModulesPage"%>
 <!--
  ***********************************************************************************
  * $URL$
@@ -27,6 +28,17 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+<%
+final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
+final ViewModulesPage vmPage = (ViewModulesPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "viewModulesPage");
+
+String moduleId = (String)request.getParameter("printModuleId");
+
+if (moduleId != null)
+{
+	vmPage.setModuleId(Integer.parseInt(moduleId));
+}
+%>
 <f:view>
 <sakai:view title="Modules: Student View" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>

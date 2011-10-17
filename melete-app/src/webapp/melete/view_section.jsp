@@ -1,4 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="org.etudes.tool.melete.ViewSectionsPage"%>
+
 <!--
  ***********************************************************************************
  * $URL$
@@ -27,7 +29,18 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+<%
+final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
+final ViewSectionsPage vsPage = (ViewSectionsPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "viewSectionsPage");
 
+String moduleId = (String)request.getParameter("moduleId");
+String secId = (String)request.getParameter("sectionId");
+if ((moduleId != null) &&(secId != null))
+{
+	vsPage.setModuleId(Integer.parseInt(moduleId));
+	vsPage.setSectionId(Integer.parseInt(secId));
+}
+%>
 <f:view>
 <sakai:view title="Modules: Student View" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
@@ -66,6 +79,7 @@
 <tr>
 <td colspan="2" align="right">										
   <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','','Melete Bookmark Window');">
+		    	<f:param id="moduleId" name="moduleId" value="#{viewSectionsPage.moduleId}" />
 		    	<f:param id="sectionId" name="sectionId" value="#{viewSectionsPage.section.sectionId}" />
 	  			<f:param id="sectionTitle" name="sectionTitle" value="#{viewSectionsPage.section.title}" />
 	  			<h:graphicImage id="bul_gif" value="/images/bookmark-it.png" alt="" styleClass="AuthImgClass"/>

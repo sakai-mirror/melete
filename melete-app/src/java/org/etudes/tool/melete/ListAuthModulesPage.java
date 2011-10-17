@@ -688,7 +688,7 @@ public class ListAuthModulesPage implements Serializable
 			if (selectedModId <= -1)
 				selectedModId = 0;
 			if ((moduleDateBeans != null) && (moduleDateBeans.size() > 0)) {
-				ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans
+				ModuleDateBean mdbean = (ModuleDateBean) mdbeansMap
 						.get(selectedModId);
 
 				if (mdbean != null) {
@@ -972,11 +972,6 @@ public class ListAuthModulesPage implements Serializable
 				Integer sectionId = (Integer) i.next();
 				secBean = ((SecModObj)secObjMap.get(sectionId)).getSecBean();
 				if (secBean != null) delSecBeans.add(secBean);
-				
-				/*SecModObj smObj = (SecModObj) i.next();
-				mdbean = (ModuleDateBean) moduleDateBeans.get((((Integer) smObj.getModObj())).intValue());
-				secBean = (SectionBeanService) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
-				*/
 			}
 			count = 0;
 			sectionSelected = false;
