@@ -65,7 +65,6 @@ public class ViewSectionsPage implements Serializable
 {
 
 	public ModuleObjService module;
-	public HtmlPanelGroup secpgroup;
 	public SectionObjService section;
 	private Boolean autonumber;
 	// added to reduce queries
@@ -395,16 +394,7 @@ public class ViewSectionsPage implements Serializable
 		return prevSecId;
 	}
 
-	/**
-	 * Get section breadcrumbs
-	 * 
-	 * @return secpgroup html panel group
-	 */
-	public HtmlPanelGroup getSecpgroup()
-	{
-		return null;
-	}
-
+	
 	/**
 	 * Returns section and sets display sequence of section
 	 * 
@@ -729,9 +719,10 @@ public class ViewSectionsPage implements Serializable
 	}*/
 
 	/**
-	 * @return view_whats_next page
+	 * Redirect to view_whats_next page
+	 * 
 	 */
-	public String goWhatsNext()
+	public void goWhatsNext(ActionEvent evt)
 	{
 		resetValues();
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -745,8 +736,14 @@ public class ViewSectionsPage implements Serializable
 		vnPage.setModuleSeqNo(this.moduleSeqNo);
 		vnPage.setModule(null);
 		// vnPage.setModule(this.module);
-
-		return "view_whats_next";
+		try
+		{
+			context.getExternalContext().redirect("view_whats_next.jsf?nextSeqNo="+this.nextSeqNo+"&moduleSeqNo="+this.moduleSeqNo+"&prevSecId="+this.sectionId+"&prevModId="+this.moduleId);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**
@@ -897,69 +894,6 @@ public class ViewSectionsPage implements Serializable
 	public void setModuleService(ModuleService moduleService)
 	{
 		this.moduleService = moduleService;
-	}
-
-	/**
-	 * Creates breadcrumbs for this section in the format module title>>section title
-	 * 
-	 * @param secpgroup
-	 *        html panel group to populate
-	 */
-	public void setSecpgroup(HtmlPanelGroup secpgroup)
-	{
-		FacesContext context = FacesContext.getCurrentInstance();
-		Application app = context.getApplication();
-
-		List list = secpgroup.getChildren();
-		list.clear();
-
-		// 1. add module as commandlink and it takes to view module page
-		Class[] param = new Class[1];
-		HtmlCommandLink modLink = new HtmlCommandLink();
-		param[0] = new ActionEvent(modLink).getClass();
-		modLink.setId("modSeclink");
-		modLink.setActionListener(app.createMethodBinding("#{viewModulesPage.viewModule}", param));
-		modLink.setAction(app.createMethodBinding("#{viewModulesPage.redirectToViewModule}", null));
-		// 1a . add outputtext to display module title
-		HtmlOutputText outModule = new HtmlOutputText();
-		outModule.setId("modtext");
-		if (this.module == null) getModule();
-		if (this.module != null)
-		{
-			outModule.setValue(this.module.getTitle());
-		}
-		// 1b. param to set module id
-		UIParameter modidParam = new UIParameter();
-		modidParam.setName("modid");
-		if (this.module != null)
-		{
-			modidParam.setValue(this.module.getModuleId());
-		}
-		modLink.getChildren().add(outModule);
-		modLink.getChildren().add(modidParam);
-		list.add(modLink);
-
-		// 2. add >>
-		HtmlOutputText seperatorText = new HtmlOutputText();
-		seperatorText.setId("sep1");
-		seperatorText.setTitle(" " + (char) 187 + " ");
-		seperatorText.setValue(" " + (char) 187 + " ");
-		list.add(seperatorText);
-
-		// note: when subsections are in place then find all parents of subsection
-		// and in a while or for loop create commandlink with action/action listener as viewSection
-
-		// 3. add current section title
-		HtmlOutputText currSectionText = new HtmlOutputText();
-		currSectionText.setId("currsectext");
-		if (this.section == null) getSection();
-		if (this.section != null)
-		{
-			currSectionText.setValue(this.section.getTitle());
-		}
-		list.add(currSectionText);
-
-		this.secpgroup = secpgroup;
 	}
 
 	/**

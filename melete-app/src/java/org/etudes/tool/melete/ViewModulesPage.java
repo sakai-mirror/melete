@@ -372,10 +372,11 @@ public class ViewModulesPage implements Serializable
 	/**
 	 * Go to previous whats next, set all the values such as prev sec id, prev mod id, module and next seq no
 	 * 
-	 * @return view_whats_next
+	 * 
 	 */
-	public String goPrevWhatsNext()
+	public void goPrevWhatsNext(ActionEvent evt)
 	{
+		int prevSecId = 0, prevModId = 0;
 		FacesContext context = FacesContext.getCurrentInstance();
 
 		ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
@@ -385,13 +386,15 @@ public class ViewModulesPage implements Serializable
 		{
 			if (this.prevMbean.getVsBeans() != null)
 			{
-				vnPage.setPrevSecId(((ViewSecBeanService) this.prevMbean.getVsBeans().get(this.prevMbean.getVsBeans().size() - 1)).getSectionId());
+				prevSecId = ((ViewSecBeanService) this.prevMbean.getVsBeans().get(this.prevMbean.getVsBeans().size() - 1)).getSectionId();
 			}
 			else
 			{
-				vnPage.setPrevSecId(0);
+				prevSecId = 0;
 			}
-			vnPage.setPrevModId(this.prevMbean.getModuleId());
+			vnPage.setPrevSecId(prevSecId);
+			prevModId = this.prevMbean.getModuleId();
+			vnPage.setPrevModId(prevModId);
 			vnPage.setModule(null);
 			// vnPage.setModule(this.prevMdbean.getModule());
 		}
@@ -402,7 +405,14 @@ public class ViewModulesPage implements Serializable
 
 		vnPage.setNextSeqNo(this.moduleSeqNo);
 
-		return "view_whats_next";
+		try
+		{
+			context.getExternalContext().redirect("view_whats_next.jsf?nextSeqNo="+this.moduleSeqNo+"&prevSecId="+prevSecId+"&prevModId="+prevModId);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 
 	}
 
@@ -427,9 +437,9 @@ public class ViewModulesPage implements Serializable
 	/**
 	 * Go to whats next, set all the values such as prev sec id, prev mod id, module and next seq no
 	 * 
-	 * @return view_whats_next
+	 * 
 	 */
-	public String goWhatsNext()
+	public void goWhatsNext(ActionEvent evt)
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 
@@ -443,7 +453,14 @@ public class ViewModulesPage implements Serializable
 
 		// if (this.mdbean != null) vnPage.setModule(this.mdbean.getModule());
 
-		return "view_whats_next";
+		try
+		{
+			context.getExternalContext().redirect("view_whats_next.jsf?nextSeqNo="+this.nextSeqNo+"&prevSecId=0&prevModId="+this.moduleId);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 
 	}
 
@@ -497,14 +514,6 @@ public class ViewModulesPage implements Serializable
 			printable = false;
 		}
 		return printable.booleanValue();
-	}
-
-	/**
-	 * @return view_module
-	 */
-	public String redirectToViewModule()
-	{
-		return "view_module";
 	}
 
 	/**
@@ -593,7 +602,6 @@ public class ViewModulesPage implements Serializable
 	 */
 	public void viewModule(ActionEvent evt)
 	{
-
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		UICommand cmdLink = (UICommand) evt.getComponent();
 		List cList = cmdLink.getChildren();
@@ -609,22 +617,32 @@ public class ViewModulesPage implements Serializable
 
 		ValueBinding binding = Util.getBinding("#{viewModulesPage}");
 		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(ctx);
-		vmPage.setModuleId(((Integer) param.getValue()).intValue());
+		int modId = ((Integer)param.getValue()).intValue();
+		vmPage.setModuleId(modId);
 		vmPage.setViewMbean(null);
 		vmPage.setPrintable(null);
 		vmPage.setAutonumber(null);
 		try
 		{
 			ModuleService modServ = getModuleService();
-			CourseModule cMod = (CourseModule) modServ.getCourseModule(((Integer) param.getValue()).intValue(), getCourseId());
-			vmPage.setModuleSeqNo(cMod.getSeqNo());
-
+			CourseModule cMod = (CourseModule) modServ.getCourseModule(modId, getCourseId());
+			int modSeqNo = cMod.getSeqNo();
+			vmPage.setModuleSeqNo(modSeqNo);
+			try
+			{
+				ctx.getExternalContext().redirect("view_module.jsf?modId=" + modId + "&modSeqNo=" + modSeqNo);
+			}
+			catch (Exception e)
+			{
+				return;
+			}
 		}
 		catch (Exception e)
 		{
 			logger.debug(e.toString());
 		}
 		vmPage.getViewMbean();
+		
 	}
 
 	/**
@@ -632,7 +650,7 @@ public class ViewModulesPage implements Serializable
 	 * 
 	 * 
 	 */
-	public void viewSection()
+	public void viewSection(ActionEvent evt)
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		UIViewRoot root = ctx.getViewRoot();

@@ -101,7 +101,7 @@ function showHideTable(index, show)
        <h:graphicImage id="moduleFinishStatus" url="/images/status_away.png" alt="#{msgs.list_modules_alt_progress}" title="#{msgs.list_modules_alt_progress}" styleClass="AuthImgClass" rendered="#{vmbean.readDate != null && !vmbean.readComplete}" />
 	   <h:graphicImage id="moduleFinishStatus1" url="/images/finish.gif" alt="#{msgs.list_modules_alt_complete}" title="#{msgs.list_modules_alt_complete}" styleClass="AuthImgClass" rendered="#{vmbean.readComplete}" /> 
        <h:outputText id="mod_seq" value="#{vmbean.seqNo}. " rendered="#{listModulesPage.autonumber}"/>
-       <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}">
+       <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" >
            <f:param name="viewmodid" value="#{vmbean.moduleId}" />
                  <h:outputText id="title"
                            value="#{vmbean.title}" rendered="#{vmbean.visibleFlag == true}"/>
@@ -116,14 +116,14 @@ function showHideTable(index, show)
                  <h:column>   
                    <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}"/>
 		      	   <h:outputText id="sec_seq" value="#{vsbean.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>
-					<h:commandLink id="viewSectionEditor"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}" rendered="#{vsbean.contentType == listModulesPage.typeLink}">
+					<h:commandLink id="viewSectionEditor"  actionListener="#{listModulesPage.viewSection}" rendered="#{vsbean.contentType == listModulesPage.typeLink}">
 	                  	 <f:param name="viewmodid" value="#{vmbean.moduleId}" />  
                           <f:param name="viewsecid" value="#{vsbean.sectionId}" /> 
                          <h:outputText id="sectitleEditor" value="#{vsbean.title}" rendered="#{vmbean.visibleFlag == true}" />
 	                 	<h:outputText id="sectitleEditor2" value="#{vsbean.title}" styleClass="italics" rendered="#{vmbean.visibleFlag == false}" />
 	                   </h:commandLink>
 	                  
-		           <h:commandLink id="viewSectionLink"  actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}" rendered="#{vsbean.contentType != listModulesPage.typeLink}">
+		           <h:commandLink id="viewSectionLink"  actionListener="#{listModulesPage.viewSection}" rendered="#{vsbean.contentType != listModulesPage.typeLink}">
 		                  <f:param name="viewmodid" value="#{vmbean.moduleId}" />  
                           <f:param name="viewsecid" value="#{vsbean.sectionId}" /> 
                          <h:outputText id="sectitleLink" value="#{vsbean.title}" rendered="#{vmbean.visibleFlag == true}" />
@@ -137,7 +137,7 @@ function showHideTable(index, show)
 		          <h:outputText id="next_seq" value="#{vmbean.nextStepsNumber}. " rendered="#{listModulesPage.autonumber}"/>
 		          <h:graphicImage id="bul_gif1" value="/images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}" style="border:0"/>
 		          
-		          <h:commandLink id="whatsNext" action="#{listModulesPage.goWhatsNext}" immediate="true">
+		          <h:commandLink id="whatsNext" actionListener="#{listModulesPage.goWhatsNext}" immediate="true">
 				    <h:outputText  id="whatsNextMsg" value="#{msgs.list_modules_stud_next_steps}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}"/>
 				    <h:outputText  id="whatsNextMsg2" value="#{msgs.list_modules_stud_next_steps}" styleClass="italics" rendered="#{vmbean.visibleFlag == false}"/>
 				    <f:param name="viewmodid" value="#{vmbean.moduleId}" />  

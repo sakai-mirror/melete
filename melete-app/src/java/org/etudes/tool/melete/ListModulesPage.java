@@ -358,14 +358,15 @@ public class ListModulesPage implements Serializable
 	}
 
 	/**
-	 * @return Set up what's next page and return view_whats_next page
+	 * Set up what's next page and return view_whats_next page
+	 * @return 
 	 */
-	public String goWhatsNext()
+	public void goWhatsNext(ActionEvent evt)
 	{
 		ViewModBean vmBean = null;
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map params = ctx.getExternalContext().getRequestParameterMap();
-		int selModId = 0, selModSeqNo = 0;
+		int selModId = 0, selModSeqNo = 0, prevSecId = 0,prevModId = 0;
 		if (params != null)
 		{
 			String modidxStr = (String) params.get("viewmodid");
@@ -397,18 +398,25 @@ public class ListModulesPage implements Serializable
 		// vnPage.setModule(getModuleService().getModule(vmBean.getModuleId()));
 		if ((vmBean.getVsBeans() == null) || (vmBean.getVsBeans().size() == 0))
 		{
-			vnPage.setPrevSecId(0);
-			vnPage.setPrevModId(vmBean.getModuleId());
+			prevSecId = 0;
+			prevModId = vmBean.getModuleId();
 		}
 		else
 		{
-			vnPage.setPrevModId(vmBean.getModuleId());
+			prevModId = vmBean.getModuleId();
 			ViewSecBean vsBean = (ViewSecBean) vmBean.getVsBeans().get(vmBean.getVsBeans().size() - 1);
-			vnPage.setPrevSecId(vsBean.getSectionId());
+			prevSecId = vsBean.getSectionId();
 		}
-
-		return "view_whats_next";
-
+		vnPage.setPrevModId(prevModId);
+		vnPage.setPrevSecId(prevSecId);
+		try
+		{
+			ctx.getExternalContext().redirect("view_whats_next.jsf?nextSeqNo="+nextSeqNo+"&prevSecId="+prevSecId+"&prevModId="+prevModId);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**
@@ -522,31 +530,6 @@ public class ListModulesPage implements Serializable
 	{
 		if (isUserAuthor()) return "list_modules_inst";
 		else return "list_modules_student";
-	}
-
-	/**
-	 * @return view_module
-	 */
-	public String redirectToViewModule()
-	{
-		String retVal = "view_module";
-		return retVal;
-	}
-
-	/**
-	 * @return view_section
-	 */
-	public String redirectToViewSection()
-	{
-		return "view_section";
-	}
-
-	/**
-	 * @return view_section
-	 */
-	public String redirectToViewSectionLink()
-	{
-		return "view_section";
 	}
 
 	/**

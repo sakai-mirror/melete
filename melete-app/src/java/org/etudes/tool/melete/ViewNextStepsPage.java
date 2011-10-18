@@ -177,7 +177,7 @@ public class ViewNextStepsPage implements Serializable
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		courseId = getCourseId();
-		int prevSeqNo;
+		int prevSeqNo, modSeqNo;
 		prevSeqNo = getModuleService().getPrevSeqNo(getUserId(), courseId, this.nextSeqNo);
 
 		if (this.prevSecId == 0)
@@ -217,19 +217,20 @@ public class ViewNextStepsPage implements Serializable
 			// the last section of the last module
 			if (prevSeqNo == -1)
 			{
-				vsPage.setModuleSeqNo(this.moduleSeqNo);
+				modSeqNo = this.moduleSeqNo;
 			}
 			else
 			{
-				vsPage.setModuleSeqNo(prevSeqNo);
+				modSeqNo = prevSeqNo;
 			}
+			vsPage.setModuleSeqNo(moduleSeqNo);
 			vsPage.setSection(null);
 			// added by rashmi on 6/14/05
 			vsPage.setModule(null);
 			vsPage.setAutonumber(null);
 			try
 			{
-				context.getExternalContext().redirect("view_section.jsf?moduleId="+this.prevModId+"&sectionId="+this.prevSecId+"&moduleSeqNo="+this.moduleSeqNo);
+				context.getExternalContext().redirect("view_section.jsf?moduleId="+this.prevModId+"&sectionId="+this.prevSecId+"&moduleSeqNo="+modSeqNo);
 			}
 			catch (Exception e)
 			{
@@ -344,7 +345,6 @@ public class ViewNextStepsPage implements Serializable
 		param[0] = new ActionEvent(modLink).getClass();
 		modLink.setId("modlink");
 		modLink.setActionListener(app.createMethodBinding("#{viewModulesPage.viewModule}", param));
-		modLink.setAction(app.createMethodBinding("#{viewModulesPage.redirectToViewModule}", null));
 		// 1a . add outputtext to display module title
 		HtmlOutputText outModule = new HtmlOutputText();
 		outModule.setId("modtext");
@@ -352,8 +352,11 @@ public class ViewNextStepsPage implements Serializable
 		if (this.module != null) outModule.setValue(this.module.getTitle());
 		// 1b. param to set module id
 		UIParameter modidParam = new UIParameter();
-		modidParam.setName("modid");
-		if (this.module != null) modidParam.setValue(this.module.getModuleId());
+		modidParam.setName("modId");
+		if (this.module != null) 
+		{
+			modidParam.setValue(this.module.getModuleId());
+		}
 		modLink.getChildren().add(outModule);
 		modLink.getChildren().add(modidParam);
 		list.add(modLink);
