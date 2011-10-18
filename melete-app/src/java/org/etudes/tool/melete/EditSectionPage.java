@@ -203,12 +203,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 	}
 
 	/**
-	 * Get composed section content.
-	 * return content editor
+	 * Get composed section content. return content editor
 	 */
 	public String getContentEditor()
 	{
-		if (logger.isDebugEnabled()) logger.debug("EDIT GETCONTENT EDITOR CALLED");
 		return this.contentEditor;
 	}
 
@@ -330,7 +328,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	    			{
 	    				// get secResource object
 	    				secResource = sectionService.getSectionResourcebyId(section.getSectionId().toString());
-	    				logger.debug("after fetching section resource object is:" + secResource.getResource() + secResource.getSectionId());
+	    	
 	    				meleteResource.setResourceId(secResource.getResource().getResourceId());
 	    				section.setSectionResource(secResource);
 	    				// refresh contentEditor
@@ -358,8 +356,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	    			{
 	    				if (meleteResource != null && meleteResource.getResourceId() != null && meleteResource.getResourceId().trim().length() != 0)
 	    				{
-	    					if (logger.isDebugEnabled()) logger.debug("Ist step of edit - check meleteResource" + meleteResource.getResourceId());
-	    					// validation 4a: check link url title
+	     					// validation 4a: check link url title
 	    					if (section.getContentType().equals("typeLink") && (secResourceName == null || secResourceName.trim().length() == 0))
 	    						throw new UserErrorException("URL_title_reqd");
 	    					// validation 4b: check link url title length
@@ -401,7 +398,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 						addCollId = getMeleteCHService().getCollectionId(getCurrentCourseId(),section.getContentType(), module.getModuleId());
 					else addCollId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
 
-					logger.debug("addCollId is:" + addCollId);
 					String newResourceId = addResourceToMeleteCollection(addCollId);
 					meleteResource.setResourceId(newResourceId);
 					if (logger.isDebugEnabled()) logger.debug("new resource id" + newResourceId + meleteResource);
@@ -644,7 +640,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	 */
 	public MeleteResource getMeleteResource()
 	{
-		// logger.debug("check meleteResource" + meleteResource + secResource);
+
 		try
 		{
 			if (this.meleteResource == null)
@@ -690,7 +686,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 				return;
 			}
 			String edit = (String) event.getComponent().getAttributes().get("sectionId");
-			logger.debug("getPreviewPageListener:" + edit);
 			FacesContext.getCurrentInstance().getExternalContext().redirect("editpreview.jsf?sectionId=" + edit);
 		}
 		catch (Exception e)
@@ -715,13 +710,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 		 try
 			{
 				editId = (String) event.getComponent().getAttributes().get("sectionId");
-				logger.debug("return back: edit is" + editId);
 				FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + editId);
 			}
 			catch (Exception e)
 			{
 				logger.debug("preview return exception:" + e.getMessage());
-				e.printStackTrace();
 			}	 
 	    }
 	
@@ -899,7 +892,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		String errMsg = null;
-		logger.debug("set server LTI:" + getLTIDescriptor());
 		selResourceIdFromList = getSelResourceIdFromList();
 
 		try
@@ -934,7 +926,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 				MeleteResourceService newResource = new MeleteResource();
 				newResource.setResourceId(newResourceId);
 				
-				logger.debug("CHK ids in lti set:" + editId + ", from attribute" + evt.getComponent().getAttributes().get("sectionId"));
 				SectionObjService section = sectionService.getSection(Integer.parseInt(editId));
 				sectionService.editSection(section, newResource, getCurrUserId(), true);
 				ctx.getExternalContext().redirect("editmodulesections.jsf?sectionId=" + editId);
@@ -1228,7 +1219,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 			shouldRenderUpload = false;
 			shouldRenderNotype = true;
 			int mId = module.getModuleId().intValue();
-			logger.debug("mId in blank section" + mId);
 
 			newSectionId = sectionService.insertSection(module, s);
 			s.setSectionId(newSectionId);

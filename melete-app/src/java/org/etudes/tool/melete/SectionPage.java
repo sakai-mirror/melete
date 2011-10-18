@@ -618,9 +618,6 @@ public abstract class SectionPage implements Serializable
 				secContentData = ltiDescriptor.getBytes();
 			}
 			ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(encodingFlag, secResourceName, secResourceDescription);
-			/*
-			 * if (logger.isDebugEnabled()) logger.debug("add resource now " + secResourceName);
-			 */
 
 			String newResourceId = getMeleteCHService().addResourceItem(secResourceName, res_mime_type, addCollId, secContentData, res);
 			return newResourceId;
@@ -726,7 +723,7 @@ public abstract class SectionPage implements Serializable
 	 */
 	public void saveListener(ActionEvent event)
 	{
-		if (logger.isDebugEnabled()) logger.debug("Hello Rashmi ------saveListener called");
+	
 	}
 
 	/**
@@ -788,7 +785,7 @@ public abstract class SectionPage implements Serializable
 		allContentTypes = null;
 		oldType = null;
 		contentWithHtml = null;
-		if (logger.isDebugEnabled()) logger.debug("!!!!!!!!!reseting section values done !!!!!!!");
+	
 	}
 
 	/**
@@ -956,7 +953,6 @@ public abstract class SectionPage implements Serializable
 	 */
 	public void setLTIDescriptor(String ltiDescriptor)
 	{
-		logger.debug("SETTING descriptor:" + ltiDescriptor);
 		this.ltiDescriptor = ltiDescriptor;
 	}
 
@@ -1114,7 +1110,6 @@ public abstract class SectionPage implements Serializable
 		{
 		contentWithHtml = false;
 		previewContentData = "";
-		logger.debug("getPreviewContentData :" + section +"," + meleteResource);
 		
 		if (meleteResource != null && meleteResource.getResourceId() != null)
 		   {
@@ -1399,7 +1394,6 @@ public abstract class SectionPage implements Serializable
 	 */
 	public void setNewURLTitle(String newURLTitle)
 	{
-		logger.debug("new url title:" + newURLTitle );
 		this.newURLTitle = newURLTitle;
 	}
 

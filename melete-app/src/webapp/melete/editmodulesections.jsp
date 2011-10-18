@@ -28,6 +28,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+<%@ taglib uri="http://javascript4jsf.dev.java.net/" prefix="j4j" %>
 
 <f:view>
 <sakai:view title="Modules: Edit Module Sections" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -74,6 +75,7 @@ function saveEditor()
 
       <!-- This Begins the Main Text Area -->
 	<h:form id="EditSectionForm" enctype="multipart/form-data" onsubmit="if (saveEditor()){ return true;}else {return false;}"> 	
+	<j4j:param name="sectionId" value="#{editSectionPage.editId}" method="get" />
 			  <h:inputHidden id="formName" value="EditSectionForm"/>  
 			  <h:inputHidden id="mode" value="Edit"/>
 			  <h:inputHidden id="sId" value="#{editSectionPage.section.sectionId}"/>
@@ -197,9 +199,10 @@ function saveEditor()
 						 									
 											 <f:subview id="contentEditorView" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
 												<%if (authorPreferencePage.isShouldRenderSferyx() && eSectionPage.getShouldRenderEditor())
-                                               { %>
-													<jsp:include page="contentSferyxEditor.jsp" />
-												<%} %> 
+                                               		   { %> 
+                                           				<jsp:include page="contentSferyxEditor.jsp" />
+													<% } %> 
+											
      											 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>
 
