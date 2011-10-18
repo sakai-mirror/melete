@@ -92,7 +92,6 @@ public class MeleteResource implements MeleteResourceService
 	@Override
 	public int hashCode()
 	{
-		System.out.println("meleteresource hashcode method");
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (allowCmrcl ? 1231 : 1237);
@@ -109,7 +108,6 @@ public class MeleteResource implements MeleteResourceService
 	@Override
 	public boolean equals(Object obj)
 	{
-	System.out.println("meleteresource equals method");	
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;

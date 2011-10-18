@@ -655,6 +655,8 @@ public class ViewSectionsPage implements Serializable
 		this.section = null;
 		String moduleIdStr = (String) context.getExternalContext().getRequestParameterMap().get("modid");
 		String sectionIdStr = (String) context.getExternalContext().getRequestParameterMap().get("secid");
+		String modSeqNoStr = (String) context.getExternalContext().getRequestParameterMap().get("modseqno");
+		
 		if (moduleIdStr != null)
 		{
 			if (moduleIdStr.trim().length() > 0)
@@ -669,10 +671,18 @@ public class ViewSectionsPage implements Serializable
 				setSectionId(new Integer(sectionIdStr).intValue());
 			}
 		}
+		if (modSeqNoStr != null)
+		{
+			if (modSeqNoStr.trim().length() > 0)
+			{
+				setModuleSeqNo(new Integer(modSeqNoStr).intValue());
+			}
+		}
 		this.module = null;
+		
 		try
 		{
-			context.getExternalContext().redirect("view_section.jsf?moduleId="+moduleIdStr+"&sectionId="+sectionIdStr);
+			context.getExternalContext().redirect("view_section.jsf?moduleId="+moduleIdStr+"&sectionId="+sectionIdStr+"&moduleSeqNo="+modSeqNoStr);
 		}
 		catch (Exception e)
 		{
