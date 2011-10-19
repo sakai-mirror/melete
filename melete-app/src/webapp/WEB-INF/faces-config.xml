@@ -1320,7 +1320,17 @@
      <navigation-case>
 		   <from-outcome>list_bookmarks</from-outcome>
         <to-view-id>/melete/list_bookmarks.jsp</to-view-id>
-      </navigation-case>                                                                      
+      </navigation-case>           
+      <navigation-case>
+		  <from-outcome>restore_modules</from-outcome>
+		  <to-view-id>/melete/restore_modules.jsp</to-view-id>
+		   <redirect/>
+     </navigation-case>
+     <navigation-case>
+		  <from-outcome>importexportmodules</from-outcome>
+		  <to-view-id>/melete/importexportmodules.jsp</to-view-id>
+		   <redirect/>
+     </navigation-case>                                                            
    </navigation-rule>
    
 <!--Rule for delete_module -->   

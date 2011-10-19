@@ -25,7 +25,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@include file="accesscheck.jsp" %>
 
-<h:panelGrid columns="8" border="0" columnClasses="authBarCol" cellspacing="5" width="64%">
+<h:panelGrid columns="10" border="0" columnClasses="authBarCol" cellspacing="5" width="75%">
 	<h:column>
 		<h:commandLink id="addAction" action="#{listAuthModulesPage.AddModuleAction}">
 		    <h:graphicImage id="addModuleImg" value="/images/document_add.gif" styleClass="AuthImgClass"/>
@@ -74,7 +74,17 @@
 	  	<h:outputText  value="#{msgs.authnavbar_make_inactive}"/>
 	  </h:commandLink>
 	</h:column>
-	
-	
+	<h:column>
+		<h:commandLink id="restoregoto" action="#{manageModulesPage.goToRestoreModules}">
+			<h:graphicImage id="image" alt="" url="/images/folder_into.gif" styleClass="AuthImgClass"/>
+			<h:outputText id="re" value="#{msgs.modules_author_manage_archive_title}" />
+		</h:commandLink>
+	</h:column>
+	<h:column>
+		<h:commandLink id="goto_impexp" action="#{manageModulesPage.importExportModules}">
+			<h:graphicImage id="image_impexp" alt="" url="/images/import1.gif" styleClass="AuthImgClass"/>
+			<h:outputText id="import" value="#{msgs.modules_author_manage_import_export}" />
+		</h:commandLink>
+	</h:column>
 </h:panelGrid>
 <!-- End code to display images horizontally. -->

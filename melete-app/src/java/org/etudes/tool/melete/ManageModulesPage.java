@@ -91,7 +91,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 	 */
 	public String cancel()
 	{
-		return "modules_author_manage";
+		return "list_auth_modules";
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class ManageModulesPage implements Serializable/* ,ToolBean */
 		archiveModulesMap = null;
 		restoreModulesList = null;
 		count = 0;
-		return "modules_author_manage";
+		return "list_auth_modules";
 	}
 
 	/**
