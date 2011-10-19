@@ -359,7 +359,6 @@ public class ListAuthModulesPage implements Serializable
 			count++;
 		else
 			count--;
-		
 		if (sec_Selected.getParent() != null) {
 			UIColumn secColumn = (UIColumn) sec_Selected.getParent();
 			List<UIComponent> secChildren = secColumn.getChildren();
@@ -372,13 +371,19 @@ public class ListAuthModulesPage implements Serializable
 							selectedSecIds = new ArrayList();
 						}
 						selectedSecIds.add((Integer) hiddenSec.getValue());
-
 					}
 				}
 
 			}
 		}
-		if ((selectedSecIds != null)&&(selectedSecIds.size() > 0)) sectionSelected = true;
+		if ((selectedSecIds != null)&&(selectedSecIds.size() > 0)) 
+		{
+			sectionSelected = true;
+		}
+		if ((selectedSecIds != null)&&(selectedSecIds.size() == 1)) 
+		{
+			selectedModId = ((SecModObj)secObjMap.get(selectedSecIds.get(0))).getModuleId();
+		}
 		return;
 	}
 	
@@ -388,6 +393,7 @@ public class ListAuthModulesPage implements Serializable
 	 */
 	public void selectAllModules(ValueChangeEvent event)
 			throws AbortProcessingException {
+		ModuleDateBean mdbean = null;
 		selectAllFlag = true;
 		int k = 0;
 		if (selectedModIds == null) {
@@ -395,13 +401,13 @@ public class ListAuthModulesPage implements Serializable
 		}
 		if ((moduleDateBeans != null) && (moduleDateBeans.size() > 0)) {
 			for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();) {
-				ModuleDateBean mdbean = (ModuleDateBean) i.next();
+				mdbean = (ModuleDateBean) i.next();
 				mdbean.setSelected(true);
 				selectedModIds.add(new Integer(mdbean.getModuleId()));
 			}
 			count = moduleDateBeans.size();
 			if (count == 1)
-				selectedModId = 0;
+				selectedModId = mdbean.getModuleId();
 			moduleSelected = true;
 		}
 		return;
@@ -662,6 +668,8 @@ public class ListAuthModulesPage implements Serializable
 	public void AddContentAction(ActionEvent evt)
 	{
 		if (!saveModuleDates()) return ;
+		if (moduleDateBeans == null || moduleDateBeans.size() == 0) return;
+		
 		FacesContext ctx = FacesContext.getCurrentInstance();
 
 		if (count >= 2)
@@ -686,8 +694,7 @@ public class ListAuthModulesPage implements Serializable
 		}
 		// module selected
 		if (moduleSelected || sectionSelected) {
-			if (selectedModId <= -1)
-				selectedModId = 0;
+			if (selectedModId <= 0) return;
 			if ((moduleDateBeans != null) && (moduleDateBeans.size() > 0)) {
 				ModuleDateBean mdbean = (ModuleDateBean) mdbeansMap
 						.get(selectedModId);
