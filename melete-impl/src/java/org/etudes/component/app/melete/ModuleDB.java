@@ -272,8 +272,8 @@ public class ModuleDB implements Serializable
 				}
 				module.setCoursemodule(cms);
 
-				session.saveOrUpdate(module);
-
+				session.update(module);
+				session.flush();
 				tx.commit();
 				logger.debug("add module success" + module.getModuleId() + module.getCoursemodule().getCourseId());
 				return;
@@ -3454,27 +3454,16 @@ else
 	 */
 	public void updateModule(Module mod) throws Exception
 	{
-
 		hibernateUtil.ensureModuleHasNonNulls(mod);
 		Transaction tx = null;
 		try
 		{
-
 			Session session = hibernateUtil.currentSession();
 
-			if (null == mod.getCreatedByFname())
-			{
-				mod.setCreatedByFname("");
-			}
-
-			if (null == mod.getCreatedByLname())
-			{
-				mod.setCreatedByLname("");
-			}
 			tx = session.beginTransaction();
 
 			// Update module properties
-			session.saveOrUpdate(mod);
+			session.update(mod);
 
 			tx.commit();
 

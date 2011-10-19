@@ -876,6 +876,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 
 			// update module seqXml
 			// logger.debug("checking seqXML now at the end of buildModule process" + seqDocument.asXML());
+			module = moduleDB.getModule(module.getModuleId());
 			module.setSeqXml(seqDocument.asXML());
 			moduleDB.updateModule(module);
 		}
