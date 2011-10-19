@@ -754,7 +754,12 @@
     <navigation-case>
       <from-outcome>editContentUploadServerView</from-outcome>
       <to-view-id>/melete/editContentUploadServerView.jsp</to-view-id>
-    </navigation-case>  
+    </navigation-case> 
+    <navigation-case>
+      <from-outcome>list_auth_modules</from-outcome>
+      <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
+      <redirect/>
+    </navigation-case> 
       <navigation-case>
       <from-outcome>list_modules_inst</from-outcome>
       <to-view-id>/melete/list_modules_inst.jsp</to-view-id>
@@ -791,6 +796,11 @@
       <from-outcome>editContentLinkServerView</from-outcome>
       <to-view-id>/melete/editContentLinkServerView.jsp</to-view-id>
      </navigation-case>  
+     <navigation-case>
+      <from-outcome>list_auth_modules</from-outcome>
+      <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
+      <redirect/>
+    </navigation-case>
       <navigation-case>
      	<from-outcome>list_modules_inst</from-outcome>
       	<to-view-id>/melete/list_modules_inst.jsp</to-view-id>
