@@ -35,6 +35,8 @@
 <%@include file="meleterightscheck.jsp" %>
 <script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
 <t:saveState id="bpfpage" value="#{bookmarkPage.fromPage}" />
+<t:saveState id="bpfmid" value="#{bookmarkPage.fromModuleId}" />
+<t:saveState id="bpfmseqno" value="#{bookmarkPage.fromModuleSeqNo}" />
  <t:saveState id="bpfromSectionId" value="#{bookmarkPage.fromSectionId}" />
  
  <h:form id="ManageBookmarksForm">
