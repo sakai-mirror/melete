@@ -55,13 +55,14 @@
 ListAuthModulesPage lamPage = (ListAuthModulesPage) facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "listAuthModulesPage");
 lamPage.saveModuleDates();
 final PrintModulePage printModulePage = (PrintModulePage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "printModulePage");
-String selected_module_id = (String)request.getParameter("modId");
+String selected_module_id = (String)request.getParameter("printModuleId");
 
 if(selected_module_id != null)
 	{
 	printModulePage.processModule(new Integer(selected_module_id));
 	out.println(printModulePage.getPrintText());	
 	}	
+
 %> 
 		</td></tr>		 
 	</table>
