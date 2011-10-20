@@ -129,6 +129,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		{
 			setMeleteResource(null);
 			setLicenseCodes(null);
+			shouldRenderContentTypeSelect = true;
 		}
 		setSuccess(false);
 		try
@@ -470,7 +471,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		{
 			return;	
 		}
-		 editId = (String) evt.getComponent().getAttributes().get("sectionId");
+//		 editId = (String) evt.getComponent().getAttributes().get("sectionId");
 		 setEditIdParam(editId);
 	}
 	
@@ -492,7 +493,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 		shouldRenderUpload = contentTypeRadio.getValue().equals("typeUpload");
 		shouldRenderNotype = contentTypeRadio.getValue().equals("notype");
 		shouldRenderLTI = contentTypeRadio.getValue().equals("typeLTI");
-
+		shouldRenderContentTypeSelect = true;
+		
 		selResourceIdFromList = null;
 		secResourceName = null;
 		secResourceDescription = null;
@@ -685,8 +687,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 			{
 				return;
 			}
-			String edit = (String) event.getComponent().getAttributes().get("sectionId");
-			FacesContext.getCurrentInstance().getExternalContext().redirect("editpreview.jsf?sectionId=" + edit);
+		//	String edit = (String) event.getComponent().getAttributes().get("sectionId");
+			FacesContext.getCurrentInstance().getExternalContext().redirect("editpreview.jsf?sectionId=" + editId);
 		}
 		catch (Exception e)
 		{
@@ -709,7 +711,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	 public void returnBack(ActionEvent event) {
 		 try
 			{
-				editId = (String) event.getComponent().getAttributes().get("sectionId");
+			//	editId = (String) event.getComponent().getAttributes().get("sectionId");
 				FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + editId);
 			}
 			catch (Exception e)
@@ -1031,7 +1033,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			return;
 		}	
 		
-		 editId = (String) evt.getComponent().getAttributes().get("otherId");
+	//	 editId = (String) evt.getComponent().getAttributes().get("otherId");
 		 SectionObjService sec = sectionService.getSection(Integer.parseInt(editId));
 		// find Next Section/subsection
 		SectionObjService nextSection = null;
@@ -1086,7 +1088,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			return;
 		}
 
-		editId = (String) evt.getComponent().getAttributes().get("otherId");
+//		editId = (String) evt.getComponent().getAttributes().get("otherId");
 		SectionObjService sec = sectionService.getSection(Integer.parseInt(editId));
 		// find Next Section/subsection
 		SectionObjService prevSection = null;

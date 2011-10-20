@@ -104,16 +104,16 @@ function saveEditor()
 			                   <tr >
 					            <td width="70%" >  
 					            	<h:commandButton id="editPrevButton" actionListener="#{editSectionPage.editPrevSectionListener}" disabled="#{!editSectionPage.hasPrev}" value="#{msgs.editmodulesections_edit_prev}" accesskey="#{msgs.prev_access}" title="#{msgs.im_prev_text}" styleClass="BottomImgPrev">
-					            	    <f:attribute name="otherId" value="#{editSectionPage.editId}" />					    
+					 					    
 					       			</h:commandButton>      	   
 									<h:commandButton id="TOCButton" action="#{editSectionPage.goTOC}" value="#{msgs.editmodulesections_TOC}" accesskey="#{msgs.toc_access}" title="#{msgs.im_toc_text}" styleClass="BottomImgTOC"/>
 					       			<h:commandButton id="editNextButton" actionListener="#{editSectionPage.editNextSectionListener}" disabled="#{!editSectionPage.hasNext}" value="#{msgs.editmodulesections_edit_next}" accesskey="#{msgs.next_access}" title="#{msgs.im_next_text}" styleClass="BottomImgNext">
-					       				<f:attribute name="otherId" value="#{editSectionPage.editId}" />					       	
+					    					       	
 					       			</h:commandButton>
 						     	
 						            <h:outputText id="text4_3" value="  " styleClass="ExtraPaddingClass"/>	
 									<h:commandButton id="editAddNewButton" actionListener="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.editmodulesections_add_new}" accesskey="#{msgs.add_access}" title="#{msgs.im_save_text}" styleClass="BottomImgAdd">
-										<f:attribute name="otherId" value="#{editSectionPage.editId}" />										 
+																 
 									</h:commandButton>  			
 						        </td>
 						        <td class="right" width="30%" >    
@@ -227,13 +227,13 @@ function saveEditor()
                   <div class="actionBar" align="left">
                 	<h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_done}" accesskey="#{msgs.done_access}" title="#{msgs.im_done_text}" styleClass="BottomImgFinish"/>
               		<h:commandButton id="submitsave" actionListener="#{editSectionPage.save}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave">
-              			<f:attribute name="sectionId" value="#{editSectionPage.editId}" />              	
+              		              	
 					</h:commandButton>
 					<h:commandButton id="preview" actionListener="#{editSectionPage.getPreviewPageListener}" value="#{msgs.im_preview}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgPreview">
-						<f:attribute name="sectionId" value="#{editSectionPage.editId}" />						
+											
 					</h:commandButton>
 					<h:commandButton id="saveAddAnotherbutton"  actionListener="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd">
-						<f:attribute name="otherId" value="#{editSectionPage.editId}" />		
+							
 					</h:commandButton>
 				
        			 </div></td>
