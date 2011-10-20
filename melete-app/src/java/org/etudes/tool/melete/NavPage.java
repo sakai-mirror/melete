@@ -186,7 +186,7 @@ public class NavPage implements Serializable
 			ValueBinding binding = Util.getBinding("#{manageModulesPage}");
 			ManageModulesPage mPage = (ManageModulesPage) binding.getValue(ctx);
 			mPage.resetValues();
-			return "modules_author_manage";
+			return "manage_content";
 		}
 		else
 			return goToPage;
