@@ -308,7 +308,7 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 	 */
 	public void setAddtoSchedule(Boolean addtoSchedule)
 	{
-		this.addtoSchedule = addtoSchedule;
+		if ((getStartDate() != null)||(getEndDate() != null)) this.addtoSchedule = addtoSchedule;
 	}
 
 	/**
