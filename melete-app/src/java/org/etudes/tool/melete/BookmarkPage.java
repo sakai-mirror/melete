@@ -202,11 +202,14 @@ public class BookmarkPage implements Serializable
 		EditSectionPage esPage = (EditSectionPage) binding.getValue(ctx);
 		esPage.setEditInfo(sec);
 		*/
-		if (sec.getModuleId() != Integer.parseInt(fromModuleId))
+		if ((fromModuleId != null) && (fromModuleId.trim().length() > 0))
 		{
-			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
-			mPage.setNavigateCM(null);
+			if (sec.getModuleId() != Integer.parseInt(fromModuleId))
+			{
+				ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+				MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+				mPage.setNavigateCM(null);
+			}
 		}
 		try
 		{	
@@ -563,14 +566,6 @@ public class BookmarkPage implements Serializable
 	}
 
 	/**
-	 * Navigation
-	 */
-	public String redirectViewSection()
-	{
-		return "view_section";
-	}
-
-	/**
 	 * Refresh the page.
 	 * 
 	 * @return
@@ -629,14 +624,22 @@ public class BookmarkPage implements Serializable
 				}
 				fromSectionId = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromSectionId");
 				
-				ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
+				/*ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
 				ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(context);
 				vsPage.resetValues();
 				vsPage.setSection(null);
 				vsPage.setModule(null);
 				vsPage.setModuleId(Integer.parseInt(this.fromModuleId));
 				vsPage.setModuleSeqNo(Integer.parseInt(this.fromModuleSeqNo));
-				vsPage.setSectionId(Integer.parseInt(this.fromSectionId));
+				vsPage.setSectionId(Integer.parseInt(this.fromSectionId));*/
+				try
+				{
+					context.getExternalContext().redirect("view_section.jsf?moduleId="+this.fromModuleId+"&sectionId="+this.fromSectionId+"&moduleSeqNo="+this.fromModuleSeqNo);
+				}
+				catch (Exception e)
+				{
+					return "list_auth_modules";
+				}
 			}
 			if (this.fromPage.equals("view_module"))
 			{
@@ -650,11 +653,19 @@ public class BookmarkPage implements Serializable
 				{
 					setFromModuleSeqNo(fromModuleSeqNoStr);
 				}
-				ValueBinding binding = Util.getBinding("#{viewModulesPage}");
+				/*ValueBinding binding = Util.getBinding("#{viewModulesPage}");
 				ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
 				vmPage.setViewMbean(null);
 				vmPage.setModuleId(Integer.parseInt(this.fromModuleId));
-				vmPage.setModuleSeqNo(Integer.parseInt(this.fromModuleSeqNo));
+				vmPage.setModuleSeqNo(Integer.parseInt(this.fromModuleSeqNo));*/
+				try
+				{
+					context.getExternalContext().redirect("view_module.jsf?modId=" + this.fromModuleId + "&modSeqNo=" + this.fromModuleSeqNo);
+				}
+				catch (Exception e)
+				{
+					return "list_auth_modules";
+				}
 			}
 			if (this.fromPage.equals("view_whats_next"))
 			{
@@ -670,12 +681,20 @@ public class BookmarkPage implements Serializable
 				}
 				fromSectionId = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromSectionId");
 			
-				ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
+				/*ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
 				ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(context);
 				vnPage.setModule(null);
 				vnPage.setPrevSecId(Integer.parseInt(this.fromSectionId));
 				vnPage.setPrevModId(Integer.parseInt(this.fromModuleId));
-				vnPage.setNextSeqNo(Integer.parseInt(this.fromModuleSeqNo));
+				vnPage.setNextSeqNo(Integer.parseInt(this.fromModuleSeqNo));*/
+				try
+				{
+					context.getExternalContext().redirect("view_whats_next.jsf?nextSeqNo="+this.fromModuleSeqNo+"&prevSecId="+this.fromSectionId+"&prevModId="+this.fromModuleId);
+				}
+				catch (Exception e)
+				{
+					return "list_auth_modules";
+				}
 			}
 			if(this.fromPage.equals("editmodulesections"))
 			{
@@ -820,8 +839,6 @@ public class BookmarkPage implements Serializable
 	/**
 	 * On clicking the bookmark title from the bookmark listing, it takes student user to view the section.
 	 * 
-	 * @param evt
-	 *        Action Event
 	 */
 	public void viewSection(ActionEvent evt)
 	{
@@ -832,7 +849,7 @@ public class BookmarkPage implements Serializable
 		List<?> cList = cmdLink.getChildren();
 		if (cList == null || cList.size() < 1) return;
 		UIParameter param1 = (UIParameter) cList.get(0);
-		ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
+		/*ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
 
 		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
 
@@ -842,14 +859,26 @@ public class BookmarkPage implements Serializable
 		vsPage.setModuleId(sec.getModuleId());
 		vsPage.setModuleSeqNo(sec.getModule().getCoursemodule().getSeqNo());
 		vsPage.setSection(sec);
-		vsPage.setModule(null);
-		if (sec.getModuleId() != Integer.parseInt(fromModuleId))
+		vsPage.setModule(null);*/
+		Section sec = (Section) sectionService.getSection(((Integer) param1.getValue()).intValue());
+		if ((fromModuleId != null) && (fromModuleId.trim().length() > 0))
 		{
-			binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
-			mPage.setNavigateCM(null);
+			if (sec.getModuleId() != Integer.parseInt(fromModuleId))
+			{
+				ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+				MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+				mPage.setNavigateCM(null);
+			}
 		}
-
+		try
+		{
+			ctx.getExternalContext().redirect("view_section.jsf?moduleId="+sec.getModuleId()+"&sectionId="+((Integer) param1.getValue()).intValue()+"&moduleSeqNo="+sec.getModule().getCoursemodule().getSeqNo());
+		}
+		catch (Exception e)
+		{
+			return;
+		}
+		
 	}
 
 	/**

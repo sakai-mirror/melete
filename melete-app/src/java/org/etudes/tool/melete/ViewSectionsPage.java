@@ -535,14 +535,14 @@ public class ViewSectionsPage implements Serializable
 		resetValues();
 		FacesContext context = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{viewModulesPage}");
-		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
+		/*ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
 		vmPage.setViewMbean(null);
 		vmPage.setPrevMbean(null);
 		vmPage.setModuleId(currModuleId);
 		vmPage.setModuleSeqNo(0);
 		vmPage.setPrintable(null);
 		vmPage.setAutonumber(null);
-		vmPage.getViewMbean();
+		vmPage.getViewMbean();*/
 		try
 		{
 			context.getExternalContext().redirect("view_module.jsf?modId="+currModuleId);
@@ -568,19 +568,19 @@ public class ViewSectionsPage implements Serializable
 		String modSeqNoStr = (String) context.getExternalContext().getRequestParameterMap().get("modseqno");
 		if ((modSeqNoStr == null) || (modSeqNoStr.length() == 0)) modSeqNoStr = "0";
 		this.module = null;
-		ValueBinding binding = Util.getBinding("#{viewModulesPage}");
-		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
+		/*ValueBinding binding = Util.getBinding("#{viewModulesPage}");
+		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);*/
 
 		/*
 		 * if (nextMdBean != null) { vmPage.setModuleId(nextMdBean.getModuleId()); }
 		 */
-		vmPage.setViewMbean(null);
+		/*vmPage.setViewMbean(null);
 		vmPage.setPrevMbean(null);
 		vmPage.setModuleId(0);
 		vmPage.setModuleSeqNo(this.nextSeqNo);
 		vmPage.setPrintable(null);
 		vmPage.setAutonumber(null);
-		vmPage.getViewMbean();
+		vmPage.getViewMbean();*/
 		try
 		{
 			context.getExternalContext().redirect("view_module.jsf?modSeqNo="+this.nextSeqNo);
@@ -612,7 +612,7 @@ public class ViewSectionsPage implements Serializable
 			}
 		}
 		this.module = null;
-		ValueBinding binding = Util.getBinding("#{viewModulesPage}");
+		/*ValueBinding binding = Util.getBinding("#{viewModulesPage}");
 		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
 		vmPage.setModuleId(this.moduleId);
 		vmPage.setPrintable(null);
@@ -620,7 +620,7 @@ public class ViewSectionsPage implements Serializable
 		vmPage.setViewMbean(null);
 		vmPage.setPrevMbean(null);
 		vmPage.setModuleSeqNo(this.moduleSeqNo);
-		vmPage.getViewMbean();
+		vmPage.getViewMbean();*/
 		try
 		{
 			context.getExternalContext().redirect("view_module.jsf?modId="+this.moduleId+"&modSeqNo="+this.moduleSeqNo);
@@ -715,9 +715,9 @@ public class ViewSectionsPage implements Serializable
 		FacesContext context = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{bookmarkPage}");
 		BookmarkPage bPage = (BookmarkPage) binding.getValue(context);
-		return bPage.gotoMyBookmarks("view_section", this.moduleId, this.sectionId);
+		return bPage.gotoMyBookmarks("view_section", this.moduleId, new Integer(this.sectionId).toString());
 	}*/
-
+	
 	/**
 	 * Redirect to view_whats_next page
 	 * 
@@ -728,13 +728,13 @@ public class ViewSectionsPage implements Serializable
 		FacesContext context = FacesContext.getCurrentInstance();
 		int currSeqNo = new Integer(((String) context.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue();
 
-		ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
+		/*ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
 		ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(context);
 		vnPage.setPrevSecId(this.sectionId);
 		vnPage.setPrevModId(this.moduleId);
 		vnPage.setNextSeqNo(this.nextSeqNo);
 		vnPage.setModuleSeqNo(this.moduleSeqNo);
-		vnPage.setModule(null);
+		vnPage.setModule(null);*/
 		// vnPage.setModule(this.module);
 		try
 		{

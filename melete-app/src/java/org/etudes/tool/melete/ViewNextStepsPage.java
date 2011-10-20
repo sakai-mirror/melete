@@ -147,7 +147,7 @@ public class ViewNextStepsPage implements Serializable
 		// this.module = null;
 		int nextSeqNo = new Integer(((String) context.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue();
 		this.module = null;
-		ValueBinding binding = Util.getBinding("#{viewModulesPage}");
+		/*ValueBinding binding = Util.getBinding("#{viewModulesPage}");
 		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
 		// vmPage.setModuleId(nextMdBean.getModuleId());
 		vmPage.setModuleId(0);
@@ -156,7 +156,7 @@ public class ViewNextStepsPage implements Serializable
 		vmPage.setModuleSeqNo(nextSeqNo);
 		vmPage.setPrintable(null);
 		vmPage.setAutonumber(null);
-		vmPage.getViewMbean();
+		vmPage.getViewMbean();*/
 		try
 		{
 			context.getExternalContext().redirect("view_module.jsf?modSeqNo="+nextSeqNo);
@@ -182,18 +182,18 @@ public class ViewNextStepsPage implements Serializable
 
 		if (this.prevSecId == 0)
 		{
-			ValueBinding binding = Util.getBinding("#{viewModulesPage}");
+			/*ValueBinding binding = Util.getBinding("#{viewModulesPage}");
 			ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
 			vmPage.setModuleId(this.prevModId);
 			vmPage.setPrintable(null);
 			vmPage.setViewMbean(null);
-			vmPage.setAutonumber(null);
+			vmPage.setAutonumber(null);*/
 			if (this.nextSeqNo > 1)
 			{
-				vmPage.setModuleSeqNo(prevSeqNo);
+				//vmPage.setModuleSeqNo(prevSeqNo);
 			}
-			vmPage.setPrevMbean(null);
-			vmPage.getViewMbean();
+			/*vmPage.setPrevMbean(null);
+			vmPage.getViewMbean();*/
 			try
 			{
 				context.getExternalContext().redirect("view_module.jsf?modId="+this.prevModId+"&modSeqNo="+prevSeqNo);
@@ -207,12 +207,12 @@ public class ViewNextStepsPage implements Serializable
 		}
 		else
 		{
-			ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
+			/*ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
 
 			ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(context);
 
 			vsPage.setSectionId(this.prevSecId);
-			vsPage.setModuleId(this.prevModId);
+			vsPage.setModuleId(this.prevModId);*/
 			// This condition occurs when whats next is after
 			// the last section of the last module
 			if (prevSeqNo == -1)
@@ -223,11 +223,11 @@ public class ViewNextStepsPage implements Serializable
 			{
 				modSeqNo = prevSeqNo;
 			}
-			vsPage.setModuleSeqNo(moduleSeqNo);
+			/*vsPage.setModuleSeqNo(moduleSeqNo);
 			vsPage.setSection(null);
 			// added by rashmi on 6/14/05
 			vsPage.setModule(null);
-			vsPage.setAutonumber(null);
+			vsPage.setAutonumber(null);*/
 			try
 			{
 				context.getExternalContext().redirect("view_section.jsf?moduleId="+this.prevModId+"&sectionId="+this.prevSecId+"&moduleSeqNo="+modSeqNo);

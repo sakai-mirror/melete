@@ -383,8 +383,8 @@ public class ListModulesPage implements Serializable
 			}
 		}
 		
-		ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
-		ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(ctx);
+		/*ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
+		ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(ctx);*/
 		
 		if (isUserAuthor() || isUserStudent())
 		{
@@ -394,7 +394,7 @@ public class ListModulesPage implements Serializable
 			}
 		}		
 		int nextSeqNo = getModuleService().getNextSeqNo(getUserId(), getCourseId(), new Integer(selModSeqNo));
-		vnPage.setNextSeqNo(nextSeqNo);
+		//vnPage.setNextSeqNo(nextSeqNo);
 		// vnPage.setModule(getModuleService().getModule(vmBean.getModuleId()));
 		if ((vmBean.getVsBeans() == null) || (vmBean.getVsBeans().size() == 0))
 		{
@@ -407,8 +407,8 @@ public class ListModulesPage implements Serializable
 			ViewSecBean vsBean = (ViewSecBean) vmBean.getVsBeans().get(vmBean.getVsBeans().size() - 1);
 			prevSecId = vsBean.getSectionId();
 		}
-		vnPage.setPrevModId(prevModId);
-		vnPage.setPrevSecId(prevSecId);
+		//vnPage.setPrevModId(prevModId);
+		//vnPage.setPrevSecId(prevSecId);
 		try
 		{
 			ctx.getExternalContext().redirect("view_whats_next.jsf?nextSeqNo="+nextSeqNo+"&prevSecId="+prevSecId+"&prevModId="+prevModId);
@@ -798,20 +798,20 @@ public class ListModulesPage implements Serializable
 			ctx.addMessage(null, msg);
 			return;
 		}
-		ValueBinding binding = Util.getBinding("#{viewModulesPage}");
+		/*ValueBinding binding = Util.getBinding("#{viewModulesPage}");
 		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(ctx);
-		vmPage.setPrintable(null);
+		vmPage.setPrintable(null);*/
 		if (isUserAuthor() || isUserStudent())
 		{
 			if ((viewModuleBeans != null) && (viewModuleBeans.size() > 0))
 			{
 				vmbean = (ViewModBean) vmbeansMap.get(selModId);
-				vmPage.setModuleId(vmbean.getModuleId());
+				/*vmPage.setModuleId(vmbean.getModuleId());
 				vmPage.setViewMbean(null);
 				vmPage.setPrevMbean(null);
 				vmPage.setModuleSeqNo(vmbean.getSeqNo());
 				vmPage.setAutonumber(null);
-				vmPage.getViewMbean();
+				vmPage.getViewMbean();*/
 
 				try
 				{
@@ -886,20 +886,20 @@ public class ListModulesPage implements Serializable
 			}
 		}
 
-		ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
+		/*ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
 		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
 		vsPage.resetValues();
 		vsPage.setSection(null);
-		vsPage.setModule(null);
+		vsPage.setModule(null);*/
 		if (vsBean != null)
 		{
 			// Section sec = vsBean.getSection();
-			vsPage.setModuleId(vmBean.getModuleId());
-			vsPage.setSectionId(vsBean.getSectionId());
+			/*vsPage.setModuleId(vmBean.getModuleId());
+			vsPage.setSectionId(vsBean.getSectionId());*/
 			// vsPage.setSection(sec);
 		}
 
-		vsPage.setModuleSeqNo(modSeqNo);
+		//vsPage.setModuleSeqNo(modSeqNo);
 		try
 		{
 			ctx.getExternalContext().redirect("view_section.jsf?moduleId="+vmBean.getModuleId()+"&sectionId="+vsBean.getSectionId()+"&moduleSeqNo="+modSeqNo);
