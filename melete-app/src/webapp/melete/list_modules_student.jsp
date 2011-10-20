@@ -65,7 +65,7 @@ function showHideTable(index, show)
 <!--Page Content-->
 <br/>
 <div align="right">
-<h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">
+<h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.viewSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">
  <f:param name="sectionId" value="#{listModulesPage.bookmarkSectionId}" /> 
  <h:graphicImage id="lvisit_gif" value="/images/last-visited.png" alt="" styleClass="BmImgClass"/>
  <h:outputText id="lastvisit" value="#{msgs.last_visited}" />									
