@@ -92,10 +92,13 @@
 					 <h:outputText id="bmnotes" value="#{bookmark.briefNotes}"/>					 
 					</h:column>
 					<h:column>
-					 <h:outputLink id="editBookmarkLink" value="list_bookmarks" onclick="OpenBookmarkWindow(#{bookmark.sectionId},'#{bookmark.title}','#{bookmarkPage.fromPage}','Melete Bookmark Window');">
+					 <h:outputLink id="editBookmarkLink" value="list_bookmarks" onclick="OpenBookmarkWindow(#{bookmark.sectionId},'#{bookmark.title}','#{bookmarkPage.fromPage}','#{bookmarkPage.fromModuleId}','#{bookmarkPage.fromModuleSeqNo}','Melete Bookmark Window');">
 		    	       <f:param id="sectionId" name="sectionId" value="#{bookmark.sectionId}" />
 		    	       <f:param id="sectionTitle" name="sectionTitle" value="#{bookmark.title}" />
 		    	       <f:param name="fromSectionId" value="#{bookmarkPage.fromSectionId}" />
+		    	       <f:param name="fromModuleId" value="#{bookmarkPage.fromModuleId}" />
+						<f:param name="fromModuleSeqNo" value="#{bookmarkPage.fromModuleSeqNo}" />
+						
 						  <h:graphicImage id="editgif" alt="" value="/images/document_edit.gif" styleClass="AuthImgClass" />
 			                <h:outputText id="emp_space-20" value=" " />
 				    		<h:outputText id="deltext0" value="#{msgs.list_bookmarks_edit}"  />
@@ -106,6 +109,8 @@
 				    		<f:param name="bookmarkId" value="#{bookmark.bookmarkId}" />
 				    		<f:param name="bookmarkTitle" value="#{bookmark.title}" />
 				    		<f:param name="fromSectionId" value="#{bookmarkPage.fromSectionId}" />
+				    		<f:param name="fromModuleId" value="#{bookmarkPage.fromModuleId}" />
+						
 				    		<h:graphicImage id="delgif" alt="" value="/images/delete.gif" styleClass="AuthImgClass" />
 							<h:outputText id="emp_space-2" value=" " />
 				    		<h:outputText id="deltext" value="#{msgs.list_bookmarks_delete}"  />

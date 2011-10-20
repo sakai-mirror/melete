@@ -67,6 +67,8 @@ final BookmarkPage bookmarkPage = (BookmarkPage)facesContext.getApplication().ge
 String sectionId = (String)request.getParameter("sectionId");
 String sectionTitle = (String)request.getParameter("sectionTitle");
 String fromPage = (String)request.getParameter("fromPage");
+String fromModuleId = (String)request.getParameter("fromModuleId");
+String fromModuleSeqNo = (String)request.getParameter("fromModuleSeqNo");
 
 if (sectionId != null)
 {
@@ -80,11 +82,21 @@ if (fromPage != null)
 {
 	bookmarkPage.setFromPage(fromPage);
 }
+if (fromModuleId != null)
+{
+	bookmarkPage.setFromModuleId(fromModuleId);
+}
+if (fromModuleSeqNo != null)
+{
+	bookmarkPage.setFromModuleSeqNo(fromModuleSeqNo);
+}
 %>
 
 <h:form id="AddBookmarkForm">
 <h:inputHidden id="sectionId" value="#{bookmarkPage.sectionId}"/>
 <h:inputHidden id="bpfpage" value="#{bookmarkPage.fromPage}" />
+<h:inputHidden id="bpfmodid" value="#{bookmarkPage.fromModuleId}" />
+<h:inputHidden id="bpfmodseqno" value="#{bookmarkPage.fromModuleSeqNo}" />
 <h:messages id="addbookmarkerror" layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 <table cellspacing="0" cellpadding="10" width="100%" border="0" align="center">
 	<tr>

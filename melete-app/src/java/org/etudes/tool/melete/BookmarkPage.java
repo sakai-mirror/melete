@@ -61,11 +61,11 @@ public class BookmarkPage implements Serializable
 
 	private String deleteBookmarkTitle;
 
-	private int fromModuleId;
+	private String fromModuleId;
 	
 	private String fromSectionId;
 	
-	private int fromModuleSeqNo;
+	private String fromModuleSeqNo;
 
 	private String fromPage;
 
@@ -202,7 +202,7 @@ public class BookmarkPage implements Serializable
 		EditSectionPage esPage = (EditSectionPage) binding.getValue(ctx);
 		esPage.setEditInfo(sec);
 		*/
-		if (sec.getModuleId() != fromModuleId)
+		if (sec.getModuleId() != Integer.parseInt(fromModuleId))
 		{
 			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
@@ -360,7 +360,7 @@ public class BookmarkPage implements Serializable
 	/**
 	 * @return the fromModuleId
 	 */
-	public int getFromModuleId()
+	public String getFromModuleId()
 	{
 		return fromModuleId;
 	}
@@ -377,7 +377,7 @@ public class BookmarkPage implements Serializable
 	/**
 	 * @return the fromModuleSeqNo
 	 */
-	public int getFromModuleSeqNo()
+	public String getFromModuleSeqNo()
 	{
 		return fromModuleSeqNo;
 	}
@@ -497,12 +497,12 @@ public class BookmarkPage implements Serializable
 		String fromModuleIdStr = (String) context.getExternalContext().getRequestParameterMap().get("fromModuleId");
 		if (fromModuleIdStr != null)
 		{
-			setFromModuleId(Integer.parseInt(fromModuleIdStr));
+			setFromModuleId(fromModuleIdStr);
 		}
 		String fromModuleSeqNoStr = (String) context.getExternalContext().getRequestParameterMap().get("fromModuleSeqNo");
 		if (fromModuleSeqNoStr != null)
 		{
-			setFromModuleSeqNo(Integer.parseInt(fromModuleSeqNoStr));
+			setFromModuleSeqNo(fromModuleSeqNoStr);
 		}
 		fromSectionId = (String) context.getExternalContext().getRequestParameterMap().get("fromSectionId");
 		
@@ -516,20 +516,20 @@ public class BookmarkPage implements Serializable
 	 *        The start point
 	 * @return
 	 */
-	public String gotoMyBookmarks(String from, int fromModuleId)
+	/*public String gotoMyBookmarks(String from, int fromModuleId)
 	{
 		resetValues();
 		setFromPage(from);
 		setFromModuleId(fromModuleId);
 		return "list_bookmarks";
-	}
+	}*/
 
 	
 	public String gotoMyBookmarks(String from, int fromModuleId, String fromSectionId)
 	{
 		resetValues();
 		setFromPage(from);
-		setFromModuleId(fromModuleId);
+		setFromModuleId(Integer.toString(fromModuleId));
 		setFromSectionId(fromSectionId);
 		return "list_bookmarks";
 	}
@@ -620,12 +620,12 @@ public class BookmarkPage implements Serializable
 				String fromModuleIdStr = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromModuleId");
 				if (fromModuleIdStr != null)
 				{
-					setFromModuleId(Integer.parseInt(fromModuleIdStr));
+					setFromModuleId(fromModuleIdStr);
 				}
 				String fromModuleSeqNoStr = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromModuleSeqNo");
 				if (fromModuleSeqNoStr != null)
 				{
-					setFromModuleSeqNo(Integer.parseInt(fromModuleSeqNoStr));
+					setFromModuleSeqNo(fromModuleSeqNoStr);
 				}
 				fromSectionId = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromSectionId");
 				
@@ -634,8 +634,8 @@ public class BookmarkPage implements Serializable
 				vsPage.resetValues();
 				vsPage.setSection(null);
 				vsPage.setModule(null);
-				vsPage.setModuleId(this.fromModuleId);
-				vsPage.setModuleSeqNo(this.fromModuleSeqNo);
+				vsPage.setModuleId(Integer.parseInt(this.fromModuleId));
+				vsPage.setModuleSeqNo(Integer.parseInt(this.fromModuleSeqNo));
 				vsPage.setSectionId(Integer.parseInt(this.fromSectionId));
 			}
 			if (this.fromPage.equals("view_module"))
@@ -643,30 +643,30 @@ public class BookmarkPage implements Serializable
 				String fromModuleIdStr = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromModuleId");
 				if (fromModuleIdStr != null)
 				{
-					setFromModuleId(Integer.parseInt(fromModuleIdStr));
+					setFromModuleId(fromModuleIdStr);
 				}
 				String fromModuleSeqNoStr = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromModuleSeqNo");
 				if (fromModuleSeqNoStr != null)
 				{
-					setFromModuleSeqNo(Integer.parseInt(fromModuleSeqNoStr));
+					setFromModuleSeqNo(fromModuleSeqNoStr);
 				}
 				ValueBinding binding = Util.getBinding("#{viewModulesPage}");
 				ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
 				vmPage.setViewMbean(null);
-				vmPage.setModuleId(this.fromModuleId);
-				vmPage.setModuleSeqNo(this.fromModuleSeqNo);
+				vmPage.setModuleId(Integer.parseInt(this.fromModuleId));
+				vmPage.setModuleSeqNo(Integer.parseInt(this.fromModuleSeqNo));
 			}
 			if (this.fromPage.equals("view_whats_next"))
 			{
 				String fromModuleIdStr = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromModuleId");
 				if (fromModuleIdStr != null)
 				{
-					setFromModuleId(Integer.parseInt(fromModuleIdStr));
+					setFromModuleId(fromModuleIdStr);
 				}
 				String fromModuleSeqNoStr = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromModuleSeqNo");
 				if (fromModuleSeqNoStr != null)
 				{
-					setFromModuleSeqNo(Integer.parseInt(fromModuleSeqNoStr));
+					setFromModuleSeqNo(fromModuleSeqNoStr);
 				}
 				fromSectionId = (String) context.getExternalContext().getRequestParameterMap().get("ManageBookmarksForm:fromSectionId");
 			
@@ -674,8 +674,8 @@ public class BookmarkPage implements Serializable
 				ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(context);
 				vnPage.setModule(null);
 				vnPage.setPrevSecId(Integer.parseInt(this.fromSectionId));
-				vnPage.setPrevModId(this.fromModuleId);
-				vnPage.setNextSeqNo(this.fromModuleSeqNo);
+				vnPage.setPrevModId(Integer.parseInt(this.fromModuleId));
+				vnPage.setNextSeqNo(Integer.parseInt(this.fromModuleSeqNo));
 			}
 			if(this.fromPage.equals("editmodulesections"))
 			{
@@ -744,7 +744,7 @@ public class BookmarkPage implements Serializable
 	 * @param fromModuleId
 	 *        the fromModuleId to set
 	 */
-	public void setFromModuleId(int fromModuleId)
+	public void setFromModuleId(String fromModuleId)
 	{
 		this.fromModuleId = fromModuleId;
 	}
@@ -762,7 +762,7 @@ public class BookmarkPage implements Serializable
 	 * @param fromModuleSeqNo
 	 *        the fromModuleSeqNo to set
 	 */
-	public void setFromModuleSeqNo(int fromModuleSeqNo)
+	public void setFromModuleSeqNo(String fromModuleSeqNo)
 	{
 		this.fromModuleSeqNo = fromModuleSeqNo;
 	}	
@@ -843,7 +843,7 @@ public class BookmarkPage implements Serializable
 		vsPage.setModuleSeqNo(sec.getModule().getCoursemodule().getSeqNo());
 		vsPage.setSection(sec);
 		vsPage.setModule(null);
-		if (sec.getModuleId() != fromModuleId)
+		if (sec.getModuleId() != Integer.parseInt(fromModuleId))
 		{
 			binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);

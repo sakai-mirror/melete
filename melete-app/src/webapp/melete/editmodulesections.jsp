@@ -118,7 +118,7 @@ function saveEditor()
 						        </td>
 						        <td class="right" width="30%" >    
 									 <h:commandButton id="bookmarkSectionLink" action="#{editSectionPage.saveAndAddBookmark}" value="#{msgs.bookmark_text}" 
-										 onclick="var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},document.getElementById('EditSectionForm:title').value,'','Melete Bookmark Window');"
+										 onclick="var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},document.getElementById('EditSectionForm:title').value,'','','','Melete Bookmark Window');"
 										  accesskey="#{msgs.bookmark_access}" title="#{msgs.im_bmrk_text}" styleClass="BottomImgBookmarkIt">
 									</h:commandButton>
 						     		<h:commandButton id="myBookmarksLink" action="#{editSectionPage.gotoMyBookmarks}" value="#{msgs.my_bookmarks}" accesskey="#{msgs.mybookmarks_access}" title="#{msgs.im_mybmrks_text}" styleClass="BottomImgMyBookmarks"/>

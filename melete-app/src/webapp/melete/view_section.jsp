@@ -83,7 +83,7 @@ if (modSeqNo != null)
 </td>
 <tr>
 <td colspan="2" align="right">										
-  <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','','Melete Bookmark Window');">
+  <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','','','','Melete Bookmark Window');">
 		    	<f:param id="moduleId" name="moduleId" value="#{viewSectionsPage.moduleId}" />
 		    	<f:param id="sectionId" name="sectionId" value="#{viewSectionsPage.section.sectionId}" />
 	  			<f:param id="sectionTitle" name="sectionTitle" value="#{viewSectionsPage.section.title}" />
