@@ -261,7 +261,7 @@ public class ListResourcesPage
 	private boolean prevListingFlag = true;
 	private boolean nextListingFlag = true;
 	private UIData table;
-
+	private String fromIndexParam;
 	/**
 	 * Default constructor
 	 */
@@ -995,6 +995,18 @@ public class ListResourcesPage
 		this.fromIndex = fromIndex;
 	}
 
+	public String getFromIndexParam()
+	{
+		fromIndexParam = Integer.toString(fromIndex);
+		return fromIndexParam;
+	}
+
+	public void setFromIndexParam(String fromIndexParam)
+	{
+		fromIndex = Integer.parseInt(fromIndexParam);
+		this.fromIndexParam = fromIndexParam;
+	}
+
 	/**
 	 * Get the listing end index. set according to the chunk size
 	 * @return
@@ -1064,10 +1076,19 @@ public class ListResourcesPage
 		// -1 implies all resources need to be displayed
 		if (this.chunkSize.equals("-1")) this.chunkSize = Integer.toString(totalSize - 1);
 		int c = Integer.parseInt(chunkSize);
-		if (c == -1) c = totalSize -1;
+		if (c == -1) c = totalSize - 1;
 		toIndex = fromIndex + c;
 		if (toIndex > (totalSize - 1)) toIndex = totalSize - 1;
-		FacesContext.getCurrentInstance().renderResponse();
+		// FacesContext.getCurrentInstance().renderResponse();
+		try
+		{
+			FacesContext.getCurrentInstance().getExternalContext().redirect(
+					fromPage + "?fromPage=" + fromPage + "&sectionId=" + sectionId + "&chunkSize=" + chunkSize);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -1098,7 +1119,6 @@ public class ListResourcesPage
 		int c = Integer.parseInt(chunkSize);
 		if (c == -1) c = totalSize -1;
 		fromIndex = fromIndex + c;
-	
 		try
 		{
 		FacesContext.getCurrentInstance().getExternalContext().redirect(fromPage +"?fromPage=" + fromPage + "&sectionId=" + sectionId + "&chunkSize=" + chunkSize + "&fromIndex=" + fromIndex);

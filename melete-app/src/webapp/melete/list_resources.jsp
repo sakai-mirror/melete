@@ -70,6 +70,8 @@
 			   <h:graphicImage id="rightImg_disable" value="/images/nav_right_disable.jpg" alt="#{msgs.list_resources_next2}" title="#{msgs.list_resources_next2}" style="border:0 none;vertical-align:middle;" rendered="#{!listResourcesPage.nextListingFlag}"/> 
    	      </h:column>											
               </h:panelGrid>
+              <t:saveState id="fromIndex1" value="#{listResourcesPage.fromIndexParam}" />
+              <t:saveState id="chunk1" value="#{listResourcesPage.chunkSize}" />
                <!-- navigation ends -->            		 
    
 			 <h:dataTable id="table"  value="#{listResourcesPage.displayResourcesList}"  var="curr_resources" binding="#{listResourcesPage.table}" border="0" headerClass="tableheader2" columnClasses="TitleWid3,ActionWid" rowClasses="row1,row2"  width="100%" summary="#{msgs.list_resources_summary}">
