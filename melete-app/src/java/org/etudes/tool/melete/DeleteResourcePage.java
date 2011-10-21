@@ -142,12 +142,6 @@ public class DeleteResourcePage implements Serializable
 				sectionService.deleteResourceInUse(this.delResourceId);
 				meleteCHService.removeResource(this.delResourceId);
 			}
-
-			if (sectionId != null && sectionId.length() != 0)
-				sectionService.deleteSectionResourcebyId(sectionId);
-			else
-				sectionId = "";
-
 			context.getExternalContext().redirect(fromPage + "?fromPage=" + fromPage + "&sectionId=" + sectionId);
 		}
 		catch (Exception e)
