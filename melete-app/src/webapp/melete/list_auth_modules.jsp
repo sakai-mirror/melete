@@ -281,7 +281,7 @@ if (msg != null)
 		  	  <h:graphicImage id="duplicateImg" value="/images/page_copy.png" alt="#{msgs.list_auth_modules_alt_duplicate}" title="#{msgs.list_auth_modules_alt_duplicate}" styleClass="AuthImgClass"/>
 		  </h:commandLink>
 		     <h:outputText id="emp_space5" value="  " styleClass="ExtraPaddingClass" />
-		     <h:outputLink id="printModuleLink" value="list_auth_modules" onclick="document.forms['listauthmodulesform'].submit();OpenPrintWindow(#{listAuthModulesPage.printModuleId},'Melete Print Window');">
+		     <h:outputLink id="printModuleLink" value="list_auth_modules" onclick="document.forms['listauthmodulesform'].elements['listauthmodulesform:saveChanges'].click();OpenPrintWindow(#{listAuthModulesPage.printModuleId},'Melete Print Window');">
 		       	<h:graphicImage id="printImgLink" value="/images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 		  </h:outputLink>  	  	   
 		    <h:outputText id="emp_space7" value="  " styleClass="ExtraPaddingClass" />
