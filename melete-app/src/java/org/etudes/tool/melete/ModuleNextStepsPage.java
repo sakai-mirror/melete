@@ -200,7 +200,8 @@ public class ModuleNextStepsPage implements Serializable/* ,ToolBean */
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		try
 		{
-			String stepsText = mdBean.getModule().getWhatsNext().trim();
+			String stepsText = null; 
+			if (mdBean.getModule().getWhatsNext() != null) stepsText = mdBean.getModule().getWhatsNext().trim();
 			moduleService.updateModuleNextSteps(mdBean.getModuleId(), stepsText);
 			return "success";
 
