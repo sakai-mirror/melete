@@ -104,7 +104,7 @@ if (moduleSeqNo != null)
 		</h:column>
 	<h:column>
 		<h:outputText id="secs" value="#{msgs.view_module_student_content_section}" ></h:outputText>  
-		<h:dataTable id="tablesec"  value="#{viewModulesPage.viewMbean.vsBeans}" var="sectionBean" columnClasses="SectionTableClassCol1,SectionTableClassCol2" rowClasses="row2,row1" headerClass="leftheader" rendered="#{viewModulesPage.sectionSize > 0}" styleClass="SectionTableClass" width="98%">
+		<h:dataTable id="tablesec"  value="#{viewModulesPage.viewMbean.vsBeans}" var="sectionBean" columnClasses="SectionTableClassCol1,SectionTableClassCol2" rowClasses="row2,row1" headerClass="leftheader" rendered="#{viewModulesPage.sectionSize > 0}" styleClass="SectionTableClass" width="98%" summary="#{msgs.view_module_summary}">
  			  <h:column> 			  		
  					<h:panelGroup style="width:100%;">
 	        		 
