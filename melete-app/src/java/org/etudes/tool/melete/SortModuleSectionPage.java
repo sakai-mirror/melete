@@ -428,10 +428,6 @@ public class SortModuleSectionPage implements Serializable{
 	 * @return modules_sort
 	 */
 	public String goToSortModules(){
-		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding lamBinding = Util.getBinding("#{listAuthModulesPage}");
-		ListAuthModulesPage lamPage = (ListAuthModulesPage) lamBinding.getValue(context);
-		if (!lamPage.saveModuleDates()) return "list_auth_modules";
 		resetValues();
 		setFormName("");
 		return "modules_sort";

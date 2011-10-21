@@ -807,6 +807,36 @@ public class ListAuthModulesPage implements Serializable
 		sectionSelected = false;
 		return "list_auth_modules";
 	}
+	
+	/** Reset values and redirect to sort modules page
+	 * @return modules_sort
+	 */
+	public String goToSortModules(){
+		if (!saveModuleDates()) return "list_auth_modules";
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding smsBinding = Util.getBinding("#{sortModuleSectionPage}");
+		SortModuleSectionPage smsPage = (SortModuleSectionPage) smsBinding.getValue(context);
+		return smsPage.goToSortModules();
+
+	}
+	
+	/**
+	 * @return restore_modules page
+	 */
+	public String goToRestoreModules()
+	{
+		if (!saveModuleDates()) return "list_auth_modules";
+		return "restore_modules";
+	}
+	
+	/** 
+	 * @return importexportmodules page
+	 */
+	public String importExportModules()
+	{
+		if (!saveModuleDates()) return "list_auth_modules";
+		return "importexportmodules";
+	}
 
 	/**Redirect to edit module page
 	 * @return edit_module

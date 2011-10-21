@@ -51,7 +51,7 @@
 	  </h:commandLink>
 	</h:column>
 	<h:column>
-	  <h:commandLink id="sortgoto" action="#{sortModuleSectionPage.goToSortModules}">
+	  <h:commandLink id="sortgoto" action="#{listAuthModulesPage.goToSortModules}">
 	    <h:graphicImage id="MoveUpImg" value="/images/document_exchange.gif" styleClass="AuthImgClass"/>   
 	   <h:outputText id="sort" value="#{msgs.modules_author_manage_sort}" />
   	</h:commandLink>
@@ -75,13 +75,13 @@
 	  </h:commandLink>
 	</h:column>
 	<h:column>
-		<h:commandLink id="restoregoto" action="#{manageModulesPage.goToRestoreModules}">
+		<h:commandLink id="restoregoto" action="#{listAuthModulesPage.goToRestoreModules}">
 			<h:graphicImage id="image" alt="" url="/images/folder_into.gif" styleClass="AuthImgClass"/>
 			<h:outputText id="re" value="#{msgs.modules_author_manage_archive_title}" />
 		</h:commandLink>
 	</h:column>
 	<h:column>
-		<h:commandLink id="goto_impexp" action="#{manageModulesPage.importExportModules}">
+		<h:commandLink id="goto_impexp" action="#{listAuthModulesPage.importExportModules}">
 			<h:graphicImage id="image_impexp" alt="" url="/images/import1.gif" styleClass="AuthImgClass"/>
 			<h:outputText id="import" value="#{msgs.modules_author_manage_import_export}" />
 		</h:commandLink>
