@@ -1,4 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="org.etudes.tool.melete.ViewSectionsPage"%>
+
 <!--
  ***********************************************************************************
  * $URL$
@@ -26,11 +28,35 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+<%
+final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
+final ViewSectionsPage vsPage = (ViewSectionsPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "viewSectionsPage");
 
+String moduleId = (String)request.getParameter("moduleId");
+String secId = (String)request.getParameter("sectionId");
+if ((moduleId != null) &&(secId != null))
+{
+	vsPage.setModuleId(Integer.parseInt(moduleId));
+	vsPage.setSectionId(Integer.parseInt(secId));
+}
+String modSeqNo = (String)request.getParameter("moduleSeqNo");
+if (modSeqNo != null)
+{
+	vsPage.setModuleSeqNo(Integer.parseInt(modSeqNo));
+}
+%>
 <f:view>
 <sakai:view title="Modules: Student View" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
 <script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
+<t:saveState id="vspmod" value="#{viewSectionsPage.module}" />
+<t:saveState id="vspsec" value="#{viewSectionsPage.section}" />
+<t:saveState id="vspmid" value="#{viewSectionsPage.moduleId}" />
+<t:saveState id="vsppsi" value="#{viewSectionsPage.prevSecId}" />
+<t:saveState id="vspnsi" value="#{viewSectionsPage.nextSecId}" />
+<t:saveState id="vspnso" value="#{viewSectionsPage.nextSeqNo}" />
+<t:saveState id="vspmso" value="#{viewSectionsPage.moduleSeqNo}" />
 
 <h:form id="viewsectionform"> 
 	<f:subview id="top">
@@ -47,7 +73,7 @@
 <!-- breadcrumbs -->
 <h:panelGrid id="crumbsItem" columns="1"  style=" border-width:medium; border-color: #E2E4E8">
 	<h:column>
-		<h:commandLink id="moduleItem" action="#{viewSectionsPage.goCurrentModule}" immediate="true" >
+		<h:commandLink id="moduleItem" actionListener="#{viewSectionsPage.goCurrentModule}" immediate="true" >
 			<h:outputText id="modTitle" value="#{viewSectionsPage.module.title}"/>			
      	</h:commandLink>
      <h:outputText id="sep" value=" &raquo; "  escape="false" /> <h:outputText id="secTitle" value="#{viewSectionsPage.section.title}" />
@@ -57,17 +83,21 @@
 </td>
 <tr>
 <td colspan="2" align="right">										
-  <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','Melete Bookmark Window');">
+  <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','','','','Melete Bookmark Window');">
+		    	<f:param id="moduleId" name="moduleId" value="#{viewSectionsPage.moduleId}" />
 		    	<f:param id="sectionId" name="sectionId" value="#{viewSectionsPage.section.sectionId}" />
 	  			<f:param id="sectionTitle" name="sectionTitle" value="#{viewSectionsPage.section.title}" />
 	  			<h:graphicImage id="bul_gif" value="/images/bookmark-it.png" alt="" styleClass="AuthImgClass"/>
 				      <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
  	</h:outputLink>		
  <h:outputText value="|"/> 			
- <h:commandLink id="myBookmarksLink" action="#{viewSectionsPage.gotoMyBookmarks}" immediate="true">
+ <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}" immediate="true">
 						<h:graphicImage id="mybook_gif" value="/images/my-bookmarks.png" alt="" styleClass="AuthImgClass"/>
 						<h:outputText id="mybks" value="#{msgs.my_bookmarks}" />	
-						<f:param name="fromPage" value="view_section" />								
+						<f:param name="fromPage" value="view_section" />	
+						<f:param name="fromModuleId" value="#{viewSectionsPage.moduleId}" />
+                        <f:param name="fromModuleSeqNo" value="#{viewSectionsPage.moduleSeqNo}" />	
+                        <f:param name="fromSectionId" value="#{viewSectionsPage.sectionId}" />						
 </h:commandLink>
 </td>
 </tr>

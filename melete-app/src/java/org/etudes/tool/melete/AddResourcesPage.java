@@ -82,6 +82,17 @@ public class AddResourcesPage implements ServletContextListener
 	 */
 	public String getNumberItems()
 	{
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		if (facesContext.getExternalContext().getRequestParameterMap().get("showMessage") != null)
+		{
+			String show = (String) facesContext.getExternalContext().getRequestParameterMap().get("showMessage");
+
+			if (show == null || show.length() == 0) return numberItems;
+
+			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+			String errMsg = bundle.getString("file_too_large");
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "file_too_large", errMsg));
+		}
 		return this.numberItems;
 	}
 
@@ -701,7 +712,13 @@ public class AddResourcesPage implements ServletContextListener
 			// for sections collection is module_id
 			if (resourceId.indexOf("/private/meleteDocs/") != -1 && resourceId.indexOf("/uploads/") != -1)
 				throw new MeleteException("section_html_null");
-			getMeleteCHService().editResource(courseId, resourceId, revisedData);
+			Boolean modify = getMeleteCHService().editResource(courseId, resourceId, revisedData);
+			// if content is modified then add to messages
+			if(modify)
+			{
+				String k = sectionId + "-" + userId;
+				addToHm_Msgs(k, "ModifiedData");
+			}
 		}
 		catch (Exception ex)
 		{

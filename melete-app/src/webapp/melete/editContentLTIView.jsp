@@ -25,9 +25,10 @@
   		<h:outputText id="editlinkText1" value="#{msgs.editcontentltiview_link1}"/>
 	</h:column>
 	<h:column>					
-		<h:commandLink id="serverViewButton"  action="#{editSectionPage.gotoServerLTIView}" styleClass="a1">
+		<h:commandLink id="serverViewButton"  actionListener="#{editSectionPage.setServerLTIListener}">
+			<f:param name="sectionId" value="#{editSectionPage.editId}" />
 			<h:graphicImage id="replaceImg2" value="/images/replace2.gif" styleClass="AuthImgClass"/>
-			<h:outputText value="#{msgs.editcontentltiview_replace}"/>
+			<h:outputText value="#{msgs.editcontentlinkview_replace}"/>
                 </h:commandLink>		
   </h:column>
   <h:column/>

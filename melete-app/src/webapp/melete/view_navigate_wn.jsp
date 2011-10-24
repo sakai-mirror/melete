@@ -27,7 +27,7 @@
 
 <h:panelGrid id="navWhatsNextItems" columns="5"  style=" border-width:medium; border-color: #E2E4E8">
 	<h:column>
-     	<h:commandLink id="prevItem" action="#{viewNextStepsPage.goPrevItem}" immediate="true">
+     	<h:commandLink id="prevItem" actionListener="#{viewNextStepsPage.goPrevItem}" immediate="true">
 			<h:outputText id="prevItemMsg"  value="#{msgs.view_navigate_ws_prev}"/>	
 			 <f:param name="prevmodid" value="#{viewNextStepsPage.prevModId}" />
 			 <f:param name="prevsecid" value="#{viewNextStepsPage.prevSecId}" />
@@ -45,7 +45,7 @@
 				<h:outputText id="seperatorMsg2" value=" | "/>	
 		</h:column>
 	<h:column>
-     <h:commandLink id="nextMod" action="#{viewNextStepsPage.goNextModule}" immediate="true" rendered="#{(viewNextStepsPage.moduleSeqNo < viewNextStepsPage.nextSeqNo)&&(meleteSiteAndUserInfo.navigateCM == null)}">
+     <h:commandLink id="nextMod" actionListener="#{viewNextStepsPage.goNextModule}" immediate="true" rendered="#{(viewNextStepsPage.moduleSeqNo < viewNextStepsPage.nextSeqNo)&&(meleteSiteAndUserInfo.navigateCM == null)}">
 			<h:outputText  id="nextItemMsg" value="#{msgs.view_navigate_ws_next}"/>	
 			 <f:param name="modseqno" value="#{viewNextStepsPage.nextSeqNo}" />
      	</h:commandLink>

@@ -186,7 +186,7 @@ public class NavPage implements Serializable
 			ValueBinding binding = Util.getBinding("#{manageModulesPage}");
 			ManageModulesPage mPage = (ManageModulesPage) binding.getValue(ctx);
 			mPage.resetValues();
-			return "modules_author_manage";
+			return "manage_content";
 		}
 		else
 			return goToPage;
@@ -307,6 +307,12 @@ public class NavPage implements Serializable
 			ValueBinding binding = Util.getBinding("#{addModulePage}");
 			AddModulePage aPage = (AddModulePage) binding.getValue(ctx);
 			return aPage.autoSave();
+		}
+		else if ("listAuth".equals(callFrom))
+		{
+			ValueBinding binding = Util.getBinding("#{listAuthModulesPage}");
+			ListAuthModulesPage lamPage = (ListAuthModulesPage) binding.getValue(ctx);
+			return lamPage.saveChanges();
 		}
 		threadLocalManager.set("MELETE_SAVE_FROM", "");
 		return "#";

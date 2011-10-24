@@ -176,12 +176,12 @@ public class SectionServiceImpl implements Serializable, SectionService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void editSection(SectionObjService section) throws Exception
+	public void editSection(SectionObjService section, String userId) throws Exception
 	{
 		try
 		{
 			// edit Section
-			sectiondb.editSection((Section) section);
+			sectiondb.editSection((Section) section, userId);
 		}
 		catch (MeleteException mex)
 		{
@@ -196,12 +196,12 @@ public class SectionServiceImpl implements Serializable, SectionService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void editSection(SectionObjService section, MeleteResourceService melResource) throws MeleteException
+	public void editSection(SectionObjService section, MeleteResourceService melResource, String userId, Boolean modifyCR) throws MeleteException
 	{
 		try
 		{
 			// edit Section
-			sectiondb.editSection((Section) section, (MeleteResource) melResource);
+			sectiondb.editSection((Section) section, (MeleteResource) melResource, userId, modifyCR);
 		}
 		catch (MeleteException mex)
 		{
@@ -209,6 +209,7 @@ public class SectionServiceImpl implements Serializable, SectionService
 		}
 		catch (Exception ex)
 		{
+			ex.printStackTrace();
 			throw new MeleteException("add_section_fail");
 		}
 	}

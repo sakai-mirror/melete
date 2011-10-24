@@ -584,12 +584,12 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public void restoreModules(List modules, String courseId) throws Exception
+	public void restoreModules(List modules, String courseId, String userId) throws Exception
 	{
 
 		try
 		{
-			moduledb.restoreModules(modules, courseId);
+			moduledb.restoreModules(modules, courseId, userId);
 		}
 		catch (Exception ex)
 		{
@@ -674,51 +674,39 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public void updateModuleDates(ModuleShdatesService modShdates, String courseId) throws Exception
+	public void updateModuleDates(ModuleShdatesService modShdates, String courseId, String userId) throws Exception
 	{
-		moduledb.updateModuleShdates((ModuleShdates) modShdates);
 		try
 		{
-			if (modShdates.getAddtoSchedule() != null)
-			{
-				moduledb.updateCalendar((Module) modShdates.getModule(), (ModuleShdates)modShdates, courseId);
-			}
+			ModuleDateBean mdbean = new ModuleDateBean();
+			mdbean.setModuleId(modShdates.getModule().getModuleId());
+			mdbean.setModule(modShdates.getModule());
+			mdbean.setModuleShdate(modShdates);
+			ArrayList<ModuleDateBean> mdbeanList = new ArrayList<ModuleDateBean>();
+			mdbeanList.add(mdbean);
+			moduledb.updateModuleDateBeans(mdbeanList, courseId, userId);
 		}
 		catch (Exception ex)
 		{
-			logger.debug("Exception thrown while updating calendar tool tables");
+			logger.debug("Exception thrown while updating module dates and calendar tool tables");
+			ex.printStackTrace();
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void updateProperties(List<? extends ModuleDateBeanService> moduleDateBeans, String courseId) throws MeleteException
+	public void updateProperties(List<? extends ModuleDateBeanService> moduleDateBeans, String courseId, String userId) throws MeleteException
 	{
 		try
 		{
-			moduledb.updateModuleDateBeans(moduleDateBeans);
+			moduledb.updateModuleDateBeans(moduleDateBeans, courseId, userId);
 		}
 		catch (Exception ex)
 		{
 			logger.debug("multiple user exception in module business");
 			throw new MeleteException("edit_module_multiple_users");
-		}
-		for (ListIterator<?> i = moduleDateBeans.listIterator(); i.hasNext();)
-		{
-			ModuleDateBean mdbean = (ModuleDateBean) i.next();
-			try
-			{
-				if (((ModuleShdates) mdbean.getModuleShdate()).getAddtoSchedule() != null)
-				{
-					moduledb.updateCalendar((Module) mdbean.getModule(), (ModuleShdates) mdbean.getModuleShdate(), courseId);
-				}
-			}
-			catch (Exception ex)
-			{
-				logger.debug("Exception thrown while updating calendar tool tables");
-			}
-		}
+		}		
 	}
 
 	/**
@@ -770,4 +758,18 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 		return true;
 	}
 
+	/**
+	 *  {@inheritDoc}
+	 */
+	public void updateModuleNextSteps(Integer moduleId, String nextSteps) throws Exception
+	{
+		try
+		{
+			moduledb.updateModuleNextSteps(moduleId, nextSteps);
+		}
+		catch (Exception ex)
+		{
+			throw new MeleteException("edit_module_next_steps");
+		}	
+	}
 }

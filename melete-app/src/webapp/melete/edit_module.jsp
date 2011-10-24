@@ -27,6 +27,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: Edit Module" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -44,54 +45,10 @@
 <script language="javascript">
 function newWindow(newContent){
   winContent = window.open(newContent, 'nextWin', 'right=0, top=20,width=750,height=600, toolbar=no,scrollbars=yes, resizable=no') }
-function showSdateCal()
-{
-  var string2 = "EditModuleForm:startDate";
-  //alert(string2);
-
-  // var dt = new Date(document.getElementById(string2).value);
-  var string2val = document.getElementById(string2).value;
-  var dt;
-    if((null == string2val) || (string2val.length == 0)) dt = new Date();
-  else dt = new Date(document.getElementById(string2).value);
-  
-   if (!isNaN(dt))
-  { 
-    var cal2 = new calendar2(document.getElementById(string2));
-    cal2.popup();
-    document.getElementById(string2).select();
-  }
-  else
-  {
-    alert('<%=mensaje%>');
-     document.getElementById(string2).select();
-  }
-}
-function showEdateCal()
-{
-  var string2 = "EditModuleForm:endDate";
-  //alert(string2);
- // var dt = new Date(document.getElementById(string2).value);
-  var string2val = document.getElementById(string2).value;
-  var dt;
-    if((null == string2val) || (string2val.length == 0)) dt = new Date();
-  else dt = new Date(document.getElementById(string2).value);
-  
-   if (!isNaN(dt))
-  { 
-    var cal2 = new calendar2(document.getElementById(string2));
-    cal2.popup();
-    document.getElementById(string2).select();
-  }
-  else
-  {
-    alert('<%=mensaje%>');
-     document.getElementById(string2).select();
-  }
-} 
 </script>
-
+<t:saveState id="empfirsec" value="#{editModulePage.firstSection}" />
  <h:form id="EditModuleForm">
+ <h:inputHidden id="modid" value="#{editModulePage.module.moduleId}"/>
  	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/>
 	</f:subview>
@@ -108,83 +65,81 @@ function showEdateCal()
 					<h:commandLink id="TOCButton"  action="#{editModulePage.gotoTOC}">
 						<h:outputText id="toc" value="#{msgs.edit_module_TOC}" />
 					</h:commandLink> &raquo;  <h:outputText value="#{editModulePage.module.title}" /> &raquo;
-					<h:commandLink id="editFirstSection" action="#{editModulePage.editSection}" rendered="#{editModulePage.hasSections}">
+					<h:commandLink id="editFirstSection" actionListener="#{editModulePage.editSection}" rendered="#{editModulePage.hasSections}">						
 					     <h:outputText id="editSectionText" value="#{msgs.edit_module_edit_sections}"/>				     
 					 </h:commandLink> 	
 					<h:outputText id="editSectionText_1" value=" / " rendered="#{editModulePage.hasSections}" />
-				  	<h:commandLink id="addSection" action="#{editModulePage.addContentSections}">
+				  	<h:commandLink id="addSection" actionListener="#{editModulePage.addContentSections}">
 					   <h:outputText id="addSectionText" value="#{msgs.edit_module_add_content_sections}"/>
 				  </h:commandLink> 				  
 			 	</td>
 	  		 </tr>
               <tr>
-                <td  class="col1" align="left" valign="top"> <h:outputText value="#{msgs.edit_module_created_by}" /> </td>
-                <td   class="col2" align="left" valign="top">
-					<h:outputText value="#{editModulePage.module.createdByFname}"></h:outputText>&nbsp;<h:outputText value="#{editModulePage.module.createdByLname}"></h:outputText>&nbsp;&nbsp;
-					<h:outputText value="#{editModulePage.module.creationDate}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm:ss a"/></h:outputText>
-				</td>
-              </tr>
-              <tr>
-                <td   class="col1" align="left" valign="top"> <h:outputText value="#{msgs.edit_module_modified_by}" /> </td>
-                <td  class="col2" align="left" valign="top">
-					<h:outputText value="#{editModulePage.module.modifiedByFname}"></h:outputText>&nbsp;<h:outputText value="#{editModulePage.module.modifiedByLname}"></h:outputText>&nbsp;&nbsp;
-					<h:outputText value="#{editModulePage.module.modificationDate}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm:ss a"/></h:outputText>
-					</br> 
-				</td>
-              </tr>       
-              <tr>
                 <td  class="col1" align="left" valign="top"> <h:outputText value="#{msgs.edit_module_module_title}" /> <span class="required">*</span>  </td>
                 <td  class="col2" align="left" valign="top">  
-						<h:inputText id="title" size="45" value="#{editModulePage.module.title}" required="true" styleClass="formtext" />											
+						<h:inputText id="title" size="45" value="#{editModulePage.module.title}" styleClass="formtext" required="true" validator="#{editModulePage.validateField}"/>											
 				</td>
               </tr>
              
               <tr>
                 <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.edit_module_descr_over_object}" /> </td>
                 <td  class="col2" align="left" valign="top">
-				<h:inputTextarea id="description" cols="45" rows="5" value="#{editModulePage.module.description}" styleClass="formtext">
-					<f:validateLength maximum="500" minimum="1"/>
-				</h:inputTextarea>	
+				<h:inputTextarea id="description" cols="45" rows="5" value="#{editModulePage.module.description}" styleClass="formtext" validator="#{editModulePage.validateField}" />
+		
 				</td>
               </tr>
               <tr>
                 <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.edit_module_keywords}" />  
                 </td>
                 <td  class="col2" align="left" valign="top">
-				<h:inputTextarea id="keywords" cols="45" rows="3" value="#{editModulePage.module.keywords}" styleClass="formtext">
-						<f:validateLength maximum="250" minimum="1" />
-				</h:inputTextarea>		
+				<h:inputTextarea id="keywords" cols="45" rows="3" value="#{editModulePage.module.keywords}" styleClass="formtext" validator="#{editModulePage.validateField}" />
+							
 				</td>
               </tr>
-       	 	   <tr>
-                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.edit_module_term_year}" /></td>
-               <td  class="col2" align="left" valign="top">
-					<h:outputText id="season" value="#{editModulePage.season}"/>
-				  	 <h:outputText id="year" value="#{editModulePage.year}" />
-				   </td>
-              </tr>
-			  <tr>
+       	 	  <tr>
                 <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.edit_module_start_date}" /></td>
                 <td  class="col2" align="left" valign="top">					
 					  <a name="startCalender"></a><h:inputText id="startDate" 
-                           value="#{editModulePage.moduleShdates.startDate}" size="22" styleClass="formtext">
+                           value="#{editModulePage.moduleShdates.startDate}" size="22" styleClass="formtext" onchange="showInvalid('EditModuleForm:startDate','EditModuleForm:err_gifst');">
 		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
         		    </h:inputText>
-		            <h:outputLink id="viewsdateCal" onclick="showSdateCal()" value="#startCalender">
+		            <h:outputLink id="viewsdateCal" onclick="showSdateCal('EditModuleForm:startDate')" value="#startCalender">
         	    		<h:graphicImage id="sdateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            			</h:outputLink>
+           			<h:graphicImage id="err_gifst" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}"  style="visibility:hidden;" onclick="showHideTable('EditModuleForm:invalidMsgSt0','true')"  styleClass="ExpClass"/>
+	          	    <h:panelGroup id="invalidMsgSt0" style="position:relative;z-index:1;visibility:hidden;display:none;" >
+			        <h:panelGrid id="invalidMsgSt" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="250px" styleClass="invalidAlertSmall" >   
+				      <h:column>
+				  	  <h:outputText value="#{msgs.invalid_msg4}"  />  
+				      </h:column>
+				      <h:column>
+					  <h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('EditModuleForm:invalidMsgSt0','false')" />
+				      </h:column>
+			        </h:panelGrid>
+			        </h:panelGroup>	
 					 </td>
               </tr>
 			  <tr>
                 <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.edit_module_end_date}" /></td>
                 <td  class="col2" align="left" valign="top">
 					 <a name="endCalender"></a> <h:inputText id="endDate" 
-                           value="#{editModulePage.moduleShdates.endDate}"  size="22" styleClass="formtext">
+                           value="#{editModulePage.moduleShdates.endDate}"  size="22" styleClass="formtext" onchange="showInvalid('EditModuleForm:endDate','EditModuleForm:err_gifen');">
                <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
             </h:inputText>
-          <h:outputLink id="viewedateCal" onclick="showEdateCal()" value="#endCalender">
+          <h:outputLink id="viewedateCal" onclick="showEdateCal('EditModuleForm:endDate')" value="#endCalender">
             <h:graphicImage id="edateCal"  value="/images/date.png"  alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            </h:outputLink>
+           <h:graphicImage id="err_gifen" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('EditModuleForm:invalidMsgEn0','true')"  styleClass="ExpClass"/>
+	             <h:panelGroup id="invalidMsgEn0" style="position:relative;z-index:1;visibility:hidden;display:none;">
+			     <h:panelGrid id="invalidMsgEn" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="250px" styleClass="invalidAlertSmall" >   
+				 <h:column>
+				  	<h:outputText value="#{msgs.invalid_msg5}"  />  
+				 </h:column>
+				 <h:column>
+					<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('EditModuleForm:invalidMsgEn0','false')" />
+				 </h:column>
+			     </h:panelGrid>
+			     </h:panelGroup>	           
 					 </td>
               </tr>
               <tr>
@@ -200,13 +155,29 @@ function showEdateCal()
  	<div class="actionBar" align="left">
  	  <h:commandButton id="returnButton"  action="#{editModulePage.goDone}" value="#{msgs.im_done}" tabindex="" accesskey="#{msgs.done_access}" title="#{msgs.im_done_text}" styleClass="BottomImgReturn" />
   	  <h:commandButton id="submitsave" action="#{editModulePage.save}" value="#{msgs.im_save}" tabindex="" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
-  	  <h:commandButton id="sectionButton" action="#{editModulePage.addContentSections}" value="#{msgs.im_add_content_sections}" tabindex="" accesskey="#{msgs.add_access}" title="#{msgs.im_add_content_sections_text}" styleClass="BottomImgAdd"/>
+  	  <h:commandButton id="sectionButton" actionListener="#{editModulePage.addContentSections}" value="#{msgs.im_add_content_sections}" tabindex="" accesskey="#{msgs.add_access}" title="#{msgs.im_add_content_sections_text}" styleClass="BottomImgAdd"/>
   	  <h:commandButton id="cancelButton" action="#{editModulePage.cancel}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
   	</div>
    </td>
   </tr>
 </table>
-<p><span class="required">*</span>&nbsp; <h:outputText value="#{msgs.edit_module_required}" /> </p>
+<table class="maintableCollapseWithNoBorder">
+	<tr>
+		<td rowspan="2" class="left">
+			<span class="required">*</span>&nbsp; <h:outputText value="#{msgs.edit_module_required}" />
+		</td>
+		<td align="right" class="footnoteDates">
+			<h:outputText value="#{msgs.edit_module_created_by}"/> <h:outputText value="#{editModulePage.module.createdByFname}"/>&nbsp;<h:outputText value="#{editModulePage.module.createdByLname}"/><h:outputText value=","/>&nbsp;
+			<h:outputText value="#{editModulePage.module.creationDate}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
+		</td>
+	</tr>
+	<tr>
+		<td align="right" class="footnoteDates">
+			<h:outputText value="#{msgs.edit_module_modified_by}"/> <h:outputText value="#{editModulePage.module.modifiedByFname}"/>&nbsp;<h:outputText value="#{editModulePage.module.modifiedByLname}"/><h:outputText value=","/>&nbsp;
+			<h:outputText value="#{editModulePage.module.modificationDate}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
+		</td>
+	</tr>
+</table>
   </h:form>
 </sakai:view>
 </f:view>

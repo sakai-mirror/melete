@@ -95,7 +95,7 @@ function resetCheck()
 			  							 <h:outputText id="t1" value="#{msgs.restore_modules_select_modules}" />
 			  							 </h:panelGroup>         
 										 </f:facet>
-											<h:selectBooleanCheckbox id="modCheck" onclick="resetCheck()" value="" valueChangeListener="#{manageModulesPage.selectedRestoreModule}"/>
+											<h:selectBooleanCheckbox id="modCheck" title="#{aml.module.moduleIdStr}" onclick="resetCheck()"  value="" valueChangeListener="#{manageModulesPage.selectedRestoreModule}"/>
 					 						<h:outputText id="modname" value="#{aml.module.title}"/>
 										</h:column>
 										<h:column>

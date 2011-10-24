@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!--
  ***********************************************************************************
  * $URL$
@@ -25,10 +26,20 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: Select Resource Item" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
+<script type="text/javascript" language="javascript1.2">
+
+function fillTitle()
+{
+	var u = document.getElementById("EditServerViewForm:link").value;
+	document.getElementById("EditServerViewForm:link_title").value = u;
+}
+
+</script>
 
 <h:form id="EditServerViewForm" enctype="multipart/form-data">	
 	<!-- top nav bar -->
@@ -37,51 +48,60 @@
 	</f:subview>
 	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/replace2.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.editcontentlinkserverview_selecting}"/></div>
 	
+	<t:saveState id="newlinkUrl" value="#{listResourcesPage.newLinkUrl}" />
+	<t:saveState id="newURLTitle" value="#{listResourcesPage.newURLTitle}" />
+	<t:saveState id="openWindow" value="#{listResourcesPage.openWindow}" />
+	<t:saveState id="fromPage" value="#{listResourcesPage.fromPage}" />
+	<t:saveState id="sectionId" value="#{listResourcesPage.sectionId}" />
+	
 <!-- This Begins the Main Text Area -->
 	<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 	<p><h:outputText id="Stext_2" value="#{msgs.editcontentlinkserverview_msg1}"/></p>
-        		<table class="maintableCollapseWithBorder">
-					<tr><td>
-  
-<!--replace with new link part Begin -->
-					<table class="maintableCollapseWithBorder" >
-					<tr><td height="20" colspan="2" class="maintabledata8"> <h:outputText id="Stext_add" value="#{msgs.editcontentlinkserverview_replace}" styleClass="bold"/> 									 
-					 <tr><td height="20" colspan="2"> 
-														<h:outputText id="editlinkText6" value="#{msgs.editcontentlinkserverview_provide}" />
-														<h:outputText id="editlinkText7" value=" " styleClass="ExtraPaddingClass"/>
-														 <h:inputText id="link" value="#{editSectionPage.linkUrl}" size="40" /> 	
-					</td></tr>	
-					<tr><td height="20" colspan="2"> 
-														<h:outputText id="editlinkText_6" value="#{msgs.resources_proper_pan_URL}" /> <h:outputText value="*" styleClass="required"/>
-			 											<h:outputText id="editlinkText_7" value=" " styleClass="ExtraPaddingClass"/>
-			 											<h:outputText id="editlinkText_7_1" value=" " styleClass="ExtraPaddingClass"/>
-														 <h:inputText id="link_title" value="#{editSectionPage.newURLTitle}" size="40" /> 	
-					</td></tr>	
-					<tr><td height="20" colspan="2"> 
-														<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{editSectionPage.section.openWindow}">
-														 </h:selectBooleanCheckbox>
-														 <h:outputText id="editlinkText_8" value="#{msgs.editcontentlinkserverview_openwindow}" />
-									                   					
-					</td></tr>
-					</table> 
-					<div class="actionBar" align="left">
-		          		<h:commandButton id="addButton_1" action="#{editSectionPage.setServerUrl}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
-		         	 	<h:commandButton id="cancelButton_1" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>													
-					 </div>	
-				 </td></tr>       
+	<!--replace with new link part Begin -->
+	<table class="maintableCollapseWithBorder">
+		<tr><td>
+			<table class="maintableCollapseWithBorder" >
+				<tr><td height="20" colspan="2" class="maintabledata8"> <h:outputText id="Stext_add" value="#{msgs.editcontentlinkserverview_replace}" styleClass="bold"/> 									 
+				 <tr><td height="20" colspan="2"> 
+													<h:outputText id="editlinkText6" value="#{msgs.editcontentlinkserverview_provide}" />
+													<h:outputText id="editlinkText7" value=" " styleClass="ExtraPaddingClass"/>
+													 <h:inputText id="link" value="#{listResourcesPage.newLinkUrl}" size="40" onchange="fillTitle()" /> 	
+				</td></tr>	
+				<tr><td height="20" colspan="2"> 
+													<h:outputText id="editlinkText_6" value="#{msgs.resources_proper_pan_URL}" /> <h:outputText value="*" styleClass="required"/>
+		 											<h:outputText id="editlinkText_7" value=" " styleClass="ExtraPaddingClass"/>
+		 											<h:outputText id="editlinkText_7_1" value=" " styleClass="ExtraPaddingClass"/>
+													 <h:inputText id="link_title" value="#{listResourcesPage.newURLTitle}" size="40" /> 	
+				</td></tr>	
+				<tr><td height="20" colspan="2"> 
+												<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{listResourcesPage.openWindow}">
+												 </h:selectBooleanCheckbox>
+													 <h:outputText id="editlinkText_8" value="#{msgs.editcontentlinkserverview_openwindow}" />
+							                   					
+				</td></tr>
+				</table> 
 
-	<!-- new link end -->				            		
-	<!-- start main -->
-	            <tr>
-	              <td width="100%" valign="top">
-				
-					<f:subview id="LinkResourceListingForm" >	
-						<jsp:include page="list_resources.jsp"/> 
-					</f:subview>	
-					<div class="actionBar" align="left">
-						<h:commandButton id="addButton" action="#{editSectionPage.setServerUrl}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
-     	 				<h:commandButton id="cancelButton" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>				
-					</div>									
+		 	<div class="actionBar" align="left">
+		          		<h:commandButton id="addButton" actionListener="#{listResourcesPage.addNewUrl}" value="#{msgs.im_continue}" action="#{listResourcesPage.setServerFile}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue">
+		          				<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />		          			
+					    </h:commandButton>    
+					      		
+		          	 	<h:commandButton id="cancelButton" immediate="true" value="#{msgs.im_cancel}" actionListener="#{listResourcesPage.cancelServerFile}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
+		          	 			<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />			          				
+		          	 	</h:commandButton>
+        			 </div>
+					 </td></tr>        
+		   
+		<!-- replace local end -->			            
+				<!-- start main -->
+						            <tr>
+						              <td width="100%" valign="top">
+						          								                    													
+											<f:subview id="LinkResourceListingForm" >	
+												<jsp:include page="list_resources.jsp"/> 
+											</f:subview>
+																																												
+															
 			  </td>
             </tr>
             </table>					

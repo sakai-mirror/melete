@@ -23,53 +23,48 @@
  **********************************************************************************/
 package org.etudes.tool.melete;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.etudes.component.app.melete.*;
-import org.etudes.api.app.melete.*;
-
-import javax.faces.application.Application;
-import javax.faces.component.html.*;
-import javax.faces.component.*;
-
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
-
 import java.util.Properties;
 
-import java.io.*;
-
-import javax.faces.context.FacesContext;
+import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIParameter;
+import javax.faces.component.html.HtmlCommandLink;
+import javax.faces.component.html.HtmlOutputText;
+import javax.faces.component.html.HtmlPanelGroup;
+import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 
-//import com.sun.faces.util.Util;
-import org.etudes.api.app.melete.ModuleService;
-import org.etudes.api.app.melete.SectionService; //import org.sakaiproject.jsf.ToolBean;
-import org.etudes.api.app.melete.SectionTrackViewObjService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.MeleteCHService;
-
+import org.etudes.api.app.melete.MeleteSecurityService;
+import org.etudes.api.app.melete.ModuleObjService;
+import org.etudes.api.app.melete.ModuleService;
+import org.etudes.api.app.melete.SectionObjService;
+import org.etudes.api.app.melete.SectionResourceService;
+import org.etudes.api.app.melete.SectionService;
+import org.etudes.api.app.melete.SectionTrackViewObjService;
+import org.etudes.simpleti.SakaiSimpleLTI;
+import org.etudes.util.HtmlHelper;
+import org.imsglobal.simplelti.SimpleLTIUtil;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
-import org.sakaiproject.util.ResourceLoader;
-
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.tool.cover.ToolManager;
-import org.etudes.simpleti.SakaiSimpleLTI;
-import org.imsglobal.simplelti.SimpleLTIUtil;
-
+import org.sakaiproject.util.ResourceLoader;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.etudes.util.HtmlHelper;
 
 public class ViewSectionsPage implements Serializable
 {
 
 	public ModuleObjService module;
-	public HtmlPanelGroup secpgroup;
 	public SectionObjService section;
 	private Boolean autonumber;
 	// added to reduce queries
@@ -97,7 +92,6 @@ public class ViewSectionsPage implements Serializable
 
 	private SectionService sectionService;
 
-	private String sectionTrack;
 	private String sectionTrackDateStr;
 	private org.w3c.dom.Document subSectionW3CDom;
 	private String typeEditor;
@@ -400,16 +394,7 @@ public class ViewSectionsPage implements Serializable
 		return prevSecId;
 	}
 
-	/**
-	 * Get section breadcrumbs
-	 * 
-	 * @return secpgroup html panel group
-	 */
-	public HtmlPanelGroup getSecpgroup()
-	{
-		return null;
-	}
-
+	
 	/**
 	 * Returns section and sets display sequence of section
 	 * 
@@ -486,19 +471,22 @@ public class ViewSectionsPage implements Serializable
 	 */
 	public String getSectionTrackDateStr()
 	{
-		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
-		SectionTrackViewObjService stv = getSectionService().insertSectionTrack(this.sectionId, mPage.getCurrentUser().getId());
-
-		if (stv != null)
+		if (this.sectionId != 0)
 		{
-			Date viewDate = stv.getViewDate();
-			if (viewDate != null)
+			FacesContext context = FacesContext.getCurrentInstance();
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+			SectionTrackViewObjService stv = getSectionService().insertSectionTrack(this.sectionId, mPage.getCurrentUser().getId());
+
+			if (stv != null)
 			{
-				DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
-				ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-				return " (" + bundle.getString("view_section_lastviewed") + " " + df.format(viewDate) + ")";
+				Date viewDate = stv.getViewDate();
+				if (viewDate != null)
+				{
+					DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
+					ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+					return " (" + bundle.getString("view_section_lastviewed") + " " + df.format(viewDate) + ")";
+				}
 			}
 		}
 		return "";
@@ -539,31 +527,39 @@ public class ViewSectionsPage implements Serializable
 	/**
 	 * Go to the current module(module that this section belongs to) page
 	 * 
-	 * @return view_module page
+	 * 
 	 */
-	public String goCurrentModule()
+	public void goCurrentModule(ActionEvent evt)
 	{
 		int currModuleId = this.moduleId;
 		resetValues();
 		FacesContext context = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{viewModulesPage}");
-		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
+		/*ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
 		vmPage.setViewMbean(null);
 		vmPage.setPrevMbean(null);
 		vmPage.setModuleId(currModuleId);
 		vmPage.setModuleSeqNo(0);
 		vmPage.setPrintable(null);
 		vmPage.setAutonumber(null);
-
-		return "view_module";
+		vmPage.getViewMbean();*/
+		try
+		{
+			context.getExternalContext().redirect("view_module.jsf?modId="+currModuleId);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
+		return ;
 	}
 
 	/**
 	 * Go to next module page
 	 * 
-	 * @return view_module page
+	 * 
 	 */
-	public String goNextModule()
+	public void goNextModule(ActionEvent evt)
 	{
 		resetValues();
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -572,28 +568,36 @@ public class ViewSectionsPage implements Serializable
 		String modSeqNoStr = (String) context.getExternalContext().getRequestParameterMap().get("modseqno");
 		if ((modSeqNoStr == null) || (modSeqNoStr.length() == 0)) modSeqNoStr = "0";
 		this.module = null;
-		ValueBinding binding = Util.getBinding("#{viewModulesPage}");
-		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
+		/*ValueBinding binding = Util.getBinding("#{viewModulesPage}");
+		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);*/
 
 		/*
 		 * if (nextMdBean != null) { vmPage.setModuleId(nextMdBean.getModuleId()); }
 		 */
-		vmPage.setViewMbean(null);
+		/*vmPage.setViewMbean(null);
 		vmPage.setPrevMbean(null);
 		vmPage.setModuleId(0);
 		vmPage.setModuleSeqNo(this.nextSeqNo);
 		vmPage.setPrintable(null);
 		vmPage.setAutonumber(null);
-
-		return "view_module";
+		vmPage.getViewMbean();*/
+		try
+		{
+			context.getExternalContext().redirect("view_module.jsf?modSeqNo="+this.nextSeqNo);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
+		return;
 	}
 
 	/**
 	 * Go to previous module
 	 * 
-	 * @return view_module page
+	 * 
 	 */
-	public String goPrevModule()
+	public void goPrevModule(ActionEvent evt)
 	{
 		resetValues();
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -608,7 +612,7 @@ public class ViewSectionsPage implements Serializable
 			}
 		}
 		this.module = null;
-		ValueBinding binding = Util.getBinding("#{viewModulesPage}");
+		/*ValueBinding binding = Util.getBinding("#{viewModulesPage}");
 		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(context);
 		vmPage.setModuleId(this.moduleId);
 		vmPage.setPrintable(null);
@@ -616,22 +620,33 @@ public class ViewSectionsPage implements Serializable
 		vmPage.setViewMbean(null);
 		vmPage.setPrevMbean(null);
 		vmPage.setModuleSeqNo(this.moduleSeqNo);
-
-		return "view_module";
+		vmPage.getViewMbean();*/
+		try
+		{
+			context.getExternalContext().redirect("view_module.jsf?modId="+this.moduleId+"&modSeqNo="+this.moduleSeqNo);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
+		
+		return;
 	}
 
 	/**
 	 * Go to previous or next section
 	 * 
-	 * @return view_section page
+	 * 
 	 */
-	public String goPrevNext()
+	public void goPrevNext(ActionEvent evt)
 	{
 		resetValues();
 		FacesContext context = FacesContext.getCurrentInstance();
 		this.section = null;
 		String moduleIdStr = (String) context.getExternalContext().getRequestParameterMap().get("modid");
 		String sectionIdStr = (String) context.getExternalContext().getRequestParameterMap().get("secid");
+		String modSeqNoStr = (String) context.getExternalContext().getRequestParameterMap().get("modseqno");
+		
 		if (moduleIdStr != null)
 		{
 			if (moduleIdStr.trim().length() > 0)
@@ -646,8 +661,23 @@ public class ViewSectionsPage implements Serializable
 				setSectionId(new Integer(sectionIdStr).intValue());
 			}
 		}
+		if (modSeqNoStr != null)
+		{
+			if (modSeqNoStr.trim().length() > 0)
+			{
+				setModuleSeqNo(new Integer(modSeqNoStr).intValue());
+			}
+		}
 		this.module = null;
-		return "view_section";
+		
+		try
+		{
+			context.getExternalContext().redirect("view_section.jsf?moduleId="+moduleIdStr+"&sectionId="+sectionIdStr+"&moduleSeqNo="+modSeqNoStr);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**
@@ -655,7 +685,7 @@ public class ViewSectionsPage implements Serializable
 	 */
 	public String gotoAddBookmark()
 	{
-		return "add_bookmark";
+		return "view_section";
 	}
 
 	/**
@@ -680,34 +710,40 @@ public class ViewSectionsPage implements Serializable
 	/**
 	 * @return list_bookmarks page
 	 */
-	public String gotoMyBookmarks()
+	/*public String gotoMyBookmarks()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{bookmarkPage}");
 		BookmarkPage bPage = (BookmarkPage) binding.getValue(context);
-
-		return bPage.gotoMyBookmarks("view_section", this.moduleId);
-	}
-
+		return bPage.gotoMyBookmarks("view_section", this.moduleId, new Integer(this.sectionId).toString());
+	}*/
+	
 	/**
-	 * @return view_whats_next page
+	 * Redirect to view_whats_next page
+	 * 
 	 */
-	public String goWhatsNext()
+	public void goWhatsNext(ActionEvent evt)
 	{
 		resetValues();
 		FacesContext context = FacesContext.getCurrentInstance();
 		int currSeqNo = new Integer(((String) context.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue();
 
-		ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
+		/*ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
 		ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(context);
 		vnPage.setPrevSecId(this.sectionId);
 		vnPage.setPrevModId(this.moduleId);
 		vnPage.setNextSeqNo(this.nextSeqNo);
 		vnPage.setModuleSeqNo(this.moduleSeqNo);
-		vnPage.setModule(null);
+		vnPage.setModule(null);*/
 		// vnPage.setModule(this.module);
-
-		return "view_whats_next";
+		try
+		{
+			context.getExternalContext().redirect("view_whats_next.jsf?nextSeqNo="+this.nextSeqNo+"&moduleSeqNo="+this.moduleSeqNo+"&prevSecId="+this.sectionId+"&prevModId="+this.moduleId);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**
@@ -827,6 +863,16 @@ public class ViewSectionsPage implements Serializable
 		this.moduleId = moduleId;
 	}
 
+	public void setPrevSecId(int prevSecId)
+	{
+		this.prevSecId = prevSecId;
+	}
+
+	public void setNextSecId(int nextSecId)
+	{
+		this.nextSecId = nextSecId;
+	}
+
 	/**
 	 * @param moduleSeqNo
 	 *        module sequence number
@@ -834,6 +880,11 @@ public class ViewSectionsPage implements Serializable
 	public void setModuleSeqNo(int moduleSeqNo)
 	{
 		this.moduleSeqNo = moduleSeqNo;
+	}
+	
+	public void setNextSeqNo(int nextSeqNo)
+	{
+		this.nextSeqNo = nextSeqNo;
 	}
 
 	/**
@@ -843,69 +894,6 @@ public class ViewSectionsPage implements Serializable
 	public void setModuleService(ModuleService moduleService)
 	{
 		this.moduleService = moduleService;
-	}
-
-	/**
-	 * Creates breadcrumbs for this section in the format module title>>section title
-	 * 
-	 * @param secpgroup
-	 *        html panel group to populate
-	 */
-	public void setSecpgroup(HtmlPanelGroup secpgroup)
-	{
-		FacesContext context = FacesContext.getCurrentInstance();
-		Application app = context.getApplication();
-
-		List list = secpgroup.getChildren();
-		list.clear();
-
-		// 1. add module as commandlink and it takes to view module page
-		Class[] param = new Class[1];
-		HtmlCommandLink modLink = new HtmlCommandLink();
-		param[0] = new ActionEvent(modLink).getClass();
-		modLink.setId("modSeclink");
-		modLink.setActionListener(app.createMethodBinding("#{viewModulesPage.viewModule}", param));
-		modLink.setAction(app.createMethodBinding("#{viewModulesPage.redirectToViewModule}", null));
-		// 1a . add outputtext to display module title
-		HtmlOutputText outModule = new HtmlOutputText();
-		outModule.setId("modtext");
-		if (this.module == null) getModule();
-		if (this.module != null)
-		{
-			outModule.setValue(this.module.getTitle());
-		}
-		// 1b. param to set module id
-		UIParameter modidParam = new UIParameter();
-		modidParam.setName("modid");
-		if (this.module != null)
-		{
-			modidParam.setValue(this.module.getModuleId());
-		}
-		modLink.getChildren().add(outModule);
-		modLink.getChildren().add(modidParam);
-		list.add(modLink);
-
-		// 2. add >>
-		HtmlOutputText seperatorText = new HtmlOutputText();
-		seperatorText.setId("sep1");
-		seperatorText.setTitle(" " + (char) 187 + " ");
-		seperatorText.setValue(" " + (char) 187 + " ");
-		list.add(seperatorText);
-
-		// note: when subsections are in place then find all parents of subsection
-		// and in a while or for loop create commandlink with action/action listener as viewSection
-
-		// 3. add current section title
-		HtmlOutputText currSectionText = new HtmlOutputText();
-		currSectionText.setId("currsectext");
-		if (this.section == null) getSection();
-		if (this.section != null)
-		{
-			currSectionText.setValue(this.section.getTitle());
-		}
-		list.add(currSectionText);
-
-		this.secpgroup = secpgroup;
 	}
 
 	/**
@@ -945,15 +933,6 @@ public class ViewSectionsPage implements Serializable
 	public void setSectionService(SectionService sectionService)
 	{
 		this.sectionService = sectionService;
-	}
-
-	/**
-	 * @param sectionTrack
-	 *        section display sequence
-	 */
-	public void setSectionTrack(String sectionTrack)
-	{
-		this.sectionTrack = sectionTrack;
 	}
 
 	public void setSectionTrackDateStr(String sectionTrackDateStr)

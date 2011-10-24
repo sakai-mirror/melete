@@ -46,6 +46,8 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.user.api.User;
+import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.util.Validator;
 
 
@@ -505,7 +507,10 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			// create a set of toSite modules
 			toSiteModules = convertToImportModules(toModuleList);
 		}
-
+		User user = UserDirectoryService.getCurrentUser();
+		String firstName = user.getFirstName();
+		String lastName = user.getLastName();
+		
 		for (ListIterator<?> i = fromModuleList.listIterator(); i.hasNext();)
 		{
 			Module fromMod = (Module) i.next();
@@ -520,10 +525,9 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			}
 
 			// Copy module properties and insert, seqXml is null for now
-			Module toMod = new Module(fromMod.getTitle(), fromMod.getLearnObj(), fromMod.getDescription(), fromMod.getKeywords(), fromMod
-					.getCreatedByFname(), fromMod.getCreatedByLname(), fromMod.getUserId(), fromMod.getModifiedByFname(), fromMod
-					.getModifiedByLname(), fromMod.getInstitute(), fromMod.getWhatsNext(), fromMod.getCreationDate(), fromMod.getModificationDate(),
-					null);
+			Module toMod = new Module(fromMod.getTitle(), fromMod.getLearnObj(), fromMod.getDescription(), fromMod.getKeywords(), firstName,
+					lastName, user.getId(), firstName, lastName, fromMod.getInstitute(), fromMod.getWhatsNext(), new java.util.Date(),
+					new java.util.Date(), null);
 			ModuleShdates toModshdate = new ModuleShdates(((ModuleShdates) fromMod.getModuleshdate()).getStartDate(), ((ModuleShdates) fromMod
 					.getModuleshdate()).getEndDate(), fromMod.getModuleshdate().getAddtoSchedule());
 			if (fromMod.getCoursemodule().isArchvFlag() == false)
@@ -569,10 +573,9 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 						Map.Entry entry = (Map.Entry) keyValuePairs.next();
 						Section fromSec = (Section) entry.getValue();
 						fromSecId = fromSec.getSectionId().intValue();
-						Section toSec = new Section(fromSec.getTitle(), fromSec.getCreatedByFname(), fromSec.getCreatedByLname(), fromSec
-								.getModifiedByFname(), fromSec.getModifiedByLname(), fromSec.getInstr(), fromSec.getContentType(), fromSec
-								.isAudioContent(), fromSec.isVideoContent(), fromSec.isTextualContent(), fromSec.isOpenWindow(), fromSec
-								.isDeleteFlag(), fromSec.getCreationDate(), fromSec.getModificationDate());
+						Section toSec = new Section(fromSec.getTitle(), firstName, lastName, firstName, lastName, fromSec.getInstr(), fromSec
+								.getContentType(), fromSec.isAudioContent(), fromSec.isVideoContent(), fromSec.isTextualContent(), fromSec
+								.isOpenWindow(), fromSec.isDeleteFlag(), new java.util.Date(), new java.util.Date());
 						// logger.debug("copied section open window value" + toSec.getTitle()+"," + toSec.isOpenWindow() );
 						try
 						{

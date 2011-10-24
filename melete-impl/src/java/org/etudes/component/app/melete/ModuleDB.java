@@ -55,6 +55,7 @@ import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.MeleteSecurityService;
 import org.etudes.api.app.melete.ModuleDateBeanService;
 import org.etudes.api.app.melete.ModuleObjService;
+import org.etudes.api.app.melete.ModuleShdatesService;
 import org.etudes.api.app.melete.SectionBeanService;
 import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.ViewModBeanService;
@@ -81,6 +82,7 @@ import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.tool.cover.SessionManager;
+import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.util.ResourceLoader;
 
@@ -231,11 +233,18 @@ public class ModuleDB implements Serializable
 			{
 				module.setCreationDate(new java.util.Date());
 				module.setUserId(userId);
-				// module.setModificationDate(new java.util.Date());
-
+				module.setModificationDate(new java.util.Date());
+				User user = UserDirectoryService.getUser(userId);
+				module.setCreatedByFname(user.getFirstName());
+				module.setCreatedByLname(user.getLastName());
+				module.setModifiedByFname(user.getFirstName());
+				module.setModifiedByLname(user.getLastName());
 				// assign sequence number
 				int seq = assignSequenceNumber(session, courseId);
 
+				if (!moduleshowdates.isStartDateValid()) moduleshowdates.setStartDate(null);
+				if (!moduleshowdates.isEndDateValid()) moduleshowdates.setEndDate(null);
+				
 				moduleshowdates.setModule(module);
 
 				tx = session.beginTransaction();
@@ -263,8 +272,8 @@ public class ModuleDB implements Serializable
 				}
 				module.setCoursemodule(cms);
 
-				session.saveOrUpdate(module);
-
+				session.update(module);
+				session.flush();
 				tx.commit();
 				logger.debug("add module success" + module.getModuleId() + module.getCoursemodule().getCourseId());
 				return;
@@ -453,7 +462,10 @@ public class ModuleDB implements Serializable
 			SectionBeanService secBean = null;
 			try
 			{
-				String sectionsSeqXML = module.getSeqXml();
+				String queryString = "select module from Module as module where module.moduleId = :moduleId";
+				Module mod = (Module) session.createQuery(queryString).setParameter("moduleId", module.getModuleId()).uniqueResult();
+
+				String sectionsSeqXML = mod.getSeqXml();
 				if (sectionsSeqXML == null) throw new MeleteException("indent_left_fail");
 				SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
 				if (secBeans.size() == 1)
@@ -478,11 +490,11 @@ public class ModuleDB implements Serializable
 					}
 				}
 
-				module.setSeqXml(sectionsSeqXML);
+				mod.setSeqXml(sectionsSeqXML);
 
 				// save object
 				tx = session.beginTransaction();
-				session.saveOrUpdate(module);
+				session.saveOrUpdate(mod);
 				tx.commit();
 
 				if (logger.isDebugEnabled()) logger.debug("commiting transaction and left indenting multiple sections");
@@ -802,6 +814,8 @@ public class ModuleDB implements Serializable
 					Section copySection = new Section(toCopySection);
 					copySection.setCreatedByFname(firstName);
 					copySection.setCreatedByLname(lastName);
+					copySection.setModifiedByFname(firstName);
+					copySection.setModifiedByLname(lastName);
 					copySection.setModule(copyMod);
 					copySection.setTitle(copySection.getTitle() + " (" + bundle.getString("Copied") + " " + shortTime.format(new Date()) + " )");
 					// insert section
@@ -875,7 +889,11 @@ public class ModuleDB implements Serializable
 			SectionBeanService secBean = null;
 			try
 			{
-				String sectionsSeqXML = module.getSeqXml();
+				//get module object again
+				String queryString = "select module from Module as module where module.moduleId = :moduleId";
+				Module mod = (Module) session.createQuery(queryString).setParameter("moduleId", module.getModuleId()).uniqueResult();
+
+				String sectionsSeqXML = mod.getSeqXml();
 				if (sectionsSeqXML == null) throw new MeleteException("indent_right_fail");
 				SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
 
@@ -887,11 +905,11 @@ public class ModuleDB implements Serializable
 					sectionsSeqXML = SectionUtil.MakeSubSection(sectionsSeqXML, section_id.toString());
 				}
 
-				module.setSeqXml(sectionsSeqXML);
+				mod.setSeqXml(sectionsSeqXML);
 
 				// save object
 				tx = session.beginTransaction();
-				session.saveOrUpdate(module);
+				session.saveOrUpdate(mod);
 				tx.commit();
 
 				if (logger.isDebugEnabled()) logger.debug("commiting transaction and indenting multiple sections");
@@ -2999,8 +3017,11 @@ else
 							if (sec.getSectionResource() != null)
 							{
 								secRes = sectionDB.getSectionResourcebyId(sec.getSectionId().toString());
+								if(secRes.getResource() != null && secRes.getResource().getResourceId() != null && secRes.getResource().getResourceId().length() != 0)
+								{
 								melRes = sectionDB.getMeleteResource(secRes.getResource().getResourceId());
 								printText.append("<p><i>" + getLicenseInformation(melRes) + "</i></p>");
+								}
 							}
 							if (sec.getInstr() != null && sec.getInstr().length() != 0)
 								printText.append("<p> <i>Instructions:</i> " + sec.getInstr() + "</p>");
@@ -3079,7 +3100,7 @@ else
 	 *        Course id
 	 * @throws MeleteException
 	 */
-	public void restoreModules(List restoreModules, String courseId) throws MeleteException
+	public void restoreModules(List restoreModules, String courseId, String userId) throws MeleteException
 	{
 		try
 		{
@@ -3115,17 +3136,22 @@ else
 					moduleShdate.setStartDate(null);
 					moduleShdate.setEndDate(null);
 
-					// 3a.set start date as restored_date and end_date as 1 yr more
-					/*
-					 * GregorianCalendar cal = new GregorianCalendar(); cal.set(Calendar.HOUR,8); cal.set(Calendar.MINUTE,0); cal.set(Calendar.SECOND,0); cal.set(Calendar.AM_PM,Calendar.AM); moduleShdate.setStartDate(cal.getTime()); cal.add(Calendar.YEAR,
-					 * 1); cal.set(Calendar.HOUR,11); cal.set(Calendar.MINUTE,59); cal.set(Calendar.SECOND,0); cal.set(Calendar.AM_PM,Calendar.PM); moduleShdate.setEndDate(cal.getTime());
-					 */
+					//fetch module object and update modification date
+					q = session.createQuery("select mod from Module mod where mod.moduleId =:moduleId");
+					q.setParameter("moduleId", coursemodule.getModule().getModuleId());
 
+					Module module = (Module) (q.uniqueResult());
+					User user = UserDirectoryService.getUser(userId);
+					module.setModificationDate(new java.util.Date());
+					module.setModifiedByFname(user.getFirstName());
+					module.setModifiedByLname(user.getLastName());
+					
 					// 4a. begin transaction
 					tx = session.beginTransaction();
 					// 4b save all objects
 					session.saveOrUpdate(coursemodule1);
 					session.saveOrUpdate(moduleShdate);
+					session.saveOrUpdate(module);
 					// 4c.commit transaction
 					tx.commit();
 				}
@@ -3428,27 +3454,16 @@ else
 	 */
 	public void updateModule(Module mod) throws Exception
 	{
-
 		hibernateUtil.ensureModuleHasNonNulls(mod);
 		Transaction tx = null;
 		try
 		{
-
 			Session session = hibernateUtil.currentSession();
 
-			if (null == mod.getCreatedByFname())
-			{
-				mod.setCreatedByFname("");
-			}
-
-			if (null == mod.getCreatedByLname())
-			{
-				mod.setCreatedByLname("");
-			}
 			tx = session.beginTransaction();
 
 			// Update module properties
-			session.saveOrUpdate(mod);
+			session.update(mod);
 
 			tx.commit();
 
@@ -3493,50 +3508,100 @@ else
 	 *        List of moduledatebeans to update
 	 * @throws Exception
 	 */
-	public void updateModuleDateBeans(List<? extends  ModuleDateBeanService> moduleDateBeans) throws Exception
+	public void updateModuleDateBeans(List<? extends  ModuleDateBeanService> moduleDateBeans, String courseId, String userId) throws Exception
 	{
 		Transaction tx = null;
 
 		Session session = hibernateUtil.currentSession();
-		for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();)
-		{
-			tx = null;
-			ModuleDateBean mdbean = (ModuleDateBean) i.next();
-			if (mdbean.isDateFlag() == false)
-			{
-				try
-				{
+		
+		if ((moduleDateBeans != null) && (moduleDateBeans.size() > 0)) {
+			for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();) {
+				tx = null;
+				ModuleDateBean mdbean = (ModuleDateBean) i.next();
+				// Saving all modules (irrespective of dateFlag) as we now save
+				// modules with start date after end date also
+				try {
+					Module checkModule = (Module) mdbean.getModule();
+					ModuleShdates checkModuleDates = (ModuleShdates) mdbean
+							.getModuleShdate();
+					logger.debug("checking for " + checkModule.getTitle());
+					String queryString = "select module from Module as module where module.moduleId = :moduleId";
+					Module mod = (Module) session
+							.createQuery(queryString)
+							.setParameter("moduleId", checkModule.getModuleId())
+							.uniqueResult();
+
+					queryString = "select moduleshdate from ModuleShdates as moduleshdate where moduleshdate.module.moduleId = :moduleId";
+					ModuleShdates mDate = (ModuleShdates) session
+							.createQuery(queryString)
+							.setParameter("moduleId", checkModule.getModuleId())
+							.uniqueResult();
+
+					// If any date is > 9999, this check sets the date to the
+					// module's previous date
+					if (!checkModuleDates.isStartDateValid()) {
+						checkModuleDates.setStartDate(mDate.getStartDate());
+					}
+					if (!checkModuleDates.isEndDateValid()) {
+						checkModuleDates.setEndDate(mDate.getEndDate());
+					}
+					// compare them. If both are same then not modified
+					logger.debug("module is same " + mod.equals(checkModule));
+					logger.debug("moduleDates is same "
+							+ mDate.equals(checkModuleDates));
+					if (mod.equals(checkModule)
+							&& mDate.equals(checkModuleDates)) {
+						logger.debug("MODULE AND SH DATES BOTH ARE EQUAL SO NO DB UPDATE for:"
+								+ mod.getTitle());
+						continue;
+					}
+
+					if (checkModuleDates.getAddtoSchedule() != null) {
+						checkModuleDates = updateCalendar(
+								checkModule.getTitle(), checkModuleDates,
+								courseId);
+					}
 					tx = session.beginTransaction();
+					logger.debug("update module and sh dates " + mod.getTitle());
+					// refresh object and Getting the set of show hides dates
+					// associated with this module
+					mDate.setStartDate(checkModuleDates.getStartDate());
+					mDate.setEndDate(checkModuleDates.getEndDate());
+					mDate.setAddtoSchedule(checkModuleDates.getAddtoSchedule());
+					mDate.setEndEventId(checkModuleDates.getEndEventId());
+					mDate.setStartEventId(checkModuleDates.getStartEventId());
+					session.saveOrUpdate(mDate);
+					// refresh object
+
+					mod.setCoursemodule(checkModule.getCoursemodule());
+					mod.setDescription(checkModule.getDescription());
+					mod.setKeywords(checkModule.getKeywords());
+					mod.setModificationDate(new Date());
+					User user = UserDirectoryService.getUser(userId);
+					mod.setModifiedByFname(user.getFirstName());
+					mod.setModifiedByLname(user.getLastName());
+					mod.setTitle(checkModule.getTitle());
+					mod.setModuleshdate(mDate);
+
 					// Update module properties
-					session.saveOrUpdate(mdbean.getModule());
-					// Getting the set of show hides dates associated with this module
-					ModuleShdates mshdates = (ModuleShdates) mdbean.getModule().getModuleshdate();
-
-					mshdates.setStartDate(mdbean.getModuleShdate().getStartDate());
-					mshdates.setEndDate(mdbean.getModuleShdate().getEndDate());
-					session.saveOrUpdate(mshdates);
-
+					session.saveOrUpdate(mod);
 					tx.commit();
 					// session.flush();
-				}
-				catch (StaleObjectStateException sose)
-				{
-					if (tx != null) tx.rollback();
+				} catch (StaleObjectStateException sose) {
+					if (tx != null)
+						tx.rollback();
 					logger.error("stale object exception" + sose.toString());
+					sose.printStackTrace();
 					throw new MeleteException("edit_module_multiple_users");
-				}
-				catch (HibernateException he)
-				{
+				} catch (HibernateException he) {
 					logger.error(he.toString());
 					throw he;
-				}
-				catch (Exception e)
-				{
-					if (tx != null) tx.rollback();
+				} catch (Exception e) {
+					if (tx != null)
+						tx.rollback();
 					logger.error(e.toString());
 					throw e;
 				}
-
 			}
 		}
 		try
@@ -3607,6 +3672,62 @@ else
 		}
 	}
 
+	/**
+	 * Update next steps.
+	 * 
+	 * @param moduleId
+	 *  The module Id
+	 * @param nextSteps
+	 *  What's next 
+	 * @throws Exception
+	 */
+	public void updateModuleNextSteps(Integer moduleId, String nextSteps) throws Exception
+	{
+		Transaction tx = null;
+		try
+		{
+			Session session = hibernateUtil.currentSession();
+			tx = session.beginTransaction();
+
+			String queryString = "select module from Module as module where module.moduleId = :moduleId";
+			Module mod = (Module) session.createQuery(queryString).setParameter("moduleId", moduleId).uniqueResult();
+			mod.setWhatsNext(nextSteps);
+			// Update module properties
+			session.saveOrUpdate(mod);
+
+			tx.commit();
+		}
+		catch (StaleObjectStateException sose)
+		{
+			if (tx != null) tx.rollback();
+			logger.error("stale object exception" + sose.toString());
+			throw new MeleteException("edit_module_next_steps");
+		}
+		catch (HibernateException he)
+		{
+			logger.error(he.toString());
+			throw he;
+		}
+		catch (Exception e)
+		{
+			if (tx != null) tx.rollback();
+			logger.error(e.toString());
+			throw e;
+		}
+		finally
+		{
+			try
+			{
+				hibernateUtil.closeSession();
+			}
+			catch (HibernateException he)
+			{
+				logger.error(he.toString());
+				throw he;
+			}
+		}
+	}
+	
 	/**
 	 * Changes seq number of all modules
 	 * 
@@ -3832,7 +3953,8 @@ else
 			}
 			else
 			{
-
+				logger.debug("in correct sections update time module is :" + moduleId );
+				logger.debug("in correct sections update time module is :" + newSecList.toString() );
 				updSeqXml = null;
 				mod = getModule(moduleId);
 				// Add sections to seqXml
@@ -4460,7 +4582,6 @@ else
 
 		if (mod == null) mod = new Module();
 		ModuleShdates mshdate = (ModuleShdates) mod.getModuleshdate();
-		mdBean.setDateFlag(!mshdate.isValid());
 		int moduleId = mod.getModuleId().intValue();
 		mdBean.setModuleId(moduleId);
 		mdBean.setModule((Module) mod);
@@ -4852,6 +4973,138 @@ else
 	}
 
 	/**
+	 * Updates the calendar tool. Seggregated from the other updateCalendar method.
+	 * 
+	 * @param moduleTitle
+	 * @param moduleshdates1
+	 * @param courseId
+	 * @return
+	 * @throws Exception
+	 */
+	protected ModuleShdates updateCalendar(String moduleTitle, ModuleShdates moduleshdates1, String courseId) throws Exception
+	{
+		if (checkCalendar(courseId) == true)
+		{
+			// The code below adds the start and stop dates to the Calendar
+			boolean addtoSchedule = moduleshdates1.getAddtoSchedule().booleanValue();
+			Date startDate = moduleshdates1.getStartDate();
+			Date endDate = moduleshdates1.getEndDate();
+			String startEventId = moduleshdates1.getStartEventId();
+			String endEventId = moduleshdates1.getEndEventId();
+			
+			CalendarService cService = org.sakaiproject.calendar.cover.CalendarService.getInstance();
+			String calendarId = cService.calendarReference(courseId, SiteService.MAIN_CONTAINER);
+			try
+			{
+				org.sakaiproject.calendar.api.Calendar c = cService.getCalendar(calendarId);
+
+				if (addtoSchedule == true)
+				{
+					//Fix for ME-1426, when start date is after end date, do not add events to calendar
+					if ((startDate != null)&&(endDate != null)&&(startDate.after(endDate)))
+					{
+						if (startEventId != null)
+						{
+							logger.debug("REMOVING start event for null start date");
+							deleteCalendarEvent(c, startEventId);
+							moduleshdates1.setStartEventId(null);
+						}
+						else
+						{
+							moduleshdates1.setStartEventId(null);
+						}
+						if (endEventId != null)
+						{
+							logger.debug("REMOVING end event for null end date");
+							deleteCalendarEvent(c, endEventId);
+							moduleshdates1.setEndEventId(null);
+						}
+						else
+						{
+							moduleshdates1.setEndEventId(null);
+						}
+						return moduleshdates1;
+					}
+					if (startDate == null)
+					{
+						if (startEventId != null)
+						{
+							logger.debug("REMOVING start event for null start date");
+							deleteCalendarEvent(c, startEventId);
+							moduleshdates1.setStartEventId(null);
+						}
+					}
+					else
+					{
+						if (startEventId == null)
+						{
+							logger.debug("ADDING start event for non-null start date");
+							String desc = endDate != null ? "This module opens today and closes " + endDate.toString() : "This module opens today";
+							startEventId = createCalendarEvent(c, startDate, "Opens: " + moduleTitle, desc);
+						}
+						else
+						{
+							logger.debug("UPDATING start event for non-nul start date");
+							String desc = endDate != null ? "This module opens today and closes " + endDate.toString() : "This module opens today";
+							startEventId = updateCalendarEvent(c, startEventId, startDate, "Opens: " + moduleTitle, desc);
+						}
+						moduleshdates1.setStartEventId(startEventId);
+					}
+					if (endDate == null)
+					{
+						if (endEventId != null)
+						{
+							logger.debug("REMOVING end event for null end date");
+							deleteCalendarEvent(c, endEventId);
+							moduleshdates1.setEndEventId(null);
+						}
+					}
+					if (endDate != null)
+					{
+						if (endEventId == null)
+						{
+							logger.debug("ADDING end event for non-null end date");
+							String desc = "This module closes today";
+							endEventId = createCalendarEvent(c, endDate, "Closes: " + moduleTitle, desc);
+						}
+						else
+						{
+							logger.debug("UPDATING end event for non-null end date");
+							String desc = "This module closes today";
+							endEventId = updateCalendarEvent(c, endEventId, endDate, "Closes: " + moduleTitle, desc);
+						}
+						moduleshdates1.setEndEventId(endEventId);
+					}
+				}
+				else
+				{
+					if (startEventId != null)
+					{
+						logger.debug("REMOVING start event for false flag");
+						deleteCalendarEvent(c, startEventId);
+						moduleshdates1.setStartEventId(null);
+					}
+					if (endEventId != null)
+					{
+						logger.debug("REMOVING end event for false flag");
+						deleteCalendarEvent(c, endEventId);
+						moduleshdates1.setEndEventId(null);
+					}
+				}
+			}
+			catch (PermissionException ee)
+			{
+				logger.warn("PermissionException while adding to calendar");
+			}
+			catch (Exception ee)
+			{
+				logger.error("Some other exception while adding to calendar " + ee.getMessage());
+			}
+		}
+		return moduleshdates1;
+	}
+	
+	/**
 	 * Update calendar tool with module dates
 	 * 
 	 * @param module1
@@ -4864,110 +5117,17 @@ else
 	 */
 	void updateCalendar(Module module1, ModuleShdates moduleshdates1, String courseId) throws Exception
 	{
-		if (checkCalendar(courseId) == true)
+		try
 		{
-			// The code below adds the start and stop dates to the Calendar
-			boolean addtoSchedule = moduleshdates1.getAddtoSchedule().booleanValue();
-			Date startDate = moduleshdates1.getStartDate();
-			Date endDate = moduleshdates1.getEndDate();
-			String startEventId = moduleshdates1.getStartEventId();
-			String endEventId = moduleshdates1.getEndEventId();
-
-			CalendarService cService = org.sakaiproject.calendar.cover.CalendarService.getInstance();
-			String calendarId = cService.calendarReference(courseId, SiteService.MAIN_CONTAINER);
-			try
-			{
-				org.sakaiproject.calendar.api.Calendar c = cService.getCalendar(calendarId);
-				try
-				{
-					if (addtoSchedule == true)
-					{
-						if (startDate == null)
-						{
-							if (startEventId != null)
-							{
-								logger.debug("REMOVING start event for null start date");
-								deleteCalendarEvent(c, startEventId);
-								moduleshdates1.setStartEventId(null);
-							}
-						}
-						else
-						{
-							if (startEventId == null)
-							{
-								logger.debug("ADDING start event for non-null start date");
-								String desc = endDate != null ? "This module opens today and closes " + endDate.toString()
-										: "This module opens today";
-								startEventId = createCalendarEvent(c, startDate, "Opens: " + module1.getTitle(), desc);
-							}
-							else
-							{
-								logger.debug("UPDATING start event for non-nul start date");
-								String desc = endDate != null ? "This module opens today and closes " + endDate.toString()
-										: "This module opens today";
-								startEventId = updateCalendarEvent(c, startEventId, startDate, "Opens: " + module1.getTitle(), desc);
-							}
-							moduleshdates1.setStartEventId(startEventId);
-						}
-						if (endDate == null)
-						{
-							if (endEventId != null)
-							{
-								logger.debug("REMOVING end event for null end date");
-								deleteCalendarEvent(c, endEventId);
-								moduleshdates1.setEndEventId(null);
-							}
-						}
-						if (endDate != null)
-						{
-							if (endEventId == null)
-							{
-								logger.debug("ADDING end event for non-null end date");
-								String desc = "This module closes today";
-								endEventId = createCalendarEvent(c, endDate, "Closes: " + module1.getTitle(), desc);
-							}
-							else
-							{
-								logger.debug("UPDATING end event for non-null end date");
-								String desc = "This module closes today";
-								endEventId = updateCalendarEvent(c, endEventId, endDate, "Closes: " + module1.getTitle(), desc);
-							}
-							moduleshdates1.setEndEventId(endEventId);
-						}
-					}
-					else
-					{
-						if (startEventId != null)
-						{
-							logger.debug("REMOVING start event for false flag");
-							deleteCalendarEvent(c, startEventId);
-							moduleshdates1.setStartEventId(null);
-						}
-						if (endEventId != null)
-						{
-							logger.debug("REMOVING end event for false flag");
-							deleteCalendarEvent(c, endEventId);
-							moduleshdates1.setEndEventId(null);
-						}
-					}
-				}
-				catch (PermissionException ee)
-				{
-					logger.warn("PermissionException while adding to calendar");
-				}
-				catch (Exception ee)
-				{
-					logger.error("Some other exception while adding to calendar " + ee.getMessage());
-				}
-				// try-catch
-			}
-			catch (Exception ex)
-			{
-				logger.error("Exception thrown while getting Calendar");
-			}
-			updateModuleShdates((ModuleShdates) moduleshdates1);
+			moduleshdates1 = updateCalendar(module1.getTitle(), moduleshdates1, courseId);
+			updateModuleShdates(moduleshdates1);
+		}
+		catch (Exception ex)
+		{
+			logger.error("Exception thrown while getting Calendar");
 		}
 	}
+
 }
 
 class AccessDates

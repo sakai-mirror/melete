@@ -31,18 +31,13 @@
 <sakai:view title="Modules: File Upload" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
 
-<%@ page import="javax.faces.application.FacesMessage, java.util.ResourceBundle"%>
-
 <% 
 	String status = (String)request.getAttribute("upload.status");
 		if( status != null && !status.equalsIgnoreCase("ok"))
 		{
 			final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
-			ResourceBundle bundle = ResourceBundle.getBundle("org.etudes.tool.melete.bundle.Messages", facesContext.getViewRoot().getLocale());
-			String infoMsg = bundle.getString("file_too_large");
-			FacesMessage msg = new FacesMessage(null, infoMsg);
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			facesContext.addMessage(null, msg);		
+			facesContext.responseComplete();
+			facesContext.getExternalContext().redirect("FileUploadView.jsf?showMessage=true");	
 	   }
 %>
 <script language="javascript1.2">
@@ -198,6 +193,7 @@ function validateFileName(divID, sourceID)
       <table class="maintableCollapseWithBorder">
         <tr>
         <td class="maintabledata3">   
+      	<h:inputHidden id="numitems" value="#{addResourcesPage.numberItems}" />
         <h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>     
 		  <table class="maintableCollapseWithNoBorder" id="AutoNumber1">
 		  	<tr>
@@ -206,7 +202,7 @@ function validateFileName(divID, sourceID)
 		  	</tr>
             <tr>
             	<td colspan="2">
-            	<h:inputHidden id="numitems" value="#{addResourcesPage.numberItems}" />
+            
               		<h:outputText id="t2" value="#{msgs.manage_content_number_files}"/>
                 	
 						  <h:selectOneMenu id="number" value="#{addResourcesPage.numberItems}" onchange="showInputs();" >

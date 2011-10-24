@@ -19,7 +19,11 @@
 -->
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+
 <%@include file="accesscheck.jsp" %>
+
+
 <h:panelGrid border="0" columns="2" columnClasses="col1,col2" width="100%">											
 <h:column>
 	<h:outputText id="editLTIBasic1" value="#{msgs.addmodulesections_lti_url}" />

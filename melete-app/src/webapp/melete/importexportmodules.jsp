@@ -35,15 +35,12 @@
 
 <% 
 	String status = (String)request.getAttribute("upload.status");
-		if( status != null && !status.equalsIgnoreCase("ok"))
+	if( status != null && !status.equalsIgnoreCase("ok"))
 		{
 			final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
-			ResourceBundle bundle = ResourceBundle.getBundle("org.etudes.tool.melete.bundle.Messages", facesContext.getViewRoot().getLocale());
-			String infoMsg = bundle.getString("error_importing_large");
-			FacesMessage msg = new FacesMessage(null, infoMsg);
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			facesContext.addMessage(null, msg);			
-		}
+			facesContext.responseComplete();
+			facesContext.getExternalContext().redirect("importexportmodules.jsf?showMessage=true");			
+	   }
 %>
 <script language="javascript1.2">
 function showprocessMsg()

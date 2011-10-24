@@ -26,11 +26,12 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: Move Section" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
-
+<t:saveState id="mspsecbeans" value="#{moveSectionsPage.sectionBeans}" />
 <h:form id="moveSectionsForm">
 	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 

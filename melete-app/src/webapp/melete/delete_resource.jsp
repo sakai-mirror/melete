@@ -26,10 +26,14 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: Delete Resource" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
+<t:saveState id="fromPage" value="#{deleteResourcePage.fromPage}" />
+<t:saveState id="delResourceId" value="#{deleteResourcePage.delResourceId}" />
+<t:saveState id="sectionId" value="#{deleteResourcePage.sectionId}" />
  
  <h:form id="DeleteResourceForm">
 	<f:subview id="top">
@@ -76,9 +80,14 @@
         </td></tr>        		 
             </table>
             <div class="actionBar" align="left">	
-	        	<h:commandButton id="delButton" action="#{deleteResourcePage.deleteResource}" value="#{msgs.im_continue}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgDelete"/>			
-	            <h:commandButton id="cancelButton" action="#{deleteResourcePage.cancelDeleteResource}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
-	      	</div>
+	        	<h:commandButton id="delButton" actionListener="#{deleteResourcePage.deleteResource}" value="#{msgs.im_continue}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgDelete">
+	        		<f:attribute name="fromPage" value="#{deleteResourcePage.fromPage}" />
+	        		<f:attribute name="sectionId" value="#{deleteResourcePage.sectionId}" />
+	        	</h:commandButton>			
+	            <h:commandButton id="cancelButton" actionListener="#{deleteResourcePage.cancelDeleteResource}" value="#{msgs.im_cancel}" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
+	         		<f:attribute name="fromPage" value="#{deleteResourcePage.fromPage}" />
+	        		<f:attribute name="sectionId" value="#{deleteResourcePage.sectionId}" />
+	        	</h:commandButton>
       </td></tr></table>
 
   <!-- This Ends the Main Text Area -->

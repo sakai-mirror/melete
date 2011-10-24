@@ -94,6 +94,13 @@ public class ExportMeleteModules
 	 */
 	public ExportMeleteModules()
 	{
+		modList = null;
+		availableModules = null;
+		selectedModules = null;
+		noFlag = false;
+		selectFormat = "IMS";
+		selectedModules = new ArrayList<String>(0);
+		selectedModules.add("all");
 	}
 
 	/**
@@ -962,6 +969,17 @@ public class ExportMeleteModules
 	public String getUploadmax()
 	{
 		int uploadmax = ServerConfigurationService.getInt("content.upload.ceiling", 50);
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		if (facesContext.getExternalContext().getRequestParameterMap().get("showMessage") != null)
+		{
+			String show = (String) facesContext.getExternalContext().getRequestParameterMap().get("showMessage");
+
+			if (show == null || show.length() == 0) return new Integer(uploadmax).toString();
+
+			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+			String errMsg = bundle.getString("error_importing_large");
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "error_importing_large", errMsg));
+		}
 		return new Integer(uploadmax).toString();
 	}
 

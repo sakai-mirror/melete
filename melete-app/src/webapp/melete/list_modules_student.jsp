@@ -57,13 +57,15 @@ function showHideTable(index, show)
 
 </script>
 <h:form id="listmodulesStudentform">
+<h:inputHidden id="lmexp" value="#{listModulesPage.expandAllFlag}" />
+<h:inputHidden id="lmshmodid" value="#{listModulesPage.showModuleId}"/>
 	<f:subview id="top">
 		<jsp:include page="topnavbar.jsp?myMode=View"/> 
 	</f:subview>
 <!--Page Content-->
 <br/>
 <div align="right">
-<h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">
+<h:commandLink id="lastVisitedLink" actionListener="#{bookmarkPage.viewSection}" rendered="#{listModulesPage.bookmarkSectionId > 0}">
  <f:param name="sectionId" value="#{listModulesPage.bookmarkSectionId}" /> 
  <h:graphicImage id="lvisit_gif" value="/images/last-visited.png" alt="" styleClass="BmImgClass"/>
  <h:outputText id="lastvisit" value="#{msgs.last_visited}" />									
@@ -87,23 +89,23 @@ function showHideTable(index, show)
       <h:column>   
       <f:facet name="header">
       <h:panelGroup>
-       <h:commandLink id="expandCollapseAction"  action="#{listModulesPage.expandCollapseAction}" immediate="true">
+       <h:commandLink id="expandCollapseAction"  action="#{listModulesPage.expandCollapseAction}" >
      	    <h:graphicImage id="exp_all_gif" alt="#{msgs.list_modules_stud_expand_all}" title="#{msgs.list_modules_stud_expand_all}" value="/images/expand-collapse.gif"   rendered="#{listModulesPage.expandAllFlag != listModulesPage.trueFlag}" styleClass="ExpClass"/>
              <h:graphicImage id="col_all_gif" alt="#{msgs.list_modules_stud_collapse_all}" title="#{msgs.list_modules_stud_collapse_all}" value="/images/collapse-expand.gif"   rendered="#{listModulesPage.expandAllFlag == listModulesPage.trueFlag}" styleClass="ExpClass"/>
           </h:commandLink>
       </h:panelGroup>
       </f:facet>                                  
     
-    <h:commandLink id="showHideSections" action="#{listModulesPage.showHideSections}" immediate="true">
+    <h:commandLink id="showHideSections" action="#{listModulesPage.showHideSections}" >
         <h:graphicImage id="exp_gif" alt="#{msgs.list_modules_stud_expand}" title="#{msgs.list_modules_stud_expand}" value="/images/expand.gif" rendered="#{((vmbean.moduleId != listModulesPage.showModuleId)&&(vmbean.vsBeans != listModulesPage.nullList)&&(listModulesPage.expandAllFlag != listModulesPage.trueFlag))}" styleClass="ExpClass"/>
           <h:graphicImage id="col_gif" alt="#{msgs.list_modules_stud_collapse}" title="#{msgs.list_modules_stud_collapse}" value="/images/collapse.gif" rendered="#{(((vmbean.moduleId == listModulesPage.showModuleId)&&(vmbean.vsBeans != listModulesPage.nullList))||((listModulesPage.expandAllFlag == listModulesPage.trueFlag)&&(vmbean.vsBeans != listModulesPage.nullList)))}" styleClass="ExpClass"/>
        </h:commandLink> 
        <h:graphicImage id="moduleFinishStatus" url="/images/status_away.png" alt="#{msgs.list_modules_alt_progress}" title="#{msgs.list_modules_alt_progress}" styleClass="AuthImgClass" rendered="#{vmbean.readDate != null && !vmbean.readComplete}" />
 	   <h:graphicImage id="moduleFinishStatus1" url="/images/finish.gif" alt="#{msgs.list_modules_alt_complete}" title="#{msgs.list_modules_alt_complete}" styleClass="AuthImgClass" rendered="#{vmbean.readComplete}" />  
       <h:outputText id="mod_seq" value="#{vmbean.seqNo}. " rendered="#{listModulesPage.autonumber}"/>
-         <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" action="#{listModulesPage.redirectToViewModule}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}" immediate="true">
-              <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
-                  <h:outputText id="title"
+         <h:commandLink id="viewModule"  actionListener="#{listModulesPage.viewModule}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}" immediate="true">
+              <f:param name="viewmodid" value="#{vmbean.moduleId}" />
+               <h:outputText id="title"
                            value="#{vmbean.title}" >
               </h:outputText>             
           </h:commandLink>
@@ -116,18 +118,18 @@ function showHideTable(index, show)
   		
               <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" rendered="#{!listModulesPage.autonumber}"/>             
 	          <h:outputText id="sec_seq" value="#{vsbean.displaySequence}. " rendered="#{listModulesPage.autonumber}"/>    
-              <h:commandLink id="viewSectionEditor"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSection}"  rendered="#{((vsbean.contentType != listModulesPage.isNull && vsbean.contentType == listModulesPage.typeLink)&&(vmbean.visibleFlag == listModulesPage.trueFlag))}" immediate="true">
-               <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
-               <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
- 
+              <h:commandLink id="viewSectionEditor"   actionListener="#{listModulesPage.viewSection}"  rendered="#{((vsbean.contentType != listModulesPage.isNull && vsbean.contentType == listModulesPage.typeLink)&&(vmbean.visibleFlag == listModulesPage.trueFlag))}" immediate="true">
+                <f:param name="viewmodid" value="#{vmbean.moduleId}" />  
+                <f:param name="viewsecid" value="#{vsbean.sectionId}" /> 
+                        
                <h:outputText id="sectitleEditor" 
                            value="#{vsbean.title}">
                </h:outputText>
              </h:commandLink>
-             <h:commandLink id="viewSectionLink"   actionListener="#{listModulesPage.viewSection}" action="#{listModulesPage.redirectToViewSectionLink}"  rendered="#{((vsbean.contentType != listModulesPage.isNull && vsbean.contentType != listModulesPage.typeLink)&&(vmbean.visibleFlag == listModulesPage.trueFlag))}" immediate="true">
-                <f:param name="modidx" value="#{listModulesPage.modTable.rowIndex}" />
-               <f:param name="secidx" value="#{listModulesPage.secTable.rowIndex}" />
-            
+             <h:commandLink id="viewSectionLink"   actionListener="#{listModulesPage.viewSection}"   rendered="#{((vsbean.contentType != listModulesPage.isNull && vsbean.contentType != listModulesPage.typeLink)&&(vmbean.visibleFlag == listModulesPage.trueFlag))}" immediate="true">
+               <f:param name="viewmodid" value="#{vmbean.moduleId}" />  
+                <f:param name="viewsecid" value="#{vsbean.sectionId}" /> 
+                 
                <h:outputText id="sectitleLink" 
                            value="#{vsbean.title}">
                </h:outputText>
@@ -140,10 +142,10 @@ function showHideTable(index, show)
           <h:outputText id="next_seq" value="#{vmbean.nextStepsNumber}. " rendered="#{listModulesPage.autonumber && vmbean.whatsNext != listModulesPage.isNull && ((listModulesPage.expandAllFlag == listModulesPage.trueFlag)||(vmbean.moduleId == listModulesPage.showModuleId))}"/>
           <h:graphicImage id="bul_gif1" value="/images/bullet_black.gif" rendered="#{!listModulesPage.autonumber && vmbean.whatsNext != listModulesPage.isNull && ((listModulesPage.expandAllFlag == listModulesPage.trueFlag)||(vmbean.moduleId == listModulesPage.showModuleId))}" style="border:0"/>
           
-          <h:commandLink id="whatsNext" action="#{listModulesPage.goWhatsNext}" immediate="true" rendered="#{((vmbean.visibleFlag == listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&((listModulesPage.expandAllFlag == listModulesPage.trueFlag)||(vmbean.moduleId == listModulesPage.showModuleId)))}">
+          <h:commandLink id="whatsNext" actionListener="#{listModulesPage.goWhatsNext}" immediate="true" rendered="#{((vmbean.visibleFlag == listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&((listModulesPage.expandAllFlag == listModulesPage.trueFlag)||(vmbean.moduleId == listModulesPage.showModuleId)))}">
 		    <h:outputText  id="whatsNextMsg" value="#{msgs.list_modules_stud_next_steps}" />
-		    <f:param name="modidx2" value="#{listModulesPage.modTable.rowIndex}" />
-		    <f:param name="modseqno" value="#{vmbean.seqNo}" />
+		    <f:param name="viewmodid" value="#{vmbean.moduleId}" />  
+            <f:param name="viewmodseqno" value="#{vmbean.seqNo}" />
           </h:commandLink>  
           <h:outputText  id="whatsNextMsg2" value="#{msgs.list_modules_stud_next_steps}" rendered="#{((vmbean.visibleFlag != listModulesPage.trueFlag)&&(vmbean.whatsNext != listModulesPage.isNull)&&((listModulesPage.expandAllFlag == listModulesPage.trueFlag)||(vmbean.moduleId == listModulesPage.showModuleId)))}"/>
            </h:column>

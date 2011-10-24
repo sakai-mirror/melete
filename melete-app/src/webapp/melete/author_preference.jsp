@@ -26,11 +26,17 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
-
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: User Preference" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
+<t:saveState id="editorpref" value="#{authorPreferences.userEditor}" />
+<t:saveState id="viewpref" value="#{authorPreferences.userView}" />
+<t:saveState id="lti" value="#{authorPreferences.showLTI}" />
+<t:saveState id="autoprint" value="#{authorPreferences.materialPrintable}" />
+<t:saveState id="autonum" value="#{authorPreferences.materialAutonumber}" />
+
 
  <h:form id="UserPreferenceForm">
 <!-- top nav bar -->
@@ -84,7 +90,7 @@
 						</h:column>
 					
 		                <h:column>
-						<jsp:include page="licenseform.jsp"/>						 						 	
+						<jsp:include page="licenseform.jsp?formName=UserPreferenceForm"/>						 						 	
 						  <h:commandLink id="allLicenseButton"  action="#{authorPreferences.changeAllLicense}" >
 							<h:graphicImage id="replaceImg2" value="/images/replace2.gif" styleClass="AuthImgClass"/>
 							<h:outputText value="#{msgs.overwriteLicenseMsg}"/>
