@@ -47,6 +47,7 @@ function newWindow(newContent){
   winContent = window.open(newContent, 'nextWin', 'right=0, top=20,width=750,height=600, toolbar=no,scrollbars=yes, resizable=no') }
 </script>
 <t:saveState id="empfirsec" value="#{editModulePage.firstSection}" />
+<t:saveState id="empmsh" value="#{editModulePage.moduleShdates}" />
  <h:form id="EditModuleForm">
  <h:inputHidden id="modid" value="#{editModulePage.module.moduleId}"/>
  	<f:subview id="top">
