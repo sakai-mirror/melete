@@ -136,25 +136,34 @@ public class SpecialAccessPage implements Serializable
 		Map sessionMap = context.getExternalContext().getSessionMap();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		// SpecialAccess specialAccess = new SpecialAccess();
-
 		if (specialAccessService == null) specialAccessService = getSpecialAccessService();
 		if (getUsers() != null)
 		{
-			this.specialAccess = validateDates(context, this.specialAccess);
-			try
+			if (!checkForEmpty())
 			{
-				specialAccessService.insertSpecialAccess(this.saList, this.specialAccess, getModule());
-			}
-			catch (Exception ex)
-			{
-				String errMsg = bundle.getString(ex.getMessage());
-				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), errMsg));
-				return "failure";
+				this.specialAccess = validateDates(context, this.specialAccess);
+				try
+				{
+					specialAccessService.insertSpecialAccess(this.saList, this.specialAccess, getModule());
+				}
+				catch (Exception ex)
+				{
+					String errMsg = bundle.getString(ex.getMessage());
+					context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), errMsg));
+					return "failure";
+				}
 			}
 		}
+		
 		resetValues();
 		return "list_special_access";
 
+	}
+	
+	protected boolean checkForEmpty()
+	{
+		if (getUsers() != null && getUsers().size() == 1 && (getUsers().get(0).equals("0"))) return true;
+		return false;
 	}
 
 	/**
@@ -401,6 +410,7 @@ public class SpecialAccessPage implements Serializable
 				saMap = null;
 			}
 		}
+		
 		return saList;
 	}
 
@@ -811,7 +821,7 @@ public class SpecialAccessPage implements Serializable
 		// Adding available list to select box
 		if (list == null || list.size() == 0)
 		{
-			selectList.add(new SelectItem("0", "No Items"));
+			selectList.add(new SelectItem("0", "No Students"));
 			return selectList;
 		}
 
