@@ -486,7 +486,7 @@ public class SpecialAccessPage implements Serializable
 	 * 
 	 * @return select list of users
 	 */
-	public List<String> getUsersList()
+	public List<SelectItem> getUsersList()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
@@ -786,7 +786,20 @@ public class SpecialAccessPage implements Serializable
 	 */
 	public void setUsers(List<String> users)
 	{
-		this.specialAccess.setUsers(SqlHelper.encodeStringArray(users.toArray(new String[users.size()])));
+		if (getUsersList().size() == 1)
+		{
+			String userVal = (String) ((SelectItem) getUsersList().get(0)).getValue();
+			if ((userVal != null) && (!userVal.equals("0")))
+			{
+				String[] valArray = new String[1];
+				valArray[0] = userVal;
+				this.specialAccess.setUsers(SqlHelper.encodeStringArray(valArray));
+			}
+		}
+		else
+		{	
+			this.specialAccess.setUsers(SqlHelper.encodeStringArray(users.toArray(new String[users.size()])));
+		}	
 	}
 
 	/**
