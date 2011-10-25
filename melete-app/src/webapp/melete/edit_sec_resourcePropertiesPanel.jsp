@@ -52,7 +52,7 @@
 
 
     <f:subview id="LicenseForm" rendered="#{!editSectionPage.shouldRenderNotype}">
-			<jsp:include page="licenseform.jsp"/>  
+			<jsp:include page="licenseform.jsp?formName=EditSectionForm"/>  
 	</f:subview>
 		
 			        <!-- end license code -->		

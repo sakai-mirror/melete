@@ -22,26 +22,38 @@
  **********************************************************************************/
 package org.etudes.tool.melete;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import javax.faces.component.UICommand;
-import javax.faces.component.UIParameter;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIData;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.etudes.api.app.melete.MeleteAuthorPrefService;
 import org.etudes.api.app.melete.MeleteCHService;
+import org.etudes.api.app.melete.MeleteResourceService;
+import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.SectionService;
+import org.etudes.component.app.melete.MeleteResource;
+import org.etudes.component.app.melete.MeleteUserPreference;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.content.cover.ContentTypeImageService;
 import org.sakaiproject.entity.api.ResourceProperties;
+import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+import org.sakaiproject.util.ResourceLoader;
 
 public class ListResourcesPage
 {
@@ -52,7 +64,7 @@ public class ListResourcesPage
 	public class DisplaySecResources implements Comparable<DisplaySecResources>
 	{
 		String resource_gif;
-		String resource_id;
+		String resource_id="";
 		String resource_title;
 		String resource_url;
 		boolean typeLink;
@@ -223,31 +235,40 @@ public class ListResourcesPage
 		}
 	};
 	public String fromPage;
-	public String secResourceName;
-	private boolean callFromSection;
+	private boolean callFromSection = true;
 	private List<DisplaySecResources> displayResourcesList;
-	private RemoteFilesListingNav listNav;
+//	private RemoteFilesListingNav listNav;
 	private boolean renderSelectedResource = false;
-	private String selResourceIdFromList;
-	private boolean sortAscFlag;
+	private String selResourceIdFromList="";
+	private boolean sortAscFlag = true;
 	protected List<DisplaySecResources> currSiteResourcesList;
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(ListResourcesPage.class);
 	protected MeleteCHService meleteCHService;
 	protected SectionService sectionService;
+	protected MeleteAuthorPrefService authorPrefService;
 	protected ServerConfigurationService serverConfigurationService;
 
-	protected boolean shouldRenderLink = false;
-
-	protected boolean shouldRenderLTI = false;
-
-	protected boolean shouldRenderUpload = false;
-
+	private String sectionId="";
+	private String newLinkUrl;
+	private String newURLTitle;
+	private boolean openWindow = false;
+	
+	private int fromIndex=0;
+	private int toIndex=0;
+	private int totalSize=0;
+	private String chunkSize="30";
+	private boolean prevListingFlag = true;
+	private boolean nextListingFlag = true;
+	private UIData table;
+	private String fromIndexParam;
 	/**
 	 * Default constructor
 	 */
 	public ListResourcesPage()
 	{
+		logger.debug("ListResourcesPage constructor");
+		displayResourcesList = new ArrayList<DisplaySecResources>();
 	}
 
 	/**
@@ -255,15 +276,13 @@ public class ListResourcesPage
 	 * 
 	 * @return Returns the currSiteResourcesList.
 	 */
-	public List<DisplaySecResources> getCurrSiteResourcesList()
+	public void getCurrSiteResourcesList()
 	{
 		try
 		{
-			if (currSiteResourcesList == null)
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			if (currSiteResourcesList == null || currSiteResourcesList.size() == 0)
 			{
-				logger.debug("from getCurrSiteResourcesList - i am null");
-				// get current site upload collection
-				FacesContext ctx = FacesContext.getCurrentInstance();
 				ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 				MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
 				String uploadCollId = getMeleteCHService().getUploadCollectionId(mPage.getCurrentSiteId());
@@ -272,8 +291,7 @@ public class ListResourcesPage
 				currSiteResourcesList = new ArrayList<DisplaySecResources>();
 
 				List<?> allmembers = null;
-				if (this.fromPage == null) return null;
-
+				if (this.fromPage == null) return;
 				// to create list of resource whose type is typeUpload
 				if (this.fromPage.equals("ContentUploadServerView") || this.fromPage.equals("editContentUploadServerView"))
 				{
@@ -296,8 +314,8 @@ public class ListResourcesPage
 				}
 
 				if (allmembers == null)
-				{
-					return null;
+				{					
+					return;					
 				}
 				Iterator<?> allmembers_iter = allmembers.iterator();
 				String serverUrl = ServerConfigurationService.getServerUrl();
@@ -314,7 +332,7 @@ public class ListResourcesPage
 					{
 						String contentextension = cr.getContentType();
 						rgif = ContentTypeImageService.getContentTypeImage(contentextension);
-						// logger.debug("image provided for" + displayName +" is " +rgif);
+		
 						if (rgif.startsWith("sakai"))
 							rgif = rgif.replace("sakai", (serverUrl + "/library/image/sakai"));
 						else if (rgif.startsWith("/sakai")) rgif = rgif.replace("/sakai", (serverUrl + "/library/image/sakai"));
@@ -324,17 +342,43 @@ public class ListResourcesPage
 						rgif = "images/web_service.png";
 					}
 					currSiteResourcesList.add(new DisplaySecResources(displayName, cr.getId(), rUrl, rType, rgif, rTypeLTI));
-				}
-				java.util.Collections.sort(currSiteResourcesList);
-				getListNav().setTotalSize(currSiteResourcesList.size() + 1);
-				getListNav().resetCurrIndex();
+				}				
 			}
+			
+			if (ctx.getExternalContext().getRequestParameterMap().get("fromIndex") != null)
+			{
+				String t = (String) ctx.getExternalContext().getRequestParameterMap().get("fromIndex");
+				fromIndex = Integer.parseInt(t);
+			}
+			if (ctx.getExternalContext().getRequestParameterMap().get("chunkSize") != null)
+			{
+				this.chunkSize = (String) ctx.getExternalContext().getRequestParameterMap().get("chunkSize");
+			}
+			if (ctx.getExternalContext().getRequestParameterMap().get("sortAscFlag") != null)
+			{
+				String s = (String) ctx.getExternalContext().getRequestParameterMap().get("sortAscFlag");
+				sortAscFlag = new Boolean(s).booleanValue();
+			}
+			
+			totalSize = currSiteResourcesList.size() + 1;
+			int c = Integer.parseInt(chunkSize);
+			if (c == -1) c = totalSize -1;
+			toIndex = fromIndex + c;
+			if (toIndex >= (totalSize - 1)) toIndex = totalSize - 1;
+			sortList();
+		//	currSiteResourcesList = currSiteResourcesList.subList(fromIndex, toIndex);
+			for(int i=fromIndex; i <toIndex; i++)
+			{
+				displayResourcesList.add(currSiteResourcesList.get(i));
+			}
+	
 		}
 		catch (Exception e)
 		{
-			logger.warn("error in creating list for server residing files" + e.toString());
+			logger.debug("error in creating list for server residing files" + e.toString());
+			e.printStackTrace();
 		}
-		return currSiteResourcesList;
+		return;
 	}
 
 	/**
@@ -344,27 +388,6 @@ public class ListResourcesPage
 	 */
 	public List<DisplaySecResources> getDisplayResourcesList()
 	{
-		try
-		{
-			if (currSiteResourcesList == null) getCurrSiteResourcesList();
-			if (currSiteResourcesList != null)
-			{
-				int fromIndex = getListNav().getCurrIndex();
-				int toIndex = getListNav().getEndIndex();
-
-				logger.debug("from and to index and total size" + fromIndex + "," + toIndex + "," + currSiteResourcesList.size());
-				displayResourcesList = null;
-				if (fromIndex >= 0 && toIndex > fromIndex && fromIndex <= currSiteResourcesList.size() && toIndex <= currSiteResourcesList.size())
-				{
-					displayResourcesList = (List<DisplaySecResources>) currSiteResourcesList.subList(fromIndex, toIndex);
-					logger.debug("displayResourcesList" + displayResourcesList.size());
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			logger.warn("error in creating displayList for server residing files" + e.toString());
-		}
 		return displayResourcesList;
 	}
 
@@ -379,15 +402,21 @@ public class ListResourcesPage
 	/**
 	 * @return Returns the listNav(30 resources on a page).
 	 */
-	public RemoteFilesListingNav getListNav()
+	/*public RemoteFilesListingNav getListNav()
 	{
 		if (listNav == null)
 		{
-			listNav = new RemoteFilesListingNav(0, 0, 30);
+			String chunkSize="30";
+			if (FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("chunkSize") != null)
+			{
+				chunkSize = (String)FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("chunkSize");
+			}
+			
+			listNav = new RemoteFilesListingNav(0, 0, Integer.parseInt(chunkSize));
 		}
 
 		return listNav;
-	}
+	}*/
 
 	/**
 	 * @return Returns the meleteCHService.
@@ -395,14 +424,6 @@ public class ListResourcesPage
 	public MeleteCHService getMeleteCHService()
 	{
 		return meleteCHService;
-	}
-
-	/**
-	 * @return resource name that is selected
-	 */
-	public String getSecResourceName()
-	{
-		return secResourceName;
 	}
 
 	/**
@@ -453,45 +474,11 @@ public class ListResourcesPage
 	}
 
 	/**
-	 * @return value that determines if link resources are rendered
-	 */
-	public boolean isShouldRenderLink()
-	{
-		return shouldRenderLink;
-	}
-
-	/**
-	 * @return value that determines if lti resources are rendered
-	 */
-	public boolean isShouldRenderLTI()
-	{
-		return shouldRenderLTI;
-	}
-
-	/**
-	 * @return value that determines if lti resources are rendered
-	 */
-	public boolean isShouldRenderUpload()
-	{
-		return shouldRenderUpload;
-	}
-
-	/**
 	 * @return delete_resource page
 	 */
 	public String redirectDeleteLink()
 	{
 		return "delete_resource";
-	}
-
-	/**
-	 * Redirects user to page they came from
-	 * 
-	 * @return value of page they came from(list_resources or section listing pages)
-	 */
-	public String redirectLink()
-	{
-		return this.fromPage;
 	}
 
 	/**
@@ -510,77 +497,49 @@ public class ListResourcesPage
 	 * @param evt
 	 *        ActionEvent object
 	 */
-	public void selectedResourceAction(ActionEvent evt)
+	public String link2meAction()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		UICommand cmdLink = (UICommand) evt.getComponent();
+		try
+		{
+			selResourceIdFromList = getSelResourceIdFromList();
+			logger.debug("res id selected:" + selResourceIdFromList);
+			if (sectionId != null && sectionId.length() != 0)
+			{
+				SectionObjService sec = sectionService.getSection(Integer.parseInt(sectionId));
+				MeleteResourceService mres = sectionService.getMeleteResource(getSelResourceIdFromList());
+				sectionService.editSection(sec, mres, getCurrUserId(), true);
+			}
 
-		// List<UIComponent> cList = cmdLink.getChildren();
-		// UIComponent comp = (UIComponent) cList.get(0);
-		// Mallika - Needed to add the if condition below since param tags aren't being
-		// rendered if file size is too large
-
-		/*
-		 * if (!(comp instanceof UIOutput)) { UIParameter param = (UIParameter) comp; this.selResourceIdFromList = (String) param.getValue(); } else {
-		 */
-		String selclientId = cmdLink.getClientId(ctx);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		String resId = selclientId.substring(0, selclientId.indexOf(':'));
-		int selResIndex = Integer.parseInt(resId);
-		selResIndex = selResIndex + getListNav().getCurrIndex();
-		this.selResourceIdFromList = ((DisplaySecResources) currSiteResourcesList.get(selResIndex)).getResource_id();
-		this.secResourceName = ((DisplaySecResources) currSiteResourcesList.get(selResIndex)).getResource_title();
-		// }
-		this.renderSelectedResource = true;
-		if (logger.isDebugEnabled()) logger.debug("selected resource id by user is " + this.selResourceIdFromList);
-
-		// populate properties panel with the selected resource
-		/*
-		 * try{ ContentResource cr= getMeleteCHService().getResource(selResourceIdFromList); this.secResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME); this.secResourceDescription =
-		 * cr.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION); if(cr.getContentLength() > 0) currLinkUrl = new String(cr.getContent()); //get resource object MeleteResource existResource =
-		 * (MeleteResource)sectionService.getMeleteResource(selResourceIdFromList); //just take resource properties from this object as its assoc with another section if(existResource != null) { meleteResource = existResource; ValueBinding binding =
-		 * Util.getBinding("#{licensePage}");
-		 * 
-		 * LicensePage lPage = (LicensePage)binding.getValue(ctx); lPage.setInitialValues(formName, existResource);
-		 * 
-		 * // render selected file name selectedResourceName = secResourceName; renderSelectedResource = true; if (logger.isDebugEnabled()) logger.debug("values changed in resource action for res name and desc" + secResourceName + secResourceDescription);
-		 * } ctx.renderResponse(); }
-		 * 
-		 * catch(Exception ex) { logger.debug("error while accessing content resource" + ex.toString()); }
-		 */
-		ctx.renderResponse();
-		return;
+			FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + sectionId);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return fromPage;
 	}
-
+	
 	/**
 	 * Sets delete resource page with selected resource values
 	 * 
 	 * @param evt
 	 *        ActionEvent object
 	 */
-	public void selectedResourceDeleteAction(ActionEvent evt)
+	public String selectedResourceDeleteAction()
 	{
+		try
+		{
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
-
-		String courseId = mPage.getCurrentSiteId();
-
-		UICommand cmdLink = (UICommand) evt.getComponent();
-		List<?> cList = cmdLink.getChildren();
-		if (cList == null || cList.size() < 1) return;
-		UIParameter param1 = (UIParameter) cList.get(0);
-		String delRes_id = (String) param1.getValue();
-		
-		binding = Util.getBinding("#{deleteResourcePage}");
-		DeleteResourcePage delResPage = (DeleteResourcePage) binding.getValue(ctx);
-		delResPage.resetValues();
-		delResPage.setFromPage(this.fromPage);
-		delResPage.setResourceName(meleteCHService.getDisplayName(delRes_id));
-		delResPage.processDeletion(delRes_id, courseId);
-		return;
+		String delRes_id = getSelResourceIdFromList();
+	
+		ctx.getExternalContext().redirect("delete_resource.jsf?fromPage=" + fromPage + "&delResourceId="+ delRes_id + "&sectionId=" + sectionId);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return fromPage;
 	}
 
 	/**
@@ -602,15 +561,6 @@ public class ListResourcesPage
 	}
 
 	/**
-	 * @param listNav
-	 *        The listNav to set.
-	 */
-	public void setListNav(RemoteFilesListingNav listNav)
-	{
-		this.listNav = listNav;
-	}
-
-	/**
 	 * @param meleteCHService
 	 *        meleteChService to set
 	 */
@@ -629,12 +579,23 @@ public class ListResourcesPage
 	}
 
 	/**
-	 * @param secResourceName
-	 *        resource name to select
+	 * Get the section Id to associate the selected resource
+	 * 
+	 * @return
 	 */
-	public void setSecResourceName(String secResourceName)
+	public String getSectionId()
 	{
-		this.secResourceName = secResourceName;
+		return sectionId;
+	}
+
+	/**
+	 * Set the section id
+	 * 
+	 * @param sectionId
+	 */
+	public void setSectionId(String sectionId)
+	{
+		this.sectionId = sectionId;
 	}
 
 	/**
@@ -647,39 +608,26 @@ public class ListResourcesPage
 	}
 
 	/**
+	 * @param sectionService
+	 *        The sectionService to set.
+	 */
+	public void setSectionService(SectionService sectionService)
+	{
+		this.sectionService = sectionService;
+	}
+	
+	public void setAuthorPrefService(MeleteAuthorPrefService authorPrefService)
+	{
+		this.authorPrefService = authorPrefService;
+	}
+
+	/**
 	 * @param serverConfigurationService
 	 *        The ServerConfigurationService to set.
 	 */
 	public void setServerConfigurationService(ServerConfigurationService serverConfigurationService)
 	{
 		this.serverConfigurationService = serverConfigurationService;
-	}
-
-	/**
-	 * @param shouldRenderLink
-	 *        value that determines if link resources are rendered
-	 */
-	public void setShouldRenderLink(boolean shouldRenderLink)
-	{
-		this.shouldRenderLink = shouldRenderLink;
-	}
-
-	/**
-	 * @param shouldRenderLTI
-	 *        value that determines if lti resources are rendered
-	 */
-	public void setShouldRenderLTI(boolean shouldRenderLTI)
-	{
-		this.shouldRenderLTI = shouldRenderLTI;
-	}
-
-	/**
-	 * @param shouldRenderUpload
-	 *        value that determines if upload resources are rendered
-	 */
-	public void setShouldRenderUpload(boolean shouldRenderUpload)
-	{
-		this.shouldRenderUpload = shouldRenderUpload;
 	}
 
 	/**
@@ -696,12 +644,13 @@ public class ListResourcesPage
 	 * 
 	 * @return the list resources page
 	 */
-	public String sortResourcesAsc()
+	public void sortResourcesAsc(ActionEvent evt)
 	{
 		sortAscFlag = false;
-		listNav.resetCurrIndex();
-		sortList();
-		return "#";
+		try
+		{
+		FacesContext.getCurrentInstance().getExternalContext().redirect(fromPage +"?fromPage=" + fromPage + "&sectionId=" + sectionId + "&chunkSize=" + chunkSize + "&sortAscFlag=" + sortAscFlag);
+		} catch (Exception e) {e.getMessage();}
 	}
 
 	/**
@@ -709,12 +658,13 @@ public class ListResourcesPage
 	 * 
 	 * @return the list resources page
 	 */
-	public String sortResourcesDesc()
+	public void sortResourcesDesc(ActionEvent evt)
 	{
 		sortAscFlag = true;
-		listNav.resetCurrIndex();
-		sortList();
-		return "#";
+		try
+		{
+		FacesContext.getCurrentInstance().getExternalContext().redirect(fromPage +"?fromPage=" + fromPage + "&sectionId=" + sectionId + "&chunkSize=" + chunkSize + "&sortAscFlag=" + sortAscFlag);
+		} catch (Exception e) {e.getMessage();}
 	}
 
 	/**
@@ -737,10 +687,499 @@ public class ListResourcesPage
 	{
 		setRenderSelectedResource(false);
 		setSelResourceIdFromList(null);
-		setSecResourceName(null);
+//		setSelectedResourceName(null);
 		setSortAscFlag(true);
-		setListNav(null);
+	//	setListNav(null);
 		refreshCurrSiteResourcesList();
 	}
 
+	/**
+	 * 
+	 * @param newResource
+	 * @return
+	 */
+	private MeleteResourceService setDefaultLicense(MeleteResourceService newResource)
+	{
+		MeleteUserPreference mup = (MeleteUserPreference) authorPrefService.getUserChoice(getCurrUserId());
+		newResource.setLicenseCode(mup.getLicenseCode());
+		newResource.setAllowCmrcl(mup.isAllowCmrcl());
+		newResource.setAllowMod(mup.getAllowMod());
+		newResource.setCcLicenseUrl(mup.getCcLicenseUrl());
+		newResource.setCopyrightOwner(mup.getCopyrightOwner());
+		newResource.setCopyrightYear(mup.getCopyrightYear());
+		newResource.setReqAttr(mup.isReqAttr());
+
+		return newResource;
+	}
+	
+	/**
+	 * Add the newly provided local file
+	 * 
+	 * @param evt
+	 */
+	public void addNewFile(ActionEvent evt)
+	{
+		try
+		{
+			FacesContext context = FacesContext.getCurrentInstance();
+			org.apache.commons.fileupload.FileItem fi = (org.apache.commons.fileupload.FileItem) context.getExternalContext().getRequestMap().get(
+					"file1");
+
+			if (fi != null && fi.getName() != null && fi.getName().length() != 0)
+			{
+
+				Util.validateUploadFileName(fi.getName());
+				// filename on the client
+				String secResourceName = fi.getName();
+				if (secResourceName.indexOf("/") != -1)
+				{
+					secResourceName = secResourceName.substring(secResourceName.lastIndexOf("/") + 1);
+				}
+				if (secResourceName.indexOf("\\") != -1)
+				{
+					secResourceName = secResourceName.substring(secResourceName.lastIndexOf("\\") + 1);
+				}
+
+				byte[] secContentData = new byte[(int) fi.getSize()];
+				InputStream is = fi.getInputStream();
+				is.read(secContentData);
+
+				String secContentMimeType = fi.getContentType();
+
+				if (secContentMimeType != null)
+				{
+					ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, secResourceName, "");
+					String containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
+					String newResourceId = getMeleteCHService().addResourceItem(secResourceName, secContentMimeType, containCollectionId,
+							secContentData, res);
+					MeleteResourceService newResource = new MeleteResource();
+					newResource.setResourceId(newResourceId);
+					//set default license information
+					newResource = setDefaultLicense(newResource);
+					SectionObjService section = sectionService.getSection(Integer.parseInt(sectionId));
+
+					section.setOpenWindow(openWindow);
+				//	sectionService.insertMeleteResource(section, newResource);
+					sectionService.editSection(section, newResource, getCurrUserId(), true);
+				}
+			}
+	//		 String secId = (String) evt.getComponent().getAttributes().get("sectionId");
+			 FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId="+sectionId);
+		}
+		catch (Exception e)
+		{
+			logger.debug("file upload FAILED" + e.toString());
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * set selected file.
+	 * 
+	 * @return
+	 */
+	public String setServerFile()
+	{
+		return "editmodulesections";
+	}
+
+	/**
+	 * Cancel selected file.
+	 * 
+	 * @return
+	 */
+	public void cancelServerFile(ActionEvent evt)
+	{
+		try
+		{
+	//		String secId = (String) evt.getComponent().getAttributes().get("sectionId");
+			FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + sectionId);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Add newly provided URL item
+	 * 
+	 * @param evt
+	 */
+	public void addNewUrl(ActionEvent evt)
+	{
+		try
+		{
+			// if title is not provided and url is provided then title is same as url.
+			if (newLinkUrl != null && newLinkUrl.length() != 0)
+			{
+				if (newURLTitle == null || newURLTitle.length() == 0) newURLTitle = newLinkUrl;
+			}
+			if (newLinkUrl != null && newURLTitle != null && newLinkUrl.length() != 0 && newURLTitle.length() != 0)
+			{
+				if (newURLTitle.trim().length() > SectionService.MAX_URL_LENGTH)
+					newURLTitle = newURLTitle.substring(0, SectionService.MAX_URL_LENGTH);
+				byte[] secContentData = new byte[newLinkUrl.length()];
+				secContentData = newLinkUrl.getBytes();
+				String res_mime_type = MeleteCHService.MIME_TYPE_LINK;
+				ResourcePropertiesEdit res = getMeleteCHService().fillInSectionResourceProperties(false, newURLTitle, "");
+				String containCollectionId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
+				String newResourceId = getMeleteCHService().addResourceItem(newURLTitle, res_mime_type, containCollectionId, secContentData, res);
+
+				MeleteResourceService newResource = new MeleteResource();
+				newResource.setResourceId(newResourceId);
+				// set default license information
+				newResource = setDefaultLicense(newResource);
+				SectionObjService section = sectionService.getSection(Integer.parseInt(sectionId));
+
+				section.setOpenWindow(openWindow);
+				sectionService.editSection(section, newResource, getCurrUserId(), true);
+			}
+			FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + sectionId);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Get the current user Id
+	 * 
+	 * @return
+	 */
+	public String getCurrUserId()
+	{
+		String currUserId ="";
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map<?, ?> sessionMap = context.getExternalContext().getSessionMap();
+		if (sessionMap != null && sessionMap.containsKey("userId"))
+			currUserId = (String) sessionMap.get("userId");
+		else
+		{
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo meleteSiteAndUser = (MeleteSiteAndUserInfo) binding.getValue(context);
+			currUserId = meleteSiteAndUser.getCurrentUser().getId();
+		}
+		return currUserId;
+	}
+	
+	/*
+	 * get the current course id Pass it to getuploads collection method
+	 */
+	private String getCurrentCourseId()
+	{
+		String currId = "";
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map<?, ?> sessionMap = context.getExternalContext().getSessionMap();
+		currId = (String) sessionMap.get("course_id");
+		if (currId == null || currId.length() == 0)
+		{
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo info = (MeleteSiteAndUserInfo) binding.getValue(context);
+			currId = info.getCourse_id();
+		}
+		return currId;
+	}
+
+	/**
+	 * get the max uploads size allowed for the course.
+	 */
+	public int getMaxUploadSize()
+	{
+
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		int sz = mPage.getMaxUploadSize();
+
+		return sz;
+	}
+
+	/**
+	 * Cancel selected file.
+	 * 
+	 * @return
+	 */
+	public String cancelServerUrl()
+	{
+		return "editmodulesections";
+	}
+
+	/**
+	 * the new provided URL
+	 * 
+	 * @return
+	 */
+	public String getNewLinkUrl()
+	{
+		return newLinkUrl;
+	}
+
+	/**
+	 * Set the URL
+	 * 
+	 * @param newLinkUrl
+	 */
+	public void setNewLinkUrl(String newLinkUrl)
+	{
+		this.newLinkUrl = newLinkUrl;
+	}
+
+	/**
+	 * Get the new URL Title
+	 * 
+	 * @return
+	 */
+	public String getNewURLTitle()
+	{
+		return newURLTitle;
+	}
+
+	/**
+	 * Set the new URL title
+	 * 
+	 * @param newURLTitle
+	 */
+	public void setNewURLTitle(String newURLTitle)
+	{
+		this.newURLTitle = newURLTitle;
+	}
+
+	/**
+	 * Get the provided open window status
+	 * 
+	 * @return
+	 */
+	public boolean isOpenWindow()
+	{
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		if (facesContext.getExternalContext().getRequestParameterMap().get("showMessage") != null)
+		{
+			String show = (String) facesContext.getExternalContext().getRequestParameterMap().get("showMessage");
+
+			if (show == null || show.length() == 0) return openWindow;
+
+			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+			String errMsg = bundle.getString("file_too_large");
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "file_too_large", errMsg));
+		}
+		return openWindow;
+	}
+
+	/**
+	 * Set the open window status
+	 * 
+	 * @param openWindow
+	 */
+	public void setOpenWindow(boolean openWindow)
+	{
+		this.openWindow = openWindow;
+	}
+
+	/**
+	 * Get the listing start index
+	 * @return
+	 */
+	public int getFromIndex()
+	{
+		return fromIndex;
+	}
+
+	/**
+	 * Set the listing start index
+	 * @param fromIndex
+	 */
+	public void setFromIndex(int fromIndex)
+	{
+		this.fromIndex = fromIndex;
+	}
+
+	public String getFromIndexParam()
+	{
+		fromIndexParam = Integer.toString(fromIndex);
+		return fromIndexParam;
+	}
+
+	public void setFromIndexParam(String fromIndexParam)
+	{
+		fromIndex = Integer.parseInt(fromIndexParam);
+		this.fromIndexParam = fromIndexParam;
+	}
+
+	/**
+	 * Get the listing end index. set according to the chunk size
+	 * @return
+	 */
+	public int getToIndex()
+	{
+		return toIndex;
+	}
+
+	/**
+	 * Set listing end index
+	 * @param toIndex
+	 */
+	public void setToIndex(int toIndex)
+	{
+		this.toIndex = toIndex;
+	}
+
+	/**
+	 * Get the total listing size
+	 * @return
+	 */
+	public int getTotalSize()
+	{
+		return totalSize;
+	}
+
+	/**
+	 * Set the listing size
+	 * @param totalSize
+	 */
+	public void setTotalSize(int totalSize)
+	{
+		this.totalSize = totalSize;
+	}
+
+	/**
+	 * Get the chunk size for pagination
+	 * @return
+	 */
+	public String getChunkSize()
+	{
+		if (Integer.parseInt(chunkSize) == (totalSize -1)) return "-1";
+		return chunkSize;
+	}
+
+	/**
+	 * Set the chunk size for pagination
+	 * @param chunkSize
+	 */
+	public void setChunkSize(String chunkSize)
+	{
+		this.chunkSize = chunkSize;
+	}
+
+	/**
+	 * Change the pagination size. Refreshes the page and starts with new chunk size.
+	 * 
+	 * @param event
+	 * @throws AbortProcessingException
+	 */
+	public void changeChunkSize(ValueChangeEvent event) throws AbortProcessingException
+	{
+		UIInput chunkSelect = (UIInput) event.getComponent();
+
+		this.chunkSize = (String) chunkSelect.getValue();
+		// -1 implies all resources need to be displayed
+		if (this.chunkSize.equals("-1")) this.chunkSize = Integer.toString(totalSize - 1);
+		int c = Integer.parseInt(chunkSize);
+		if (c == -1) c = totalSize - 1;
+		toIndex = fromIndex + c;
+		if (toIndex > (totalSize - 1)) toIndex = totalSize - 1;
+		// FacesContext.getCurrentInstance().renderResponse();
+		try
+		{
+			FacesContext.getCurrentInstance().getExternalContext().redirect(
+					fromPage + "?fromPage=" + fromPage + "&sectionId=" + sectionId + "&chunkSize=" + chunkSize);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Process start and end indices for the previous page
+	 * 
+	 * @return the start page
+	 */
+	public void goPrev(ActionEvent evt)
+	{	
+		int c = Integer.parseInt(chunkSize);
+		if (c == -1) c = totalSize -1;
+		fromIndex = fromIndex - c;
+		if (fromIndex < 0) fromIndex = 0;
+
+		try
+		{
+		FacesContext.getCurrentInstance().getExternalContext().redirect(fromPage +"?fromPage=" + fromPage + "&sectionId=" + sectionId + "&chunkSize=" + chunkSize + "&fromIndex=" + fromIndex);
+		} catch (Exception e) {e.getMessage();}
+	}
+
+	/**
+	 * Process start and end indices for the next page
+	 * 
+	 * @return the start page
+	 */
+	public void goNext(ActionEvent evt)
+	{
+		int c = Integer.parseInt(chunkSize);
+		if (c == -1) c = totalSize -1;
+		fromIndex = fromIndex + c;
+		try
+		{
+		FacesContext.getCurrentInstance().getExternalContext().redirect(fromPage +"?fromPage=" + fromPage + "&sectionId=" + sectionId + "&chunkSize=" + chunkSize + "&fromIndex=" + fromIndex);
+		} catch (Exception e) {e.getMessage();}
+	}
+	
+	/**
+	 * Show navigation prev button
+	 * @return true if shown listing is from middle
+	 */
+	public boolean isPrevListingFlag()
+	{	
+		if (currSiteResourcesList == null) getCurrSiteResourcesList();
+		if (fromIndex == 0)	prevListingFlag = false;
+		else prevListingFlag = true;
+		return prevListingFlag;
+	}
+
+	/**
+	 * Show navigation next button
+	 * @return true if more listing is to show
+	 */
+	public boolean isNextListingFlag()
+	{
+		if (toIndex < (totalSize - 1))nextListingFlag = true;
+		else nextListingFlag = false;
+		return nextListingFlag;
+	}
+
+	/**
+	 * Get the display start index
+	 * @return
+	 */
+	public String getDisplayFromIndex()
+	{
+		if (currSiteResourcesList == null) getCurrSiteResourcesList();
+		return new Integer(fromIndex + 1).toString();
+	}
+
+	/**
+	 * Get the display end index
+	 * @return
+	 */
+	public String getDisplayEndIndex()
+	{
+		return new Integer(toIndex).toString();
+	}
+	
+	/**
+	 * @return value of datatable (in which resources are rendered)
+	 */
+	public UIData getTable()
+	{
+		return table;
+	}
+
+	/**
+	 * @param table module datatable to set
+	 */
+	public void setTable(UIData table)
+	{
+		this.table = table;
+	}
 }

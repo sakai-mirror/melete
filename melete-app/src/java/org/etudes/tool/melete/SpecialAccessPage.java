@@ -33,6 +33,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.component.html.*;
 import javax.faces.component.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -47,6 +50,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.io.*;
 
 import javax.faces.context.FacesContext;
@@ -81,9 +85,9 @@ public class SpecialAccessPage implements Serializable
 	private int moduleId;
 	private boolean noAccFlag;
 	private List saList;
+	private Map saMap = null;
 
-	private List selectedAccIndices = null;
-	private int showInvalidAccessId;
+	private List selectedAccIds = null;
 	/** identifier field */
 	private SpecialAccessObjService specialAccess;
 	private SpecialAccessService specialAccessService;
@@ -132,31 +136,34 @@ public class SpecialAccessPage implements Serializable
 		Map sessionMap = context.getExternalContext().getSessionMap();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		// SpecialAccess specialAccess = new SpecialAccess();
-
 		if (specialAccessService == null) specialAccessService = getSpecialAccessService();
-
-		Date st = this.specialAccess.getStartDate();
-		Date end = this.specialAccess.getEndDate();
-
-		boolean dateResult = validateDates(context, bundle, st, end);
-		if (dateResult == false) return "failure";
-
 		if (getUsers() != null)
 		{
-			try
+			if (!checkForEmpty())
 			{
-				specialAccessService.insertSpecialAccess(this.saList, this.specialAccess, getModule());
-			}
-			catch (Exception ex)
-			{
-				String errMsg = bundle.getString(ex.getMessage());
-				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), errMsg));
-				return "failure";
+				this.specialAccess = validateDates(context, this.specialAccess);
+				try
+				{
+					specialAccessService.insertSpecialAccess(this.saList, this.specialAccess, getModule());
+				}
+				catch (Exception ex)
+				{
+					String errMsg = bundle.getString(ex.getMessage());
+					context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), errMsg));
+					return "failure";
+				}
 			}
 		}
+		
 		resetValues();
 		return "list_special_access";
 
+	}
+	
+	protected boolean checkForEmpty()
+	{
+		if (getUsers() != null && getUsers().size() == 1 && (getUsers().get(0).equals("0"))) return true;
+		return false;
 	}
 
 	/**
@@ -187,6 +194,8 @@ public class SpecialAccessPage implements Serializable
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		List delAccs = null;
 		count = 0;
+		
+		if ((saList == null)||(saList.size() == 0)) return "list_special_access";
 
 		// added by rashmi
 		if (!accessSelected)
@@ -207,18 +216,29 @@ public class SpecialAccessPage implements Serializable
 			{
 				delAccs = new ArrayList();
 			}
-			if (selectedAccIndices != null)
+			if (selectedAccIds != null)
 			{
 				StringBuffer accTitlesBuf = new StringBuffer();
-				for (ListIterator i = selectedAccIndices.listIterator(); i.hasNext();)
+				for (ListIterator i = selectedAccIds.listIterator(); i.hasNext();)
 				{
 					int saId = ((Integer) i.next()).intValue();
-					sa = (SpecialAccess) saList.get(saId);
-					delAccs.add(sa.getAccessId());
-					accTitlesBuf.append(generateUserNames(sa.getUsers()));
+					sa = (SpecialAccess) saMap.get(saId);
+					if (sa != null) 
+ {
+						delAccs.add(sa.getAccessId());
+						accTitlesBuf.append(generateUserNames(sa.getUsers()));
+					}
 				}
-				setDeleteAccessIds(delAccs);
-				setDeleteAccessTitles(accTitlesBuf.toString());
+				if ((delAccs != null) && (delAccs.size() > 0)) {
+					setDeleteAccessIds(delAccs);
+					setDeleteAccessTitles(accTitlesBuf.toString());
+				}
+				else 
+				{
+					count = 0;
+					resetSelectedLists();
+					return "list_special_access";
+				}
 			}
 		}
 
@@ -259,10 +279,13 @@ public class SpecialAccessPage implements Serializable
 	 */
 	public void editSpecialAccess(ActionEvent evt)
 	{
+		if ((saList == null)||(saList.size() == 0)) return;
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map params = ctx.getExternalContext().getRequestParameterMap();
-		int selAccIndex = Integer.parseInt((String) params.get("accidx"));
-		setSpecialAccess((SpecialAccess) this.saList.get(selAccIndex));
+		int selAccId = Integer.parseInt((String) params.get("accid"));
+		SpecialAccess sa = (SpecialAccess) this.saMap.get(selAccId);
+		if (sa == null) return;
+		setSpecialAccess(sa);
 
 	}
 
@@ -340,7 +363,14 @@ public class SpecialAccessPage implements Serializable
 	 */
 	public ModuleObjService getModule()
 	{
-		return this.moduleService.getModule(this.moduleId);
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		if (ctx.getExternalContext().getRequestParameterMap().get("editmodid") != null)
+		{
+			String selectedModId = (String)ctx.getExternalContext().getRequestParameterMap().get("editmodid");
+			moduleId = Integer.parseInt(selectedModId);
+			setSaList(null);
+		}
+		return this.moduleService.getModule(this.moduleId);		
 	}
 
 	/**
@@ -361,10 +391,10 @@ public class SpecialAccessPage implements Serializable
 		if (saList == null)
 		{
 			saList = specialAccessService.getSpecialAccess(this.moduleId);
-			listSize = saList.size();
+			if (saList != null) listSize = saList.size();
 
 			StringBuffer userNameBuf = new StringBuffer();
-			if (saList.size() > 0)
+			if ((saList != null)&&(saList.size() > 0))
 			{
 				noAccFlag = false;
 				for (ListIterator i = saList.listIterator(); i.hasNext();)
@@ -372,12 +402,15 @@ public class SpecialAccessPage implements Serializable
 					SpecialAccess saObj = (SpecialAccess) i.next();
 					saObj.setUserNames(generateUserNames(saObj.getUsers()));
 				}
+				saMap = getSaMap(saList);
 			}
 			else
 			{
 				noAccFlag = true;
+				saMap = null;
 			}
 		}
+		
 		return saList;
 	}
 
@@ -387,14 +420,6 @@ public class SpecialAccessPage implements Serializable
 	public boolean getSelectAllFlag()
 	{
 		return selectAllFlag;
-	}
-
-	/**
-	 * @return invalid access id
-	 */
-	public int getShowInvalidAccessId()
-	{
-		return showInvalidAccessId;
 	}
 
 	/**
@@ -461,7 +486,7 @@ public class SpecialAccessPage implements Serializable
 	 * 
 	 * @return select list of users
 	 */
-	public List<String> getUsersList()
+	public List<SelectItem> getUsersList()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
@@ -488,15 +513,6 @@ public class SpecialAccessPage implements Serializable
 	}
 
 	/**
-	 * @return list_special_access
-	 */
-	public String hideInvalid()
-	{
-		setShowInvalidAccessId(-1);
-		return "list_special_access";
-	}
-
-	/**
 	 * @return the noAccFlag
 	 */
 	public boolean isNoAccFlag()
@@ -518,7 +534,7 @@ public class SpecialAccessPage implements Serializable
 	 */
 	public void resetSelectedLists()
 	{
-		selectedAccIndices = null;
+		selectedAccIds = null;
 		selectAllFlag = false;
 	}
 
@@ -529,11 +545,11 @@ public class SpecialAccessPage implements Serializable
 	public void resetValues()
 	{
 		saList = null;
+		saMap = null;
 		noAccFlag = true;
 		accessSelected = false;
 		deleteAccessIds = null;
 		deleteAccessTitles = null;
-		setShowInvalidAccessId(-1);
 	}
 
 	/**
@@ -559,18 +575,17 @@ public class SpecialAccessPage implements Serializable
 	 */
 	public void selectAllAccess(ValueChangeEvent event) throws AbortProcessingException
 	{
+		if ((saList == null)||(saList.size() == 0)) return;
 		selectAllFlag = true;
-		int k = 0;
-		if (selectedAccIndices == null)
+		if (selectedAccIds == null)
 		{
-			selectedAccIndices = new ArrayList();
+			selectedAccIds = new ArrayList();
 		}
 		for (ListIterator i = saList.listIterator(); i.hasNext();)
 		{
 			SpecialAccess sa = (SpecialAccess) i.next();
 			sa.setSelected(true);
-			selectedAccIndices.add(new Integer(k));
-			k++;
+			selectedAccIds.add(new Integer(sa.getAccessId()));
 		}
 		count = saList.size();
 		if (count == 1) selectedAccIndex = 0;
@@ -596,20 +611,32 @@ public class SpecialAccessPage implements Serializable
 				count++;
 			else
 				count--;
+			
+			String title = (String) acc_Selected.getAttributes().get("title");
+			if (title != null) {
+				int selectedAccId = Integer.parseInt(title);
+				
+				if (selectedAccIds == null)
+				{
+					selectedAccIds = new ArrayList();
+				}
+				selectedAccIds.add(new Integer(selectedAccId));
+				accessSelected = true;
+			}	
 
-			String selclientId = acc_Selected.getClientId(context);
+			/*String selclientId = acc_Selected.getClientId(context);
 			if (logger.isDebugEnabled()) logger.debug("Sel client ID is " + selclientId);
 			selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
 			selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
 			String accessId = selclientId.substring(0, selclientId.indexOf(':'));
 
 			selectedAccIndex = Integer.parseInt(accessId);
-			if (selectedAccIndices == null)
+			if (selectedAccIds == null)
 			{
-				selectedAccIndices = new ArrayList();
+				selectedAccIds = new ArrayList();
 			}
-			selectedAccIndices.add(new Integer(selectedAccIndex));
-			accessSelected = true;
+			selectedAccIds.add(new Integer(selectedAccIndex));
+			accessSelected = true;*/
 		}
 		return;
 	}
@@ -706,15 +733,6 @@ public class SpecialAccessPage implements Serializable
 	}
 
 	/**
-	 * @param showInvalidAccessId
-	 *        invalid access id
-	 */
-	public void setShowInvalidAccessId(int showInvalidAccessId)
-	{
-		this.showInvalidAccessId = showInvalidAccessId;
-	}
-
-	/**
 	 * @param specialAccess
 	 *        specialAccessObjService object
 	 */
@@ -768,29 +786,20 @@ public class SpecialAccessPage implements Serializable
 	 */
 	public void setUsers(List<String> users)
 	{
-		this.specialAccess.setUsers(SqlHelper.encodeStringArray(users.toArray(new String[users.size()])));
-	}
-
-	/**
-	 * Sets showInvalidAccessId to set invalid popup on list page
-	 * 
-	 * @return list_special_access
-	 */
-	public String showHideInvalid()
-	{
-		ModuleDateBean mdbean = null;
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIViewRoot root = ctx.getViewRoot();
-		UIData table = null;
-		table = (UIData) root.findComponent("listspecialaccessform").findComponent("table");
-
-		SpecialAccess saObj = (SpecialAccess) table.getRowData();
-		if (getShowInvalidAccessId() != saObj.getAccessId())
+		if (getUsersList().size() == 1)
 		{
-			setShowInvalidAccessId(saObj.getAccessId());
+			String userVal = (String) ((SelectItem) getUsersList().get(0)).getValue();
+			if ((userVal != null) && (!userVal.equals("0")))
+			{
+				String[] valArray = new String[1];
+				valArray[0] = userVal;
+				this.specialAccess.setUsers(SqlHelper.encodeStringArray(valArray));
+			}
 		}
-
-		return "list_special_access";
+		else
+		{	
+			this.specialAccess.setUsers(SqlHelper.encodeStringArray(users.toArray(new String[users.size()])));
+		}	
 	}
 
 	/**
@@ -825,7 +834,7 @@ public class SpecialAccessPage implements Serializable
 		// Adding available list to select box
 		if (list == null || list.size() == 0)
 		{
-			selectList.add(new SelectItem("0", "No Items"));
+			selectList.add(new SelectItem("0", "No Students"));
 			return selectList;
 		}
 
@@ -840,26 +849,23 @@ public class SpecialAccessPage implements Serializable
 
 		return selectList;
 	}
-
+	
 	/**
-	 * Ensure that the dates do not have a year after 9999 and the end date is after the start date
+	 * Ensure that the dates do not have a year after 9999
 	 * 
 	 * @param context
 	 *        FacesContext object
-	 * @param bundle
-	 *        ResourceLoader object
-	 * @param st
-	 *        Start date
-	 * @param end
-	 *        End date
-	 * @return true if dates are valid, false otherwise
+	 * @param specialAccess
+	 *        SpecialAccess object
+	 * @return SpecialAccessObjService object with dates corrected
 	 */
-	private boolean validateDates(FacesContext context, ResourceLoader bundle, Date st, Date end)
+	private SpecialAccessObjService validateDates(FacesContext context, SpecialAccessObjService specialAccess)
 	{
 		Calendar calstart = new GregorianCalendar();
 		Calendar calend = new GregorianCalendar();
 
-		boolean errorFlag = false;
+		Date st = specialAccess.getStartDate();
+		Date end = specialAccess.getEndDate();
 		if ((st != null) || (end != null))
 		{
 			if (st != null)
@@ -867,9 +873,23 @@ public class SpecialAccessPage implements Serializable
 				calstart.setTime(st);
 				if (calstart.get(Calendar.YEAR) > 9999)
 				{
-					String errMsg = bundle.getString("year_toobig_error");
-					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-					errorFlag = true;
+					Map params = context.getExternalContext().getRequestParameterMap();
+					String prevStartDateStr = (String) params.get("AddSpecialAccessForm:prevStartDate");
+					if ((prevStartDateStr.equals("null") || (prevStartDateStr.trim().equals("")) || (prevStartDateStr.trim().length() == 0)))
+					{
+						specialAccess.setStartDate(null);
+					}
+					else
+					{
+						try
+						{
+							specialAccess.setStartDate(getDateFromString(prevStartDateStr));
+						}
+						catch (ParseException e)
+						{
+							specialAccess.setStartDate(getModule().getModuleshdate().getStartDate());
+						}
+					}
 				}
 			}
 			if (end != null)
@@ -877,28 +897,51 @@ public class SpecialAccessPage implements Serializable
 				calend.setTime(end);
 				if (calend.get(Calendar.YEAR) > 9999)
 				{
-					String errMsg = bundle.getString("year_toobig_error");
-					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-					errorFlag = true;
-				}
-			}
-
-			// validation no 4 b
-			if ((end != null) && (st != null))
-			{
-				if (end.compareTo(st) <= 0)
-				{
-					String errMsg = "";
-					errMsg = bundle.getString("end_date_before_start");
-					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-					errorFlag = true;
+					Map params = context.getExternalContext().getRequestParameterMap();
+					String prevEndDateStr = (String) params.get("AddSpecialAccessForm:prevEndDate");
+					if ((prevEndDateStr.equals("null") || (prevEndDateStr.trim().equals("")) || (prevEndDateStr.trim().length() == 0)))
+					{
+						specialAccess.setEndDate(null);
+					}
+					else
+					{
+						try
+						{
+							specialAccess.setEndDate(getDateFromString(prevEndDateStr));
+						}
+						catch (ParseException e)
+						{
+							specialAccess.setEndDate(this.module.getModuleshdate().getEndDate());
+						}
+					}
 				}
 			}
 		}
-		// If there is an error, validation fails and the method returns false
-		// If there are no errors, validation passes and the method returns true;
-		if (errorFlag == true) return false;
-		return true;
-	}
 
+		return specialAccess;
+	}	
+	
+	protected Map getSaMap(List saList)
+	{
+		if ((saList == null)||(saList.size() == 0)) return null;
+		Map saMap = new LinkedHashMap<Integer, SpecialAccess>();
+
+		for (Iterator itr = saList.listIterator(); itr.hasNext();)
+		{
+			SpecialAccess saObj = (SpecialAccess) itr.next();
+		    saMap.put(saObj.getAccessId(), saObj);
+		}	
+		return saMap;
+	}	
+	
+	public Date getDateFromString(String dateStr) throws ParseException{
+		Date date = null;
+		try {
+			SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.MEDIUM);
+	        date = sdf.parse(dateStr);
+		} catch (ParseException e) {
+			throw e;
+		}
+		return date;
+	}	
 }

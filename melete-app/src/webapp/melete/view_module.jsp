@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="org.etudes.tool.melete.ViewModulesPage"%>
 <!--
  ***********************************************************************************
  * $URL$
@@ -26,11 +27,35 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+<%
+final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
+final ViewModulesPage vmPage = (ViewModulesPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "viewModulesPage");
 
+String moduleId = (String)request.getParameter("modId");
+
+if (moduleId != null)
+{
+	vmPage.setModuleId(Integer.parseInt(moduleId));
+}
+
+String moduleSeqNo = (String)request.getParameter("modSeqNo");
+if (moduleSeqNo != null)
+{
+	vmPage.setModuleSeqNo(Integer.parseInt(moduleSeqNo));
+}
+%>
 <f:view>
 <sakai:view title="Modules: Student View" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
 <script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
+<t:saveState id="vmpvmbean" value="#{viewModulesPage.viewMbean}" />
+<t:saveState id="vmppmbean" value="#{viewModulesPage.prevMbean}" />
+<t:saveState id="vmppsn" value="#{viewModulesPage.prevSeqNo}" />
+<t:saveState id="vmpmsn" value="#{viewModulesPage.moduleSeqNo}" />
+<t:saveState id="vmpnsn" value="#{viewModulesPage.nextSeqNo}" />
+<t:saveState id="vmppss" value="#{viewModulesPage.prevSectionSize}" />
+
 <h:form id="viewmoduleform">
  <f:subview id="top">
   	<jsp:include page="topnavbar.jsp?myMode=View"/>
@@ -41,9 +66,6 @@
 <!--Page Content-->
 		 <tr>
 			<td align="center">			
-			<!-- The getmdbean method correctly determines the prev and next seq nos in the backing bean -->
-			<!-- The hidden field below has been added just to get the getmdbean method to execute first -->
-		    <h:inputHidden id="hacktitle" value="#{viewModulesPage.viewMbean.title}"/>
 			<f:subview id="topmod">
 			  <jsp:include page="view_navigate_mod.jsp"/>
 			</f:subview>
@@ -56,6 +78,7 @@
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />									
  <f:param name="fromPage" value="view_module" />
  <f:param name="fromModuleId" value="#{viewModulesPage.moduleId}" />
+ <f:param name="fromModuleSeqNo" value="#{viewModulesPage.moduleSeqNo}" />
 </h:commandLink>				  
 </td>
 </tr>			               
@@ -70,7 +93,7 @@
 		</h:column>
 		<h:column rendered="#{viewModulesPage.printable}">
 			<h:outputLink id="printModuleLink" value="view_module" onclick="OpenPrintWindow(#{viewModulesPage.viewMbean.moduleId},'Melete Print Window');" rendered="#{viewModulesPage.printable}">
-		    	<f:param id="printmoduleId" name="printModuleId" value="#{viewModulesPage.viewMbean.moduleId}" />
+		    	<f:param id="modId" name="modId" value="#{viewModulesPage.viewMbean.moduleId}" />
 	  			<h:graphicImage id="printImgLink" value="/images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 		 	</h:outputLink>
 		</h:column>
@@ -81,11 +104,11 @@
 		</h:column>
 	<h:column>
 		<h:outputText id="secs" value="#{msgs.view_module_student_content_section}" ></h:outputText>  
-		<h:dataTable id="tablesec"  value="#{viewModulesPage.viewMbean.vsBeans}" var="sectionBean" columnClasses="SectionTableClassCol1,SectionTableClassCol2" rowClasses="row2,row1" headerClass="leftheader" rendered="#{viewModulesPage.sectionSize > 0}" styleClass="SectionTableClass" width="98%">
+		<h:dataTable id="tablesec"  value="#{viewModulesPage.viewMbean.vsBeans}" var="sectionBean" columnClasses="SectionTableClassCol1,SectionTableClassCol2" rowClasses="row2,row1" headerClass="leftheader" rendered="#{viewModulesPage.sectionSize > 0}" styleClass="SectionTableClass" width="98%" summary="#{msgs.view_module_summary}">
  			  <h:column> 			  		
  					<h:panelGroup style="width:100%;">
 	        		 
-			          <h:commandLink id="viewSectionEditor"  action="#{viewModulesPage.viewSection}" styleClass="#{sectionBean.displayClass}" rendered="#{sectionBean.title != viewModulesPage.nullString}" immediate="true">
+			          <h:commandLink id="viewSectionEditor"  actionListener="#{viewModulesPage.viewSection}" styleClass="#{sectionBean.displayClass}" rendered="#{sectionBean.title != viewModulesPage.nullString}" immediate="true">
 					      <h:graphicImage id="bul_gif" value="/images/bullet_black.gif" rendered="#{!viewModulesPage.autonumber}" styleClass="AuthImgClass"/>
 					      <h:outputText id="sec_seq" value="#{sectionBean.displaySequence}. " rendered="#{viewModulesPage.autonumber}"/>
 						  <h:outputText id="sectitleEditor" value="#{sectionBean.title}" > </h:outputText>

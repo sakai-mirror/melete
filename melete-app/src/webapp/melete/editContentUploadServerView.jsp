@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!--
  ***********************************************************************************
  * $URL$
@@ -25,69 +26,67 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
-
+<%@ taglib uri="http://javascript4jsf.dev.java.net/" prefix="j4j" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 <f:view>
 <sakai:view title="Modules: Select Resource Item" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
+
+<t:saveState id="fromPage" value="#{listResourcesPage.fromPage}" />
+<t:saveState id="sectionId" value="#{listResourcesPage.sectionId}" />
 
 <%@ page import="javax.faces.application.FacesMessage, java.util.ResourceBundle"%>
 
 <% 
 	String status = (String)request.getAttribute("upload.status");
+	String other = (String)request.getParameter("sectionId");
+	
 		if( status != null && !status.equalsIgnoreCase("ok"))
 		{
 			final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
-			ResourceBundle bundle = ResourceBundle.getBundle("org.etudes.tool.melete.bundle.Messages", facesContext.getViewRoot().getLocale());
-			String infoMsg = bundle.getString("file_too_large");
-			FacesMessage msg = new FacesMessage(null, infoMsg);
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			facesContext.addMessage(null, msg);				
+			facesContext.responseComplete();
+			facesContext.getExternalContext().redirect("editContentUploadServerView.jsf?fromPage=editContentUploadServerView&showMessage=true&sectionId="+other);			
 	   }
+	   
 %>
 
-<script language="javascript1.2">
-function fillupload()
-{
-	if(document.getElementById("file1") != undefined)
-	{
-		var k = document.getElementById("file1").value;
-		document.getElementById("EditUploadServerViewForm:filename").value=k;
-	}
-}
-
-</script>
-
 <h:form id="EditUploadServerViewForm" enctype="multipart/form-data">	
+<j4j:param name="sectionId" value="#{listResourcesPage.sectionId}" method="get" />
+<j4j:param name="fromPage" value="#{listResourcesPage.fromPage}" method="get" />
 <!-- top nav bar -->
     <f:subview id="top">
       <jsp:include page="topnavbar.jsp"/> 
     </f:subview>
+	
 	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/replace2.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.editcontentuploadserverview_selecting}" /></div>
 <!-- This Begins the Main Text Area -->
+			<h:outputText value="#{listResourcesPage.openWindow}" style="visibility:hidden;display:none"/>
 			<h:messages showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
 			<p><h:outputText id="Stext_2" value="#{msgs.editcontentuploadserverview_msg1}"/></p>
     		<table class="maintableCollapseWithBorder">
 				<tr><td>  					 
 <!--replace with local part Begin -->
-					<table class="maintableCollapseWithNoBorder" >
+				<table class="maintableCollapseWithNoBorder" >
 						<tr><td height="20" colspan="2" class="maintabledata8"> <h:outputText id="Stext_add" value="#{msgs.editcontentuploadserverview_replace}" styleClass="bold"/> 									 
 						 <tr><td height="20" colspan="2"> <h:outputText id="Stext3" value="#{msgs.editcontentuploadserverview_upload}"/> 				
-																			<INPUT TYPE="FILE" id="file1" NAME="file1" style="visibility:visible" onChange="javascript:fillupload()"/>
+								<INPUT TYPE="FILE" id="file1" NAME="file1" style="visibility:visible" />
 						</td></tr>	
 						<tr><td  colspan="2"> 
-							<h:outputText id="note" value="#{msgs.editcontentuploadserverview_note} #{editSectionPage.maxUploadSize}MB."  styleClass="comment red"/>				
-							<h:inputHidden id="filename" value="#{editSectionPage.hiddenUpload}" />
-							<h:outputText id="brval" value="<BR>" escape="false"/>
-							<h:outputText id="somespaces1" value=" " styleClass="MediumPaddingClass" />
-							<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{editSectionPage.section.openWindow}" rendered="#{editSectionPage.shouldRenderUpload}">
-	                        </h:selectBooleanCheckbox>
-		                    <h:outputText id="editlinkText_8" value="#{msgs.editcontentlinkserverview_openwindow}" rendered="#{editSectionPage.shouldRenderUpload}"/>
-													
-					</td></tr>	
+							<h:outputText id="note" value="#{msgs.editcontentuploadserverview_note} #{listResourcesPage.maxUploadSize}MB."  styleClass="comment red"/>				
+						</td></tr>
+						<tr><td  colspan="2"> 
+							<h:selectBooleanCheckbox id="windowopen" title="openWindow" value="#{listResourcesPage.openWindow}" />
+	                        <h:outputText id="editlinkText_8" value="#{msgs.editcontentlinkserverview_openwindow}"/>
+						</td></tr>	
 					</table>
 			       	<div class="actionBar" align="left">
-		          		<h:commandButton id="addButton" action="#{editSectionPage.setServerFile}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
-		          	 	<h:commandButton id="cancelButton" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
+		          		<h:commandButton id="addButton" actionListener="#{listResourcesPage.addNewFile}" value="#{msgs.im_continue}" action="#{listResourcesPage.setServerFile}" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue">
+		          				<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />		          			
+					    </h:commandButton> 		          			
+					      		
+		          	 	<h:commandButton id="cancelButton" immediate="true" value="#{msgs.im_cancel}" actionListener="#{listResourcesPage.cancelServerFile}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
+		          	 		<f:param name="sectionId" value="#{listResourcesPage.sectionId}" />		          			
+					    </h:commandButton> 
         			 </div>
 					 </td></tr>        
 		   
@@ -99,11 +98,7 @@ function fillupload()
 											<f:subview id="UploadResourceListingForm" >	
 												<jsp:include page="list_resources.jsp"/> 
 											</f:subview>
-																																												
-									<div class="actionBar" align="left">
-					          	   	<h:commandButton id="addButton_1" action="#{editSectionPage.setServerFile}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
-					          	 	<h:commandButton id="cancelButton_1" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
-							    </div>									
+								
 						  </td>
 			            </tr>
 			           	</table>					

@@ -26,10 +26,15 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
-<sakai:view title="Modules: Manage Content" toolCssHref="/etudes-melete-tool/rtbc004.css">
+<sakai:view title="Modules: Select Resource Item" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
+
+<t:saveState id="fromPage" value="#{listResourcesPage.fromPage}" />
+<t:saveState id="sectionId" value="#{listResourcesPage.sectionId}" />
+
 
  <h:form id="ManageContentForm">
 	 <f:subview id="top">
@@ -81,8 +86,7 @@
 				</table>
 				<div class="actionBar" align="left">	
             	    <h:commandButton id="continueButton" action="#{manageResourcesPage.addItems}" value="#{msgs.im_continue}"  accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue"/>
-        	        <h:commandButton id="cancelButton" immediate="true" action="#{manageResourcesPage.cancel}" value="#{msgs.im_cancel}"  accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel"/>
-				</div>
+    			</div>
 				</td></tr>             
 			 <tr>
         		 <td>

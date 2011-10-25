@@ -264,18 +264,18 @@ public class ViewModulesPage implements Serializable
 	/**
 	 * Go to next section, set all the values such as section id, module id, section and module
 	 * 
-	 * @return view_section
+	 * 
 	 */
-	public String goNextSection()
+	public void goNextSection(ActionEvent evt)
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 
-		ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
-
-		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
-
+		
 		ViewSecBeanService secBean = (ViewSecBeanService) this.viewMbean.getVsBeans().get(0);
 		SectionObjService sec = sectionService.getSection(secBean.getSectionId());
+		
+		/*ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
+		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
 		vsPage.setSectionId(secBean.getSectionId());
 		vsPage.setModuleId(sec.getModuleId());
 		vsPage.setModuleSeqNo(sec.getModule().getCoursemodule().getSeqNo());
@@ -283,87 +283,136 @@ public class ViewModulesPage implements Serializable
 		vsPage.setSection(sec);
 		// added by rashmi on 6/14/05
 		vsPage.setModule(null);
-		vsPage.setAutonumber(null);
-
-		String retVal = "view_section";
-		return retVal;
+		vsPage.setAutonumber(null);*/
+		
+		try
+		{
+			ctx.getExternalContext().redirect("view_section.jsf?moduleId="+sec.getModuleId()+"&sectionId="+secBean.getSectionId()+"&moduleSeqNo="+sec.getModule().getCoursemodule().getSeqNo());
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**
 	 * Go to previous or next module
 	 * 
-	 * @return view_module
+	 * 
 	 */
-	public String goPrevNext()
+	public void goPrevNext(ActionEvent evt)
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		this.moduleSeqNo = new Integer(((String) ctx.getExternalContext().getRequestParameterMap().get("modseqno"))).intValue();
 		this.viewMbean = null;
 		this.moduleId = 0;
-		return "view_module";
+		try
+		{
+			ctx.getExternalContext().redirect("view_module.jsf?modSeqNo="+this.moduleSeqNo);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**
 	 * Go to previous section, set all the values such as section id, module id, section and module
 	 * 
-	 * @return view_section
+	 * 
 	 */
-	public String goPrevSection()
+	public void goPrevSection(ActionEvent evt)
 	{
+		String retVal;
 		FacesContext ctx = FacesContext.getCurrentInstance();
 
-		ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
+		/*ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
 
-		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
+		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);*/
+		
+		if (this.prevMbean != null)
+		{
 
-		ViewSecBeanService secBean = (ViewSecBeanService) this.prevMbean.getVsBeans().get(this.prevMbean.getVsBeans().size() - 1);
-		SectionObjService sec = sectionService.getSection(secBean.getSectionId());
-		vsPage.setSectionId(secBean.getSectionId());
-		vsPage.setModuleId(sec.getModuleId());
-		vsPage.setModuleSeqNo(sec.getModule().getCoursemodule().getSeqNo());
-		vsPage.setSection(null);
-		vsPage.setSection(sec);
-		// added by rashmi on 6/14/05
-		vsPage.setModule(null);
-		vsPage.setAutonumber(null);
-		String retVal = "view_section";
-		return retVal;
+			ViewSecBeanService secBean = (ViewSecBeanService) this.prevMbean.getVsBeans().get(this.prevMbean.getVsBeans().size() - 1);
+			SectionObjService sec = sectionService.getSection(secBean.getSectionId());
+			if (sec != null)
+			{
+				/*vsPage.setSectionId(secBean.getSectionId());
+				vsPage.setModuleId(sec.getModuleId());
+				vsPage.setModuleSeqNo(sec.getModule().getCoursemodule().getSeqNo());
+				vsPage.setSection(null);
+				vsPage.setSection(sec);
+				// added by rashmi on 6/14/05
+				vsPage.setModule(null);
+				vsPage.setAutonumber(null);*/
+				retVal = "view_section.jsf?moduleId=" + sec.getModuleId() + "&sectionId=" + secBean.getSectionId() + "&moduleSeqNo="
+						+ sec.getModule().getCoursemodule().getSeqNo();
+			}
+			else
+			{
+				this.viewMbean = null;
+				retVal = "view_module.jsf?modId=" + this.moduleId;
+			}
+		}
+		else
+		{
+			retVal = "view_module.jsf?modId=" + this.moduleId;
+		}
+
+		try
+		{
+			ctx.getExternalContext().redirect(retVal);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**
 	 * Go to previous whats next, set all the values such as prev sec id, prev mod id, module and next seq no
 	 * 
-	 * @return view_whats_next
+	 * 
 	 */
-	public String goPrevWhatsNext()
+	public void goPrevWhatsNext(ActionEvent evt)
 	{
+		int prevSecId = 0, prevModId = 0;
 		FacesContext context = FacesContext.getCurrentInstance();
 
-		ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
-		ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(context);
+		/*ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
+		ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(context);*/
 		if (this.prevMbean == null) getViewMbean();
 		if (this.prevMbean != null)
 		{
 			if (this.prevMbean.getVsBeans() != null)
 			{
-				vnPage.setPrevSecId(((ViewSecBeanService) this.prevMbean.getVsBeans().get(this.prevMbean.getVsBeans().size() - 1)).getSectionId());
+				prevSecId = ((ViewSecBeanService) this.prevMbean.getVsBeans().get(this.prevMbean.getVsBeans().size() - 1)).getSectionId();
 			}
 			else
 			{
-				vnPage.setPrevSecId(0);
+				prevSecId = 0;
 			}
-			vnPage.setPrevModId(this.prevMbean.getModuleId());
-			vnPage.setModule(null);
+			//vnPage.setPrevSecId(prevSecId);
+			prevModId = this.prevMbean.getModuleId();
+			//vnPage.setPrevModId(prevModId);
+			//vnPage.setModule(null);
 			// vnPage.setModule(this.prevMdbean.getModule());
 		}
 		else
 		{
-			vnPage.setPrevSecId(0);
+			//vnPage.setPrevSecId(0);
 		}
 
-		vnPage.setNextSeqNo(this.moduleSeqNo);
+		//vnPage.setNextSeqNo(this.moduleSeqNo);
 
-		return "view_whats_next";
+		try
+		{
+			context.getExternalContext().redirect("view_whats_next.jsf?nextSeqNo="+this.moduleSeqNo+"&prevSecId="+prevSecId+"&prevModId="+prevModId);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 
 	}
 
@@ -388,23 +437,30 @@ public class ViewModulesPage implements Serializable
 	/**
 	 * Go to whats next, set all the values such as prev sec id, prev mod id, module and next seq no
 	 * 
-	 * @return view_whats_next
+	 * 
 	 */
-	public String goWhatsNext()
+	public void goWhatsNext(ActionEvent evt)
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 
-		ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
+		/*ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
 		ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(context);
 		vnPage.setPrevSecId(0);
 		vnPage.setPrevModId(this.moduleId);
 
 		vnPage.setNextSeqNo(this.nextSeqNo);
-		vnPage.setModule(null);
+		vnPage.setModule(null);*/
 
 		// if (this.mdbean != null) vnPage.setModule(this.mdbean.getModule());
 
-		return "view_whats_next";
+		try
+		{
+			context.getExternalContext().redirect("view_whats_next.jsf?nextSeqNo="+this.nextSeqNo+"&prevSecId=0&prevModId="+this.moduleId);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 
 	}
 
@@ -461,14 +517,6 @@ public class ViewModulesPage implements Serializable
 	}
 
 	/**
-	 * @return view_module
-	 */
-	public String redirectToViewModule()
-	{
-		return "view_module";
-	}
-
-	/**
 	 * @param autonumber
 	 *        true if autonumbering is allowed, false if not
 	 */
@@ -502,6 +550,21 @@ public class ViewModulesPage implements Serializable
 	public void setModuleSeqNo(int moduleSeqNo)
 	{
 		this.moduleSeqNo = moduleSeqNo;
+	}
+	
+	public void setPrevSeqNo(int prevSeqNo)
+	{
+		this.prevSeqNo = prevSeqNo;
+	}
+	
+	public void setNextSeqNo(int nextSeqNo)
+	{
+		this.nextSeqNo = nextSeqNo;
+	}
+	
+	public void setPrevSectionSize(int prevSectionSize)
+	{
+		this.prevSectionSize = prevSectionSize;
 	}
 
 	/**
@@ -539,7 +602,6 @@ public class ViewModulesPage implements Serializable
 	 */
 	public void viewModule(ActionEvent evt)
 	{
-
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		UICommand cmdLink = (UICommand) evt.getComponent();
 		List cList = cmdLink.getChildren();
@@ -553,43 +615,54 @@ public class ViewModulesPage implements Serializable
 			}
 		}
 
-		ValueBinding binding = Util.getBinding("#{viewModulesPage}");
-		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(ctx);
-		vmPage.setModuleId(((Integer) param.getValue()).intValue());
+		/*ValueBinding binding = Util.getBinding("#{viewModulesPage}");
+		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(ctx);*/
+		int modId = ((Integer)param.getValue()).intValue();
+		/*vmPage.setModuleId(modId);
 		vmPage.setViewMbean(null);
 		vmPage.setPrintable(null);
-		vmPage.setAutonumber(null);
+		vmPage.setAutonumber(null);*/
 		try
 		{
 			ModuleService modServ = getModuleService();
-			CourseModule cMod = (CourseModule) modServ.getCourseModule(((Integer) param.getValue()).intValue(), getCourseId());
-			vmPage.setModuleSeqNo(cMod.getSeqNo());
-
+			CourseModule cMod = (CourseModule) modServ.getCourseModule(modId, getCourseId());
+			int modSeqNo = cMod.getSeqNo();
+			//vmPage.setModuleSeqNo(modSeqNo);
+			try
+			{
+				ctx.getExternalContext().redirect("view_module.jsf?modId=" + modId + "&modSeqNo=" + modSeqNo);
+			}
+			catch (Exception e)
+			{
+				return;
+			}
 		}
 		catch (Exception e)
 		{
 			logger.debug(e.toString());
 		}
+		//vmPage.getViewMbean();
+		
 	}
 
 	/**
 	 * Set up view section page with the right values for section id, module id, module sequene number and section
 	 * 
-	 * @return view_section
+	 * 
 	 */
-	public String viewSection()
+	public void viewSection(ActionEvent evt)
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		UIViewRoot root = ctx.getViewRoot();
 		UIData table = null;
 		table = (UIData) root.findComponent("viewmoduleform").findComponent("tablesec");
-		ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
+		/*ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
 
-		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
+		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);*/
 
 		ViewSecBeanService secBean = (ViewSecBeanService) table.getRowData();
 		SectionObjService sec = sectionService.getSection(secBean.getSectionId());
-		vsPage.resetValues();
+		/*vsPage.resetValues();
 		vsPage.setSectionId(secBean.getSectionId());
 		vsPage.setModuleId(sec.getModuleId());
 		vsPage.setModuleSeqNo(sec.getModule().getCoursemodule().getSeqNo());
@@ -597,10 +670,17 @@ public class ViewModulesPage implements Serializable
 		vsPage.setSection(sec);
 		// added by rashmi on 6/14/05
 		vsPage.setModule(null);
-		// vsPage.setAutonumber(this.autonumber);
+		// vsPage.setAutonumber(this.autonumber);*/
 
 		String retVal = "view_section";
-		return retVal;
+		try
+		{
+			ctx.getExternalContext().redirect("view_section.jsf?moduleId="+sec.getModuleId()+"&sectionId="+secBean.getSectionId()+"&moduleSeqNo="+sec.getModule().getCoursemodule().getSeqNo());
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**

@@ -28,14 +28,24 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: List of bookmarks" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
 <script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
-
+<t:saveState id="bpfpage" value="#{bookmarkPage.fromPage}" />
+<t:saveState id="bpfmid" value="#{bookmarkPage.fromModuleId}" />
+<t:saveState id="bpfmseqno" value="#{bookmarkPage.fromModuleSeqNo}" />
+ <t:saveState id="bpfromSectionId" value="#{bookmarkPage.fromSectionId}" />
+ 
  <h:form id="ManageBookmarksForm">
- 	<!-- top nav bar -->
+ <h:inputHidden id="bpfpageparam" value="#{bookmarkPage.fromPage}" />
+ <h:inputHidden id="fromModuleId" value="#{bookmarkPage.fromModuleId}" />
+ <h:inputHidden id="fromModuleSeqNo" value="#{bookmarkPage.fromModuleSeqNo}" />
+ <h:inputHidden id="fromSectionId" value="#{bookmarkPage.fromSectionId}" />
+ 
+   	<!-- top nav bar -->
 		<f:subview id="top">
 				<jsp:include page="topnavbar.jsp"/> 
 		</f:subview>
@@ -61,7 +71,7 @@
 							 </h:panelGroup> 
 						 </f:facet>
 					 <h:outputText id="emp_space" value="     "  styleClass="ExtraPaddingClass" />	
-					 <h:commandLink id="viewSection"  actionListener="#{bookmarkPage.viewSection}" action="#{bookmarkPage.redirectViewSection}" rendered="#{((bookmarkPage.instRole == false)&&(bookmark.sectionVisibleFlag == bookmarkPage.trueFlag))}">
+					 <h:commandLink id="viewSection"  actionListener="#{bookmarkPage.viewSection}" rendered="#{((bookmarkPage.instRole == false)&&(bookmark.sectionVisibleFlag == bookmarkPage.trueFlag))}">
 					   <f:param name="sectionId" value="#{bookmark.sectionId}" />
 					   <h:outputText id="bmtitle" value="#{bookmark.title}"/>
 					 </h:commandLink>
@@ -82,9 +92,13 @@
 					 <h:outputText id="bmnotes" value="#{bookmark.briefNotes}"/>					 
 					</h:column>
 					<h:column>
-					 <h:outputLink id="editBookmarkLink" value="list_bookmarks" onclick="OpenBookmarkWindow(#{bookmark.sectionId},'#{bookmark.title}','Melete Bookmark Window');">
+					 <h:outputLink id="editBookmarkLink" value="list_bookmarks" onclick="OpenBookmarkWindow(#{bookmark.sectionId},'#{bookmark.title}','#{bookmarkPage.fromPage}','#{bookmarkPage.fromModuleId}','#{bookmarkPage.fromModuleSeqNo}','Melete Bookmark Window');">
 		    	       <f:param id="sectionId" name="sectionId" value="#{bookmark.sectionId}" />
 		    	       <f:param id="sectionTitle" name="sectionTitle" value="#{bookmark.title}" />
+		    	       <f:param name="fromSectionId" value="#{bookmarkPage.fromSectionId}" />
+		    	       <f:param name="fromModuleId" value="#{bookmarkPage.fromModuleId}" />
+						<f:param name="fromModuleSeqNo" value="#{bookmarkPage.fromModuleSeqNo}" />
+						
 						  <h:graphicImage id="editgif" alt="" value="/images/document_edit.gif" styleClass="AuthImgClass" />
 			                <h:outputText id="emp_space-20" value=" " />
 				    		<h:outputText id="deltext0" value="#{msgs.list_bookmarks_edit}"  />
@@ -94,6 +108,9 @@
 					  <h:commandLink id="deleteaction" actionListener="#{bookmarkPage.deleteAction}"  action="#{bookmarkPage.redirectDeleteLink}" immediate="true" >
 				    		<f:param name="bookmarkId" value="#{bookmark.bookmarkId}" />
 				    		<f:param name="bookmarkTitle" value="#{bookmark.title}" />
+				    		<f:param name="fromSectionId" value="#{bookmarkPage.fromSectionId}" />
+				    		<f:param name="fromModuleId" value="#{bookmarkPage.fromModuleId}" />
+						
 				    		<h:graphicImage id="delgif" alt="" value="/images/delete.gif" styleClass="AuthImgClass" />
 							<h:outputText id="emp_space-2" value=" " />
 				    		<h:outputText id="deltext" value="#{msgs.list_bookmarks_delete}"  />

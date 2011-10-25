@@ -116,9 +116,10 @@ public interface MeleteCHService
 	 *        The resource Id
 	 * @param contentEditor
 	 *        HTML data
+	 * @return boolean. null if resource is bad, true if contents have changed
 	 * @throws Exception
 	 */
-	public void editResource(String resourceId, String contentEditor) throws Exception;
+	public Boolean editResource(String resourceId, String contentEditor) throws Exception;
 
 	/**
 	 * Edit a composed section HTML resource if you have author access to a site.
@@ -129,9 +130,10 @@ public interface MeleteCHService
 	 *        The resource Id
 	 * @param contentEditor
 	 *        composed section data
+	 * @return boolean. null if resource is bad, true if contents have changed        
 	 * @throws Exception
 	 */
-	public void editResource(String courseId, String resourceId, String contentEditor) throws Exception;
+	public Boolean editResource(String courseId, String resourceId, String contentEditor) throws Exception;
 
 	/**
 	 * Update the resource properties of a resource.
@@ -142,8 +144,9 @@ public interface MeleteCHService
 	 *        Resource display name
 	 * @param secResourceDescription
 	 *        resource description
+	 * @return boolean. null if resource is bad, true if contents have changed.       
 	 */
-	public void editResourceProperties(String selResourceIdFromList, String secResourceName, String secResourceDescription);
+	public Boolean editResourceProperties(String selResourceIdFromList, String secResourceName, String secResourceDescription);
 
 	/**
 	 * Get ResourceProperties for a resource

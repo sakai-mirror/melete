@@ -23,11 +23,10 @@
  **********************************************************************************/
 package org.etudes.component.app.melete;
 
-import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.etudes.api.app.melete.MeleteResourceService;
 
-public class MeleteResource implements Serializable, MeleteResourceService
+public class MeleteResource implements MeleteResourceService
 {
 
 	/** persistent field */
@@ -88,6 +87,56 @@ public class MeleteResource implements Serializable, MeleteResourceService
 		this.copyrightOwner = s1.copyrightOwner;
 		this.copyrightYear = s1.copyrightYear;
 
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (allowCmrcl ? 1231 : 1237);
+		result = prime * result + allowMod;
+		result = prime * result + ((ccLicenseUrl == null) ? 0 : ccLicenseUrl.hashCode());
+		result = prime * result + ((copyrightOwner == null) ? 0 : copyrightOwner.hashCode());
+		result = prime * result + ((copyrightYear == null) ? 0 : copyrightYear.hashCode());
+		result = prime * result + licenseCode;
+		result = prime * result + (reqAttr ? 1231 : 1237);
+		result = prime * result + ((resourceId == null) ? 0 : resourceId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		MeleteResource other = (MeleteResource) obj;
+		if (allowCmrcl != other.allowCmrcl) return false;
+		if (allowMod != other.allowMod) return false;
+		if (ccLicenseUrl == null)
+		{
+			if (other.ccLicenseUrl != null) return false;
+		}
+		else if (!ccLicenseUrl.equals(other.ccLicenseUrl)) return false;
+		if (copyrightOwner == null)
+		{
+			if (other.copyrightOwner != null) return false;
+		}
+		else if (!copyrightOwner.equals(other.copyrightOwner)) return false;
+		if (copyrightYear == null)
+		{
+			if (other.copyrightYear != null) return false;
+		}
+		else if (!copyrightYear.equals(other.copyrightYear)) return false;
+		if (licenseCode != other.licenseCode) return false;
+		if (reqAttr != other.reqAttr) return false;
+		if (resourceId == null)
+		{
+			if (other.resourceId != null) return false;
+		}
+		else if (!resourceId.equals(other.resourceId)) return false;
+		return true;
 	}
 
 	/**

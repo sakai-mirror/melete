@@ -35,8 +35,6 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService
 
 	protected CourseModule cmod;
 
-	protected boolean dateFlag;
-
 	/** nullable persistent field */
 	protected Module module;
 
@@ -128,14 +126,6 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isDateFlag()
-	{
-		return dateFlag;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean isSaFlag()
 	{
 		return saFlag;
@@ -156,14 +146,6 @@ public class ModuleDateBean implements Serializable, ModuleDateBeanService
 	public void setCmod(org.etudes.api.app.melete.CourseModuleService cmod)
 	{
 		this.cmod = (CourseModule) cmod;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setDateFlag(boolean dateFlag)
-	{
-		this.dateFlag = dateFlag;
 	}
 
 	/**

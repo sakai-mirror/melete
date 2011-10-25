@@ -33,6 +33,8 @@ import javax.faces.component.*;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -49,6 +51,7 @@ import org.sakaiproject.util.ResourceLoader; //import com.sun.faces.util.Util;
 import java.sql.Timestamp;
 import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.MeleteSecurityService;
+import org.etudes.api.app.melete.SectionBeanService;
 import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzGroup;
 import javax.faces.event.*;
@@ -62,7 +65,7 @@ public class ListModulesPage implements Serializable
 	private BookmarkService bookmarkService;
 
 	private boolean closedModulesFlag;
-	private boolean expandAllFlag;
+	private boolean expandAllFlag = true;
 	private String formName;
 	private String isNull = null;
 	private ListDataModel modDataModel;
@@ -87,6 +90,7 @@ public class ListModulesPage implements Serializable
 	private String typeUpload;
 
 	private List viewModuleBeans = null;
+	private Map vmbeansMap = null;
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(ListModulesPage.class);
 	/** Dependency: The Melete Security service. */
@@ -99,10 +103,11 @@ public class ListModulesPage implements Serializable
 
 	public ListModulesPage()
 	{
-
 		FacesContext context = FacesContext.getCurrentInstance();
 		// context.getViewRoot().setTransient(true);
 		Map sessionMap = context.getExternalContext().getSessionMap();
+		Map params = context.getExternalContext().getRequestParameterMap();
+		if ((((String) params.get("listmodulesform:lmexp")) == null)||(((String) params.get("listmodulesStudentform:lmexp")) == null)) {
 		courseId = null;
 		userId = null;
 		nomodsFlag = null;
@@ -121,6 +126,7 @@ public class ListModulesPage implements Serializable
 			expandAllFlag = false;
 		}
 		setBookmarkSectionId(-1);
+		}
 	}
 
 	/**
@@ -314,7 +320,9 @@ public class ListModulesPage implements Serializable
 		try
 		{
 			if (nomodsFlag == null || viewModuleBeans == null)
+			{
 				viewModuleBeans = getModuleService().getViewModules(getUserId(), getCourseId(), true);
+			}	
 		}
 		catch (Exception e)
 		{
@@ -341,71 +349,74 @@ public class ListModulesPage implements Serializable
 					break;
 				}
 			}
+			if (viewModuleBeans != null && viewModuleBeans.size() > 0)
+			{
+				vmbeansMap = getVmbeansMap(viewModuleBeans);
+			}
 		}
 		return viewModuleBeans;
 	}
 
 	/**
-	 * @return Set up what's next page and return view_whats_next page
+	 * Set up what's next page and return view_whats_next page
+	 * @return 
 	 */
-	public String goWhatsNext()
+	public void goWhatsNext(ActionEvent evt)
 	{
 		ViewModBean vmBean = null;
 		FacesContext ctx = FacesContext.getCurrentInstance();
-
 		Map params = ctx.getExternalContext().getRequestParameterMap();
-		int selModIndex = 0, modSeqNo = -1;
-
+		int selModId = 0, selModSeqNo = 0, prevSecId = 0,prevModId = 0;
 		if (params != null)
 		{
-			String modidxStr = (String) params.get("modidx2");
+			String modidxStr = (String) params.get("viewmodid");
 			// This condition was added to fix ME-809 bug report issue
 			if ((modidxStr != null) && (modidxStr.length() > 0) && (!(modidxStr.equals("null"))))
 			{
-				selModIndex = Integer.parseInt(modidxStr);
+				selModId = Integer.parseInt(modidxStr);
 			}
-			else
+			String modseqStr = (String) params.get("viewmodseqno");
+			// This condition was added to fix ME-809 bug report issue
+			if ((modseqStr != null) && (modseqStr.length() > 0) && (!(modseqStr.equals("null"))))
 			{
-				selModIndex = 0;
-			}
-			String modSeqStr = (String) params.get("modseqno");
-			if ((modSeqStr != null) && (modSeqStr.length() > 0) && (!(modSeqStr.equals("null"))))
-			{
-				modSeqNo = Integer.parseInt(modSeqStr);
-			}
-			else
-			{
-				modSeqNo = -1;
+				selModSeqNo = Integer.parseInt(modseqStr);
 			}
 		}
-
-		ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
-		ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(ctx);
-		vnPage.setModule(null);
+		
+		/*ValueBinding binding = Util.getBinding("#{viewNextStepsPage}");
+		ViewNextStepsPage vnPage = (ViewNextStepsPage) binding.getValue(ctx);*/
+		
 		if (isUserAuthor() || isUserStudent())
 		{
-			if ((viewModuleBeans != null) && (viewModuleBeans.size() > 0))
+			if ((vmbeansMap != null) && (vmbeansMap.size() > 0))
 			{
-				vmBean = (ViewModBean) viewModuleBeans.get(selModIndex);
+				vmBean = (ViewModBean) vmbeansMap.get(selModId);
 			}
-		}
-		int nextSeqNo = getModuleService().getNextSeqNo(getUserId(), getCourseId(), new Integer(modSeqNo));
-		vnPage.setNextSeqNo(nextSeqNo);
+		}		
+		int nextSeqNo = getModuleService().getNextSeqNo(getUserId(), getCourseId(), new Integer(selModSeqNo));
+		//vnPage.setNextSeqNo(nextSeqNo);
 		// vnPage.setModule(getModuleService().getModule(vmBean.getModuleId()));
 		if ((vmBean.getVsBeans() == null) || (vmBean.getVsBeans().size() == 0))
 		{
-			vnPage.setPrevSecId(0);
-			vnPage.setPrevModId(vmBean.getModuleId());
+			prevSecId = 0;
+			prevModId = vmBean.getModuleId();
 		}
 		else
 		{
-			vnPage.setPrevModId(vmBean.getModuleId());
+			prevModId = vmBean.getModuleId();
 			ViewSecBean vsBean = (ViewSecBean) vmBean.getVsBeans().get(vmBean.getVsBeans().size() - 1);
-			vnPage.setPrevSecId(vsBean.getSectionId());
+			prevSecId = vsBean.getSectionId();
 		}
-
-		return "view_whats_next";
-
+		//vnPage.setPrevModId(prevModId);
+		//vnPage.setPrevSecId(prevSecId);
+		try
+		{
+			ctx.getExternalContext().redirect("view_whats_next.jsf?nextSeqNo="+nextSeqNo+"&prevSecId="+prevSecId+"&prevModId="+prevModId);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**
@@ -519,31 +530,6 @@ public class ListModulesPage implements Serializable
 	{
 		if (isUserAuthor()) return "list_modules_inst";
 		else return "list_modules_student";
-	}
-
-	/**
-	 * @return view_module
-	 */
-	public String redirectToViewModule()
-	{
-		String retVal = "view_module";
-		return retVal;
-	}
-
-	/**
-	 * @return view_section
-	 */
-	public String redirectToViewSection()
-	{
-		return "view_section";
-	}
-
-	/**
-	 * @return view_section
-	 */
-	public String redirectToViewSectionLink()
-	{
-		return "view_section";
 	}
 
 	/**
@@ -793,18 +779,14 @@ public class ListModulesPage implements Serializable
 		ViewModBean vmbean = null;
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map params = ctx.getExternalContext().getRequestParameterMap();
-		int selModIndex;
-		if (params != null && params.containsKey("modidx"))
+		int selModId = 0;
+		if (params != null && params.containsKey("viewmodid"))
 		{
-			String modidxStr = (String) params.get("modidx");
+			String modidxStr = (String) params.get("viewmodid");
 			// This condition was added to fix ME-809 bug report issue
 			if ((modidxStr != null) && (modidxStr.length() > 0) && (!(modidxStr.equals("null"))))
 			{
-				selModIndex = Integer.parseInt(modidxStr);
-			}
-			else
-			{
-				selModIndex = 0;
+				selModId = Integer.parseInt(modidxStr);
 			}
 		}
 		else
@@ -816,19 +798,29 @@ public class ListModulesPage implements Serializable
 			ctx.addMessage(null, msg);
 			return;
 		}
-		ValueBinding binding = Util.getBinding("#{viewModulesPage}");
+		/*ValueBinding binding = Util.getBinding("#{viewModulesPage}");
 		ViewModulesPage vmPage = (ViewModulesPage) binding.getValue(ctx);
-		vmPage.setPrintable(null);
+		vmPage.setPrintable(null);*/
 		if (isUserAuthor() || isUserStudent())
 		{
 			if ((viewModuleBeans != null) && (viewModuleBeans.size() > 0))
 			{
-				vmbean = (ViewModBean) viewModuleBeans.get(selModIndex);
-				vmPage.setModuleId(vmbean.getModuleId());
+				vmbean = (ViewModBean) vmbeansMap.get(selModId);
+				/*vmPage.setModuleId(vmbean.getModuleId());
 				vmPage.setViewMbean(null);
 				vmPage.setPrevMbean(null);
 				vmPage.setModuleSeqNo(vmbean.getSeqNo());
 				vmPage.setAutonumber(null);
+				vmPage.getViewMbean();*/
+
+				try
+				{
+					ctx.getExternalContext().redirect("view_module.jsf?modId=" + vmbean.getModuleId() + "&modSeqNo=" + vmbean.getSeqNo());
+				}
+				catch (Exception e)
+				{
+					return;
+				}
 			}
 		}
 
@@ -843,28 +835,28 @@ public class ListModulesPage implements Serializable
 		FacesContext ctx = FacesContext.getCurrentInstance();
 
 		Map params = ctx.getExternalContext().getRequestParameterMap();
-		int selModIndex, selSecIndex;
-		if (params != null && params.containsKey("modidx") && params.containsKey("secidx"))
+		int selModId = 0, selSecId = 0;
+		if (params != null && params.containsKey("viewmodid") && params.containsKey("viewsecid"))
 		{
-			String modidxStr = (String) params.get("modidx");
+			String modidxStr = (String) params.get("viewmodid");
 			// This condition was added to fix ME-809 bug report issue
 			if ((modidxStr != null) && (modidxStr.length() > 0) && (!(modidxStr.equals("null"))))
 			{
-				selModIndex = Integer.parseInt(modidxStr);
+				selModId = Integer.parseInt(modidxStr);
 			}
 			else
 			{
-				selModIndex = 0;
+				selModId = 0;
 			}
-			String secidxStr = (String) params.get("secidx");
+			String secidxStr = (String) params.get("viewsecid");
 			// This condition was added to fix ME-809 bug report issue
 			if ((secidxStr != null) && (secidxStr.length() > 0) && (!(secidxStr.equals("null"))))
 			{
-				selSecIndex = Integer.parseInt(secidxStr);
+				selSecId = Integer.parseInt(secidxStr);
 			}
 			else
 			{
-				selSecIndex = 0;
+				selSecId = 0;
 			}
 
 		}
@@ -886,29 +878,64 @@ public class ListModulesPage implements Serializable
 		{
 			if ((viewModuleBeans != null) && (viewModuleBeans.size() > 0))
 			{
-				vmBean = (ViewModBean) viewModuleBeans.get(selModIndex);
-				// Fix for ArrayIndexOutofBoundsException: -1
-				if ((selSecIndex < 0) || (selSecIndex >= vmBean.getVsBeans().size())) selSecIndex = 0;
-				vsBean = (ViewSecBean) vmBean.getVsBeans().get(selSecIndex);
+				vmBean = (ViewModBean) vmbeansMap.get(selModId);
+				Map vsbeansMap = getVsbeansMap(vmBean.getVsBeans());
+				vsBean = (ViewSecBean)vsbeansMap.get(selSecId);
+
 				modSeqNo = vmBean.getSeqNo();
 			}
 		}
 
-		ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
+		/*ValueBinding binding = Util.getBinding("#{viewSectionsPage}");
 		ViewSectionsPage vsPage = (ViewSectionsPage) binding.getValue(ctx);
 		vsPage.resetValues();
 		vsPage.setSection(null);
-		vsPage.setModule(null);
+		vsPage.setModule(null);*/
 		if (vsBean != null)
 		{
 			// Section sec = vsBean.getSection();
-			vsPage.setModuleId(vmBean.getModuleId());
-			vsPage.setSectionId(vsBean.getSectionId());
+			/*vsPage.setModuleId(vmBean.getModuleId());
+			vsPage.setSectionId(vsBean.getSectionId());*/
 			// vsPage.setSection(sec);
 		}
 
-		vsPage.setModuleSeqNo(modSeqNo);
+		//vsPage.setModuleSeqNo(modSeqNo);
+		try
+		{
+			ctx.getExternalContext().redirect("view_section.jsf?moduleId="+vmBean.getModuleId()+"&sectionId="+vsBean.getSectionId()+"&moduleSeqNo="+modSeqNo);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
+		
 	}
+	
+	protected Map getVmbeansMap(List vmBeans)
+	{
+		if ((vmBeans == null)||(vmBeans.size() == 0)) return null;
+		Map vmbeansMap = new LinkedHashMap<Integer, ViewModBean>();
+
+		for (Iterator itr = vmBeans.listIterator(); itr.hasNext();)
+		{
+			ViewModBean vmbean = (ViewModBean) itr.next();
+		    vmbeansMap.put(vmbean.getModuleId(), vmbean);
+		}	
+		return vmbeansMap;
+	}
+	
+	protected Map getVsbeansMap(List vsBeans)
+	{
+		if ((vsBeans == null)||(vsBeans.size() == 0)) return null;
+		Map vsbeansMap = new LinkedHashMap<Integer,ViewSecBean>();
+
+		for (Iterator itr = vsBeans.listIterator(); itr.hasNext();)
+		{
+			ViewSecBean vsbean = (ViewSecBean) itr.next();
+		    vsbeansMap.put(vsbean.getSectionId(), vsbean);
+		}	
+		return vsbeansMap;
+	}		
 
 	/**
 	 * @param ctx

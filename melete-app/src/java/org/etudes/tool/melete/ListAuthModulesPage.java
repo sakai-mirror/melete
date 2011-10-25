@@ -29,11 +29,13 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIColumn;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIData;
 import javax.faces.component.UIInput;
@@ -46,13 +48,16 @@ import javax.faces.event.ValueChangeEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.etudes.api.app.melete.MeleteSecurityService;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.ModuleService;
 import org.etudes.api.app.melete.SectionBeanService;
 import org.etudes.api.app.melete.exception.MeleteException;
+import org.etudes.component.app.melete.Module;
 import org.etudes.component.app.melete.ModuleDateBean;
 import org.etudes.component.app.melete.Section;
 import org.etudes.component.app.melete.SectionBean;
+import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.util.ResourceLoader;
 
 /**
@@ -60,31 +65,32 @@ import org.sakaiproject.util.ResourceLoader;
  *
  */
 
-class SecModObj implements Comparable
+class SecModObj
 {
-	Integer modIndex, secIndex;
-
-	public SecModObj(int modInd, int secInd)
+	int moduleId;
+	SectionBean secBean;
+	ModuleDateBean mdBean;
+	
+	public SecModObj(int modId, SectionBean sBean, ModuleDateBean mBean)
 	{
-		modIndex = new Integer(modInd);
-		secIndex = new Integer(secInd);
+		moduleId = modId;
+		secBean = sBean;
+		mdBean = mBean;
 	}
 
-	public Integer getModObj()
+	public int getModuleId()
 	{
-		return modIndex;
+		return moduleId;
+	}
+	
+	public SectionBean getSecBean()
+	{
+		return secBean;
 	}
 
-	public Integer getSecObj()
+	public ModuleDateBean getMdBean()
 	{
-		return secIndex;
-	}
-
-	public int compareTo(Object smObj) throws ClassCastException
-	{
-		if (!(smObj instanceof SecModObj)) throw new ClassCastException("SecModObj class expected.");
-		int compModIndex = ((SecModObj) smObj).getModObj().intValue();
-		return this.getModObj().intValue() - compModIndex;
+		return mdBean;
 	}
 
 }
@@ -96,8 +102,10 @@ public class ListAuthModulesPage implements Serializable
 	protected Log logger = LogFactory.getLog(ListAuthModulesPage.class);
 
 	private List moduleDateBeans = null;
-
-	private List errModuleIds = null;
+	
+	private Map mdbeansMap = null;
+	
+	private Map secObjMap = null;
 
 	/** identifier field */
 	private int showModuleId;
@@ -110,7 +118,7 @@ public class ListAuthModulesPage implements Serializable
 
 	private Boolean nomodsFlag;
 
-	private boolean expandAllFlag;
+	private boolean expandAllFlag = true;
 
 	private boolean autonumber;
 	
@@ -122,15 +130,15 @@ public class ListAuthModulesPage implements Serializable
 	// rashmi added
 	int count;
 
-	int selectedModIndex;
+	int selectedModId;
 
-	private List selectedModIndices = null;
+	private List selectedModIds = null;
 
-	private List selectedSecModIndices = null;
+	private List selectedSecIds = null;
 
 	boolean moduleSelected;
 
-	int selectedSecIndex;
+	int selectedSecId;
 
 	boolean sectionSelected;
 	
@@ -148,10 +156,15 @@ public class ListAuthModulesPage implements Serializable
 
 	// added by rashmi on apr 8
 	private String isNull = null;
+	
+	private boolean isInstructor;
+	
+	/** Dependency: The Melete Security service. */
+	protected MeleteSecurityService meleteSecurityService;
 
 	private UIData table;
 	private UIData secTable;
-
+	
 	/**
 	 * @return value of datatable (in which modules are rendered)
 	 */
@@ -177,29 +190,32 @@ public class ListAuthModulesPage implements Serializable
     	
 		courseId = mPage.getCurrentSiteId();
 		userId = mPage.getCurrentUser().getId();
-		nomodsFlag = null;
-		setShowModuleId(-1);
-		count = 0;
-		selectedModIndex = -1;
-		moduleSelected = false;
-		selectedModIndices = null;
-		selectedSecModIndices = null;
+		
+		Map params = context.getExternalContext().getRequestParameterMap();
+		if (((String) params.get("listauthmodulesform:lamexp")) == null) {
+			nomodsFlag = null;
+			setShowModuleId(-1);
+			count = 0;
+			selectedModId = -1;
+			moduleSelected = false;
+			selectedModIds = null;
+			selectedSecIds = null;
 
-		selectedSecIndex = -1;
-		sectionSelected = false;
-		binding = Util.getBinding("#{authorPreferences}");
-		AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
-		String expFlag = preferencePage.getUserView();
-		if (expFlag.equals("true"))
-		{
-			expandAllFlag = true;
+			selectedSecId = -1;
+			sectionSelected = false;
+			selectAllFlag = false;
+			listSize = 0;
+			binding = Util.getBinding("#{authorPreferences}");
+			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding
+					.getValue(context);
+			String expFlag = preferencePage.getUserView();
+			if (expFlag.equals("true")) {
+				expandAllFlag = true;
+			} else {
+				expandAllFlag = false;
+			}
 		}
-		else
-		{
-			expandAllFlag = false;
-		}
-		selectAllFlag = false;
-		listSize = 0;
+		
 	}
 
 	/**
@@ -209,15 +225,14 @@ public class ListAuthModulesPage implements Serializable
 	public void resetValues()
 	{
 		setShowModuleId(-1);
-		errModuleIds = null;
 		nomodsFlag = null;
 		count = 0;
-		selectedModIndex = -1;
+		selectedModId = -1;
 		moduleSelected = false;
-		selectedModIndices = null;
-		selectedSecModIndices = null;
+		selectedModIds = null;
+		selectedSecIds = null;
 
-		selectedSecIndex = -1;
+		selectedSecId = -1;
 		sectionSelected = false;
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{authorPreferences}");
@@ -240,6 +255,8 @@ public class ListAuthModulesPage implements Serializable
 		selectAllFlag = false;
 		listSize = 0;
 		moduleDateBeans = null;
+		mdbeansMap = null;
+		secObjMap = null;
 	}
 
 	/**
@@ -250,20 +267,6 @@ public class ListAuthModulesPage implements Serializable
 		return autonumber;
 	};
 	
-	/** Set date flag of each module to false
-	 * 
-	 */
-	public void resetDateFlags()
-	{
-		resetSelectedLists();
-		for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();)
-		{
-			ModuleDateBean mdbean = (ModuleDateBean) i.next();
-			mdbean.setDateFlag(false);
-		}
-
-	}
-
 	/**
 	 * @return Returns the ModuleService.
 	 */
@@ -318,32 +321,26 @@ public class ListAuthModulesPage implements Serializable
 	 * @param event ValueChangeEvent object
 	 * @throws AbortProcessingException
 	 */
-	public void selectedModuleSection(ValueChangeEvent event) throws AbortProcessingException
-	{
-		if (selectAllFlag == false)
-		{	
-		
-		FacesContext context = FacesContext.getCurrentInstance();
-		UIInput mod_Selected = (UIInput) event.getComponent();
-		if (((Boolean) mod_Selected.getValue()).booleanValue() == true)
-			count++;
-		else
-			count--;
+	public void selectedModule(ValueChangeEvent event) throws AbortProcessingException
+    {
+		if ((moduleDateBeans == null)||(moduleDateBeans.size() == 0)) return;
+		if (selectAllFlag == false) {
+			UIInput mod_Selected = (UIInput) event.getComponent();
+			if (((Boolean) mod_Selected.getValue()).booleanValue() == true)
+				count++;
+			else
+				count--;
 
-		String selclientId = mod_Selected.getClientId(context);
-		if (logger.isDebugEnabled()) logger.debug("Sel client ID is " + selclientId);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		String modId = selclientId.substring(0, selclientId.indexOf(':'));
+			String title = (String) mod_Selected.getAttributes().get("title");
+			if (title != null) {
+				selectedModId = Integer.parseInt(title);
 
-		selectedModIndex = Integer.parseInt(modId);
-		
-		if (selectedModIndices == null)
-		{
-			selectedModIndices = new ArrayList();
-		}
-		selectedModIndices.add(new Integer(selectedModIndex));
-		moduleSelected = true;
+				if (selectedModIds == null) {
+					selectedModIds = new ArrayList();
+				}
+				selectedModIds.add(new Integer(selectedModId));
+				moduleSelected = true;
+			}
 		}
 		return;
 	}
@@ -354,30 +351,39 @@ public class ListAuthModulesPage implements Serializable
 	 */
 	public void selectedSection(ValueChangeEvent event) throws AbortProcessingException
 	{
-		FacesContext context = FacesContext.getCurrentInstance();
+		if ((secObjMap == null)||(secObjMap.size() == 0)) return;
+		
 		UIInput sec_Selected = (UIInput) event.getComponent();
+			
 		if (((Boolean) sec_Selected.getValue()).booleanValue() == true)
 			count++;
 		else
 			count--;
+		if (sec_Selected.getParent() != null) {
+			UIColumn secColumn = (UIColumn) sec_Selected.getParent();
+			List<UIComponent> secChildren = secColumn.getChildren();
+			if ((secChildren != null) && (secChildren.size() > 0)) {
+				for (Iterator itr = secChildren.listIterator(); itr.hasNext();) {
+					UIComponent comp = (UIComponent) itr.next();
+					if (comp.getId().equals("hacksecid")) {
+						UIInput hiddenSec = (UIInput) comp;
+						if (selectedSecIds == null) {
+							selectedSecIds = new ArrayList();
+						}
+						selectedSecIds.add((Integer) hiddenSec.getValue());
+					}
+				}
 
-		String selclientId = sec_Selected.getClientId(context);
-		if (logger.isDebugEnabled()) logger.debug("Sel client ID is " + selclientId);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		String modId = selclientId.substring(0, selclientId.indexOf(':'));
-		selectedModIndex = Integer.parseInt(modId);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		selclientId = selclientId.substring(selclientId.indexOf(':') + 1);
-		String sectionindex = selclientId.substring(0, selclientId.indexOf(':'));
-		selectedSecIndex = Integer.parseInt(sectionindex);
-		if (selectedSecModIndices == null)
-		{
-			selectedSecModIndices = new ArrayList();
+			}
 		}
-		selectedSecModIndices.add(new SecModObj(selectedModIndex, selectedSecIndex));
-		sectionSelected = true;
-
+		if ((selectedSecIds != null)&&(selectedSecIds.size() > 0)) 
+		{
+			sectionSelected = true;
+		}
+		if ((selectedSecIds != null)&&(selectedSecIds.size() == 1)) 
+		{
+			selectedModId = ((SecModObj)secObjMap.get(selectedSecIds.get(0))).getModuleId();
+		}
 		return;
 	}
 	
@@ -385,34 +391,35 @@ public class ListAuthModulesPage implements Serializable
 	 * @param event ValueChangeEvent object
 	 * @throws AbortProcessingException
 	 */
-	public void selectAllModules(ValueChangeEvent event) throws AbortProcessingException
-	{
-		selectAllFlag= true;
+	public void selectAllModules(ValueChangeEvent event)
+			throws AbortProcessingException {
+		ModuleDateBean mdbean = null;
+		selectAllFlag = true;
 		int k = 0;
-		if (selectedModIndices == null)
-		{
-			selectedModIndices = new ArrayList();
+		if (selectedModIds == null) {
+			selectedModIds = new ArrayList();
 		}
-		for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();)
-		{
-			ModuleDateBean mdbean = (ModuleDateBean) i.next();
-			mdbean.setSelected(true);
-			selectedModIndices.add(new Integer(k));
-			k++;
+		if ((moduleDateBeans != null) && (moduleDateBeans.size() > 0)) {
+			for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();) {
+				mdbean = (ModuleDateBean) i.next();
+				mdbean.setSelected(true);
+				selectedModIds.add(new Integer(mdbean.getModuleId()));
+			}
+			count = moduleDateBeans.size();
+			if (count == 1)
+				selectedModId = mdbean.getModuleId();
+			moduleSelected = true;
 		}
-		count = moduleDateBeans.size();
-		if (count == 1) selectedModIndex = 0;
-		moduleSelected = true;
 		return;
-	}	
+	}
 
 	/** Reset selected module lists and selectAllFlag to false
 	 * 
 	 */
 	public void resetSelectedLists()
 	{
-		selectedModIndices = null;
-		selectedSecModIndices = null;
+		selectedModIds = null;
+		selectedSecIds = null;
 		selectAllFlag = false;
 	}
 	
@@ -429,66 +436,32 @@ public class ListAuthModulesPage implements Serializable
     	MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
     	courseId = mPage.getCurrentSiteId();
 
-    	boolean flagsReset = false;
-		try
+    	try
 		{
 			ModuleService modServ = getModuleService();
 			// fetch beans
 			if (nomodsFlag == null || moduleDateBeans == null)
 				moduleDateBeans = modServ.getModuleDateBeans(userId, courseId);
-			
 			// for bug reports
 			if (moduleDateBeans == null || moduleDateBeans.size() == 0) 
 			{
 				listSize = 0;
 				nomodsFlag = true;
+				mdbeansMap = null;
+				secObjMap = null;
 				return moduleDateBeans;
 			}
+			
+			if (moduleDateBeans != null && moduleDateBeans.size() > 0)
+			{
+				mdbeansMap = getMdbeansMap(moduleDateBeans);
+				secObjMap = getSecObjMap(moduleDateBeans);
+			}
+			
+			
 			// end
 			nomodsFlag = false;
 			listSize = moduleDateBeans.size();
-			Iterator itr = context.getMessages();
-			while (itr.hasNext())
-			{
-				String msg = ((FacesMessage) itr.next()).getDetail();
-				if (msg.equals("Input data is not in the correct format."))
-				{
-					resetDateFlags();
-					flagsReset = true;
-				}
-				else
-				{
-					break;
-				}
-			}
-			// selectedModIndices = new ArrayList();
-			for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();)
-			{
-				ModuleDateBean mdbean = (ModuleDateBean) i.next();
-				// If there is an invalid format message, don't set lollipop
-				if (flagsReset == false)
-				{
-					if (errModuleIds != null)
-					{
-						if (errModuleIds.size() > 0)
-						{
-							for (ListIterator l = errModuleIds.listIterator(); l.hasNext();)
-							{
-								ModuleDateBean errmdbean = (ModuleDateBean) l.next();
-								if (errmdbean.getModuleId() == mdbean.getModuleId())
-								{
-									mdbean.setDateFlag(true);
-									mdbean.getModuleShdate().setStartDate(errmdbean.getModuleShdate().getStartDate());
-									mdbean.getModuleShdate().setEndDate(errmdbean.getModuleShdate().getEndDate());
-								}
-							}
-
-						}
-					}
-				}
-
-
-			}
 		}
 		catch (Exception e)
 		{
@@ -559,7 +532,10 @@ public class ListAuthModulesPage implements Serializable
 	 */
 	public boolean getNomodsFlag()
 	{
-		if(nomodsFlag == null) getModuleDateBeans();
+		if (nomodsFlag == null) 
+		{
+			getModuleDateBeans();
+		}
 		return nomodsFlag;
 	}
 
@@ -638,7 +614,7 @@ public class ListAuthModulesPage implements Serializable
 			ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
 			if (getShowModuleId() != mdbean.getModuleId())
 			{	
-			   setShowModuleId(mdbean.getModuleId());
+				setShowModuleId(mdbean.getModuleId());
 			}
 			else
 			{
@@ -646,6 +622,7 @@ public class ListAuthModulesPage implements Serializable
 				setExpandAllFlag(false);
 			}
 		}
+		saveModuleDates();
 		return "list_auth_modules";
 	}
 	
@@ -655,7 +632,7 @@ public class ListAuthModulesPage implements Serializable
 	public String expandCollapseAction()
 	{
 		resetSelectedLists();
-	
+	    saveModuleDates();
 		if (getExpandAllFlag() == false)
 		{		
 		  setExpandAllFlag(true);
@@ -668,72 +645,6 @@ public class ListAuthModulesPage implements Serializable
 		return "list_auth_modules";		
 	}
 	
-	/**Reset lists and navigate to edit module or section page depending on what is selected
-	 * @return list_auth_modules or edit_module or editmodulesections
-	 */
-	public String editAction()
-	{
-		resetSelectedLists();
-		FacesContext ctx = FacesContext.getCurrentInstance();
-
-		if (count >= 2)
-		{
-			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-			String msg = bundle.getString("select_error");
-			addMessage(ctx, "Select  ERROR", msg, FacesMessage.SEVERITY_ERROR);
-			count = 0;
-			moduleSelected = false;
-			sectionSelected = false;
-			return "list_auth_modules";
-		}
-		count = 0;
-
-		// module selected
-		if (moduleSelected)
-		{
-			if (moduleDateBeans != null && selectedModIndex > -1)
-			{
-			ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selectedModIndex);
-			ValueBinding binding = Util.getBinding("#{editModulePage}");
-			EditModulePage emPage = (EditModulePage) binding.getValue(ctx);
-			emPage.setEditInfo(mdbean);
-			// added by rashmi to show correct module number
-			emPage.resetModuleNumber();
-
-			count = 0;
-			moduleSelected = false;
-			// Mallika -3/24/05
-			sectionSelected = false;
-			return "edit_module";
-			}
-		}
-		if (sectionSelected)
-		{
-			if (moduleDateBeans != null && selectedModIndex > -1 && selectedSecIndex > -1)
-			{
-			ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selectedModIndex);
-			SectionBeanService secBean = (SectionBeanService) mdbean.getSectionBeans().get(selectedSecIndex);
-			ValueBinding binding = Util.getBinding("#{editSectionPage}");
-			EditSectionPage esPage = (EditSectionPage) binding.getValue(ctx);
-			esPage.setEditInfo((Section) secBean.getSection());
-
-			sectionSelected = false;
-			// Mallika - 3/24/05
-			moduleSelected = false;
-			return "editmodulesections";
-			}
-		}
-		if ((moduleSelected == false) && (sectionSelected == false))
-		{
-			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-			String msg = bundle.getString("select_one_edit");
-			addMessage(ctx, "Select  One", msg, FacesMessage.SEVERITY_ERROR);
-		}
-		moduleSelected = false;
-		sectionSelected = false;
-		return "list_auth_modules";
-	}
-
 	
 	/**Reset selected lists and navigate to add module page
 	 * @return add_module
@@ -741,6 +652,7 @@ public class ListAuthModulesPage implements Serializable
 	public String AddModuleAction()
 	{
 		resetSelectedLists();
+		if (!saveModuleDates()) return "list_auth_modules";
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{addModulePage}");
 
@@ -753,9 +665,11 @@ public class ListAuthModulesPage implements Serializable
 	/** Reset selected lists and navigate to add section page
 	 * @return editmodulesections or list_auth_modules
 	 */
-	public String AddContentAction()
+	public void AddContentAction(ActionEvent evt)
 	{
-		resetSelectedLists();
+		if (!saveModuleDates()) return ;
+		if (moduleDateBeans == null || moduleDateBeans.size() == 0) return;
+		
 		FacesContext ctx = FacesContext.getCurrentInstance();
 
 		if (count >= 2)
@@ -767,42 +681,49 @@ public class ListAuthModulesPage implements Serializable
 
 			moduleSelected = false;
 			sectionSelected = false;
-			return "list_auth_modules";
+			return ;
 		}
 		count = 0;
-		// module selected
-		if (moduleSelected || sectionSelected)
-		{
-			if(selectedModIndex <= -1) selectedModIndex = 0;
-			ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selectedModIndex);
-
-			ValueBinding binding = Util.getBinding("#{editSectionPage}");
-			FacesContext context = FacesContext.getCurrentInstance();
-			EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
-			editPage.setSection(null);
-			editPage.resetSectionValues();
-			editPage.setModule(mdbean.getModule());
-			
-			Map sessionMap = context.getExternalContext().getSessionMap();
-			sessionMap.put("currModule", mdbean.getModule());
-			
-			editPage.addBlankSection();
-
-			count = 0;
-			moduleSelected = false;
-			// Mallika -3/24/05
-			sectionSelected = false;
-			return "editmodulesections";
-		}
+		
 		if ((moduleSelected == false) && (sectionSelected == false))
 		{
 			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 			String msg = bundle.getString("select_one_add");
 			addMessage(ctx, "Select  One", msg, FacesMessage.SEVERITY_ERROR);
+			return;
 		}
-		moduleSelected = false;
-		sectionSelected = false;
-		return "list_auth_modules";
+		// module selected
+		if (moduleSelected || sectionSelected) {
+			if (selectedModId <= 0) return;
+			if ((moduleDateBeans != null) && (moduleDateBeans.size() > 0)) {
+				ModuleDateBean mdbean = (ModuleDateBean) mdbeansMap
+						.get(selectedModId);
+
+				if (mdbean != null) {
+					ValueBinding binding = Util
+							.getBinding("#{editSectionPage}");
+					FacesContext context = FacesContext.getCurrentInstance();
+					EditSectionPage editPage = (EditSectionPage) binding
+							.getValue(context);
+					editPage.setModule(mdbean.getModule());
+					Integer newSecId = editPage.addBlankSection();
+
+					count = 0;
+					moduleSelected = false;
+					// Mallika -3/24/05
+					sectionSelected = false;
+					try {
+						if (newSecId != null)
+							ctx.getExternalContext().redirect(
+									"editmodulesections.jsf?sectionId="
+											+ newSecId.toString());
+					} catch (Exception e) {
+						return;
+					}
+				}
+			}
+		}
+		return;
 	}
 
 	/** Inactivate modules and display a message about modules that have been inactivated
@@ -810,10 +731,11 @@ public class ListAuthModulesPage implements Serializable
 	 */
 	public String InactivateAction()
 	{
-
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		List selModBeans = null;
 		ModuleDateBean mdbean = null;
+		if (!saveModuleDates()) return "list_auth_modules";
+		if (moduleDateBeans == null || moduleDateBeans.size() == 0) return "list_auth_modules";
 		if (sectionSelected)
 		{
 			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
@@ -824,35 +746,41 @@ public class ListAuthModulesPage implements Serializable
 		}
 
 		// module selected
-		if (moduleSelected && selectedModIndices != null)
+		if (moduleSelected && selectedModIds != null)
 		{
-
 			if (selModBeans == null)
 			{
 				selModBeans = new ArrayList();
 			}
-			for (ListIterator i = selectedModIndices.listIterator(); i.hasNext();)
+			for (ListIterator i = selectedModIds.listIterator(); i.hasNext();)
 			{
-				mdbean = (ModuleDateBean) moduleDateBeans.get(((Integer) i.next()).intValue());
-				selModBeans.add(mdbean);
+				mdbean = (ModuleDateBean) mdbeansMap.get(((Integer) i.next()).intValue());
+				if (mdbean != null) selModBeans.add(mdbean);
 			}
 			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 			try
 			{
-				int origSeqNo = mdbean.getCmod().getSeqNo();
-				getModuleService().archiveModules(selModBeans,moduleDateBeans,courseId);
-				StringBuffer modTitles = new StringBuffer();
-				mdbean = null;
-				for (ListIterator i = selModBeans.listIterator(); i.hasNext();)
-				{
-					mdbean = (ModuleDateBean) i.next();
-					modTitles.append(mdbean.getModule().getTitle());
-					modTitles.append(", ");
+				if ((selModBeans != null) && (selModBeans.size() > 0)
+						&& (moduleDateBeans != null)
+						&& (moduleDateBeans.size() > 0)) {
+					getModuleService().archiveModules(selModBeans,
+							moduleDateBeans, courseId);
+					StringBuffer modTitles = new StringBuffer();
+					mdbean = null;
+					for (ListIterator i = selModBeans.listIterator(); i
+							.hasNext();) {
+						mdbean = (ModuleDateBean) i.next();
+						modTitles.append(mdbean.getModule().getTitle());
+						modTitles.append(", ");
+					}
+					modTitles.delete(modTitles.toString().length() - 2,
+							modTitles.toString().length());
+					String msg1 = bundle.getString("inactivate_message1");
+					String msg2 = bundle.getString("inactivate_message2");
+					addMessage(ctx, "Inactivate Message",
+							msg1 + modTitles.toString() + msg2,
+							FacesMessage.SEVERITY_INFO);
 				}
-				modTitles.delete(modTitles.toString().length() - 2, modTitles.toString().length());
-				String msg1 = bundle.getString("inactivate_message1");
-				String msg2 = bundle.getString("inactivate_message2");
-				addMessage(ctx, "Inactivate Message", msg1 + modTitles.toString() + msg2, FacesMessage.SEVERITY_INFO);
 			}
 			catch (Exception ex)
 			{
@@ -879,30 +807,110 @@ public class ListAuthModulesPage implements Serializable
 		sectionSelected = false;
 		return "list_auth_modules";
 	}
+	
+	/** Reset values and redirect to sort modules page
+	 * @return modules_sort
+	 */
+	public String goToSortModules(){
+		if (!saveModuleDates()) return "list_auth_modules";
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding smsBinding = Util.getBinding("#{sortModuleSectionPage}");
+		SortModuleSectionPage smsPage = (SortModuleSectionPage) smsBinding.getValue(context);
+		return smsPage.goToSortModules();
+
+	}
+	
+	/**
+	 * @return restore_modules page
+	 */
+	public String goToRestoreModules()
+	{
+		if (!saveModuleDates()) return "list_auth_modules";
+		return "restore_modules";
+	}
+	
+	/** 
+	 * @return importexportmodules page
+	 */
+	public String importExportModules()
+	{
+		if (!saveModuleDates()) return "list_auth_modules";
+		return "importexportmodules";
+	}
 
 	/**Redirect to edit module page
 	 * @return edit_module
 	 */
 	public String redirectToEditModule()
 	{
+		if (!saveModuleDates()) return "list_auth_modules";
 		return "edit_module";
 	}
 
-	/** Redirect to edit module page with selected module id
-	 * @param evt ActionEvent object
+	/**
+	 * Redirect to edit module page with selected module id
+	 * 
+	 * @param evt
+	 *        ActionEvent object
 	 */
 	public void editModule(ActionEvent evt)
 	{
+		if (!saveModuleDates()) return;
 		resetSelectedLists();
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map params = ctx.getExternalContext().getRequestParameterMap();
-		int selModIndex = Integer.parseInt((String) params.get("modidx"));
+		int selModId = Integer.parseInt((String) params.get("editmodid"));
 
-		ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selModIndex);
+		ModuleDateBean mdbean = (ModuleDateBean) mdbeansMap.get(selModId);
 		ValueBinding binding = Util.getBinding("#{editModulePage}");
 		EditModulePage emPage = (EditModulePage) binding.getValue(ctx);
 		emPage.setEditInfo(mdbean);
 		emPage.resetModuleNumber();
+		try
+		{
+			FacesContext.getCurrentInstance().getExternalContext().redirect("edit_module.jsf?editmodid=" + selModId);
+		}
+		catch (Exception e)
+		{
+			e.getMessage();
+		}
+	}
+	
+	protected Map getMdbeansMap(List moduleDateBeans)
+	{
+		if ((moduleDateBeans == null)||(moduleDateBeans.size() == 0)) return null;
+		Map mdbeansMap = new LinkedHashMap<Integer, ModuleDateBean>();
+
+		for (Iterator itr = moduleDateBeans.listIterator(); itr.hasNext();)
+		{
+			ModuleDateBean mdbean = (ModuleDateBean) itr.next();
+		    mdbeansMap.put(mdbean.getModuleId(), mdbean);
+		}	
+		return mdbeansMap;
+	}
+	
+	protected Map getSecObjMap(List moduleDateBeans)
+    {
+		if ((moduleDateBeans == null) || (moduleDateBeans.size() == 0))
+			return null;
+		Map secobjMap = new LinkedHashMap<Integer, SecModObj>();
+
+		for (Iterator itr = moduleDateBeans.listIterator(); itr.hasNext();) {
+			ModuleDateBean mdbean = (ModuleDateBean) itr.next();
+			List sectionBeans = mdbean.getSectionBeans();
+			if ((sectionBeans != null) && (sectionBeans.size() > 0)) {
+				int moduleId = mdbean.getModuleId();
+				for (Iterator sItr = sectionBeans.listIterator(); sItr
+						.hasNext();) {
+					SectionBean secbean = (SectionBean) sItr.next();
+					secobjMap
+							.put(secbean.getSection().getSectionId(),
+									new SecModObj(moduleId,
+											secbean, mdbean));
+				}
+			}
+		}
+		return secobjMap;
 	}
 
 	/** Redirect to edit section page
@@ -910,6 +918,7 @@ public class ListAuthModulesPage implements Serializable
 	 */
 	public String redirectToEditSection()
 	{
+		if (!saveModuleDates()) return "list_auth_modules";
 		return "editmodulesections";
 	}
 
@@ -918,20 +927,21 @@ public class ListAuthModulesPage implements Serializable
 	 */
 	public void editSection(ActionEvent evt)
 	{
+		if (!saveModuleDates()) return;
 		resetSelectedLists();
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		Map params = ctx.getExternalContext().getRequestParameterMap();
-	  	int selModIndex = Integer.parseInt((String) params.get("modidx"));
-	  	int selSecIndex = Integer.parseInt((String) params.get("secidx"));
+		int selModId = Integer.parseInt((String) params.get("editsecmodid"));
+		int selSecId = Integer.parseInt((String) params.get("sectionId"));
 
-		ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selModIndex);
-		SectionBeanService secBean = (SectionBeanService) mdbean.getSectionBeans().get(selSecIndex);
-
-		ValueBinding binding = Util.getBinding("#{editSectionPage}");
-		EditSectionPage esPage = (EditSectionPage) binding.getValue(ctx);
-		Map sessionMap = ctx.getExternalContext().getSessionMap();
-		sessionMap.put("currModule", ((Section) secBean.getSection()).getModule());
-		esPage.setEditInfo((Section) secBean.getSection());
+		try
+		{
+			ctx.getExternalContext().redirect("editmodulesections.jsf?sectionId=" + selSecId);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/** Redirect to delete confirmation page with selected modules or sections
@@ -939,12 +949,12 @@ public class ListAuthModulesPage implements Serializable
 	 */
 	public String deleteAction()
 	{
-
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		List delMods = null;
 		List delSecBeans = null;
-
 		count = 0;
+		if (!saveModuleDates()) return "list_auth_modules";
+		if ((moduleDateBeans == null)||(moduleDateBeans.size() == 0)) return "list_auth_modules";
 
 		// added by rashmi
 		if (!moduleSelected && !sectionSelected)
@@ -962,11 +972,11 @@ public class ListAuthModulesPage implements Serializable
 			{
 				delMods = new ArrayList();
 			}
-			if (selectedModIndices != null)
+			if (selectedModIds != null)
 			{
-			  for (ListIterator i = selectedModIndices.listIterator(); i.hasNext();)
+			  for (ListIterator i = selectedModIds.listIterator(); i.hasNext();)
 			  {
-				mdbean = (ModuleDateBean) moduleDateBeans.get(((Integer) i.next()).intValue());
+				mdbean = (ModuleDateBean) mdbeansMap.get(((Integer) i.next()).intValue());
 				delMods.add(mdbean.getModule());
 			  }
 			}
@@ -974,11 +984,12 @@ public class ListAuthModulesPage implements Serializable
 			DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
 			// dmPage.setMdbean(mdbean);
 			dmPage.setModules(delMods);
+			dmPage.setSectionBeans(new ArrayList<SectionBeanService>());
 		//	List <> allActivenArchvModules = moduleService.getAllActivenArchvModules();
 			dmPage.setModuleSelected(true);
 			count = 0;
 			moduleSelected = false;
-			selectedModIndices = null;
+			selectedModIds = null;
 		//	delModBeans = null;
 			// We do not want to bypass processing of section if sections and modules are selected
 			if (sectionSelected == false)
@@ -988,13 +999,14 @@ public class ListAuthModulesPage implements Serializable
 		}
 		if (sectionSelected)
 		{
+			if ((secObjMap == null)||(secObjMap.size() == 0)) return "list_auth_modules";
 			ModuleDateBean mdbean = null;
 			SectionBeanService secBean = null;
 			if (delSecBeans == null)
 			{
 				delSecBeans = new ArrayList();
 			}
-			if(selectedSecModIndices == null)
+			if(selectedSecIds == null)
 			{
 				ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 				String msg = bundle.getString("select_one_delete");
@@ -1005,26 +1017,25 @@ public class ListAuthModulesPage implements Serializable
 				return "list_auth_modules";
 			}
 
-			for (ListIterator i = selectedSecModIndices.listIterator(); i.hasNext();)
+			for (ListIterator i = selectedSecIds.listIterator(); i.hasNext();)
 			{
-				SecModObj smObj = (SecModObj) i.next();
-				mdbean = (ModuleDateBean) moduleDateBeans.get((((Integer) smObj.getModObj())).intValue());
-				secBean = (SectionBeanService) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
-				delSecBeans.add(secBean);
+				Integer sectionId = (Integer) i.next();
+				secBean = ((SecModObj)secObjMap.get(sectionId)).getSecBean();
+				if (secBean != null) delSecBeans.add(secBean);
 			}
-
-			ValueBinding binding = Util.getBinding("#{deleteModulePage}");
-			DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
-			dmPage.setSection((Section) secBean.getSection());
-			dmPage.setSectionBeans(delSecBeans);
-			dmPage.setSectionSelected(true);
-
 			count = 0;
 			sectionSelected = false;
-			selectedSecModIndices = null;
-			// Mallika - 3/24/05
-
+			selectedSecIds = null;
+			
+			if (delSecBeans != null)
+			{	
+			ValueBinding binding = Util.getBinding("#{deleteModulePage}");
+			DeleteModulePage dmPage = (DeleteModulePage) binding.getValue(ctx);
+			//dmPage.setSection((Section) secBean.getSection());
+			dmPage.setSectionBeans(delSecBeans);
+			dmPage.setSectionSelected(true);
 			return "delete_module";
+			}
 		}
 
 		moduleSelected = false;
@@ -1032,97 +1043,37 @@ public class ListAuthModulesPage implements Serializable
 		resetSelectedLists();
 		return "list_auth_modules";
 	}
+	
+	public boolean saveModuleDates()
+	{
+		if (getIsInstructor())
+		{
+			if ((moduleDateBeans == null)||(moduleDateBeans.size() == 0)) return true;
+			FacesContext ctx = FacesContext.getCurrentInstance();
+			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+			try
+			{
+				getModuleService().updateProperties(moduleDateBeans, courseId, userId);
+			}
+			catch (Exception e)
+			{
+				logger.debug(e.toString());
+				String msg = bundle.getString("list_auth_modules_fail");
+				addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
+				return false;
+			}
+		}
+		return true;
+	}
 
-	/** Validate dates and save changes
-	 * @return list_auth_modules
+	/** Resets lists and save changes
+	 * @return page that request came from
 	 */
 	public String saveChanges()
 	{
 		resetSelectedLists();
-		FacesContext ctx = null;
-		ResourceLoader bundle = null;
-		boolean dateErrFlag = false;
-		boolean yearTooBigFlag = false;
-		errModuleIds = new ArrayList();
-		try
-		{
-			Iterator moduleIter = moduleDateBeans.iterator();
-			ctx = FacesContext.getCurrentInstance();
-			bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-			Calendar stCal = null;
-			Calendar enCal = null;
-			while (moduleIter.hasNext())
-			{
-				ModuleDateBean mdbean = (ModuleDateBean) moduleIter.next();
-				mdbean.setDateFlag(false);
-				if (mdbean.getModuleShdate().getStartDate() != null)
-				{
-					stCal = Calendar.getInstance();
-					stCal.setTime(mdbean.getModuleShdate().getStartDate());
-					if (stCal.get(Calendar.YEAR) > 9999)
-					{
-					  yearTooBigFlag = true;
-					  mdbean.setDateFlag(true);
-					}
-				}
-				if (mdbean.getModuleShdate().getEndDate() != null)
-				{
-					enCal = Calendar.getInstance();
-					enCal.setTime(mdbean.getModuleShdate().getEndDate());
-					if (enCal.get(Calendar.YEAR) > 9999)
-					{
-					  yearTooBigFlag = true;
-					  mdbean.setDateFlag(true);
-					}
-				}
-				if ((mdbean.getModuleShdate().getStartDate() != null)&&(mdbean.getModuleShdate().getEndDate() != null))
-				{
-				  if (mdbean.getModuleShdate().getStartDate().compareTo(mdbean.getModuleShdate().getEndDate()) >= 0)
-				  {
-					dateErrFlag = true;
-					mdbean.setDateFlag(true);
-					/*
-					 * addDateErrorMessage(ctx); return "list_auth_modules";
-					 */
-				  }
-
-			     }
-				if (mdbean.isDateFlag() == true)
-				  {
-					  errModuleIds.add(mdbean);
-				  }
-			}
-			  getModuleService().updateProperties(moduleDateBeans, courseId);
-
-
-			if ((yearTooBigFlag == true)||(dateErrFlag == true))
-			{
-			  if (yearTooBigFlag == true)
-			  {
-			  String msg = bundle.getString("year_toobig_error");
-			  addMessage(ctx, "Year Error", msg, FacesMessage.SEVERITY_ERROR);
-			  }
-			  if (dateErrFlag == true)
-			  {
-				String msg = bundle.getString("date_error");
-				addMessage(ctx, "Date Error", msg, FacesMessage.SEVERITY_ERROR);
-			  }
-			}
-			else
-			{
-				String msg = bundle.getString("changes_saved");
-				addMessage(ctx, "Changes Saved", msg, FacesMessage.SEVERITY_INFO);
-			}
-			}
-
-		catch (Exception e)
-		{
-			logger.debug(e.toString());
-			String msg = bundle.getString("list_auth_modules_fail");
-			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
-			return "list_auth_modules";
-		}
-		return "list_auth_modules";
+		saveModuleDates();
+		return "#";
 	}
 
 	/** Redirect to list auth page
@@ -1133,53 +1084,35 @@ public class ListAuthModulesPage implements Serializable
 		return "list_auth_modules";
 	}
 
-	/** Redirect to view module page
-	 * @return view_module
-	 */
-	public String viewModule()
-	{
-		return "view_module";
-	}
-
-	/** Redirect to view section page
-	 * @return view_section
-	 */
-	public String viewSection()
-	{
-		return "view_section";
-	}
-
-	/** Redirect to list auth page
-	 * @return list_auth_modules
-	 */
-	public String viewPrereqs()
-	{
-		return "list_auth_modules";
-	}
-
-	
 	/** Reset selected lists and redirect to module_post_steps page
 	 * @return module_post_steps
 	 */
-	public String viewNextsteps()
+	public void viewNextsteps(ActionEvent evt)
 	{
 		resetSelectedLists();
+		if (!saveModuleDates()) return;
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		UIViewRoot root = ctx.getViewRoot();
 		UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
 		ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
-		ValueBinding binding = Util.getBinding("#{moduleNextStepsPage}");
-		ModuleNextStepsPage nextPage = (ModuleNextStepsPage) binding.getValue(ctx);
-		nextPage.setMdBean(mdbean);
-		return "module_post_steps";
+		Integer selModId = mdbean.getModuleId();
+		try
+		{
+			ctx.getExternalContext().redirect("module_post_steps.jsf?editmodid=" + selModId.toString());
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 	
 	/** Reset selected lists and redirect to list of special accesses page
 	 * @return list_special_access
 	 */
-	public String specialAccessAction()
+/*	public String specialAccessAction()
 	{
 		resetSelectedLists();
+		if (!saveModuleDates()) return "list_auth_modules";
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		UIViewRoot root = ctx.getViewRoot();
 		if (root != null)
@@ -1196,8 +1129,26 @@ public class ListAuthModulesPage implements Serializable
 			}
 		}
 		return "list_special_access";
-	}	
+	}	*/
 
+	public void specialAccessAction(ActionEvent evt)
+	{
+		resetSelectedLists();
+		if (!saveModuleDates()) return;
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		UIViewRoot root = ctx.getViewRoot();
+		UIData table = (UIData) root.findComponent("listauthmodulesform").findComponent("table");
+		ModuleDateBean mdbean = (ModuleDateBean) table.getRowData();
+		Integer selModId = mdbean.getModuleId();
+		try
+		{
+			ctx.getExternalContext().redirect("list_special_access.jsf?editmodid=" + selModId.toString());
+		}
+		catch (Exception e)
+		{
+			return;
+		}
+	}
 	
 	/**
 	 * @return String value of isNull
@@ -1208,15 +1159,17 @@ public class ListAuthModulesPage implements Serializable
 	}
 
 	/**Reset values, set selected flags to false, count to 0
-	 * and selectedSecModIndices to null
+	 * and selectedSecIds to null
 	 */
 	private void resetSubSectionValues()
 	{
 		sectionSelected = false;
 		moduleSelected = false;
 		count = 0;
-		selectedSecModIndices = null;
+		selectedSecIds = null;
 		moduleDateBeans = null;
+		mdbeansMap = null;
+		secObjMap = null;
 	}
 
 	/** Get indentation level of a section
@@ -1259,7 +1212,9 @@ public class ListAuthModulesPage implements Serializable
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-
+		if (!saveModuleDates()) return "list_auth_modules";
+		if ((moduleDateBeans == null)||(moduleDateBeans.size() == 0)) return "list_auth_modules";
+		
 		// if module is selected then throw message
 		if (moduleSelected)
 		{
@@ -1278,6 +1233,11 @@ public class ListAuthModulesPage implements Serializable
 		}
 		if (sectionSelected == true)
 		{
+			if ((secObjMap == null) || (secObjMap.size() == 0))
+			{
+				resetSubSectionValues();
+				return "list_auth_modules";
+			}
 			SecModObj smObj = null;
 			ModuleDateBean mdbean = null;
 			SectionBeanService secBean = null;
@@ -1287,7 +1247,7 @@ public class ListAuthModulesPage implements Serializable
 				indentSecBeans = new ArrayList();
 			}
 
-			if (selectedSecModIndices == null) 
+			if (selectedSecIds == null) 
 			{
 				resetSubSectionValues();
 				return "list_auth_modules";
@@ -1296,49 +1256,55 @@ public class ListAuthModulesPage implements Serializable
 			// or if it is too deep to indent
 			// If multiple sections are selected, we indent those that we can
 			// and leave the others alone
-			if (selectedSecModIndices.size() == 1)
-			{
-				smObj = (SecModObj) selectedSecModIndices.get(0);
-				mdbean = (ModuleDateBean) moduleDateBeans.get((((Integer) smObj.getModObj())).intValue());
-				int selIndex = ((Integer) smObj.getSecObj()).intValue();
-				// If user tries to indent first section, return
-				if (mdbean.getSectionBeans().size() < 2 || selIndex == 0)
+			if (selectedSecIds.size() == 1)
+			{	
+				smObj = (SecModObj) secObjMap.get(selectedSecIds.get(0));
+				if ((smObj != null)&&(smObj.getMdBean() != null)&&(smObj.getSecBean()!=null))
 				{
-					logger.debug("First section can't be change to subsection");
-					resetSubSectionValues();
-					return "list_auth_modules";
-				}
-				else
-				{
-					secBean = (SectionBeanService) mdbean.getSectionBeans().get(selIndex);
-					boolean indentOk = findIndent(secBean, mdbean.getSectionBeans());
-
-					// Only allow indent upto 10 levels
-					if (indentOk)
+					mdbean = smObj.getMdBean();
+					if (mdbean.getSectionBeans().size() < 2)
 					{
-						try
-						{
-							indentSecBeans.add(secBean);
-							moduleService.createSubSection(mdbean.getModule(), indentSecBeans);
-						}
-						catch (MeleteException me)
-						{
-							logger.debug(me.toString());
-							String msg = bundle.getString("indent_right_fail");
-							addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
-						}
+						logger.debug("First section can't be change to subsection");
+						resetSubSectionValues();
+						return "list_auth_modules";
 					}
 					else
 					{
-						String msg = bundle.getString("indent_right_toodeep");
-						addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
+						secBean = smObj.getSecBean();
+	
+						boolean indentOk = findIndent(secBean, mdbean.getSectionBeans());
+						// Only allow indent upto 10 levels
+						if (indentOk)
+						{
+							try
+							{
+								indentSecBeans.add(secBean);
+								moduleService.createSubSection(mdbean.getModule(), indentSecBeans);
+							}
+							catch (MeleteException me)
+							{
+								logger.debug(me.toString());
+								String msg = bundle.getString("indent_right_fail");
+								addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
+							}
+						}
+						else
+						{
+							String msg = bundle.getString("indent_right_toodeep");
+							addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
+						}
 					}
+				}
+				else
+				{
+					resetSubSectionValues();
+					return "list_auth_modules";
 				}
 			}
 			else
 			{
 				// Multiple indent code
-				boolean res = checkDifModules(selectedSecModIndices);
+				boolean res = checkDifModules(selectedSecIds);
 				if (res == true)
 				{
 					String msg = bundle.getString("list_select_in_onemodule");
@@ -1351,27 +1317,30 @@ public class ListAuthModulesPage implements Serializable
 					mdbean = null;
 					secBean = null;
 
-					for (ListIterator i = selectedSecModIndices.listIterator(); i.hasNext();)
+					for (ListIterator i = selectedSecIds.listIterator(); i.hasNext();)
 					{
-						smObj = (SecModObj) i.next();
-						mdbean = (ModuleDateBean) moduleDateBeans.get((((Integer) smObj.getModObj())).intValue());
-						secBean = (SectionBeanService) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
-						boolean indentOk = findIndent(secBean, mdbean.getSectionBeans());
-
-						if (indentOk)
+						Integer sectionId = (Integer) i.next();	
+						smObj = (SecModObj) secObjMap.get(sectionId);
+						if ((smObj != null)&&(smObj.getMdBean() != null)&&(smObj.getSecBean()!=null))
 						{
-							indentSecBeans.add(secBean);
+							mdbean = smObj.getMdBean();
+							secBean = smObj.getSecBean();
+							boolean indentOk = findIndent(secBean, mdbean.getSectionBeans());
+							if (indentOk)
+							{
+								indentSecBeans.add(secBean);
+							}
+							try
+							{
+								moduleService.createSubSection(mdbean.getModule(), indentSecBeans);
+							}
+							catch (MeleteException me)
+							{
+								logger.debug(me.toString());
+								String msg = bundle.getString("indent_right_fail");
+								addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
+							}
 						}
-					}
-					try
-					{
-						moduleService.createSubSection(mdbean.getModule(), indentSecBeans);
-					}
-					catch (MeleteException me)
-					{
-						logger.debug(me.toString());
-						String msg = bundle.getString("indent_right_fail");
-						addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 					}
 				}
 			}
@@ -1386,13 +1355,16 @@ public class ListAuthModulesPage implements Serializable
 	/** Bring section one level up in indentation
 	 * @return list_auth_modules
 	 */
-	public String BringSubSectionLevelUpAction()
-	{
+	public String BringSubSectionLevelUpAction() {
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		ResourceLoader bundle = new ResourceLoader(
+				"org.etudes.tool.melete.bundle.Messages");
+		if (!saveModuleDates())
+			return "list_auth_modules";
+		if ((moduleDateBeans == null) || (moduleDateBeans.size() == 0))
+			return "list_auth_modules";
 
-		if (count == 0)
-		{
+		if (count == 0) {
 			String msg = bundle.getString("list_select_one_indent");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 			resetSubSectionValues();
@@ -1400,8 +1372,7 @@ public class ListAuthModulesPage implements Serializable
 		}
 
 		// if module is selected then throw message
-		if (moduleSelected)
-		{
+		if (moduleSelected) {
 			String msg = bundle.getString("list_select_indent");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 			resetSubSectionValues();
@@ -1410,88 +1381,95 @@ public class ListAuthModulesPage implements Serializable
 
 		// section selected
 		/*
-		 * if(sectionSelected && count != 1) { String msg = bundle.getString("list_select_one_indent"); addMessage(ctx,"Error
-		 * Message",msg,FacesMessage.SEVERITY_ERROR); resetSubSectionValues(); return "list_auth_modules"; }
+		 * if(sectionSelected && count != 1) { String msg =
+		 * bundle.getString("list_select_one_indent"); addMessage(ctx,"Error
+		 * Message
+		 * ",msg,FacesMessage.SEVERITY_ERROR); resetSubSectionValues(); return "
+		 * list_auth_modules"; }
 		 */
 
-		if (sectionSelected == true)
-		{
+		if (sectionSelected == true) {
+			if ((secObjMap == null) || (secObjMap.size() == 0))
+				return "list_auth_modules";
 			SecModObj smObj = null;
 			ModuleDateBean mdbean = null;
 			SectionBeanService secBean = null;
 			List indentSecBeans = null;
-			if (indentSecBeans == null)
-			{
+			if (indentSecBeans == null) {
 				indentSecBeans = new ArrayList();
 			}
-			
-			if (selectedSecModIndices == null) 
-			{
+
+			if (selectedSecIds == null) {
 				resetSubSectionValues();
 				return "list_auth_modules";
 			}
 			// If one section is selected, we check if its the top level section
 			// If multiple sections are selected, we indent those that we can
 			// and leave the others alone
-			if (selectedSecModIndices.size() == 1)
-			{
-				smObj = (SecModObj) selectedSecModIndices.get(0);
-				mdbean = (ModuleDateBean) moduleDateBeans.get((((Integer) smObj.getModObj())).intValue());
-				secBean = (SectionBeanService) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
-				if (checkTopLevelSection(secBean.getDisplaySequence()))
-				{
-					logger.debug("Top level section can't indent left more");
-					resetSubSectionValues();
-					return "list_auth_modules";
+			if (selectedSecIds.size() == 1) {
+				smObj = (SecModObj) secObjMap.get(selectedSecIds.get(0));
+				if ((smObj != null) && (smObj.getMdBean() != null)
+						&& (smObj.getSecBean() != null))
+					{
+					mdbean = (ModuleDateBean) smObj.getMdBean();
+					secBean = (SectionBeanService) smObj.getSecBean();
+					if (checkTopLevelSection(secBean.getDisplaySequence())) {
+						logger.debug("Top level section can't indent left more");
+						resetSubSectionValues();
+						return "list_auth_modules";
+					}
+					try {
+						indentSecBeans.add(secBean);
+						moduleService.bringOneLevelUp(mdbean.getModule(),
+								indentSecBeans);
+					} catch (MeleteException me) {
+						logger.debug(me.toString());
+						String msg = bundle.getString("indent_left_fail");
+						addMessage(ctx, "Error Message", msg,
+								FacesMessage.SEVERITY_ERROR);
+					}
 				}
-				try
-				{
-					indentSecBeans.add(secBean);
-					moduleService.bringOneLevelUp(mdbean.getModule(), indentSecBeans);
-				}
-				catch (MeleteException me)
-				{
-					logger.debug(me.toString());
-					String msg = bundle.getString("indent_left_fail");
-					addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
-				}
-			}
-			else
-			{
+			} else {
 				// Multiple indent code
-				boolean res = checkDifModules(selectedSecModIndices);
-				if (res == true)
-				{
+				boolean res = checkDifModules(selectedSecIds);
+				if (res == true) {
 					String msg = bundle.getString("list_select_in_onemodule");
-					addMessage(ctx, "Select Indent", msg, FacesMessage.SEVERITY_ERROR);
+					addMessage(ctx, "Select Indent", msg,
+							FacesMessage.SEVERITY_ERROR);
 					resetSubSectionValues();
 					return "list_auth_modules";
-				}
-				else
-				{
+				} else {
 					mdbean = null;
 					secBean = null;
 
-					for (ListIterator i = selectedSecModIndices.listIterator(); i.hasNext();)
-					{
-						smObj = (SecModObj) i.next();
-						mdbean = (ModuleDateBean) moduleDateBeans.get((((Integer) smObj.getModObj())).intValue());
-						secBean = (SectionBeanService) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
-						indentSecBeans.add(secBean);
+					for (ListIterator i = selectedSecIds.listIterator(); i
+							.hasNext();) {
+						Integer sectionId = (Integer) i.next();
+						smObj = (SecModObj) secObjMap.get(sectionId);
+						if ((smObj != null) && (smObj.getMdBean() != null)
+								&& (smObj.getSecBean() != null)) {
+							mdbean = smObj.getMdBean();
+							secBean = smObj.getSecBean();
+							indentSecBeans.add(secBean);
+						}
 					}
-					try
-					{
-						moduleService.bringOneLevelUp(mdbean.getModule(), indentSecBeans);
+					if ((indentSecBeans != null)
+							&& (indentSecBeans.size() != 0)) {
+						try {
+							moduleService.bringOneLevelUp(mdbean.getModule(),
+									indentSecBeans);
+						} catch (MeleteException me) {
+							logger.debug(me.toString());
+							String msg = bundle.getString("indent_left_fail");
+							addMessage(ctx, "Error Message", msg,
+									FacesMessage.SEVERITY_ERROR);
+						}
 					}
-					catch (MeleteException me)
-					{
-						logger.debug(me.toString());
-						String msg = bundle.getString("indent_left_fail");
-						addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
-					}
+
 				}
 			}
 		}
+
 		resetSubSectionValues();
 		int saveShowId = showModuleId;
 		resetValues();
@@ -1512,14 +1490,27 @@ public class ListAuthModulesPage implements Serializable
 	}
 
 	/** Check if selected sections are in different modules
-	 * @param selectedSecModIndices list of SecMod objects
+	 * @param selectedSecIds list of SecMod objects
 	 * @return true if sections are in different modules, false otherwise
 	 */
-	private boolean checkDifModules(List selectedSecModIndices)
+	private boolean checkDifModules(List selectedSecIds)
 	{
-		Collections.sort(selectedSecModIndices);
-		Integer firstMod = ((SecModObj) selectedSecModIndices.get(0)).getModObj();
-		Integer lastMod = ((SecModObj) selectedSecModIndices.get(selectedSecModIndices.size() - 1)).getModObj();
+		if ((moduleDateBeans == null)||(moduleDateBeans.size() == 0)) return false;
+		if ((secObjMap == null) || (secObjMap.size() == 0)) return false;
+		List moduleIdList = new ArrayList();
+		for (ListIterator i = selectedSecIds.listIterator(); i.hasNext();)
+		{
+			Integer sectionId = (Integer) i.next();	
+			SecModObj smObj = (SecModObj) secObjMap.get(sectionId);
+			if ((smObj != null)&&(smObj.getMdBean() != null)&&(smObj.getSecBean()!=null))
+			{
+				moduleIdList.add(smObj.getModuleId());
+			}
+		}	
+		if ((moduleIdList == null) || (moduleIdList.size() == 0)) return false;
+		Collections.sort(moduleIdList);
+		Integer firstMod = (Integer) moduleIdList.get(0);
+		Integer lastMod = (Integer) moduleIdList.get(moduleIdList.size() - 1);
 		if (!(firstMod.equals(lastMod)))
 			return true;
 		else
@@ -1527,123 +1518,7 @@ public class ListAuthModulesPage implements Serializable
 	}
 
 	
-	/** Move module or section one up in the list
-	 * @return list_auth_modules
-	 */
-	public String MoveItemUpAction()
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		// if module is selected then throw message
-		logger.debug("values" + moduleSelected + count + selectedModIndices + selectedSecModIndices + sectionSelected);
-
-		if (count != -1)
-		{
-			String msg = bundle.getString("select_one_move");
-			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
-			resetSubSectionValues();
-			return "list_auth_modules";
-		}
-
-		try
-		{
-			if (moduleSelected)
-			{
-				int selIndex = ((Integer) selectedModIndices.get(0)).intValue();
-
-				if (moduleDateBeans.size() < 2 || selIndex == 0)
-				{
-					logger.debug("first module selected to move up");
-					resetSubSectionValues();
-					return "list_auth_modules";
-				}
-				ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selIndex);
-				logger.debug("calling sort for " + mdbean.getModule().getTitle());
-				moduleService.sortModule(mdbean.getModule(), courseId, "up");
-			}
-			if (sectionSelected)
-			{
-				SecModObj smObj = (SecModObj) selectedSecModIndices.get(0);
-				ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get((((Integer) smObj.getModObj())).intValue());
-				int selIndex = ((Integer) smObj.getSecObj()).intValue();
-				if (mdbean.getSectionBeans().size() < 2 || selIndex == 0)
-				{
-					logger.debug("one item in the list or first section is selected to move up");
-					resetSubSectionValues();
-					return "list_auth_modules";
-				}
-				SectionBeanService secBean = (SectionBeanService) mdbean.getSectionBeans().get(selIndex);
-				moduleService.sortSectionItem(mdbean.getModule(), secBean.getSection().getSectionId().toString(), "up");
-			}
-		}
-		catch (MeleteException me)
-		{
-			logger.debug(me.toString());
-			me.printStackTrace();
-			String msg = bundle.getString("sort_fail");
-			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
-		}
-		resetSubSectionValues();
-		return "list_auth_modules";
-	}
-
-	/** Move module or section one down in the list
-	 * @return list_auth_modules
-	 */
-	public String MoveItemDownAction()
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		// if module is selected then throw message
-		if (count != 1)
-		{
-			String msg = bundle.getString("select_one_move");
-			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
-			resetSubSectionValues();
-			return "list_auth_modules";
-		}
-
-		try
-		{
-			if (moduleSelected)
-			{
-				int selIndex = ((Integer) selectedModIndices.get(0)).intValue();
-
-				if (moduleDateBeans.size() < 2 || (selIndex == moduleDateBeans.size() - 1))
-				{
-					logger.debug("last module selected to move down");
-					resetSubSectionValues();
-					return "list_auth_modules";
-				}
-				ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get(selIndex);
-				logger.debug("calling sort for " + mdbean.getModule().getTitle());
-				moduleService.sortModule((ModuleObjService) mdbean.getModule(), courseId, "down");
-			}
-			if (sectionSelected)
-			{
-				SecModObj smObj = (SecModObj) selectedSecModIndices.get(0);
-				ModuleDateBean mdbean = (ModuleDateBean) moduleDateBeans.get((((Integer) smObj.getModObj())).intValue());
-				int selIndex = ((Integer) smObj.getSecObj()).intValue();
-
-				if (mdbean.getSectionBeans().size() < 2 || (selIndex == mdbean.getSectionBeans().size() - 1))
-				{
-					logger.debug("one item in the list or last section is selected to move down");
-					resetSubSectionValues();
-					return "list_auth_modules";
-				}
-				SectionBeanService secBean = (SectionBeanService) mdbean.getSectionBeans().get(selIndex);
-				moduleService.sortSectionItem((ModuleObjService) mdbean.getModule(), secBean.getSection().getSectionId().toString(), "down");
-			}
-		}
-		catch (MeleteException me)
-		{
-			logger.debug(me.toString());
-			String msg = bundle.getString("sort_fail");
-			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
-		}
-		resetSubSectionValues();
-		return "list_auth_modules";
-	}
+	
 
 	/** Make a copy of the selected module
 	 * @return list_auth_modules
@@ -1652,7 +1527,8 @@ public class ListAuthModulesPage implements Serializable
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-
+		if (!saveModuleDates()) return "list_auth_modules";
+		
 		try
 		{
 			resetSelectedLists();
@@ -1676,46 +1552,60 @@ public class ListAuthModulesPage implements Serializable
 	 * @return list_auth_modules or move_section
 	 */
 	public String MoveSectionAction()
-	{
+    {
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		try
-		{
-			if (count == 0 || moduleSelected)
-			{
+		ResourceLoader bundle = new ResourceLoader(
+				"org.etudes.tool.melete.bundle.Messages");
+		if (!saveModuleDates())
+			return "list_auth_modules";
+		if ((moduleDateBeans == null) || (moduleDateBeans.size() == 0))
+			return "list_auth_modules";
+
+		try {
+			if (count == 0 || moduleSelected) {
 				String msg = bundle.getString("select_mv_section");
-				addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
+				addMessage(ctx, "Error Message", msg,
+						FacesMessage.SEVERITY_ERROR);
 				resetSubSectionValues();
 				return "list_auth_modules";
 			}
 
-			if (sectionSelected && selectedSecModIndices != null)
-			{
+			if (sectionSelected && selectedSecIds != null) {
+				if ((secObjMap == null) || (secObjMap.size() == 0)) {
+					resetSubSectionValues();
+					return "list_auth_modules";
+				}
 				ModuleDateBean mdbean = null;
 				SectionBean secBean = null;
-				ArrayList<SectionBean> moveSectionBeans = new ArrayList<SectionBean>(0);
+				ArrayList<SectionBean> moveSectionBeans = new ArrayList<SectionBean>(
+						0);
 
-				for (ListIterator<SecModObj> i = selectedSecModIndices.listIterator(); i.hasNext();)
-				{
-					SecModObj smObj = i.next();
-					mdbean = (ModuleDateBean) moduleDateBeans.get((((Integer) smObj.getModObj())).intValue());
-					secBean = (SectionBean) mdbean.getSectionBeans().get((((Integer) smObj.getSecObj())).intValue());
-					moveSectionBeans.add(secBean);
+				for (ListIterator<Integer> i = selectedSecIds.listIterator(); i
+						.hasNext();) {
+					Integer sectionId = (Integer) i.next();
+					SecModObj smObj = (SecModObj) secObjMap.get(sectionId);
+					if ((smObj != null) && (smObj.getMdBean() != null)
+							&& (smObj.getSecBean() != null)) {
+						mdbean = smObj.getMdBean();
+						secBean = smObj.getSecBean();
+						moveSectionBeans.add(secBean);
+					}
 				}
-				ValueBinding binding = Util.getBinding("#{moveSectionsPage}");
-				MoveSectionsPage mvPage = (MoveSectionsPage) binding.getValue(ctx);
-				mvPage.resetValues();
-				mvPage.setSectionBeans(moveSectionBeans);
-
 				count = 0;
 				sectionSelected = false;
-				selectedSecModIndices = null;
-				return "move_section";
+				selectedSecIds = null;
+				if ((moveSectionBeans != null) && (moveSectionBeans.size() > 0)) {
+					ValueBinding binding = Util
+							.getBinding("#{moveSectionsPage}");
+					MoveSectionsPage mvPage = (MoveSectionsPage) binding
+							.getValue(ctx);
+					mvPage.resetValues();
+					mvPage.setSectionBeans(moveSectionBeans);
+					return "move_section";
+				}
 			}
 
-		}
-		catch (Exception me)
-		{
+		} catch (Exception me) {
 			logger.debug(me.toString());
 			String msg = bundle.getString("copy_fail");
 			addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
@@ -1731,7 +1621,7 @@ public class ListAuthModulesPage implements Serializable
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-
+		
 		try
 		{
 			resetSelectedLists();
@@ -1749,6 +1639,30 @@ public class ListAuthModulesPage implements Serializable
 		}
 		return 0;
 	}
+	
+	/**
+	 * Check if the current user has permission as author.
+	 * 
+	 * @return true if the current user has permission to perform this action, false if not.
+	 */
+	public boolean getIsInstructor()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+
+		try
+		{
+			return meleteSecurityService.allowAuthor(ToolManager.getCurrentPlacement().getContext());
+		}
+		catch (Exception e)
+		{
+			String errMsg = bundle.getString("auth_failed");
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "auth_failed", errMsg));
+			logger.warn(e.toString());
+		}
+		return false;
+	}
+	
 
 /** Add message to context
 	 * @param ctx FacesContext object
@@ -1761,6 +1675,15 @@ public class ListAuthModulesPage implements Serializable
 		FacesMessage msg = new FacesMessage(msgName, msgDetail);
 		msg.setSeverity(severity);
 		ctx.addMessage(null, msg);
+	}
+	
+	/**
+	 * @param meleteSecurityService
+	 *        The meleteSecurityService to set.
+	 */
+	public void setMeleteSecurityService(MeleteSecurityService meleteSecurityService)
+	{
+		this.meleteSecurityService = meleteSecurityService;
 	}
 	
 	/**

@@ -27,10 +27,12 @@ package org.etudes.component.app.melete;
 import java.io.File;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -148,7 +150,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				}
 			}
 		}
-	    return courseId;
+		return courseId;
 	}
 
 	/**
@@ -241,7 +243,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 
 		return null;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -614,16 +616,17 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void editResourceProperties(String selResourceIdFromList, String secResourceName, String secResourceDescription)
+	public Boolean editResourceProperties(String selResourceIdFromList, String secResourceName, String secResourceDescription)
 	{
-		if (selResourceIdFromList == null || selResourceIdFromList.length() == 0) return;
+		Boolean modify = false;
+		if (selResourceIdFromList == null || selResourceIdFromList.length() == 0) return modify;
 		ContentResourceEdit edit = null;
 		try
 		{
 			if (!isUserAuthor(getCourseId(selResourceIdFromList)))
 			{
 				logger.info("User is not authorized to access meleteDocs collection");
-				return;
+				return modify;
 			}
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
@@ -637,6 +640,11 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			}
 			edit = getContentservice().editResource(selResourceIdFromList);
 			ResourcePropertiesEdit rp = edit.getPropertiesEdit();
+			if (rp.getProperty(ResourceProperties.PROP_DISPLAY_NAME) != null)
+				modify = (rp.getProperty(ResourceProperties.PROP_DISPLAY_NAME).compareTo(secResourceName) == 0) ? false : true;
+			if (rp.getProperty(ResourceProperties.PROP_DESCRIPTION) != null)
+				modify = modify ||( (rp.getProperty(ResourceProperties.PROP_DESCRIPTION).compareTo(secResourceDescription) == 0) ? false : true);
+			
 			rp.clear();
 			rp.addProperty(ResourceProperties.PROP_DISPLAY_NAME, secResourceName);
 			rp.addProperty(ResourceProperties.PROP_DESCRIPTION, secResourceDescription);
@@ -647,6 +655,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 		catch (Exception e)
 		{
 			logger.error("edit res properties:" + e.toString());
+			e.printStackTrace();
 		}
 		finally
 		{
@@ -654,7 +663,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			// clear the security advisor
 			meleteSecurityService.popAdvisor();
 		}
-		return;
+		return modify;
 	}
 
 	/**
@@ -731,7 +740,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				{
 					int lastDashIndex = checkDup.lastIndexOf("-");
 					int lastDotIndex = checkDup.lastIndexOf(".");
-					
+
 					// for titles with no file extension
 					if (lastDotIndex == -1) lastDotIndex = checkDup.length();
 					if ((lastDashIndex != -1) && (lastDotIndex != -1))
@@ -832,7 +841,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	{
 		String dupName = null;
 		int index = name.lastIndexOf(".");
-		
+
 		// for files with no extension
 		if (index == -1) index = name.length();
 		String base = null;
@@ -841,7 +850,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 		{
 			base = name.substring(0, index);
 			ext = name.substring(index);
-			if(ext == null) ext = "";
+			if (ext == null) ext = "";
 		}
 		dupName = base + numberStr + ext;
 		return dupName;
@@ -896,15 +905,17 @@ public class MeleteCHServiceImpl implements MeleteCHService
 		{
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
-			ContentResourceEdit cr = getContentservice().editResource(resourceId);
+			ContentResource cr = getContentservice().getResource(resourceId);
 			logger.debug("prop name" + cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
 			String dispName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
-			getContentservice().cancelResource(cr);
+
+			cr = null;
 			return dispName;
 		}
 		catch (Exception e)
 		{
 			logger.debug("error in reading resource properties in edit section" + e);
+			e.printStackTrace();
 		}
 		finally
 		{
@@ -928,9 +939,9 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
 			List<ContentResource> all = null;
-			all=getContentservice().getAllResources(uploadCollId);
+			all = getContentservice().getAllResources(uploadCollId);
 			return all;
-			
+
 		}
 		catch (Exception e)
 		{
@@ -1112,15 +1123,16 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void editResource(String resourceId, String contentEditor) throws Exception
+	public Boolean editResource(String resourceId, String contentEditor) throws Exception
 	{
 		ContentResourceEdit edit = null;
+		Boolean modify = false;
 		try
 		{
 			if (!isUserAuthor(getCourseId(resourceId)))
 			{
 				logger.info("User is not authorized to access meleteDocs collection");
-				return;
+				return modify;
 			}
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
@@ -1135,13 +1147,27 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				{
 				}
 				edit = getContentservice().editResource(resourceId);
+				byte[] originalData = edit.getContent();
 				byte[] data = contentEditor.getBytes();
+								
+				/*Vector<String> original = checkTextModified(new String(originalData));
+				Vector<String> newData = checkTextModified(new String(data));
+				modify = original.equals(newData) ? false : true;
+				logger.debug("modify value in edit resource :" + modify);*/
+
+			/*	Check on length
+			    logger.debug("check if data is changed :" + originalData.length + ", and now dat's length is " + data.length);
+				if (originalData.length == data.length) modify = false;
+				else modify = true;		*/
+				
+				// compare arrays
+				modify = !Arrays.equals(originalData, data);
 				edit.setContent(data);
 				// edit.setContentLength((long)data.length);
 				getContentservice().commitResource(edit);
 				edit = null;
 			}
-			return;
+			return modify;
 		}
 		catch (Exception e)
 		{
@@ -1160,15 +1186,16 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	 * {@inheritDoc}
 	 */
 
-	public void editResource(String courseId, String resourceId, String contentEditor) throws Exception
+	public Boolean editResource(String courseId, String resourceId, String contentEditor) throws Exception
 	{
 		ContentResourceEdit edit = null;
+		Boolean modify = false;
 		try
 		{
 			if (!isUserAuthor(courseId))
 			{
 				logger.info("User is not authorized to access meleteDocs collection");
-				return;
+				return modify;
 			}
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
@@ -1183,13 +1210,26 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				{
 				}
 				edit = getContentservice().editResource(resourceId);
+				byte[] originalData = edit.getContent();
 				byte[] data = contentEditor.getBytes();
+				
+			/*	Vector<String> original = checkTextModified(new String(originalData));
+				Vector<String> newData = checkTextModified(new String(data));
+				modify = original.equals(newData) ? false : true;
+				logger.debug("modify value in edit resource :" + modify);*/	
+			/*	Check on length
+			    logger.debug("check if data is changed :" + originalData.length + ", and now dat's length is " + data.length);
+				if (originalData.length == data.length) modify = false;
+				else modify = true;		*/	
+				
+				// compare arrays
+				modify = !Arrays.equals(originalData, data);
 				edit.setContent(data);
 				// edit.setContentLength((long)data.length);
 				getContentservice().commitResource(edit);
 				edit = null;
 			}
-			return;
+			return modify;
 		}
 		catch (Exception e)
 		{
@@ -1204,6 +1244,46 @@ public class MeleteCHServiceImpl implements MeleteCHService
 		}
 	}
 
+	/**
+	 * Parses the data as text and a list of embedded media.
+	 * @param content1
+	 * The html content
+	 * @return
+	 * a vector with first element as text and second element as list of embedded media.
+	 */
+	private Vector<String> checkTextModified(String content1) 
+	{
+		Vector<String> v = new Vector<String>(0);
+		try
+		{
+			if (content1 == null || content1.length() == 0) return v;
+			Pattern p1 = Pattern.compile("<(img|a|embed|script|applet|object)\\s+.*?/*>", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE
+					| Pattern.DOTALL);
+			Pattern p2 = Pattern.compile("(src|href|data|archive)[\\s]*=[\\s]*\"([^#\"]*)([#\"])", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+
+			Matcher m = p1.matcher(content1);
+			StringBuffer sb = new StringBuffer();
+			List<String> embed = new ArrayList<String>(0);
+			while (m.find())
+			{
+				Matcher m2 = p2.matcher(m.group(0));
+				if (m2.find() && m2.groupCount() == 3) embed.add(m2.group(2));
+				m.appendReplacement(sb, "");
+			}
+			m.appendTail(sb);
+
+			v.add(sb.toString());
+			v.add(embed.toString());
+
+			return v;
+		}
+		catch (Exception e)
+		{
+			logger.debug("error in checking text");
+			e.printStackTrace();
+		}
+		return v;
+	}
 	/**
 	 * {@inheritDoc}
 	 */
@@ -1237,8 +1317,8 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	/**
 	 * {@inheritDoc}
 	 */
-	public String findLocalImagesEmbeddedInEditor(String courseId, ArrayList<String> errs, Map<String, String> newEmbeddedResources, String contentEditor)
-	throws MeleteException
+	public String findLocalImagesEmbeddedInEditor(String courseId, ArrayList<String> errs, Map<String, String> newEmbeddedResources,
+			String contentEditor) throws MeleteException
 	{
 		String checkforimgs = contentEditor;
 		// get collection id where the embedded files will go
@@ -1367,7 +1447,9 @@ public class MeleteCHServiceImpl implements MeleteCHService
 						logger.debug("embedded link so looking for target value" + endSrc + checkforimgs.length() + checkforimgs.indexOf(">"));
 						String soFar = checkforimgs.substring(0, endSrc);
 						String checkTarget = checkforimgs.substring(endSrc, checkforimgs.indexOf(">") + 1);
-						String laterPart = checkforimgs.substring(checkforimgs.indexOf(">") + 2);
+						String laterPart = "";
+						if (checkforimgs.indexOf(">") + 2 <= checkforimgs.length())
+							laterPart = checkforimgs.substring(checkforimgs.indexOf(">") + 2);
 						Pattern pa = Pattern.compile("\\s[tT][aA][rR][gG][eE][tT]\\s*=");
 						Matcher m = pa.matcher(checkTarget);
 						if (!m.find())

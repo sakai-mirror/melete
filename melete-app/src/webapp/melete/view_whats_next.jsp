@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="org.etudes.tool.melete.ViewNextStepsPage"%>
 <!--
  ***********************************************************************************
  * $URL$
@@ -26,11 +27,40 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+<%
+final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
+final ViewNextStepsPage vnsPage = (ViewNextStepsPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "viewNextStepsPage");
 
+String nextSeqNo = (String)request.getParameter("nextSeqNo");
+String moduleSeqNo = (String)request.getParameter("moduleSeqNo");
+String prevSecId = (String)request.getParameter("prevSecId");
+String prevModId = (String)request.getParameter("prevModId");
+if (nextSeqNo != null)
+{
+	vnsPage.setNextSeqNo(Integer.parseInt(nextSeqNo));
+}
+if (moduleSeqNo != null)
+{
+	vnsPage.setModuleSeqNo(Integer.parseInt(moduleSeqNo));
+}
+if (prevSecId != null)
+{
+	vnsPage.setPrevSecId(Integer.parseInt(prevSecId));
+}
+if (prevModId != null)
+{
+	vnsPage.setPrevModId(Integer.parseInt(prevModId));
+}
+%>
 <f:view>
 <sakai:view title="Modules: Student View" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="meleterightscheck.jsp" %>
 <a name="newanchor"></a>
+<t:saveState id="vnspmod" value="#{viewNextStepsPage.module}" />
+<t:saveState id="vnsppmod" value="#{viewNextStepsPage.prevModId}" />
+<t:saveState id="vnsppsec" value="#{viewNextStepsPage.prevSecId}" />
+<t:saveState id="vnspnso" value="#{viewNextStepsPage.nextSeqNo}" />
 <h:form id="viewNSsectionform">   
 	<f:subview id="top">
 	  <jsp:include page="topnavbar.jsp?myMode=View"/> 
@@ -56,6 +86,8 @@
  <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />
  <f:param name="fromPage" value="view_whats_next" />
  <f:param name="fromModuleId" value="#{viewNextStepsPage.prevModId}" />
+ <f:param name="fromSectionId" value="#{viewNextStepsPage.prevSecId}" />
+ <f:param name="fromModuleSeqNo" value="#{viewNextStepsPage.nextSeqNo}" />
 </h:commandLink>				  
 </td>
 </tr>

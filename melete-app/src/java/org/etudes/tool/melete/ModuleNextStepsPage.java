@@ -114,6 +114,17 @@ public class ModuleNextStepsPage implements Serializable/* ,ToolBean */
 	 */
 	public ModuleDateBean getMdBean()
 	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		if (mdBean == null && ctx.getExternalContext().getRequestParameterMap().get("editmodid") != null)
+		{
+			String selectedModId = (String)ctx.getExternalContext().getRequestParameterMap().get("editmodid");
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+
+			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+			String courseId = mPage.getCurrentSiteId();
+			String userId = mPage.getCurrentUser().getId();
+			this.mdBean = (ModuleDateBean) moduleService.getModuleDateBean(userId, courseId, Integer.parseInt(selectedModId));
+		}
 		return mdBean;
 	}
 
@@ -186,16 +197,12 @@ public class ModuleNextStepsPage implements Serializable/* ,ToolBean */
 	public String steps()
 	{
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		try
 		{
-			mdBean.setDateFlag(false);
-			ArrayList mdbeanList = new ArrayList();
-			mdbeanList.add(mdBean);
-			moduleService.updateProperties(mdbeanList, mPage.getCurrentSiteId());
-
+			String stepsText = null; 
+			if (mdBean.getModule().getWhatsNext() != null) stepsText = mdBean.getModule().getWhatsNext().trim();
+			moduleService.updateModuleNextSteps(mdBean.getModuleId(), stepsText);
 			return "success";
 
 		}

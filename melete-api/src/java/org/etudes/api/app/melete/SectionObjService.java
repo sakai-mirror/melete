@@ -23,9 +23,10 @@
  **********************************************************************************/
 package org.etudes.api.app.melete;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public interface SectionObjService
+public interface SectionObjService extends Serializable
 {
 	/**
 	 * {@inheritDoc}

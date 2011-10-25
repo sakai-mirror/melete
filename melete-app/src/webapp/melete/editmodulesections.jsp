@@ -27,6 +27,8 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+<%@ taglib uri="http://javascript4jsf.dev.java.net/" prefix="j4j" %>
 
 <f:view>
 <sakai:view title="Modules: Edit Module Sections" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -69,17 +71,11 @@ function saveEditor()
 	return result;	
 }
 
-function showmessage()
-{
-		if (document.getElementById("file1") != undefined && document.getElementById("file1").value.length  >  0)
-		   {
-		   window.defaultStatus="<%=mensaje%>";
-		   } 
-  }
 </script>
 
       <!-- This Begins the Main Text Area -->
 	<h:form id="EditSectionForm" enctype="multipart/form-data" onsubmit="if (saveEditor()){ return true;}else {return false;}"> 	
+	<j4j:param name="sectionId" value="#{editSectionPage.editId}" method="get" />
 			  <h:inputHidden id="formName" value="EditSectionForm"/>  
 			  <h:inputHidden id="mode" value="Edit"/>
 			  <h:inputHidden id="sId" value="#{editSectionPage.section.sectionId}"/>
@@ -89,6 +85,11 @@ function showmessage()
 		<f:subview id="top">
 			<jsp:include page="topnavbar.jsp"/> 
 		</f:subview>
+		
+		<t:saveState id="worksection" value="#{editSectionPage.section}" />
+		<t:saveState id="workLicense" value="#{licensePage.licenseCodes}" />
+		<t:saveState id="workId" value="#{editSectionPage.editId}" />
+		
 		<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText id="captionText" value="#{msgs.editmodulesections_editing_section}" /> </div>
 		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
         <div id="errMsg1" style="color:red"><p> </p></div>
@@ -102,16 +103,22 @@ function showmessage()
 				            <table  width="100%"> 
 			                   <tr >
 					            <td width="70%" >  
-					            	<h:commandButton id="editPrevButton" action="#{editSectionPage.editPrevSection}" disabled="#{!editSectionPage.hasPrev}" value="#{msgs.editmodulesections_edit_prev}" accesskey="#{msgs.prev_access}" title="#{msgs.im_prev_text}" styleClass="BottomImgPrev"/>          	   
+					            	<h:commandButton id="editPrevButton" actionListener="#{editSectionPage.editPrevSectionListener}" disabled="#{!editSectionPage.hasPrev}" value="#{msgs.editmodulesections_edit_prev}" accesskey="#{msgs.prev_access}" title="#{msgs.im_prev_text}" styleClass="BottomImgPrev">
+					 					    
+					       			</h:commandButton>      	   
 									<h:commandButton id="TOCButton" action="#{editSectionPage.goTOC}" value="#{msgs.editmodulesections_TOC}" accesskey="#{msgs.toc_access}" title="#{msgs.im_toc_text}" styleClass="BottomImgTOC"/>
-					       			<h:commandButton id="editNextButton" action="#{editSectionPage.editNextSection}" disabled="#{!editSectionPage.hasNext}" value="#{msgs.editmodulesections_edit_next}" accesskey="#{msgs.next_access}" title="#{msgs.im_next_text}" styleClass="BottomImgNext"/>
+					       			<h:commandButton id="editNextButton" actionListener="#{editSectionPage.editNextSectionListener}" disabled="#{!editSectionPage.hasNext}" value="#{msgs.editmodulesections_edit_next}" accesskey="#{msgs.next_access}" title="#{msgs.im_next_text}" styleClass="BottomImgNext">
+					    					       	
+					       			</h:commandButton>
 						     	
 						            <h:outputText id="text4_3" value="  " styleClass="ExtraPaddingClass"/>	
-									<h:commandButton id="editAddNewButton" action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.editmodulesections_add_new}" accesskey="#{msgs.add_access}" title="#{msgs.im_save_text}" styleClass="BottomImgAdd"/>  			
+									<h:commandButton id="editAddNewButton" actionListener="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.editmodulesections_add_new}" accesskey="#{msgs.add_access}" title="#{msgs.im_save_text}" styleClass="BottomImgAdd">
+																 
+									</h:commandButton>  			
 						        </td>
 						        <td class="right" width="30%" >    
 									 <h:commandButton id="bookmarkSectionLink" action="#{editSectionPage.saveAndAddBookmark}" value="#{msgs.bookmark_text}" 
-										 onclick="var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},document.getElementById('EditSectionForm:title').value,'Melete Bookmark Window');"
+										 onclick="var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},document.getElementById('EditSectionForm:title').value,'','','','Melete Bookmark Window');"
 										  accesskey="#{msgs.bookmark_access}" title="#{msgs.im_bmrk_text}" styleClass="BottomImgBookmarkIt">
 									</h:commandButton>
 						     		<h:commandButton id="myBookmarksLink" action="#{editSectionPage.gotoMyBookmarks}" value="#{msgs.my_bookmarks}" accesskey="#{msgs.mybookmarks_access}" title="#{msgs.im_mybmrks_text}" styleClass="BottomImgMyBookmarks"/>
@@ -126,25 +133,16 @@ function showmessage()
 			          	</td>
 			          </tr>	 
 	                   <!-- end table header -->
-	                         	 <tr>
-                                    <td class="col1" align="left" valign="top"><h:outputText id="text8" value="#{msgs.editmodulesections_author}"/></td>
-                                    <td class="col2" align="left" valign="top"><h:outputText value="#{editSectionPage.section.createdByFname}" styleClass="formtext"/>&nbsp;<h:outputText value="#{editSectionPage.section.createdByLname}" styleClass="formtext"/>
-                                    <h:outputText value="#{editSectionPage.section.creationDate}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm:ss a"/></h:outputText>
-                                    </td>
-                                  </tr>
-
                                    <tr>
                                     <td class="col1" align="left" valign="top"><h:outputText id="text7" value="#{msgs.editmodulesections_section_title}" /><span class="required">*</span></td>
                                     <td class="col2" align="left" valign="top">
-									<h:inputText id="title" value="#{editSectionPage.section.title}" size="45"  required="true" styleClass="formtext"/>
+									<h:inputText id="title" value="#{editSectionPage.section.title}" size="45" styleClass="formtext" />
 									</td>
                                   </tr>                           
 								  <tr>
                                     <td class="col1" align="left" valign="top"><h:outputText id="text9" value="#{msgs.editmodulesections_instructions}" /></td>
                                     <td class="col2" align="left" valign="top">
-										  <h:inputTextarea id="instr" cols="45" rows="5" value="#{editSectionPage.section.instr}" styleClass="formtext">
-											<f:validateLength maximum="250" minimum="1"/>
-									</h:inputTextarea>
+										  <h:inputTextarea id="instr" cols="45" rows="5" value="#{editSectionPage.section.instr}" styleClass="formtext" />
 									</td>
                                   </tr>
                                   <tr>
@@ -201,9 +199,10 @@ function showmessage()
 						 									
 											 <f:subview id="contentEditorView" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
 												<%if (authorPreferencePage.isShouldRenderSferyx() && eSectionPage.getShouldRenderEditor())
-                                               { %>
-													<jsp:include page="contentSferyxEditor.jsp" />
-												<%} %> 
+                                               		   { %> 
+                                           				<jsp:include page="contentSferyxEditor.jsp" />
+													<% } %> 
+											
      											 <h:inputHidden id="sferyxDisplay" value="#{authorPreferences.shouldRenderSferyx}" />
 											</f:subview>
 
@@ -227,21 +226,39 @@ function showmessage()
                 <td>
                   <div class="actionBar" align="left">
                 	<h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_done}" accesskey="#{msgs.done_access}" title="#{msgs.im_done_text}" styleClass="BottomImgFinish"/>
-              		<h:commandButton id="submitsave" action="#{editSectionPage.save}" rendered="#{editSectionPage.shouldRenderEditor}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
-					<h:commandButton id="submitsave1" action="#{editSectionPage.save}" rendered="#{editSectionPage.shouldRenderUpload}" onclick="showmessage()" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
-					<h:commandButton id="submitsave2" action="#{editSectionPage.save}" rendered="#{!editSectionPage.shouldRenderEditor && !editSectionPage.shouldRenderUpload}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave"/>
-					<h:commandButton id="previewEditor" action="#{editSectionPage.getPreviewPage}" rendered="#{editSectionPage.shouldRenderEditor}" value="#{msgs.im_preview}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgPreview"/>
-					<h:commandButton id="preview" action="#{editSectionPage.getPreviewPage}" rendered="#{editSectionPage.shouldRenderEditor == false}" value="#{msgs.im_preview}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgPreview"/>
-					
-					<h:commandButton id="saveAddAnotherbutton"  action="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd"/>
+              		<h:commandButton id="submitsave" actionListener="#{editSectionPage.save}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave">
+              		              	
+					</h:commandButton>
+					<h:commandButton id="preview" actionListener="#{editSectionPage.getPreviewPageListener}" value="#{msgs.im_preview}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgPreview">
+											
+					</h:commandButton>
+					<h:commandButton id="saveAddAnotherbutton"  actionListener="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd">
+							
+					</h:commandButton>
 				
        			 </div></td>
               </tr>
               
             </table>
-			
-			
-	   <p><span class="required">*</span>&nbsp; <h:outputText value="#{msgs.editmodulesections_required}" /></p>
+			<table class="maintableCollapseWithNoBorder">
+			<tr>
+				<td rowspan="2" class="left">
+					<span class="required">*</span>&nbsp; <h:outputText value="#{msgs.edit_module_required}" />
+				</td>
+				<td align="right" class="footnoteDates">
+					<h:outputText value="#{msgs.editmodulesections_author}"/>&nbsp;<h:outputText value="#{editSectionPage.section.createdByFname}" />&nbsp;<h:outputText value="#{editSectionPage.section.createdByLname}"/><h:outputText value=","/>&nbsp;
+                    <h:outputText value="#{editSectionPage.section.creationDate}" styleClass="italics"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
+                             
+				</td>
+			</tr>
+			<tr>
+				<td align="right" class="footnoteDates">
+					<h:outputText value="#{msgs.editmodulesections_author_edit}"/>&nbsp;<h:outputText value="#{editSectionPage.section.modifiedByFname}" />&nbsp;<h:outputText value="#{editSectionPage.section.modifiedByLname}" /><h:outputText value=","/>&nbsp;
+                    <h:outputText value="#{editSectionPage.section.modificationDate}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
+                </td>
+			</tr>
+		</table>	
+	  
   </h:form>
 	 
 

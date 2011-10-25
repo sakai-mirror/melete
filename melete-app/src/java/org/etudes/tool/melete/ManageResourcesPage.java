@@ -89,6 +89,7 @@ public class ManageResourcesPage
 	 */
 	public String getFileType()
 	{
+		if (fileType == null || fileType.length() == 0) resetValues();
 		return this.fileType;
 	}
 
@@ -124,10 +125,10 @@ public class ManageResourcesPage
 		this.fileType = "upload";
 		this.numberItems = "1";
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{listResourcesPage}");
+		ValueBinding binding =Util.getBinding("#{listResourcesPage}");
 		ListResourcesPage listResPage = (ListResourcesPage) binding.getValue(ctx);
 		listResPage.setFromPage("manage_content");
-		listResPage.resetValues();
+		listResPage.setSectionId("");
 	}
 
 	/**

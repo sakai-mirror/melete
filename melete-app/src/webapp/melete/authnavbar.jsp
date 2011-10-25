@@ -25,15 +25,15 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@include file="accesscheck.jsp" %>
 
-<h:panelGrid columns="8" border="0" columnClasses="authBarCol" cellspacing="5" width="64%">
+<h:panelGrid columns="10" border="0" columnClasses="authBarCol" cellspacing="5" width="75%">
 	<h:column>
-		<h:commandLink id="addAction" action="#{listAuthModulesPage.AddModuleAction}" immediate="true">
+		<h:commandLink id="addAction" action="#{listAuthModulesPage.AddModuleAction}">
 		    <h:graphicImage id="addModuleImg" value="/images/document_add.gif" styleClass="AuthImgClass"/>
 	  		<h:outputText  value="#{msgs.authnavbar_add_module}"/>
 		</h:commandLink>
 	</h:column>
 	<h:column>
-		<h:commandLink id="addContAction" action="#{listAuthModulesPage.AddContentAction}">
+		<h:commandLink id="addContAction" actionListener="#{listAuthModulesPage.AddContentAction}">
 	  		<h:graphicImage id="addContentImg" value="/images/document_add.gif" styleClass="AuthImgClass"/>
 	  		<h:outputText  value="#{msgs.authnavbar_add_content}"/>
 		</h:commandLink>
@@ -51,7 +51,7 @@
 	  </h:commandLink>
 	</h:column>
 	<h:column>
-	  <h:commandLink id="sortgoto" action="#{sortModuleSectionPage.goToSortModules}">
+	  <h:commandLink id="sortgoto" action="#{listAuthModulesPage.goToSortModules}">
 	    <h:graphicImage id="MoveUpImg" value="/images/document_exchange.gif" styleClass="AuthImgClass"/>   
 	   <h:outputText id="sort" value="#{msgs.modules_author_manage_sort}" />
   	</h:commandLink>
@@ -74,7 +74,17 @@
 	  	<h:outputText  value="#{msgs.authnavbar_make_inactive}"/>
 	  </h:commandLink>
 	</h:column>
-	
-	
+	<h:column>
+		<h:commandLink id="restoregoto" action="#{listAuthModulesPage.goToRestoreModules}">
+			<h:graphicImage id="image" alt="" url="/images/folder_into.gif" styleClass="AuthImgClass"/>
+			<h:outputText id="re" value="#{msgs.modules_author_manage_archive_title}" />
+		</h:commandLink>
+	</h:column>
+	<h:column>
+		<h:commandLink id="goto_impexp" action="#{listAuthModulesPage.importExportModules}">
+			<h:graphicImage id="image_impexp" alt="" url="/images/import1.gif" styleClass="AuthImgClass"/>
+			<h:outputText id="import" value="#{msgs.modules_author_manage_import_export}" />
+		</h:commandLink>
+	</h:column>
 </h:panelGrid>
 <!-- End code to display images horizontally. -->

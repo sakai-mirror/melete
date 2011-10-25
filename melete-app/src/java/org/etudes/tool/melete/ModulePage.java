@@ -65,7 +65,7 @@ public abstract class ModulePage implements Serializable
 	private String season;
 	private ArrayList showDates;
 
-	private boolean success;
+	private boolean success = true;
 	private int year;
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(ModulePage.class);
@@ -460,64 +460,39 @@ public abstract class ModulePage implements Serializable
 		context.addMessage(null, msg);
 	}
 
-	/**
-	 * Ensure that the dates do not have a year after 9999 and the end date is after the start date
-	 * 
-	 * @param context
-	 *        FacesContext object
-	 * @param bundle
-	 *        ResourceLoader object
-	 * @param st
-	 *        Start date
-	 * @param end
-	 *        End date
-	 * @return true if dates are valid, false otherwise
-	 */
-	protected boolean validateDates(FacesContext context, ResourceLoader bundle, Date st, Date end)
+	public void validateField(FacesContext context, UIComponent toValidate, Object value)
 	{
-		Calendar calstart = new GregorianCalendar();
-		Calendar calend = new GregorianCalendar();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 
-		boolean errorFlag = false;
-		if ((st != null) || (end != null))
-		{
-			if (st != null)
-			{
-				calstart.setTime(st);
-				if (calstart.get(Calendar.YEAR) > 9999)
-				{
-					String errMsg = bundle.getString("year_toobig_error");
-					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-					errorFlag = true;
-				}
-			}
-			if (end != null)
-			{
-				calend.setTime(end);
-				if (calend.get(Calendar.YEAR) > 9999)
-				{
-					String errMsg = bundle.getString("year_toobig_error");
-					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-					errorFlag = true;
-				}
-			}
-
-			// validation no 4 b
-			if ((end != null) && (st != null))
-			{
-				if (end.compareTo(st) <= 0)
-				{
-					String errMsg = "";
-					errMsg = bundle.getString("end_date_before_start");
-					addMessage(context, "Error Message", errMsg, FacesMessage.SEVERITY_ERROR);
-					errorFlag = true;
-				}
-			}
+		String check = (String) value;
+	
+		// title is required
+		if (toValidate.getClientId(context).indexOf("title") != -1 && check.trim().length() == 0)
+		{			
+			((UIInput) toValidate).setValid(false);
+			String errMsg = bundle.getString("title_reqd");
+			context.addMessage(toValidate.getClientId(context), new FacesMessage(FacesMessage.SEVERITY_ERROR, "title_reqd", errMsg));
 		}
-		// If there is an error, validation fails and the method returns false
-		// If there are no errors, validation passes and the method returns true;
-		if (errorFlag == true) return false;
-		return true;
+		// title no more than 200 characters
+		if (toValidate.getClientId(context).indexOf("title") != -1 && check != null && check.trim().length() > ModuleService.MAX_TITLE_LENGTH)
+		{
+			((UIInput) toValidate).setValid(false);
+			String errMsg = bundle.getString("invalid_title_len");
+			context.addMessage(toValidate.getClientId(context), new FacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_title_len", errMsg));
+		}
+		// description no more than 500 characters
+		if (toValidate.getClientId(context).indexOf("description") != -1 && check != null && check.trim().length() > ModuleService.MAX_DESC_LENGTH)
+		{
+			((UIInput) toValidate).setValid(false);
+			String errMsg = bundle.getString("invalid_description_len");
+			context.addMessage(toValidate.getClientId(context), new FacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_description_len", errMsg));
+		}
+		// keywords no more than 250 characters
+		if (toValidate.getClientId(context).indexOf("keywords") != -1 && check != null && check.trim().length() > ModuleService.MAX_TITLE_LENGTH)
+		{
+			((UIInput) toValidate).setValid(false);
+			String errMsg = bundle.getString("invalid_keywords_len");
+			context.addMessage(toValidate.getClientId(context), new FacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_keywords_len", errMsg));
+		}
 	}
-
 }

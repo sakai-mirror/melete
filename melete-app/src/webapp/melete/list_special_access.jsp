@@ -25,12 +25,13 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
 <sakai:view title="Modules: List Special Access" toolCssHref="/etudes-melete-tool/rtbc004.css">
 
 <%@include file="accesscheck.jsp" %>
-
+<script type="text/javascript" language="JavaScript" src="/etudes-melete-tool/js/calendar2.js"></script>
 <script type="text/javascript" language="javascript">
 
 function selectAll()
@@ -76,8 +77,10 @@ function resetAllAcc()
 }
 
 </script>
-
+<t:saveState id="spModId" value="#{specialAccessPage.moduleId}"/>
 <h:form id="listspecialaccessform">
+
+			    
     <f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
@@ -92,7 +95,7 @@ function resetAllAcc()
 	
 	    <h:panelGrid columns="2" columnClasses="authBarCol" border="0" width="16%" >
 		<h:column>
-			<h:commandLink id="addAction" action="#{specialAccessPage.addAccessAction}" immediate="true">
+			<h:commandLink id="addAction" action="#{specialAccessPage.addAccessAction}">
 			    <h:graphicImage id="addAccessImg" value="/images/document_add.gif" styleClass="AuthImgClass"/>
 		  		<h:outputText  value="#{msgs.list_special_access_add}"/>
 			</h:commandLink>
@@ -117,21 +120,17 @@ function resetAllAcc()
      <f:facet name="header">
        <h:outputText value="&nbsp;" escape="false"/>
      </f:facet>  
-     <h:panelGrid columns="1" style="z-index:0;" rendered="#{saObj.valid == false}">   
-	 <h:column>    
-     <h:commandLink id="showHideInvalid" action="#{specialAccessPage.showHideInvalid}" immediate="true">
-	    <h:graphicImage id="err_gif" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" rendered="#{saObj.valid == false}" styleClass="ExpClass"/>                     
-     </h:commandLink> 
-	 <h:panelGrid id="invalidMsg" columns="1" border="1" rules="cols" bgcolor="#FFFFCC" cellpadding="5" width="300px" styleClass="invalidAlert" rendered="#{saObj.valid == false && specialAccessPage.showInvalidAccessId == saObj.accessId}" >   
-		<h:column>     	  
-		<h:outputText value="#{msgs.invalid_access_msg}" />
-		</h:column>
-		<h:column>
-		<h:commandButton value="#{msgs.invalid_ok_msg}" action="#{specialAccessPage.hideInvalid}" immediate="true" styleClass="BottomImgFinish"/>
-		</h:column>
-	  </h:panelGrid> 
-	  </h:column>
-	  </h:panelGrid>             
+     <h:graphicImage id="err_gif" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" rendered="#{saObj.valid == false}" onclick="showHideTable('listspecialaccessform:table:' + #{specialAccessPage.table.rowIndex} +':invalidMsg0','true')"  styleClass="ExpClass"/>
+	 <h:panelGroup id="invalidMsg0" style="position:relative;z-index:1;visibility:hidden;display:none;" rendered="#{saObj.valid == false}" >
+			 <h:panelGrid id="invalidMsg" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="390px" styleClass="invalidAlert" >   
+				<h:column>
+				  	<h:outputText value="#{msgs.invalid_access_msg}" />
+				</h:column>
+				<h:column>
+					<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('listspecialaccessform:table:' + #{specialAccessPage.table.rowIndex} +':invalidMsg0','false')" />
+				</h:column>
+			  </h:panelGrid>
+	</h:panelGroup>	                   
     </h:column>   
    <h:column>
      <f:facet name="header">
@@ -139,7 +138,7 @@ function resetAllAcc()
        <h:selectBooleanCheckbox id="allacccheck" value="#{specialAccessPage.selectAllFlag}" onclick="selectAll()" valueChangeListener="#{specialAccessPage.selectAllAccess}" rendered="#{specialAccessPage.noAccFlag == false}" />   
       </h:panelGroup> 
      </f:facet>   
-    <h:selectBooleanCheckbox id="accCheck" value="#{saObj.selected}" onclick="resetAllAcc()" valueChangeListener="#{specialAccessPage.selectedAccess}" />
+    <h:selectBooleanCheckbox id="accCheck" title="#{saObj.accessIdStr}" value="#{saObj.selected}" onclick="resetAllAcc()" valueChangeListener="#{specialAccessPage.selectedAccess}" />
      </h:column>               
    <h:column>
  	<f:facet name="header">
@@ -148,9 +147,10 @@ function resetAllAcc()
      </h:panelGroup>        
     </f:facet>	
      <h:commandLink id="editAcc" actionListener="#{specialAccessPage.editSpecialAccess}"  action="#{specialAccessPage.redirectToEditSpecialAccess}">     				
-     <f:param name="accidx" value="#{specialAccessPage.table.rowIndex}" />
+     <f:param name="accid" value="#{saObj.accessId}" />
      <h:outputText id="title2" value="#{saObj.userNames}" escape="false"></h:outputText>
      </h:commandLink>
+    
      </h:column>      
        <h:column>
         <f:facet name="header">
@@ -164,7 +164,7 @@ function resetAllAcc()
             </h:outputText>
                   <h:outputText id="startDate" 
                            value="#{saObj.startDate}"    rendered="#{((saObj.startDate != null)&&(saObj.overrideStart == true))}">
-              <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
+              <f:convertDateTime type="both" dateStyle="medium" timeStyle="short"/>
             </h:outputText>
               </h:column>         
         <h:column>
@@ -182,12 +182,14 @@ function resetAllAcc()
               <h:outputText id="endDate"
                            value="#{saObj.endDate}"
                               rendered="#{((saObj.endDate != null)&&(saObj.overrideEnd == true))}">
-               <f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/>
+               <f:convertDateTime type="both" dateStyle="medium" timeStyle="short"/>
             </h:outputText>
+        
          </h:column>         
     </h:dataTable>   
    <h:inputHidden id="listSize" value="#{specialAccessPage.listSize}"/>   
-   <div class="actionBar" align="left">				
+   <div class="actionBar" align="left">			
+   	
 	<h:commandButton id="returnButton"  immediate="true" action="#{specialAccessPage.returnAction}" value="#{msgs.im_return}" tabindex="" accesskey="#{msgs.return_access}" title="#{msgs.im_return_text}" styleClass="BottomImgReturn" />
    </div>	
 	

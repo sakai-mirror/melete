@@ -243,6 +243,10 @@ public class MeleteJsfTool extends HttpServlet
 		{
 			ThreadLocalManager.set("MELETE_SAVE_FROM", "Section");
 		}
+		else if (target.startsWith("/list_auth_modules"))
+		{
+			ThreadLocalManager.set("MELETE_SAVE_FROM", "listAuth");
+		}
 
 		// add the configured folder root and extension (if missing)
 		target = m_path + target;

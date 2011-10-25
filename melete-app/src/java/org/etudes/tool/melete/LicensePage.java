@@ -51,7 +51,8 @@ public class LicensePage
 	public String formName;
 	private ArrayList<SelectItem> licenseTypes;
 	private String licenseCodes;
-
+	private String sectionId="";
+	
 	// constants
 	public final static String NO_CODE = "0";
 	public final static String Copyright_CODE = "1";
@@ -73,7 +74,7 @@ public class LicensePage
 	private MeleteResource melResource;
 
 	// THis property is set to false from NavPage
-	private boolean callFromSection;
+	private boolean callFromSection = true;
 
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(LicensePage.class);
@@ -99,15 +100,16 @@ public class LicensePage
 
 	/**
 	 * Initialize values.
-	 * 
+	 *
 	 * @param formName
 	 *        The formName
 	 * @param melResource
 	 *        MeleteResource
 	 */
-	public void setInitialValues(String formName, MeleteResource melResource)
+	public void setInitialValues(String formName, String sectionId, MeleteResource melResource)
 	{
 		this.formName = formName;
+		this.sectionId = sectionId;
 		setInitialValues();
 		this.melResource = melResource;
 
@@ -121,13 +123,13 @@ public class LicensePage
 			setCopyright_year(melResource.getCopyrightYear());
 		}
 		else
-			setLicenseCodes("0");
+			setLicenseCodes("4");
 		resetFlags();
 	}
 
 	/**
 	 * Initialize values.
-	 * 
+	 *
 	 * @param formName
 	 *        The formName
 	 * @param mup
@@ -150,7 +152,7 @@ public class LicensePage
 		else
 		{
 			setInitialValues();
-			setLicenseCodes("0");
+			setLicenseCodes("4");
 		}
 		resetFlags();
 	}
@@ -179,7 +181,7 @@ public class LicensePage
 
 	/**
 	 * Get all licenses to show in the dropdown.
-	 * 
+	 *
 	 * @return
 	 */
 	public ArrayList<SelectItem> getLicenseTypes()
@@ -217,7 +219,7 @@ public class LicensePage
 
 	/**
 	 * Show/Hides different license based on the user selection.
-	 * 
+	 *
 	 * @param event
 	 *        ValueChangeEvent
 	 * @throws AbortProcessingException
@@ -228,7 +230,8 @@ public class LicensePage
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		// UIViewRoot root = ctx.getViewRoot();
 		UIInput licenseSelect = (UIInput) event.getComponent();
-
+		sectionId = (String) event.getComponent().getAttributes().get("sectionId");
+		
 		shouldRenderCC = licenseSelect.getValue().equals(CC_CODE);
 		shouldRenderCopyright = licenseSelect.getValue().equals(Copyright_CODE);
 		shouldRenderPublicDomain = licenseSelect.getValue().equals(PD_CODE);
@@ -248,7 +251,7 @@ public class LicensePage
 
 	/**
 	 * Set values based on license type selected.
-	 * 
+	 *
 	 * @param meleteSectionResource
 	 *        MeleteResource
 	 * @return
@@ -310,7 +313,7 @@ public class LicensePage
 
 	/**
 	 * Sets user preference based on license selected.
-	 * 
+	 *
 	 * @param mup
 	 *        MeleteUserPreference
 	 * @return
@@ -378,7 +381,7 @@ public class LicensePage
 
 	/**
 	 * Based on license selected it sets all rendering flags.
-	 * 
+	 *
 	 * @param licenseCodes
 	 */
 	public void setLicenseCodes(String licenseCodes)
@@ -408,7 +411,7 @@ public class LicensePage
 
 	/**
 	 * Gets all license codes.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getLicenseCodes()
@@ -418,7 +421,7 @@ public class LicensePage
 
 	/**
 	 * Looks for the required fields.
-	 * 
+	 *
 	 * @throws UserErrorException
 	 */
 	public void checkForRequiredFields() throws UserErrorException
@@ -430,7 +433,7 @@ public class LicensePage
 
 	/**
 	 * Check the word length for copyright owner and year. They can't be more than 255 characters long
-	 * 
+	 *
 	 * @throws UserErrorException
 	 */
 	public void validateLicenseLengths() throws UserErrorException
@@ -441,7 +444,7 @@ public class LicensePage
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getAllowCmrcl()
@@ -465,7 +468,7 @@ public class LicensePage
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getAllowMod()
@@ -489,7 +492,7 @@ public class LicensePage
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getReqAttr()
@@ -507,7 +510,7 @@ public class LicensePage
 
 	/**
 	 * Returns true if license is Creative commons
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isShouldRenderCC()
@@ -517,7 +520,7 @@ public class LicensePage
 
 	/**
 	 * Returns true if license is copyright of author
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isShouldRenderCopyright()
@@ -571,6 +574,24 @@ public class LicensePage
 	public void setCopyright_year(String copyright_year)
 	{
 		this.copyright_year = copyright_year;
+	}
+
+	/**
+	 * The sectionId 
+	 * @return
+	 */
+	public String getSectionId()
+	{
+		return sectionId;
+	}
+
+	/**
+	 * 
+	 * @param sectionId
+	 */
+	public void setSectionId(String sectionId)
+	{
+		this.sectionId = sectionId;
 	}
 
 	/**
@@ -664,21 +685,11 @@ public class LicensePage
 	 */
 	public boolean isCallFromSection()
 	{
-		if (this.formName != null)
-		{
-			if (this.formName.equals("UserPreferenceForm"))
-			{
-				callFromSection = false;
-			}
-			else
-			{
-				callFromSection = true;
-			}
-		}
-		else
-		{
+		if (this.formName != null && this.formName.equals("EditSectionForm"))
 			callFromSection = true;
-		}
+		else
+			callFromSection = false;
+
 		return callFromSection;
 	}
 

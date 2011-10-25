@@ -25,19 +25,29 @@
 -->
 
 <%
+String fromPage = (String)request.getParameter("AddBookmarkForm:bpfpage");
+String fromModuleId = (String)request.getParameter("AddBookmarkForm:bpfmodid");
+String fromModuleSeqNo = (String)request.getParameter("AddBookmarkForm:bpfmodseqno");
 final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 final BookmarkPage bookmarkPage = (BookmarkPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "bookmarkPage");
 bookmarkPage.resetValues();
+
 %>
+
 <html>
 <body>
+
 <script language="javascript">
 alert("Bookmark saved");
 var elementToGet = "ManageBookmarksForm"+ ":" + "refreshButton";  
 var form = window.opener.document.forms['ManageBookmarksForm'];  
 if (form != null)
 {
-   var button = form.elements[elementToGet];  
+	form.elements['ManageBookmarksForm:bpfpageparam'].value='<%=fromPage%>';
+	form.elements['ManageBookmarksForm:fromModuleId'].value='<%=fromModuleId%>';
+	form.elements['ManageBookmarksForm:fromModuleSeqNo'].value='<%=fromModuleSeqNo%>';
+    
+    var button = form.elements[elementToGet];  
     button.click();
  }
  else

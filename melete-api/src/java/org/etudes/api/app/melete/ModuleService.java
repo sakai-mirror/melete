@@ -29,6 +29,9 @@ import org.etudes.api.app.melete.exception.MeleteException;
 
 public interface ModuleService
 {
+	public static final int MAX_DESC_LENGTH = 500;
+	public static final int MAX_TITLE_LENGTH = 250;
+	
 	/**
 	 * Apply base date to all module start and end dates
 	 * 
@@ -402,10 +405,12 @@ public interface ModuleService
 	 *        List of CourseModule objects
 	 * @param courseId
 	 *        The courseId
+	 * @param userId
+	 *        The UserId        
 	 * @throws Exception
 	 *         MeleteException
 	 */
-	public void restoreModules(List<? extends CourseModuleService> modules, String courseId) throws Exception;
+	public void restoreModules(List<? extends CourseModuleService> modules, String courseId, String userId) throws Exception;
 
 	/**
 	 * Note: No longer in use
@@ -453,10 +458,14 @@ public interface ModuleService
 	 * 
 	 * @param modShdates
 	 *        ModuleShdatesService Object
+	 * @param courseId
+	 *        The course Id
+	 * @param userId
+	 *        The user Id
 	 * @throws Exception
 	 *         "edit_module_multiple_users" MeleteException and Hibernate Exception
 	 */
-	public void updateModuleDates(ModuleShdatesService modShdates, String courseId) throws Exception;
+	public void updateModuleDates(ModuleShdatesService modShdates, String courseId, String userId) throws Exception;
 
 	/**
 	 * Update Module and ModuleShdates. Updates calendar tool.
@@ -465,10 +474,12 @@ public interface ModuleService
 	 *        List of moduleDateBeans objects
 	 * @param courseId
 	 *        The course Id
+	 *  @param userId
+	 *  	The user Id      
 	 * @throws Exception
 	 *         edit_module_multiple_users MeleteException
 	 */
-	public void updateProperties(List<? extends ModuleDateBeanService>  moduleDateBeans, String courseId) throws Exception;
+	public void updateProperties(List<? extends ModuleDateBeanService>  moduleDateBeans, String courseId, String userId) throws Exception;
 
 	/**
 	 * Creates sequence XML for all modules of the site.
@@ -480,4 +491,15 @@ public interface ModuleService
 	 *         Hibernate Exception, MeleteException
 	 */
 	public boolean updateSeqXml(String courseId) throws Exception;
+	
+	/**
+	 * Updates module's what next information.
+	 * 
+	 * @param moduleId
+	 *   The module Id
+	 * @param nextSteps
+	 *   What's next string
+	 * @throws Exception
+	 */
+	public void updateModuleNextSteps(Integer moduleId, String nextSteps) throws Exception;
 }

@@ -44,6 +44,22 @@
   </properties>
   <dependencies>
     <dependency>
+        <groupId>org.sakaiproject.kernel</groupId>
+        <artifactId>sakai-kernel-api</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.sakaiproject.kernel</groupId>
+        <artifactId>sakai-component-manager</artifactId>
+    </dependency>
+    <dependency>
+  	<groupId>org.etudes</groupId>
+  	<artifactId>etudes-util-api</artifactId>
+     </dependency>  
+     <dependency>
+      	<groupId>org.etudes</groupId>
+      	<artifactId>etudes-util-util</artifactId>
+     </dependency> 
+     <dependency>
       <groupId>org.etudes</groupId>
       <artifactId>etudes-melete-api</artifactId>
       <version>${melete.version}</version>

@@ -32,6 +32,7 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.ActionEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,7 +60,7 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 	protected Log logger = LogFactory.getLog(EditModulePage.class);
 	private boolean callFromAddContent = false;
 	private boolean showLicenseFlag = true;
-	private boolean hasSections = false;
+	private boolean hasSections = true;
 	private SectionObjService firstSection = null;
 	protected ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
 
@@ -128,24 +129,11 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 		// validation
 		module.setTitle(module.getTitle().trim());
 
-		// validation no 3
-		Date st = getModuleShdates().getStartDate();
-		Date end = getModuleShdates().getEndDate();
-
-		// validation no 4 b
-		boolean dateResult = validateDates(context, bundle, st, end);
-		if (dateResult == false) return "failure";
-
-		/*
-		 * if ((end != null) && (st != null)) { if (end.compareTo(st) <= 0) { errMsg = ""; errMsg = bundle.getString("end_date_before_start"); FacesMessage msg = new FacesMessage(errMsg); msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-		 * context.addMessage(null, msg); return "failure"; } }
-		 */
-
 		// rashmi added validations end
 		// actual update
 		try
 		{
-			setModification();
+		//	setModification();
 			if (module.getKeywords() != null)
 			{
 				module.setKeywords(module.getKeywords().trim());
@@ -158,10 +146,9 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 			mdbean.setModuleId(getModule().getModuleId().intValue());
 			mdbean.setModule((Module) getModule());
 			mdbean.setModuleShdate((ModuleShdates) getModuleShdates());
-			mdbean.setDateFlag(false);
 			ArrayList<ModuleDateBean> mdbeanList = new ArrayList<ModuleDateBean>();
 			mdbeanList.add(mdbean);
-			moduleService.updateProperties(mdbeanList, mPage.getCurrentSiteId());
+			moduleService.updateProperties(mdbeanList, mPage.getCurrentSiteId(),mPage.getCurrentUser().getId());
 
 			// add module to session
 			sessionMap.put("currModule", module);
@@ -204,6 +191,9 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 		{
 			callFromAddContent = false;
 		}
+		// refresh module and sh dates object
+		module = moduleService.getModule(module.getModuleId());
+		setModuleShdates(module.getModuleshdate());
 		return "edit_module";
 
 	}
@@ -232,7 +222,7 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 	/**
 	 * Creates a new section.
 	 */
-	public String addContentSections()
+	public void addContentSections(ActionEvent evt)
 	{
 		if (!getSuccess())
 		{
@@ -245,7 +235,7 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 			else
 			{
 				callFromAddContent = false;
-				return "edit_module";
+				return;
 			}
 		}
 		// Revision -- 12/20 - to remove retaintion of values
@@ -255,11 +245,18 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 
 		ValueBinding binding = Util.getBinding("#{editSectionPage}");
 		EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
-		editPage.setSection(null);
-		editPage.resetSectionValues();
 		editPage.setModule(module);
-		editPage.addBlankSection();
-		return "editmodulesections";
+		Integer newSecId = editPage.addBlankSection();
+		try
+		{
+			if (newSecId != null) context.getExternalContext().redirect("editmodulesections.jsf?sectionId=" + newSecId.toString());
+		}
+		catch (Exception e)
+		{
+			return;
+		}
+		
+		return;
 	}
 
 	/**
@@ -415,7 +412,7 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 	 * If edit module is invoked from CM, then pass the return address to section page.
 	 * @return
 	 */
-	public String editSection()
+	public void editSection(ActionEvent evt)
 	{
 		callFromAddContent = false;
 		if (!getSuccess())
@@ -423,18 +420,28 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 			if (!savehere().equals("failure"))
 				setSuccess(true);
 			else
-				return "edit_module";
+				return ;
 		}
 
 		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{editSectionPage}");
-		EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
 		Map sessionMap = context.getExternalContext().getSessionMap();
 		sessionMap.put("currModule", module);
-		editPage.setEditInfo(firstSection);
-		return "editmodulesections";
+		
+		try
+		{
+			context.getExternalContext().redirect("editmodulesections.jsf?sectionId=" + firstSection.getSectionId().toString());
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
+	public SectionObjService getFirstSection()
+	{
+		return this.firstSection;
+	}
+	
 	/**
 	 * @param firstSection
 	 *        the firstSection to set
@@ -469,7 +476,12 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 			threadLocalManager.set("MELETE_MODULE_ID", null);
 			threadLocalManager.set("MELETE_NAVIGATE_BACK", null);
 		}
-
+		if (ctx.getExternalContext().getRequestParameterMap().get("editmodid") != null)
+		{
+			String selectedModId = (String)ctx.getExternalContext().getRequestParameterMap().get("editmodid");
+			this.mdBean = (ModuleDateBean) moduleService.getModuleDateBean(userId, courseId, Integer.parseInt(selectedModId));
+			setEditInfo(this.mdBean);
+		}
 		return super.getModule();
 	}
 

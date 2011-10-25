@@ -876,6 +876,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 
 			// update module seqXml
 			// logger.debug("checking seqXML now at the end of buildModule process" + seqDocument.asXML());
+			module = moduleDB.getModule(module.getModuleId());
 			module.setSeqXml(seqDocument.asXML());
 			moduleDB.updateModule(module);
 		}
@@ -920,13 +921,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			String hrefVal = eleRes.attributeValue("href");
 			String nextsteps = new String(readData(unZippedDirPath, hrefVal));
 			module.setWhatsNext(nextsteps);
-			ModuleDateBean mdbean = new ModuleDateBean();
-			mdbean.setModuleId(module.getModuleId().intValue());
-			mdbean.setModule(module);
-			mdbean.setModuleShdate(module.getModuleshdate());
-			ArrayList<ModuleDateBean> mdbeanList = new ArrayList<ModuleDateBean>();
-			mdbeanList.add(mdbean);
-			moduleDB.updateModuleDateBeans(mdbeanList);
+			moduleDB.updateModuleNextSteps(module.getModuleId(), nextsteps);
 		}
 
 	}
@@ -1069,6 +1064,8 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		section.setTextualContent(true);
 		section.setCreatedByFname(firstName);
 		section.setCreatedByLname(lastName);
+		section.setModifiedByFname(firstName);
+		section.setModifiedByLname(lastName);
 		section.setContentType("notype");
 
 		if (!sectionTitleFlag) section.setTitle("Untitled Section");
@@ -1212,6 +1209,9 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		section.setTextualContent(true);
 		section.setCreatedByFname(firstName);
 		section.setCreatedByLname(lastName);
+		section.setModifiedByFname(firstName);
+		section.setModifiedByLname(lastName);
+		
 		section.setContentType("notype");
 
 		if (!sectionTitleFlag) section.setTitle("Untitled Section");

@@ -25,15 +25,19 @@ package org.etudes.tool.melete;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.ActionEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.SectionService;
+import org.sakaiproject.content.api.ContentResource;
+import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.util.ResourceLoader;
 
 public class DeleteResourcePage implements Serializable
@@ -48,23 +52,27 @@ public class DeleteResourcePage implements Serializable
 	private boolean warningFlag;
 	private String delResourceName;
 	private String delResourceId;
+	private String sectionId;
 
 	/**
 	 * Default constructor
 	 */
 	public DeleteResourcePage()
 	{
-	}
-
-	/**
-	 * Reset values.
-	 */
-	public void resetValues()
-	{
 		warningFlag = false;
 		fromPage = "";
 		delResourceId = null;
 		delResourceName = null;
+		sectionId="";
+	}
+
+	/**
+	 * Get the from Page
+	 * @return
+	 */
+	public String getFromPage()
+	{
+		return fromPage;
 	}
 
 	/**
@@ -94,25 +102,6 @@ public class DeleteResourcePage implements Serializable
 	}
 
 	/**
-	 * Checks the selected resource is used in the other sections. If yes, warns the user.
-	 * 
-	 * @param delResourceId
-	 *        The Resource Id
-	 * @param title
-	 *        The resource display name. Get it from meleteCHService
-	 * @param courseId
-	 *        The Site Id
-	 */
-	public void processDeletion(String delResourceId, String title, String courseId)
-	{
-		this.delResourceId = delResourceId;
-		this.delResourceName = title;
-		List<?> res_in_use = sectionService.findResourceInUse(delResourceId, courseId);
-		if (res_in_use != null) logger.debug("res_in_use size " + res_in_use.size());
-		if (res_in_use != null && res_in_use.size() > 0) warningFlag = true;
-	}
-	
-	/**
 	 * Set resource name
 	 * 
 	 * @param title
@@ -131,6 +120,7 @@ public class DeleteResourcePage implements Serializable
 		ValueBinding binding = Util.getBinding("#{listResourcesPage}");
 		ListResourcesPage listResPage = (ListResourcesPage) binding.getValue(ctx);
 		listResPage.setFromPage(this.fromPage);
+		listResPage.setSectionId(sectionId);
 		listResPage.refreshCurrSiteResourcesList();
 	}
 
@@ -139,9 +129,11 @@ public class DeleteResourcePage implements Serializable
 	 * 
 	 * @return navigate back to start page
 	 */
-	public String deleteResource()
+	public void deleteResource(ActionEvent evt)
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
+		fromPage = (String) evt.getComponent().getAttributes().get("fromPage");
+		sectionId = (String) evt.getComponent().getAttributes().get("sectionId");
 		try
 		{
 			if (delResourceId != null)
@@ -149,28 +141,8 @@ public class DeleteResourcePage implements Serializable
 				// delete from content resource
 				sectionService.deleteResourceInUse(this.delResourceId);
 				meleteCHService.removeResource(this.delResourceId);
-				logger.debug("delete resource is done now move back to page");
 			}
-			if (fromPage.startsWith("edit"))
-			{
-				ValueBinding binding = Util.getBinding("#{editSectionPage}");
-				EditSectionPage editPage = (EditSectionPage) binding.getValue(context);
-				if (editPage.meleteResource != null && editPage.meleteResource.getResourceId() != null
-						&& editPage.meleteResource.getResourceId().equals(delResourceId))
-				{
-					logger.debug("remove resource from cache");
-					if (editPage.secResource != null) editPage.secResource.setResource(null);
-					editPage.meleteResource = null;
-					editPage.resetMeleteResourceValues();
-				}
-				refreshCurrSiteResourcesList();
-			}
-			else if (fromPage.startsWith("manage"))
-			{
-				refreshCurrSiteResourcesList();
-			}
-
-			return fromPage;
+			context.getExternalContext().redirect(fromPage + "?fromPage=" + fromPage + "&sectionId=" + sectionId);
 		}
 		catch (Exception e)
 		{
@@ -179,7 +151,6 @@ public class DeleteResourcePage implements Serializable
 			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 			String errMsg = bundle.getString("delete_resource_fail");
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), errMsg));
-			return "#";
 		}
 	}
 
@@ -188,9 +159,19 @@ public class DeleteResourcePage implements Serializable
 	 * 
 	 * @return
 	 */
-	public String cancelDeleteResource()
+	public void cancelDeleteResource(ActionEvent evt)
 	{
-		return fromPage;
+		try
+		{
+			FacesContext context = FacesContext.getCurrentInstance();
+			fromPage = (String) evt.getComponent().getAttributes().get("fromPage");
+			sectionId = (String) evt.getComponent().getAttributes().get("sectionId");
+			context.getExternalContext().redirect(fromPage + "?fromPage=" + fromPage + "&sectionId=" + sectionId);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -241,7 +222,79 @@ public class DeleteResourcePage implements Serializable
 	 */
 	public String getDelResourceName()
 	{
+		if (this.delResourceName == null || this.delResourceName.length() == 0 && delResourceId != null)
+			this.delResourceName = meleteCHService.getDisplayName(delResourceId);
 		return this.delResourceName;
+	}
+
+	/**
+	 * Get the resourceId of the resource being deleted
+	 * @return
+	 */
+	public String getDelResourceId()
+	{
+		return delResourceId;
+	}
+
+	/**
+	 * Set the resourceId to delete
+	 * @param delResourceId
+	 */
+	public void setDelResourceId(String delResourceId)
+	{
+	    logger.debug("setDelResourceId :" + delResourceId);
+		this.delResourceId = delResourceId;
+		try
+		{
+		if (delResourceId != null && delResourceId.length() != 0)
+		{
+			ContentResource cr = meleteCHService.getResource(delResourceId);
+			delResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
+			String course_id = getCurrentCourseId();
+			processDeletion(delResourceId, course_id);
+		}
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * get the current course id Pass it to getuploads collection method
+	 */
+	private String getCurrentCourseId()
+	{
+		String currId = "";
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map<?, ?> sessionMap = context.getExternalContext().getSessionMap();
+		currId = (String) sessionMap.get("course_id");
+		if (currId == null || currId.length() == 0)
+		{
+			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+			MeleteSiteAndUserInfo info = (MeleteSiteAndUserInfo) binding.getValue(context);
+			currId = info.getCourse_id();
+		}
+		return currId;
+	}
+
+	/**
+	 * Get the sectionId if the parameter is being passed around for edit section pages.
+	 * @return
+	 */
+	public String getSectionId()
+	{
+		return sectionId;
+	}
+
+	/**
+	 * Set the sectionid. This is to pass the parameter back to edit section pages
+	 * 
+	 * @param sectionId
+	 */
+	public void setSectionId(String sectionId)
+	{
+		logger.debug("setSectionId in delete resource:" + sectionId);
+		this.sectionId = sectionId;
 	}
 
 }
