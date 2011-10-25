@@ -29,6 +29,15 @@
 <f:view>
 <sakai:view title="Modules: Link Upload" toolCssHref="/etudes-melete-tool/rtbc004.css">
 <%@include file="accesscheck.jsp" %>
+<script type="text/javascript" language="javascript1.2">
+
+function fillTitle(idx, idx1)
+{
+	var u = document.getElementById(idx).value;
+	document.getElementById(idx1).value = u;
+}
+
+</script>
 
  <h:form id="LinkUploadForm" enctype="multipart/form-data" >
  <!-- top nav bar -->
@@ -92,7 +101,7 @@
 			    <h:outputText escape="false" value="&nbsp;*&nbsp;" styleClass="required"/>
 		       <h:outputText id="urltext" escape="false" value="#{msgs.link_upload_view_url}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />
 				 <h:message for="url" id="errurlmsg" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>                
-                <h:inputText id="url" size="40" value="#{ut.url}" />
+                <h:inputText id="url" size="40" value="#{ut.url}" onchange="fillTitle('LinkUploadForm:utTable:' +#{addResourcesPage.table.rowIndex} + ':url', 'LinkUploadForm:utTable:' +#{addResourcesPage.table.rowIndex} + ':title' )" />
                 <h:outputText id="spc" escape="false" value="&nbsp;" />
                  <h:commandLink id="removeLink"   actionListener="#{addResourcesPage.removeLink}" action="#{addResourcesPage.redirectToLinkUpload}" >  
                    <h:graphicImage id="remove_gif" alt="" value="/images/remove_item.png" styleClass="ExpClass"/>
