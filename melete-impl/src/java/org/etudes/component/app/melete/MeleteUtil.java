@@ -496,27 +496,26 @@ public class MeleteUtil
 	 */
 	public String replacePath(String s, String one, String another)
 	{
-		if (s.equals("")) return "";
-		if ((one == null) || (one.length() == 0)) return s;
-		String checkOne = "=\"" + one + "\"";
-		another = "=\"" + another + "\"";
+		try
+		{
+			if (s.equals("")) return "";
+			if ((one == null) || (one.length() == 0)) return s;
 
-		if (s.indexOf(checkOne) != -1)
-		{
-			s = s.replace(checkOne, another);
-			return s;
+			another = "=\"" + another + "\"";
+
+			Pattern p = Pattern.compile("=\\s*[\"|']" + one + "[\"|']", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+			Matcher m = p.matcher(s);
+			StringBuffer sb = new StringBuffer();
+			while (m.find())
+			{
+				m.appendReplacement(sb, another);
+			}
+			m.appendTail(sb);
+			return sb.toString();
 		}
-		checkOne = "='" + one + "'";
-		if (s.indexOf(checkOne) != -1)
+		catch (Exception e)
 		{
-			s = s.replace(checkOne, another);
-			return s;
-		}
-		checkOne = "=" + one;
-		if (s.indexOf(checkOne) != -1)
-		{
-			s = s.replace(checkOne, another);
-			return s;
+			e.printStackTrace();
 		}
 
 		return s;
