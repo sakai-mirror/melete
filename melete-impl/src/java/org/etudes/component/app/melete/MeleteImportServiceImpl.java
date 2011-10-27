@@ -525,7 +525,14 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			if (actualFileLocation != null && actualFileLocation.equals(fileResourceName)) return actualFileLocation;
 		}
 
-		return null;
+		// for references not in file tag and are just embedded references
+		if (fileResourceName.startsWith("../"))
+		{
+			fileResourceName = fileResourceName.replace("../", "");
+		}
+			
+		return fileResourceName;
+	//	return null;
 	}
 
 	/**

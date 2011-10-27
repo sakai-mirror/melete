@@ -3513,10 +3513,11 @@ else
 		Transaction tx = null;
 
 		Session session = hibernateUtil.currentSession();
-		
+		logger.debug("COMING TO UMDB");
 		if ((moduleDateBeans != null) && (moduleDateBeans.size() > 0)) {
 			for (ListIterator i = moduleDateBeans.listIterator(); i.hasNext();) {
 				tx = null;
+				logger.debug("ITERATING");
 				ModuleDateBean mdbean = (ModuleDateBean) i.next();
 				// Saving all modules (irrespective of dateFlag) as we now save
 				// modules with start date after end date also
@@ -3557,9 +3558,15 @@ else
 					}
 
 					if (checkModuleDates.getAddtoSchedule() != null) {
+						logger.debug("EVENT ids here are "+checkModuleDates.getStartEventId());
+
 						checkModuleDates = updateCalendar(
 								checkModule.getTitle(), checkModuleDates,
 								courseId);
+					}
+					else
+					{
+						logger.debug("ATS is null");
 					}
 					tx = session.beginTransaction();
 					logger.debug("update module and sh dates " + mod.getTitle());
