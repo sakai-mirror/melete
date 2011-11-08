@@ -27,25 +27,17 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 
 <sakai:tool_bar>
- <h:outputLink value="" rendered="#{navPage.shouldRenderView}">
- 	<h:commandButton id="ViewButton" action="#{navPage.viewAction}" disabled="#{!navPage.shouldRenderView}" value="#{msgs.topnavbar_view}" title="#{msgs.topnavbar_view}" styleClass="TopImgView"/>
-  </h:outputLink>
- <h:outputLabel value="#{msgs.topnavbar_view}" rendered="#{!navPage.shouldRenderView}" styleClass="TopImgViewText" />
- 
- <h:outputLink value="" rendered="#{navPage.isInstructor && navPage.shouldRenderAuthor}">
-	  <h:commandButton id="AuthorButton" action="#{navPage.authAction}" disabled="#{!navPage.shouldRenderAuthor}" value="#{msgs.topnavbar_author}" title="#{msgs.topnavbar_author}" styleClass="TopImgAuthor"/>
-  </h:outputLink>
-  <h:outputLabel value="#{msgs.topnavbar_author}" rendered="#{navPage.isInstructor && !navPage.shouldRenderAuthor}" styleClass="TopImgAuthorText" />
+  	<h:commandButton id="ViewButton" action="#{navPage.viewAction}" disabled="#{!navPage.shouldRenderView}" rendered="#{navPage.shouldRenderView}" value="#{msgs.topnavbar_view}" title="#{msgs.topnavbar_view}" styleClass="TopImgView"/>
+ 	 <h:outputLabel value="#{msgs.topnavbar_view}" rendered="#{!navPage.shouldRenderView}" styleClass="TopImgViewText" />
+
+    <h:commandButton id="AuthorButton" action="#{navPage.authAction}" disabled="#{!navPage.shouldRenderAuthor}" rendered="#{navPage.isInstructor && navPage.shouldRenderAuthor}" value="#{msgs.topnavbar_author}" title="#{msgs.topnavbar_author}" styleClass="TopImgAuthor"/>
+     <h:outputLabel value="#{msgs.topnavbar_author}" rendered="#{navPage.isInstructor && !navPage.shouldRenderAuthor}" styleClass="TopImgAuthorText" />
     
-   <h:outputLink value="" rendered="#{navPage.isInstructor && navPage.shouldRenderManage}">
-	  <h:commandButton id="ManageButton" action="#{navPage.manageAction}" disabled="#{!navPage.shouldRenderManage}" value="#{msgs.topnavbar_manage}" title="#{msgs.topnavbar_manage}" rendered="#{navPage.isInstructor}" styleClass="TopImgManage"/>
-   </h:outputLink>
-   <h:outputLabel value="#{msgs.topnavbar_manage}" rendered="#{navPage.isInstructor && !navPage.shouldRenderManage}" styleClass="TopImgManageText" />
+    <h:commandButton id="ManageButton" action="#{navPage.manageAction}" disabled="#{!navPage.shouldRenderManage}" value="#{msgs.topnavbar_manage}" title="#{msgs.topnavbar_manage}" rendered="#{navPage.isInstructor && navPage.shouldRenderManage}" styleClass="TopImgManage"/>
+     <h:outputLabel value="#{msgs.topnavbar_manage}" rendered="#{navPage.isInstructor && !navPage.shouldRenderManage}" styleClass="TopImgManageText" />
   
-  <h:outputLink value="" rendered="#{navPage.shouldRenderPreferences}">
- 	 <h:commandButton id="PreferencesButton" action="#{navPage.PreferenceAction}" disabled="#{!navPage.shouldRenderPreferences}" value="#{msgs.topnavbar_preferences}" title="#{msgs.topnavbar_preferences}" styleClass="TopImgPreference"/>
-  </h:outputLink>
-  <h:outputLabel value="#{msgs.topnavbar_preferences}" rendered="#{!navPage.shouldRenderPreferences}" styleClass="TopImgPreferenceText" /> 
+    <h:commandButton id="PreferencesButton" action="#{navPage.PreferenceAction}" disabled="#{!navPage.shouldRenderPreferences}" rendered="#{navPage.shouldRenderPreferences}" value="#{msgs.topnavbar_preferences}" title="#{msgs.topnavbar_preferences}" styleClass="TopImgPreference"/>
+ 	  <h:outputLabel value="#{msgs.topnavbar_preferences}" rendered="#{!navPage.shouldRenderPreferences}" styleClass="TopImgPreferenceText" /> 
 </sakai:tool_bar>
 <!-- End code to display images horizontally. -->
 

@@ -38,7 +38,7 @@
 
  <h:form id="ManageContentForm">
 	 <f:subview id="top">
-		<jsp:include page="topnavbar.jsp"/> 
+		<jsp:include page="topnavbar.jsp?myMode=Manage"/> 
 	</f:subview>
 	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/manage_content.png" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.manage_content_title}" /></div>
 		  

@@ -345,32 +345,36 @@ td.MainTableClass     { white-space: nowrap;}
 					}						
 .TopImgManage		{  
 					padding-left:1.5em;
+					padding-right:1em;
 					border:none;
-					color:inherit;
+					color:#6066AC;
 					background-color: inherit;
 					background:url('images/folder_document.gif') .2em no-repeat;
 					}
 										
 .TopImgPreference	{  
 					padding-left:1.5em;
+					padding-right:1em;
 					border:none;
-					color: inherit;
+					color:#6066AC;
 					background-color: inherit;
 					background:url('images/user_preferences.png') .2em no-repeat;
 					}	
 					
 .TopImgView			{  
 					padding-left:1.5em;
+					padding-right:1em;
 					border:none;
-					color: inherit;
+					color:#6066AC;
 					background-color: inherit;
 					background:url('images/preview.png') .2em no-repeat;	
 					}	
 								
 .TopImgAuthor		{  
 					padding-left:1.5em;
+					padding-right:1em;
 					border:none;
-					color: inherit;
+					color:#6066AC;
 					background-color: inherit;
 					background:url('images/author.png') .2em no-repeat;	
 					}
@@ -381,31 +385,31 @@ td.MainTableClass     { white-space: nowrap;}
 					cursor: text;
 					}														
 .TopImgViewText 	{
-					padding-left:2em;			
+					padding-left:2em;
 					background-color: inherit;
 					background:url('images/preview.png') .2em no-repeat;
-					padding-right:1em;
+					padding-right:1.5em;					
 					}			
 
 .TopImgAuthorText {
-					padding-left:1.5em;			
+					padding-left:1.5em;	
 					background-color: inherit;
 					background:url('images/author.png') .2em no-repeat;
-					padding-right:1em;
+					padding-right:1.5em;
 					}	
 
 .TopImgManageText	{  
 					padding-left:1.7em;
 					background-color: inherit;
 					background:url('images/folder_document.gif') .2em no-repeat;
-					padding-right:1em;
+					padding-right:1.5em;
 					}
 										
 .TopImgPreferenceText {  
 					padding-left:1.7em;
 					background-color: inherit;
 					background:url('images/user_preferences.png') .2em no-repeat;
-					padding-right:1em;
+					padding-right:1.5em;
 					}																	
  /* list resources page styles */
 
