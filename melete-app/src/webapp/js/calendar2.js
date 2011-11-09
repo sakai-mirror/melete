@@ -309,7 +309,7 @@ function cal_error (str_message) {
 	return null;
 }
 
-function showSdateCal(string2)
+function showSdateCal(string2,alertMsg)
 {
   var string2val = document.getElementById(string2).value;
   var dt;
@@ -324,12 +324,12 @@ function showSdateCal(string2)
   }
   else
   {
-    alert('<%=mensaje%>');
+    alert(alertMsg);
      document.getElementById(string2).select();
   }
 }
 
-function showEdateCal(string2)
+function showEdateCal(string2,alertMsg)
 {
   var string2val = document.getElementById(string2).value;
   var dt;
@@ -344,7 +344,7 @@ function showEdateCal(string2)
    }
   else
   {
-    alert('<%=mensaje%>');
+    alert(alertMsg);
      document.getElementById(string2).select();
   }
 } 
