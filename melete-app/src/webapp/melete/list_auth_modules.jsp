@@ -43,11 +43,6 @@ if (request.getAttribute("msg") != null)
 %>
 <%@ page import="javax.faces.application.FacesMessage, java.util.Iterator, java.lang.String, org.sakaiproject.util.ResourceLoader"%>
 
-<% 
-	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-	String mensaje=bundle .getString("JS_date");
-	
-%>
 
 <script type="text/javascript" language="JavaScript" src="/etudes-melete-tool/js/calendar2.js"></script>
 <script type="text/javascript" language="javascript" src="/etudes-melete-tool/js/sharedscripts.js"></script>
@@ -224,7 +219,7 @@ if (msg != null)
                            value="#{mdbean.moduleShdate.startDate}" onchange="showInvalid('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':startDate','listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':err_gifst');">
             <f:convertDateTime type="both" dateStyle="medium" timeStyle="short"/>
             </h:inputText>
-            <h:outputLink id="viewsdateCal" onclick="showSdateCal('listauthmodulesform:table:'+#{listAuthModulesPage.table.rowIndex}+':startDate')" value="#">
+            <h:outputLink id="viewsdateCal" onclick="showSdateCal('listauthmodulesform:table:'+#{listAuthModulesPage.table.rowIndex}+':startDate','#{msgs.JS_date}')" value="#">
             <h:graphicImage id="sdateCal" value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="ListDatePickerClass"/>
            </h:outputLink> 
             <h:graphicImage id="err_gifst" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}"  style="visibility:hidden;" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgSt0','true')"  styleClass="ExpClass"/>
@@ -249,7 +244,7 @@ if (msg != null)
                            value="#{mdbean.moduleShdate.endDate}" onchange="showInvalid('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':endDate','listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':err_gifen');">
                <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
             </h:inputText>
-             <h:outputLink id="viewedateCal" onclick="showEdateCal('listauthmodulesform:table:'+#{listAuthModulesPage.table.rowIndex}+':endDate')" value="#">
+             <h:outputLink id="viewedateCal" onclick="showEdateCal('listauthmodulesform:table:'+#{listAuthModulesPage.table.rowIndex}+':endDate','#{msgs.JS_date}')" value="#">
             <h:graphicImage id="edateCal" value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="ListDatePickerClass"/>
            </h:outputLink>
             <h:graphicImage id="err_gifen" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgEn0','true')"  styleClass="ExpClass"/>
