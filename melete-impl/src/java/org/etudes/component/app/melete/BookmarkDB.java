@@ -263,10 +263,20 @@ public class BookmarkDB
 			q.setParameter("userId", userId);
 			q.setParameter("siteId", siteId);
 			Section section = (Section) q.uniqueResult();
-			// Always show last visited link to instructors
 			if (isAuthor)
 			{
-				sectionId = section.getSectionId().intValue();
+				Date startDate = section.getModule().getModuleshdate().getStartDate();
+				Date endDate = section.getModule().getModuleshdate().getEndDate();
+				//Since we no longer show invalid modules to instructors in list view,
+				//we also don't want to show the link to a last visited section if it is invalid
+				if ((startDate != null) && (endDate != null) && (startDate.compareTo(endDate) >= 0))
+				{
+					sectionId = 0;
+				}
+				else
+				{
+					sectionId = section.getSectionId().intValue();
+				}
 			}
 			else
 			{
