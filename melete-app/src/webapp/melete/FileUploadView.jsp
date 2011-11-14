@@ -50,8 +50,6 @@ function loadInputs()
    document.getElementById("choose"+i).style.display='block';
   }   
    clearMsgs();
-   showErrorMsgs();
-   showSuccessMsgs();
 }
 
 function clearMsgs()
@@ -63,69 +61,7 @@ function clearMsgs()
 	}
 }
 
-function showErrorMsgs()
-{
-  var errStr=document.getElementById("FileUploadForm:err_field_msgs").value;
-   var end = 0;
-   var len = 0;
-   var idx;
-   var msg;
-  if(errStr != undefined)
-  {
-   len = errStr.length; 
-   while(errStr != undefined && (end = errStr.indexOf(",")) != -1)
-  	{
-  	idx = errStr.substring(1,end);
-  	errStr = errStr.substring(end+1,len);
-  	len = errStr.length;  
-  	if((end = errStr.indexOf(",")) != -1)
-  	{
-  	msg = errStr.substring(1,end);
-  	errStr = errStr.substring(end+1,len);
-  	len = errStr.length;   	
-   	}
-   	else
-   	{
-   	msg = errStr.substring(1,len-1);
-   	errStr = null;
-   	}   	
-   	document.getElementById("errMsg"+idx).innerHTML=msg;
-  	}
-  }
-}
 
-function showSuccessMsgs()
-{
-  var successStr=document.getElementById("FileUploadForm:success_field_msgs").value;
-   var end = 0;
-   var len = 0;
-   var idx;
-   var msg;
-  if(successStr != null)
-  {
-   len = successStr.length; 
-   while(successStr != null && (end = successStr.indexOf(",")) != -1)
-  	{
-  	idx = successStr.substring(1,end);
-  	successStr = successStr.substring(end+1,len);
-  	len = successStr.length;  
-  	if((end = successStr.indexOf(",")) != -1)
-  	{
-  	msg = successStr.substring(1,end);
-  	successStr = successStr.substring(end+1,len);
-  	len = successStr.length;   	
-   	}
-   	else
-   	{
-   	msg = successStr.substring(1,len-1);
-   	successStr = null;
-   	}   	
-   	document.getElementById("choose"+idx).style.display='none';
-   	document.getElementById("show"+idx).style.display='block';
-   	document.getElementById("show"+idx).innerHTML=msg;
-  	}
-  }
-}
 function showInputs()
 {
   var str=document.getElementById("FileUploadForm:number").value;
@@ -219,13 +155,6 @@ function validateFileName(divID, sourceID)
 						 </h:selectOneMenu>
 				</td>	
 			</tr>				
-		  	<tr>
-			  <td>
-			  <br>
-			  	<h:inputHidden id="err_field_msgs" value="#{addResourcesPage.err_fields}" />
-			  	<h:inputHidden id="success_field_msgs" value="#{addResourcesPage.success_fields}" />
-			  </td>
-			</tr>
           <tr>
 		    <td colspan="2">		    	
 			<p>

@@ -62,8 +62,6 @@ public class AddResourcesPage implements ServletContextListener
 	private List<UrlTitleObj> utList;
 	protected MeleteCHService meleteCHService;
 	private UIData table;
-	private ArrayList<String> err_fields = null;
-	private ArrayList<String> success_fields = null;
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(AddResourcesPage.class);
 	private HashMap<String, ArrayList<String>> hm_msgs;
@@ -133,8 +131,6 @@ public class AddResourcesPage implements ServletContextListener
 		this.numberItems = null;
 		this.fileType = null;
 		this.maxUploadSize = 0;
-		err_fields = null;
-		success_fields = null;
 	}
 
 	/**
@@ -167,7 +163,6 @@ public class AddResourcesPage implements ServletContextListener
 		// Code that validates required fields
 		int emptyCounter = 0;
 
-		err_fields = null;
 		if (this.fileType.equals("upload"))
 		{
 			for (int i = 1; i <= 10; i++)
@@ -228,9 +223,6 @@ public class AddResourcesPage implements ServletContextListener
 						if (logger.isDebugEnabled()) logger.debug("new names for upload content is" + secContentMimeType + "," + secResourceName);
 
 						addItem(secResourceName, secContentMimeType, addCollId, secContentData);
-						if (success_fields == null) success_fields = new ArrayList<String>();
-						success_fields.add(new Integer(i).toString());
-						success_fields.add(bundle.getString("add_item_success") + secResourceName);
 					}
 					else
 					{
@@ -241,26 +233,16 @@ public class AddResourcesPage implements ServletContextListener
 				catch (MeleteException mex)
 				{
 					String mexMsg = mex.getMessage();
-					if (mex.getMessage().equals("embed_img_bad_filename")) mexMsg = "img_bad_filename";
+					if (mexMsg.equals("embed_img_bad_filename")) mexMsg = "img_bad_filename";
 					String errMsg = bundle.getString(mexMsg);
-					// context.addMessage ("FileUploadForm:chooseFile"+i, new FacesMessage(FacesMessage.SEVERITY_ERROR,mex.getMessage(),errMsg));
-					// logger.error("error in uploading multiple files" + errMsg);
-					if (err_fields == null) err_fields = new ArrayList<String>();
-					err_fields.add(new Integer(i).toString());
-					err_fields.add(errMsg);
-					// return "failure";
+					context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, mexMsg, errMsg));
+					return "failure";
 				}
 				catch (Exception e)
 				{
 					logger.debug("file upload FAILED" + e.toString());
 				}
 			}
-			if (err_fields != null)
-			{
-				logger.debug("err found in fields" + err_fields.toString());
-				return "file_upload_view";
-			}
-
 		}
 
 		if (this.fileType.equals("link"))
@@ -623,22 +605,6 @@ public class AddResourcesPage implements ServletContextListener
 	{
 		// 1 MB = 1048576 bytes
 		if (new Long((sz / 1048576)).intValue() > getMaxUploadSize()) throw new MeleteException("file_too_large");
-	}
-
-	/**
-	 * @return the err_fields
-	 */
-	public ArrayList<String> getErr_fields()
-	{
-		return this.err_fields;
-	}
-
-	/**
-	 * @return the success_fields
-	 */
-	public ArrayList<String> getSuccess_fields()
-	{
-		return this.success_fields;
 	}
 
 	/**
