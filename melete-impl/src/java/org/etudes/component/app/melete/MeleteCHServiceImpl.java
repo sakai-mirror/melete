@@ -1150,10 +1150,10 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				byte[] originalData = edit.getContent();
 				byte[] data = contentEditor.getBytes();
 								
-				/*Vector<String> original = checkTextModified(new String(originalData));
+				Vector<String> original = checkTextModified(new String(originalData));
 				Vector<String> newData = checkTextModified(new String(data));
 				modify = original.equals(newData) ? false : true;
-				logger.debug("modify value in edit resource :" + modify);*/
+			/*	logger.debug("modify value in edit resource :" + modify);*/
 
 			/*	Check on length
 			    logger.debug("check if data is changed :" + originalData.length + ", and now dat's length is " + data.length);
@@ -1161,7 +1161,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				else modify = true;		*/
 				
 				// compare arrays
-				modify = !Arrays.equals(originalData, data);
+				//modify = !Arrays.equals(originalData, data);
 				edit.setContent(data);
 				// edit.setContentLength((long)data.length);
 				getContentservice().commitResource(edit);
@@ -1213,17 +1213,17 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				byte[] originalData = edit.getContent();
 				byte[] data = contentEditor.getBytes();
 				
-			/*	Vector<String> original = checkTextModified(new String(originalData));
+				Vector<String> original = checkTextModified(new String(originalData));
 				Vector<String> newData = checkTextModified(new String(data));
 				modify = original.equals(newData) ? false : true;
-				logger.debug("modify value in edit resource :" + modify);*/	
+			/*	logger.debug("modify value in edit resource :" + modify);*/	
 			/*	Check on length
 			    logger.debug("check if data is changed :" + originalData.length + ", and now dat's length is " + data.length);
 				if (originalData.length == data.length) modify = false;
 				else modify = true;		*/	
 				
 				// compare arrays
-				modify = !Arrays.equals(originalData, data);
+			//	modify = !Arrays.equals(originalData, data);
 				edit.setContent(data);
 				// edit.setContentLength((long)data.length);
 				getContentservice().commitResource(edit);
