@@ -254,7 +254,7 @@ function saveEditor()
                 </td>
 			</tr>
 			<tr>
-				<td align="right" class="footnoteDates">					
+				<td align="right" class="footnoteDates" style="display:none">					
                     <h:outputText value="#{msgs.editmodulesections_author_edit_start}"/>&nbsp;<h:outputText id="editStartTime" value="#{editSectionPage.workStartedAt}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
                 </td>
 			</tr>
