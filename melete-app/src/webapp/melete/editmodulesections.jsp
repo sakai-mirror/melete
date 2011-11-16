@@ -65,7 +65,7 @@ function saveEditor()
         if(document.getElementById("EditSectionForm:rId") != undefined || document.getElementById("EditSectionForm:rId") != null)
       	  document.htmleditor.addAdditionalDynamicParameter('resourceId',document.getElementById("EditSectionForm:rId").value);
        document.htmleditor.addAdditionalDynamicParameter('uId',document.getElementById("EditSectionForm:uId").value);		  
-		
+	   document.htmleditor.addAdditionalDynamicParameter('editStartTime',document.getElementById("EditSectionForm:editStartTime").innerHTML);	
 		result = document.htmleditor.uploadMultipartContent(true);			    	
 	}	
 	return result;	
@@ -80,7 +80,8 @@ function saveEditor()
 			  <h:inputHidden id="mode" value="Edit"/>
 			  <h:inputHidden id="sId" value="#{editSectionPage.section.sectionId}"/>
 			  <h:inputHidden id="rId" value="#{editSectionPage.meleteResource.resourceId}" rendered="#{editSectionPage.meleteResource !=null}"/>
-			  <h:inputHidden id="uId" value="#{editSectionPage.currUserId}"/>
+			  <h:inputHidden id="uId" value="#{editSectionPage.currUserId}"/>	
+		  
 		<!-- top nav bar -->
 		<f:subview id="top">
 			<jsp:include page="topnavbar.jsp"/> 
@@ -89,7 +90,8 @@ function saveEditor()
 		<t:saveState id="worksection" value="#{editSectionPage.section}" />
 		<t:saveState id="workLicense" value="#{licensePage.licenseCodes}" />
 		<t:saveState id="workId" value="#{editSectionPage.editId}" />
-		
+		<t:saveState id="workStartTime" value="#{editSectionPage.workStartedAt}" />
+			
 		<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText id="captionText" value="#{msgs.editmodulesections_editing_section}" /> </div>
 		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
         <div id="errMsg1" style="color:red"><p> </p></div>
@@ -226,23 +228,16 @@ function saveEditor()
                 <td>
                   <div class="actionBar" align="left">
                 	<h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_done}" accesskey="#{msgs.done_access}" title="#{msgs.im_done_text}" styleClass="BottomImgFinish"/>
-              		<h:commandButton id="submitsave" actionListener="#{editSectionPage.save}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave">
-              		              	
-					</h:commandButton>
-					<h:commandButton id="preview" actionListener="#{editSectionPage.getPreviewPageListener}" value="#{msgs.im_preview}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgPreview">
-											
-					</h:commandButton>
-					<h:commandButton id="saveAddAnotherbutton"  actionListener="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}"  accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd">
-							
-					</h:commandButton>
-				
-       			 </div></td>
+              		<h:commandButton id="submitsave" actionListener="#{editSectionPage.save}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave" />
+         			<h:commandButton id="preview" actionListener="#{editSectionPage.getPreviewPageListener}" value="#{msgs.im_preview}" accesskey="#{msgs.preview_access}" title="#{msgs.im_preview_text}" styleClass="BottomImgPreview" />
+					<h:commandButton id="saveAddAnotherbutton"  actionListener="#{editSectionPage.saveAndAddAnotherSection}" value="#{msgs.im_add_another_section}" accesskey="#{msgs.add_access}" title="#{msgs.im_add_another_section_text}" styleClass="BottomImgAdd" />
+				 </div></td>
               </tr>
               
             </table>
 			<table class="maintableCollapseWithNoBorder">
 			<tr>
-				<td rowspan="2" class="left">
+				<td rowspan="3" class="left">
 					<span class="required">*</span>&nbsp; <h:outputText value="#{msgs.edit_module_required}" />
 				</td>
 				<td align="right" class="footnoteDates">
@@ -255,6 +250,12 @@ function saveEditor()
 				<td align="right" class="footnoteDates">
 					<h:outputText value="#{msgs.editmodulesections_author_edit}"/>&nbsp;<h:outputText value="#{editSectionPage.section.modifiedByFname}" />&nbsp;<h:outputText value="#{editSectionPage.section.modifiedByLname}" /><h:outputText value=","/>&nbsp;
                     <h:outputText value="#{editSectionPage.section.modificationDate}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
+                 
+                </td>
+			</tr>
+			<tr>
+				<td align="right" class="footnoteDates">					
+                    <h:outputText value="#{msgs.editmodulesections_author_edit_start}"/>&nbsp;<h:outputText id="editStartTime" value="#{editSectionPage.workStartedAt}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
                 </td>
 			</tr>
 		</table>	

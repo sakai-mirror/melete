@@ -401,6 +401,39 @@ public class SectionDB implements Serializable
 	}
 
 	/**
+	 * 
+	 */
+	public Date getLastModifiedDate(Integer sectionId)
+	{
+		Date secModifyDate = null;
+		try
+		{
+			Session session = hibernateUtil.currentSession();
+			String queryString = "select s.modificationDate from Section s where s.sectionId = :sectionId";
+			Query query = session.createQuery(queryString);
+			query.setParameter("sectionId", sectionId);
+			Object res = query.uniqueResult();
+			if (res != null) secModifyDate = (Date) res;
+		}
+		catch (HibernateException he)
+		{
+			logger.error(he.toString());
+		}
+		finally
+		{
+			try
+			{
+				hibernateUtil.closeSession();
+			}
+			catch (HibernateException he)
+			{
+				logger.error(he.toString());
+			}
+		}
+		return secModifyDate;
+	}
+	
+	/**
 	 * Depending on the deleteFrom parameter, this method cleans out the section from various MELETE tables
 	 * 
 	 * @param sec

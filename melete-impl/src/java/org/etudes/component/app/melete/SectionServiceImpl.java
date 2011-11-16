@@ -250,6 +250,23 @@ public class SectionServiceImpl implements Serializable, SectionService
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public Date getLastModifiedDate(Integer sectionId)
+	{
+		Date last = null;
+		try
+		{
+			last = sectiondb.getLastModifiedDate(sectionId);
+		}
+		catch (Exception ex)
+		{
+			logger.debug("failed to get last modified date" + ex.getMessage());
+		}
+		return last;
+	}
+	
+	/**
 	 * @return Returns the meleteLicenseDB.
 	 */
 	public MeleteLicenseDB getMeleteLicenseDB()

@@ -24,7 +24,9 @@
 package org.etudes.tool.melete;
 
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -45,6 +47,7 @@ import javax.servlet.ServletContextListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.MeleteCHService;
+import org.etudes.api.app.melete.SectionService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.etudes.api.app.melete.exception.UserErrorException;
 import org.sakaiproject.component.cover.ServerConfigurationService;
@@ -61,6 +64,7 @@ public class AddResourcesPage implements ServletContextListener
 	private int removeLinkIndex;
 	private List<UrlTitleObj> utList;
 	protected MeleteCHService meleteCHService;
+	protected SectionService sectionService;
 	private UIData table;
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(AddResourcesPage.class);
@@ -471,6 +475,11 @@ public class AddResourcesPage implements ServletContextListener
 		this.meleteCHService = meleteCHService;
 	}
 
+	public void setSectionService(SectionService sectionService)
+	{
+		this.sectionService = sectionService;
+	}
+
 	/**
 	 * Get the type of file being added - upload or link
 	 * 
@@ -651,10 +660,18 @@ public class AddResourcesPage implements ServletContextListener
 	 * @param htmlContentData
 	 *        Composed content
 	 */
-	public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, String sectionId, String userId,
+	public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, String sectionId, String userId, String editStartTime,
 			Map<String, String> newEmbeddedResources, String htmlContentData) throws Exception
 	{
 		ArrayList<String> errs = new ArrayList<String>();
+		// check for overwrite
+		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
+		Date checkLastWork = sectionService.getLastModifiedDate(Integer.parseInt(sectionId));
+		if (checkLastWork != null && checkLastWork.after(df.parse(editStartTime)))
+		{
+			return;
+		}
+
 		String revisedData = getMeleteCHService().findLocalImagesEmbeddedInEditor(courseId, errs, newEmbeddedResources, htmlContentData);
 
 		// add messages to hashmap
