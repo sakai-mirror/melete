@@ -65,7 +65,7 @@ function saveEditor()
         if(document.getElementById("EditSectionForm:rId") != undefined || document.getElementById("EditSectionForm:rId") != null)
       	  document.htmleditor.addAdditionalDynamicParameter('resourceId',document.getElementById("EditSectionForm:rId").value);
        document.htmleditor.addAdditionalDynamicParameter('uId',document.getElementById("EditSectionForm:uId").value);		  
-	   document.htmleditor.addAdditionalDynamicParameter('editStartTime',document.getElementById("EditSectionForm:editStartTime").innerHTML);	
+	   document.htmleditor.addAdditionalDynamicParameter('editLastSaveTime',document.getElementById("EditSectionForm:editLastSaveTime").innerHTML);	
 		result = document.htmleditor.uploadMultipartContent(true);			    	
 	}	
 	return result;	
@@ -90,7 +90,7 @@ function saveEditor()
 		<t:saveState id="worksection" value="#{editSectionPage.section}" />
 		<t:saveState id="workLicense" value="#{licensePage.licenseCodes}" />
 		<t:saveState id="workId" value="#{editSectionPage.editId}" />
-		<t:saveState id="workStartTime" value="#{editSectionPage.workStartedAt}" />
+		<t:saveState id="workStartTime" value="#{editSectionPage.lastSavedAt}" />
 			
 		<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText id="captionText" value="#{msgs.editmodulesections_editing_section}" /> </div>
 		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
@@ -237,7 +237,7 @@ function saveEditor()
             </table>
 			<table class="maintableCollapseWithNoBorder">
 			<tr>
-				<td rowspan="3" class="left">
+				<td rowspan="2" class="left">
 					<span class="required">*</span>&nbsp; <h:outputText value="#{msgs.edit_module_required}" />
 				</td>
 				<td align="right" class="footnoteDates">
@@ -255,7 +255,7 @@ function saveEditor()
 			</tr>
 			<tr>
 				<td align="right" class="footnoteDates" style="display:none">					
-                    <h:outputText value="#{msgs.editmodulesections_author_edit_start}"/>&nbsp;<h:outputText id="editStartTime" value="#{editSectionPage.workStartedAt}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
+                    <h:outputText value="#{msgs.editmodulesections_author_edit_start}"/>&nbsp;<h:outputText id="editLastSaveTime" value="#{editSectionPage.lastSavedAt}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
                 </td>
 			</tr>
 		</table>	

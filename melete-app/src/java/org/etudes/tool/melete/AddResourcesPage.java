@@ -655,19 +655,21 @@ public class AddResourcesPage implements ServletContextListener
 	 *        The section Id
 	 * @param userId
 	 *        The user Id
+	 * @param lastSaveTime
+	 * 		  section last saved on	       
 	 * @param newEmbeddedResources
 	 *        Map of all embedded resources. Keyed with local file name.
 	 * @param htmlContentData
 	 *        Composed content
 	 */
-	public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, String sectionId, String userId, String editStartTime,
+	public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, String sectionId, String userId, String lastSaveTime,
 			Map<String, String> newEmbeddedResources, String htmlContentData) throws Exception
 	{
 		ArrayList<String> errs = new ArrayList<String>();
 		// check for overwrite
 		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
 		Date checkLastWork = sectionService.getLastModifiedDate(Integer.parseInt(sectionId));
-		if (checkLastWork != null && checkLastWork.after(df.parse(editStartTime)))
+		if (checkLastWork != null && checkLastWork.compareTo(df.parse(lastSaveTime)) <=0)
 		{
 			return;
 		}
@@ -683,6 +685,7 @@ public class AddResourcesPage implements ServletContextListener
 				addToHm_Msgs(k, err);
 			}
 		}
+		Boolean modify = false;
 		try
 		{
 			// in case of add and edit from notype to compose section
@@ -695,13 +698,8 @@ public class AddResourcesPage implements ServletContextListener
 			// for sections collection is module_id
 			if (resourceId.indexOf("/private/meleteDocs/") != -1 && resourceId.indexOf("/uploads/") != -1)
 				throw new MeleteException("section_html_null");
-			Boolean modify = getMeleteCHService().editResource(courseId, resourceId, revisedData);
-			// if content is modified then add to messages
-			if(modify)
-			{
-				String k = sectionId + "-" + userId;
-				addToHm_Msgs(k, "ModifiedData");
-			}
+			modify = getMeleteCHService().editResource(courseId, resourceId, revisedData);
+			
 		}
 		catch (Exception ex)
 		{
@@ -713,6 +711,14 @@ public class AddResourcesPage implements ServletContextListener
 					getMeleteCHService().getCollectionId(courseId, "typeEditor", getMeleteCHService().getContainingModule(sectionId)),
 					secContentData, res);
 			addtoMeleteResource(sectionId, newResourceId);
+			modify = true;
+		}
+		
+		// if content is modified then add to messages
+		if(modify)
+		{
+			String k = sectionId + "-" + userId;
+			addToHm_Msgs(k, "ModifiedData");
 		}
 	}
 

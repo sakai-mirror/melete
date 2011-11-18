@@ -79,7 +79,7 @@
 		{
 			if(request.getParameter("html_content") != null)
 			{			
-				aResourcePage.saveSectionHtmlItem(collId, request.getParameter("courseId"), request.getParameter("resourceId"), request.getParameter("sId"), request.getParameter("uId"),request.getParameter("editStartTime"), newEmbeddedResources, request.getParameter("html_content") );
+				aResourcePage.saveSectionHtmlItem(collId, request.getParameter("courseId"), request.getParameter("resourceId"), request.getParameter("sId"), request.getParameter("uId"),request.getParameter("editLastSaveTime"), newEmbeddedResources, request.getParameter("html_content") );
 			}				
 		}  catch (Exception ex) {
 			String exKey = request.getParameter("sId") + "-"+ request.getParameter("uId"); 

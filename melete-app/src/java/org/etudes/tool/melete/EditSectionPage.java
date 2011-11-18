@@ -77,7 +77,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 	private String editId;
 	
-	private Date workStartedAt;
+	private Date lastSavedAt;
 	
 	/**
 	 * Default constructor
@@ -99,13 +99,26 @@ public class EditSectionPage extends SectionPage implements Serializable
 		FacesContext context = FacesContext.getCurrentInstance();
 
 //		resetSectionValues();
-		workStartedAt = new java.util.Date();
+		try
+		{
 		setFormName("EditSectionForm");
 		if(editId == null) editId = section1.getSectionId().toString();
 		setSection(sectionService.getSection(section1.getSectionId()));
+		lastSavedAt = this.section.getModificationDate();
 		setModule(moduleService.getModule(section1.getModuleId()));
 	//	setSecResource(this.section.getSectionResource());
 		setSecResource(sectionService.getSectionResourcebyId(this.section.getSectionId().toString()));
+		}
+		catch (Exception e)
+		{
+			try
+			{
+				FacesContext.getCurrentInstance().getExternalContext().redirect("list_auth_modules");
+			}
+			catch (Exception ex)
+			{
+			}
+		}
 		if (this.secResource != null && this.secResource.getResource() != null)
 		{
 		//	setMeleteResource((MeleteResource) this.secResource.getResource());
@@ -300,6 +313,12 @@ public class EditSectionPage extends SectionPage implements Serializable
 						if (err.equals("ModifiedData"))
 						{
 							modifyContentResource = true;
+							//save section other properties
+							secResource = sectionService.getSectionResourcebyId(section.getSectionId().toString());
+							meleteResource.setResourceId(secResource.getResource().getResourceId());
+							section.setSectionResource(secResource);
+							meleteResource = lPage.processLicenseInformation(meleteResource);
+							sectionService.editSection(section, meleteResource, getCurrUserId(), modifyContentResource);
 							continue;
 						}
 					String errMsg = resourcesPage.getMessageText(err);
@@ -313,35 +332,29 @@ public class EditSectionPage extends SectionPage implements Serializable
 			// save section
 			if (logger.isDebugEnabled()) logger.debug("EditSectionpage:save section" + section.getContentType());
 			Date checkLastWork = sectionService.getLastModifiedDate(section.getSectionId());
-			logger.debug("last work date:" + checkLastWork + checkLastWork.before(workStartedAt));
-			if (checkLastWork != null && checkLastWork.before(workStartedAt))
+		
+			if (checkLastWork != null && checkLastWork.compareTo(lastSavedAt) <= 0)
 			{
 				if (section.getContentType().equals("notype"))
 				{
 					meleteResource = null;
 					sectionService.editSection(section, getCurrUserId());
-					// refresh section
-					this.section = sectionService.getSection(section.getSectionId());
 				}
 				else
 				{
 					shouldRenderContentTypeSelect = false;
 					// step 1: check if new resource content or existing resource is edited
 					try
-					{
+					{	
 						binding = Util.getBinding("#{authorPreferences}");
 						AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
-
 						if ("typeEditor".equals(section.getContentType()) && preferencePage.isShouldRenderSferyx())
 						{
 							// get secResource object
 							secResource = sectionService.getSectionResourcebyId(section.getSectionId().toString());
 
 							meleteResource.setResourceId(secResource.getResource().getResourceId());
-							section.setSectionResource(secResource);
-							// refresh contentEditor
-							ContentResource cr = getMeleteCHService().getResource(secResource.getResource().getResourceId());
-							if (cr != null) this.contentEditor = new String(cr.getContent());
+							section.setSectionResource(secResource);						
 						}
 						else if ("typeEditor".equals(section.getContentType()) && preferencePage.isShouldRenderFCK())
 						{
@@ -429,6 +442,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 					sectionService.editSection(section, meleteResource, getCurrUserId(), modifyContentResource);
 				}
 			}
+
 			// refresh section
 			this.section = sectionService.getSection(section.getSectionId());
 			if (section.getContentType().equals("typeEditor"))
@@ -440,7 +454,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 					contentEditor = new String(cr.getContent());
 				}
 			}
-			workStartedAt = new java.util.Date();
+			lastSavedAt = section.getModificationDate();
 			//Track the event
 			EventTrackingService.post(EventTrackingService.newEvent("melete.section.edit", ToolManager.getCurrentPlacement().getContext(), true));
 
@@ -1263,12 +1277,12 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return newSectionId;
 	}	
 	
-	public Date getWorkStartedAt() {
-		return workStartedAt;
+	public Date getLastSavedAt() {
+		return lastSavedAt;
 	}
 
-	public void setWorkStartedAt(Date workStartedAt) {
-		this.workStartedAt = workStartedAt;
+	public void setLastSavedAt(Date lastSavedAt) {
+		this.lastSavedAt = lastSavedAt;
 	}
 
 	public String getEditId()
