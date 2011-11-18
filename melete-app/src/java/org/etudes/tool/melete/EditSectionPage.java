@@ -992,8 +992,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		try
 		{
-			String secId = (String) evt.getComponent().getAttributes().get("sectionId");
-			FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + secId);
+	//		String secId = (String) evt.getComponent().getAttributes().get("sectionId");
+			FacesContext.getCurrentInstance().getExternalContext().redirect("editmodulesections.jsf?sectionId=" + editId);
 		}
 		catch (Exception e)
 		{

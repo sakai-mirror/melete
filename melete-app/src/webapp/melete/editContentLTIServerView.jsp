@@ -77,7 +77,7 @@
 							 <h:commandButton id="addButton_1" actionListener="#{editSectionPage.setServerLTI}" value="#{msgs.im_continue}" tabindex="" accesskey="#{msgs.continue_access}" title="#{msgs.im_continue_text}" styleClass="BottomImgContinue">
 								 <f:attribute name="sectionId" value="#{editSectionPage.editId}" />
 						 	</h:commandButton>
-					     	<h:commandButton id="cancelButton_1" immediate="true" action="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
+					     	<h:commandButton id="cancelButton_1" immediate="true" actionListener="#{editSectionPage.cancelServerFile}" value="#{msgs.im_cancel}" tabindex="" accesskey="#{msgs.cancel_access}" title="#{msgs.im_cancel_text}" styleClass="BottomImgCancel">
 					     		<f:attribute name="sectionId" value="#{editSectionPage.editId}" />
 						 	</h:commandButton>		
 						</div></td></tr>
