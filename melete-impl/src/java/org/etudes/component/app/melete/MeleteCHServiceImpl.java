@@ -1454,25 +1454,6 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				// for internal links to make it relative
 				else
 				{
-					// add target if not provided
-					if (foundLink != null && foundLink.equals("link") && endSrc > 0 && checkforimgs.indexOf(">") > endSrc)
-					{
-						logger.debug("embedded link so looking for target value" + endSrc + checkforimgs.length() + checkforimgs.indexOf(">"));
-						String soFar = checkforimgs.substring(0, endSrc);
-						String checkTarget = checkforimgs.substring(endSrc, checkforimgs.indexOf(">") + 1);
-						String laterPart = "";
-						if (checkforimgs.indexOf(">") + 2 <= checkforimgs.length())
-							laterPart = checkforimgs.substring(checkforimgs.indexOf(">") + 2);
-						Pattern pa = Pattern.compile("\\s[tT][aA][rR][gG][eE][tT]\\s*=");
-						Matcher m = pa.matcher(checkTarget);
-						if (!m.find())
-						{
-							String newTarget = meleteUtil.replace(checkTarget, ">", " target=_blank >");
-							checkforimgs = soFar + newTarget + laterPart;
-							contentEditor = meleteUtil.replace(contentEditor, soFar + checkTarget, soFar + newTarget);
-						}
-					}
-
 					if (fileName.startsWith(ServerConfigurationService.getServerUrl()))
 					{
 						if (fileName.indexOf("/meleteDocs") != -1)
@@ -1536,10 +1517,52 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				logger.debug(e.toString());
 				e.printStackTrace();
 			}
-		}
+		}	
+		// add target attribute if missing
+		contentEditor = addTargetAttributeIfMissing(contentEditor);
 		return contentEditor;
 	}
 
+	/**
+	 * 
+	 * @param s1
+	 * @return
+	 */
+	private String addTargetAttributeIfMissing(String s1)
+	{
+		Pattern pa = Pattern.compile("<a\\s+.*?/*>", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.DOTALL);
+		Pattern p_target = Pattern.compile("\\s[tT][aA][rR][gG][eE][tT]\\s*=");
+		Pattern p_targetBlank = Pattern.compile("\\s[tT][aA][rR][gG][eE][tT]\\s*=\\s*[\"]*_blank\\s*[\"]*");
+		
+		Matcher m = pa.matcher(s1);
+		StringBuffer sb = new StringBuffer();
+		while (m.find())
+		{
+			String a_content = m.group(0);
+			Matcher m_target = p_target.matcher(m.group(0));
+
+			if (m_target.find())
+			{
+				// check if target is _blank with or without and some FCK composed data has 2 targets so replace all with blank 
+				Matcher m_blank = p_targetBlank.matcher(a_content);
+				StringBuffer sb_blank = new StringBuffer();
+				while (m_blank.find())
+				{
+					m_blank.appendReplacement(sb_blank, "");
+				}
+				m_blank.appendTail(sb_blank);
+				a_content = sb_blank.toString();
+			}
+			// add it
+			a_content = a_content.replace("<a ", "<a target=\"_blank\" ");
+
+			m.appendReplacement(sb, a_content);
+		}
+		m.appendTail(sb);
+		return sb.toString();
+	}
+	
+	
 	public List<String> findAllEmbeddedImages(String sec_resId) throws Exception
 	{
 		try
