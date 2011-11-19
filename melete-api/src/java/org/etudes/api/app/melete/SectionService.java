@@ -175,6 +175,14 @@ public interface SectionService
 	public String[] getCCLicenseURL(boolean reqAttr, boolean allowCmrcl, int allowMod);
 
 	/**
+	 * Get the last modified date of the section.
+	 * 
+	 * @param sectionId
+	 * @return
+	 */
+	public Date getLastModifiedDate(Integer sectionId);
+	
+	/**
 	 * Get all available licenses
 	 * 
 	 * @return list of MeleteLicense objects

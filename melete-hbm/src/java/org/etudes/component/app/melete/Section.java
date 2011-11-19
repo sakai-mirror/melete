@@ -179,9 +179,9 @@ public class Section implements SectionObjService
 		}
 		else if (!contentType.equals(other.contentType)) return false;
 		if (deleteFlag != other.deleteFlag) return false;
-		if (instr == null)
+		if (instr == null || instr.length() == 0)
 		{
-			if (other.instr != null) return false;
+			if (other.instr != null && other.instr.trim().length() != 0) return false;
 		}
 		else if (!instr.equals(other.instr)) return false;
 		if (moduleId != other.moduleId) return false;

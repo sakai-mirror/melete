@@ -27,7 +27,6 @@ package org.etudes.component.app.melete;
 import java.io.File;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -1149,19 +1148,10 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				edit = getContentservice().editResource(resourceId);
 				byte[] originalData = edit.getContent();
 				byte[] data = contentEditor.getBytes();
-								
-				/*Vector<String> original = checkTextModified(new String(originalData));
-				Vector<String> newData = checkTextModified(new String(data));
-				modify = original.equals(newData) ? false : true;
-				logger.debug("modify value in edit resource :" + modify);*/
-
-			/*	Check on length
-			    logger.debug("check if data is changed :" + originalData.length + ", and now dat's length is " + data.length);
-				if (originalData.length == data.length) modify = false;
-				else modify = true;		*/
 				
-				// compare arrays
-				modify = !Arrays.equals(originalData, data);
+				modify = !HtmlHelper.compareHtml(new String(originalData), new String(data));
+				logger.debug("modify value in edit resource :" + modify);	
+			
 				edit.setContent(data);
 				// edit.setContentLength((long)data.length);
 				getContentservice().commitResource(edit);
@@ -1212,18 +1202,11 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				edit = getContentservice().editResource(resourceId);
 				byte[] originalData = edit.getContent();
 				byte[] data = contentEditor.getBytes();
-				
-			/*	Vector<String> original = checkTextModified(new String(originalData));
-				Vector<String> newData = checkTextModified(new String(data));
-				modify = original.equals(newData) ? false : true;
-				logger.debug("modify value in edit resource :" + modify);*/	
-			/*	Check on length
-			    logger.debug("check if data is changed :" + originalData.length + ", and now dat's length is " + data.length);
-				if (originalData.length == data.length) modify = false;
-				else modify = true;		*/	
-				
-				// compare arrays
-				modify = !Arrays.equals(originalData, data);
+											
+				modify = !HtmlHelper.compareHtml(new String(originalData), new String(data));
+				logger.debug("modify value in edit resource :" + modify);	
+			
+				// save user provided data
 				edit.setContent(data);
 				// edit.setContentLength((long)data.length);
 				getContentservice().commitResource(edit);
@@ -1245,13 +1228,43 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	}
 
 	/**
+	 * 
+	 * @param content1
+	 * @return
+	 */
+	private String checkPlainText(String content1) 
+	{	
+		try
+		{
+			if (content1 == null || content1.length() == 0) return content1;
+			Pattern p1 = Pattern.compile("<.*?>", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.DOTALL);
+			
+			Matcher m = p1.matcher(content1);
+			StringBuffer sb = new StringBuffer();
+			while (m.find())
+			{				
+				m.appendReplacement(sb, "");
+			}
+			m.appendTail(sb);
+			return sb.toString();
+		}
+		catch (Exception e)
+		{
+			logger.debug("error in checking text");
+			e.printStackTrace();
+		}
+		return content1;
+	}
+	
+	
+	/**
 	 * Parses the data as text and a list of embedded media.
 	 * @param content1
 	 * The html content
 	 * @return
-	 * a vector with first element as text and second element as list of embedded media.
+	 * a vector with first element as list of embedded media.
 	 */
-	private Vector<String> checkTextModified(String content1) 
+	private Vector<String> checkEmbedModified(String content1) 
 	{
 		Vector<String> v = new Vector<String>(0);
 		try
@@ -1272,7 +1285,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			}
 			m.appendTail(sb);
 
-			v.add(sb.toString());
+	//		v.add(sb.toString());
 			v.add(embed.toString());
 
 			return v;

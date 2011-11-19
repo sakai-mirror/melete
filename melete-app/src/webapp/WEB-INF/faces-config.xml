@@ -535,6 +535,11 @@
 	    	            <property-name>meleteCHService</property-name>
 	    	            <value>#{Components["org.etudes.api.app.melete.MeleteCHService"]}</value>
             </managed-property>
+          <managed-property>
+            <description>Service Dependency: Section service</description>
+            <property-name>sectionService</property-name>
+            <value>#{Components["org.etudes.api.app.melete.SectionService"]}</value>
+        </managed-property>    
  </managed-bean>  
  
 <managed-bean>

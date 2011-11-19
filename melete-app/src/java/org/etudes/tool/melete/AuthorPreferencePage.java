@@ -198,7 +198,7 @@ public class AuthorPreferencePage
 	public String getMeleteDefaultEditor()
 	{
 		String defaultEditor = ServerConfigurationService.getString("melete.wysiwyg.editor", "");
-		logger.debug("getMeleteDefaultEditor:" + defaultEditor + "...");
+//		logger.debug("getMeleteDefaultEditor:" + defaultEditor + "...");
 
 		if (defaultEditor == null || defaultEditor.length() == 0)
 		{
