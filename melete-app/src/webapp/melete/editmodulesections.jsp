@@ -53,6 +53,12 @@
 
 <script type="text/javascript" language="javascript1.2">
 
+var fckEditorInstance = null;
+function FCKeditor_OnComplete( editorInstance )
+{
+	fckEditorInstance = editorInstance;	
+}
+
 function saveEditor()
 {
 	var result = true;
@@ -65,9 +71,33 @@ function saveEditor()
         if(document.getElementById("EditSectionForm:rId") != undefined || document.getElementById("EditSectionForm:rId") != null)
       	  document.htmleditor.addAdditionalDynamicParameter('resourceId',document.getElementById("EditSectionForm:rId").value);
        document.htmleditor.addAdditionalDynamicParameter('uId',document.getElementById("EditSectionForm:uId").value);		  
-	   document.htmleditor.addAdditionalDynamicParameter('editLastSaveTime',document.getElementById("EditSectionForm:editLastSaveTime").innerHTML);	
+	   document.htmleditor.addAdditionalDynamicParameter('editLastSaveTime',document.getElementById("EditSectionForm:editLastSaveTime").innerHTML);
+	   document.htmleditor.addAdditionalDynamicParameter('edited',document.htmleditor.isDocumentEdited());	
 		result = document.htmleditor.uploadMultipartContent(true);			    	
-	}	
+
+		// get sferyx's idea about changes made
+		var changed = document.htmleditor.isDocumentEdited();
+		document.getElementById("EditSectionForm:edited").value = changed;
+	}
+	
+	if (fckEditorInstance != null)
+	{
+		var changed = false;
+		// if in source mode when submit, we might miss changes
+		var cmd = fckEditorInstance.Commands.GetCommand("Source");
+		var cmdState = cmd.GetState();
+		if (cmdState == 1)
+		{
+			changed = true;
+		}
+		else
+		{
+			// ask FCK about changes made
+			changed = fckEditorInstance.IsDirty();
+		}
+		document.getElementById("EditSectionForm:edited").value = changed;
+	}
+
 	return result;	
 }
 
@@ -81,6 +111,7 @@ function saveEditor()
 			  <h:inputHidden id="sId" value="#{editSectionPage.section.sectionId}"/>
 			  <h:inputHidden id="rId" value="#{editSectionPage.meleteResource.resourceId}" rendered="#{editSectionPage.meleteResource !=null}"/>
 			  <h:inputHidden id="uId" value="#{editSectionPage.currUserId}"/>	
+			  <h:inputHidden id="edited" value="#{editSectionPage.isComposeDataEdited}"/>	
 		  
 		<!-- top nav bar -->
 		<f:subview id="top">

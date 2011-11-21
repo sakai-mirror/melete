@@ -139,7 +139,9 @@ public abstract class SectionPage implements Serializable
 
 	protected String oldType;
 	private String currUserId;
-
+	
+	private Boolean isComposeDataEdited = false;
+	
 	/**
 	 * default constructor
 	 */
@@ -675,7 +677,8 @@ public abstract class SectionPage implements Serializable
 					// getMeleteCHService().editResource(resourceId, contentEditor);
 					throw me;
 				}
-				modify =getMeleteCHService().editResource(resourceId, contentEditor);
+				getMeleteCHService().editResource(resourceId, contentEditor);
+				modify = isComposeDataEdited;
 			}
 			// sferyx saves thru save.jsp
 			else if (section.getContentType().equals("typeEditor") && authPage.isShouldRenderSferyx())
@@ -1517,5 +1520,23 @@ public abstract class SectionPage implements Serializable
 			currId = info.getCourse_id();
 		}
 		return currId;
+	}
+	
+	/*
+	 * 
+	 * 
+	 */
+	public Boolean getIsComposeDataEdited()
+	{
+		return isComposeDataEdited;
+	}
+
+	/**
+	 * 
+	 * @param isEdited
+	 */
+	public void setIsComposeDataEdited(Boolean isComposeDataEdited)
+	{
+		this.isComposeDataEdited = isComposeDataEdited;
 	}
 }
