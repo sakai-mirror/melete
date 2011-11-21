@@ -40,6 +40,8 @@ function showProcessMessage()
 </script>
 <t:saveState id="dmpmodules" value="#{deleteModulePage.modules}" />
 <t:saveState id="dmpsecbeans" value="#{deleteModulePage.sectionBeans}" />
+<t:saveState id="modsecsel" value="#{deleteModulePage.sameModuleSectionSelected}"/>
+	
  <h:form id="DeleteModuleForm">
   <h:inputHidden id="modsel" value="#{deleteModulePage.moduleSelected}"/>
    <h:inputHidden id="secsel" value="#{deleteModulePage.sectionSelected}"/>
