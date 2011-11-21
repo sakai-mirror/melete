@@ -40,10 +40,12 @@ function showProcessMessage()
 </script>
 <t:saveState id="dmpmodules" value="#{deleteModulePage.modules}" />
 <t:saveState id="dmpsecbeans" value="#{deleteModulePage.sectionBeans}" />
+<t:saveState id="modsecsel" value="#{deleteModulePage.sameModuleSectionSelected}"/>
+	
  <h:form id="DeleteModuleForm">
   <h:inputHidden id="modsel" value="#{deleteModulePage.moduleSelected}"/>
    <h:inputHidden id="secsel" value="#{deleteModulePage.sectionSelected}"/>
-	<f:subview id="top">
+   <f:subview id="top">
 		<jsp:include page="topnavbar.jsp"/> 
 	</f:subview>
 	  <div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/Warning.gif" alt="" width="16" height="16" align="absbottom" border="0"><h:outputText value="#{msgs.delete_module_module}" rendered="#{deleteModulePage.moduleSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion1}" rendered="#{deleteModulePage.sectionSelected}"/><h:outputText value="#{msgs.delete_module_section_deletion2}" /></div>

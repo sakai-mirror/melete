@@ -549,6 +549,11 @@ public class DeleteModulePage implements Serializable/* ,ToolBean */
 	{
 		return sameModuleSectionSelected;
 	}
+	
+	public void setSameModuleSectionSelected(boolean sameModuleSectionSelected)
+	{
+		this.sameModuleSectionSelected = sameModuleSectionSelected;
+	}
 
 	/**
 	 * Get the start point
