@@ -124,7 +124,7 @@ if (msg != null)
            <h:outputText id="mybks" value="#{msgs.my_bookmarks}" />				
          </h:commandLink>		  
    	</div>
- <table width="100%" border="1" class="maintableCollapseWithBorder">
+ <table width="100%" class="maintableCollapseWithBorder">
   <tr>
    <td>
  	<f:subview id="authtop">

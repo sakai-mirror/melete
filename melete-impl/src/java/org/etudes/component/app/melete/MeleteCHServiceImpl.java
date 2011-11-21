@@ -1122,7 +1122,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	/**
 	 * {@inheritDoc}
 	 */
-	public Boolean editResource(String resourceId, String contentEditor) throws Exception
+	public void editResource(String resourceId, String contentEditor) throws Exception
 	{
 		ContentResourceEdit edit = null;
 		Boolean modify = false;
@@ -1131,7 +1131,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			if (!isUserAuthor(getCourseId(resourceId)))
 			{
 				logger.info("User is not authorized to access meleteDocs collection");
-				return modify;
+				return;
 			}
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
@@ -1146,18 +1146,14 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				{
 				}
 				edit = getContentservice().editResource(resourceId);
-				byte[] originalData = edit.getContent();
 				byte[] data = contentEditor.getBytes();
-				
-				modify = !HtmlHelper.compareHtml(new String(originalData), new String(data));
-				logger.debug("modify value in edit resource :" + modify);	
-			
+
 				edit.setContent(data);
 				// edit.setContentLength((long)data.length);
 				getContentservice().commitResource(edit);
 				edit = null;
 			}
-			return modify;
+			return;
 		}
 		catch (Exception e)
 		{
@@ -1176,16 +1172,16 @@ public class MeleteCHServiceImpl implements MeleteCHService
 	 * {@inheritDoc}
 	 */
 
-	public Boolean editResource(String courseId, String resourceId, String contentEditor) throws Exception
+	public void editResource(String courseId, String resourceId, String contentEditor) throws Exception
 	{
 		ContentResourceEdit edit = null;
-		Boolean modify = false;
+
 		try
 		{
 			if (!isUserAuthor(courseId))
 			{
 				logger.info("User is not authorized to access meleteDocs collection");
-				return modify;
+				return;
 			}
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
@@ -1200,19 +1196,15 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				{
 				}
 				edit = getContentservice().editResource(resourceId);
-				byte[] originalData = edit.getContent();
 				byte[] data = contentEditor.getBytes();
-											
-				modify = !HtmlHelper.compareHtml(new String(originalData), new String(data));
-				logger.debug("modify value in edit resource :" + modify);	
-			
+
 				// save user provided data
 				edit.setContent(data);
 				// edit.setContentLength((long)data.length);
 				getContentservice().commitResource(edit);
 				edit = null;
 			}
-			return modify;
+			return;
 		}
 		catch (Exception e)
 		{

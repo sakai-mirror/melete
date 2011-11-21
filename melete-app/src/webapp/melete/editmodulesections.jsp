@@ -71,7 +71,8 @@ function saveEditor()
         if(document.getElementById("EditSectionForm:rId") != undefined || document.getElementById("EditSectionForm:rId") != null)
       	  document.htmleditor.addAdditionalDynamicParameter('resourceId',document.getElementById("EditSectionForm:rId").value);
        document.htmleditor.addAdditionalDynamicParameter('uId',document.getElementById("EditSectionForm:uId").value);		  
-	   document.htmleditor.addAdditionalDynamicParameter('editLastSaveTime',document.getElementById("EditSectionForm:editLastSaveTime").innerHTML);	
+	   document.htmleditor.addAdditionalDynamicParameter('editLastSaveTime',document.getElementById("EditSectionForm:editLastSaveTime").innerHTML);
+	   document.htmleditor.addAdditionalDynamicParameter('edited',document.htmleditor.isDocumentEdited());	
 		result = document.htmleditor.uploadMultipartContent(true);			    	
 
 		// get sferyx's idea about changes made
@@ -110,7 +111,7 @@ function saveEditor()
 			  <h:inputHidden id="sId" value="#{editSectionPage.section.sectionId}"/>
 			  <h:inputHidden id="rId" value="#{editSectionPage.meleteResource.resourceId}" rendered="#{editSectionPage.meleteResource !=null}"/>
 			  <h:inputHidden id="uId" value="#{editSectionPage.currUserId}"/>	
-			  <h:inputHidden id="edited" value="false"/>	
+			  <h:inputHidden id="edited" value="#{editSectionPage.isComposeDataEdited}"/>	
 		  
 		<!-- top nav bar -->
 		<f:subview id="top">

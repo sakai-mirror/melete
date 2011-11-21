@@ -78,7 +78,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 	private String editId;
 	
 	private Date lastSavedAt;
-	
+
 	/**
 	 * Default constructor
 	 */
@@ -297,41 +297,42 @@ public class EditSectionPage extends SectionPage implements Serializable
 			
 			// validation 3: if upload a new file check fileName format -- move to uploadSectionContent()
 			// validation 3-1: if typeEditor and saved by sferyx then check for error messages
-			if (section.getContentType().equals("typeEditor"))
+			binding = Util.getBinding("#{authorPreferences}");
+			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
+			Date checkLastWork = sectionService.getLastModifiedDate(section.getSectionId());
+			
+			if (section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx())
 			{
 				binding = Util.getBinding("#{addResourcesPage}");
 				AddResourcesPage resourcesPage = (AddResourcesPage) binding.getValue(context);
-				HashMap<String,ArrayList<String>> save_err = resourcesPage.getHm_msgs();
+				HashMap<String, ArrayList<String>> save_err = resourcesPage.getHm_msgs();
 				logger.debug("hashmap in editsectionpage is " + save_err);
 				String errKey = section.getSectionId().toString() + "-" + getCurrUserId();
-				if(save_err != null && !save_err.isEmpty() && save_err.containsKey(errKey))
+				if (save_err != null && !save_err.isEmpty() && save_err.containsKey(errKey))
 				{
 					ArrayList<String> errs = save_err.get(errKey);
 					for (String err : errs)
 					{
-						// for sferyx saved data
-						if (err.equals("ModifiedData"))
-						{
-							modifyContentResource = true;
-							//save section other properties
-							secResource = sectionService.getSectionResourcebyId(section.getSectionId().toString());
-							meleteResource.setResourceId(secResource.getResource().getResourceId());
-							section.setSectionResource(secResource);
-							meleteResource = lPage.processLicenseInformation(meleteResource);
-							sectionService.editSection(section, meleteResource, getCurrUserId(), modifyContentResource);
-							continue;
-						}
-					String errMsg = resourcesPage.getMessageText(err);
-					context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, err, errMsg));					
-					}		
-					resourcesPage.removeFromHm_Msgs(errKey);					
+						String errMsg = resourcesPage.getMessageText(err);
+						context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, err, errMsg));
+					}
+					resourcesPage.removeFromHm_Msgs(errKey);
 				}
-				if (context.getMessages().hasNext()) return "failure";			
+				if (context.getMessages().hasNext()) return "failure";
+				if (checkLastWork != null && checkLastWork.compareTo(lastSavedAt) > 0 && getIsComposeDataEdited())
+				{
+					modifyContentResource = getIsComposeDataEdited();
+					// save other details
+					secResource = sectionService.getSectionResourcebyId(section.getSectionId().toString());
+					meleteResource.setResourceId(secResource.getResource().getResourceId());
+					section.setSectionResource(secResource);
+					meleteResource = lPage.processLicenseInformation(meleteResource);
+					sectionService.editSection(section, meleteResource, getCurrUserId(), modifyContentResource);
+				}
 			}
 			
 			// save section
 			if (logger.isDebugEnabled()) logger.debug("EditSectionpage:save section" + section.getContentType());
-			Date checkLastWork = sectionService.getLastModifiedDate(section.getSectionId());
 		
 			if (checkLastWork != null && checkLastWork.compareTo(lastSavedAt) <= 0)
 			{
@@ -346,10 +347,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 					// step 1: check if new resource content or existing resource is edited
 					try
 					{	
-						binding = Util.getBinding("#{authorPreferences}");
-						AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
+			
 						if ("typeEditor".equals(section.getContentType()) && preferencePage.isShouldRenderSferyx())
 						{
+							modifyContentResource = getIsComposeDataEdited();
 							// get secResource object
 							secResource = sectionService.getSectionResourcebyId(section.getSectionId().toString());
 
