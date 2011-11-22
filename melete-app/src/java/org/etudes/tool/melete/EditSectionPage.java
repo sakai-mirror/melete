@@ -319,16 +319,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 					resourcesPage.removeFromHm_Msgs(errKey);
 				}
 				if (context.getMessages().hasNext()) return "failure";
-				if (checkLastWork != null && checkLastWork.compareTo(lastSavedAt) > 0 && getIsComposeDataEdited())
-				{
-					modifyContentResource = getIsComposeDataEdited();
-					// save other details
-					secResource = sectionService.getSectionResourcebyId(section.getSectionId().toString());
-					meleteResource.setResourceId(secResource.getResource().getResourceId());
-					section.setSectionResource(secResource);
-					meleteResource = lPage.processLicenseInformation(meleteResource);
-					sectionService.editSection(section, meleteResource, getCurrUserId(), modifyContentResource);
-				}
+				logger.debug("CHK IN edit page:" + checkLastWork + ", compare:"+checkLastWork.compareTo(lastSavedAt));
+				modifyContentResource = getIsComposeDataEdited();
 			}
 			
 			// save section

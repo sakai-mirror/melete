@@ -1339,7 +1339,7 @@ public class SectionDB implements Serializable
 			findSection.setTextualContent(section.isTextualContent());
 			findSection.setTitle(section.getTitle());
 			findSection.setVideoContent(section.isVideoContent());
-			findSection.setModificationDate(new java.util.Date());
+	//		findSection.setModificationDate(section.getModificationDate());
 
 			SectionResource secResource = getSectionResourcebyId(section.getSectionId().toString());
 
