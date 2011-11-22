@@ -662,13 +662,21 @@ public class AddResourcesPage implements ServletContextListener
 	 * @param htmlContentData
 	 *        Composed content
 	 */
-	public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, String sectionId, String userId, String edited,
+	public void saveSectionHtmlItem(String UploadCollId, String courseId, String resourceId, String sectionId, String userId, String lastSaveTime, String edited,
 			Map<String, String> newEmbeddedResources, String htmlContentData) throws Exception
 	{
 		ArrayList<String> errs = new ArrayList<String>();
+		
+		//check for overwrite
+		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT);
+		Date checkLastWork = sectionService.getLastModifiedDate(Integer.parseInt(sectionId));
 
-		try
+		if (checkLastWork != null && checkLastWork.compareTo(df.parse(lastSaveTime)) > 0)
 		{
+			return;
+		}
+		try
+		{			
 			// in case of add and edit from notype to compose section
 			if (resourceId == null || resourceId.length() == 0)
 			{
@@ -680,9 +688,7 @@ public class AddResourcesPage implements ServletContextListener
 			if (resourceId.indexOf("/private/meleteDocs/") != -1 && resourceId.indexOf("/uploads/") != -1)
 				throw new MeleteException("section_html_null");
 			
-			if ("true".equals(edited))
-			{
-				String revisedData = getMeleteCHService().findLocalImagesEmbeddedInEditor(courseId, errs, newEmbeddedResources, htmlContentData);
+			String revisedData = getMeleteCHService().findLocalImagesEmbeddedInEditor(courseId, errs, newEmbeddedResources, htmlContentData);
 
 				// add messages to hashmap
 				if (errs.size() > 0)
@@ -694,7 +700,7 @@ public class AddResourcesPage implements ServletContextListener
 					}
 				}
 				getMeleteCHService().editResource(courseId, resourceId, revisedData);
-			}
+			
 		}
 		catch (Exception ex)
 		{
