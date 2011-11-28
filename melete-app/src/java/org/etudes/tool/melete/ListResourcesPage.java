@@ -701,6 +701,11 @@ public class ListResourcesPage
 	private MeleteResourceService setDefaultLicense(MeleteResourceService newResource)
 	{
 		MeleteUserPreference mup = (MeleteUserPreference) authorPrefService.getUserChoice(getCurrUserId());
+		if (mup == null)
+		{
+			newResource.setLicenseCode(0);
+			return newResource;
+		}
 		newResource.setLicenseCode(mup.getLicenseCode());
 		newResource.setAllowCmrcl(mup.isAllowCmrcl());
 		newResource.setAllowMod(mup.getAllowMod());
