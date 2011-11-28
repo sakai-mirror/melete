@@ -345,8 +345,7 @@ public class ViewModulesPage implements Serializable
 				// added by rashmi on 6/14/05
 				vsPage.setModule(null);
 				vsPage.setAutonumber(null);*/
-				retVal = "view_section.jsf?moduleId=" + sec.getModuleId() + "&sectionId=" + secBean.getSectionId() + "&moduleSeqNo="
-						+ sec.getModule().getCoursemodule().getSeqNo();
+				retVal = "view_section.jsf?moduleId=" + sec.getModuleId() + "&sectionId=" + secBean.getSectionId() + "&moduleSeqNo="+ sec.getModule().getCoursemodule().getSeqNo();
 			}
 			else
 			{

@@ -649,21 +649,21 @@ public class ViewSectionsPage implements Serializable
 		
 		if (moduleIdStr != null)
 		{
-			if (moduleIdStr.trim().length() > 0)
+			if ((moduleIdStr.trim().length() > 0)&&(!moduleIdStr.trim().equals("null")))
 			{
 				setModuleId(new Integer(moduleIdStr).intValue());
 			}
 		}
 		if (sectionIdStr != null)
 		{
-			if (sectionIdStr.trim().length() > 0)
+			if ((sectionIdStr.trim().length() > 0)&&(!sectionIdStr.trim().equals("null")))
 			{
 				setSectionId(new Integer(sectionIdStr).intValue());
 			}
 		}
 		if (modSeqNoStr != null)
 		{
-			if (modSeqNoStr.trim().length() > 0)
+			if ((modSeqNoStr.trim().length() > 0)&&(!modSeqNoStr.trim().equals("null")))
 			{
 				setModuleSeqNo(new Integer(modSeqNoStr).intValue());
 			}
@@ -672,7 +672,7 @@ public class ViewSectionsPage implements Serializable
 		
 		try
 		{
-			context.getExternalContext().redirect("view_section.jsf?moduleId="+moduleIdStr+"&sectionId="+sectionIdStr+"&moduleSeqNo="+modSeqNoStr);
+			context.getExternalContext().redirect("view_section.jsf?moduleId="+this.moduleId+"&sectionId="+this.sectionId+"&moduleSeqNo="+this.moduleSeqNo);
 		}
 		catch (Exception e)
 		{

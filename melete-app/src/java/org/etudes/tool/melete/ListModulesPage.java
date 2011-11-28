@@ -891,13 +891,13 @@ public class ListModulesPage implements Serializable
 		vsPage.resetValues();
 		vsPage.setSection(null);
 		vsPage.setModule(null);*/
-		if (vsBean != null)
-		{
+		//if (vsBean != null)
+		//{
 			// Section sec = vsBean.getSection();
 			/*vsPage.setModuleId(vmBean.getModuleId());
 			vsPage.setSectionId(vsBean.getSectionId());*/
 			// vsPage.setSection(sec);
-		}
+		//}
 
 		//vsPage.setModuleSeqNo(modSeqNo);
 		try

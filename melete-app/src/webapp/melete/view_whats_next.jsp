@@ -38,19 +38,19 @@ String prevSecId = (String)request.getParameter("prevSecId");
 String prevModId = (String)request.getParameter("prevModId");
 if (nextSeqNo != null)
 {
-	vnsPage.setNextSeqNo(Integer.parseInt(nextSeqNo));
+	if (!nextSeqNo.trim().equals("null")) vnsPage.setNextSeqNo(Integer.parseInt(nextSeqNo));
 }
 if (moduleSeqNo != null)
 {
-	vnsPage.setModuleSeqNo(Integer.parseInt(moduleSeqNo));
+	if (!moduleSeqNo.trim().equals("null")) vnsPage.setModuleSeqNo(Integer.parseInt(moduleSeqNo));
 }
 if (prevSecId != null)
 {
-	vnsPage.setPrevSecId(Integer.parseInt(prevSecId));
+	if (!prevSecId.trim().equals("null")) vnsPage.setPrevSecId(Integer.parseInt(prevSecId));
 }
 if (prevModId != null)
 {
-	vnsPage.setPrevModId(Integer.parseInt(prevModId));
+	if (!prevModId.trim().equals("null")) vnsPage.setPrevModId(Integer.parseInt(prevModId));
 }
 %>
 <f:view>

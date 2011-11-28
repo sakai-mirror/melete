@@ -37,13 +37,13 @@ String moduleId = (String)request.getParameter("moduleId");
 String secId = (String)request.getParameter("sectionId");
 if ((moduleId != null) &&(secId != null))
 {
-	vsPage.setModuleId(Integer.parseInt(moduleId));
-	vsPage.setSectionId(Integer.parseInt(secId));
+	if (!moduleId.trim().equals("null")) vsPage.setModuleId(Integer.parseInt(moduleId));
+	if (!secId.trim().equals("null")) vsPage.setSectionId(Integer.parseInt(secId));
 }
 String modSeqNo = (String)request.getParameter("moduleSeqNo");
 if (modSeqNo != null)
 {
-	vsPage.setModuleSeqNo(Integer.parseInt(modSeqNo));
+	if (!modSeqNo.trim().equals("null")) vsPage.setModuleSeqNo(Integer.parseInt(modSeqNo));
 }
 %>
 <f:view>
