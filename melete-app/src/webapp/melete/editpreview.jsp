@@ -84,7 +84,6 @@
 			<tr><td>
 				<div class="actionBar" align="left">
 						<h:commandButton id="return" actionListener="#{editSectionPage.returnBack}"  value="#{msgs.im_return}" accesskey="#{msgs.return_access}" title="#{msgs.im_return_text}" styleClass="BottomImgReturn">
-								<f:attribute name="sectionId" value="#{editSectionPage.editId}" />								
 						</h:commandButton>
 	   	        </div></td>
               </tr>
