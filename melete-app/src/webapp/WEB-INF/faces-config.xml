@@ -1431,6 +1431,7 @@
     <navigation-case>
 		   <from-outcome>list_auth_modules</from-outcome>
         <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
+        <redirect/>
       </navigation-case>        
        <navigation-case>
 		   <from-outcome>list_modules_inst</from-outcome>
@@ -1451,10 +1452,12 @@
    <navigation-case>
 		   <from-outcome>manage_content</from-outcome>
         <to-view-id>/melete/manage_content.jsp</to-view-id>
+        <redirect/>
       </navigation-case>    
        <navigation-case>
       <from-outcome>author_preference</from-outcome>
       <to-view-id>/melete/author_preference.jsp</to-view-id>
+      <redirect/>
      </navigation-case>                                  
      <navigation-case>
       <from-outcome>view_whats_next</from-outcome>
