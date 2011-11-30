@@ -690,6 +690,10 @@
       <to-view-id>/melete/editmodulesections.jsp</to-view-id>
      </navigation-case>
      <navigation-case>
+      <from-outcome>false</from-outcome>
+      <to-view-id>/melete/editmodulesections.jsp</to-view-id>
+     </navigation-case>
+     <navigation-case>
       <from-outcome>list_auth_modules</from-outcome>
       <to-view-id>/melete/list_auth_modules.jsp</to-view-id>
       <redirect/>
