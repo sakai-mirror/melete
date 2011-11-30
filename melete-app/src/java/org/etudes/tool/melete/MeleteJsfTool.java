@@ -211,7 +211,15 @@ public class MeleteJsfTool extends HttpServlet
 			// store this
 			if (m_defaultToLastView)
 			{
-				session.setAttribute(LAST_VIEW_VISITED, target);
+				String params = req.getQueryString();
+				if (params != null)
+				{
+					session.setAttribute(LAST_VIEW_VISITED, target + "?" + params);
+				}
+				else
+				{
+					session.setAttribute(LAST_VIEW_VISITED, target);
+				}
 			}
 		}
 
@@ -331,7 +339,7 @@ public class MeleteJsfTool extends HttpServlet
 		int pos = path.lastIndexOf(".");
 		if (pos == -1) return false;
 
-		// we need that last dot to be the end of the path, not burried in the path somewhere (i.e. no more slashes after the last dot)
+		// we need that last dot to be the end of the path, not buried in the path somewhere (i.e. no more slashes after the last dot)
 		String ext = path.substring(pos);
 		if (ext.indexOf("/") != -1) return false;
 
@@ -353,5 +361,4 @@ public class MeleteJsfTool extends HttpServlet
 	{
 		return target;
 	}
-
 }
