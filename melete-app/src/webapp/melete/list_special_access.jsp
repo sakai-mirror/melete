@@ -95,7 +95,7 @@ function resetAllAcc()
 	
 	    <h:panelGrid columns="2" columnClasses="authBarCol" border="0" width="16%" >
 		<h:column>
-			<h:commandLink id="addAction" action="#{specialAccessPage.addAccessAction}">
+			<h:commandLink id="addAction" actionListener="#{specialAccessPage.addAccessAction}">
 			    <h:graphicImage id="addAccessImg" value="/images/document_add.gif" styleClass="AuthImgClass"/>
 		  		<h:outputText  value="#{msgs.list_special_access_add}"/>
 			</h:commandLink>
