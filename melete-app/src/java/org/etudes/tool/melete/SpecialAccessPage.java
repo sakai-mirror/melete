@@ -119,10 +119,25 @@ public class SpecialAccessPage implements Serializable
 	/**
 	 * @return add_special_access
 	 */
-	public String addAccessAction()
+	/*public String addAccessAction()
 	{
 		this.specialAccess = null;
 		return "add_special_access";
+	}*/
+	
+	public void addAccessAction(ActionEvent evt)
+	{
+		String selectedModId = null;
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		this.specialAccess = null;
+		try
+		{
+			ctx.getExternalContext().redirect("add_special_access.jsf?editmodid=" + this.moduleId);
+		}
+		catch (Exception e)
+		{
+			return;
+		}
 	}
 
 	/**
@@ -431,6 +446,10 @@ public class SpecialAccessPage implements Serializable
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		Map sessionMap = context.getExternalContext().getSessionMap();
+		if (context.getExternalContext().getRequestParameterMap().get("editmodid") != null)
+		{
+			this.moduleId = Integer.parseInt((String)context.getExternalContext().getRequestParameterMap().get("editmodid"));
+		}
 		if (specialAccess == null)
 		{
 			specialAccess = new SpecialAccess();
