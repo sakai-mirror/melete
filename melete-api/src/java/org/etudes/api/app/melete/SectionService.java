@@ -32,8 +32,8 @@ import org.etudes.api.app.melete.SectionTrackViewObjService;
 public interface SectionService
 {
 	public static final int MAX_URL_LENGTH = 150;
-	public static final int MAX_TITLE_INSTR_LENGTH = 250;
-	
+	public static final int MAX_TITLE_LENGTH = 250;
+	public static final int MAX_INSTR_LENGTH = 400;
 	/**
 	 * Change license for all sections with the preferred one.
 	 * 

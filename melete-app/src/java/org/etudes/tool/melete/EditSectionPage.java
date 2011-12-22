@@ -258,13 +258,14 @@ public class EditSectionPage extends SectionPage implements Serializable
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "title_reqd", errMsg));
 			return "failure";
 		}
-		if( section.getTitle() != null && section.getTitle().trim().length() > SectionService.MAX_TITLE_INSTR_LENGTH)
+		if( section.getTitle() != null && section.getTitle().trim().length() > SectionService.MAX_TITLE_LENGTH)
 		{			
 			String errMsg = bundle.getString("invalid_title_len");
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_title_len", errMsg));
 			return "failure";
 		}	
-		if( section.getInstr() != null && section.getInstr().trim().length() > SectionService.MAX_TITLE_INSTR_LENGTH)
+		logger.debug("SectionService.MAX_TITLE_INSTR_LENGTH:" + SectionService.MAX_INSTR_LENGTH);
+		if( section.getInstr() != null && section.getInstr().trim().length() > SectionService.MAX_INSTR_LENGTH)
 		{
 			String errMsg = bundle.getString("invalid_instructions_len");
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_instructions_len", errMsg));
