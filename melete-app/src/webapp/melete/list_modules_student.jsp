@@ -35,7 +35,7 @@
 
 function showHideTable(index, show)
 {
-  var string2 = "listmodulesStudentform:table:" + index +":preReqMsg0";
+  var string2 = "listmodulesform:table:" + index +":preReqMsg0";
   var string2ele = document.getElementById(string2);
   // show the box
   if(string2ele != undefined && string2ele != null && string2ele.style.display == "none" && show.match("true")) 
@@ -56,7 +56,7 @@ function showHideTable(index, show)
 }
 
 </script>
-<h:form id="listmodulesStudentform">
+<h:form id="listmodulesform">
 <h:inputHidden id="lmexp" value="#{listModulesPage.expandAllFlag}" />
 <h:inputHidden id="lmshmodid" value="#{listModulesPage.showModuleId}"/>
 	<f:subview id="top">

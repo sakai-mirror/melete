@@ -107,13 +107,13 @@ public class ListModulesPage implements Serializable
 		// context.getViewRoot().setTransient(true);
 		Map sessionMap = context.getExternalContext().getSessionMap();
 		Map params = context.getExternalContext().getRequestParameterMap();
-		if ((((String) params.get("listmodulesform:lmexp")) == null)||(((String) params.get("listmodulesStudentform:lmexp")) == null)) {
+		
+		if (((String) params.get("listmodulesform:lmexp")) == null) {
 		courseId = null;
 		userId = null;
 		nomodsFlag = null;
 		closedModulesFlag = false;
 		setShowModuleId(-1);
-		expandAllFlag = false;
 		ValueBinding binding = Util.getBinding("#{authorPreferences}");
 		AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
 		String expFlag = preferencePage.getUserView();
@@ -252,7 +252,7 @@ public class ListModulesPage implements Serializable
 				table = (UIData) root.findComponent("listmodulesform").findComponent("StudentTable");
 			}
 			else
-				table = (UIData) root.findComponent("listmodulesStudentform").findComponent("table");
+				table = (UIData) root.findComponent("listmodulesform").findComponent("table");
 			ViewModBean vmbean = (ViewModBean) table.getRowData();
 			printModuleId = vmbean.getModuleId();
 			return printModuleId;
@@ -544,7 +544,6 @@ public class ListModulesPage implements Serializable
 		autonumberMaterial = null;
 		FacesContext context = FacesContext.getCurrentInstance();
 		// context.getViewRoot().setTransient(true);
-		expandAllFlag = false;
 		ValueBinding binding = Util.getBinding("#{authorPreferences}");
 		AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
 		String expFlag = preferencePage.getUserView();
@@ -744,7 +743,6 @@ public class ListModulesPage implements Serializable
 		}
 		else
 		{
-			ViewModBean vmbean = null;
 			FacesContext ctx = FacesContext.getCurrentInstance();
 			UIViewRoot root = ctx.getViewRoot();
 			UIData table = null;
@@ -754,9 +752,9 @@ public class ListModulesPage implements Serializable
 			}
 			else
 			{
-				table = (UIData) root.findComponent("listmodulesStudentform").findComponent("table");
+				table = (UIData) root.findComponent("listmodulesform").findComponent("table");
 			}
-			vmbean = (ViewModBean) table.getRowData();
+			ViewModBean vmbean = (ViewModBean) table.getRowData();
 			if (getShowModuleId() != vmbean.getModuleId())
 			{
 				setShowModuleId(vmbean.getModuleId());
