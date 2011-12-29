@@ -940,6 +940,65 @@ public class ModuleDB implements Serializable
 			throw new MeleteException("indent_right_fail");
 		}
 	}
+	
+	/**
+	 * 
+	 * @param module
+	 * @param sectionId
+	 * @throws MeleteException
+	 */
+	public void createSubSection(ModuleObjService module, String sectionId) throws MeleteException
+	{
+		try
+		{
+			Session session = hibernateUtil.currentSession();
+			Transaction tx = null;
+			try
+			{
+				//get module object again
+				String queryString = "select module from Module as module where module.moduleId = :moduleId";
+				Module mod = (Module) session.createQuery(queryString).setParameter("moduleId", module.getModuleId()).uniqueResult();
+
+				String sectionsSeqXML = mod.getSeqXml();
+				if (sectionsSeqXML == null) throw new MeleteException("indent_right_fail");
+				SubSectionUtilImpl SectionUtil = new SubSectionUtilImpl();
+
+				sectionsSeqXML = SectionUtil.MakeSubSection(sectionsSeqXML, sectionId);
+				mod.setSeqXml(sectionsSeqXML);
+
+				// save object
+				tx = session.beginTransaction();
+				session.saveOrUpdate(mod);
+				tx.commit();
+
+				if (logger.isDebugEnabled()) logger.debug("commiting transaction and indenting a section");
+			}
+			catch (StaleObjectStateException sose)
+			{
+				logger.error("stale object exception" + sose.toString());
+			}
+			catch (HibernateException he)
+			{
+				if (tx != null) tx.rollback();
+				logger.error(he.toString());
+				throw he;
+			}
+			catch (MeleteException me)
+			{
+				if (tx != null) tx.rollback();
+				throw me;
+			}
+			finally
+			{
+				hibernateUtil.closeSession();
+			}
+		}
+		catch (Exception ex)
+		{
+
+			throw new MeleteException("indent_right_fail");
+		}
+	}
 
 	/**
 	 * Create truncated title when string is over 30 chars

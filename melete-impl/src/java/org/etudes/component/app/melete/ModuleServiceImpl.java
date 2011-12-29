@@ -159,6 +159,14 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
+	public void createSubSection(ModuleObjService module, String sectionId) throws MeleteException
+	{
+		moduledb.createSubSection((Module) module, sectionId);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void deleteModules(List<? extends ModuleObjService> delModules, String courseId, String userId) throws Exception
 	{
 		List<? extends ModuleObjService> allModules = new ArrayList<Module>(0);
