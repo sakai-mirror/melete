@@ -1548,7 +1548,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			// add it
 			a_content = a_content.replace("<a ", "<a target=\"_blank\" ");
 
-			m.appendReplacement(sb, a_content);
+			m.appendReplacement(sb,Matcher.quoteReplacement(a_content));
 		}
 		m.appendTail(sb);
 		return sb.toString();
