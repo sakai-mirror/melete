@@ -309,8 +309,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 
 			long starttime = System.currentTimeMillis();
 			logger.debug("time to get all collectionMap" + starttime);
-			ContentCollection c = getContentservice().getCollection(collId);
-			List<ContentResource> mem = c.getMemberResources();
+			List<ContentResource> mem = getContentservice().getAllResources(collId);
 			if (mem == null) return null;
 
 			ListIterator<?> memIt = mem.listIterator();
@@ -358,8 +357,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 
 			long starttime = System.currentTimeMillis();
 			logger.debug("time to get all collectionMap" + starttime);
-			ContentCollection c = getContentservice().getCollection(collId);
-			List<ContentResource> mem = c.getMemberResources();
+			List<ContentResource> mem = getContentservice().getAllResources(collId);
 			if (mem == null) return null;
 
 			ListIterator<?> memIt = mem.listIterator();
@@ -408,8 +406,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			}
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
-			ContentCollection c = getContentservice().getCollection(collId);
-			List<ContentResource> mem = c.getMemberResources();
+			List<ContentResource> mem = getContentservice().getAllResources(collId);
 			if (mem == null) return null;
 
 			ListIterator<?> memIt = mem.listIterator();
@@ -453,8 +450,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			}
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
-			ContentCollection c = getContentservice().getCollection(collId);
-			List<ContentResource> mem = c.getMemberResources();
+			List<ContentResource> mem = getContentservice().getAllResources(collId);
 			if (mem == null) return null;
 
 			ListIterator<?> memIt = mem.listIterator();
@@ -500,16 +496,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 			}
 			// setup a security advisor
 			meleteSecurityService.pushAdvisor();
-			ContentCollection c = getContentservice().getCollection(collId);
-			List<ContentResource> mem = c.getMemberResources();
-			if (mem == null) return null;
-
-			ListIterator<?> memIt = mem.listIterator();
-			while (memIt != null && memIt.hasNext())
-			{
-				ContentEntity ce = (ContentEntity) memIt.next();
-				if (!ce.isResource()) memIt.remove();
-			}
+			List<ContentResource> mem = getContentservice().getAllResources(collId);
 
 			return mem;
 		}
