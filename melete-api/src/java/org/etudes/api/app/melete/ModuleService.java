@@ -366,6 +366,23 @@ public interface ModuleService
 	public void insertProperties(ModuleObjService module, ModuleShdatesService moduleshdates, String userId, String courseId) throws Exception;
 
 	/**
+	 * Adds Module to the Database.
+	 * 
+	 * @param module
+	 *        ModuleObjService object
+	 * @param moduleshdates
+	 *        ModuleShdatesService Object
+	 * @param seq
+	 *        assigned sequence number
+	 * @param userId
+	 *        The user Id
+	 * @param courseId
+	 *        The Site Id
+	 * @throws Exception
+	 *         "add_module_fail" MeleteException
+	 */
+	public void insertProperties(ModuleObjService module, ModuleShdatesService moduleshdates, int seq, String userId, String courseId) throws Exception;
+	/**
 	 * Checks if the module is completely read by the user
 	 * 
 	 * @param user_id

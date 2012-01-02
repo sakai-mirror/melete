@@ -218,6 +218,20 @@ public class ModuleDB implements Serializable
 	 */
 	public void addModule(Module module, ModuleShdates moduleshowdates, String userId, String courseId) throws Exception
 	{
+		addModule(module, moduleshowdates, 0, userId, courseId);
+	}
+
+	/**
+	 * 
+	 * @param module
+	 * @param moduleshowdates
+	 * @param seq
+	 * @param userId
+	 * @param courseId
+	 * @throws Exception
+	 */
+	public void addModule(Module module, ModuleShdates moduleshowdates, int seq, String userId, String courseId) throws Exception
+	{
 		/*
 		 * Since Oracle silently transforms "" to nulls, we need to check to see if these non null properties are in fact null.
 		 */
@@ -240,7 +254,8 @@ public class ModuleDB implements Serializable
 				module.setModifiedByFname(user.getFirstName());
 				module.setModifiedByLname(user.getLastName());
 				// assign sequence number
-				int seq = assignSequenceNumber(session, courseId);
+				if (seq == 0)
+					seq = assignSequenceNumber(session, courseId);
 
 				if (!moduleshowdates.isStartDateValid()) moduleshowdates.setStartDate(null);
 				if (!moduleshowdates.isEndDateValid()) moduleshowdates.setEndDate(null);

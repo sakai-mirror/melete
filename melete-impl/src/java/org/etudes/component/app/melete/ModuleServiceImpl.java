@@ -506,6 +506,30 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
+	public void insertProperties(ModuleObjService module, ModuleShdatesService moduleshdates, int seq, String userId, String courseId) throws Exception
+	{
+
+		// module object and moduleshdates are provided by ui pages
+
+		Module module1 = (Module) module;
+		ModuleShdates moduleshdates1 = (ModuleShdates) moduleshdates;
+
+		// insert new module
+		moduledb.addModule(module1, moduleshdates1, seq, userId, courseId);
+
+		if (moduleshdates1.getAddtoSchedule() != null)
+		{
+			if (moduleshdates1.getAddtoSchedule().booleanValue() == true)
+			{
+				moduledb.updateCalendar(module1, moduleshdates1, courseId);
+			}
+		}
+
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isModuleCompleted(String user_id, int module_id)
 	{
 		return moduledb.isModuleCompleted(user_id, module_id);
