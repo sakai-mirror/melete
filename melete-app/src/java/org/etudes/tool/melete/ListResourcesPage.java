@@ -700,21 +700,29 @@ public class ListResourcesPage
 	 */
 	private MeleteResourceService setDefaultLicense(MeleteResourceService newResource)
 	{
-		MeleteUserPreference mup = (MeleteUserPreference) authorPrefService.getUserChoice(getCurrUserId());
-		if (mup == null)
+		try
+		{
+			MeleteUserPreference mup = (MeleteUserPreference) authorPrefService.getUserChoice(getCurrUserId());
+			if (mup == null || mup.getLicenseCode() == null)
+			{
+				newResource.setLicenseCode(0);
+				return newResource;
+			}
+			newResource.setLicenseCode(mup.getLicenseCode());
+			newResource.setAllowCmrcl(mup.isAllowCmrcl());
+			newResource.setAllowMod(mup.getAllowMod());
+			newResource.setCcLicenseUrl(mup.getCcLicenseUrl());
+			newResource.setCopyrightOwner(mup.getCopyrightOwner());
+			newResource.setCopyrightYear(mup.getCopyrightYear());
+			newResource.setReqAttr(mup.isReqAttr());
+
+			return newResource;
+		}
+		catch (Exception e)
 		{
 			newResource.setLicenseCode(0);
 			return newResource;
 		}
-		newResource.setLicenseCode(mup.getLicenseCode());
-		newResource.setAllowCmrcl(mup.isAllowCmrcl());
-		newResource.setAllowMod(mup.getAllowMod());
-		newResource.setCcLicenseUrl(mup.getCcLicenseUrl());
-		newResource.setCopyrightOwner(mup.getCopyrightOwner());
-		newResource.setCopyrightYear(mup.getCopyrightYear());
-		newResource.setReqAttr(mup.isReqAttr());
-
-		return newResource;
 	}
 	
 	/**
