@@ -360,7 +360,7 @@ public class SortModuleSectionPage implements Serializable{
 				moduleService.sortModule(mod,courseId,"down");
 				newModulesList = getModuleService().getModules(courseId);
 				newList  = forSelectItemsList(newModulesList);
-				newSelectedModule = new Integer(selIndex+1).toString();
+				newSelectedModule = new Integer(selIndex+2).toString();
 			}
 		}
 		catch (MeleteException me)
