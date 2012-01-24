@@ -3590,6 +3590,7 @@ else
 	 */
 	private boolean shouldUpdateModuleObject(Module mod1, Module mod2)
 	{
+		if (mod1 == null || mod2 == null) return false;
 		if (mod1.getClass() != mod2.getClass()) return false;
 
 		if (mod1.getDescription() == null)
@@ -3619,6 +3620,7 @@ else
 	 */
 	private boolean shouldUpdateModuleShDateObject(ModuleShdates obj1, ModuleShdates obj2)
 	{
+		if (obj1 == null || obj2 == null) return false;
 		if (obj1.getClass() != obj2.getClass()) return false;
 
 		if (obj1.getAddtoSchedule() == null)

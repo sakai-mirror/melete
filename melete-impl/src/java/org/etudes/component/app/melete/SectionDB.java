@@ -173,6 +173,7 @@ public class SectionDB implements Serializable
 	 */
 	private boolean shouldUpdateSectionObject(Section obj1, Section obj2)
 	{
+		if (obj1 == null || obj2 == null) return false;
 		if (obj1.getClass() != obj2.getClass()) return false;
 
 		if (obj1.isAudioContent() != obj2.isAudioContent()) return false;
@@ -210,6 +211,7 @@ public class SectionDB implements Serializable
 	 */
 	private boolean shouldUpdateMeleteResourceObject(MeleteResource obj1, MeleteResource obj2)
 	{
+		if (obj1 == null || obj2 == null) return false;
 		if (obj1.getClass() != obj2.getClass()) return false;
 
 		if (obj1.isAllowCmrcl() != obj2.isAllowCmrcl()) return false;
