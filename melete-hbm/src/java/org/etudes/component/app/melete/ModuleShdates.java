@@ -99,51 +99,6 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 		this.module = null;
 	}
 
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		ModuleShdates other = (ModuleShdates) obj;
-		if (addtoSchedule == null)
-		{
-			if (other.addtoSchedule != null) return false;
-		}
-		else if (!addtoSchedule.equals(other.addtoSchedule)) return false;
-		if (endDate == null && other.endDate != null) return false;
-		else if (endDate != null && other.endDate == null) return false;
-		else if (endDate != null && other.endDate != null)
-		{
-			endDate = (Date) endDate;
-			other.endDate = (Date) other.endDate;
-			if (endDate.compareTo(other.endDate) != 0) return false;	
-		}
-			
-		if (moduleId == null)
-		{
-			if (other.moduleId != null) return false;
-		}
-		else if (!moduleId.equals(other.moduleId)) return false;
-		if (startDate == null && other.startDate != null) return false;
-		else if (startDate != null && other.startDate == null) return false;
-		else if (startDate != null && other.startDate != null)
-		{
-			startDate = (Date) startDate;
-			other.startDate = (Date) other.startDate;
-			try
-			{
-			if (startDate.compareTo(other.startDate) != 0) return false;
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-		
-		return true;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -206,18 +161,6 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 	public int getVersion()
 	{
 		return this.version;
-	}
-
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((addtoSchedule == null) ? 0 : addtoSchedule.hashCode());
-		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
-		result = prime * result + ((moduleId == null) ? 0 : moduleId.hashCode());
-		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
-		return result;
 	}
 
 	/**

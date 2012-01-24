@@ -1063,6 +1063,8 @@ public class ModuleDB implements Serializable
 			{
 				// Get resources for modules that need to be deleted
 				delResourcesList = getActiveResourcesFromList(delModules);
+
+				allModules.removeAll(delModules);
 				if ((delResourcesList != null) && (delResourcesList.size() > 0))
 				{
 					List<String> allActiveResources = getActiveResourcesFromList(allModules);
@@ -1085,7 +1087,6 @@ public class ModuleDB implements Serializable
 				for (Iterator<? extends ModuleObjService> dmIter = delModules.iterator(); dmIter.hasNext();)
 				{
 					Module dm = (Module) dmIter.next();
-					allModules.remove(dm);
 					allModuleIds.append(dm.getModuleId().toString() + ",");
 					Map<Integer, SectionObjService> delSections = dm.getSections();
 					if (delSections != null && !delSections.isEmpty())
@@ -3579,6 +3580,88 @@ else
 	}
 
 	/**
+	 * Compare module objects to check if they are different.
+	 * 
+	 * @param mod1
+	 *        Module 1
+	 * @param mod2
+	 *        Module 2
+	 * @return true if they are equal.
+	 */
+	private boolean shouldUpdateModuleObject(Module mod1, Module mod2)
+	{
+		if (mod1.getClass() != mod2.getClass()) return false;
+
+		if (mod1.getDescription() == null)
+		{
+			if (mod2.getDescription() != null) return false;
+		}
+		else if (!mod1.getDescription().equals(mod2.getDescription())) return false;
+		if (mod1.getKeywords() == null)
+		{
+			if (mod2.getKeywords() != null) return false;
+		}
+		else if (!mod1.getKeywords().equals(mod2.getKeywords())) return false;
+		if (mod1.getTitle() == null)
+		{
+			if (mod2.getTitle() != null) return false;
+		}
+		else if (!mod1.getTitle().equals(mod2.getTitle())) return false;
+		return true;
+	}
+
+	/**
+	 * Compare moduleshdate objects.
+	 * 
+	 * @param obj1
+	 * @param obj2
+	 * @return
+	 */
+	private boolean shouldUpdateModuleShDateObject(ModuleShdates obj1, ModuleShdates obj2)
+	{
+		if (obj1.getClass() != obj2.getClass()) return false;
+
+		if (obj1.getAddtoSchedule() == null)
+		{
+			if (obj2.getAddtoSchedule() != null) return false;
+		}
+		else if (!obj1.getAddtoSchedule().equals(obj2.getAddtoSchedule())) return false;
+
+		if (obj1.getEndDate() == null && obj2.getEndDate() != null)
+			return false;
+		else if (obj1.getEndDate() != null && obj2.getEndDate() == null)
+			return false;
+		else if (obj1.getEndDate() != null && obj2.getEndDate() != null)
+		{
+			if (obj1.getEndDate().compareTo(obj2.getEndDate()) != 0) return false;
+		}
+
+		if (obj1.getModuleId() == null)
+		{
+			if (obj2.getModuleId() != null) return false;
+		}
+		else if (!obj1.getModuleId().equals(obj2.getModuleId())) return false;
+
+		if (obj1 == null && obj2.getStartDate() != null)
+			return false;
+		else if (obj1.getStartDate() != null && obj2.getStartDate() == null)
+			return false;
+		else if (obj1.getStartDate() != null && obj2.getStartDate() != null)
+		{
+			try
+			{
+				if (obj1.getStartDate().compareTo(obj2.getStartDate()) != 0) return false;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		return true;
+	}
+	
+	/**
 	 * Update moduledatebean objects
 	 * 
 	 * @param moduleDateBeans
@@ -3624,13 +3707,11 @@ else
 						checkModuleDates.setEndDate(mDate.getEndDate());
 					}
 					// compare them. If both are same then not modified
-					logger.debug("module is same " + mod.equals(checkModule));
-					logger.debug("moduleDates is same "
-							+ mDate.equals(checkModuleDates));
-					if (mod.equals(checkModule)
-							&& mDate.equals(checkModuleDates)) {
-						logger.debug("MODULE AND SH DATES BOTH ARE EQUAL SO NO DB UPDATE for:"
-								+ mod.getTitle());
+					logger.debug("module is same " + shouldUpdateModuleObject(mod, checkModule));
+					logger.debug("moduleDates is same " + shouldUpdateModuleShDateObject(mDate, checkModuleDates));
+					if (shouldUpdateModuleObject(mod, checkModule) && shouldUpdateModuleShDateObject(mDate, checkModuleDates))
+					{
+						logger.debug("MODULE AND SH DATES BOTH ARE EQUAL SO NO DB UPDATE for:" + mod.getTitle());
 						continue;
 					}
 

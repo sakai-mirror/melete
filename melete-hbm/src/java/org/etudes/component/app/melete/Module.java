@@ -28,6 +28,8 @@ import java.util.Date;
 import java.util.Map;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.SectionObjService;
 
@@ -182,26 +184,10 @@ public class Module implements Serializable, ModuleObjService
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		Module other = (Module) obj;
-		if (description == null)
-		{
-			if (other.description != null) return false;
-		}
-		else if (!description.equals(other.description)) return false;
-		if (keywords == null)
-		{
-			if (other.keywords != null) return false;
-		}
-		else if (!keywords.equals(other.keywords)) return false;
-		if (title == null)
-		{
-			if (other.title != null) return false;
-		}
-		else if (!title.equals(other.title)) return false;
-		return true;
+	if (this == obj) return true;
+	if ((obj == null) || (obj.getClass() != this.getClass())) return false;
+	if ((this.moduleId == null) || (((Module) obj).moduleId == null)) return false;
+	return this.moduleId.equals(((Module) obj).moduleId);
 	}
 
 	/**
@@ -374,12 +360,7 @@ public class Module implements Serializable, ModuleObjService
 	@Override
 	public int hashCode()
 	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((keywords == null) ? 0 : keywords.hashCode());
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		return result;
+		return new HashCodeBuilder().append(getModuleId()).toHashCode();
 	}
 
 	/**
