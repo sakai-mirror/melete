@@ -163,6 +163,84 @@ public class SectionDB implements Serializable
 	}
 
 	/**
+	 * Compare 2 section objects.
+	 * 
+	 * @param obj1
+	 *        Object 1
+	 * @param obj2
+	 *        Object 2
+	 * @return true if objects are same
+	 */
+	private boolean shouldUpdateSectionObject(Section obj1, Section obj2)
+	{
+		if (obj1.getClass() != obj2.getClass()) return false;
+
+		if (obj1.isAudioContent() != obj2.isAudioContent()) return false;
+		if (obj1.getContentType() == null)
+		{
+			if (obj2.getContentType() != null) return false;
+		}
+		else if (!obj1.getContentType().equals(obj2.getContentType())) return false;
+		if (obj1.isDeleteFlag() != obj2.isDeleteFlag()) return false;
+		if (obj1.getInstr() == null || obj1.getInstr().length() == 0)
+		{
+			if (obj2.getInstr() != null && obj2.getInstr().trim().length() != 0) return false;
+		}
+		else if (!obj1.getInstr().equals(obj2.getInstr())) return false;
+		if (obj1.getModuleId() != obj2.getModuleId()) return false;
+		if (obj1.isOpenWindow() != obj2.isOpenWindow()) return false;
+		if (obj1.isTextualContent() != obj2.isTextualContent()) return false;
+		if (obj1.getTitle() == null)
+		{
+			if (obj2.getTitle() != null) return false;
+		}
+		else if (!obj1.getTitle().equals(obj2.getTitle())) return false;
+		if (obj1.isVideoContent() != obj2.isVideoContent()) return false;
+		return true;
+	}
+	
+	/**
+	 * Compare 2 Melete Resource objects
+	 * 
+	 * @param obj1
+	 *        Object 1
+	 * @param obj2
+	 *        Object 2
+	 * @return true if same
+	 */
+	private boolean shouldUpdateMeleteResourceObject(MeleteResource obj1, MeleteResource obj2)
+	{
+		if (obj1.getClass() != obj2.getClass()) return false;
+
+		if (obj1.isAllowCmrcl() != obj2.isAllowCmrcl()) return false;
+		if (obj1.getAllowMod() != obj2.getAllowMod()) return false;
+		if (obj1.getCcLicenseUrl() == null)
+		{
+			if (obj2.getCcLicenseUrl() != null) return false;
+		}
+		else if (!obj1.getCcLicenseUrl().equals(obj2.getCcLicenseUrl())) return false;
+		if (obj1.getCopyrightOwner() == null)
+		{
+			if (obj2.getCopyrightOwner() != null) return false;
+		}
+		else if (!obj1.getCopyrightOwner().equals(obj2.getCopyrightOwner())) return false;
+		if (obj1.getCopyrightYear() == null)
+		{
+			if (obj2.getCopyrightYear() != null) return false;
+		}
+		else if (!obj1.getCopyrightYear().equals(obj2.getCopyrightYear())) return false;
+		if (obj1.getLicenseCode() != obj2.getLicenseCode()) return false;
+		if (obj1.isReqAttr() != obj2.isReqAttr()) return false;
+		if (obj1.getResourceId() == null)
+		{
+			if (obj2.getResourceId() != null) return false;
+		}
+		else if (!obj1.getResourceId().equals(obj2.getResourceId())) return false;
+		return true;
+	}
+	
+	
+	/**
 	 * Update section.
 	 * 
 	 * @param section
@@ -186,7 +264,7 @@ public class SectionDB implements Serializable
 				Section findSection = (Section) query.uniqueResult();
 			
 				//compare before saving
-				if(findSection.equals(section))
+				if(shouldUpdateSectionObject(findSection, section))
 				{
 					logger.debug("2 sections are equal...no modification");			
 				}
@@ -295,7 +373,7 @@ public class SectionDB implements Serializable
 				}
 
 				// compare
-				if (!section.equals(findSection) || (melResource != null && !melResource.equals(findMelResource)) || modifyCR)
+				if (!shouldUpdateSectionObject(section, findSection) || (melResource != null && !shouldUpdateMeleteResourceObject(melResource, findMelResource)) || modifyCR)
 				{
 					// modification details
 					User user = UserDirectoryService.getUser(userId);
