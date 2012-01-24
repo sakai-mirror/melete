@@ -3333,7 +3333,7 @@ else
 
 			try
 			{
-				List sortModules = new ArrayList();
+				List<CourseModule> sortModules = new ArrayList<CourseModule>();
 				List newModulesList = null;
 				Query q = session
 						.createQuery("select cm from CourseModule cm where cm.courseId =:course_id and cm.archvFlag=0 and cm.deleteFlag = 0 order by cm.seqNo");
@@ -3342,13 +3342,22 @@ else
 				// nothing to sort
 				if (sortModules.size() <= 1) return;
 
-				int curr_seq = module.getCoursemodule().getSeqNo();
-				logger.debug("curr_seq" + curr_seq);
-				CourseModule curr_cm = (CourseModule) sortModules.get(curr_seq - 1);
-				logger.debug("curr_cm" + curr_cm.getSeqNo() + curr_seq + curr_cm.getModuleId() + module.getModuleId());
-				if (!curr_cm.getModuleId().equals(module.getModuleId())) throw new MeleteException("sort_fail");
+				// find the to be sorted coursemodule object
+				CourseModule curr_cm = null;
+				int curr_seq = 0;
+				for (CourseModule c : sortModules)
+				{
+					if (c.getModuleId() == module.getModuleId())
+					{
+						curr_cm = c;
+						curr_seq = c.getSeqNo();
+						break;
+					}
+				}
+				// if to be sorted module not found in db then return
+				if(curr_cm == null) return;
+				
 				CourseModule change_cm = null;
-
 				if (Direction.equals("allUp"))
 				{
 					logger.debug("sort up module " + module.getModuleId());
@@ -3424,12 +3433,7 @@ else
 				if (tx != null) tx.rollback();
 				logger.error(he.toString());
 				throw he;
-			}
-			catch (MeleteException me)
-			{
-				if (tx != null) tx.rollback();
-				throw me;
-			}
+			}			
 			finally
 			{
 				hibernateUtil.closeSession();

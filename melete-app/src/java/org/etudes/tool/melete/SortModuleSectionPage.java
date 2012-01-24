@@ -168,10 +168,12 @@ public class SortModuleSectionPage implements Serializable{
 		}
 
 		Iterator itr = list.iterator();
+		int count = 1;
+	
 		while (itr.hasNext()) {
 			ModuleObjService  mod = (ModuleObjService) itr.next();
 			int seq = mod.getCoursemodule().getSeqNo();
-			String value = new Integer(seq).toString();
+			String value = new Integer(count++).toString();
 			String label = seq + ". " + mod.getTitle();
 			selectList.add(new SelectItem(value, label));
 		}
