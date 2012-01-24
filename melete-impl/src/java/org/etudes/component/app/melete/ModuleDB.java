@@ -1063,8 +1063,6 @@ public class ModuleDB implements Serializable
 			{
 				// Get resources for modules that need to be deleted
 				delResourcesList = getActiveResourcesFromList(delModules);
-
-				allModules.removeAll(delModules);
 				if ((delResourcesList != null) && (delResourcesList.size() > 0))
 				{
 					List<String> allActiveResources = getActiveResourcesFromList(allModules);
@@ -1087,6 +1085,7 @@ public class ModuleDB implements Serializable
 				for (Iterator<? extends ModuleObjService> dmIter = delModules.iterator(); dmIter.hasNext();)
 				{
 					Module dm = (Module) dmIter.next();
+					allModules.remove(dm);
 					allModuleIds.append(dm.getModuleId().toString() + ",");
 					Map<Integer, SectionObjService> delSections = dm.getSections();
 					if (delSections != null && !delSections.isEmpty())
