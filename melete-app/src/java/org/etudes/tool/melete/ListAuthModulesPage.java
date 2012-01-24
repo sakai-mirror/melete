@@ -3,7 +3,7 @@
  * $URL$
  *
  ***********************************************************************************
- * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -793,6 +793,7 @@ public class ListAuthModulesPage implements Serializable
 			// Mallika - 3/24/05 added this to prevent selected value from being stored
 			moduleSelected = false;
 			sectionSelected = false;
+			resetValues();
 			return "list_auth_modules";
 		}
 
