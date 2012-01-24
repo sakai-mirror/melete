@@ -165,6 +165,30 @@ public class Section implements SectionObjService
 		this.modificationDate = modificationDate;
 	}
 
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((sectionId == null) ? 0 : sectionId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Section other = (Section) obj;
+		if (sectionId == null)
+		{
+			if (other.sectionId != null) return false;
+		}
+		else if (!sectionId.equals(other.sectionId)) return false;
+		return true;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
