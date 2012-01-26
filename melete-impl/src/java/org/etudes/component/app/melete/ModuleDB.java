@@ -3644,20 +3644,13 @@ else
 		}
 		else if (!obj1.getModuleId().equals(obj2.getModuleId())) return false;
 
-		if (obj1 == null && obj2.getStartDate() != null)
+		if (obj1.getStartDate() == null && obj2.getStartDate() != null)
 			return false;
 		else if (obj1.getStartDate() != null && obj2.getStartDate() == null)
 			return false;
 		else if (obj1.getStartDate() != null && obj2.getStartDate() != null)
 		{
-			try
-			{
-				if (obj1.getStartDate().compareTo(obj2.getStartDate()) != 0) return false;
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
+			if (obj1.getStartDate().compareTo(obj2.getStartDate()) != 0) return false;
 		}
 
 		return true;
