@@ -425,6 +425,42 @@ public class SubSectionUtilImpl
 	}
 
 	/**
+	 * 
+	 * @param sectionsSeqXML
+	 * @param parentId
+	 * @param section_id
+	 * @return
+	 * @throws MeleteException
+	 */
+	public String MakeSubSection(String sectionsSeqXML, String parentId, String section_id) throws MeleteException
+	{
+		try
+		{
+			org.w3c.dom.Document subSectionW3CDOM = Xml.readDocumentFromString(sectionsSeqXML);
+			org.w3c.dom.Element root = subSectionW3CDOM.getDocumentElement();
+			org.w3c.dom.Element parentElement = subSectionW3CDOM.getElementById(parentId);
+			org.w3c.dom.Element indentthisElement = subSectionW3CDOM.getElementById(section_id);
+
+			// root.selectSingleNode("//*[@id='" + section_id +"']");
+			if (parentElement != null && indentthisElement != null)
+			{
+				logger.debug("actually  creating subsection of parentId" + parentId);
+				parentElement.appendChild(indentthisElement);
+			}
+			return writeDocumentToString(subSectionW3CDOM);
+		}
+		catch (Exception ex)
+		{
+			if (logger.isDebugEnabled())
+			{
+				logger.error("some other error in creating sub section" + ex.toString());
+				ex.printStackTrace();
+			}
+			throw new MeleteException("indent_right_fail");
+		}
+	}
+	
+	/**
 	 * Move section to the bottom of the sequence xml
 	 * 
 	 * @param sectionsSeqXML
