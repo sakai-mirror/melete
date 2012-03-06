@@ -607,12 +607,12 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	/**
 	 * {@inheritDoc}
 	 */
-	public String printModule(ModuleObjService module) throws MeleteException
+	public String printModule(ModuleObjService module, String userId) throws MeleteException
 	{
 		try
 		{
 
-			return moduledb.prepareModuleSectionsForPrint((Module) module);
+			return moduledb.prepareModuleSectionsForPrint((Module) module, userId);
 		}
 		catch (Exception ex)
 		{

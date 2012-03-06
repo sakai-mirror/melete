@@ -433,13 +433,16 @@ public interface ModuleService
 
 	/**
 	 * Gets the module and its sections contents in a printable fashion.
+	 * Also updates section tracking information
 	 * 
 	 * @param module
 	 *        ModuleObjService Object
+	 * @param userId
+	 *        The user id      
 	 * @return
 	 * @throws "print_module_fail" MeleteException
 	 */
-	public String printModule(ModuleObjService module) throws MeleteException;
+	public String printModule(ModuleObjService module, String userId) throws MeleteException;
 
 	/**
 	 * Restores a list of archived modules. Restored modules have open dates and are sequenced at the bottom of the list.
