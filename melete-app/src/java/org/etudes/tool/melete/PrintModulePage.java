@@ -25,6 +25,7 @@ package org.etudes.tool.melete;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,6 +61,10 @@ public class PrintModulePage
 	 */
 	public void processModule(Integer moduleId)
 	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		
 		// logger.debug("print process called");
 		printText = null;
 		FacesContext ctx = FacesContext.getCurrentInstance();
@@ -67,7 +72,7 @@ public class PrintModulePage
 		try
 		{
 			ModuleObjService printMod = moduleService.getModule(moduleId.intValue());
-			printText = moduleService.printModule(printMod);
+			printText = moduleService.printModule(printMod, mPage.getCurrentUser().getId());
 		}
 		catch (Exception e)
 		{

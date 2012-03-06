@@ -3033,13 +3033,16 @@ else
 
 	/**
 	 * Create printable view of sections of a module
+	 * Also updates section tracking information as a module when printed is considered read
 	 * 
 	 * @param module
 	 *        module object
+	 * @param userId
+	 *        The user id
 	 * @return Print text
 	 * @throws MeleteException
 	 */
-	public String prepareModuleSectionsForPrint(Module module) throws MeleteException
+	public String prepareModuleSectionsForPrint(Module module, String userId) throws MeleteException
 	{
 		try
 		{
@@ -3073,9 +3076,10 @@ else
 					for (ListIterator<SecLevelObj> k = xmlSecList.listIterator(); k.hasNext();)
 					{
 						SecLevelObj slObj = k.next();
+						Section sec = null;
 						if (slObj != null)
 						{
-							Section sec = (Section) printSections.get(new Integer(slObj.getSectionId()));
+							sec = (Section) printSections.get(new Integer(slObj.getSectionId()));
 
 							if (autonumber)
 							{
@@ -3131,6 +3135,7 @@ else
 							}
 
 						}
+						sectionDB.insertSectionTrack(sec.getSectionId(), userId);
 					}
 				}
 				// what's next information in the end
