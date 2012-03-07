@@ -23,6 +23,9 @@
 
 package org.etudes.tool.melete;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
@@ -31,6 +34,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.ModuleService;
+import org.etudes.api.app.melete.SectionService;
 import org.sakaiproject.util.ResourceLoader;
 
 public class PrintModulePage
@@ -39,7 +43,9 @@ public class PrintModulePage
 	/** identifier field */
 
 	private ModuleService moduleService;
+	private SectionService sectionService;
 
+	
 	private String printText;
 
 	/** Dependency: The logging service. */
@@ -61,18 +67,28 @@ public class PrintModulePage
 	 */
 	public void processModule(Integer moduleId)
 	{
-		FacesContext context = FacesContext.getCurrentInstance();
-		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
-		
 		// logger.debug("print process called");
 		printText = null;
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		ModuleObjService printMod = moduleService.getModule(moduleId.intValue());
+		Map sectionMap = printMod.getSections();
+		if ((sectionMap != null) && (sectionMap.size() > 0))
+		{
+			Iterator it = sectionMap.entrySet().iterator();
+			while (it.hasNext())
+			{
+				Map.Entry pairs = (Map.Entry) it.next();
+				Integer secId = (Integer) pairs.getKey();
+				ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+				MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+				getSectionService().insertSectionTrack(secId.intValue(), mPage.getCurrentUser().getId());
+
+			}
+		}
 		try
 		{
-			ModuleObjService printMod = moduleService.getModule(moduleId.intValue());
-			printText = moduleService.printModule(printMod, mPage.getCurrentUser().getId());
+			printText = moduleService.printModule(printMod);
 		}
 		catch (Exception e)
 		{
@@ -106,6 +122,24 @@ public class PrintModulePage
 	{
 		this.moduleService = moduleService;
 	}
+	
+	/**
+	 * @return Returns the SectionService.
+	 */
+	public SectionService getSectionService()
+	{
+		return sectionService;
+	}
+
+	/**
+	 * @param sectionService
+	 *        The sectionService to set.
+	 */
+	public void setSectionService(SectionService sectionService)
+	{
+		this.sectionService = sectionService;
+	}
+
 
 	/**
 	 * @return the printText
