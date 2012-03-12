@@ -149,7 +149,9 @@ for (var n=0; n<7; n++)
 document.write('</tr>');
 
 // print calendar table
+
 var dt_current_day = new Date(dt_firstday);
+
 
 while (dt_current_day.getMonth() == dt_current.getMonth() ||
 	dt_current_day.getMonth() == dt_firstday.getMonth()) {
@@ -293,8 +295,16 @@ if (obj_caller && obj_caller.time_comp)
 	  }
 	  else
 	  {
-	  	  document.write('<option value=\"AM\" selected>AM');
+	     if (dt_current.getHours() > 12)
+	    { 
+	  	  document.write('<option value=\"AM\">AM');
+	  	  document.write('<option value=\"PM\" selected>PM');
+	  	 }
+	  	 else
+	  	 {
+	  	   document.write('<option value=\"AM\" selected>AM');
 	  	  document.write('<option value=\"PM\">PM');
+	  	 } 
 	  }
 	}
 
