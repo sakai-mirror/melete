@@ -16,7 +16,7 @@ var BUL_YEARSCROLL = true;
 var calendars = [];
 var RE_NUM = /^\-?\d+$/;
 
-function calendar2(obj_target) {
+function calendar2(obj_target,hrs,mins,ampm) {
 
 	// assigning methods
 	this.gen_date = ambrosia_format_date; //cal_gen_date2;
@@ -42,13 +42,17 @@ function calendar2(obj_target) {
 	// register in global collections
 	this.id = calendars.length;
 	calendars[this.id] = this;
+	// Adding these to set times for start and end dates differently (SAK-301)
+	this.sethrs = hrs;
+	this.setmins = mins;
+	this.ampm = ampm;
 }
 
 function ambrosia_now()
 {
 	var rv = new Date();
-	rv.setHours(12);
-	rv.setMinutes(0);
+	rv.setHours(this.sethrs);
+	rv.setMinutes(this.setmins);
 	rv.setSeconds(0);
 	rv.setMilliseconds(0);
 	return rv;
@@ -62,6 +66,7 @@ function cal_popup2 (str_datetime) {
 	if (!str_datetime)
 	{
 	  this.ampm_val = this.prs_ampm(this.target.value);
+      if (!this.ampm_val) this.ampm_val = this.ampm;
 	}
 
         //alert('dt current value in popup is '+this.dt_current.valueOf());
@@ -313,12 +318,15 @@ function showSdateCal(string2,alertMsg)
 {
   var string2val = document.getElementById(string2).value;
   var dt;
-    if((null == string2val) || (string2val.length == 0)) dt = new Date();
+    if((null == string2val) || (string2val.length == 0))
+    {
+    	dt = new Date();
+    }	
   else dt = new Date(document.getElementById(string2).value);
   
    if (!isNaN(dt))
   { 
-    var cal2 = new calendar2(document.getElementById(string2));
+    var cal2 = new calendar2(document.getElementById(string2),"8","0","AM");
     cal2.popup();
     document.getElementById(string2).select();
   }
@@ -338,7 +346,7 @@ function showEdateCal(string2,alertMsg)
   
    if (!isNaN(dt))
   { 
-   var cal2 = new calendar2(document.getElementById(string2));
+   var cal2 = new calendar2(document.getElementById(string2),"11","59","PM");
    cal2.popup();
    document.getElementById(string2).select();
    }

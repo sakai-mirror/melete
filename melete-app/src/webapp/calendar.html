@@ -293,8 +293,16 @@ if (obj_caller && obj_caller.time_comp)
 	  }
 	  else
 	  {
-	  	  document.write('<option value=\"AM\" selected>AM');
+	     if (dt_current.getHours() > 12)
+	    { 
+	  	  document.write('<option value=\"AM\">AM');
+	  	  document.write('<option value=\"PM\" selected>PM');
+	  	 }
+	  	 else
+	  	 {
+	  	   document.write('<option value=\"AM\" selected>AM');
 	  	  document.write('<option value=\"PM\">PM');
+	  	 } 
 	  }
 	}
 
