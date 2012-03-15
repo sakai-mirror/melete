@@ -137,6 +137,20 @@ public interface ModuleService
 	public void createSubSection(ModuleObjService module, String sectionId) throws MeleteException;
 
 	/**
+	 * Right indent sections to next level of subsections.
+	 * 
+	 * @param module
+	 *        ModuleObjService object
+	 * @param parentSectionId
+	 *        Id of parent section
+	 * @param sectionId
+	 *        Id of section
+	 * @throws MeleteException
+	 *         "indent_right_fail" MeleteException
+	 */
+	public void createSubSection(ModuleObjService module, String parentSectionId, String sectionId) throws MeleteException;
+
+	/**
 	 * 
 	 * @param delModules
 	 *        List of ModuleObjService objects
