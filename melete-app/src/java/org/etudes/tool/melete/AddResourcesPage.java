@@ -704,6 +704,7 @@ public class AddResourcesPage implements ServletContextListener
 		}
 		catch (Exception ex)
 		{
+			htmlContentData = getMeleteCHService().findLocalImagesEmbeddedInEditor(courseId, errs, newEmbeddedResources, htmlContentData);
 			byte[] secContentData = htmlContentData.getBytes();
 
 			String secResourceName = getMeleteCHService().getTypeEditorSectionName(new Integer(sectionId));
