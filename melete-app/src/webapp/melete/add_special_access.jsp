@@ -76,10 +76,14 @@ function newWindow(newContent){
                       <h:inputHidden id="accessId" value="#{specialAccessPage.specialAccess.accessId}"/>
                       <h:inputHidden id="overrideStart" value="#{specialAccessPage.specialAccess.overrideStart}"/>
 					  <h:inputHidden id="overrideEnd" value="#{specialAccessPage.specialAccess.overrideEnd}"/>
+					  <h:inputHidden id="overrideAllowUntil" value="#{specialAccessPage.specialAccess.overrideAllowUntil}"/>
 					  <h:inputHidden id="modStartDate" value="#{specialAccessPage.startDate}">
 					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
 					  </h:inputHidden>
 					  <h:inputHidden id="modEndDate" value="#{specialAccessPage.endDate}">
+					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+					  </h:inputHidden>
+					  <h:inputHidden id="modAllowUntilDate" value="#{specialAccessPage.allowUntilDate}">
 					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
 					  </h:inputHidden>
 					  <h:inputHidden id="prevStartDate" value="#{specialAccessPage.specialAccess.startDate}">
@@ -88,11 +92,14 @@ function newWindow(newContent){
 					  <h:inputHidden id="prevEndDate" value="#{specialAccessPage.specialAccess.endDate}">
 					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
 					  </h:inputHidden>
+					  <h:inputHidden id="prevAllowUntilDate" value="#{specialAccessPage.specialAccess.allowUntilDate}">
+					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+					  </h:inputHidden>
 					  <a name="startCalender"></a> <h:inputText id="startDate" 
                            value="#{specialAccessPage.specialAccess.startDate}" size="22" styleClass="formtext" onchange="showInvalid('AddSpecialAccessForm:startDate','AddSpecialAccessForm:err_gifst');">
 		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
         		    </h:inputText>
-		            <h:outputLink id="viewsdateCal" onclick="showSdateCal('AddSpecialAccessForm:startDate','#{msgs.JS_date}')" value="#startCalender" >
+		            <h:outputLink id="viewsdateCal" onclick="showCal('AddSpecialAccessForm:startDate','8','0','AM');return false;" value="#startCalender" >
         	    		<h:graphicImage id="sdateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            			</h:outputLink>
                     <h:graphicImage id="err_gifst" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}"  style="visibility:hidden;" onclick="showHideTable('AddSpecialAccessForm:invalidMsgSt0','true')"  styleClass="ExpClass"/>
@@ -116,7 +123,7 @@ function newWindow(newContent){
                            value="#{specialAccessPage.specialAccess.endDate}" size="22" styleClass="formtext" onchange="showInvalid('AddSpecialAccessForm:endDate','AddSpecialAccessForm:err_gifen');">
              			  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
           		 </h:inputText>
-          <h:outputLink id="viewedateCal" onclick="showEdateCal('AddSpecialAccessForm:endDate','#{msgs.JS_date}')" value="#endCalender">
+          <h:outputLink id="viewedateCal" onclick="showCal('AddSpecialAccessForm:endDate','11','59','PM');return false;" value="#endCalender">
             <h:graphicImage id="edateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            </h:outputLink>
            <h:graphicImage id="err_gifen" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('AddSpecialAccessForm:invalidMsgEn0','true')"  styleClass="ExpClass"/>
@@ -133,6 +140,29 @@ function newWindow(newContent){
 			 </td>
               </tr>			  
              	
+              <tr>
+                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_special_access_allowuntil_date}" /></td>
+                <td>
+                <a name="allowUntilCalender"></a><h:inputText id="allowUntilDate" 
+                           value="#{specialAccessPage.specialAccess.allowUntilDate}" size="22" styleClass="formtext" onchange="showInvalid('AddSpecialAccessForm:allowUntilDate','AddSpecialAccessForm:err_gifallowuntil');">
+             			  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+          		 </h:inputText>
+          <h:outputLink id="viewaudateCal" onclick="showCal('AddSpecialAccessForm:allowUntilDate','11','59','PM');return false;" value="#allowUntilCalender">
+            <h:graphicImage id="audateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
+           </h:outputLink>
+           <h:graphicImage id="err_gifallowuntil" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('AddSpecialAccessForm:invalidMsgEn0','true')"  styleClass="ExpClass"/>
+	             <h:panelGroup id="invalidMsgEn0" style="position:relative;z-index:1;visibility:hidden;display:none;">
+			     <h:panelGrid id="invalidMsgEn" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="250px" styleClass="invalidAlertSmall" >   
+				 <h:column>
+				  	<h:outputText value="#{msgs.invalid_msg5}"  />  
+				 </h:column>
+				 <h:column>
+					<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('AddSpecialAccessForm:invalidMsgEn0','false')" />
+				 </h:column>
+			     </h:panelGrid>
+			     </h:panelGroup>
+			 </td>
+              </tr>		
 		</table>
   		<div class="actionBar" align="left">
           	<h:commandButton action="#{specialAccessPage.addSpecialAccess}" value="#{msgs.im_done}" accesskey="#{msgs.done_access}" title="#{msgs.im_done_text}" styleClass="BottomImgReturn"/>
@@ -154,7 +184,12 @@ function newWindow(newContent){
         	{	
         		document.getElementById("AddSpecialAccessForm:endDate").value = document.getElementById("AddSpecialAccessForm:modEndDate").value;
         		document.getElementById("AddSpecialAccessForm:prevEndDate").value = document.getElementById("AddSpecialAccessForm:modEndDate").value;
-        	}	
+        	}
+        	if (document.getElementById("AddSpecialAccessForm:overrideAllowUntil").value != "true")
+        	{	
+        		document.getElementById("AddSpecialAccessForm:allowUntilDate").value = document.getElementById("AddSpecialAccessForm:modAllowUntilDate").value;
+        		document.getElementById("AddSpecialAccessForm:prevAllowUntilDate").value = document.getElementById("AddSpecialAccessForm:modAllowUntilDate").value;
+        	}
         }              
     </script>    
 	</h:form>

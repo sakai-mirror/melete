@@ -91,7 +91,7 @@ public class SpecialAccessPage implements Serializable
 	/** identifier field */
 	private SpecialAccessObjService specialAccess;
 	private SpecialAccessService specialAccessService;
-	private Date startDate, endDate;
+	private Date startDate, endDate, allowUntilDate;
 	private UIData table;
 
 	/** Dependency: The logging service. */
@@ -356,6 +356,14 @@ public class SpecialAccessPage implements Serializable
 	{
 		return getModule().getModuleshdate().getEndDate();
 	}
+	
+	/**
+	 * @return allow until date of current module
+	 */
+	public Date getAllowUntilDate()
+	{
+		return getModule().getModuleshdate().getAllowUntilDate();
+	}
 
 	/**
 	 * @return size of list
@@ -457,8 +465,10 @@ public class SpecialAccessPage implements Serializable
 			specialAccess.setModuleId(this.moduleId);
 			specialAccess.setStartDate(getModule().getModuleshdate().getStartDate());
 			specialAccess.setEndDate(getModule().getModuleshdate().getEndDate());
+			specialAccess.setAllowUntilDate(getModule().getModuleshdate().getAllowUntilDate());
 			specialAccess.setOverrideStart(false);
 			specialAccess.setOverrideEnd(false);
+			specialAccess.setOverrideAllowUntil(false);
 		}
 		return specialAccess;
 	}
@@ -685,6 +695,15 @@ public class SpecialAccessPage implements Serializable
 	public void setEndDate(Date endDate)
 	{
 		this.endDate = endDate;
+	}
+	
+	/**
+	 * @param allowUntilDate
+	 *        allow until date of current module
+	 */
+	public void setAllowUntilDate(Date allowUntilDate)
+	{
+		this.allowUntilDate = allowUntilDate;
 	}
 
 	/**
