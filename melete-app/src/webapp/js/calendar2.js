@@ -314,48 +314,28 @@ function cal_error (str_message) {
 	return null;
 }
 
-function showSdateCal(string2,alertMsg)
+function showCal(string2,hrs,mins,ampm)
 {
   var string2val = document.getElementById(string2).value;
   var dt;
-    if((null == string2val) || (string2val.length == 0))
-    {
-    	dt = new Date();
-    }	
-  else dt = new Date(document.getElementById(string2).value);
+  if((null == string2val) || (string2val.length == 0))
+  {
+    dt = new Date();
+  }	
+  else dt = new Date(string2val);
   
-   if (!isNaN(dt))
+  if (!isNaN(dt))
   { 
-    var cal2 = new calendar2(document.getElementById(string2),"8","0","AM");
+    var cal2 = new calendar2(document.getElementById(string2),hrs,mins,ampm);
     cal2.popup();
     document.getElementById(string2).select();
   }
   else
   {
-    alert(alertMsg);
-     document.getElementById(string2).select();
+    alert("Date is in an invalid format. Enter date in this format MM/DD/YYYY HH:MM AM/PM");
+    document.getElementById(string2).select();
   }
 }
-
-function showEdateCal(string2,alertMsg)
-{
-  var string2val = document.getElementById(string2).value;
-  var dt;
-    if((null == string2val) || (string2val.length == 0)) dt = new Date();
-  else dt = new Date(document.getElementById(string2).value);
-  
-   if (!isNaN(dt))
-  { 
-   var cal2 = new calendar2(document.getElementById(string2),"11","59","PM");
-   cal2.popup();
-   document.getElementById(string2).select();
-   }
-  else
-  {
-    alert(alertMsg);
-     document.getElementById(string2).select();
-  }
-} 
 
 function showHideTable(string2, show)
 {
