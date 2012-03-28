@@ -37,6 +37,8 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 	/** nullable persistent field */
 	private Boolean addtoSchedule;
 
+	private Date allowUntilDate;
+	
 	/** nullable persistent field */
 	private Date endDate;
 
@@ -79,9 +81,10 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 	}
 
 	/** full constructor */
-	public ModuleShdates(Date startDate, Date endDate, int version, Boolean addtoSchedule, String startEventId, String endEventId,
+	public ModuleShdates(Date allowUntilDate, Date startDate, Date endDate, int version, Boolean addtoSchedule, String startEventId, String endEventId,
 			org.etudes.component.app.melete.Module module)
 	{
+		this.allowUntilDate = allowUntilDate;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.version = version;
@@ -96,6 +99,7 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 	{
 		this.startDate = oldModuleShdates.getStartDate();
 		this.endDate = oldModuleShdates.getEndDate();
+		this.allowUntilDate = oldModuleShdates.getAllowUntilDate();
 		this.module = null;
 	}
 
@@ -107,7 +111,7 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 		result = prime * result + ((moduleId == null) ? 0 : moduleId.hashCode());
 		return result;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -129,6 +133,14 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 	public Boolean getAddtoSchedule()
 	{
 		return this.addtoSchedule;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getAllowUntilDate()
+	{
+		return allowUntilDate;
 	}
 
 	/**
@@ -204,7 +216,7 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 		}
 		return false;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -216,6 +228,24 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 			stCal = Calendar.getInstance();
 			stCal.setTime(getStartDate());
 			if (stCal.get(Calendar.YEAR) > 9999)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isAllowUntilDateValid()
+	{
+		Calendar allowUntilCal = null;
+		if (getAllowUntilDate() != null)
+		{
+			allowUntilCal = Calendar.getInstance();
+			allowUntilCal.setTime(getAllowUntilDate());
+			if (allowUntilCal.get(Calendar.YEAR) > 9999)
 			{
 				return false;
 			}
@@ -239,7 +269,7 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 			}
 		}
 		return true;
-	}	
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -268,7 +298,7 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 		{
 			return false;
 		}
-	}
+	}	
 
 	/**
 	 * {@inheritDoc}
@@ -276,6 +306,14 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 	public void setAddtoSchedule(Boolean addtoSchedule)
 	{
 		if ((getStartDate() != null)||(getEndDate() != null)) this.addtoSchedule = addtoSchedule;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setAllowUntilDate(Date allowUntilDate)
+	{
+		this.allowUntilDate = allowUntilDate;
 	}
 
 	/**

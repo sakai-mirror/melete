@@ -77,9 +77,10 @@ CREATE TABLE `melete_course_module` (
 CREATE INDEX COURSE_ID_IDX ON `melete_course_module` (COURSE_ID); 
 CREATE TABLE `melete_module_shdates` (
   `MODULE_ID` int(11) NOT NULL default '0',
-  `VERSION` int(11) NOT NULL default '0',
+  `VERSION` int(11) NOT NULL default '0',  
   `START_DATE` datetime default NULL,
   `END_DATE` datetime default NULL,
+  `ALLOWUNTIL_DATE` datetime default NULL, 
   `START_EVENT_ID` varchar(99),
   `END_EVENT_ID` varchar(99),
   `ADDTO_SCHEDULE` tinyint(1)),

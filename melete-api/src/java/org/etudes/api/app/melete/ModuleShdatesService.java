@@ -40,7 +40,12 @@ public interface ModuleShdatesService
 	 * @return add to schedule boolean flag
 	 */
 	public abstract Boolean getAddtoSchedule();
-
+	
+	/**
+	 * @return allow until date
+	 */
+	public abstract Date getAllowUntilDate();
+	
 	/**
 	 * @return end date
 	 */
@@ -94,7 +99,11 @@ public interface ModuleShdatesService
 	 */
 	public boolean isEndDateValid();
 	
-
+	/**
+	 * @return true if start date year is less than or equal to 9999, false otherwise
+	 */
+	public boolean isAllowUntilDateValid();	
+	
 	/**
 	 * @return visibleFlag value of visible flag
 	 */
@@ -123,6 +132,12 @@ public interface ModuleShdatesService
 	 *        module object
 	 */
 	public abstract void setModule(org.etudes.api.app.melete.ModuleObjService module);
+
+	/**
+	 * @param allowUntilDate
+	 *        the allow Until date
+	 */
+	public abstract void setAllowUntilDate(Date allowUntilDate);
 
 	/**
 	 * @param startDate
