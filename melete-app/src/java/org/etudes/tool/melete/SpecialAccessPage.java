@@ -901,10 +901,12 @@ public class SpecialAccessPage implements Serializable
 	{
 		Calendar calstart = new GregorianCalendar();
 		Calendar calend = new GregorianCalendar();
+		Calendar calau = new GregorianCalendar();
 
 		Date st = specialAccess.getStartDate();
 		Date end = specialAccess.getEndDate();
-		if ((st != null) || (end != null))
+		Date au = specialAccess.getAllowUntilDate();
+		if ((st != null) || (end != null) || (au != null))
 		{
 			if (st != null)
 			{
@@ -950,6 +952,30 @@ public class SpecialAccessPage implements Serializable
 						catch (ParseException e)
 						{
 							specialAccess.setEndDate(this.module.getModuleshdate().getEndDate());
+						}
+					}
+				}
+			}
+			if (au != null)
+			{
+				calau.setTime(au);
+				if (calau.get(Calendar.YEAR) > 9999)
+				{
+					Map params = context.getExternalContext().getRequestParameterMap();
+					String prevAllowUntilDateStr = (String) params.get("AddSpecialAccessForm:prevAllowUntilDate");
+					if ((prevAllowUntilDateStr.equals("null") || (prevAllowUntilDateStr.trim().equals("")) || (prevAllowUntilDateStr.trim().length() == 0)))
+					{
+						specialAccess.setAllowUntilDate(null);
+					}
+					else
+					{
+						try
+						{
+							specialAccess.setAllowUntilDate(getDateFromString(prevAllowUntilDateStr));
+						}
+						catch (ParseException e)
+						{
+							specialAccess.setAllowUntilDate(this.module.getModuleshdate().getAllowUntilDate());
 						}
 					}
 				}
