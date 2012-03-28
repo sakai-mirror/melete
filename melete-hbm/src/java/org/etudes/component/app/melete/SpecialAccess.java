@@ -35,8 +35,9 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService
 {
 
 	private int accessId;
-	
-	protected String accessIdStr;
+
+	/** nullable persistent field */
+	private Date allowUntilDate;
 
 	/** nullable persistent field */
 	private Date endDate;
@@ -45,6 +46,9 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService
 
 	/** nullable persistent field */
 	private int moduleId;
+
+	/** nullable persistent field */
+	private boolean overrideAllowUntil;
 
 	private boolean overrideEnd;
 
@@ -57,7 +61,9 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService
 	private String userNames;
 
 	private String users;
+
 	private boolean valid;
+	protected String accessIdStr;
 
 	protected boolean selected;
 
@@ -68,8 +74,10 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService
 		this.users = null;
 		this.startDate = null;
 		this.endDate = null;
+		this.allowUntilDate = null;
 		this.overrideStart = false;
 		this.overrideEnd = false;
+		this.overrideStart = false;
 	}
 
 	/*
@@ -79,9 +87,18 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService
 	{
 		return accessId;
 	}
-	
-	public String getAccessIdStr() {
+
+	public String getAccessIdStr()
+	{
 		return Integer.toString(this.accessId);
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public Date getAllowUntilDate()
+	{
+		return this.allowUntilDate;
 	}
 
 	/*
@@ -135,6 +152,14 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService
 	/*
 	 * {@inheritDoc}
 	 */
+	public boolean isOverrideAllowUntil()
+	{
+		return this.overrideAllowUntil;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
 	public boolean isOverrideEnd()
 	{
 		return this.overrideEnd;
@@ -165,7 +190,7 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService
 	{
 		Calendar stCal = null;
 		Calendar enCal = null;
-		Date actualStartDate, actualEndDate;
+		Date actualStartDate, actualEndDate, actualAllowUntilDate;
 		if (overrideStart)
 			actualStartDate = getStartDate();
 		else
@@ -174,11 +199,26 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService
 			actualEndDate = getEndDate();
 		else
 			actualEndDate = getModule().getModuleshdate().getEndDate();
-		if ((actualStartDate != null) && (actualEndDate != null))
+		if (overrideAllowUntil)
+			actualAllowUntilDate = getAllowUntilDate();
+		else
+			actualAllowUntilDate = getAllowUntilDate();	
+		   //actualAllowUntilDate = getModule().getModuleshdate().getAllowUntilDate();
+		if ((actualStartDate != null) && (actualAllowUntilDate != null))
 		{
-			if (actualStartDate.compareTo(actualEndDate) >= 0)
+			if (actualStartDate.compareTo(actualAllowUntilDate) >= 0)
 			{
 				return false;
+			}
+		}
+		else
+		{
+			if ((actualStartDate != null) && (actualEndDate != null))
+			{
+				if (actualStartDate.compareTo(actualEndDate) >= 0)
+				{
+					return false;
+				}
 			}
 		}
 		return true;
@@ -190,6 +230,14 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService
 	public void setAccessId(int accessId)
 	{
 		this.accessId = accessId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setAllowUntilDate(Date allowUntilDate)
+	{
+		this.allowUntilDate = allowUntilDate;
 	}
 
 	/*
@@ -214,6 +262,14 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService
 	public void setModuleId(int moduleId)
 	{
 		this.moduleId = moduleId;
+	}
+
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setOverrideAllowUntil(boolean overrideAllowUntil)
+	{
+		this.overrideAllowUntil = overrideAllowUntil;
 	}
 
 	/*
