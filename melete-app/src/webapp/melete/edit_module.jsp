@@ -138,6 +138,30 @@ function newWindow(newContent){
 			     </h:panelGroup>	           
 					 </td>
               </tr>
+                <tr>
+                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_allowuntil_date}" /></td>
+                <td  class="col2" align="left" valign="top">
+				<a name="allowUntilCalender"></a>
+				<h:inputText id="allowUntilDate" 
+                           value="#{editModulePage.moduleShdates.allowUntilDate}" size="22" styleClass="formtext" onchange="showInvalid('EditModuleForm:allowUntilDate','EditModuleForm:err_gifal');">
+             			  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+          		 </h:inputText>
+          		 <h:outputLink id="viewallowdateCal" onclick="showCal('EditModuleForm:allowUntilDate','11','59','PM');return false;" value="#allowUntilCalender">
+           			 <h:graphicImage id="allowdateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
+          		 </h:outputLink>
+                 <h:graphicImage id="err_gifal" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('EditModuleForm:invalidMsgAllow0','true')"  styleClass="ExpClass"/>
+	             <h:panelGroup id="invalidMsgAllow0" style="position:relative;z-index:1;visibility:hidden;display:none;">
+				     <h:panelGrid id="invalidMsgAllow" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="250px" styleClass="invalidAlertSmall" >   
+						 <h:column>
+						  	<h:outputText value="#{msgs.invalid_msg6}"  />  
+						 </h:column>
+						 <h:column>
+							<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('EditModuleForm:invalidMsgAllow0','false')" />
+						 </h:column>
+			    	 </h:panelGrid>
+			     </h:panelGroup>	
+				</td>
+              </tr>			
               <tr>
                 <td  class="col1">&nbsp;</td>
                 <td  class="col2" valign="top">
