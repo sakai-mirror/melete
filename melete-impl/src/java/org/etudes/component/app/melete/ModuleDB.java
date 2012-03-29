@@ -258,6 +258,7 @@ public class ModuleDB implements Serializable
 
 				if (!moduleshowdates.isStartDateValid()) moduleshowdates.setStartDate(null);
 				if (!moduleshowdates.isEndDateValid()) moduleshowdates.setEndDate(null);
+				if (!moduleshowdates.isAllowUntilDateValid()) moduleshowdates.setAllowUntilDate(null);
 				
 				moduleshowdates.setModule(module);
 
@@ -3716,7 +3717,15 @@ else
 		{
 			if (obj1.getStartDate().compareTo(obj2.getStartDate()) != 0) return false;
 		}
-
+		
+		if (obj1.getAllowUntilDate() == null && obj2.getAllowUntilDate() != null)
+			return false;
+		else if (obj1.getAllowUntilDate() != null && obj2.getAllowUntilDate() == null)
+			return false;
+		else if (obj1.getAllowUntilDate() != null && obj2.getAllowUntilDate() != null)
+		{
+			if (obj1.getAllowUntilDate().compareTo(obj2.getAllowUntilDate()) != 0) return false;
+		}
 		return true;
 	}
 	
@@ -3765,6 +3774,10 @@ else
 					if (!checkModuleDates.isEndDateValid()) {
 						checkModuleDates.setEndDate(mDate.getEndDate());
 					}
+					
+					if (!checkModuleDates.isAllowUntilDateValid()) {
+						checkModuleDates.setAllowUntilDate(mDate.getAllowUntilDate());
+					}
 					// compare them. If both are same then not modified
 					logger.debug("module is same " + shouldUpdateModuleObject(mod, checkModule));
 					logger.debug("moduleDates is same " + shouldUpdateModuleShDateObject(mDate, checkModuleDates));
@@ -3791,6 +3804,7 @@ else
 					// associated with this module
 					mDate.setStartDate(checkModuleDates.getStartDate());
 					mDate.setEndDate(checkModuleDates.getEndDate());
+					mDate.setAllowUntilDate(checkModuleDates.getAllowUntilDate());
 					mDate.setAddtoSchedule(checkModuleDates.getAddtoSchedule());
 					mDate.setEndEventId(checkModuleDates.getEndEventId());
 					mDate.setStartEventId(checkModuleDates.getStartEventId());
