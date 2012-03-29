@@ -45,6 +45,11 @@ public interface ViewModBeanService
 	 * @return end date
 	 */
 	public abstract Date getEndDate();
+	
+	/**
+	 * @return allow until date
+	 */
+	public abstract Date getAllowUntilDate();
 
 	/**
 	 * @return get module id
@@ -141,6 +146,12 @@ public interface ViewModBeanService
 	 *        the end date
 	 */
 	public abstract void setEndDate(Date endDate);
+	
+	/**
+	 * @param allowUntilDate
+	 *        the allow until date
+	 */
+	public abstract void setAllowUntilDate(Date allowUntilDate);
 
 	/**
 	 * @param moduleId

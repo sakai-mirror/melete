@@ -82,7 +82,7 @@ function showHideTable(index, show)
  <h:outputText id="nomodstext" value="#{msgs.no_modules}" rendered="#{listModulesPage.nomodsFlag == null || listModulesPage.nomodsFlag}" style="text-align:left"/>
  <h:dataTable id="StudentTable"  
                   value="#{listModulesPage.viewModuleBeans}" rendered="#{listModulesPage.nomodsFlag != null && !listModulesPage.nomodsFlag}" 
-                  var="vmbean"  rowClasses="row1,row2" columnClasses="StudentListTitleClass,ListClosedClass,ListDateClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
+                  var="vmbean"  rowClasses="row1,row2" columnClasses="StudentListTitleClass,ListClosedClass,ListDateClass,ListDateClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
                   border="0" cellpadding="3" cellspacing="0" width="100%" styleClass="valignStyle9" binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_inst_summary}">
         <h:column>      
         <f:facet name="header">
@@ -222,6 +222,28 @@ function showHideTable(index, show)
 	          </h:outputText>
 	          <h:outputText id="endDate2_1" value="</br>" escape="false" rendered="#{!vmbean.visibleFlag}" styleClass="italics"/>
 	          <h:outputText id="endDate2_2" value="#{vmbean.endDate}" rendered="#{!vmbean.visibleFlag}" styleClass="italics">
+	                <f:convertDateTime type="time" timeStyle="short" />
+	            </h:outputText>           
+   	 </h:column> 
+   	  <h:column>
+              <f:facet name="header">
+                <h:outputText value="#{msgs.list_modules_inst_allowuntil_date}" />
+              </f:facet>  
+			 <h:outputText id="auDate0" value="-" rendered="#{vmbean.allowUntilDate == null}" />
+              
+              <h:outputText id="auDate" value="#{vmbean.allowUntilDate}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}">
+                <f:convertDateTime pattern="MMM d, yyyy" />            
+	           </h:outputText>
+	           <h:outputText id="auDate_1" value="</br>" escape="false" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}"/>
+	            <h:outputText id="auDate_2" value="#{vmbean.allowUntilDate}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}">
+	                <f:convertDateTime type="time" timeStyle="short" />
+	            </h:outputText>
+          
+             <h:outputText id="auDate2" value="#{vmbean.allowUntilDate}" rendered="#{!vmbean.visibleFlag}" styleClass="italics">
+                <f:convertDateTime pattern="MMM d, yyyy" />              
+	          </h:outputText>
+	          <h:outputText id="auDate2_1" value="</br>" escape="false" rendered="#{!vmbean.visibleFlag}" styleClass="italics"/>
+	          <h:outputText id="auDate2_2" value="#{vmbean.allowUntilDate}" rendered="#{!vmbean.visibleFlag}" styleClass="italics">
 	                <f:convertDateTime type="time" timeStyle="short" />
 	            </h:outputText>           
    	 </h:column>   

@@ -188,8 +188,6 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService
 	 */
 	public boolean isValid()
 	{
-		Calendar stCal = null;
-		Calendar enCal = null;
 		Date actualStartDate, actualEndDate, actualAllowUntilDate;
 		if (overrideStart)
 			actualStartDate = getStartDate();
@@ -202,25 +200,15 @@ public class SpecialAccess implements Serializable, SpecialAccessObjService
 		if (overrideAllowUntil)
 			actualAllowUntilDate = getAllowUntilDate();
 		else
-			actualAllowUntilDate = getAllowUntilDate();	
-		   //actualAllowUntilDate = getModule().getModuleshdate().getAllowUntilDate();
-		if ((actualStartDate != null) && (actualAllowUntilDate != null))
-		{
-			if (actualStartDate.compareTo(actualAllowUntilDate) >= 0)
-			{
-				return false;
-			}
-		}
-		else
-		{
-			if ((actualStartDate != null) && (actualEndDate != null))
-			{
-				if (actualStartDate.compareTo(actualEndDate) >= 0)
-				{
-					return false;
-				}
-			}
-		}
+			actualAllowUntilDate = getModule().getModuleshdate().getAllowUntilDate();
+		
+		// start, if defined, must be before allowUntil and End, if defined
+		if ((actualStartDate != null) && (actualEndDate != null) && (!actualStartDate.before(actualEndDate))) return Boolean.FALSE;
+		if ((actualStartDate != null) && (actualAllowUntilDate != null) && (!actualStartDate.before(actualAllowUntilDate))) return Boolean.FALSE;
+
+		// End, if defined, must be not after allowUntil, if defined
+		if ((actualEndDate != null) && (actualAllowUntilDate != null) && (actualEndDate.after(actualAllowUntilDate))) return Boolean.FALSE;
+
 		return true;
 	}
 

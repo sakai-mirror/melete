@@ -221,15 +221,21 @@ public class SpecialAccessDB
 
 			if (find_sa == null)
 			{
+				System.out.println("Sa start is "+sa.isOverrideStart());
+				System.out.println("Sa allow is "+sa.isOverrideAllowUntil());
+				
 				session.save(sa);
 			}
 			else
 			{
+				
 				find_sa.setUsers(sa.getUsers());
 				find_sa.setStartDate(sa.getStartDate());
 				find_sa.setEndDate(sa.getEndDate());
+				find_sa.setAllowUntilDate(sa.getEndDate());
 				find_sa.setOverrideStart(sa.isOverrideStart());
 				find_sa.setOverrideEnd(sa.isOverrideEnd());
+				find_sa.setOverrideAllowUntil(sa.isOverrideAllowUntil());
 				session.update(find_sa);
 			}
 

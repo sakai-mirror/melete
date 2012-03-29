@@ -493,6 +493,7 @@ public class BookmarkDB
 		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
 		Date startDate;
 		Date endDate;
+		Date allowUntilDate;
 
 		if (sa.isOverrideStart())
 			startDate = sa.getStartDate();
@@ -503,6 +504,13 @@ public class BookmarkDB
 			endDate = sa.getEndDate();
 		else
 			endDate = mshdates.getEndDate();
+		
+		if (sa.isOverrideAllowUntil())
+			allowUntilDate = sa.getAllowUntilDate();
+		else
+			allowUntilDate = mshdates.getAllowUntilDate();
+		
+		if (allowUntilDate != null) endDate = allowUntilDate;
 
 		if (((startDate == null) || (startDate.before(currentTimestamp))) && ((endDate == null) || (endDate.after(currentTimestamp))))
 		{

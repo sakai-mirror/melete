@@ -112,7 +112,7 @@ function resetAllAcc()
     	
    <h:dataTable id="table" 
                   value="#{specialAccessPage.saList}"
-                  var="saObj"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass" 
+                  var="saObj"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass,ListDateInputClass" 
                   cellpadding="3" cellspacing="0" 
 				  width="100%" binding="#{specialAccessPage.table}" styleClass="valignStyle9" summary="#{msgs.list_special_access_summary}">
                       
@@ -185,7 +185,26 @@ function resetAllAcc()
                <f:convertDateTime type="both" dateStyle="medium" timeStyle="short"/>
             </h:outputText>
         
-         </h:column>         
+         </h:column>  
+          <h:column>
+               <f:facet name="header">
+				 <h:outputText id="t7" value="#{msgs.list_special_access_allowuntil_date}" />
+             </f:facet>
+
+             <h:outputText id="auDate0" 
+                           value="#{msgs.list_special_access_default}"  styleClass="italics"  rendered="#{(saObj.overrideAllowUntil == false)}">
+            </h:outputText>
+             <h:outputText id="auDate1" 
+                           value="#{msgs.list_special_access_open}" styleClass="italics"   rendered="#{((saObj.allowUntilDate == null)&&(saObj.overrideAllowUntil == true))}">
+             </h:outputText>
+
+              <h:outputText id="auDate"
+                           value="#{saObj.allowUntilDate}"
+                              rendered="#{((saObj.allowUntilDate != null)&&(saObj.overrideAllowUntil == true))}">
+               <f:convertDateTime type="both" dateStyle="medium" timeStyle="short"/>
+            </h:outputText>
+        
+         </h:column>          
     </h:dataTable>   
    <h:inputHidden id="listSize" value="#{specialAccessPage.listSize}"/>   
    <div class="actionBar" align="left">			

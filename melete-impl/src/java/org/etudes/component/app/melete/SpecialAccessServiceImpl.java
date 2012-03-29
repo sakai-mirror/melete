@@ -165,7 +165,8 @@ public class SpecialAccessServiceImpl implements Serializable, SpecialAccessServ
 		// Compare special access dates to module dates
 		// If they are the same, no need to add this access and if it exists delete it
 		if ((!Different.different(sa.getStartDate(), mod.getModuleshdate().getStartDate()))
-				&& (!Different.different(sa.getEndDate(), mod.getModuleshdate().getEndDate())))
+				&& (!Different.different(sa.getEndDate(), mod.getModuleshdate().getEndDate()))
+				&& (!Different.different(sa.getAllowUntilDate(), mod.getModuleshdate().getAllowUntilDate())))
 		{
 			// New access, so don't add it
 			if (sa.getAccessId() == 0)
@@ -210,6 +211,15 @@ public class SpecialAccessServiceImpl implements Serializable, SpecialAccessServ
 		{
 			sa.setOverrideEnd(false);
 			sa.setEndDate(null);
+		}
+		if (Different.different(sa.getAllowUntilDate(), mod.getModuleshdate().getAllowUntilDate()))
+		{
+			sa.setOverrideAllowUntil(true);
+		}
+		else
+		{
+			sa.setOverrideAllowUntil(false);
+			sa.setAllowUntilDate(null);
 		}
 
 		updateSpecialAccess(sa);

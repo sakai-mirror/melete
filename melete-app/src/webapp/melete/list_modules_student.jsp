@@ -83,7 +83,7 @@ function showHideTable(index, show)
  <h:dataTable id="table" 
                   value="#{listModulesPage.modDataModel}"
                   var="vmbean"   rowClasses="row1,row2"  rendered="#{listModulesPage.nomodsFlag != null && !listModulesPage.nomodsFlag}" 
-              columnClasses="StudentListTitleClass,ListClosedClass,ListDateClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
+              columnClasses="StudentListTitleClass,ListClosedClass,ListDateClass,ListDateClass,ListDateClass,ListDateClass,ListPrintClass" headerClass="tableheader"
                    border="0" cellpadding="3" cellspacing="0" width="100%" 
                    binding="#{listModulesPage.modTable}" summary="#{msgs.list_modules_stud_summary}">
       <h:column>   
@@ -214,6 +214,22 @@ function showHideTable(index, show)
 	           </h:outputText>
 	           <h:outputText id="endDate_1" value="</br>" escape="false" />
 	            <h:outputText id="endDate_2" value="#{vmbean.endDate}" >
+	                <f:convertDateTime type="time" timeStyle="short" />
+	            </h:outputText>           
+         </h:column>
+       <h:column>
+      <f:facet name="header">
+        <h:panelGroup>
+        <h:outputText value="#{msgs.list_modules_stud_allowuntil_date}" />
+        </h:panelGroup>
+        </f:facet>
+			 <h:outputText id="auDate0" value="-" rendered="#{vmbean.allowUntilDate == null}" />
+              
+              <h:outputText id="auDate" value="#{vmbean.allowUntilDate}" >
+                <f:convertDateTime pattern="MMM d, yyyy" />            
+	           </h:outputText>
+	           <h:outputText id="auDate_1" value="</br>" escape="false" />
+	            <h:outputText id="auDate_2" value="#{vmbean.allowUntilDate}" >
 	                <f:convertDateTime type="time" timeStyle="short" />
 	            </h:outputText>           
          </h:column>

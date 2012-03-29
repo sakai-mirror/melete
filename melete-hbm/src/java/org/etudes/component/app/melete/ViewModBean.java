@@ -42,6 +42,8 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	protected String description;
 
 	protected Date endDate;
+	
+	protected Date allowUntilDate;
 
 	/** identifier field */
 	protected int moduleId;
@@ -93,12 +95,13 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	 * @param whatsNext
 	 * @param startDate
 	 * @param endDate
+	 * @param allowUntilDate
 	 * @param seqNo
 	 * @param seqXml
 	 * @param vsBeans
 	 */
 	public ViewModBean(int moduleId, boolean selected, boolean dateFlag, String description, boolean visibleFlag, String title, String rowClasses,
-			String whatsNext, Date startDate, Date endDate, int seqNo, String seqXml, List<ViewSecBeanService> vsBeans)
+			String whatsNext, Date startDate, Date endDate, Date allowUntilDate, int seqNo, String seqXml, List<ViewSecBeanService> vsBeans)
 	{
 		this.moduleId = moduleId;
 		this.selected = selected;
@@ -110,6 +113,7 @@ public class ViewModBean implements Serializable, ViewModBeanService
 		this.whatsNext = whatsNext;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		this.allowUntilDate = allowUntilDate;
 		this.seqNo = seqNo;
 		this.seqXml = seqXml;
 		this.vsBeans = vsBeans;
@@ -146,6 +150,14 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	public Date getEndDate()
 	{
 		return this.endDate;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getAllowUntilDate()
+	{
+		return this.allowUntilDate;
 	}
 
 	/**
@@ -248,9 +260,16 @@ public class ViewModBean implements Serializable, ViewModBeanService
 		if (visibleFlag == false && blockedBy == null)
 		{
 			Date currentDate = new java.util.Date();
-			if ((getEndDate() != null) && (getEndDate().before(currentDate)))
+			if ((getAllowUntilDate() != null) && (getAllowUntilDate().before(currentDate)))
 			{
 				return true;
+			}
+			else
+			{
+				if ((getEndDate() != null) && (getEndDate().before(currentDate)))
+				{
+					return true;
+				}
 			}
 		}
 		return false;
@@ -339,6 +358,14 @@ public class ViewModBean implements Serializable, ViewModBeanService
 	public void setEndDate(Date endDate)
 	{
 		this.endDate = endDate;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setAllowUntilDate(Date allowUntilDate)
+	{
+		this.allowUntilDate = allowUntilDate;
 	}
 
 	/**
