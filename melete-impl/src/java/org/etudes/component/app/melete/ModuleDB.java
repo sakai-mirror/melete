@@ -4068,11 +4068,37 @@ else
 			java.sql.Timestamp startTimestamp = null;
 			java.sql.Timestamp endTimestamp = null;
 			java.sql.Timestamp auTimestamp = null;
-			if (ad.overrideStart && ad.overrideEnd && ad.overrideAllowUntil)
+			boolean allOverridden = false;
+			allOverridden = ad.overrideStart && ad.overrideEnd && ad.overrideAllowUntil;
+			try
 			{
-				startTimestamp = ad.getAccStartTimestamp();
-				endTimestamp = ad.getAccEndTimestamp();
-				auTimestamp = ad.getAccAllowUntilTimestamp();
+				//Only execute query if atleast one flag is not overriden
+				if (!allOverridden)
+				{
+					pstmt = dbConnection.prepareStatement("select start_date,end_date,allowuntil_date from melete_module_shdates where module_id=?");
+					if (rs != null)
+					{
+						while (rs.next())
+						{
+							startTimestamp = rs.getTimestamp("start_date");
+							endTimestamp = rs.getTimestamp("end_date");
+							auTimestamp = rs.getTimestamp("allowuntil_date");
+						}
+					}
+				}
+				if (ad.overrideStart)
+				{
+					startTimestamp = ad.getAccStartTimestamp();
+				}
+				if (ad.overrideEnd)
+				{
+					endTimestamp = ad.getAccEndTimestamp();
+				}
+				if (ad.overrideAllowUntil)
+				{
+					auTimestamp = ad.getAccAllowUntilTimestamp();
+				}
+
 				if (isVisible(startTimestamp, endTimestamp, auTimestamp))
 				{
 					continue;
@@ -4081,65 +4107,13 @@ else
 				{
 					removeList.add(seq);
 				}
+
+				rs.close();
+				pstmt.close();
 			}
-			else
+			catch (Exception e)
 			{
-				try
-				{
-					if (ad.overrideStart)
-					{
-						startTimestamp = ad.getAccStartTimestamp();
-						pstmt = dbConnection.prepareStatement("select end_date from melete_module_shdates where module_id=?");
-						pstmt.setInt(1, ad.getModuleId());
-						rs = pstmt.executeQuery();
-						if (rs != null)
-						{
-							while (rs.next())
-							{
-								endTimestamp = rs.getTimestamp("end_date");
-							}
-						}
-						if (isVisible(startTimestamp, endTimestamp, auTimestamp))
-						{
-							continue;
-						}
-						else
-						{
-							removeList.add(seq);
-						}
-					}
-					else
-					{
-						if (ad.overrideEnd)
-						{
-							endTimestamp = ad.getAccEndTimestamp();
-							pstmt = dbConnection.prepareStatement("select start_date from melete_module_shdates where module_id=?");
-							pstmt.setInt(1, ad.getModuleId());
-							rs = pstmt.executeQuery();
-							if (rs != null)
-							{
-								while (rs.next())
-								{
-									startTimestamp = rs.getTimestamp("start_date");
-								}
-							}
-							if (isVisible(startTimestamp, endTimestamp, auTimestamp))
-							{
-								continue;
-							}
-							else
-							{
-								removeList.add(seq);
-							}
-						}
-					}
-					rs.close();
-					pstmt.close();
-				}
-				catch (Exception e)
-				{
-					if (logger.isErrorEnabled()) logger.error(e.toString());
-				}
+				if (logger.isErrorEnabled()) logger.error(e.toString());
 			}
 		}
 		return removeList;
