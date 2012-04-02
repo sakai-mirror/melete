@@ -140,9 +140,9 @@ if (msg != null)
     
    <h:dataTable id="table" 
                   value="#{listAuthModulesPage.moduleDateBeans}"
-                  var="mdbean"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass,ListActionClass" 
-                  cellpadding="3" cellspacing="0" border="0" rendered="#{listAuthModulesPage.nomodsFlag != null && !listAuthModulesPage.nomodsFlag}"
-				  width="100%" binding="#{listAuthModulesPage.table}" styleClass="mainListTableCollapseWithBorder0" summary="#{msgs.list_auth_modules_summary}">
+                  var="mdbean"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass,ListDateInputClass,ListActionClass" 
+                  rendered="#{listAuthModulesPage.nomodsFlag != null && !listAuthModulesPage.nomodsFlag}"
+				  binding="#{listAuthModulesPage.table}" styleClass="mainListTableCollapseWithBorder0" summary="#{msgs.list_auth_modules_summary}">
   
      <h:column>   
 	     <f:facet name="header">
@@ -225,7 +225,7 @@ if (msg != null)
             <h:graphicImage id="err_gifst" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}"  style="visibility:hidden;" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgSt0','true')"  styleClass="ExpClass"/>
 	          
 		   <h:panelGroup id="invalidMsgSt0" style="position:relative;z-index:1;visibility:hidden;display:none;" >
-			 <h:panelGrid id="invalidMsgSt" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="250px" styleClass="invalidAlertSmall" >   
+			 <h:panelGrid id="invalidMsgSt" columns="1" border="0" bgcolor="#FFFFCC" width="250px" styleClass="invalidAlertSmall" >   
 				<h:column>
 				  	<h:outputText value="#{msgs.invalid_msg4}"  />  
 				</h:column>
@@ -250,12 +250,37 @@ if (msg != null)
             <h:graphicImage id="err_gifen" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgEn0','true')"  styleClass="ExpClass"/>
 	          
 		   <h:panelGroup id="invalidMsgEn0" style="position:relative;z-index:1;visibility:hidden;display:none;">
-			 <h:panelGrid id="invalidMsgEn" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="250px" styleClass="invalidAlertSmall" >   
+			 <h:panelGrid id="invalidMsgEn" columns="1" border="0" bgcolor="#FFFFCC" width="250px" styleClass="invalidAlertSmall" >   
 				<h:column>
 				  	<h:outputText value="#{msgs.invalid_msg5}"  />  
 				</h:column>
 				<h:column>
 					<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgEn0','false')" />
+				</h:column>
+			  </h:panelGrid>
+			</h:panelGroup>	
+         </h:column>
+          <h:column>
+               <f:facet name="header">
+				 <h:outputText id="t7" value="#{msgs.list_auth_modules_allow_date}" />
+             </f:facet>
+             
+            <h:inputText id="allowUntilDate" 
+                           value="#{mdbean.moduleShdate.allowUntilDate}" onchange="showInvalid('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':allowUntilDate','listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':err_gifal');">
+               <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+            </h:inputText>
+             <h:outputLink id="viewadateCal" onclick="showCal('listauthmodulesform:table:'+#{listAuthModulesPage.table.rowIndex}+':allowUntilDate','11','59','PM');return false;" value="#">
+            <h:graphicImage id="adateCal" value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="ListDatePickerClass"/>
+           </h:outputLink>
+            <h:graphicImage id="err_gifal" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgAl0','true')"  styleClass="ExpClass"/>
+	          
+		   <h:panelGroup id="invalidMsgAl0" style="position:relative;z-index:1;visibility:hidden;display:none;">
+			 <h:panelGrid id="invalidMsgAl" columns="1" border="0" bgcolor="#FFFFCC" width="250px" styleClass="invalidAlertSmall" >   
+				<h:column>
+				  	<h:outputText value="#{msgs.invalid_msg6}"  />  
+				</h:column>
+				<h:column>
+					<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgAl0','false')" />
 				</h:column>
 			  </h:panelGrid>
 			</h:panelGroup>	
