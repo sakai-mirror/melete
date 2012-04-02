@@ -3291,6 +3291,7 @@ else
 					ModuleShdates moduleShdate = (ModuleShdates) (q.uniqueResult());
 					moduleShdate.setStartDate(null);
 					moduleShdate.setEndDate(null);
+					moduleShdate.setAllowUntilDate(null);
 
 					//fetch module object and update modification date
 					q = session.createQuery("select mod from Module mod where mod.moduleId =:moduleId");
@@ -5228,6 +5229,7 @@ else
 			boolean addtoSchedule = moduleshdates1.getAddtoSchedule().booleanValue();
 			Date startDate = moduleshdates1.getStartDate();
 			Date endDate = moduleshdates1.getEndDate();
+			Date allowUntilDate = moduleshdates1.getAllowUntilDate();
 			String startEventId = moduleshdates1.getStartEventId();
 			String endEventId = moduleshdates1.getEndEventId();
 			
@@ -5240,7 +5242,9 @@ else
 				if (addtoSchedule == true)
 				{
 					//Fix for ME-1426, when start date is after end date, do not add events to calendar
-					if ((startDate != null)&&(endDate != null)&&(startDate.after(endDate)))
+					if (((startDate != null)&&(endDate != null)&&(startDate.after(endDate)))||
+							((startDate != null)&&(allowUntilDate != null)&&(startDate.after(allowUntilDate)))||
+							((endDate != null)&&(allowUntilDate != null)&&(endDate.after(allowUntilDate))))
 					{
 						if (startEventId != null)
 						{

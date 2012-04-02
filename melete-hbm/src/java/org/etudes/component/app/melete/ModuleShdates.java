@@ -81,12 +81,12 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 	}
 
 	/** full constructor */
-	public ModuleShdates(Date allowUntilDate, Date startDate, Date endDate, int version, Boolean addtoSchedule, String startEventId, String endEventId,
+	public ModuleShdates(Date startDate, Date endDate, Date allowUntilDate, int version, Boolean addtoSchedule, String startEventId, String endEventId,
 			org.etudes.component.app.melete.Module module)
 	{
-		this.allowUntilDate = allowUntilDate;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		this.allowUntilDate = allowUntilDate;
 		this.version = version;
 		this.addtoSchedule = addtoSchedule;
 		this.startEventId = startEventId;
@@ -204,11 +204,25 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 	 */
 	public boolean isDateFlag()
 	{
-		if (isStartDateValid() && isEndDateValid())
+		if (isStartDateValid() && isEndDateValid() && isAllowUntilDateValid())
 		{	
 		  if ((getStartDate() != null) && (getEndDate() != null))
 		  {
 			if (getStartDate().compareTo(getEndDate()) >= 0)
+			{
+				return true;
+			}
+		  }
+		  if ((getStartDate() != null) && (getAllowUntilDate() != null))
+		  {
+			if (getStartDate().compareTo(getAllowUntilDate()) >= 0)
+			{
+				return true;
+			}
+		  }
+		  if ((getEndDate() != null) && (getAllowUntilDate() != null))
+		  {
+			if (getEndDate().compareTo(getAllowUntilDate()) >= 0)
 			{
 				return true;
 			}
@@ -279,8 +293,12 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
 		// check if there is an access advisor - if not, that's ok.
 
+		Date actualEndDate;
+		if (getAllowUntilDate() != null) actualEndDate = getAllowUntilDate();
+		else actualEndDate = getEndDate();
+		
 		if (((getStartDate() == null) || (getStartDate().before(currentTimestamp)))
-				&& ((getEndDate() == null) || (getEndDate().after(currentTimestamp))))
+				&& ((actualEndDate == null) || (actualEndDate.after(currentTimestamp))))
 		{
 			this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
 			if ((this.accessAdvisor != null)
