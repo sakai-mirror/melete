@@ -80,6 +80,15 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 		this.addtoSchedule = addtoSchedule;
 	}
 
+	/** Custom constructor */
+	public ModuleShdates(Date startDate, Date endDate, Date allowUntilDate, Boolean addtoSchedule)
+	{
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.allowUntilDate = allowUntilDate;
+		this.addtoSchedule = addtoSchedule;
+	}
+	
 	/** full constructor */
 	public ModuleShdates(Date startDate, Date endDate, Date allowUntilDate, int version, Boolean addtoSchedule, String startEventId, String endEventId,
 			org.etudes.component.app.melete.Module module)

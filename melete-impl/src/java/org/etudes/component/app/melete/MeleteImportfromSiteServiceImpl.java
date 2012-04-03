@@ -528,9 +528,10 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			Module toMod = new Module(fromMod.getTitle(), fromMod.getLearnObj(), fromMod.getDescription(), fromMod.getKeywords(), firstName,
 					lastName, user.getId(), firstName, lastName, fromMod.getInstitute(), fromMod.getWhatsNext(), new java.util.Date(),
 					new java.util.Date(), null);
-			ModuleShdates toModshdate = new ModuleShdates(((ModuleShdates) fromMod.getModuleshdate()).getStartDate(), ((ModuleShdates) fromMod
-					.getModuleshdate()).getEndDate(), fromMod.getModuleshdate().getAddtoSchedule());
-			if (fromMod.getCoursemodule().isArchvFlag() == false)
+			ModuleShdates fromShDates = (ModuleShdates) fromMod.getModuleshdate();
+			ModuleShdates toModshdate = new ModuleShdates(fromShDates.getStartDate(), fromShDates.getEndDate(), fromShDates.getAllowUntilDate(),
+					fromShDates.getAddtoSchedule());
+	if (fromMod.getCoursemodule().isArchvFlag() == false)
 			{
 				try
 				{
