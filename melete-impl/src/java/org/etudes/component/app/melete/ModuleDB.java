@@ -335,15 +335,16 @@ public class ModuleDB implements Serializable
 		}
 		StringBuilder sql = new StringBuilder();
 		sql.append("UPDATE MELETE_MODULE_SHDATES MSH,MELETE_COURSE_MODULE MCM SET");
-		sql.append(" MSH.START_DATE=DATE_ADD(MSH.START_DATE,INTERVAL ? DAY), MSH.END_DATE=DATE_ADD(MSH.END_DATE,INTERVAL ? DAY)");
+		sql.append(" MSH.START_DATE=DATE_ADD(MSH.START_DATE,INTERVAL ? DAY), MSH.END_DATE=DATE_ADD(MSH.END_DATE,INTERVAL ? DAY), MSH.ALLOWUNTIL_DATE=DATE_ADD(MSH.ALLOWUNTIL_DATE,INTERVAL ? DAY)");
 		sql.append(" WHERE MSH.MODULE_ID=MCM.MODULE_ID AND MCM.COURSE_ID =?");
 
-		Object[] fields = new Object[3];
+		Object[] fields = new Object[4];
 		int i = 0;
 		fields[i++] = days_diff;
 		fields[i++] = days_diff;
+		fields[i++] = days_diff;
 		fields[i++] = course_id;
-
+		
 		if (!SqlService.dbWrite(sql.toString(), fields))
 		{
 			throw new RuntimeException("applyBaseDate: db write failed");
