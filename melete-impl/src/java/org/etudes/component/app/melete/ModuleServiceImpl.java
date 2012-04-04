@@ -550,21 +550,29 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 	 *        Start date
 	 * @param closeDate
 	 *        End date
+	 * @param allowUntilDate
+	 *        Allow Until date
 	 * @return invalid if bad dates or not able to determine the status. open if module is open and active closed if module is closed later if module is not opened yet
 	 */
-	public String isSectionModuleOpen(Date startDate, Date endDate)
+	public String isSectionModuleOpen(Date startDate, Date endDate, Date allowUntilDate)
 	{
 		String access = "invalid";
 		Date currentDate = new java.util.Date();
+		Date actualEndDate;
 
 		// check invalid
-		if (startDate != null && endDate != null && startDate.compareTo(endDate) >= 0)
+		if ((startDate != null && endDate != null && startDate.compareTo(endDate) >= 0)
+				|| (startDate != null && allowUntilDate != null && startDate.compareTo(allowUntilDate) >= 0)
+				|| (endDate != null && allowUntilDate != null && endDate.compareTo(allowUntilDate) >= 0))
 		{
 			return access;
 		}
 
+		if (allowUntilDate != null) actualEndDate = allowUntilDate;
+		else actualEndDate = endDate;
+		
 		// check for open, close, not yet
-		if ((startDate == null || startDate.before(currentDate)) && (endDate == null || endDate.after(currentDate)))
+		if ((startDate == null || startDate.before(currentDate)) && (actualEndDate == null || actualEndDate.after(currentDate)))
 		{
 			access = "open";
 		}
@@ -575,7 +583,7 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 				access = "later";
 			}
 
-			if (endDate != null && endDate.before(currentDate))
+			if (actualEndDate != null && actualEndDate.before(currentDate))
 			{
 				access = "closed";
 			}
