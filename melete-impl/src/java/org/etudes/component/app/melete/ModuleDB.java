@@ -4777,7 +4777,7 @@ else
 	}
 
 	/**
-	 * Determines if this module is currently visible
+	 * Determines if this module is currently visible(does not check if the dates are valid)
 	 * 
 	 * @param startTimestamp
 	 *        Start date
