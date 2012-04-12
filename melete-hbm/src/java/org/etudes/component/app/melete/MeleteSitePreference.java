@@ -58,6 +58,15 @@ public class MeleteSitePreference implements Serializable, MeleteSitePreferenceS
 		this.printable = false;
 		this.autonumber = false;
 	}
+	
+	/**
+	 * copy constructor
+	 */
+	public MeleteSitePreference(MeleteSitePreference m)
+	{
+		this.printable = m.printable;
+		this.autonumber = m.autonumber;
+	}
 
 	/**
 	 * @return Returns the siteId.

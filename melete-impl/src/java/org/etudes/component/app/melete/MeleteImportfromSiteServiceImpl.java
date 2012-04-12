@@ -39,6 +39,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.MeleteImportfromSiteService;
+import org.etudes.api.app.melete.MeleteSitePreferenceService;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
@@ -463,7 +464,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		// Copy the uploads collection
 		buildModules(fromContext, toContext);
 		transferManageItems(fromContext, toContext);
-		// setMeleteSitePreference(fromContext, toContext);
+		transferMeleteSitePreference(fromContext, toContext);
 	}
 
 	/**
@@ -729,6 +730,34 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		logger.debug("TRANSFER took " + (totalend - totalstart) + " millisecs");
 	}
 
+	/**
+	 * Transfers melete site preferences like printable etc
+	 * @param fromContext
+	 * @param toContext
+	 */
+	private void transferMeleteSitePreference(String fromContext, String toContext)
+	{
+		try
+		{
+			MeleteSitePreference fromMsp = meleteUserPrefDB.getSitePreferences(fromContext);
+			MeleteSitePreference toMsp = meleteUserPrefDB.getSitePreferences(toContext);
+			if (toMsp == null)
+			{
+				toMsp = new MeleteSitePreference(fromMsp);
+			}
+			else
+			{
+				toMsp.setAutonumber(fromMsp.isAutonumber());
+				toMsp.setPrintable(fromMsp.isPrintable());
+			}
+			meleteUserPrefDB.setSitePreferences(toMsp);
+		}
+		catch (Exception e)
+		{
+			logger.warn("Error on importing melete site preferences" + e.getMessage());
+		}
+	}
+	
 	/**
 	 * Class to check if module should be imported to next site. If module with same title, no of sections, and all sections with same title and 
 	 * content type exists in next site then don't import over.
