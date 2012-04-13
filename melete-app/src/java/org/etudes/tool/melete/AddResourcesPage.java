@@ -728,7 +728,7 @@ public class AddResourcesPage implements ServletContextListener
 		String data = null;
 		try
 		{
-			if (sectionId == null || sectionId.length() == 0) return data;
+			if (sectionId == null || sectionId.length() == 0 || sectionId.equals("null")) return data;
 			String resourceId = getMeleteCHService().getSectionResource(sectionId);
 			logger.debug("resource id in AddResource getdata method:" + resourceId);
 			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");

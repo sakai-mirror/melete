@@ -40,15 +40,17 @@
 <% 
 	ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 	String mensaje=bundle.getString("editmodulesections_uploading");
-
 	final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
-	final EditSectionPage eSectionPage = (EditSectionPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "editSectionPage");
-	if(eSectionPage.getSection() != null && eSectionPage.getSection().getSectionId() != null)
-	{
-		request.setAttribute("attr_sId",eSectionPage.getSection().getSectionId().toString());	
-	}
-  final AuthorPreferencePage authorPreferencePage = (AuthorPreferencePage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "authorPreferences");
 	
+	if (request.getParameter("sectionId") != null && !request.getParameter("sectionId").equals("null"))
+		request.setAttribute("attr_sId", request.getParameter("sectionId"));
+	else 
+	{
+		response.sendRedirect("list_auth_modules.jsf");
+	}
+	
+  final EditSectionPage eSectionPage = (EditSectionPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "editSectionPage");
+  final AuthorPreferencePage authorPreferencePage = (AuthorPreferencePage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "authorPreferences");
 %>
 
 <script type="text/javascript" language="javascript1.2">
