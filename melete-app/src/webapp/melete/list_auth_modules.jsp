@@ -138,10 +138,10 @@ if (msg != null)
    <td>
    	<h:outputText id="nomodmsg" value="#{msgs.list_auth_modules_no_modules_available}" rendered="#{listAuthModulesPage.nomodsFlag == null || listAuthModulesPage.nomodsFlag}" styleClass="left"/>
     
-   <h:dataTable id="table" 
+   <h:dataTable id="table"
                   value="#{listAuthModulesPage.moduleDateBeans}"
-                  var="mdbean"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListModCheckClass,ListTitleClass,ListDateInputClass,ListDateInputClass,ListDateInputClass,ListActionClass" 
-                  rendered="#{listAuthModulesPage.nomodsFlag != null && !listAuthModulesPage.nomodsFlag}"
+                  var="mdbean"  headerClass="tableheader" rowClasses="row1,row2" columnClasses="ListModCheckClass,ListModCheckClass,ListTitleClass,ListAuthorDateClass,ListAuthorDateClass,ListAuthorDateClass,ListActionClass" 
+                  rendered="#{listAuthModulesPage.nomodsFlag != null && !listAuthModulesPage.nomodsFlag}" width="100%" 
 				  binding="#{listAuthModulesPage.table}" styleClass="mainListTableCollapseWithBorder0" summary="#{msgs.list_auth_modules_summary}">
   
      <h:column>   
@@ -211,43 +211,48 @@ if (msg != null)
             </h:column>
           </h:dataTable>     
         </h:column>      
-       <h:column>
-        <f:facet name="header">
+       <h:column>   
+         <f:facet name="header">
              <h:outputText id="t4" value="#{msgs.list_auth_modules_start_date}" />
-             </f:facet>             
-                <h:inputText id="startDate"
-                           value="#{mdbean.moduleShdate.startDate}" onchange="showInvalid('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':startDate','listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':err_gifst');">
-            <f:convertDateTime type="both" dateStyle="medium" timeStyle="short"/>
-            </h:inputText>
-            <h:outputLink id="viewsdateCal" onclick="showCal('listauthmodulesform:table:'+#{listAuthModulesPage.table.rowIndex}+':startDate','8','0','AM');return false;" value="#">
-            <h:graphicImage id="sdateCal" value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="ListDatePickerClass"/>
-           </h:outputLink> 
-            <h:graphicImage id="err_gifst" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}"  style="visibility:hidden;" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgSt0','true')"  styleClass="ExpClass"/>
+          </f:facet> 
+	       <h:panelGrid border="0" cellpadding="2px" width="100%" style="vertical-align:top;white-space:nowrap;">	       
+	       <h:column>
+	            <h:inputText id="startDate" size="20"
+	                           value="#{mdbean.moduleShdate.startDate}" onchange="showInvalid('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':startDate','listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':err_gifst');">
+	            	<f:convertDateTime type="both" dateStyle="medium" timeStyle="short"/>
+	            </h:inputText>
+	            <h:outputLink id="viewsdateCal" onclick="showCal('listauthmodulesform:table:'+#{listAuthModulesPage.table.rowIndex}+':startDate','8','0','AM');return false;" value="#">
+	            	<h:graphicImage id="sdateCal" value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="ListDatePickerClass"/>
+	           </h:outputLink> 	
+	           <h:graphicImage id="err_gifst" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}"  style="visibility:hidden;" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgSt0','true')"  styleClass="ExpClass"/>
 	          
-		   <h:panelGroup id="invalidMsgSt0" style="position:relative;z-index:1;visibility:hidden;display:none;" >
-			 <h:panelGrid id="invalidMsgSt" columns="1" border="0" bgcolor="#FFFFCC" width="250px" styleClass="invalidAlertSmall" >   
-				<h:column>
-				  	<h:outputText value="#{msgs.invalid_msg4}"  />  
-				</h:column>
-				<h:column>
-					<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgSt0','false')" />
-				</h:column>
-			  </h:panelGrid>
-			</h:panelGroup>		
-         </h:column>         
-        <h:column>
-               <f:facet name="header">
-				 <h:outputText id="t6" value="#{msgs.list_auth_modules_end_date}" />
-             </f:facet>
-             
-            <h:inputText id="endDate" 
+			   <h:panelGroup id="invalidMsgSt0" style="position:relative;z-index:1;visibility:hidden;display:none;" >
+				 <h:panelGrid id="invalidMsgSt" columns="1" border="0" bgcolor="#FFFFCC" width="250px" styleClass="invalidAlertSmall" >   
+					<h:column>
+					  	<h:outputText value="#{msgs.invalid_msg4}"  />  
+					</h:column>
+					<h:column>
+						<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgSt0','false')" />
+					</h:column>
+				  </h:panelGrid>
+				</h:panelGroup>		
+	       </h:column>           		
+	      </h:panelGrid> 	
+       </h:column>  
+       <h:column>
+      		<f:facet name="header">
+             <h:outputText id="t5" value="#{msgs.list_auth_modules_end_date}" />
+          </f:facet> 
+        <h:panelGrid border="0" cellpadding="2px" width="100%" style="vertical-align:top;white-space:nowrap;">	       
+       <h:column>      
+            <h:inputText id="endDate" size="20" 
                            value="#{mdbean.moduleShdate.endDate}" onchange="showInvalid('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':endDate','listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':err_gifen');">
                <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
             </h:inputText>
              <h:outputLink id="viewedateCal" onclick="showCal('listauthmodulesform:table:'+#{listAuthModulesPage.table.rowIndex}+':endDate','11','59','PM');return false;" value="#">
             <h:graphicImage id="edateCal" value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="ListDatePickerClass"/>
            </h:outputLink>
-            <h:graphicImage id="err_gifen" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgEn0','true')"  styleClass="ExpClass"/>
+           <h:graphicImage id="err_gifen" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgEn0','true')"  styleClass="ExpClass"/>
 	          
 		   <h:panelGroup id="invalidMsgEn0" style="position:relative;z-index:1;visibility:hidden;display:none;">
 			 <h:panelGrid id="invalidMsgEn" columns="1" border="0" bgcolor="#FFFFCC" width="250px" styleClass="invalidAlertSmall" >   
@@ -258,23 +263,26 @@ if (msg != null)
 					<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgEn0','false')" />
 				</h:column>
 			  </h:panelGrid>
-			</h:panelGroup>	
-         </h:column>
-          <h:column>
-               <f:facet name="header">
-				 <h:outputText id="t7" value="#{msgs.list_auth_modules_allow_date}" />
-             </f:facet>
-             
-            <h:inputText id="allowUntilDate" 
-                           value="#{mdbean.moduleShdate.allowUntilDate}" onchange="showInvalid('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':allowUntilDate','listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':err_gifal');">
-               <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
-            </h:inputText>
+			</h:panelGroup>	             
+         </h:column>           		
+	     </h:panelGrid> 	
+       </h:column>    
+       <h:column> 
+      	<f:facet name="header">
+             <h:outputText id="t6" value="#{msgs.list_auth_modules_allow_date}" />
+          </f:facet> 
+       <h:panelGrid border="0" cellpadding="2px" width="100%" style="vertical-align:top;white-space:nowrap;">	       
+       <h:column>
+	        <h:inputText id="allowUntilDate" size="20" 
+	                       value="#{mdbean.moduleShdate.allowUntilDate}" onchange="showInvalid('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':allowUntilDate','listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':err_gifal');">
+	           <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+	        </h:inputText>
              <h:outputLink id="viewadateCal" onclick="showCal('listauthmodulesform:table:'+#{listAuthModulesPage.table.rowIndex}+':allowUntilDate','11','59','PM');return false;" value="#">
-            <h:graphicImage id="adateCal" value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="ListDatePickerClass"/>
-           </h:outputLink>
-            <h:graphicImage id="err_gifal" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgAl0','true')"  styleClass="ExpClass"/>
-	          
-		   <h:panelGroup id="invalidMsgAl0" style="position:relative;z-index:1;visibility:hidden;display:none;">
+          		  <h:graphicImage id="adateCal" value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="ListDatePickerClass"/>
+          	 </h:outputLink>
+	        <h:graphicImage id="err_gifal" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgAl0','true')"  styleClass="ExpClass"/>
+		          
+		    <h:panelGroup id="invalidMsgAl0" style="position:relative;z-index:1;visibility:hidden;display:none;">
 			 <h:panelGrid id="invalidMsgAl" columns="1" border="0" bgcolor="#FFFFCC" width="250px" styleClass="invalidAlertSmall" >   
 				<h:column>
 				  	<h:outputText value="#{msgs.invalid_msg6}"  />  
@@ -283,28 +291,30 @@ if (msg != null)
 					<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':invalidMsgAl0','false')" />
 				</h:column>
 			  </h:panelGrid>
-			</h:panelGroup>	
-         </h:column>
-         <h:column>
-           <h:outputText id="emp_space6" value="  " styleClass="ExtraPaddingClass" />
+			 </h:panelGroup>	
+ 		  </h:column>           		
+      	 </h:panelGrid> 
+      </h:column>
+      <h:column>
+         	<h:panelGrid columns="4" styleClass="maintableCollapseWithNoBorder">         	
            <h:commandLink id="viewNextsteps" actionListener="#{listAuthModulesPage.viewNextsteps}" >
 			   <h:graphicImage id="vns_gif" value="/images/add.gif" alt="#{msgs.list_auth_modules_alt_add_steps}" title="#{msgs.list_auth_modules_alt_add_steps}" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext == listAuthModulesPage.isNull}"/>      
 			   <h:graphicImage id="vns1_gif" value="/images/view_next.gif" alt="#{msgs.list_auth_modules_alt_next_steps}" title="#{msgs.list_auth_modules_alt_next_steps}" styleClass="AddImgClass"  rendered="#{mdbean.module.whatsNext != listAuthModulesPage.isNull}"/>        		   
            </h:commandLink>
-          <h:outputText id="emp_space8" value="  " styleClass="ExtraPaddingClass" />
+         
            <h:commandLink id="specialAccess" actionListener="#{listAuthModulesPage.specialAccessAction}" >
 			   <h:graphicImage id="acc_gif" value="/images/access_add.png" alt="#{msgs.list_auth_modules_alt_add_access}" title="#{msgs.list_auth_modules_alt_add_access}" styleClass="AddImgClass" rendered="#{mdbean.saFlag == false}"/>
 			   <h:graphicImage id="acc_view_gif" value="images/access_view.png" alt="#{msgs.list_auth_modules_alt_view_access}" title="#{msgs.list_auth_modules_alt_view_access}" styleClass="AddImgClass" rendered="#{mdbean.saFlag == true}"/>            
 			 </h:commandLink>           
-           <h:outputText id="emp_space4" value="  " styleClass="ExtraPaddingClass" />
+           
 		  <h:commandLink id="duplicateModule" action="#{listAuthModulesPage.duplicateAction}">
 		  	  <h:graphicImage id="duplicateImg" value="/images/page_copy.png" alt="#{msgs.list_auth_modules_alt_duplicate}" title="#{msgs.list_auth_modules_alt_duplicate}" styleClass="AuthImgClass"/>
 		  </h:commandLink>
-		     <h:outputText id="emp_space5" value="  " styleClass="ExtraPaddingClass" />
+		  
 		     <h:outputLink id="printModuleLink" value="list_auth_modules" onclick="document.forms['listauthmodulesform'].elements['listauthmodulesform:saveChanges'].click();OpenPrintWindow(#{listAuthModulesPage.printModuleId},'Melete Print Window');">
 		       	<h:graphicImage id="printImgLink" value="/images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 		  </h:outputLink>  	  	   
-		    <h:outputText id="emp_space7" value="  " styleClass="ExtraPaddingClass" />
+		  </h:panelGrid>
         </h:column>          
     </h:dataTable>   
       <h:inputHidden id="listSize" value="#{listAuthModulesPage.listSize}"/>

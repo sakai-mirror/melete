@@ -194,7 +194,13 @@ a1:active 			{color : #000080;}
   	vertical-align: top;
   	text-align: left;
   }
-  
+
+ .ListAuthorDateClass {
+   vertical-align:top;
+	width:1%;
+	font-size:85%;
+   }
+     
 .ListTitleClass {
 	font-size: 92%;
   	vertical-align: top;
@@ -210,7 +216,7 @@ a1:active 			{color : #000080;}
 
 .ListActionClass {
 	vertical-align: top;    
-    width: 11%;
+    width:6%;
   	white-space: nowrap;
   } 
   
@@ -218,13 +224,14 @@ a1:active 			{color : #000080;}
    vertical-align: top;
 	width: 2%;
    }
-   
- .ListDateInputClass {
+ 
+.ListDateInputClass {
 	font-size: 85%;
 	vertical-align: top;
     width: 18%;  
     white-space: nowrap;	
-  }  
+  } 
+  
 .ListDatePickerClass	{  
 width: 16px;  
 height: 16px;  border: 0 none black;  
