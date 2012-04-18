@@ -389,7 +389,7 @@ public class MeleteSiteAndUserInfo
 	}
 
 	/**
-	 * Populate sessionMap with current site, user, first name, last name, institute nad max upload size
+	 * Populate sessionMap with current site, user, first name, last name and max upload size
 	 * 
 	 */
 	public void populateMeleteSession()
@@ -403,7 +403,6 @@ public class MeleteSiteAndUserInfo
 			setCourse_id(getCurrentSiteId());
 			sessionMap.put("firstName", getCurrentUser().getFirstName());
 			sessionMap.put("lastName", getCurrentUser().getLastName());
-			sessionMap.put("institute", "Foothill College");
 			sessionMap.put("maxSize", String.valueOf(getMaxUploadSize()));
 
 			// logger.debug("Is Author is "+ isUserAuthor());

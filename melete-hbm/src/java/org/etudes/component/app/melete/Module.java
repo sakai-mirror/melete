@@ -52,14 +52,8 @@ public class Module implements Serializable, ModuleObjService
 	/** nullable persistent field */
 	private String description;
 
-	/** nullable persistent field */
-	private String institute;
-
 	/** persistent field */
 	private String keywords;
-
-	/** nullable persistent field */
-	private String learnObj;
 
 	/** nullable persistent field */
 	private Date modificationDate;
@@ -106,10 +100,8 @@ public class Module implements Serializable, ModuleObjService
 	public Module(Module oldModule)
 	{
 		this.title = oldModule.getTitle();
-		this.learnObj = oldModule.getLearnObj();
 		this.description = oldModule.getDescription();
 		this.keywords = oldModule.getKeywords();
-		this.institute = oldModule.getInstitute();
 		this.whatsNext = oldModule.getWhatsNext();
 		this.seqXml = null;
 		this.moduleshdate = null;
@@ -133,12 +125,11 @@ public class Module implements Serializable, ModuleObjService
 	}
 
 	/* Custom constructor */
-	public Module(String title, String learnObj, String description, String keywords, String createdByFname, String createdByLname, String userId,
-			String modifiedByFname, String modifiedByLname, String institute, String whatsNext, Date creationDate, Date modificationDate,
+	public Module(String title, String description, String keywords, String createdByFname, String createdByLname, String userId,
+			String modifiedByFname, String modifiedByLname, String whatsNext, Date creationDate, Date modificationDate,
 			String seqXml)
 	{
 		this.title = title;
-		this.learnObj = learnObj;
 		this.description = description;
 		this.keywords = keywords;
 		this.createdByFname = createdByFname;
@@ -146,7 +137,6 @@ public class Module implements Serializable, ModuleObjService
 		this.userId = userId;
 		this.modifiedByFname = modifiedByFname;
 		this.modifiedByLname = modifiedByLname;
-		this.institute = institute;
 		this.whatsNext = whatsNext;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
@@ -155,13 +145,12 @@ public class Module implements Serializable, ModuleObjService
 	}
 
 	/** full constructor */
-	public Module(String title, String learnObj, String description, String keywords, String createdByFname, String createdByLname, String userId,
-			String modifiedByFname, String modifiedByLname, String institute, String whatsNext, Date creationDate, Date modificationDate,
+	public Module(String title, String description, String keywords, String createdByFname, String createdByLname, String userId,
+			String modifiedByFname, String modifiedByLname, String whatsNext, Date creationDate, Date modificationDate,
 			String seqXml, int version, org.etudes.component.app.melete.ModuleShdates moduleshdate,
 			org.etudes.component.app.melete.CourseModule coursemodule, Map<Integer, SectionObjService> sections, Map deletedSections)
 	{
 		this.title = title;
-		this.learnObj = learnObj;
 		this.description = description;
 		this.keywords = keywords;
 		this.createdByFname = createdByFname;
@@ -169,7 +158,6 @@ public class Module implements Serializable, ModuleObjService
 		this.userId = userId;
 		this.modifiedByFname = modifiedByFname;
 		this.modifiedByLname = modifiedByLname;
-		this.institute = institute;
 		this.whatsNext = whatsNext;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
@@ -241,25 +229,9 @@ public class Module implements Serializable, ModuleObjService
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getInstitute()
-	{
-		return this.institute;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public String getKeywords()
 	{
 		return this.keywords;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getLearnObj()
-	{
-		return this.learnObj;
 	}
 
 	/**
@@ -414,25 +386,9 @@ public class Module implements Serializable, ModuleObjService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setInstitute(String institute)
-	{
-		this.institute = institute;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setKeywords(String keywords)
 	{
 		this.keywords = keywords;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setLearnObj(String learnObj)
-	{
-		this.learnObj = learnObj;
 	}
 
 	/**

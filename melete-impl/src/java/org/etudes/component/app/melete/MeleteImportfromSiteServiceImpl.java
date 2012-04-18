@@ -526,8 +526,8 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			}
 
 			// Copy module properties and insert, seqXml is null for now
-			Module toMod = new Module(fromMod.getTitle(), fromMod.getLearnObj(), fromMod.getDescription(), fromMod.getKeywords(), firstName,
-					lastName, user.getId(), firstName, lastName, fromMod.getInstitute(), fromMod.getWhatsNext(), new java.util.Date(),
+			Module toMod = new Module(fromMod.getTitle(), fromMod.getDescription(), fromMod.getKeywords(), firstName,
+					lastName, user.getId(), firstName, lastName, fromMod.getWhatsNext(), new java.util.Date(),
 					new java.util.Date(), null);
 			ModuleShdates fromShDates = (ModuleShdates) fromMod.getModuleshdate();
 			ModuleShdates toModshdate = new ModuleShdates(fromShDates.getStartDate(), fromShDates.getEndDate(), fromShDates.getAllowUntilDate(),

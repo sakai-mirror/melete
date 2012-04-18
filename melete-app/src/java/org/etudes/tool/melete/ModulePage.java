@@ -183,8 +183,7 @@ public abstract class ModulePage implements Serializable
 
 			module.setCreatedByFname(mPage.getCurrentUser().getFirstName());
 			module.setCreatedByLname(mPage.getCurrentUser().getLastName());
-			module.setInstitute("");
-
+			
 			success = false;
 
 		}

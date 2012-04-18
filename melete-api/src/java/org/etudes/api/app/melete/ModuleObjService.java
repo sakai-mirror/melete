@@ -62,19 +62,9 @@ public interface ModuleObjService
 	public abstract String getDescription();
 
 	/**
-	 * @return institute
-	 */
-	public abstract String getInstitute();
-
-	/**
 	 * @return keywords
 	 */
 	public abstract String getKeywords();
-
-	/**
-	 * @return learnObj string
-	 */
-	public abstract String getLearnObj();
 
 	/**
 	 * @return
@@ -166,20 +156,9 @@ public interface ModuleObjService
 	public abstract void setDescription(String description);
 
 	/**
-	 * @param institute
-	 */
-	public abstract void setInstitute(String institute);
-
-	/**
 	 * @param keywords
 	 */
 	public abstract void setKeywords(String keywords);
-
-	/**
-	 * @param learnObj
-	 *        learning objectives
-	 */
-	public abstract void setLearnObj(String learnObj);
 
 	/**
 	 * @param modificationDate
