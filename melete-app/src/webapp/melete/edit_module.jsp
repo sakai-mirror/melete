@@ -187,13 +187,13 @@ function newWindow(newContent){
 			<span class="required">*</span>&nbsp; <h:outputText value="#{msgs.edit_module_required}" />
 		</td>
 		<td align="right" class="footnoteDates">
-			<h:outputText value="#{msgs.edit_module_created_by}"/> <h:outputText value="#{editModulePage.module.createdByFname}"/>&nbsp;<h:outputText value="#{editModulePage.module.createdByLname}"/><h:outputText value=","/>&nbsp;
+			<h:outputText value="#{msgs.edit_module_created_by}"/> <h:outputText value="#{editModulePage.createdAuthor}"/><h:outputText value=","/>&nbsp;
 			<h:outputText value="#{editModulePage.module.creationDate}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
 		</td>
 	</tr>
 	<tr>
 		<td align="right" class="footnoteDates">
-			<h:outputText value="#{msgs.edit_module_modified_by}"/> <h:outputText value="#{editModulePage.module.modifiedByFname}"/>&nbsp;<h:outputText value="#{editModulePage.module.modifiedByLname}"/><h:outputText value=","/>&nbsp;
+			<h:outputText value="#{msgs.edit_module_modified_by}"/> <h:outputText value="#{editModulePage.modifiedAuthor}"/><h:outputText value=","/>&nbsp;
 			<h:outputText value="#{editModulePage.module.modificationDate}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
 		</td>
 	</tr>

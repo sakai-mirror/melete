@@ -82,6 +82,11 @@ public interface ModuleObjService
 	public abstract String getModifiedByLname();
 
 	/**
+	 * @return get modified by user id
+	 */
+	public abstract String getModifyUserId();
+
+	/**
 	 * @return module id
 	 */
 	public abstract Integer getModuleId();
@@ -178,6 +183,12 @@ public interface ModuleObjService
 	 */
 	public abstract void setModifiedByLname(String modifiedByLname);
 
+	/**
+	 * @param modifyUserId
+	 *        user_id of modifying author
+	 */
+	public abstract void setModifyUserId(String modifyUserId);
+	
 	/**
 	 * @param moduleId
 	 *        the module id

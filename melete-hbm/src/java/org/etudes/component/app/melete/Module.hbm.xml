@@ -40,7 +40,7 @@
 	<property name="keywords" column="KEYWORDS" type="string"  length="250" not-null="true"/>
 	<property name="createdByFname" column="CREATED_BY_FNAME" type="string"  length="50" not-null="true" />
 	<property name="createdByLname" column="CREATED_BY_LNAME" type="string"   length="50" not-null="true"/>
-   <property name="userId" column="USER_ID" type="string"   length="99" not-null="true"/>	
+    <property name="userId" column="USER_ID" type="string"   length="99" not-null="true"/>	
 	<property name="modifiedByFname" column="MODIFIED_BY_FNAME" type="string"  length="50"/>
 	<property name="modifiedByLname" column="MODIFIED_BY_LNAME" type="string"   length="50" />
 		
@@ -49,7 +49,8 @@
 	<!--size 500-->
 	<property name="creationDate"  column="CREATION_DATE"  type="timestamp"  not-null="true"/>			
 	<property name="modificationDate"  column="MODIFICATION_DATE"  type="timestamp" />
-       <property name="seqXml" column="SEQ_XML"  type="text"  />										
+    <property name="seqXml" column="SEQ_XML"  type="text"  />
+    <property name="modifyUserId" column="MODIFY_USER_ID" type="string"   length="99" not-null="true"/>  										
 	<!--add url reference to cc_license_url at some point-->
 <!--<list name="sections" cascade="all-delete-orphan" table="melete_section" inverse="true" lazy="false" where="DELETE_FLAG=0">
 -->

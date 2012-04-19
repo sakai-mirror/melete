@@ -247,6 +247,7 @@ public class ModuleDB implements Serializable
 			{
 				module.setCreationDate(new java.util.Date());
 				module.setUserId(userId);
+				module.setModifyUserId(userId);
 				module.setModificationDate(new java.util.Date());
 				User user = UserDirectoryService.getUser(userId);
 				module.setCreatedByFname(user.getFirstName());
@@ -3294,7 +3295,8 @@ else
 					moduleShdate.setEndDate(null);
 					moduleShdate.setAllowUntilDate(null);
 
-					//fetch module object and update modification date
+/*					restoring is event and we are not updating modification details for that
+ * 					//fetch module object and update modification date
 					q = session.createQuery("select mod from Module mod where mod.moduleId =:moduleId");
 					q.setParameter("moduleId", coursemodule.getModule().getModuleId());
 
@@ -3303,13 +3305,14 @@ else
 					module.setModificationDate(new java.util.Date());
 					module.setModifiedByFname(user.getFirstName());
 					module.setModifiedByLname(user.getLastName());
-					
+					module.setModifyUserId(userId);
+					*/
 					// 4a. begin transaction
 					tx = session.beginTransaction();
 					// 4b save all objects
 					session.saveOrUpdate(coursemodule1);
 					session.saveOrUpdate(moduleShdate);
-					session.saveOrUpdate(module);
+//					session.saveOrUpdate(module);
 					// 4c.commit transaction
 					tx.commit();
 				}
@@ -3837,6 +3840,7 @@ else
 					User user = UserDirectoryService.getUser(userId);
 					mod.setModifiedByFname(user.getFirstName());
 					mod.setModifiedByLname(user.getLastName());
+					mod.setModifyUserId(userId);
 					mod.setTitle(checkModule.getTitle());
 					mod.setModuleshdate(mDate);
 

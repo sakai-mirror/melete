@@ -64,6 +64,9 @@ public class Module implements Serializable, ModuleObjService
 	/** nullable persistent field */
 	private String modifiedByLname;
 
+	/** persistent field */
+	private String modifyUserId;
+	
 	/** identifier field */
 	private Integer moduleId;
 	
@@ -145,8 +148,9 @@ public class Module implements Serializable, ModuleObjService
 	}
 
 	/** full constructor */
-	public Module(String title, String description, String keywords, String createdByFname, String createdByLname, String userId,
-			String modifiedByFname, String modifiedByLname, String whatsNext, Date creationDate, Date modificationDate,
+
+	public Module(String title, String learnObj, String description, String keywords, String createdByFname, String createdByLname, String userId,
+			String modifiedByFname, String modifiedByLname, String modifyUserId, String institute, String whatsNext, Date creationDate, Date modificationDate,
 			String seqXml, int version, org.etudes.component.app.melete.ModuleShdates moduleshdate,
 			org.etudes.component.app.melete.CourseModule coursemodule, Map<Integer, SectionObjService> sections, Map deletedSections)
 	{
@@ -161,6 +165,7 @@ public class Module implements Serializable, ModuleObjService
 		this.whatsNext = whatsNext;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
+		this.modifyUserId = modifyUserId;
 		this.seqXml = seqXml;
 		this.version = version;
 		this.moduleshdate = moduleshdate;
@@ -256,6 +261,14 @@ public class Module implements Serializable, ModuleObjService
 	public String getModifiedByLname()
 	{
 		return this.modifiedByLname;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getModifyUserId()
+	{
+		return modifyUserId;
 	}
 
 	/**
@@ -415,6 +428,14 @@ public class Module implements Serializable, ModuleObjService
 		this.modifiedByLname = modifiedByLname;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setModifyUserId(String modifyUserId)
+	{
+		this.modifyUserId = modifyUserId;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */

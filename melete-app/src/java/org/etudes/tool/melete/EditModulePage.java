@@ -46,6 +46,8 @@ import org.etudes.component.app.melete.ModuleShdates;
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.tool.cover.ToolManager;
+import org.sakaiproject.user.api.User;
+import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.util.ResourceLoader;
 
 /**
@@ -62,6 +64,8 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 	private boolean showLicenseFlag = true;
 	private boolean hasSections = true;
 	private SectionObjService firstSection = null;
+	private String createdAuthor;
+	private String modifiedAuthor;
 	protected ThreadLocalManager threadLocalManager = org.sakaiproject.thread_local.cover.ThreadLocalManager.getInstance();
 
 	/**
@@ -71,7 +75,8 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 	{
 		setFormName("EditModuleForm");
 		setSuccess(false);
-
+		createdAuthor = "";
+		modifiedAuthor = "";
 	}
 
 	/**
@@ -501,4 +506,57 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 		this.mdBean = (ModuleDateBean) moduleService.getModuleDateBean(userId, siteId, new Integer(id).intValue());
 		setEditInfo(mdBean);
 	}
+
+	/**
+	 * Get the creator name. If user Id is specified get the current name otherwise from our stored fields
+	 * @return
+	 */
+	public String getCreatedAuthor()
+	{
+		try
+		{
+			if (module.getUserId() != null && module.getUserId().length() > 0)
+			{
+				User user = UserDirectoryService.getUser(module.getUserId());
+				createdAuthor = user.getFirstName();
+				createdAuthor = createdAuthor.concat(" " + user.getLastName());
+			}
+			else
+			{
+				createdAuthor = module.getCreatedByFname() + " " + module.getCreatedByLname();
+			}
+		}
+		catch (Exception e)
+		{
+			createdAuthor = module.getCreatedByFname() + " " + module.getCreatedByLname();
+		}
+		return createdAuthor;
+	}
+
+	/**
+	 * Get the last modified author name.
+	 * @return
+	 */
+	public String getModifiedAuthor()
+	{
+		try
+		{
+			if (module.getModifyUserId() != null && module.getModifyUserId().length() > 0)
+			{
+				User user = UserDirectoryService.getUser(module.getModifyUserId());
+				modifiedAuthor = user.getFirstName();
+				modifiedAuthor = modifiedAuthor.concat(" " + user.getLastName());
+			}
+			else
+			{
+				modifiedAuthor = module.getModifiedByFname() + " " + module.getModifiedByLname();
+			}
+		}
+		catch (Exception e)
+		{
+			modifiedAuthor = module.getModifiedByFname() + " " + module.getModifiedByLname();
+		}
+		return modifiedAuthor;
+	}
+
 }
