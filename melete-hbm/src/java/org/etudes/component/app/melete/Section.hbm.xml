@@ -49,6 +49,8 @@
 	<property name="deleteFlag" column="DELETE_FLAG" type="boolean" />				
 	<property name="creationDate"  column="CREATION_DATE"  type="timestamp" not-null="true"/>			
 	<property name="modificationDate"  column="MODIFICATION_DATE"  type="timestamp"  not-null="true"/>
+	<property name="userId" column="USER_ID" type="string"   length="99" not-null="true"/>	
+    <property name="modifyUserId" column="MODIFY_USER_ID" type="string"   length="99" not-null="true"/>
 	<many-to-one name="module"  class="org.etudes.component.app.melete.Module" insert="false" update="false" column="MODULE_ID"  lazy="false"/>
 	<one-to-one name="sectionResource" class="org.etudes.component.app.melete.SectionResource"/>	
 	</class>

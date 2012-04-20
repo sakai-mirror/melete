@@ -836,7 +836,7 @@ public class ModuleDB implements Serializable
 					copySection.setModule(copyMod);
 					copySection.setTitle(copySection.getTitle() + " (" + bundle.getString("Copied") + " " + shortTime.format(new Date()) + " )");
 					// insert section
-					Integer copySectionId = sectionDB.addSection(copyMod, copySection, false);
+					Integer copySectionId = sectionDB.addSection(copyMod, copySection, false, userId);
 					copySection.setSectionId(copySectionId);
 					// copySection.setModule(copyMod);
 					if (toCopySection.getContentType() != null && !toCopySection.getContentType().equals("notype"))

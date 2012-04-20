@@ -582,7 +582,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 						try
 						{
 							// Insert into the SECTION table
-							sectionDB.addSection(toMod, toSec, false);
+							sectionDB.addSection(toMod, toSec, false, user.getId());
 							toSecId = toSec.getSectionId().intValue();
 							// Replace old references of sections to new references in SEQ xml
 							// TODO : Move the update seqxml lower down so sequence does not update

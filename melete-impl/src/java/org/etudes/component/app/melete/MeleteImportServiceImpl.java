@@ -1084,7 +1084,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			meleteResource.setCcLicenseUrl(RESOURCE_LICENSE_URL);
 		}
 		// save section object
-		Integer new_section_id = sectionDB.addSection(module, section, true);
+		Integer new_section_id = sectionDB.addSection(module, section, true, userId);
 		section.setSectionId(new_section_id);
 		seqElement.addAttribute("id", new_section_id.toString());
 
@@ -1230,7 +1230,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			meleteResource.setCcLicenseUrl(RESOURCE_LICENSE_URL);
 		}
 		// save section object
-		Integer new_section_id = sectionDB.addSection(module, section, true);
+		Integer new_section_id = sectionDB.addSection(module, section, true, userId);
 		section.setSectionId(new_section_id);
 		seqElement.addAttribute("id", new_section_id.toString());
 

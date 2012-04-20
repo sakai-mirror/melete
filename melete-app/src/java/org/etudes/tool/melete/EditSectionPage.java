@@ -49,6 +49,8 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.tool.cover.ToolManager;
+import org.sakaiproject.user.api.User;
+import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.util.ResourceLoader;
 
 import org.sakaiproject.event.cover.EventTrackingService;
@@ -79,6 +81,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 	
 	private Date lastSavedAt;
 
+	private String createdByAuthor;
+	
+	private String modifiedByAuthor;
 	/**
 	 * Default constructor
 	 */
@@ -86,6 +91,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		logger.debug("EditSectionPage CONSTRUCTOR CALLED");
 		setFormName("EditSectionForm");
+		createdByAuthor = "";
+		modifiedByAuthor = "";
 	}
 
 	/**
@@ -1251,7 +1258,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			shouldRenderNotype = true;
 			int mId = module.getModuleId().intValue();
 
-			newSectionId = sectionService.insertSection(module, s);
+			newSectionId = sectionService.insertSection(module, s, info.getCurrentUser().getId());
 			s.setSectionId(newSectionId);
 
 			// refresh module and refresh seqxml. It has newly added section id
@@ -1298,5 +1305,57 @@ public class EditSectionPage extends SectionPage implements Serializable
 			setEditInfo(sec);
 		}
 
+	}
+	
+	/**
+	 * Get the creator name. If user Id is specified get the current name otherwise from our stored fields
+	 * @return
+	 */
+	public String getCreatedByAuthor()
+	{
+		try
+		{
+			if (section.getUserId() != null && section.getUserId().length() > 0)
+			{
+				User user = UserDirectoryService.getUser(section.getUserId());
+				createdByAuthor = user.getFirstName();
+				createdByAuthor = createdByAuthor.concat(" " + user.getLastName());
+			}
+			else
+			{
+				createdByAuthor = section.getCreatedByFname() + " " + section.getCreatedByLname();
+			}
+		}
+		catch (Exception e)
+		{
+			createdByAuthor = section.getCreatedByFname() + " " + section.getCreatedByLname();
+		}
+		return createdByAuthor;
+	}
+
+	/**
+	 * Get the last modified author name.
+	 * @return
+	 */
+	public String getModifiedByAuthor()
+	{
+		try
+		{
+			if (section.getModifyUserId() != null && section.getModifyUserId().length() > 0)
+			{
+				User user = UserDirectoryService.getUser(section.getModifyUserId());
+				modifiedByAuthor = user.getFirstName();
+				modifiedByAuthor = modifiedByAuthor.concat(" " + user.getLastName());
+			}
+			else
+			{
+				modifiedByAuthor = section.getModifiedByFname() + " " + section.getModifiedByLname();
+			}
+		}
+		catch (Exception e)
+		{
+			modifiedByAuthor = section.getModifiedByFname() + " " + section.getModifiedByLname();
+		}
+		return modifiedByAuthor;
 	}
 }

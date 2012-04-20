@@ -60,6 +60,9 @@ public class Section implements SectionObjService
 	/** nullable persistent field */
 	private String modifiedByLname;
 
+	/** persistent field */
+	private String modifyUserId;
+	
 	/** nullable persistent field */
 	private org.etudes.component.app.melete.Module module;
 
@@ -81,6 +84,9 @@ public class Section implements SectionObjService
 	/** persistent field */
 	private String title = "Untitled section";
 
+	/** persistent field */
+	private String userId;
+	
 	/** nullable persistent field */
 	private int version;
 
@@ -252,6 +258,14 @@ public class Section implements SectionObjService
 	{
 		return this.modifiedByLname;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getModifyUserId()
+	{
+		return modifyUserId;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -293,6 +307,14 @@ public class Section implements SectionObjService
 		return this.title;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getUserId()
+	{
+		return userId;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -424,6 +446,14 @@ public class Section implements SectionObjService
 	/**
 	 * {@inheritDoc}
 	 */
+	public void setModifyUserId(String modifyUserId)
+	{
+		this.modifyUserId = modifyUserId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setModule(org.etudes.api.app.melete.ModuleObjService module)
 	{
 		this.module = (Module) module;
@@ -476,7 +506,15 @@ public class Section implements SectionObjService
 	{
 		this.title = title;
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setUserId(String userId)
+	{
+		this.userId = userId;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */

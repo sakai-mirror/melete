@@ -90,6 +90,13 @@ public interface SectionObjService extends Serializable
 	public abstract String getModifiedByLname();
 
 	/**
+	 * Get modified by userid
+	 * 
+	 * @return
+	 */
+	public abstract String getModifyUserId();
+	
+	/**
 	 * Get Module.
 	 * 
 	 * @return
@@ -124,6 +131,13 @@ public interface SectionObjService extends Serializable
 	 */
 	public abstract String getTitle();
 
+	/**
+	 * Get created by userid
+	 * 
+	 * @return
+	 */
+	public abstract String getUserId();
+	
 	/**
 	 * 
 	 * @return
@@ -241,6 +255,12 @@ public interface SectionObjService extends Serializable
 	public abstract void setModifiedByLname(String modifiedByLname);
 
 	/**
+	 * @param modifyUserId
+	 *        user_id of modifying author
+	 */
+	public abstract void setModifyUserId(String modifyUserId);
+	
+	/**
 	 * Set Module
 	 * 
 	 * @param module
@@ -289,6 +309,12 @@ public interface SectionObjService extends Serializable
 	 */
 	public abstract void setTitle(String title);
 
+	/**
+	 * @param userId
+	 *        user_id of creator
+	 */
+	public abstract void setUserId(String userId);
+	
 	/**
 	 * 
 	 * @param version

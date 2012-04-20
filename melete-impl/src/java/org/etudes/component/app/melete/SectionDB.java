@@ -76,7 +76,7 @@ public class SectionDB implements Serializable
 	/**
 	 * Add section sets the not-null values not been populated yet and then inserts the section into section table. update module witht his association to new added section If error in committing transaction, it rollbacks the transaction.
 	 */
-	public Integer addSection(Module module, Section section, boolean fromImport) throws MeleteException
+	public Integer addSection(Module module, Section section, boolean fromImport, String userId) throws MeleteException
 	{
 		try
 		{
@@ -90,7 +90,8 @@ public class SectionDB implements Serializable
 				section.setModificationDate(new java.util.Date());
 				section.setModuleId(module.getModuleId().intValue());
 				section.setDeleteFlag(false);
-
+				section.setUserId(userId);
+				section.setModifyUserId(userId);
 				/*
 				 * Since Oracle silently transforms "" to nulls, we need to check to see if these non null properties are in fact null.
 				 */
@@ -277,6 +278,7 @@ public class SectionDB implements Serializable
 					findSection.setModifiedByFname(user.getFirstName());
 					findSection.setModifiedByLname(user.getLastName());
 					findSection.setModificationDate(new java.util.Date());
+					findSection.setModifyUserId(userId);
 				}
 				findSection.setAudioContent(section.isAudioContent());
 				findSection.setContentType(section.getContentType());
@@ -381,7 +383,8 @@ public class SectionDB implements Serializable
 					User user = UserDirectoryService.getUser(userId);
 					findSection.setModifiedByFname(user.getFirstName());
 					findSection.setModifiedByLname(user.getLastName());
-					findSection.setModificationDate(new java.util.Date());									
+					findSection.setModificationDate(new java.util.Date());		
+					findSection.setModifyUserId(userId);
 				}
 
 				// if new associated resource is different than old one, fetch from db

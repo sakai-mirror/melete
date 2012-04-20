@@ -274,14 +274,14 @@ function saveEditor()
 					<span class="required">*</span>&nbsp; <h:outputText value="#{msgs.edit_module_required}" />
 				</td>
 				<td align="right" class="footnoteDates">
-					<h:outputText value="#{msgs.editmodulesections_author}"/>&nbsp;<h:outputText value="#{editSectionPage.section.createdByFname}" />&nbsp;<h:outputText value="#{editSectionPage.section.createdByLname}"/><h:outputText value=","/>&nbsp;
+					<h:outputText value="#{msgs.editmodulesections_author}"/>&nbsp;<h:outputText value="#{editSectionPage.createdByAuthor}" /><h:outputText value=","/>&nbsp;
                     <h:outputText value="#{editSectionPage.section.creationDate}" styleClass="italics"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
                              
 				</td>
 			</tr>
 			<tr>
 				<td align="right" class="footnoteDates">
-					<h:outputText value="#{msgs.editmodulesections_author_edit}"/>&nbsp;<h:outputText value="#{editSectionPage.section.modifiedByFname}" />&nbsp;<h:outputText value="#{editSectionPage.section.modifiedByLname}" /><h:outputText value=","/>&nbsp;
+					<h:outputText value="#{msgs.editmodulesections_author_edit}"/>&nbsp;<h:outputText value="#{editSectionPage.modifiedByAuthor}" /><h:outputText value=","/>&nbsp;
                     <h:outputText value="#{editSectionPage.section.modificationDate}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
                  
                 </td>
