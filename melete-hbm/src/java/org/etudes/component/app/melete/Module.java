@@ -39,12 +39,6 @@ public class Module implements Serializable, ModuleObjService
 	private org.etudes.component.app.melete.CourseModule coursemodule;
 
 	/** persistent field */
-	private String createdByFname;
-
-	/** persistent field */
-	private String createdByLname;
-
-	/** persistent field */
 	private Date creationDate;
 
 	private Map deletedSections;
@@ -57,12 +51,6 @@ public class Module implements Serializable, ModuleObjService
 
 	/** nullable persistent field */
 	private Date modificationDate;
-
-	/** nullable persistent field */
-	private String modifiedByFname;
-
-	/** nullable persistent field */
-	private String modifiedByLname;
 
 	/** persistent field */
 	private String modifyUserId;
@@ -111,16 +99,16 @@ public class Module implements Serializable, ModuleObjService
 		this.coursemodule = null;
 		this.sections = null;
 		this.deletedSections = null;
+		this.userId = oldModule.userId;
+		this.modifyUserId = oldModule.modifyUserId;
 	}
 
 	/** minimal constructor */
-	public Module(String title, String keywords, String createdByFname, String createdByLname, String userId, Date creationDate, Map<Integer, SectionObjService> sections,
+	public Module(String title, String keywords, String userId, Date creationDate, Map<Integer, SectionObjService> sections,
 			Map deletedSections)
 	{
 		this.title = title;
 		this.keywords = keywords;
-		this.createdByFname = createdByFname;
-		this.createdByLname = createdByLname;
 		this.userId = userId;
 		this.creationDate = creationDate;
 		this.sections = sections;
@@ -128,18 +116,14 @@ public class Module implements Serializable, ModuleObjService
 	}
 
 	/* Custom constructor */
-	public Module(String title, String description, String keywords, String createdByFname, String createdByLname, String userId,
-			String modifiedByFname, String modifiedByLname, String whatsNext, Date creationDate, Date modificationDate,
-			String seqXml)
+	public Module(String title, String description, String keywords, String userId, String modifyUserId, String whatsNext, Date creationDate,
+			Date modificationDate, String seqXml)
 	{
 		this.title = title;
 		this.description = description;
 		this.keywords = keywords;
-		this.createdByFname = createdByFname;
-		this.createdByLname = createdByLname;
 		this.userId = userId;
-		this.modifiedByFname = modifiedByFname;
-		this.modifiedByLname = modifiedByLname;
+		this.modifyUserId = modifyUserId;
 		this.whatsNext = whatsNext;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
@@ -157,11 +141,7 @@ public class Module implements Serializable, ModuleObjService
 		this.title = title;
 		this.description = description;
 		this.keywords = keywords;
-		this.createdByFname = createdByFname;
-		this.createdByLname = createdByLname;
 		this.userId = userId;
-		this.modifiedByFname = modifiedByFname;
-		this.modifiedByLname = modifiedByLname;
 		this.whatsNext = whatsNext;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
@@ -189,22 +169,6 @@ public class Module implements Serializable, ModuleObjService
 	public org.etudes.api.app.melete.CourseModuleService getCoursemodule()
 	{
 		return this.coursemodule;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getCreatedByFname()
-	{
-		return this.createdByFname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getCreatedByLname()
-	{
-		return this.createdByLname;
 	}
 
 	/**
@@ -245,22 +209,6 @@ public class Module implements Serializable, ModuleObjService
 	public Date getModificationDate()
 	{
 		return this.modificationDate;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getModifiedByFname()
-	{
-		return this.modifiedByFname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getModifiedByLname()
-	{
-		return this.modifiedByLname;
 	}
 
 	/**
@@ -359,22 +307,6 @@ public class Module implements Serializable, ModuleObjService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setCreatedByFname(String createdByFname)
-	{
-		this.createdByFname = createdByFname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setCreatedByLname(String createdByLname)
-	{
-		this.createdByLname = createdByLname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setCreationDate(Date creationDate)
 	{
 		this.creationDate = creationDate;
@@ -410,22 +342,6 @@ public class Module implements Serializable, ModuleObjService
 	public void setModificationDate(Date modificationDate)
 	{
 		this.modificationDate = modificationDate;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setModifiedByFname(String modifiedByFname)
-	{
-		this.modifiedByFname = modifiedByFname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setModifiedByLname(String modifiedByLname)
-	{
-		this.modifiedByLname = modifiedByLname;
 	}
 
 	/**

@@ -40,17 +40,7 @@ public interface ModuleObjService
 	 * @return coursemoduleservice
 	 */
 	public abstract org.etudes.api.app.melete.CourseModuleService getCoursemodule();
-
-	/**
-	 * @return created by fname string
-	 */
-	public abstract String getCreatedByFname();
-
-	/**
-	 * @return created by lname string
-	 */
-	public abstract String getCreatedByLname();
-
+	
 	/**
 	 * @return creation date
 	 */
@@ -70,16 +60,6 @@ public interface ModuleObjService
 	 * @return
 	 */
 	public abstract Date getModificationDate();
-
-	/**
-	 * @return modified by name
-	 */
-	public abstract String getModifiedByFname();
-
-	/**
-	 * @return get modified by lname
-	 */
-	public abstract String getModifiedByLname();
 
 	/**
 	 * @return get modified by user id
@@ -140,16 +120,6 @@ public interface ModuleObjService
 	public abstract void setCoursemodule(org.etudes.api.app.melete.CourseModuleService coursemodule);
 
 	/**
-	 * @param createdByFname
-	 */
-	public abstract void setCreatedByFname(String createdByFname);
-
-	/**
-	 * @param createdByLname
-	 */
-	public abstract void setCreatedByLname(String createdByLname);
-
-	/**
 	 * @param creationDate
 	 *        creation date
 	 */
@@ -170,18 +140,6 @@ public interface ModuleObjService
 	 *        modification date
 	 */
 	public abstract void setModificationDate(Date modificationDate);
-
-	/**
-	 * @param modifiedByFname
-	 *        first name of author
-	 */
-	public abstract void setModifiedByFname(String modifiedByFname);
-
-	/**
-	 * @param modifiedByLname
-	 *        last name of author
-	 */
-	public abstract void setModifiedByLname(String modifiedByLname);
 
 	/**
 	 * @param modifyUserId

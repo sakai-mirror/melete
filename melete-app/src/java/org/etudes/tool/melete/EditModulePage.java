@@ -87,9 +87,6 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 		FacesContext context = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
 		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
-
-		module.setModifiedByFname(mPage.getCurrentUser().getFirstName());
-		module.setModifiedByLname(mPage.getCurrentUser().getLastName());
 		module.setModificationDate(new Date());
 	}
 
@@ -521,14 +518,10 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 				createdAuthor = user.getFirstName();
 				createdAuthor = createdAuthor.concat(" " + user.getLastName());
 			}
-			else
-			{
-				createdAuthor = module.getCreatedByFname() + " " + module.getCreatedByLname();
-			}
 		}
 		catch (Exception e)
 		{
-			createdAuthor = module.getCreatedByFname() + " " + module.getCreatedByLname();
+			createdAuthor = "";
 		}
 		return createdAuthor;
 	}
@@ -546,15 +539,11 @@ public class EditModulePage extends ModulePage implements Serializable/* , ToolB
 				User user = UserDirectoryService.getUser(module.getModifyUserId());
 				modifiedAuthor = user.getFirstName();
 				modifiedAuthor = modifiedAuthor.concat(" " + user.getLastName());
-			}
-			else
-			{
-				modifiedAuthor = module.getModifiedByFname() + " " + module.getModifiedByLname();
-			}
+			}			
 		}
 		catch (Exception e)
 		{
-			modifiedAuthor = module.getModifiedByFname() + " " + module.getModifiedByLname();
+			modifiedAuthor ="";
 		}
 		return modifiedAuthor;
 	}

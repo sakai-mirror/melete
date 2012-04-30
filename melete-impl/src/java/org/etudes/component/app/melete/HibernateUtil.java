@@ -78,59 +78,6 @@ public class HibernateUtil implements Serializable
 	}
 
 	/**
-	 * Method added to ensure null values are not added for Oracle
-	 * 
-	 * @param mod
-	 *        module object
-	 */
-	public void ensureModuleHasNonNulls(Module mod)
-	{
-		Map sections = mod.getSections();
-		if (sections != null && sections.size() > 0)
-		{
-			Iterator iter = sections.keySet().iterator();
-
-			while (iter.hasNext())
-			{
-				Object key;
-				Section cur;
-
-				key = iter.next();
-				cur = (Section) sections.get(key);
-				ensureSectionHasNonNull(cur);
-			}
-		}
-		if (null == mod.getCreatedByFname())
-		{
-			mod.setCreatedByFname("");
-		}
-		if (null == mod.getCreatedByFname())
-		{
-			mod.setCreatedByFname("");
-		}
-
-	}
-
-	/**
-	 * Method added to ensure section object does not have null objects
-	 * 
-	 * @param sec
-	 *        Section object
-	 */
-	public void ensureSectionHasNonNull(Section sec)
-	{
-		if (null == sec.getCreatedByFname())
-		{
-			sec.setCreatedByFname("");
-		}
-
-		if (null == sec.getCreatedByLname())
-		{
-			sec.setCreatedByLname("");
-		}
-	}
-
-	/**
 	 * @return Returns the sessionFactory.
 	 */
 	public SessionFactory getSessionFactory()

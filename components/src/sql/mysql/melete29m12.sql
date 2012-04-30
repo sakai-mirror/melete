@@ -51,15 +51,12 @@ CREATE TABLE `melete_module` (
   `TITLE` varchar(255) NOT NULL default '',
   `DESCRIPTION` text,
   `KEYWORDS` varchar(250) NOT NULL default '',
-  `CREATED_BY_FNAME` varchar(50) NOT NULL default '',
-  `CREATED_BY_LNAME` varchar(50) NOT NULL default '',
   `USER_ID` varchar(99) NOT NULL default '',
-  `MODIFIED_BY_FNAME` varchar(50) default NULL,
-  `MODIFIED_BY_LNAME` varchar(50) default NULL,
   `WHATS_NEXT` text,
   `CREATION_DATE` datetime NOT NULL default '0000-00-00 00:00:00',
   `MODIFICATION_DATE` datetime default NULL,
   `SEQ_XML` text,
+  `MODIFY_USER_ID` varchar(99) NOT NULL default '',
   PRIMARY KEY  (`MODULE_ID`)
 );
 CREATE TABLE `melete_course_module` (
@@ -102,10 +99,6 @@ CREATE TABLE `melete_section` (
  `VERSION` int(11) NOT NULL default '0',
  `MODULE_ID` int(11) NOT NULL default '0',
  `TITLE` varchar(255) NOT NULL default '',
- `CREATED_BY_FNAME` varchar(50) NOT NULL default '',
- `CREATED_BY_LNAME` varchar(50) NOT NULL default '',
- `MODIFIED_BY_FNAME` varchar(50) default NULL,
- `MODIFIED_BY_LNAME` varchar(50) default NULL,
  `INSTR` varchar(250) default NULL,
  `CONTENT_TYPE` varchar(10) NOT NULL default '',
  `AUDIO_CONTENT` tinyint(1) default NULL,
@@ -115,6 +108,8 @@ CREATE TABLE `melete_section` (
  `DELETE_FLAG` tinyint(1) default '0',
  `CREATION_DATE` datetime NOT NULL default '0000-00-00 00:00:00',
  `MODIFICATION_DATE` datetime NOT NULL default '0000-00-00 00:00:00',
+ `USER_ID` varchar(99) NOT NULL default '',
+ `MODIFY_USER_ID` varchar(99) NOT NULL default '',
  PRIMARY KEY(`SECTION_ID`),
  CONSTRAINT `FK_MS_MM` FOREIGN KEY(`MODULE_ID`) REFERENCES `melete_module`(`MODULE_ID`)
  );

@@ -92,11 +92,6 @@ public class SectionDB implements Serializable
 				section.setDeleteFlag(false);
 				section.setUserId(userId);
 				section.setModifyUserId(userId);
-				/*
-				 * Since Oracle silently transforms "" to nulls, we need to check to see if these non null properties are in fact null.
-				 */
-
-				hibernateUtil.ensureSectionHasNonNull(section);
 				// save object
 				if (!session.isOpen())
 				{
@@ -274,9 +269,6 @@ public class SectionDB implements Serializable
 				else
 				{
 					// update modification details only when there is modification
-					User user = UserDirectoryService.getUser(userId);
-					findSection.setModifiedByFname(user.getFirstName());
-					findSection.setModifiedByLname(user.getLastName());
 					findSection.setModificationDate(new java.util.Date());
 					findSection.setModifyUserId(userId);
 				}
@@ -287,8 +279,6 @@ public class SectionDB implements Serializable
 				findSection.setTextualContent(section.isTextualContent());
 				findSection.setTitle(section.getTitle());
 				findSection.setVideoContent(section.isVideoContent());			
-
-				hibernateUtil.ensureSectionHasNonNull(findSection);
 
 				// save object
 				if (!session.isOpen()) session = hibernateUtil.currentSession();
@@ -380,9 +370,6 @@ public class SectionDB implements Serializable
 				if (!shouldUpdateSectionObject(section, findSection) || (melResource != null && !shouldUpdateMeleteResourceObject(melResource, findMelResource)) || modifyCR)
 				{
 					// modification details
-					User user = UserDirectoryService.getUser(userId);
-					findSection.setModifiedByFname(user.getFirstName());
-					findSection.setModifiedByLname(user.getLastName());
 					findSection.setModificationDate(new java.util.Date());		
 					findSection.setModifyUserId(userId);
 				}
@@ -441,8 +428,7 @@ public class SectionDB implements Serializable
 				findSection.setTitle(section.getTitle());
 				findSection.setVideoContent(section.isVideoContent());				
 				findSection.setSectionResource(findSecResource);
-
-				hibernateUtil.ensureSectionHasNonNull(findSection);
+	
 				session.saveOrUpdate(findSection);
 				session.flush();
 				tx.commit();
@@ -552,8 +538,6 @@ public class SectionDB implements Serializable
 			try
 			{
 				tx = session.beginTransaction();
-
-				hibernateUtil.ensureSectionHasNonNull(sec);
 
 				secRes = (SectionResource) sec.getSectionResource();
 
@@ -1255,8 +1239,6 @@ public class SectionDB implements Serializable
 			Transaction tx = null;
 			try
 			{
-				hibernateUtil.ensureSectionHasNonNull(section);
-
 				SectionResource secResource = (SectionResource) section.getSectionResource();
 				if (secResource == null)
 				{
@@ -1340,7 +1322,6 @@ public class SectionDB implements Serializable
 			Transaction tx = null;
 			try
 			{
-				hibernateUtil.ensureSectionHasNonNull(section);
 
 				if (secResource == null)
 				{
@@ -1416,8 +1397,6 @@ public class SectionDB implements Serializable
 			findSection.setAudioContent(section.isAudioContent());
 			findSection.setContentType(section.getContentType());
 			findSection.setInstr(section.getInstr());
-			findSection.setModifiedByFname(section.getModifiedByFname());
-			findSection.setModifiedByLname(section.getModifiedByLname());
 			findSection.setOpenWindow(section.isOpenWindow());
 			findSection.setTextualContent(section.isTextualContent());
 			findSection.setTitle(section.getTitle());
@@ -1430,7 +1409,6 @@ public class SectionDB implements Serializable
 			Transaction tx = null;
 			try
 			{
-				hibernateUtil.ensureSectionHasNonNull(findSection);
 
 				// SectionResource secResource = (SectionResource)section.getSectionResource();
 				if (secResource == null)
@@ -1724,7 +1702,6 @@ public class SectionDB implements Serializable
 			Transaction tx = null;
 			try
 			{
-				hibernateUtil.ensureSectionHasNonNull(section);
 
 				// delete SectionResource
 				tx = session.beginTransaction();
@@ -1778,8 +1755,6 @@ public class SectionDB implements Serializable
 			Transaction tx = null;
 			try
 			{
-				hibernateUtil.ensureSectionHasNonNull(section);
-
 				// set secResource fields
 				secResource.setSection(section);
 				secResource.setSectionId(section.getSectionId());

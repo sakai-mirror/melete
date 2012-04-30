@@ -232,12 +232,6 @@ public class ModuleDB implements Serializable
 	 */
 	public void addModule(Module module, ModuleShdates moduleshowdates, int seq, String userId, String courseId) throws Exception
 	{
-		/*
-		 * Since Oracle silently transforms "" to nulls, we need to check to see if these non null properties are in fact null.
-		 */
-
-		hibernateUtil.ensureModuleHasNonNulls(module);
-
 		try
 		{
 			Session session = hibernateUtil.currentSession();
@@ -250,10 +244,6 @@ public class ModuleDB implements Serializable
 				module.setModifyUserId(userId);
 				module.setModificationDate(new java.util.Date());
 				User user = UserDirectoryService.getUser(userId);
-				module.setCreatedByFname(user.getFirstName());
-				module.setCreatedByLname(user.getLastName());
-				module.setModifiedByFname(user.getFirstName());
-				module.setModifiedByLname(user.getLastName());
 				// assign sequence number
 				seq = assignSequenceNumber(session, courseId);
 
@@ -807,13 +797,8 @@ public class ModuleDB implements Serializable
 		{
 			// get module and its sections
 			Module copyMod = new Module(module);
-			String firstName = UserDirectoryService.getUser(userId).getFirstName();
-			String lastName = UserDirectoryService.getUser(userId).getLastName();
 
 			DateFormat shortTime = DateFormat.getDateInstance(DateFormat.LONG);
-
-			copyMod.setCreatedByFname(firstName);
-			copyMod.setCreatedByLname(lastName);
 			copyMod.setTitle(copyMod.getTitle() + " (" + bundle.getString("Copied") + " " + shortTime.format(new Date()) + " )");
 			ModuleShdates CopyModuleshowdates = new ModuleShdates((ModuleShdates) module.getModuleshdate());
 
@@ -829,10 +814,6 @@ public class ModuleDB implements Serializable
 				{
 					// with title as copy of xxx and sectionResource
 					Section copySection = new Section(toCopySection);
-					copySection.setCreatedByFname(firstName);
-					copySection.setCreatedByLname(lastName);
-					copySection.setModifiedByFname(firstName);
-					copySection.setModifiedByLname(lastName);
 					copySection.setModule(copyMod);
 					copySection.setTitle(copySection.getTitle() + " (" + bundle.getString("Copied") + " " + shortTime.format(new Date()) + " )");
 					// insert section
@@ -3619,7 +3600,6 @@ else
 	 */
 	public void updateModule(Module mod) throws Exception
 	{
-		hibernateUtil.ensureModuleHasNonNulls(mod);
 		Transaction tx = null;
 		try
 		{
@@ -3837,9 +3817,6 @@ else
 					mod.setDescription(checkModule.getDescription());
 					mod.setKeywords(checkModule.getKeywords());
 					mod.setModificationDate(new Date());
-					User user = UserDirectoryService.getUser(userId);
-					mod.setModifiedByFname(user.getFirstName());
-					mod.setModifiedByLname(user.getLastName());
 					mod.setModifyUserId(userId);
 					mod.setTitle(checkModule.getTitle());
 					mod.setModuleshdate(mDate);

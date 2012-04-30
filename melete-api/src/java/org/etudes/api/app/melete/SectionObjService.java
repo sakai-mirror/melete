@@ -41,20 +41,6 @@ public interface SectionObjService extends Serializable
 	public abstract String getContentType();
 
 	/**
-	 * Get created by user's first name
-	 * 
-	 * @return
-	 */
-	public abstract String getCreatedByFname();
-
-	/**
-	 * Get created by user's last name
-	 * 
-	 * @return
-	 */
-	public abstract String getCreatedByLname();
-
-	/**
 	 * Get section creation date
 	 * 
 	 * @return
@@ -74,20 +60,6 @@ public interface SectionObjService extends Serializable
 	 * @return
 	 */
 	public abstract Date getModificationDate();
-
-	/**
-	 * Get modified by user's first name
-	 * 
-	 * @return
-	 */
-	public abstract String getModifiedByFname();
-
-	/**
-	 * Get modified by user's last name
-	 * 
-	 * @return
-	 */
-	public abstract String getModifiedByLname();
 
 	/**
 	 * Get modified by userid
@@ -199,20 +171,6 @@ public interface SectionObjService extends Serializable
 	public abstract void setContentType(String contentType);
 
 	/**
-	 * Set created by user's first name
-	 * 
-	 * @param createdByFname
-	 */
-	public abstract void setCreatedByFname(String createdByFname);
-
-	/**
-	 * Set created by user's last name
-	 * 
-	 * @param createdByLname
-	 */
-	public abstract void setCreatedByLname(String createdByLname);
-
-	/**
 	 * Set section's creation date
 	 * 
 	 * @param creationDate
@@ -239,20 +197,6 @@ public interface SectionObjService extends Serializable
 	 * @param modificationDate
 	 */
 	public abstract void setModificationDate(Date modificationDate);
-
-	/**
-	 * Set modified by user's first name
-	 * 
-	 * @param modifiedByFname
-	 */
-	public abstract void setModifiedByFname(String modifiedByFname);
-
-	/**
-	 * Set modified by user's last name
-	 * 
-	 * @param modifiedByLname
-	 */
-	public abstract void setModifiedByLname(String modifiedByLname);
 
 	/**
 	 * @param modifyUserId

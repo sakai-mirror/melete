@@ -369,22 +369,6 @@ public abstract class SectionPage implements Serializable
 	}
 
 	/**
-	 * concatenates first name and last name of the creator of this section.
-	 * 
-	 * @return author name
-	 */
-	public String getAuthor()
-	{
-		if (author == null)
-		{
-			author = new StringBuffer();
-			author.append(this.section.getCreatedByFname() + " ");
-			author.append(this.section.getCreatedByLname());
-		}
-		return author.toString();
-	}
-
-	/**
 	 * @param contentEditor
 	 * 
 	 */

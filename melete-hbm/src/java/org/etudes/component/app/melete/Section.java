@@ -37,12 +37,6 @@ public class Section implements SectionObjService
 	private String contentType;
 
 	/** persistent field */
-	private String createdByFname;
-
-	/** persistent field */
-	private String createdByLname;
-
-	/** persistent field */
 	private Date creationDate;
 
 	/** nullable persistent field */
@@ -53,12 +47,6 @@ public class Section implements SectionObjService
 
 	/** persistent field */
 	private Date modificationDate;
-
-	/** nullable persistent field */
-	private String modifiedByFname;
-
-	/** nullable persistent field */
-	private String modifiedByLname;
 
 	/** persistent field */
 	private String modifyUserId;
@@ -99,17 +87,12 @@ public class Section implements SectionObjService
 	}
 
 	/** full constructor */
-	public Section(int moduleId, String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname,
-			String instr, String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean openWindow,
-			boolean deleteFlag, Date creationDate, Date modificationDate, int version, org.etudes.component.app.melete.Module module,
-			org.etudes.component.app.melete.SectionResource sectionResource)
+	public Section(int moduleId, String userId, String modifyUserId, String title, String instr, String contentType, boolean audioContent, boolean videoContent, boolean textualContent,
+			boolean openWindow, boolean deleteFlag, Date creationDate, Date modificationDate, int version,
+			org.etudes.component.app.melete.Module module, org.etudes.component.app.melete.SectionResource sectionResource)
 	{
 		this.moduleId = moduleId;
 		this.title = title;
-		this.createdByFname = createdByFname;
-		this.createdByLname = createdByLname;
-		this.modifiedByFname = modifiedByFname;
-		this.modifiedByLname = modifiedByLname;
 		this.instr = instr;
 		this.contentType = contentType;
 		this.audioContent = audioContent;
@@ -122,6 +105,8 @@ public class Section implements SectionObjService
 		this.version = version;
 		this.module = module;
 		this.sectionResource = sectionResource;
+		this.userId = userId;
+		this.modifyUserId = modifyUserId;
 	}
 
 	/** copy constructor */
@@ -137,29 +122,27 @@ public class Section implements SectionObjService
 		this.deleteFlag = oldSection.isDeleteFlag();
 		this.module = null;
 		this.sectionResource = null;
+		this.userId = oldSection.userId;
+		this.modifyUserId = oldSection.modifyUserId;
 	}
 
 	/** minimal constructor */
-	public Section(String title, String createdByFname, String createdByLname, String contentType, Date creationDate, Date modificationDate)
+	public Section(String title, String contentType, Date creationDate, Date modificationDate)
 	{
 		this.title = title;
-		this.createdByFname = createdByFname;
-		this.createdByLname = createdByLname;
 		this.contentType = contentType;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
 	}
 
 	/** Custom constructor */
-	public Section(String title, String createdByFname, String createdByLname, String modifiedByFname, String modifiedByLname, String instr,
+	public Section(String title, String userId, String modifyUserId, String instr,
 			String contentType, boolean audioContent, boolean videoContent, boolean textualContent, boolean openWindow, boolean deleteFlag,
 			Date creationDate, Date modificationDate)
 	{
 		this.title = title;
-		this.createdByFname = createdByFname;
-		this.createdByLname = createdByLname;
-		this.modifiedByFname = modifiedByFname;
-		this.modifiedByLname = modifiedByLname;
+		this.userId = userId;
+		this.modifyUserId = modifyUserId;
 		this.instr = instr;
 		this.contentType = contentType;
 		this.audioContent = audioContent;
@@ -206,22 +189,6 @@ public class Section implements SectionObjService
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getCreatedByFname()
-	{
-		return this.createdByFname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getCreatedByLname()
-	{
-		return this.createdByLname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public Date getCreationDate()
 	{
 		return this.creationDate;
@@ -243,22 +210,6 @@ public class Section implements SectionObjService
 		return this.modificationDate;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getModifiedByFname()
-	{
-		return this.modifiedByFname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getModifiedByLname()
-	{
-		return this.modifiedByLname;
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -382,22 +333,6 @@ public class Section implements SectionObjService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setCreatedByFname(String createdByFname)
-	{
-		this.createdByFname = createdByFname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setCreatedByLname(String createdByLname)
-	{
-		this.createdByLname = createdByLname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setCreationDate(Date creationDate)
 	{
 		this.creationDate = creationDate;
@@ -425,22 +360,6 @@ public class Section implements SectionObjService
 	public void setModificationDate(Date modificationDate)
 	{
 		this.modificationDate = modificationDate;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setModifiedByFname(String modifiedByFname)
-	{
-		this.modifiedByFname = modifiedByFname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setModifiedByLname(String modifiedByLname)
-	{
-		this.modifiedByLname = modifiedByLname;
 	}
 
 	/**

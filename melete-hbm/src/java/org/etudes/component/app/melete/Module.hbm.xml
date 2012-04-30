@@ -38,11 +38,7 @@
 	<property name="description" column="DESCRIPTION"  type="text"  />				
 	<!--size 700-->
 	<property name="keywords" column="KEYWORDS" type="string"  length="250" not-null="true"/>
-	<property name="createdByFname" column="CREATED_BY_FNAME" type="string"  length="50" not-null="true" />
-	<property name="createdByLname" column="CREATED_BY_LNAME" type="string"   length="50" not-null="true"/>
-    <property name="userId" column="USER_ID" type="string"   length="99" not-null="true"/>	
-	<property name="modifiedByFname" column="MODIFIED_BY_FNAME" type="string"  length="50"/>
-	<property name="modifiedByLname" column="MODIFIED_BY_LNAME" type="string"   length="50" />
+	<property name="userId" column="USER_ID" type="string"   length="99" not-null="true"/>	
 		
 	<!--make sure if timestamp is correct-->
 	<property name="whatsNext" column="WHATS_NEXT"  type="text"  />						

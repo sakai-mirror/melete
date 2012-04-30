@@ -175,15 +175,7 @@ public abstract class ModulePage implements Serializable
 		if (null == module)
 		{
 			module = new Module();
-	
-			// get user information from session
-			FacesContext context = FacesContext.getCurrentInstance();
-			ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-			MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
-
-			module.setCreatedByFname(mPage.getCurrentUser().getFirstName());
-			module.setCreatedByLname(mPage.getCurrentUser().getLastName());
-			
+		
 			success = false;
 
 		}

@@ -1245,11 +1245,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			Section s = new Section();
 			s.setContentType("notype");
 			s.setTextualContent(true);
-			// user info from session
-			s.setCreatedByFname(info.getCurrentUser().getFirstName());
-			s.setCreatedByLname(info.getCurrentUser().getLastName());
-			s.setModifiedByFname(info.getCurrentUser().getFirstName());
-			s.setModifiedByLname(info.getCurrentUser().getLastName());
+
 			// reset flags
 			shouldRenderEditor = false;
 			shouldRenderLink = false;
@@ -1320,15 +1316,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 				User user = UserDirectoryService.getUser(section.getUserId());
 				createdByAuthor = user.getFirstName();
 				createdByAuthor = createdByAuthor.concat(" " + user.getLastName());
-			}
-			else
-			{
-				createdByAuthor = section.getCreatedByFname() + " " + section.getCreatedByLname();
-			}
+			}		
 		}
 		catch (Exception e)
 		{
-			createdByAuthor = section.getCreatedByFname() + " " + section.getCreatedByLname();
+			createdByAuthor = "";
 		}
 		return createdByAuthor;
 	}
@@ -1346,15 +1338,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 				User user = UserDirectoryService.getUser(section.getModifyUserId());
 				modifiedByAuthor = user.getFirstName();
 				modifiedByAuthor = modifiedByAuthor.concat(" " + user.getLastName());
-			}
-			else
-			{
-				modifiedByAuthor = section.getModifiedByFname() + " " + section.getModifiedByLname();
-			}
+			}	
 		}
 		catch (Exception e)
 		{
-			modifiedByAuthor = section.getModifiedByFname() + " " + section.getModifiedByLname();
+			modifiedByAuthor = "";
 		}
 		return modifiedByAuthor;
 	}
