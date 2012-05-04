@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -97,7 +97,7 @@ function newWindow(newContent){
                 <td  class="col2" align="left" valign="top">					
 					  <a name="startCalender"></a><h:inputText id="startDate" 
                            value="#{editModulePage.moduleShdates.startDate}" size="22" styleClass="formtext" onchange="showInvalid('EditModuleForm:startDate','EditModuleForm:err_gifst');">
-		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+		        	      <f:converter converterId="melete.DateTimeConverter" />
         		    </h:inputText>
 		            <h:outputLink id="viewsdateCal" onclick="showCal('EditModuleForm:startDate','8','0','AM');return false;" value="#startCalender">
         	    		<h:graphicImage id="sdateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
@@ -120,7 +120,7 @@ function newWindow(newContent){
                 <td  class="col2" align="left" valign="top">
 					 <a name="endCalender"></a> <h:inputText id="endDate" 
                            value="#{editModulePage.moduleShdates.endDate}"  size="22" styleClass="formtext" onchange="showInvalid('EditModuleForm:endDate','EditModuleForm:err_gifen');">
-               <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+               <f:converter converterId="melete.DateTimeConverter" />
             </h:inputText>
           <h:outputLink id="viewedateCal" onclick="showCal('EditModuleForm:endDate','11','59','PM');return false;" value="#endCalender">
             <h:graphicImage id="edateCal"  value="/images/date.png"  alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
@@ -144,7 +144,7 @@ function newWindow(newContent){
 				<a name="allowUntilCalender"></a>
 				<h:inputText id="allowUntilDate" 
                            value="#{editModulePage.moduleShdates.allowUntilDate}" size="22" styleClass="formtext" onchange="showInvalid('EditModuleForm:allowUntilDate','EditModuleForm:err_gifal');">
-             			  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+             			  <f:converter converterId="melete.DateTimeConverter" />
           		 </h:inputText>
           		 <h:outputLink id="viewallowdateCal" onclick="showCal('EditModuleForm:allowUntilDate','11','59','PM');return false;" value="#allowUntilCalender">
            			 <h:graphicImage id="allowdateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>

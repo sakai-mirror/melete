@@ -36,7 +36,10 @@
             <default-locale>en</default-locale>
         </locale-config>
     </application>  
-  
+  <converter>
+        <converter-id>melete.DateTimeConverter</converter-id>
+        <converter-class>org.etudes.tool.melete.DateTimeConverter</converter-class>
+    </converter>
 	<!-- =================== MeleteSiteAndUserInfo ============== -->
 	<managed-bean>
 		<description>Melete Site And UserInfo</description>
