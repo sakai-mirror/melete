@@ -28,6 +28,8 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+<%@ taglib uri="date-time-converter" prefix="o" %>
+
 
 <f:view>
 <sakai:view title="Modules: Edit Module" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -97,7 +99,7 @@ function newWindow(newContent){
                 <td  class="col2" align="left" valign="top">					
 					  <a name="startCalender"></a><h:inputText id="startDate" 
                            value="#{editModulePage.moduleShdates.startDate}" size="22" styleClass="formtext" onchange="showInvalid('EditModuleForm:startDate','EditModuleForm:err_gifst');">
-		        	      <f:converter converterId="melete.DateTimeConverter" />
+		        	      <o:convertDateTime />
         		    </h:inputText>
 		            <h:outputLink id="viewsdateCal" onclick="showCal('EditModuleForm:startDate','8','0','AM');return false;" value="#startCalender">
         	    		<h:graphicImage id="sdateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>

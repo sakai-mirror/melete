@@ -22,63 +22,42 @@
 
 package org.etudes.tool.melete;
 
-import java.io.Serializable;
-import java.util.Date;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import org.etudes.util.DateUtil;
+import javax.faces.webapp.ConverterTag;
+import javax.faces.convert.Converter;
+import javax.servlet.jsp.JspException;
 
-/**
- * Wrapper for supporting the timezone
- */
-public class DateTimeConverter extends javax.faces.convert.DateTimeConverter
+public class DateTimeTag extends ConverterTag
 {
-	public final static String CONVERTER_ID = "melete.DateTimeConverter";
+
 	private boolean multiLine = false;
 
-	@Override
-	public Object getAsObject(FacesContext fc, UIComponent uic, String string)
+	public DateTimeTag()
 	{
-		Object date = null;
-		try
-		{
-			date = DateUtil.getDateFromString(string);
-		}
-		catch (Exception e)
-		{
-			date = super.getAsObject(fc, uic, string);
-		}
-
-		return date;
+		super();
+		setConverterId(DateTimeConverter.CONVERTER_ID);
 	}
 
-	@Override
-	public String getAsString(FacesContext fc, UIComponent uic, Object o)
+	protected Converter createConverter() throws JspException
 	{
-		Date date = (Date) o;
-		String dateZoneStr;
-		if (this.multiLine)
-		{
-			dateZoneStr = DateUtil.getMultiStringFromDate(date);
-		}
-		else
-		{
-			dateZoneStr = DateUtil.getStringFromDate(date);
-		}
-		return dateZoneStr;
+		DateTimeConverter converter = (DateTimeConverter) super.createConverter();
+		converter.setMultiLine(multiLine);
+		return converter;
+	}
+
+	public void release()
+	{
+		super.release();
+		multiLine = false;
 	}
 
 	public boolean getMultiLine()
 	{
 		return multiLine;
-
 	}
 
 	public void setMultiLine(boolean multiLine)
 	{
-		System.out.println("Coming to setmulti " + multiLine);
 		this.multiLine = multiLine;
-
 	}
 
 }
