@@ -26,6 +26,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+<%@ taglib uri="date-time-converter" prefix="o" %>
 
 <f:view>
 <sakai:view title="Modules: List Special Access" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -164,7 +165,7 @@ function resetAllAcc()
             </h:outputText>
                   <h:outputText id="startDate" 
                            value="#{saObj.startDate}"    rendered="#{((saObj.startDate != null)&&(saObj.overrideStart == true))}">
-              <f:converter converterId="melete.DateTimeConverter" />
+              <o:convertDateTime />
             </h:outputText>
               </h:column>         
         <h:column>
@@ -182,7 +183,7 @@ function resetAllAcc()
               <h:outputText id="endDate"
                            value="#{saObj.endDate}"
                               rendered="#{((saObj.endDate != null)&&(saObj.overrideEnd == true))}">
-               <f:converter converterId="melete.DateTimeConverter" />
+               <o:convertDateTime />
             </h:outputText>
         
          </h:column>  
@@ -201,7 +202,7 @@ function resetAllAcc()
               <h:outputText id="auDate"
                            value="#{saObj.allowUntilDate}"
                               rendered="#{((saObj.allowUntilDate != null)&&(saObj.overrideAllowUntil == true))}">
-               <f:converter converterId="melete.DateTimeConverter" />
+               <o:convertDateTime />
             </h:outputText>
         
          </h:column>          

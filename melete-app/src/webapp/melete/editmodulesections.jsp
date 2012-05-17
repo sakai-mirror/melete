@@ -29,6 +29,7 @@
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 <%@ taglib uri="http://javascript4jsf.dev.java.net/" prefix="j4j" %>
+<%@ taglib uri="date-time-converter" prefix="o" %>
 
 <f:view>
 <sakai:view title="Modules: Edit Module Sections" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -275,20 +276,20 @@ function saveEditor()
 				</td>
 				<td align="right" class="footnoteDates">
 					<h:outputText value="#{msgs.editmodulesections_author}"/>&nbsp;<h:outputText value="#{editSectionPage.createdByAuthor}" /><h:outputText value=","/>&nbsp;
-                    <h:outputText value="#{editSectionPage.section.creationDate}" styleClass="italics"><f:converter converterId="melete.DateTimeConverter" /></h:outputText>
+                    <h:outputText value="#{editSectionPage.section.creationDate}" styleClass="italics"><o:convertDateTime /></h:outputText>
                              
 				</td>
 			</tr>
 			<tr>
 				<td align="right" class="footnoteDates">
 					<h:outputText value="#{msgs.editmodulesections_author_edit}"/>&nbsp;<h:outputText value="#{editSectionPage.modifiedByAuthor}" /><h:outputText value=","/>&nbsp;
-                    <h:outputText value="#{editSectionPage.section.modificationDate}"><f:converter converterId="melete.DateTimeConverter" /></h:outputText>
+                    <h:outputText value="#{editSectionPage.section.modificationDate}"><o:convertDateTime /></h:outputText>
                  
                 </td>
 			</tr>
 			<tr>
 				<td align="right" class="footnoteDates" style="display:none">					
-                    <h:outputText value="#{msgs.editmodulesections_author_edit_start}"/>&nbsp;<h:outputText id="editLastSaveTime" value="#{editSectionPage.lastSavedAt}"><f:converter converterId="melete.DateTimeConverter" /></h:outputText>
+                    <h:outputText value="#{msgs.editmodulesections_author_edit_start}"/>&nbsp;<h:outputText id="editLastSaveTime" value="#{editSectionPage.lastSavedAt}"><o:convertDateTime /></h:outputText>
                 </td>
 			</tr>
 		</table>	

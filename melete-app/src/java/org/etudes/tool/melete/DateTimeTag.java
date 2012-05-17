@@ -30,6 +30,52 @@ public class DateTimeTag extends ConverterTag
 {
 
 	private boolean multiLine = false;
+	private String type = null;
+	private String pattern = null;
+	
+	public String getPattern()
+	{
+		return pattern;
+	}
+
+	public void setPattern(String pattern)
+	{
+		this.pattern = pattern;
+	}
+
+	public String getType()
+	{
+		return type;
+	}
+
+	public void setType(String type)
+	{
+		this.type = type;
+	}
+
+	public String getDateStyle()
+	{
+		return dateStyle;
+	}
+
+	public void setDateStyle(String dateStyle)
+	{
+		this.dateStyle = dateStyle;
+	}
+
+	public String getTimeStyle()
+	{
+		return timeStyle;
+	}
+
+	public void setTimeStyle(String timeStyle)
+	{
+		this.timeStyle = timeStyle;
+	}
+
+	private String dateStyle = null;
+	private String timeStyle = null;
+
 
 	public DateTimeTag()
 	{
@@ -41,6 +87,16 @@ public class DateTimeTag extends ConverterTag
 	{
 		DateTimeConverter converter = (DateTimeConverter) super.createConverter();
 		converter.setMultiLine(multiLine);
+		if (type != null) 
+		{
+			converter.setType(type);
+		}
+		if (dateStyle != null) 
+		{
+			converter.setDateStyle(dateStyle);
+		}
+		if (timeStyle != null) converter.setTimeStyle(timeStyle);
+		if (pattern != null) converter.setPattern(pattern);
 		return converter;
 	}
 

@@ -35,7 +35,7 @@ public class DateTimeConverter extends javax.faces.convert.DateTimeConverter
 {
 	public final static String CONVERTER_ID = "melete.DateTimeConverter";
 	private boolean multiLine = false;
-
+	
 	@Override
 	public Object getAsObject(FacesContext fc, UIComponent uic, String string)
 	{
@@ -71,14 +71,11 @@ public class DateTimeConverter extends javax.faces.convert.DateTimeConverter
 	public boolean getMultiLine()
 	{
 		return multiLine;
-
 	}
 
 	public void setMultiLine(boolean multiLine)
 	{
-		System.out.println("Coming to setmulti " + multiLine);
 		this.multiLine = multiLine;
-
 	}
 
 }

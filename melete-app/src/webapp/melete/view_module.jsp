@@ -28,6 +28,8 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+<%@ taglib uri="date-time-converter" prefix="o" %>
+
 <%
 final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 final ViewModulesPage vmPage = (ViewModulesPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "viewModulesPage");
@@ -117,7 +119,7 @@ if (moduleSeqNo != null)
 				</h:column>
 				<h:column>
 					 <h:outputText id="viewDt" value="#{sectionBean.viewDate}" rendered="#{sectionBean.viewDate != null}">
-						<f:convertDateTime type="both" dateStyle="long" timeStyle="short"/>
+						<o:convertDateTime />
 	        	    </h:outputText>	
 	        	    <h:outputText id="viewDt1" value="-" rendered="#{sectionBean.viewDate == null}" />
 	        	    <f:facet name="header">
