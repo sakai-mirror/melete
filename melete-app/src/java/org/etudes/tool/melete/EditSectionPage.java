@@ -285,6 +285,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "add_section_modality_reqd", errMsg));
 			return "failure";
 		}
+		
+		if (contentEditor == null || contentEditor.trim().length() == 0) section.setContentType("notype");
+		
 		Boolean modifyContentResource = false;
 		ValueBinding binding =  Util.getBinding("#{licensePage}");
 		 LicensePage lPage = (LicensePage)binding.getValue(context);

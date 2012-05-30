@@ -62,7 +62,6 @@
 							InputStream in = item.getInputStream();
 							byte[] buf = new byte[(int)item.getSize()];
 							in.read(buf);
-							
 							String embed_ResId = aResourcePage.addItem(fileName,(String)item.getContentType(),collId , buf);
 							in.close();
 							aResourcePage.addtoMeleteResource(null,embed_ResId);
@@ -77,8 +76,8 @@
 		
 		try
 		{
-			if(request.getParameter("html_content") != null)
-			{			
+			if(request.getParameter("html_content") != null && request.getParameter("html_content").trim().length() != 0)
+			{		
 				aResourcePage.saveSectionHtmlItem(collId, request.getParameter("courseId"), request.getParameter("resourceId"), request.getParameter("sId"), request.getParameter("uId"),request.getParameter("editLastSaveTime"),request.getParameter("edited"), newEmbeddedResources, request.getParameter("html_content") );
 			}				
 		}  catch (Exception ex) {
