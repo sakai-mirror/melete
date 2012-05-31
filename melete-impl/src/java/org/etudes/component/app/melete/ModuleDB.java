@@ -85,6 +85,7 @@ import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.util.ResourceLoader;
+import org.sakaiproject.util.Validator;
 
 public class ModuleDB implements Serializable
 {
@@ -197,6 +198,8 @@ public class ModuleDB implements Serializable
 
 	/** Dependency (optional, self-injected): AccessAdvisor. */
 	protected transient AccessAdvisor accessAdvisor = null;
+	
+	private MeleteUtil meleteUtil = new MeleteUtil();
 
 	public ModuleDB()
 	{
@@ -1295,7 +1298,7 @@ public class ModuleDB implements Serializable
 							logger.warn("NULL or empty resource id found in delete process ");
 							continue;
 						}
-						delResourceIds.append("'" + delResourceId + "',");
+						delResourceIds.append("'" + meleteUtil.escapeQuoted(delResourceId) + "',");
 					}
 
 					// Ensuring that there are no empty resource ids
@@ -1421,7 +1424,8 @@ public class ModuleDB implements Serializable
 
 		}
 	}
-
+	
+	
 	/**
 	 * Get all active and archived modules
 	 * 
@@ -4989,7 +4993,9 @@ else
 
 					}
 					else
+					{
 						secEmbed.add(sec.getSectionResource().getResource().getResourceId());
+					}	
 				}
 			}
 			// logger.debug("before sorting and removing dups" + secEmbed.size());

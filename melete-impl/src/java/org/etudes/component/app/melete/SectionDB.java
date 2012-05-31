@@ -67,6 +67,9 @@ public class SectionDB implements Serializable
 
 	/** Dependency: a logger component. */
 	private Log logger = LogFactory.getLog(SectionDB.class);
+	
+	private MeleteUtil meleteUtil = new MeleteUtil();
+
 
 	public SectionDB()
 	{
@@ -2180,7 +2183,7 @@ public class SectionDB implements Serializable
 		for (String delRes : delResources)
 		{
 			if (delRes == null) continue;
-			delResourceIds.append("'" + delRes + "',");
+			delResourceIds.append("'" + meleteUtil.escapeQuoted(delRes) + "',");
 			if (removeResourceFlag == true)
 			{
 				try
