@@ -30,7 +30,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -802,13 +801,8 @@ public class ModuleDB implements Serializable
 		{
 			// get module and its sections
 			Module copyMod = new Module(module);
-			// format the date using the end-user's locale and time zone prefs
-			Locale userLocale = DateHelper.getPreferredLocale(null);
-			TimeZone userZone = DateHelper.getPreferredTimeZone(null);
-			DateFormat format = DateFormat.getDateInstance(DateFormat.LONG, userLocale);
-			format.setTimeZone(userZone);
-
-			copyMod.setTitle(copyMod.getTitle() + " (" + bundle.getString("Copied") + " " + format.format(new Date()) + " )");
+			
+			copyMod.setTitle(copyMod.getTitle() + " (" + bundle.getString("Copied") + " " + DateHelper.formatDateForName(new Date(), null) + " )");
 			ModuleShdates CopyModuleshowdates = new ModuleShdates((ModuleShdates) module.getModuleshdate());
 
 			// insert copy module with blank seq_xml and sections as null
@@ -824,7 +818,7 @@ public class ModuleDB implements Serializable
 					// with title as copy of xxx and sectionResource
 					Section copySection = new Section(toCopySection);
 					copySection.setModule(copyMod);
-					copySection.setTitle(copySection.getTitle() + " (" + bundle.getString("Copied") + " " + format.format(new Date()) + " )");
+					copySection.setTitle(copySection.getTitle() + " (" + bundle.getString("Copied") + " " + DateHelper.formatDateForName(new Date(), userId) + " )");
 					// insert section
 					Integer copySectionId = sectionDB.addSection(copyMod, copySection, false, userId);
 					copySection.setSectionId(copySectionId);
