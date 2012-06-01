@@ -31,7 +31,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -39,12 +38,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.Vector;
 
@@ -62,6 +63,7 @@ import org.etudes.api.app.melete.ViewModBeanService;
 import org.etudes.api.app.melete.ViewSecBeanService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.etudes.util.api.AccessAdvisor;
+import org.etudes.util.DateHelper;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -800,9 +802,13 @@ public class ModuleDB implements Serializable
 		{
 			// get module and its sections
 			Module copyMod = new Module(module);
+			// format the date using the end-user's locale and time zone prefs
+			Locale userLocale = DateHelper.getPreferredLocale(null);
+			TimeZone userZone = DateHelper.getPreferredTimeZone(null);
+			DateFormat format = DateFormat.getDateInstance(DateFormat.LONG, userLocale);
+			format.setTimeZone(userZone);
 
-			DateFormat shortTime = DateFormat.getDateInstance(DateFormat.LONG);
-			copyMod.setTitle(copyMod.getTitle() + " (" + bundle.getString("Copied") + " " + shortTime.format(new Date()) + " )");
+			copyMod.setTitle(copyMod.getTitle() + " (" + bundle.getString("Copied") + " " + format.format(new Date()) + " )");
 			ModuleShdates CopyModuleshowdates = new ModuleShdates((ModuleShdates) module.getModuleshdate());
 
 			// insert copy module with blank seq_xml and sections as null
@@ -818,7 +824,7 @@ public class ModuleDB implements Serializable
 					// with title as copy of xxx and sectionResource
 					Section copySection = new Section(toCopySection);
 					copySection.setModule(copyMod);
-					copySection.setTitle(copySection.getTitle() + " (" + bundle.getString("Copied") + " " + shortTime.format(new Date()) + " )");
+					copySection.setTitle(copySection.getTitle() + " (" + bundle.getString("Copied") + " " + format.format(new Date()) + " )");
 					// insert section
 					Integer copySectionId = sectionDB.addSection(copyMod, copySection, false, userId);
 					copySection.setSectionId(copySectionId);
@@ -4736,29 +4742,6 @@ else
 			}
 		}
 		return navSeqNo;
-	}
-
-	/**
-	 * Get sql timestamp value of string time
-	 * 
-	 * @param dateTime
-	 * @return sql timestamp value
-	 */
-	private java.sql.Timestamp getTime(String dateTime)
-	{
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
-		Date dd = null;
-		try
-		{
-			dd = sdf.parse(dateTime);
-		}
-		catch (Exception pe)
-		{
-			if (logger.isErrorEnabled()) logger.error(pe);
-		}
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.fffffffff");
-		String jdbcTime = sdf1.format(dd);
-		return java.sql.Timestamp.valueOf(jdbcTime);
 	}
 
 	/**

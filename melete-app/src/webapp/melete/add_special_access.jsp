@@ -5,7 +5,7 @@
  * $Id: add_special_access.jsp 68182 2010-06-15 20:18:18Z mallika@etudes.org $  
  ***********************************************************************************
  *
- * Copyright (c) 2010, 2011 Etudes, Inc.
+ * Copyright (c) 2010, 2011, 2012 Etudes, Inc.
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+<%@ taglib uri="date-time-converter" prefix="o" %>
 
 <f:view>
 <sakai:view title="Modules: Add Special Access" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -78,26 +79,26 @@ function newWindow(newContent){
 					  <h:inputHidden id="overrideEnd" value="#{specialAccessPage.specialAccess.overrideEnd}"/>
 					  <h:inputHidden id="overrideAllowUntil" value="#{specialAccessPage.specialAccess.overrideAllowUntil}"/>
 					  <h:inputHidden id="modStartDate" value="#{specialAccessPage.startDate}">
-					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+					  <o:convertDateTime />
 					  </h:inputHidden>
 					  <h:inputHidden id="modEndDate" value="#{specialAccessPage.endDate}">
-					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+					  <o:convertDateTime />
 					  </h:inputHidden>
 					  <h:inputHidden id="modAllowUntilDate" value="#{specialAccessPage.allowUntilDate}">
-					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+					  <o:convertDateTime />
 					  </h:inputHidden>
 					  <h:inputHidden id="prevStartDate" value="#{specialAccessPage.specialAccess.startDate}">
-					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+					  <o:convertDateTime />
 					  </h:inputHidden>
 					  <h:inputHidden id="prevEndDate" value="#{specialAccessPage.specialAccess.endDate}">
-					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+					  <o:convertDateTime />
 					  </h:inputHidden>
 					  <h:inputHidden id="prevAllowUntilDate" value="#{specialAccessPage.specialAccess.allowUntilDate}">
-					  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+					  <o:convertDateTime />
 					  </h:inputHidden>
 					  <a name="startCalender"></a> <h:inputText id="startDate" 
                            value="#{specialAccessPage.specialAccess.startDate}" size="22" styleClass="formtext" onchange="showInvalid('AddSpecialAccessForm:startDate','AddSpecialAccessForm:err_gifst');">
-		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+		        	      <o:convertDateTime />
         		    </h:inputText>
 		            <h:outputLink id="viewsdateCal" onclick="showCal('AddSpecialAccessForm:startDate','8','0','AM');return false;" value="#startCalender" >
         	    		<h:graphicImage id="sdateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
@@ -121,7 +122,7 @@ function newWindow(newContent){
                 <td>
                 <a name="endCalender"></a><h:inputText id="endDate" 
                            value="#{specialAccessPage.specialAccess.endDate}" size="22" styleClass="formtext" onchange="showInvalid('AddSpecialAccessForm:endDate','AddSpecialAccessForm:err_gifen');">
-             			  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+             			  <o:convertDateTime />
           		 </h:inputText>
           <h:outputLink id="viewedateCal" onclick="showCal('AddSpecialAccessForm:endDate','11','59','PM');return false;" value="#endCalender">
             <h:graphicImage id="edateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
@@ -145,7 +146,7 @@ function newWindow(newContent){
                 <td>
                 <a name="allowUntilCalender"></a><h:inputText id="allowUntilDate" 
                            value="#{specialAccessPage.specialAccess.allowUntilDate}" size="22" styleClass="formtext" onchange="showInvalid('AddSpecialAccessForm:allowUntilDate','AddSpecialAccessForm:err_gifallowuntil');">
-             			  <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+             			  <o:convertDateTime />
           		 </h:inputText>
           <h:outputLink id="viewaudateCal" onclick="showCal('AddSpecialAccessForm:allowUntilDate','11','59','PM');return false;" value="#allowUntilCalender">
             <h:graphicImage id="audateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>

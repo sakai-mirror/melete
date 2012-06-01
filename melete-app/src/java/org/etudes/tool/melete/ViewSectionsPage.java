@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009,2010,2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009,2010,2011, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -24,7 +24,6 @@
 package org.etudes.tool.melete;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -51,6 +50,7 @@ import org.etudes.api.app.melete.SectionService;
 import org.etudes.api.app.melete.SectionTrackViewObjService;
 import org.etudes.simpleti.SakaiSimpleLTI;
 import org.etudes.util.HtmlHelper;
+import org.etudes.util.DateHelper;
 import org.imsglobal.simplelti.SimpleLTIUtil;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
@@ -483,13 +483,12 @@ public class ViewSectionsPage implements Serializable
 				Date viewDate = stv.getViewDate();
 				if (viewDate != null)
 				{
-					DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
 					ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-					return " (" + bundle.getString("view_section_lastviewed") + " " + df.format(viewDate) + ")";
+					return " (" + bundle.getString("view_section_lastviewed") + " " + DateHelper.formatDate(viewDate,null) + ")";
 				}
 			}
 		}
-		return "";
+		return ""; 
 	}
 	
 	/**

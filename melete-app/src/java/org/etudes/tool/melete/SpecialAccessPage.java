@@ -3,7 +3,7 @@
  * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/java/org/etudes/tool/melete/SpecialAccessPage.java $
  * $Id: SpecialAccessPage.java 56408 2008-12-19 21:16:52Z mallika@etudes.org $
  ***********************************************************************************
- * Copyright (c) 2010, 2011 Etudes, Inc.
+ * Copyright (c) 2010, 2011, 2012 Etudes, Inc.
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you
@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.component.app.melete.*;
 import org.etudes.api.app.melete.*;
+import org.etudes.util.DateHelper;
 import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.Application;
@@ -34,8 +35,6 @@ import javax.faces.component.html.*;
 import javax.faces.component.*;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -1001,8 +1000,7 @@ public class SpecialAccessPage implements Serializable
 	public Date getDateFromString(String dateStr) throws ParseException{
 		Date date = null;
 		try {
-			SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.MEDIUM);
-	        date = sdf.parse(dateStr);
+			date = DateHelper.parseDate(dateStr, null);
 		} catch (ParseException e) {
 			throw e;
 		}

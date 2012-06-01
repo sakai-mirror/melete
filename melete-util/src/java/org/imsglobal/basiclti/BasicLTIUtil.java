@@ -27,8 +27,6 @@ import java.util.TimeZone;
 import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;

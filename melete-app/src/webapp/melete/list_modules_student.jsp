@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -26,6 +26,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="date-time-converter" prefix="o" %>
 
 <f:view>
 <sakai:view title="Modules: Student View" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -192,14 +193,10 @@ function showHideTable(index, show)
              </h:panelGroup>
            </f:facet>  
 			  <h:outputText id="startDate0" value="-" rendered="#{vmbean.startDate == null}" />
-              
-              <h:outputText id="startDate" value="#{vmbean.startDate}">
-                <f:convertDateTime pattern="MMM d, yyyy" />            
-	           </h:outputText>
-	           <h:outputText id="startDate_1" value="</br>" escape="false" />
-	           <h:outputText id="startDate_2" value="#{vmbean.startDate}" >
-	                <f:convertDateTime type="time" timeStyle="short" />
-	            </h:outputText>
+              <h:outputText id="startDate" value="#{vmbean.startDate}" escape="false">
+              <o:convertDateTime multiLine="true"/>
+              </h:outputText>
+               
           </h:column>
       <h:column>
       <f:facet name="header">
@@ -208,14 +205,9 @@ function showHideTable(index, show)
         </h:panelGroup>
         </f:facet>
 			 <h:outputText id="endDate0" value="-" rendered="#{vmbean.endDate == null}" />
-              
-              <h:outputText id="endDate" value="#{vmbean.endDate}" >
-                <f:convertDateTime pattern="MMM d, yyyy" />            
-	           </h:outputText>
-	           <h:outputText id="endDate_1" value="</br>" escape="false" />
-	            <h:outputText id="endDate_2" value="#{vmbean.endDate}" >
-	                <f:convertDateTime type="time" timeStyle="short" />
-	            </h:outputText>           
+              <h:outputText id="endDate" value="#{vmbean.endDate}" escape="false">
+              <o:convertDateTime multiLine="true"/>
+              </h:outputText>            
          </h:column>
        <h:column>
       <f:facet name="header">
@@ -224,28 +216,18 @@ function showHideTable(index, show)
         </h:panelGroup>
         </f:facet>
 			 <h:outputText id="auDate0" value="-" rendered="#{vmbean.allowUntilDate == null}" />
-              
-              <h:outputText id="auDate" value="#{vmbean.allowUntilDate}" >
-                <f:convertDateTime pattern="MMM d, yyyy" />            
-	           </h:outputText>
-	           <h:outputText id="auDate_1" value="</br>" escape="false" />
-	            <h:outputText id="auDate_2" value="#{vmbean.allowUntilDate}" >
-	                <f:convertDateTime type="time" timeStyle="short" />
-	            </h:outputText>           
+              <h:outputText id="auDate" value="#{vmbean.allowUntilDate}" escape="false">
+              <o:convertDateTime  multiLine="true"/>
+              </h:outputText>         
          </h:column>
  		 <h:column>
               <f:facet name="header">
                 <h:outputText value="#{msgs.list_modules_stud_viewed_date}" />
               </f:facet>  
                <h:outputText id="viewDate0" value="-" rendered="#{vmbean.readDate == null}" />
-              
-              <h:outputText id="viewDate" value="#{vmbean.readDate}" >
-                <f:convertDateTime pattern="MMM d, yyyy" />            
-	           </h:outputText>
-	           <h:outputText id="viewDate_1" value="</br>" escape="false" />
-	            <h:outputText id="viewDate_2" value="#{vmbean.readDate}" >
-	                <f:convertDateTime type="time" timeStyle="short" />
-	            </h:outputText>               
+              <h:outputText id="viewDate" value="#{vmbean.readDate}"  escape="false">
+              <o:convertDateTime multiLine="true"/>
+               </h:outputText>      
    	 	</h:column>   
 		 <h:column>  
 		 	<f:facet name="header">
