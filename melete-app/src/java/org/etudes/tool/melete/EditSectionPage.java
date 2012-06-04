@@ -79,7 +79,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 	private String editId;
 	
-	private Date lastSavedAt;
+	private long lastSavedAt;
 
 	private String createdByAuthor;
 	
@@ -111,7 +111,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		setFormName("EditSectionForm");
 		if(editId == null) editId = section1.getSectionId().toString();
 		setSection(sectionService.getSection(section1.getSectionId()));
-		lastSavedAt = this.section.getModificationDate();
+		lastSavedAt = ((Date)this.section.getModificationDate()).getTime();
 		setModule(moduleService.getModule(section1.getModuleId()));
 	//	setSecResource(this.section.getSectionResource());
 		setSecResource(sectionService.getSectionResourcebyId(this.section.getSectionId().toString()));
@@ -286,7 +286,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 			return "failure";
 		}
 		
-		if (section.getContentType().equals("typeEditor")&&(contentEditor == null || contentEditor.trim().length() == 0)) section.setContentType("notype");
+		if (section.getContentType().equals("typeEditor")&&(contentEditor == null || contentEditor.trim().length() == 0)) 
+		{
+			section.setContentType("notype");
+		}
 		
 		Boolean modifyContentResource = false;
 		ValueBinding binding =  Util.getBinding("#{licensePage}");
@@ -329,14 +332,14 @@ public class EditSectionPage extends SectionPage implements Serializable
 					resourcesPage.removeFromHm_Msgs(errKey);
 				}
 				if (context.getMessages().hasNext()) return "failure";
-				logger.debug("CHK IN edit page:" + checkLastWork + ", compare:"+checkLastWork.compareTo(lastSavedAt));
+				logger.debug("CHK IN edit page:" + checkLastWork + ", compare:"+(checkLastWork.getTime() > lastSavedAt));
 				modifyContentResource = getIsComposeDataEdited();
 			}
 			
 			// save section
 			if (logger.isDebugEnabled()) logger.debug("EditSectionpage:save section" + section.getContentType());
 		
-			if (checkLastWork != null && checkLastWork.compareTo(lastSavedAt) <= 0)
+			if (checkLastWork != null && checkLastWork.getTime() <= lastSavedAt)
 			{
 				if (section.getContentType().equals("notype"))
 				{
@@ -457,7 +460,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 					contentEditor = new String(cr.getContent());
 				}
 			}
-			lastSavedAt = section.getModificationDate();
+			lastSavedAt = ((Date)section.getModificationDate()).getTime();
 			//Track the event
 			EventTrackingService.post(EventTrackingService.newEvent("melete.section.edit", ToolManager.getCurrentPlacement().getContext(), true));
 
@@ -1276,11 +1279,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return newSectionId;
 	}	
 	
-	public Date getLastSavedAt() {
+	public long getLastSavedAt() {
 		return lastSavedAt;
 	}
 
-	public void setLastSavedAt(Date lastSavedAt) {
+	public void setLastSavedAt(long lastSavedAt) {
 		this.lastSavedAt = lastSavedAt;
 	}
 
