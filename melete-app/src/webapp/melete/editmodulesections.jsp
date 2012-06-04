@@ -289,7 +289,7 @@ function saveEditor()
 			</tr>
 			<tr>
 				<td align="right" class="footnoteDates" style="display:none">					
-                    <h:outputText value="#{msgs.editmodulesections_author_edit_start}"/>&nbsp;<h:outputText id="editLastSaveTime" value="#{editSectionPage.lastSavedAt}"><o:convertDateTime /></h:outputText>
+                    <h:outputText value="#{msgs.editmodulesections_author_edit_start}"/>&nbsp;<h:outputText id="editLastSaveTime" value="#{editSectionPage.lastSavedAt}"><f:convertDateTime type="both" dateStyle="default"/></h:outputText>
                 </td>
 			</tr>
 		</table>	

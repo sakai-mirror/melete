@@ -24,12 +24,15 @@
 package org.etudes.tool.melete;
 
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UICommand;
@@ -668,9 +671,13 @@ public class AddResourcesPage implements ServletContextListener
 		ArrayList<String> errs = new ArrayList<String>();
 		
 		//check for overwrite
+		Locale userLocale = DateHelper.getPreferredLocale(null);
+		TimeZone userZone = DateHelper.getPreferredTimeZone(null);
+		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, userLocale);
+		df.setTimeZone(userZone);
 		Date checkLastWork = sectionService.getLastModifiedDate(Integer.parseInt(sectionId));
 
-		if (checkLastWork != null && checkLastWork.compareTo(DateHelper.parseDate(lastSaveTime, null)) > 0)
+		if (checkLastWork != null && checkLastWork.compareTo(df.parse(lastSaveTime)) > 0)
 		{
 			return;
 		}
