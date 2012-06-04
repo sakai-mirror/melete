@@ -76,7 +76,7 @@
 		
 		try
 		{
-			if(request.getParameter("html_content") != null && request.getParameter("html_content").trim().length() != 0)
+			if(request.getParameter("html_content") != null)
 			{		
 				aResourcePage.saveSectionHtmlItem(collId, request.getParameter("courseId"), request.getParameter("resourceId"), request.getParameter("sId"), request.getParameter("uId"),request.getParameter("editLastSaveTime"),request.getParameter("edited"), newEmbeddedResources, request.getParameter("html_content") );
 			}				

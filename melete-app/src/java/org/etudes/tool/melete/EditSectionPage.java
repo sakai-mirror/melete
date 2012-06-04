@@ -286,11 +286,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 			return "failure";
 		}
 		
-		if (section.getContentType().equals("typeEditor")&&(contentEditor == null || contentEditor.trim().length() == 0)) 
-		{
-			section.setContentType("notype");
-		}
-		
 		Boolean modifyContentResource = false;
 		ValueBinding binding =  Util.getBinding("#{licensePage}");
 		 LicensePage lPage = (LicensePage)binding.getValue(context);
