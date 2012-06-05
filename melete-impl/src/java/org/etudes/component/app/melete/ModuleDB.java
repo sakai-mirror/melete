@@ -245,6 +245,7 @@ public class ModuleDB implements Serializable
 			{
 				module.setCreationDate(new java.util.Date());
 				module.setUserId(userId);
+				
 				module.setModifyUserId(userId);
 				module.setModificationDate(new java.util.Date());
 				User user = UserDirectoryService.getUser(userId);
@@ -5041,6 +5042,7 @@ else
 			{
 				module.setCreationDate(new java.util.Date());
 				module.setUserId(userId);
+				module.setModifyUserId(userId);
 				// module.setModificationDate(new java.util.Date());
 
 				moduleshowdates.setModule(module);

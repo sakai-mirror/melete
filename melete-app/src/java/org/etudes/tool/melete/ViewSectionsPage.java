@@ -48,10 +48,8 @@ import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.SectionResourceService;
 import org.etudes.api.app.melete.SectionService;
 import org.etudes.api.app.melete.SectionTrackViewObjService;
-import org.etudes.simpleti.SakaiSimpleLTI;
 import org.etudes.util.HtmlHelper;
 import org.etudes.util.DateHelper;
-import org.imsglobal.simplelti.SimpleLTIUtil;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.event.cover.EventTrackingService;
@@ -225,9 +223,9 @@ public class ViewSectionsPage implements Serializable
 			logger.debug(e.toString());
 			return "";
 		}
-
+		return getContentPost(str);
 		// Check to see if we are doing a POST...
-		if (SimpleLTIUtil.isPostLaunch(str))
+		/*if (SimpleLTIUtil.isPostLaunch(str))
 		{
 			return getContentPost(str);
 		}
@@ -247,11 +245,11 @@ public class ViewSectionsPage implements Serializable
 		if (htmltext != null)
 		{
 			return htmltext;
-		}
+		}*/
 
 		// htmltext not returned from launch
-		if (logger.isDebugEnabled()) logger.debug("Unable to get htmltext for " + resource.getId());
-		return "";
+		//if (logger.isDebugEnabled()) logger.debug("Unable to get htmltext for " + resource.getId());
+		//return "";
 	}
 
 	/**
@@ -948,10 +946,10 @@ public class ViewSectionsPage implements Serializable
 	 */
 	private String getContentPost(String str)
 	{
-		String frameHeight = SimpleLTIUtil.getFrameHeight(str);
+		//String frameHeight = SimpleLTIUtil.getFrameHeight(str);
 		String htmltext = "<iframe id=\"iframeLTIPost\" src=\"" + getContentLink()
 		+ "\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" " + " marginwidth=\"0\" marginheight=\"0\" " + "height=\""
-		+ frameHeight + "\"  border=\"0\" frameborder= \"0\"></iframe>";
+		+ 1200 + "\"  border=\"0\" frameborder= \"0\"></iframe>";
 		return htmltext;
 	}
 

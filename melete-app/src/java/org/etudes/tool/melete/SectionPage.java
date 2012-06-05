@@ -5,7 +5,7 @@
  * $Id$
  ************************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -57,7 +57,6 @@ import org.etudes.component.app.melete.MeleteUserPreference;
 import org.etudes.component.app.melete.Module;
 import org.etudes.component.app.melete.SectionResource;
 import org.imsglobal.basiclti.BasicLTIUtil;
-import org.imsglobal.simplelti.SimpleLTIUtil;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentHostingService;
@@ -595,7 +594,7 @@ public abstract class SectionPage implements Serializable
 				{
 					throw new MeleteException("add_section_empty_lti");
 				}
-				if (!(SimpleLTIUtil.validateDescriptor(ltiDescriptor) || BasicLTIUtil.validateDescriptor(ltiDescriptor) != null))
+				if (BasicLTIUtil.validateDescriptor(ltiDescriptor) != null)
 				{
 					throw new MeleteException("add_section_bad_lti");
 				}
