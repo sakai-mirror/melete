@@ -9,7 +9,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -76,10 +76,14 @@
 		
 		try
 		{
-			if(request.getParameter("html_content") != null)
+			if((request.getParameter("html_content") != null)&&(request.getParameter("html_content").trim().length() > 0))
 			{		
 				aResourcePage.saveSectionHtmlItem(collId, request.getParameter("courseId"), request.getParameter("resourceId"), request.getParameter("sId"), request.getParameter("uId"),request.getParameter("editLastSaveTime"),request.getParameter("edited"), newEmbeddedResources, request.getParameter("html_content") );
-			}				
+			}	
+			else
+			{
+			    aResourcePage.addToHm_Msgs("content_empty","true");
+			}			
 		}  catch (Exception ex) {
 			String exKey = request.getParameter("sId") + "-"+ request.getParameter("uId"); 
 			aResourcePage.addToHm_Msgs(exKey,"add_section_fail");

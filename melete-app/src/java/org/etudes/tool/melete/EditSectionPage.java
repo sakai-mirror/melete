@@ -3,7 +3,7 @@
  * $URL$
  * $Id$
  ***********************************************************************************
- * Copyright (c) 2008,2009, 2010, 2011 Etudes, Inc.
+ * Copyright (c) 2008,2009, 2010, 2011, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -286,8 +286,47 @@ public class EditSectionPage extends SectionPage implements Serializable
 			return "failure";
 		}
 		
+		ValueBinding binding = Util.getBinding("#{authorPreferences}");
+		AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
+		
+		boolean contentEmpty = false;
+		//If editor is sferyx, grab content empty flag value and set section to notype
+		if (section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx())
+		{
+			binding = Util.getBinding("#{addResourcesPage}");
+			AddResourcesPage resourcesPage = (AddResourcesPage) binding.getValue(context);
+			HashMap<String, ArrayList<String>> save_err = resourcesPage.getHm_msgs();
+			logger.debug("hashmap in editsectionpage is " + save_err);
+			String errKey = "content_empty";
+			if (save_err != null && !save_err.isEmpty() && save_err.containsKey(errKey))
+			{
+				ArrayList<String> errs = save_err.get(errKey);
+				for (String err : errs)
+				{
+					//String errMsg = resourcesPage.getMessageText(err);
+					if (err.equals("true")) 
+					{
+						section.setContentType("notype");
+						contentEmpty = true;
+					}
+				}
+				resourcesPage.removeFromHm_Msgs(errKey);
+			}
+			
+		}
+		
+		//If editor is FCK, check contentEditor and set section to notype if blank
+		if (section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderFCK())
+		{
+			if ((contentEditor == null) || (contentEditor.trim().length() == 0))
+			{
+				section.setContentType("notype");
+				contentEmpty = true;
+			}
+		}	
+		
 		Boolean modifyContentResource = false;
-		ValueBinding binding =  Util.getBinding("#{licensePage}");
+		binding =  Util.getBinding("#{licensePage}");
 		 LicensePage lPage = (LicensePage)binding.getValue(context);
 		 lPage.setFormName(formName);
 		try
@@ -305,8 +344,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 			
 			// validation 3: if upload a new file check fileName format -- move to uploadSectionContent()
 			// validation 3-1: if typeEditor and saved by sferyx then check for error messages
-			binding = Util.getBinding("#{authorPreferences}");
-			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
 			Date checkLastWork = sectionService.getLastModifiedDate(section.getSectionId());
 			
 			if (section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx())
@@ -338,8 +375,27 @@ public class EditSectionPage extends SectionPage implements Serializable
 			{
 				if (section.getContentType().equals("notype"))
 				{
-					meleteResource = null;
-					sectionService.editSection(section, getCurrUserId());
+					//This means content in editor is empty
+					if (contentEmpty)
+					{
+						meleteResource = null;
+						//Clear out Melete resource table and the resource entry in CH
+						if (section.getSectionResource() != null && section.getSectionResource().getResource() != null)
+						{
+							String delResourceId = section.getSectionResource().getResource().getResourceId();
+							sectionService.deleteResourceInUse(delResourceId);
+							meleteCHService.removeResource(delResourceId);
+						}
+						// delete existing record from section_resource table
+						sectionService.deleteSectionResourcebyId(section.getSectionId().toString());
+						// insert just into section table
+						sectionService.editSection(section, getCurrUserId());
+					}
+					else
+					{
+						meleteResource = null;
+						sectionService.editSection(section, getCurrUserId());
+					}
 				}
 				else
 				{
