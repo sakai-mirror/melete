@@ -40,6 +40,8 @@ public class SectionTrackView implements Serializable, SectionTrackViewObjServic
 
 	private String userId;
 
+	private Date firstViewDate;
+	
 	private Date viewDate;
 
 	public SectionTrackView()
@@ -48,6 +50,7 @@ public class SectionTrackView implements Serializable, SectionTrackViewObjServic
 		this.userId = null;
 		this.viewDate = null;
 		this.section = null;
+		this.firstViewDate = null;
 	}
 
 	/*
@@ -89,11 +92,19 @@ public class SectionTrackView implements Serializable, SectionTrackViewObjServic
 	/*
 	 * {@inheritDoc}
 	 */
+	public Date getFirstViewDate()
+	{
+		return firstViewDate;
+	}
+	
+	/*
+	 * {@inheritDoc}
+	 */
 	public Date getViewDate()
 	{
 		return this.viewDate;
 	}
-
+	
 	/*
 	 * {@inheritDoc}
 	 */
@@ -126,6 +137,14 @@ public class SectionTrackView implements Serializable, SectionTrackViewObjServic
 		this.userId = userId;
 	}
 
+	/*
+	 * {@inheritDoc}
+	 */
+	public void setFirstViewDate(Date firstViewDate)
+	{
+		this.firstViewDate = firstViewDate;
+	}
+	
 	/*
 	 * {@inheritDoc}
 	 */

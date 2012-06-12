@@ -1008,6 +1008,7 @@ public class SectionDB implements Serializable
 				find_sv.setSectionId(sectionId);
 				find_sv.setUserId(userId);
 				find_sv.setViewDate(new java.util.Date());
+				find_sv.setFirstViewDate(new java.util.Date());
 				session.save(find_sv);
 			}
 			else
@@ -1018,6 +1019,7 @@ public class SectionDB implements Serializable
 				returnStv.setSectionId(find_sv.getSectionId());
 				returnStv.setUserId(find_sv.getUserId());
 				returnStv.setViewDate(find_sv.getViewDate());
+				returnStv.setFirstViewDate(find_sv.getFirstViewDate());
 				find_sv.setViewDate(new java.util.Date());
 				session.update(find_sv);
 			}
@@ -2285,6 +2287,33 @@ public class SectionDB implements Serializable
 		}
 	}
 
+	/**
+	 * Get all users who have viewed a section.
+	 * 
+	 * @param sectionId
+	 *        The section id
+	 * @return a Map<userId, ViewDate> for a section
+	 */
+	public Map<String, Date> getSectionUsersFirstViewDate(int sectionId)
+	{
+		Map<String, Date> all = new HashMap<String, Date>();
+		Session session = hibernateUtil.currentSession();
+		Query q = session.getNamedQuery("trackSectionItem");
+		q.setParameter("sectionId", sectionId, Hibernate.INTEGER);
+
+		List<SectionTrackView> sectionUsers = q.list();
+		if (sectionUsers == null || sectionUsers.size() <= 0) return all;
+		for (SectionTrackView s : sectionUsers)
+		{
+			if (s.getFirstViewDate() != null)
+			{
+				all.put(s.getUserId(), s.getFirstViewDate());
+			}
+		}
+		hibernateUtil.closeSession();
+		return all;
+	}
+	
 	/**
 	 * Get all users who have viewed a section.
 	 * 

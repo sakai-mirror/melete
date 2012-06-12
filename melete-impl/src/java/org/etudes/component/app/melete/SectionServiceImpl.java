@@ -506,6 +506,15 @@ public class SectionServiceImpl implements Serializable, SectionService
 		}
 		return secTitle;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Map<String, Date> getSectionFirstViewDates(String sectionId) throws Exception
+	{
+		if (sectionId == null) return null;
+		return sectiondb.getSectionUsersFirstViewDate(new Integer(sectionId).intValue());
+	}
 
 	/**
 	 * {@inheritDoc}

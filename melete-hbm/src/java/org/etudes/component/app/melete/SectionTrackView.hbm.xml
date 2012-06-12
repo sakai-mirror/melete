@@ -31,6 +31,7 @@
      <key-property name="sectionId" column="SECTION_ID"  type="int" />
      <key-property name="userId" column="USER_ID" type="string" length="99" />
      </composite-id>
+     <property name="firstViewDate"  column="FIRST_VIEW_DATE"  type="timestamp"  />
      <property name="viewDate"  column="VIEW_DATE"  type="timestamp"  />
      <many-to-one name="section" class="org.etudes.component.app.melete.Section" insert="false" update="false" column="SECTION_ID" lazy="false"/>  				
   </class>

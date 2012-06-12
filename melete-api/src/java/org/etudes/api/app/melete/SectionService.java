@@ -295,6 +295,18 @@ public interface SectionService
 	public String getSectionTitle(int sectionId);
 
 	/**
+	 * Get all users first view date information for a section.
+	 * 
+	 * @param sectionId
+	 *        the section id
+	 * @return a Map<userId, FirstViewDate> information for a section.
+	 * 
+	 * @throws Exception
+	 * 
+	 */
+	public Map<String, Date> getSectionFirstViewDates(String sectionId) throws Exception;
+	
+	/**
 	 * Get all users view date information for a section.
 	 * 
 	 * @param sectionId

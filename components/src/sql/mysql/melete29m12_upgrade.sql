@@ -19,3 +19,6 @@ alter table melete_section drop column CREATED_BY_FNAME;
 alter table melete_section drop column CREATED_BY_LNAME;
 alter table melete_section drop column MODIFIED_BY_FNAME;
 alter table melete_section drop column MODIFIED_BY_LNAME;
+
+alter table melete_section_track_view add column FIRST_VIEW_DATE datetime default NULL;
+update melete_section_track_view set first_view_date = view_date where first_view_date is NULL or first_view_date='':
