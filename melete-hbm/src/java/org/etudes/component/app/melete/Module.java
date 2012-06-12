@@ -39,12 +39,6 @@ public class Module implements Serializable, ModuleObjService
 	private org.etudes.component.app.melete.CourseModule coursemodule;
 
 	/** persistent field */
-	private String createdByFname;
-
-	/** persistent field */
-	private String createdByLname;
-
-	/** persistent field */
 	private Date creationDate;
 
 	private Map deletedSections;
@@ -52,24 +46,15 @@ public class Module implements Serializable, ModuleObjService
 	/** nullable persistent field */
 	private String description;
 
-	/** nullable persistent field */
-	private String institute;
-
 	/** persistent field */
 	private String keywords;
 
 	/** nullable persistent field */
-	private String learnObj;
-
-	/** nullable persistent field */
 	private Date modificationDate;
 
-	/** nullable persistent field */
-	private String modifiedByFname;
-
-	/** nullable persistent field */
-	private String modifiedByLname;
-
+	/** persistent field */
+	private String modifyUserId;
+	
 	/** identifier field */
 	private Integer moduleId;
 	
@@ -106,26 +91,24 @@ public class Module implements Serializable, ModuleObjService
 	public Module(Module oldModule)
 	{
 		this.title = oldModule.getTitle();
-		this.learnObj = oldModule.getLearnObj();
 		this.description = oldModule.getDescription();
 		this.keywords = oldModule.getKeywords();
-		this.institute = oldModule.getInstitute();
 		this.whatsNext = oldModule.getWhatsNext();
 		this.seqXml = null;
 		this.moduleshdate = null;
 		this.coursemodule = null;
 		this.sections = null;
 		this.deletedSections = null;
+		this.userId = oldModule.userId;
+		this.modifyUserId = oldModule.modifyUserId;
 	}
 
 	/** minimal constructor */
-	public Module(String title, String keywords, String createdByFname, String createdByLname, String userId, Date creationDate, Map<Integer, SectionObjService> sections,
+	public Module(String title, String keywords, String userId, Date creationDate, Map<Integer, SectionObjService> sections,
 			Map deletedSections)
 	{
 		this.title = title;
 		this.keywords = keywords;
-		this.createdByFname = createdByFname;
-		this.createdByLname = createdByLname;
 		this.userId = userId;
 		this.creationDate = creationDate;
 		this.sections = sections;
@@ -133,20 +116,14 @@ public class Module implements Serializable, ModuleObjService
 	}
 
 	/* Custom constructor */
-	public Module(String title, String learnObj, String description, String keywords, String createdByFname, String createdByLname, String userId,
-			String modifiedByFname, String modifiedByLname, String institute, String whatsNext, Date creationDate, Date modificationDate,
-			String seqXml)
+	public Module(String title, String description, String keywords, String userId, String modifyUserId, String whatsNext, Date creationDate,
+			Date modificationDate, String seqXml)
 	{
 		this.title = title;
-		this.learnObj = learnObj;
 		this.description = description;
 		this.keywords = keywords;
-		this.createdByFname = createdByFname;
-		this.createdByLname = createdByLname;
 		this.userId = userId;
-		this.modifiedByFname = modifiedByFname;
-		this.modifiedByLname = modifiedByLname;
-		this.institute = institute;
+		this.modifyUserId = modifyUserId;
 		this.whatsNext = whatsNext;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
@@ -155,24 +132,20 @@ public class Module implements Serializable, ModuleObjService
 	}
 
 	/** full constructor */
+
 	public Module(String title, String learnObj, String description, String keywords, String createdByFname, String createdByLname, String userId,
-			String modifiedByFname, String modifiedByLname, String institute, String whatsNext, Date creationDate, Date modificationDate,
+			String modifiedByFname, String modifiedByLname, String modifyUserId, String institute, String whatsNext, Date creationDate, Date modificationDate,
 			String seqXml, int version, org.etudes.component.app.melete.ModuleShdates moduleshdate,
 			org.etudes.component.app.melete.CourseModule coursemodule, Map<Integer, SectionObjService> sections, Map deletedSections)
 	{
 		this.title = title;
-		this.learnObj = learnObj;
 		this.description = description;
 		this.keywords = keywords;
-		this.createdByFname = createdByFname;
-		this.createdByLname = createdByLname;
 		this.userId = userId;
-		this.modifiedByFname = modifiedByFname;
-		this.modifiedByLname = modifiedByLname;
-		this.institute = institute;
 		this.whatsNext = whatsNext;
 		this.creationDate = creationDate;
 		this.modificationDate = modificationDate;
+		this.modifyUserId = modifyUserId;
 		this.seqXml = seqXml;
 		this.version = version;
 		this.moduleshdate = moduleshdate;
@@ -196,22 +169,6 @@ public class Module implements Serializable, ModuleObjService
 	public org.etudes.api.app.melete.CourseModuleService getCoursemodule()
 	{
 		return this.coursemodule;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getCreatedByFname()
-	{
-		return this.createdByFname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getCreatedByLname()
-	{
-		return this.createdByLname;
 	}
 
 	/**
@@ -241,25 +198,9 @@ public class Module implements Serializable, ModuleObjService
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getInstitute()
-	{
-		return this.institute;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public String getKeywords()
 	{
 		return this.keywords;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getLearnObj()
-	{
-		return this.learnObj;
 	}
 
 	/**
@@ -273,17 +214,9 @@ public class Module implements Serializable, ModuleObjService
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getModifiedByFname()
+	public String getModifyUserId()
 	{
-		return this.modifiedByFname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getModifiedByLname()
-	{
-		return this.modifiedByLname;
+		return modifyUserId;
 	}
 
 	/**
@@ -374,22 +307,6 @@ public class Module implements Serializable, ModuleObjService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setCreatedByFname(String createdByFname)
-	{
-		this.createdByFname = createdByFname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setCreatedByLname(String createdByLname)
-	{
-		this.createdByLname = createdByLname;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setCreationDate(Date creationDate)
 	{
 		this.creationDate = creationDate;
@@ -414,25 +331,9 @@ public class Module implements Serializable, ModuleObjService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setInstitute(String institute)
-	{
-		this.institute = institute;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setKeywords(String keywords)
 	{
 		this.keywords = keywords;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setLearnObj(String learnObj)
-	{
-		this.learnObj = learnObj;
 	}
 
 	/**
@@ -446,19 +347,11 @@ public class Module implements Serializable, ModuleObjService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setModifiedByFname(String modifiedByFname)
+	public void setModifyUserId(String modifyUserId)
 	{
-		this.modifiedByFname = modifiedByFname;
+		this.modifyUserId = modifyUserId;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setModifiedByLname(String modifiedByLname)
-	{
-		this.modifiedByLname = modifiedByLname;
-	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */

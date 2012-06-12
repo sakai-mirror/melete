@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -39,6 +39,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.MeleteImportfromSiteService;
+import org.etudes.api.app.melete.MeleteSitePreferenceService;
 import org.etudes.api.app.melete.ModuleObjService;
 import org.etudes.api.app.melete.SectionObjService;
 import org.etudes.api.app.melete.exception.MeleteException;
@@ -463,7 +464,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		// Copy the uploads collection
 		buildModules(fromContext, toContext);
 		transferManageItems(fromContext, toContext);
-		// setMeleteSitePreference(fromContext, toContext);
+		transferMeleteSitePreference(fromContext, toContext);
 	}
 
 	/**
@@ -507,9 +508,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			// create a set of toSite modules
 			toSiteModules = convertToImportModules(toModuleList);
 		}
-		User user = UserDirectoryService.getCurrentUser();
-		String firstName = user.getFirstName();
-		String lastName = user.getLastName();
+		User importer = UserDirectoryService.getCurrentUser();
 		
 		for (ListIterator<?> i = fromModuleList.listIterator(); i.hasNext();)
 		{
@@ -525,16 +524,16 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			}
 
 			// Copy module properties and insert, seqXml is null for now
-			Module toMod = new Module(fromMod.getTitle(), fromMod.getLearnObj(), fromMod.getDescription(), fromMod.getKeywords(), firstName,
-					lastName, user.getId(), firstName, lastName, fromMod.getInstitute(), fromMod.getWhatsNext(), new java.util.Date(),
-					new java.util.Date(), null);
-			ModuleShdates toModshdate = new ModuleShdates(((ModuleShdates) fromMod.getModuleshdate()).getStartDate(), ((ModuleShdates) fromMod
-					.getModuleshdate()).getEndDate(), fromMod.getModuleshdate().getAddtoSchedule());
+			Module toMod = new Module(fromMod.getTitle(), fromMod.getDescription(), fromMod.getKeywords(), importer.getId(), importer.getId(),
+					fromMod.getWhatsNext(), new java.util.Date(), new java.util.Date(), null);
+			ModuleShdates fromShDates = (ModuleShdates) fromMod.getModuleshdate();
+			ModuleShdates toModshdate = new ModuleShdates(fromShDates.getStartDate(), fromShDates.getEndDate(), fromShDates.getAllowUntilDate(),
+					fromShDates.getAddtoSchedule());
 			if (fromMod.getCoursemodule().isArchvFlag() == false)
 			{
 				try
 				{
-					moduleDB.addModule(toMod, toModshdate, fromMod.getUserId(), toContext);
+					moduleDB.addModule(toMod, toModshdate, importer.getId(), toContext);
 					if ((toModshdate.getAddtoSchedule().booleanValue() == true)
 							&& ((toModshdate.getStartDate() != null) || (toModshdate.getEndDate() != null)))
 					{
@@ -551,7 +550,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 				CourseModule toCmod = new CourseModule(toContext, -1, true, fromMod.getCoursemodule().getDateArchived(), false, toMod);
 				try
 				{
-					moduleDB.addArchivedModule(toMod, toModshdate, fromMod.getUserId(), toContext, toCmod);
+					moduleDB.addArchivedModule(toMod, toModshdate, importer.getId(), toContext, toCmod);
 				}
 				catch (Exception ex3)
 				{
@@ -573,14 +572,15 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 						Map.Entry entry = (Map.Entry) keyValuePairs.next();
 						Section fromSec = (Section) entry.getValue();
 						fromSecId = fromSec.getSectionId().intValue();
-						Section toSec = new Section(fromSec.getTitle(), firstName, lastName, firstName, lastName, fromSec.getInstr(), fromSec
-								.getContentType(), fromSec.isAudioContent(), fromSec.isVideoContent(), fromSec.isTextualContent(), fromSec
-								.isOpenWindow(), fromSec.isDeleteFlag(), new java.util.Date(), new java.util.Date());
+
+						Section toSec = new Section(fromSec.getTitle(), importer.getId(), importer.getId(), fromSec.getInstr(),
+								fromSec.getContentType(), fromSec.isAudioContent(), fromSec.isVideoContent(), fromSec.isTextualContent(),
+								fromSec.isOpenWindow(), fromSec.isDeleteFlag(), new java.util.Date(), new java.util.Date());
 						// logger.debug("copied section open window value" + toSec.getTitle()+"," + toSec.isOpenWindow() );
 						try
 						{
 							// Insert into the SECTION table
-							sectionDB.addSection(toMod, toSec, false);
+							sectionDB.addSection(toMod, toSec, false, importer.getId());
 							toSecId = toSec.getSectionId().intValue();
 							// Replace old references of sections to new references in SEQ xml
 							// TODO : Move the update seqxml lower down so sequence does not update
@@ -728,6 +728,36 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		logger.debug("TRANSFER took " + (totalend - totalstart) + " millisecs");
 	}
 
+	/**
+	 * Transfers melete site preferences like printable etc
+	 * @param fromContext
+	 * @param toContext
+	 */
+	private void transferMeleteSitePreference(String fromContext, String toContext)
+	{
+		try
+		{
+			MeleteSitePreference fromMsp = meleteUserPrefDB.getSitePreferences(fromContext);
+			MeleteSitePreference toMsp = meleteUserPrefDB.getSitePreferences(toContext);
+			if (fromMsp == null) return;
+			if (toMsp == null)
+			{
+				toMsp = new MeleteSitePreference(fromMsp);
+			}
+			else
+			{
+				toMsp.setAutonumber(fromMsp.isAutonumber());
+				toMsp.setPrintable(fromMsp.isPrintable());
+			}
+			meleteUserPrefDB.setSitePreferences(toMsp);
+		}
+		catch (Exception e)
+		{
+			logger.warn("Error on importing melete site preferences" + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Class to check if module should be imported to next site. If module with same title, no of sections, and all sections with same title and 
 	 * content type exists in next site then don't import over.

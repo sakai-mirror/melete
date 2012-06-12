@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009,2010, 2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009,2010, 2011, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -73,7 +73,6 @@ import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.util.Xml;
 import org.imsglobal.basiclti.BasicLTIUtil;
-import org.etudes.simpleti.SakaiSimpleLTI;
 import org.etudes.basiclti.SakaiBLTIUtil;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.util.ResourceLoader;
@@ -87,7 +86,6 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService, EntityP
 	private MeleteExportService meleteExportService;
 
 	// Keep both of these here for upwards compatibility - Chuck
-	public static final String MIME_TYPE_SLTI = "ims/simplelti";
 	public static final String MIME_TYPE_BLTI = "ims/basiclti";
 
 	private static ResourceLoader rb = new ResourceLoader("security_svc");
@@ -318,7 +316,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService, EntityP
 						try
 						{
 							ContentResource content = chService.getResource(contentHostingRef.getId());
-							if (MIME_TYPE_SLTI.equals(content.getContentType()) || MIME_TYPE_BLTI.equals(content.getContentType()))
+							if (MIME_TYPE_BLTI.equals(content.getContentType()))
 							{
 								byte[] bytes = content.getContent();
 								ResourceProperties resprops = content.getProperties();
@@ -343,31 +341,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService, EntityP
 										pushAdvisor();
 									}
 								}
-								else
-									// Attempt SimpleLTI
-								{
-									Properties props = null;
-									// We must remove our advisor while we do the launch and then put it back
-									// Otherwise the launch will give the user too much power
-									try
-									{
-										popAdvisor();
-										props = SakaiSimpleLTI.doLaunch(str, ref.getContext(), ref.getId());
-									}
-									catch (Exception e)
-									{
-										logger.info("Exception e " + e.getMessage());
-										e.printStackTrace();
-									}
-									finally
-									{
-										pushAdvisor();
-									}
-									if (props != null)
-									{
-										postData = props.getProperty("htmltext");
-									}
-								}
+								
 
 								if (postData == null)
 								{

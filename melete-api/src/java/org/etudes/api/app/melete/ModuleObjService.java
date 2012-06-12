@@ -40,17 +40,7 @@ public interface ModuleObjService
 	 * @return coursemoduleservice
 	 */
 	public abstract org.etudes.api.app.melete.CourseModuleService getCoursemodule();
-
-	/**
-	 * @return created by fname string
-	 */
-	public abstract String getCreatedByFname();
-
-	/**
-	 * @return created by lname string
-	 */
-	public abstract String getCreatedByLname();
-
+	
 	/**
 	 * @return creation date
 	 */
@@ -62,19 +52,9 @@ public interface ModuleObjService
 	public abstract String getDescription();
 
 	/**
-	 * @return institute
-	 */
-	public abstract String getInstitute();
-
-	/**
 	 * @return keywords
 	 */
 	public abstract String getKeywords();
-
-	/**
-	 * @return learnObj string
-	 */
-	public abstract String getLearnObj();
 
 	/**
 	 * @return
@@ -82,14 +62,9 @@ public interface ModuleObjService
 	public abstract Date getModificationDate();
 
 	/**
-	 * @return modified by name
+	 * @return get modified by user id
 	 */
-	public abstract String getModifiedByFname();
-
-	/**
-	 * @return get modified by lname
-	 */
-	public abstract String getModifiedByLname();
+	public abstract String getModifyUserId();
 
 	/**
 	 * @return module id
@@ -145,16 +120,6 @@ public interface ModuleObjService
 	public abstract void setCoursemodule(org.etudes.api.app.melete.CourseModuleService coursemodule);
 
 	/**
-	 * @param createdByFname
-	 */
-	public abstract void setCreatedByFname(String createdByFname);
-
-	/**
-	 * @param createdByLname
-	 */
-	public abstract void setCreatedByLname(String createdByLname);
-
-	/**
 	 * @param creationDate
 	 *        creation date
 	 */
@@ -166,20 +131,9 @@ public interface ModuleObjService
 	public abstract void setDescription(String description);
 
 	/**
-	 * @param institute
-	 */
-	public abstract void setInstitute(String institute);
-
-	/**
 	 * @param keywords
 	 */
 	public abstract void setKeywords(String keywords);
-
-	/**
-	 * @param learnObj
-	 *        learning objectives
-	 */
-	public abstract void setLearnObj(String learnObj);
 
 	/**
 	 * @param modificationDate
@@ -188,17 +142,11 @@ public interface ModuleObjService
 	public abstract void setModificationDate(Date modificationDate);
 
 	/**
-	 * @param modifiedByFname
-	 *        first name of author
+	 * @param modifyUserId
+	 *        user_id of modifying author
 	 */
-	public abstract void setModifiedByFname(String modifiedByFname);
-
-	/**
-	 * @param modifiedByLname
-	 *        last name of author
-	 */
-	public abstract void setModifiedByLname(String modifiedByLname);
-
+	public abstract void setModifyUserId(String modifyUserId);
+	
 	/**
 	 * @param moduleId
 	 *        the module id

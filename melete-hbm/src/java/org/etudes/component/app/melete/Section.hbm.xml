@@ -36,10 +36,6 @@
 	 <version name="version" column="VERSION" />   
      <property name="moduleId" column="MODULE_ID"  type="int"  not-null="true"/>
     <property name="title" column="TITLE" type="string"  length="255" not-null="true"/>
-	<property name="createdByFname" column="CREATED_BY_FNAME" type="string"  length="50" not-null="true"/>
-	<property name="createdByLname" column="CREATED_BY_LNAME" type="string"   length="50" not-null="true"/>
-	<property name="modifiedByFname" column="MODIFIED_BY_FNAME" type="string"  length="50"/>
-	<property name="modifiedByLname" column="MODIFIED_BY_LNAME" type="string"   length="50" />
 	<property name="instr" column="INSTR" type="string" length="250" />		
 	<property name="contentType" column="CONTENT_TYPE" type="string"  length="10" not-null="true"/>			
 	<property name="audioContent" column="AUDIO_CONTENT" type="boolean"/>		
@@ -49,6 +45,8 @@
 	<property name="deleteFlag" column="DELETE_FLAG" type="boolean" />				
 	<property name="creationDate"  column="CREATION_DATE"  type="timestamp" not-null="true"/>			
 	<property name="modificationDate"  column="MODIFICATION_DATE"  type="timestamp"  not-null="true"/>
+	<property name="userId" column="USER_ID" type="string"   length="99" not-null="true"/>	
+    <property name="modifyUserId" column="MODIFY_USER_ID" type="string"   length="99" not-null="true"/>
 	<many-to-one name="module"  class="org.etudes.component.app.melete.Module" insert="false" update="false" column="MODULE_ID"  lazy="false"/>
 	<one-to-one name="sectionResource" class="org.etudes.component.app.melete.SectionResource"/>	
 	</class>

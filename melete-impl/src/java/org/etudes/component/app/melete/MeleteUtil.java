@@ -152,6 +152,46 @@ public class MeleteUtil
 		}
 		return filename;
 	}
+	
+	/**
+	 * Appends quotes to quotes in string
+	 * 
+	 * @param value
+	 *        String to replace
+	 * @return String's quotes appended with quotes
+	 */
+	public String escapeQuoted(String value)
+	{
+		if (value == null) return "";
+		try
+		{
+			StringBuffer buf = new StringBuffer();
+			for (int i = 0; i < value.length(); i++)
+			{
+				char c = value.charAt(i);
+
+				// a single quote must be escaped with a leading backslash
+				if (c == '\'')
+				{
+					buf.append("''");
+				}
+				else
+				{
+					buf.append(c);
+				}
+			}
+
+			String rv = buf.toString();
+			return rv;
+		}
+		catch (Exception e)
+		{
+			logger.warn("escapeQuoted: ", e);
+			return value;
+		}
+
+	}
+
 
 	/**
 	 * Finds the embed item patters in the string and return three values the string with the embed pattern, the start index of the referred path the end index of the referred path

@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,6 +28,8 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+<%@ taglib uri="date-time-converter" prefix="o" %>
+
 
 <f:view>
 <sakai:view title="Modules: Edit Module" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -97,9 +99,9 @@ function newWindow(newContent){
                 <td  class="col2" align="left" valign="top">					
 					  <a name="startCalender"></a><h:inputText id="startDate" 
                            value="#{editModulePage.moduleShdates.startDate}" size="22" styleClass="formtext" onchange="showInvalid('EditModuleForm:startDate','EditModuleForm:err_gifst');">
-		        	      <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+		        	      <o:convertDateTime />
         		    </h:inputText>
-		            <h:outputLink id="viewsdateCal" onclick="showSdateCal('EditModuleForm:startDate','#{msgs.JS_date}')" value="#startCalender">
+		            <h:outputLink id="viewsdateCal" onclick="showCal('EditModuleForm:startDate','8','0','AM');return false;" value="#startCalender">
         	    		<h:graphicImage id="sdateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            			</h:outputLink>
            			<h:graphicImage id="err_gifst" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}"  style="visibility:hidden;" onclick="showHideTable('EditModuleForm:invalidMsgSt0','true')"  styleClass="ExpClass"/>
@@ -120,9 +122,9 @@ function newWindow(newContent){
                 <td  class="col2" align="left" valign="top">
 					 <a name="endCalender"></a> <h:inputText id="endDate" 
                            value="#{editModulePage.moduleShdates.endDate}"  size="22" styleClass="formtext" onchange="showInvalid('EditModuleForm:endDate','EditModuleForm:err_gifen');">
-               <f:convertDateTime  type="both" dateStyle="medium" timeStyle="short"/>
+               <o:convertDateTime />
             </h:inputText>
-          <h:outputLink id="viewedateCal" onclick="showEdateCal('EditModuleForm:endDate','#{msgs.JS_date}')" value="#endCalender">
+          <h:outputLink id="viewedateCal" onclick="showCal('EditModuleForm:endDate','11','59','PM');return false;" value="#endCalender">
             <h:graphicImage id="edateCal"  value="/images/date.png"  alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            </h:outputLink>
            <h:graphicImage id="err_gifen" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('EditModuleForm:invalidMsgEn0','true')"  styleClass="ExpClass"/>
@@ -138,6 +140,30 @@ function newWindow(newContent){
 			     </h:panelGroup>	           
 					 </td>
               </tr>
+                <tr>
+                <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_allowuntil_date}" /></td>
+                <td  class="col2" align="left" valign="top">
+				<a name="allowUntilCalender"></a>
+				<h:inputText id="allowUntilDate" 
+                           value="#{editModulePage.moduleShdates.allowUntilDate}" size="22" styleClass="formtext" onchange="showInvalid('EditModuleForm:allowUntilDate','EditModuleForm:err_gifal');">
+             			  <o:convertDateTime />
+          		 </h:inputText>
+          		 <h:outputLink id="viewallowdateCal" onclick="showCal('EditModuleForm:allowUntilDate','11','59','PM');return false;" value="#allowUntilCalender">
+           			 <h:graphicImage id="allowdateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
+          		 </h:outputLink>
+                 <h:graphicImage id="err_gifal" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('EditModuleForm:invalidMsgAllow0','true')"  styleClass="ExpClass"/>
+	             <h:panelGroup id="invalidMsgAllow0" style="position:relative;z-index:1;visibility:hidden;display:none;">
+				     <h:panelGrid id="invalidMsgAllow" columns="1" border="0" bgcolor="#FFFFCC" cellpadding="5" width="250px" styleClass="invalidAlertSmall" >   
+						 <h:column>
+						  	<h:outputText value="#{msgs.invalid_msg6}"  />  
+						 </h:column>
+						 <h:column>
+							<h:outputLabel value="#{msgs.invalid_ok_msg}"  styleClass="BottomImgOK" onclick="showHideTable('EditModuleForm:invalidMsgAllow0','false')" />
+						 </h:column>
+			    	 </h:panelGrid>
+			     </h:panelGroup>	
+				</td>
+              </tr>			
               <tr>
                 <td  class="col1">&nbsp;</td>
                 <td  class="col2" valign="top">
@@ -163,14 +189,14 @@ function newWindow(newContent){
 			<span class="required">*</span>&nbsp; <h:outputText value="#{msgs.edit_module_required}" />
 		</td>
 		<td align="right" class="footnoteDates">
-			<h:outputText value="#{msgs.edit_module_created_by}"/> <h:outputText value="#{editModulePage.module.createdByFname}"/>&nbsp;<h:outputText value="#{editModulePage.module.createdByLname}"/><h:outputText value=","/>&nbsp;
-			<h:outputText value="#{editModulePage.module.creationDate}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
+			<h:outputText value="#{msgs.edit_module_created_by}"/> <h:outputText value="#{editModulePage.createdAuthor}"/><h:outputText value=","/>&nbsp;
+			<h:outputText value="#{editModulePage.module.creationDate}"><o:convertDateTime /></h:outputText>
 		</td>
 	</tr>
 	<tr>
 		<td align="right" class="footnoteDates">
-			<h:outputText value="#{msgs.edit_module_modified_by}"/> <h:outputText value="#{editModulePage.module.modifiedByFname}"/>&nbsp;<h:outputText value="#{editModulePage.module.modifiedByLname}"/><h:outputText value=","/>&nbsp;
-			<h:outputText value="#{editModulePage.module.modificationDate}"><f:convertDateTime type="both" dateStyle="long" timeStyle="short"/></h:outputText>
+			<h:outputText value="#{msgs.edit_module_modified_by}"/> <h:outputText value="#{editModulePage.modifiedAuthor}"/><h:outputText value=","/>&nbsp;
+			<h:outputText value="#{editModulePage.module.modificationDate}"><o:convertDateTime /></h:outputText>
 		</td>
 	</tr>
 </table>

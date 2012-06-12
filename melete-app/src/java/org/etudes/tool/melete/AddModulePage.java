@@ -141,7 +141,7 @@ public class AddModulePage extends ModulePage implements Serializable
 	 */
 	public String autoSave()
 	{
-		if (save().equals("confirm_addmodule")) return "#";
+		if (!save().equals("failure")) return "#";
 		return "add_module";
 	}
 }

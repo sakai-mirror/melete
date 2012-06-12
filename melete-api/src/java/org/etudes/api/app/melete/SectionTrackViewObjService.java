@@ -50,6 +50,11 @@ public interface SectionTrackViewObjService
 	/**
 	 * @return get view date
 	 */
+	public abstract Date getFirstViewDate();
+
+	/**
+	 * @return get view date
+	 */
 	public abstract Date getViewDate();
 
 	/**
@@ -77,6 +82,12 @@ public interface SectionTrackViewObjService
 	 */
 	public abstract void setUserId(String userId);
 
+	/**
+	 * @param viewDate
+	 *        set view date
+	 */
+	public abstract void setFirstViewDate(Date firstViewDate);
+	
 	/**
 	 * @param viewDate
 	 *        set view date

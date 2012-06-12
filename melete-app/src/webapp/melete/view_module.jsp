@@ -6,7 +6,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011,2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -28,6 +28,8 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
+<%@ taglib uri="date-time-converter" prefix="o" %>
+
 <%
 final javax.faces.context.FacesContext facesContext = javax.faces.context.FacesContext.getCurrentInstance();
 final ViewModulesPage vmPage = (ViewModulesPage)facesContext.getApplication().getVariableResolver().resolveVariable(facesContext, "viewModulesPage");
@@ -117,7 +119,7 @@ if (moduleSeqNo != null)
 				</h:column>
 				<h:column>
 					 <h:outputText id="viewDt" value="#{sectionBean.viewDate}" rendered="#{sectionBean.viewDate != null}">
-						<f:convertDateTime type="both" dateStyle="long" timeStyle="short"/>
+						<o:convertDateTime />
 	        	    </h:outputText>	
 	        	    <h:outputText id="viewDt1" value="-" rendered="#{sectionBean.viewDate == null}" />
 	        	    <f:facet name="header">

@@ -32,6 +32,11 @@ public interface SpecialAccessObjService
 	public abstract int getAccessId();
 
 	/**
+	 * @return allowUntilDate end date to set
+	 */
+	public abstract Date getAllowUntilDate();
+
+	/**
 	 * @return endDate end date to set
 	 */
 	public abstract Date getEndDate();
@@ -62,6 +67,11 @@ public interface SpecialAccessObjService
 	public abstract String getUsers();
 
 	/**
+	 * @return overrideAllowUntil
+	 */
+	public abstract boolean isOverrideAllowUntil();
+
+	/**
 	 * @return overrideEnd
 	 */
 	public abstract boolean isOverrideEnd();
@@ -76,6 +86,12 @@ public interface SpecialAccessObjService
 	 *        the accessId to set
 	 */
 	public abstract void setAccessId(int accessId);
+
+	/**
+	 * @param allowUntilDate
+	 *        allow until date to set
+	 */
+	public abstract void setAllowUntilDate(Date allowUntilDate);
 
 	/**
 	 * @param endDate
@@ -94,6 +110,12 @@ public interface SpecialAccessObjService
 	 *        the module id to set
 	 */
 	public abstract void setModuleId(int moduleId);
+
+	/**
+	 * @param overrideAllowUntil
+	 *        overrideAllowUntil to set
+	 */
+	public abstract void setOverrideAllowUntil(boolean overrideAllowUntil);
 
 	/**
 	 * @param overrideEnd

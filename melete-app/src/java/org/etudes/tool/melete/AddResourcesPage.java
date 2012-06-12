@@ -24,7 +24,6 @@
 package org.etudes.tool.melete;
 
 import java.io.InputStream;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,6 +49,7 @@ import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.SectionService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.etudes.api.app.melete.exception.UserErrorException;
+import org.etudes.util.DateHelper;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
@@ -668,10 +668,11 @@ public class AddResourcesPage implements ServletContextListener
 		ArrayList<String> errs = new ArrayList<String>();
 		
 		//check for overwrite
-		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT);
 		Date checkLastWork = sectionService.getLastModifiedDate(Integer.parseInt(sectionId));
 
-		if (checkLastWork != null && checkLastWork.compareTo(df.parse(lastSaveTime)) > 0)
+		long lstLong = Long.parseLong(lastSaveTime);
+		
+		if (checkLastWork != null && checkLastWork.getTime() > lstLong)
 		{
 			return;
 		}
@@ -728,7 +729,7 @@ public class AddResourcesPage implements ServletContextListener
 		String data = null;
 		try
 		{
-			if (sectionId == null || sectionId.length() == 0) return data;
+			if (sectionId == null || sectionId.length() == 0 || sectionId.equals("null")) return data;
 			String resourceId = getMeleteCHService().getSectionResource(sectionId);
 			logger.debug("resource id in AddResource getdata method:" + resourceId);
 			ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");

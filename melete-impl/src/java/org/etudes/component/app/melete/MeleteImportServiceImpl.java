@@ -972,8 +972,6 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		String lastName = UserDirectoryService.getUser(userId).getLastName();
 
 		module.setUserId(userId);
-		module.setCreatedByFname(firstName);
-		module.setCreatedByLname(lastName);
 		module.setModuleshdate(getModuleShdates());
 		if (module.getCoursemodule() != null)
 		{
@@ -1069,10 +1067,6 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		String lastName = UserDirectoryService.getUser(userId).getLastName();
 
 		section.setTextualContent(true);
-		section.setCreatedByFname(firstName);
-		section.setCreatedByLname(lastName);
-		section.setModifiedByFname(firstName);
-		section.setModifiedByLname(lastName);
 		section.setContentType("notype");
 
 		if (!sectionTitleFlag) section.setTitle("Untitled Section");
@@ -1084,7 +1078,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			meleteResource.setCcLicenseUrl(RESOURCE_LICENSE_URL);
 		}
 		// save section object
-		Integer new_section_id = sectionDB.addSection(module, section, true);
+		Integer new_section_id = sectionDB.addSection(module, section, true, userId);
 		section.setSectionId(new_section_id);
 		seqElement.addAttribute("id", new_section_id.toString());
 
@@ -1214,11 +1208,6 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 		String lastName = UserDirectoryService.getUser(userId).getLastName();
 
 		section.setTextualContent(true);
-		section.setCreatedByFname(firstName);
-		section.setCreatedByLname(lastName);
-		section.setModifiedByFname(firstName);
-		section.setModifiedByLname(lastName);
-		
 		section.setContentType("notype");
 
 		if (!sectionTitleFlag) section.setTitle("Untitled Section");
@@ -1230,7 +1219,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			meleteResource.setCcLicenseUrl(RESOURCE_LICENSE_URL);
 		}
 		// save section object
-		Integer new_section_id = sectionDB.addSection(module, section, true);
+		Integer new_section_id = sectionDB.addSection(module, section, true, userId);
 		section.setSectionId(new_section_id);
 		seqElement.addAttribute("id", new_section_id.toString());
 

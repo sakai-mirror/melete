@@ -1331,17 +1331,18 @@ public class ListAuthModulesPage implements Serializable
 							{
 								indentSecBeans.add(secBean);
 							}
-							try
-							{
-								moduleService.createSubSection(mdbean.getModule(), indentSecBeans);
-							}
-							catch (MeleteException me)
-							{
-								logger.debug(me.toString());
-								String msg = bundle.getString("indent_right_fail");
-								addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
-							}
+							
 						}
+					}
+					try
+					{
+						moduleService.createSubSection(mdbean.getModule(), indentSecBeans);
+					}
+					catch (MeleteException me)
+					{
+						logger.debug(me.toString());
+						String msg = bundle.getString("indent_right_fail");
+						addMessage(ctx, "Error Message", msg, FacesMessage.SEVERITY_ERROR);
 					}
 				}
 			}

@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010,2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010,2011, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -26,6 +26,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://sakaiproject.org/jsf/sakai" prefix="sakai" %>
+<%@ taglib uri="date-time-converter" prefix="o" %>
 
 <f:view>
 <sakai:view title="Modules: Restore Inactive Modules" toolCssHref="/etudes-melete-tool/rtbc004.css">
@@ -102,7 +103,7 @@ function resetCheck()
 										<f:facet name="header">
 																   <h:outputText id="t2" value="#{msgs.restore_modules_date_deactivated}" />          
 										 </f:facet>
-											<h:outputText id="deactivateDate" value="#{aml.dateArchived}"><f:convertDateTime pattern="yyyy-MMM-d hh:mm a"/></h:outputText>
+											<h:outputText id="deactivateDate" value="#{aml.dateArchived}"><o:convertDateTime /></h:outputText>
 										</h:column>			
 			 						</h:dataTable>
 			 						 <h:inputHidden id="listSize" value="#{manageModulesPage.listSize}"/>

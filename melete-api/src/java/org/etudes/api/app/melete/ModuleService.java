@@ -412,9 +412,10 @@ public interface ModuleService
 	 * 
 	 * @param startDate
 	 * @param endDate
+	 * @param allowUntilDate
 	 * @return invalid if not able to determine the status. open if module is open and active. closed if module is closed. later if module is not opened yet.
 	 */
-	public String isSectionModuleOpen(Date startDate, Date endDate);
+	public String isSectionModuleOpen(Date startDate, Date endDate, Date allowUntilDate);
 
 	/**
 	 * Moves the list of sections to the module. Updates the old and selected module sequence XML. For composed sections, moves the file to selected module's content collection.

@@ -30,8 +30,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -39,12 +37,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.Vector;
 
@@ -62,6 +62,7 @@ import org.etudes.api.app.melete.ViewModBeanService;
 import org.etudes.api.app.melete.ViewSecBeanService;
 import org.etudes.api.app.melete.exception.MeleteException;
 import org.etudes.util.api.AccessAdvisor;
+import org.etudes.util.DateHelper;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -85,6 +86,7 @@ import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.util.ResourceLoader;
+import org.sakaiproject.util.Validator;
 
 public class ModuleDB implements Serializable
 {
@@ -197,6 +199,8 @@ public class ModuleDB implements Serializable
 
 	/** Dependency (optional, self-injected): AccessAdvisor. */
 	protected transient AccessAdvisor accessAdvisor = null;
+	
+	private MeleteUtil meleteUtil = new MeleteUtil();
 
 	public ModuleDB()
 	{
@@ -232,12 +236,6 @@ public class ModuleDB implements Serializable
 	 */
 	public void addModule(Module module, ModuleShdates moduleshowdates, int seq, String userId, String courseId) throws Exception
 	{
-		/*
-		 * Since Oracle silently transforms "" to nulls, we need to check to see if these non null properties are in fact null.
-		 */
-
-		hibernateUtil.ensureModuleHasNonNulls(module);
-
 		try
 		{
 			Session session = hibernateUtil.currentSession();
@@ -247,17 +245,16 @@ public class ModuleDB implements Serializable
 			{
 				module.setCreationDate(new java.util.Date());
 				module.setUserId(userId);
+				
+				module.setModifyUserId(userId);
 				module.setModificationDate(new java.util.Date());
 				User user = UserDirectoryService.getUser(userId);
-				module.setCreatedByFname(user.getFirstName());
-				module.setCreatedByLname(user.getLastName());
-				module.setModifiedByFname(user.getFirstName());
-				module.setModifiedByLname(user.getLastName());
 				// assign sequence number
 				seq = assignSequenceNumber(session, courseId);
 
 				if (!moduleshowdates.isStartDateValid()) moduleshowdates.setStartDate(null);
 				if (!moduleshowdates.isEndDateValid()) moduleshowdates.setEndDate(null);
+				if (!moduleshowdates.isAllowUntilDateValid()) moduleshowdates.setAllowUntilDate(null);
 				
 				moduleshowdates.setModule(module);
 
@@ -334,15 +331,16 @@ public class ModuleDB implements Serializable
 		}
 		StringBuilder sql = new StringBuilder();
 		sql.append("UPDATE MELETE_MODULE_SHDATES MSH,MELETE_COURSE_MODULE MCM SET");
-		sql.append(" MSH.START_DATE=DATE_ADD(MSH.START_DATE,INTERVAL ? DAY), MSH.END_DATE=DATE_ADD(MSH.END_DATE,INTERVAL ? DAY)");
+		sql.append(" MSH.START_DATE=DATE_ADD(MSH.START_DATE,INTERVAL ? DAY), MSH.END_DATE=DATE_ADD(MSH.END_DATE,INTERVAL ? DAY), MSH.ALLOWUNTIL_DATE=DATE_ADD(MSH.ALLOWUNTIL_DATE,INTERVAL ? DAY)");
 		sql.append(" WHERE MSH.MODULE_ID=MCM.MODULE_ID AND MCM.COURSE_ID =?");
 
-		Object[] fields = new Object[3];
+		Object[] fields = new Object[4];
 		int i = 0;
 		fields[i++] = days_diff;
 		fields[i++] = days_diff;
+		fields[i++] = days_diff;
 		fields[i++] = course_id;
-
+		
 		if (!SqlService.dbWrite(sql.toString(), fields))
 		{
 			throw new RuntimeException("applyBaseDate: db write failed");
@@ -804,14 +802,8 @@ public class ModuleDB implements Serializable
 		{
 			// get module and its sections
 			Module copyMod = new Module(module);
-			String firstName = UserDirectoryService.getUser(userId).getFirstName();
-			String lastName = UserDirectoryService.getUser(userId).getLastName();
-
-			DateFormat shortTime = DateFormat.getDateInstance(DateFormat.LONG);
-
-			copyMod.setCreatedByFname(firstName);
-			copyMod.setCreatedByLname(lastName);
-			copyMod.setTitle(copyMod.getTitle() + " (" + bundle.getString("Copied") + " " + shortTime.format(new Date()) + " )");
+			
+			copyMod.setTitle(copyMod.getTitle() + " (" + bundle.getString("Copied") + " " + DateHelper.formatDateForName(new Date(), null) + " )");
 			ModuleShdates CopyModuleshowdates = new ModuleShdates((ModuleShdates) module.getModuleshdate());
 
 			// insert copy module with blank seq_xml and sections as null
@@ -826,14 +818,10 @@ public class ModuleDB implements Serializable
 				{
 					// with title as copy of xxx and sectionResource
 					Section copySection = new Section(toCopySection);
-					copySection.setCreatedByFname(firstName);
-					copySection.setCreatedByLname(lastName);
-					copySection.setModifiedByFname(firstName);
-					copySection.setModifiedByLname(lastName);
 					copySection.setModule(copyMod);
-					copySection.setTitle(copySection.getTitle() + " (" + bundle.getString("Copied") + " " + shortTime.format(new Date()) + " )");
+					copySection.setTitle(copySection.getTitle() + " (" + bundle.getString("Copied") + " " + DateHelper.formatDateForName(new Date(), userId) + " )");
 					// insert section
-					Integer copySectionId = sectionDB.addSection(copyMod, copySection, false);
+					Integer copySectionId = sectionDB.addSection(copyMod, copySection, false, userId);
 					copySection.setSectionId(copySectionId);
 					// copySection.setModule(copyMod);
 					if (toCopySection.getContentType() != null && !toCopySection.getContentType().equals("notype"))
@@ -1311,7 +1299,7 @@ public class ModuleDB implements Serializable
 							logger.warn("NULL or empty resource id found in delete process ");
 							continue;
 						}
-						delResourceIds.append("'" + delResourceId + "',");
+						delResourceIds.append("'" + meleteUtil.escapeQuoted(delResourceId) + "',");
 					}
 
 					// Ensuring that there are no empty resource ids
@@ -1437,7 +1425,8 @@ public class ModuleDB implements Serializable
 
 		}
 	}
-
+	
+	
 	/**
 	 * Get all active and archived modules
 	 * 
@@ -1667,6 +1656,10 @@ public class ModuleDB implements Serializable
 					{
 						dateList.add(mod.getModuleshdate().getEndDate());
 					}
+					if (mod.getModuleshdate().getAllowUntilDate() != null)
+					{
+						dateList.add(mod.getModuleshdate().getAllowUntilDate());
+					}
 				}
 			}
 
@@ -1727,6 +1720,10 @@ public class ModuleDB implements Serializable
 					if (mod.getModuleshdate().getEndDate() != null)
 					{
 						dateList.add(mod.getModuleshdate().getEndDate());
+					}
+					if (mod.getModuleshdate().getAllowUntilDate() != null)
+					{
+						dateList.add(mod.getModuleshdate().getAllowUntilDate());
 					}
 				}
 			}
@@ -1978,7 +1975,7 @@ public class ModuleDB implements Serializable
 		{
 			if (meleteSecurityService.allowAuthor(courseId))
 			{
-				queryStr = "select cm.seqNo, count(s.moduleId) from CourseModule cm, Section s, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId = s.moduleId and cm.moduleId=ms.moduleId and (ms.startDate is null or ms.endDate is null or ms.startDate < ms.endDate) group by cm order by cm.seqNo asc";
+				queryStr = "select cm.seqNo, count(s.moduleId) from CourseModule cm, Section s, ModuleShdates ms where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo > :currSeqNo and cm.moduleId = s.moduleId and cm.moduleId=ms.moduleId and (ms.startDate is null or ms.endDate is null or ms.startDate < ms.endDate) and (ms.startDate is null or ms.allowUntilDate is null or ms.startDate < ms.allowUntilDate) and (ms.endDate is null or ms.allowUntilDate is null or ms.endDate < ms.allowUntilDate) group by cm order by cm.seqNo asc";
 			}
 			if (meleteSecurityService.allowStudent(courseId))
 			{
@@ -2183,7 +2180,7 @@ public class ModuleDB implements Serializable
 		{
 			if (meleteSecurityService.allowAuthor(courseId))
 			{
-				queryStr = "select cm.seqNo, count(s.moduleId) from CourseModule cm, ModuleShdates ms, Section s where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId = s.moduleId and cm.moduleId=ms.moduleId and (ms.startDate is null or ms.endDate is null or ms.startDate < ms.endDate) group by cm order by cm.seqNo desc";
+				queryStr = "select cm.seqNo, count(s.moduleId) from CourseModule cm, ModuleShdates ms, Section s where cm.courseId =:courseId and cm.deleteFlag=0 and cm.archvFlag=0 and cm.seqNo < :currSeqNo and cm.moduleId = s.moduleId and cm.moduleId=ms.moduleId and (ms.startDate is null or ms.endDate is null or ms.startDate < ms.endDate) and (ms.startDate is null or ms.allowUntilDate is null or ms.startDate < ms.allowUntilDate) and (ms.endDate is null or ms.allowUntilDate is null or ms.endDate < ms.allowUntilDate) group by cm order by cm.seqNo desc";
 			}
 			if (meleteSecurityService.allowStudent(courseId))
 			{
@@ -2410,12 +2407,12 @@ public class ModuleDB implements Serializable
 			//Select information from the section tracking table, use conditions as appropriate with dates for filtered and unfiltered
 			if (filtered)
 			{
-				sql = "select m.module_id,c.seq_no,m.title as modTitle,m.description as modDesc,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (d.start_date is NULL or d.end_date is NULL or d.start_date < d.end_date) and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
-			    stvSql = "select straight_join mcm.module_id,mstv.section_id,mstv.view_date from melete_course_module mcm,melete_module_shdates msh,melete_section ms,melete_section_track_view mstv where  mcm.course_id = ? and mcm.delete_flag = 0 and mcm.archv_flag = 0 and mcm.module_id = msh.module_id and (msh.start_date is NULL or msh.end_date is NULL or msh.start_date < msh.end_date) and mcm.module_id = ms.module_id and (ms.delete_flag=0 or ms.delete_flag is NULL) and mstv.user_id = ? and ms.section_id = mstv.section_id order by mcm.module_id";
+				sql = "select m.module_id,c.seq_no,m.title as modTitle,m.description as modDesc,m.whats_next,m.seq_xml,d.start_date,d.end_date,d.allowuntil_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (d.start_date is NULL or d.end_date is NULL or d.start_date < d.end_date) and (d.start_date is NULL or d.allowuntil_date is NULL or d.start_date < d.allowuntil_date) and (d.end_date is NULL or d.allowuntil_date is NULL or d.end_date < d.allowuntil_date) and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
+			    stvSql = "select straight_join mcm.module_id,mstv.section_id,mstv.view_date from melete_course_module mcm,melete_module_shdates msh,melete_section ms,melete_section_track_view mstv where  mcm.course_id = ? and mcm.delete_flag = 0 and mcm.archv_flag = 0 and mcm.module_id = msh.module_id and (msh.start_date is NULL or msh.end_date is NULL or msh.start_date < msh.end_date) and (msh.start_date is NULL or msh.allowuntil_date is NULL or msh.start_date < msh.allowuntil_date) and (msh.end_date is NULL or msh.allowuntil_date is NULL or msh.end_date < msh.allowuntil_date) and mcm.module_id = ms.module_id and (ms.delete_flag=0 or ms.delete_flag is NULL) and mstv.user_id = ? and ms.section_id = mstv.section_id order by mcm.module_id";
 			}
 			else
 			{
-				sql = "select m.module_id,c.seq_no,m.title as modTitle,m.description as modDesc, m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
+				sql = "select m.module_id,c.seq_no,m.title as modTitle,m.description as modDesc, m.whats_next,m.seq_xml,d.start_date,d.end_date,d.allowuntil_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.delete_flag=0 and c.archv_flag=0 and (s.delete_flag=0 or s.delete_flag is NULL) order by c.seq_no";
 				stvSql = "select straight_join mcm.module_id,mstv.section_id,mstv.view_date from melete_course_module mcm,melete_section ms,melete_section_track_view mstv where  mcm.course_id = ? and mcm.delete_flag = 0 and mcm.archv_flag = 0 and mcm.module_id = ms.module_id  and (ms.delete_flag=0 or ms.delete_flag is NULL) and mstv.user_id = ? and ms.section_id = mstv.section_id order by mcm.module_id";
 			}
 			PreparedStatement pstmt = dbConnection.prepareStatement(sql);
@@ -2695,6 +2692,8 @@ else
 
 		java.sql.Timestamp startTimestamp = rs.getTimestamp("start_date");
 		java.sql.Timestamp endTimestamp = rs.getTimestamp("end_date");
+		java.sql.Timestamp auTimestamp = rs.getTimestamp("allowuntil_date");
+		
 		// If special access is set up, use those dates; otherwise,
 		// use module dates
 		if ((accMap != null) && (accMap.size() > 0))
@@ -2704,15 +2703,18 @@ else
 			{
 				if (ad.overrideStart) startTimestamp = ad.getAccStartTimestamp();
 				if (ad.overrideEnd) endTimestamp = ad.getAccEndTimestamp();
+				if (ad.overrideAllowUntil) auTimestamp = ad.getAccAllowUntilTimestamp();
 			}
 		}
 
 		// Date flag is false for invalid modules
-		if ((startTimestamp != null) && (endTimestamp != null) && (startTimestamp.compareTo(endTimestamp) >= 0))
+		if ((((startTimestamp != null) && (endTimestamp != null) && (startTimestamp.compareTo(endTimestamp) >= 0)))||
+		(((startTimestamp != null) && (auTimestamp != null) && (startTimestamp.compareTo(auTimestamp) >= 0)))||
+		(((endTimestamp != null) && (auTimestamp != null) && (endTimestamp.compareTo(auTimestamp) >= 0))))
 			vmBean.setDateFlag(false);
 		else
 			vmBean.setDateFlag(true);
-		if (isVisible(startTimestamp, endTimestamp))
+		if (isVisible(startTimestamp, endTimestamp, auTimestamp))
 		{
 			this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
 			if ((this.accessAdvisor != null)
@@ -2742,6 +2744,10 @@ else
 		if (endTimestamp != null)
 		{
 			vmBean.setEndDate(new java.util.Date(endTimestamp.getTime() + (endTimestamp.getNanos() / 1000000)));
+		}
+		if (auTimestamp != null)
+		{
+			vmBean.setAllowUntilDate(new java.util.Date(auTimestamp.getTime() + (auTimestamp.getNanos() / 1000000)));
 		}
 		return vmBean;
 	}
@@ -2793,7 +2799,7 @@ else
 			ResultSet rs = null;
 			String sql;
 
-			sql = "select m.module_id,c.seq_no,m.title as modTitle,m.description as modDesc,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where m.module_id = ? and (s.delete_flag=0 or s.delete_flag is NULL)";
+			sql = "select m.module_id,c.seq_no,m.title as modTitle,m.description as modDesc,m.whats_next,m.seq_xml,d.start_date,d.end_date,d.allowuntil_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where m.module_id = ? and (s.delete_flag=0 or s.delete_flag is NULL)";
 			
 			PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 			pstmt.setInt(1, modId);
@@ -2843,7 +2849,7 @@ else
 			ResultSet rs = null, modIdRs = null;
 			String sql;
 
-			sql = "select m.module_id,c.seq_no,m.title as modTitle,m.description as modDesc,m.whats_next,m.seq_xml,d.start_date,d.end_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.seq_no = ? and (s.delete_flag=0 or s.delete_flag is NULL)";
+			sql = "select m.module_id,c.seq_no,m.title as modTitle,m.description as modDesc,m.whats_next,m.seq_xml,d.start_date,d.end_date,d.allowuntil_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where c.course_id = ? and c.seq_no = ? and (s.delete_flag=0 or s.delete_flag is NULL)";
 			PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 			pstmt.setString(1, courseId);
 			pstmt.setInt(2, seqNo);
@@ -3273,8 +3279,10 @@ else
 					ModuleShdates moduleShdate = (ModuleShdates) (q.uniqueResult());
 					moduleShdate.setStartDate(null);
 					moduleShdate.setEndDate(null);
+					moduleShdate.setAllowUntilDate(null);
 
-					//fetch module object and update modification date
+/*					restoring is event and we are not updating modification details for that
+ * 					//fetch module object and update modification date
 					q = session.createQuery("select mod from Module mod where mod.moduleId =:moduleId");
 					q.setParameter("moduleId", coursemodule.getModule().getModuleId());
 
@@ -3283,13 +3291,14 @@ else
 					module.setModificationDate(new java.util.Date());
 					module.setModifiedByFname(user.getFirstName());
 					module.setModifiedByLname(user.getLastName());
-					
+					module.setModifyUserId(userId);
+					*/
 					// 4a. begin transaction
 					tx = session.beginTransaction();
 					// 4b save all objects
 					session.saveOrUpdate(coursemodule1);
 					session.saveOrUpdate(moduleShdate);
-					session.saveOrUpdate(module);
+//					session.saveOrUpdate(module);
 					// 4c.commit transaction
 					tx.commit();
 				}
@@ -3596,7 +3605,6 @@ else
 	 */
 	public void updateModule(Module mod) throws Exception
 	{
-		hibernateUtil.ensureModuleHasNonNulls(mod);
 		Transaction tx = null;
 		try
 		{
@@ -3716,7 +3724,15 @@ else
 		{
 			if (obj1.getStartDate().compareTo(obj2.getStartDate()) != 0) return false;
 		}
-
+		
+		if (obj1.getAllowUntilDate() == null && obj2.getAllowUntilDate() != null)
+			return false;
+		else if (obj1.getAllowUntilDate() != null && obj2.getAllowUntilDate() == null)
+			return false;
+		else if (obj1.getAllowUntilDate() != null && obj2.getAllowUntilDate() != null)
+		{
+			if (obj1.getAllowUntilDate().compareTo(obj2.getAllowUntilDate()) != 0) return false;
+		}
 		return true;
 	}
 	
@@ -3765,6 +3781,10 @@ else
 					if (!checkModuleDates.isEndDateValid()) {
 						checkModuleDates.setEndDate(mDate.getEndDate());
 					}
+					
+					if (!checkModuleDates.isAllowUntilDateValid()) {
+						checkModuleDates.setAllowUntilDate(mDate.getAllowUntilDate());
+					}
 					// compare them. If both are same then not modified
 					logger.debug("module is same " + shouldUpdateModuleObject(mod, checkModule));
 					logger.debug("moduleDates is same " + shouldUpdateModuleShDateObject(mDate, checkModuleDates));
@@ -3791,6 +3811,7 @@ else
 					// associated with this module
 					mDate.setStartDate(checkModuleDates.getStartDate());
 					mDate.setEndDate(checkModuleDates.getEndDate());
+					mDate.setAllowUntilDate(checkModuleDates.getAllowUntilDate());
 					mDate.setAddtoSchedule(checkModuleDates.getAddtoSchedule());
 					mDate.setEndEventId(checkModuleDates.getEndEventId());
 					mDate.setStartEventId(checkModuleDates.getStartEventId());
@@ -3801,9 +3822,7 @@ else
 					mod.setDescription(checkModule.getDescription());
 					mod.setKeywords(checkModule.getKeywords());
 					mod.setModificationDate(new Date());
-					User user = UserDirectoryService.getUser(userId);
-					mod.setModifiedByFname(user.getFirstName());
-					mod.setModifiedByLname(user.getLastName());
+					mod.setModifyUserId(userId);
 					mod.setTitle(checkModule.getTitle());
 					mod.setModuleshdate(mDate);
 
@@ -4036,11 +4055,39 @@ else
 			AccessDates ad = (AccessDates) pairs.getValue();
 			java.sql.Timestamp startTimestamp = null;
 			java.sql.Timestamp endTimestamp = null;
-			if (ad.overrideStart && ad.overrideEnd)
+			java.sql.Timestamp auTimestamp = null;
+			boolean allOverridden = false;
+			allOverridden = ad.overrideStart && ad.overrideEnd && ad.overrideAllowUntil;
+			try
 			{
-				startTimestamp = ad.getAccStartTimestamp();
-				endTimestamp = ad.getAccEndTimestamp();
-				if (isVisible(startTimestamp, endTimestamp))
+				//Only execute query if atleast one flag is not overriden
+				if (!allOverridden)
+				{
+					pstmt = dbConnection.prepareStatement("select start_date,end_date,allowuntil_date from melete_module_shdates where module_id=?");
+					if (rs != null)
+					{
+						while (rs.next())
+						{
+							startTimestamp = rs.getTimestamp("start_date");
+							endTimestamp = rs.getTimestamp("end_date");
+							auTimestamp = rs.getTimestamp("allowuntil_date");
+						}
+					}
+				}
+				if (ad.overrideStart)
+				{
+					startTimestamp = ad.getAccStartTimestamp();
+				}
+				if (ad.overrideEnd)
+				{
+					endTimestamp = ad.getAccEndTimestamp();
+				}
+				if (ad.overrideAllowUntil)
+				{
+					auTimestamp = ad.getAccAllowUntilTimestamp();
+				}
+
+				if (isVisible(startTimestamp, endTimestamp, auTimestamp))
 				{
 					continue;
 				}
@@ -4048,65 +4095,13 @@ else
 				{
 					removeList.add(seq);
 				}
+
+				rs.close();
+				pstmt.close();
 			}
-			else
+			catch (Exception e)
 			{
-				try
-				{
-					if (ad.overrideStart)
-					{
-						startTimestamp = ad.getAccStartTimestamp();
-						pstmt = dbConnection.prepareStatement("select end_date from melete_module_shdates where module_id=?");
-						pstmt.setInt(1, ad.getModuleId());
-						rs = pstmt.executeQuery();
-						if (rs != null)
-						{
-							while (rs.next())
-							{
-								endTimestamp = rs.getTimestamp("end_date");
-							}
-						}
-						if (isVisible(startTimestamp, endTimestamp))
-						{
-							continue;
-						}
-						else
-						{
-							removeList.add(seq);
-						}
-					}
-					else
-					{
-						if (ad.overrideEnd)
-						{
-							endTimestamp = ad.getAccEndTimestamp();
-							pstmt = dbConnection.prepareStatement("select start_date from melete_module_shdates where module_id=?");
-							pstmt.setInt(1, ad.getModuleId());
-							rs = pstmt.executeQuery();
-							if (rs != null)
-							{
-								while (rs.next())
-								{
-									startTimestamp = rs.getTimestamp("start_date");
-								}
-							}
-							if (isVisible(startTimestamp, endTimestamp))
-							{
-								continue;
-							}
-							else
-							{
-								removeList.add(seq);
-							}
-						}
-					}
-					rs.close();
-					pstmt.close();
-				}
-				catch (Exception e)
-				{
-					if (logger.isErrorEnabled()) logger.error(e.toString());
-				}
+				if (logger.isErrorEnabled()) logger.error(e.toString());
 			}
 		}
 		return removeList;
@@ -4367,7 +4362,7 @@ else
 		if (meleteSecurityService.allowStudent(courseId)) {
 			// String sql =
 			// "select a.module_id,a.start_date,a.end_date,a.override_start,a.override_end from melete_special_access a,melete_course_module c where a.users like ? and (a.start_date is NULL or a.end_date is NULL or a.start_date < a.end_date) and a.module_id=c.module_id and c.course_id = ?";
-			String sql = "select a.users,a.module_id,a.start_date,a.end_date,a.override_start,a.override_end from melete_special_access a,melete_course_module c where (a.start_date is NULL or a.end_date is NULL or a.start_date < a.end_date) and a.module_id=c.module_id and c.course_id = ?";
+			String sql = "select a.users,a.module_id,a.start_date,a.end_date,a.allowuntil_date,a.override_start,a.override_end,a.override_allowuntil from melete_special_access a,melete_course_module c where (a.start_date is NULL or a.end_date is NULL or a.start_date < a.end_date) and (a.start_date is NULL or a.allowuntil_date is NULL or a.start_date < a.allowuntil_date) and (a.end_date is NULL or a.allowuntil_date is NULL or a.end_date < a.allowuntil_date) and a.module_id=c.module_id and c.course_id = ?";
 
 			PreparedStatement accPstmt = dbConnection.prepareStatement(sql);
 			accPstmt.setString(1, courseId);
@@ -4382,8 +4377,10 @@ else
 						AccessDates ad = new AccessDates(accModuleId,
 								accRs.getTimestamp("start_date"),
 								accRs.getTimestamp("end_date"),
+								accRs.getTimestamp("allowuntil_date"),
 								accRs.getBoolean("override_start"),
-								accRs.getBoolean("override_end"));
+								accRs.getBoolean("override_end"),
+								accRs.getBoolean("override_allowuntil"));
 						accMap.put(accModuleId, ad);
 					}
 				}
@@ -4602,11 +4599,11 @@ else
 			// First get all sequence numbers after this one from course module table
 			if (prevFlag)
 			{
-				sql = "select cm.seq_no, cm.module_id, count(s.module_id) as secCount from melete_course_module cm,melete_module_shdates msh,melete_section s where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = s.module_id and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) group by cm.seq_no order by cm.seq_no desc";
+				sql = "select cm.seq_no, cm.module_id, count(s.module_id) as secCount from melete_course_module cm,melete_module_shdates msh,melete_section s where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = s.module_id and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?) and (msh.allowuntil_date is null or msh.allowuntil_date > ?) and (msh.end_date is null or msh.allowuntil_date is null or msh.end_date < msh.allowuntil_date)) group by cm.seq_no order by cm.seq_no desc";
 			}
 			else
 			{
-				sql = "select cm.seq_no, cm.module_id, count(s.module_id) as secCount from melete_course_module cm,melete_module_shdates msh,melete_section s where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = s.module_id and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?)) group by cm.seq_no order by cm.seq_no";
+				sql = "select cm.seq_no, cm.module_id, count(s.module_id) as secCount from melete_course_module cm,melete_module_shdates msh,melete_section s where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = s.module_id and cm.module_id = msh.module_id and ((msh.start_date is null or msh.start_date < ?) and (msh.end_date is null or msh.end_date > ?) and (msh.allowuntil_date is null or msh.allowuntil_date > ?) and (msh.end_date is null or msh.allowuntil_date is null or msh.end_date < msh.allowuntil_date)) group by cm.seq_no order by cm.seq_no";
 			}
 			PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 			pstmt.setString(1, courseId);
@@ -4614,6 +4611,7 @@ else
 			currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
 			pstmt.setTimestamp(3, currentTimestamp);
 			pstmt.setTimestamp(4, currentTimestamp);
+			pstmt.setTimestamp(5, currentTimestamp);
 			rs = pstmt.executeQuery();
 			this.accessAdvisor = (AccessAdvisor) ComponentManager.get(AccessAdvisor.class);
 			//Check if any of these modules are blocked by CM. Add ones that are not blocked to resList
@@ -4640,11 +4638,11 @@ else
 			// Get all access entries for user after/before this seq number
 			if (prevFlag)
 			{
-				sql = "select cm.seq_no, sa.module_id, sa.start_date, sa.end_date, sa.override_start, sa.override_end from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = sa.module_id and sa.users like ? and (sa.start_date is null or sa.end_date is null or sa.start_date < sa.end_date) order by cm.seq_no desc";
+				sql = "select cm.seq_no, sa.module_id, sa.start_date, sa.end_date, sa.allowuntil_date, sa.override_start, sa.override_end, sa.override_allowuntil from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no < ? and cm.module_id = sa.module_id and sa.users like ? and (sa.start_date is null or sa.end_date is null or sa.start_date < sa.end_date) and (sa.start_date is null or sa.allowuntil_date is null or sa.start_date < sa.allowuntil_date) and (sa.end_date is null or sa.allowuntil_date is null or sa.end_date < sa.allowuntil_date) order by cm.seq_no desc";
 			}
 			else
 			{
-				sql = "select cm.seq_no, sa.module_id, sa.start_date, sa.end_date, sa.override_start, sa.override_end from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = sa.module_id and sa.users like ? and (sa.start_date is null or sa.end_date is null or sa.start_date < sa.end_date) order by cm.seq_no";
+				sql = "select cm.seq_no, sa.module_id, sa.start_date, sa.end_date, sa.allowuntil_date, sa.override_start, sa.override_end, sa.override_allowuntil from melete_course_module cm,melete_special_access sa where cm.course_id = ? and cm.delete_flag = 0 and cm.archv_flag = 0 and cm.seq_no > ? and cm.module_id = sa.module_id and sa.users like ? and (sa.start_date is null or sa.end_date is null or sa.start_date < sa.end_date) and (sa.start_date is null or sa.allowuntil_date is null or sa.start_date < sa.allowuntil_date) and (sa.end_date is null or sa.allowuntil_date is null or sa.end_date < sa.allowuntil_date) order by cm.seq_no";
 			}
 			PreparedStatement accPstmt = dbConnection.prepareStatement(sql);
 			accPstmt.setString(1, courseId);
@@ -4664,8 +4662,8 @@ else
 					  continue;
 					else
 					{	
-					  AccessDates ad = new AccessDates(moduleId, accRs.getTimestamp("start_date"), accRs.getTimestamp("end_date"),
-						accRs.getBoolean("override_start"), accRs.getBoolean("override_end"));
+					  AccessDates ad = new AccessDates(moduleId, accRs.getTimestamp("start_date"), accRs.getTimestamp("end_date"), accRs.getTimestamp("allowuntil_date"),
+						accRs.getBoolean("override_start"), accRs.getBoolean("override_end"), accRs.getBoolean("override_allowuntil"));
 					  accMap.put(accRs.getInt("seq_no"), ad);
 					}  
 				}
@@ -4742,40 +4740,22 @@ else
 	}
 
 	/**
-	 * Get sql timestamp value of string time
-	 * 
-	 * @param dateTime
-	 * @return sql timestamp value
-	 */
-	private java.sql.Timestamp getTime(String dateTime)
-	{
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
-		Date dd = null;
-		try
-		{
-			dd = sdf.parse(dateTime);
-		}
-		catch (Exception pe)
-		{
-			if (logger.isErrorEnabled()) logger.error(pe);
-		}
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.fffffffff");
-		String jdbcTime = sdf1.format(dd);
-		return java.sql.Timestamp.valueOf(jdbcTime);
-	}
-
-	/**
-	 * Determines if this module is currently visible
+	 * Determines if this module is currently visible(does not check if the dates are valid)
 	 * 
 	 * @param startTimestamp
 	 *        Start date
 	 * @param endTimestamp
 	 *        End date
+	 * @param allowUntilTimestamp
+	 *        Allow Until date        
 	 * @return true if module is visible, false if not
 	 */
-	private boolean isVisible(java.sql.Timestamp startTimestamp, java.sql.Timestamp endTimestamp)
+	private boolean isVisible(java.sql.Timestamp startTimestamp, java.sql.Timestamp endTimestamp, java.sql.Timestamp allowUntilTimestamp)
 	{
 		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+		
+		if (allowUntilTimestamp != null) endTimestamp = allowUntilTimestamp;
+		
 		if (((startTimestamp == null) || (startTimestamp.before(currentTimestamp)))
 				&& ((endTimestamp == null) || (endTimestamp.after(currentTimestamp))))
 		{
@@ -4991,7 +4971,9 @@ else
 
 					}
 					else
+					{
 						secEmbed.add(sec.getSectionResource().getResource().getResourceId());
+					}	
 				}
 			}
 			// logger.debug("before sorting and removing dups" + secEmbed.size());
@@ -5060,6 +5042,7 @@ else
 			{
 				module.setCreationDate(new java.util.Date());
 				module.setUserId(userId);
+				module.setModifyUserId(userId);
 				// module.setModificationDate(new java.util.Date());
 
 				moduleshowdates.setModule(module);
@@ -5213,6 +5196,7 @@ else
 			boolean addtoSchedule = moduleshdates1.getAddtoSchedule().booleanValue();
 			Date startDate = moduleshdates1.getStartDate();
 			Date endDate = moduleshdates1.getEndDate();
+			Date allowUntilDate = moduleshdates1.getAllowUntilDate();
 			String startEventId = moduleshdates1.getStartEventId();
 			String endEventId = moduleshdates1.getEndEventId();
 			
@@ -5225,7 +5209,9 @@ else
 				if (addtoSchedule == true)
 				{
 					//Fix for ME-1426, when start date is after end date, do not add events to calendar
-					if ((startDate != null)&&(endDate != null)&&(startDate.after(endDate)))
+					if (((startDate != null)&&(endDate != null)&&(startDate.after(endDate)))||
+							((startDate != null)&&(allowUntilDate != null)&&(startDate.after(allowUntilDate)))||
+							((endDate != null)&&(allowUntilDate != null)&&(endDate.after(allowUntilDate))))
 					{
 						if (startEventId != null)
 						{
@@ -5358,19 +5344,31 @@ class AccessDates
 {
 	java.sql.Timestamp accEndTimestamp;
 	java.sql.Timestamp accStartTimestamp;
+	java.sql.Timestamp accAllowUntilTimestamp;
 	int moduleId;
 	boolean overrideEnd;
 	boolean overrideStart;
+	boolean overrideAllowUntil;
 
-	AccessDates(int moduleId, java.sql.Timestamp accStartTimestamp, java.sql.Timestamp accEndTimestamp, boolean overrideStart, boolean overrideEnd)
+	AccessDates(int moduleId, java.sql.Timestamp accStartTimestamp, java.sql.Timestamp accEndTimestamp, java.sql.Timestamp accAllowUntilTimestamp, boolean overrideStart, boolean overrideEnd, boolean overrideAllowUntil)
 	{
 		this.moduleId = moduleId;
 		this.accStartTimestamp = accStartTimestamp;
 		this.accEndTimestamp = accEndTimestamp;
+		this.accAllowUntilTimestamp = accAllowUntilTimestamp;
 		this.overrideStart = overrideStart;
 		this.overrideEnd = overrideEnd;
+		this.overrideAllowUntil = overrideAllowUntil;
 	}
 
+	/**
+	 * @return the access allow until timestamp
+	 */
+	public java.sql.Timestamp getAccAllowUntilTimestamp()
+	{
+		return this.accAllowUntilTimestamp;
+	}
+	
 	/**
 	 * @return the access end timestamp
 	 */
@@ -5396,6 +5394,14 @@ class AccessDates
 	}
 
 	/**
+	 * @return override allowUntil flag value
+	 */
+	public boolean isOverrideAllowUntil()
+	{
+		return this.overrideAllowUntil;
+	}
+	
+	/**
 	 * @return override end flag value
 	 */
 	public boolean isOverrideEnd()
@@ -5412,8 +5418,17 @@ class AccessDates
 	}
 
 	/**
+	 * @param accAllowUntilTimestamp
+	 *        the access allow until timestamp
+	 */
+	public void setAccAllowUntilTimestamp(java.sql.Timestamp accAllowUntilTimestamp)
+	{
+		this.accAllowUntilTimestamp = accAllowUntilTimestamp;
+	}
+	
+	/**
 	 * @param accEndTimestamp
-	 *        the acces end timestamp
+	 *        the access end timestamp
 	 */
 	public void setAccEndTimestamp(java.sql.Timestamp accEndTimestamp)
 	{
@@ -5438,6 +5453,15 @@ class AccessDates
 		this.moduleId = moduleId;
 	}
 
+	/**
+	 * @param overrideAllowUntil
+	 *        override allow until flag value
+	 */
+	public void setOverrideAllowUntil(boolean overrideAllowUntil)
+	{
+		this.overrideAllowUntil = overrideAllowUntil;
+	}
+	
 	/**
 	 * @param overrideEnd
 	 *        override end flag value

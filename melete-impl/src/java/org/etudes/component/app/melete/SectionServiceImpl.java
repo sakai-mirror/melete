@@ -506,6 +506,15 @@ public class SectionServiceImpl implements Serializable, SectionService
 		}
 		return secTitle;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Map<String, Date> getSectionFirstViewDates(String sectionId) throws Exception
+	{
+		if (sectionId == null) return null;
+		return sectiondb.getSectionUsersFirstViewDate(new Integer(sectionId).intValue());
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -672,13 +681,13 @@ public class SectionServiceImpl implements Serializable, SectionService
 	/**
 	 * {@inheritDoc}
 	 */
-	public Integer insertSection(ModuleObjService module, SectionObjService section) throws MeleteException
+	public Integer insertSection(ModuleObjService module, SectionObjService section, String userId) throws MeleteException
 	{
 		try
 		{
 			// insert new Section
 			logger.debug("dtd in insersection - impl layer");
-			Integer newsectionId = sectiondb.addSection((Module) module, (Section) section, false);
+			Integer newsectionId = sectiondb.addSection((Module) module, (Section) section, false, userId);
 			return newsectionId;
 
 		}

@@ -295,6 +295,18 @@ public interface SectionService
 	public String getSectionTitle(int sectionId);
 
 	/**
+	 * Get all users first view date information for a section.
+	 * 
+	 * @param sectionId
+	 *        the section id
+	 * @return a Map<userId, FirstViewDate> information for a section.
+	 * 
+	 * @throws Exception
+	 * 
+	 */
+	public Map<String, Date> getSectionFirstViewDates(String sectionId) throws Exception;
+	
+	/**
 	 * Get all users view date information for a section.
 	 * 
 	 * @param sectionId
@@ -351,11 +363,13 @@ public interface SectionService
 	 *        The module
 	 * @param section
 	 *        The section
+	 * @param userId
+	 * 		Id of author creating the section       
 	 * @return
 	 * @throws Exception
 	 *         "add_section_fail" MeleteException
 	 */
-	public Integer insertSection(ModuleObjService module, SectionObjService section) throws Exception;
+	public Integer insertSection(ModuleObjService module, SectionObjService section, String userId) throws Exception;
 
 	/**
 	 * this method inserts the association in between section and resource and updates melete resource object

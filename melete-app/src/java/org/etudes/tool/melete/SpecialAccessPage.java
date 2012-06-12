@@ -3,7 +3,7 @@
  * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/java/org/etudes/tool/melete/SpecialAccessPage.java $
  * $Id: SpecialAccessPage.java 56408 2008-12-19 21:16:52Z mallika@etudes.org $
  ***********************************************************************************
- * Copyright (c) 2010, 2011 Etudes, Inc.
+ * Copyright (c) 2010, 2011, 2012 Etudes, Inc.
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you
@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.etudes.component.app.melete.*;
 import org.etudes.api.app.melete.*;
+import org.etudes.util.DateHelper;
 import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.Application;
@@ -34,8 +35,6 @@ import javax.faces.component.html.*;
 import javax.faces.component.*;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -91,7 +90,7 @@ public class SpecialAccessPage implements Serializable
 	/** identifier field */
 	private SpecialAccessObjService specialAccess;
 	private SpecialAccessService specialAccessService;
-	private Date startDate, endDate;
+	private Date startDate, endDate, allowUntilDate;
 	private UIData table;
 
 	/** Dependency: The logging service. */
@@ -356,6 +355,14 @@ public class SpecialAccessPage implements Serializable
 	{
 		return getModule().getModuleshdate().getEndDate();
 	}
+	
+	/**
+	 * @return allow until date of current module
+	 */
+	public Date getAllowUntilDate()
+	{
+		return getModule().getModuleshdate().getAllowUntilDate();
+	}
 
 	/**
 	 * @return size of list
@@ -457,8 +464,10 @@ public class SpecialAccessPage implements Serializable
 			specialAccess.setModuleId(this.moduleId);
 			specialAccess.setStartDate(getModule().getModuleshdate().getStartDate());
 			specialAccess.setEndDate(getModule().getModuleshdate().getEndDate());
+			specialAccess.setAllowUntilDate(getModule().getModuleshdate().getAllowUntilDate());
 			specialAccess.setOverrideStart(false);
 			specialAccess.setOverrideEnd(false);
+			specialAccess.setOverrideAllowUntil(false);
 		}
 		return specialAccess;
 	}
@@ -686,6 +695,15 @@ public class SpecialAccessPage implements Serializable
 	{
 		this.endDate = endDate;
 	}
+	
+	/**
+	 * @param allowUntilDate
+	 *        allow until date of current module
+	 */
+	public void setAllowUntilDate(Date allowUntilDate)
+	{
+		this.allowUntilDate = allowUntilDate;
+	}
 
 	/**
 	 * @param listSize
@@ -882,10 +900,12 @@ public class SpecialAccessPage implements Serializable
 	{
 		Calendar calstart = new GregorianCalendar();
 		Calendar calend = new GregorianCalendar();
+		Calendar calau = new GregorianCalendar();
 
 		Date st = specialAccess.getStartDate();
 		Date end = specialAccess.getEndDate();
-		if ((st != null) || (end != null))
+		Date au = specialAccess.getAllowUntilDate();
+		if ((st != null) || (end != null) || (au != null))
 		{
 			if (st != null)
 			{
@@ -935,6 +955,30 @@ public class SpecialAccessPage implements Serializable
 					}
 				}
 			}
+			if (au != null)
+			{
+				calau.setTime(au);
+				if (calau.get(Calendar.YEAR) > 9999)
+				{
+					Map params = context.getExternalContext().getRequestParameterMap();
+					String prevAllowUntilDateStr = (String) params.get("AddSpecialAccessForm:prevAllowUntilDate");
+					if ((prevAllowUntilDateStr.equals("null") || (prevAllowUntilDateStr.trim().equals("")) || (prevAllowUntilDateStr.trim().length() == 0)))
+					{
+						specialAccess.setAllowUntilDate(null);
+					}
+					else
+					{
+						try
+						{
+							specialAccess.setAllowUntilDate(getDateFromString(prevAllowUntilDateStr));
+						}
+						catch (ParseException e)
+						{
+							specialAccess.setAllowUntilDate(this.module.getModuleshdate().getAllowUntilDate());
+						}
+					}
+				}
+			}
 		}
 
 		return specialAccess;
@@ -956,8 +1000,7 @@ public class SpecialAccessPage implements Serializable
 	public Date getDateFromString(String dateStr) throws ParseException{
 		Date date = null;
 		try {
-			SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.MEDIUM);
-	        date = sdf.parse(dateStr);
+			date = DateHelper.parseDate(dateStr, null);
 		} catch (ParseException e) {
 			throw e;
 		}

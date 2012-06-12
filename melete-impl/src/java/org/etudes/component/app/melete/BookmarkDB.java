@@ -188,7 +188,7 @@ public class BookmarkDB
 					}
 					if ((saList == null) || (saList.size() == 0))
 					{
-						bmark.setSectionVisibleFlag(bmark.getSection().getModule().getModuleshdate().isVisibleFlag());
+						bmark.setSectionVisibleFlag(isSectionVisible(null,(ModuleShdates)bmark.getSection().getModule().getModuleshdate()));
 					}
 					else
 					{
@@ -207,7 +207,7 @@ public class BookmarkDB
 						// If access has not been set for this module, use module's dates
 						if (accessFound == false)
 						{
-							bmark.setSectionVisibleFlag(bmark.getSection().getModule().getModuleshdate().isVisibleFlag());
+							bmark.setSectionVisibleFlag(isSectionVisible(null,(ModuleShdates)bmark.getSection().getModule().getModuleshdate()));
 						}
 
 					}
@@ -267,9 +267,11 @@ public class BookmarkDB
 			{
 				Date startDate = section.getModule().getModuleshdate().getStartDate();
 				Date endDate = section.getModule().getModuleshdate().getEndDate();
+				Date allowUntilDate = section.getModule().getModuleshdate().getAllowUntilDate();
+				
 				//Since we no longer show invalid modules to instructors in list view,
 				//we also don't want to show the link to a last visited section if it is invalid
-				if ((startDate != null) && (endDate != null) && (startDate.compareTo(endDate) >= 0))
+				if (isSectionInvalid(startDate,endDate,allowUntilDate))
 				{
 					sectionId = 0;
 				}
@@ -300,7 +302,7 @@ public class BookmarkDB
 				}
 				else
 				{
-					if (section.getModule().getModuleshdate().isVisibleFlag())
+					if (isSectionVisible(null, (ModuleShdates) section.getModule().getModuleshdate()))
 					{
 						sectionId = section.getSectionId().intValue();
 					}
@@ -480,29 +482,48 @@ public class BookmarkDB
 	}
 
 	/**
-	 * Determines a section corresponding to a bookmark is visible, checks with special access and module start and end dates
+	 * Determines if a section corresponding to a bookmark is visible and valid, checks with special access and module start and end dates
 	 * 
 	 * @param sa
 	 *        Special access object
 	 * @param mshdates
 	 *        ModuleShdates object
-	 * @return true if section is visible
+	 * @return true if section is visible and valid
 	 */
 	private boolean isSectionVisible(SpecialAccess sa, ModuleShdates mshdates)
 	{
 		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
 		Date startDate;
 		Date endDate;
+		Date allowUntilDate;
 
-		if (sa.isOverrideStart())
-			startDate = sa.getStartDate();
+		if (sa != null)
+		{
+			if (sa.isOverrideStart())
+				startDate = sa.getStartDate();
+			else
+				startDate = mshdates.getStartDate();
+
+			if (sa.isOverrideEnd())
+				endDate = sa.getEndDate();
+			else
+				endDate = mshdates.getEndDate();
+
+			if (sa.isOverrideAllowUntil())
+				allowUntilDate = sa.getAllowUntilDate();
+			else
+				allowUntilDate = mshdates.getAllowUntilDate();
+		}
 		else
+		{
 			startDate = mshdates.getStartDate();
-
-		if (sa.isOverrideEnd())
-			endDate = sa.getEndDate();
-		else
 			endDate = mshdates.getEndDate();
+			allowUntilDate = mshdates.getAllowUntilDate();
+		}
+		
+		if (isSectionInvalid(startDate,endDate,allowUntilDate)) return false;
+		
+ 		if (allowUntilDate != null) endDate = allowUntilDate;
 
 		if (((startDate == null) || (startDate.before(currentTimestamp))) && ((endDate == null) || (endDate.after(currentTimestamp))))
 		{
@@ -512,6 +533,24 @@ public class BookmarkDB
 		{
 			return false;
 		}
+	}
+	
+	/**
+	 * Determines if a section is invalid
+	 * 
+	 * @param startDate The Start Date
+	 * @param endDate The End Date
+	 * @param allowUntilDate The Allow Until Date
+	 * @return true if the section has invalid dates, false if it has valid dates
+	 */
+	private boolean isSectionInvalid(Date startDate, Date endDate, Date allowUntilDate)
+	{
+		if ((((startDate != null) && (endDate != null) && (startDate.compareTo(endDate) >= 0)))||
+				(((startDate != null) && (allowUntilDate != null) && (startDate.compareTo(allowUntilDate) >= 0)))||
+				(((endDate != null) && (allowUntilDate != null) && (endDate.compareTo(allowUntilDate) >= 0))))
+			return true;
+		
+		return false;
 	}
 
 }

@@ -67,6 +67,9 @@ public class SectionDB implements Serializable
 
 	/** Dependency: a logger component. */
 	private Log logger = LogFactory.getLog(SectionDB.class);
+	
+	private MeleteUtil meleteUtil = new MeleteUtil();
+
 
 	public SectionDB()
 	{
@@ -76,7 +79,7 @@ public class SectionDB implements Serializable
 	/**
 	 * Add section sets the not-null values not been populated yet and then inserts the section into section table. update module witht his association to new added section If error in committing transaction, it rollbacks the transaction.
 	 */
-	public Integer addSection(Module module, Section section, boolean fromImport) throws MeleteException
+	public Integer addSection(Module module, Section section, boolean fromImport, String userId) throws MeleteException
 	{
 		try
 		{
@@ -90,12 +93,8 @@ public class SectionDB implements Serializable
 				section.setModificationDate(new java.util.Date());
 				section.setModuleId(module.getModuleId().intValue());
 				section.setDeleteFlag(false);
-
-				/*
-				 * Since Oracle silently transforms "" to nulls, we need to check to see if these non null properties are in fact null.
-				 */
-
-				hibernateUtil.ensureSectionHasNonNull(section);
+				section.setUserId(userId);
+				section.setModifyUserId(userId);
 				// save object
 				if (!session.isOpen())
 				{
@@ -273,10 +272,8 @@ public class SectionDB implements Serializable
 				else
 				{
 					// update modification details only when there is modification
-					User user = UserDirectoryService.getUser(userId);
-					findSection.setModifiedByFname(user.getFirstName());
-					findSection.setModifiedByLname(user.getLastName());
 					findSection.setModificationDate(new java.util.Date());
+					findSection.setModifyUserId(userId);
 				}
 				findSection.setAudioContent(section.isAudioContent());
 				findSection.setContentType(section.getContentType());
@@ -285,8 +282,6 @@ public class SectionDB implements Serializable
 				findSection.setTextualContent(section.isTextualContent());
 				findSection.setTitle(section.getTitle());
 				findSection.setVideoContent(section.isVideoContent());			
-
-				hibernateUtil.ensureSectionHasNonNull(findSection);
 
 				// save object
 				if (!session.isOpen()) session = hibernateUtil.currentSession();
@@ -378,10 +373,8 @@ public class SectionDB implements Serializable
 				if (!shouldUpdateSectionObject(section, findSection) || (melResource != null && !shouldUpdateMeleteResourceObject(melResource, findMelResource)) || modifyCR)
 				{
 					// modification details
-					User user = UserDirectoryService.getUser(userId);
-					findSection.setModifiedByFname(user.getFirstName());
-					findSection.setModifiedByLname(user.getLastName());
-					findSection.setModificationDate(new java.util.Date());									
+					findSection.setModificationDate(new java.util.Date());		
+					findSection.setModifyUserId(userId);
 				}
 
 				// if new associated resource is different than old one, fetch from db
@@ -438,8 +431,7 @@ public class SectionDB implements Serializable
 				findSection.setTitle(section.getTitle());
 				findSection.setVideoContent(section.isVideoContent());				
 				findSection.setSectionResource(findSecResource);
-
-				hibernateUtil.ensureSectionHasNonNull(findSection);
+	
 				session.saveOrUpdate(findSection);
 				session.flush();
 				tx.commit();
@@ -549,8 +541,6 @@ public class SectionDB implements Serializable
 			try
 			{
 				tx = session.beginTransaction();
-
-				hibernateUtil.ensureSectionHasNonNull(sec);
 
 				secRes = (SectionResource) sec.getSectionResource();
 
@@ -1018,6 +1008,7 @@ public class SectionDB implements Serializable
 				find_sv.setSectionId(sectionId);
 				find_sv.setUserId(userId);
 				find_sv.setViewDate(new java.util.Date());
+				find_sv.setFirstViewDate(new java.util.Date());
 				session.save(find_sv);
 			}
 			else
@@ -1028,6 +1019,7 @@ public class SectionDB implements Serializable
 				returnStv.setSectionId(find_sv.getSectionId());
 				returnStv.setUserId(find_sv.getUserId());
 				returnStv.setViewDate(find_sv.getViewDate());
+				returnStv.setFirstViewDate(find_sv.getFirstViewDate());
 				find_sv.setViewDate(new java.util.Date());
 				session.update(find_sv);
 			}
@@ -1252,8 +1244,6 @@ public class SectionDB implements Serializable
 			Transaction tx = null;
 			try
 			{
-				hibernateUtil.ensureSectionHasNonNull(section);
-
 				SectionResource secResource = (SectionResource) section.getSectionResource();
 				if (secResource == null)
 				{
@@ -1337,7 +1327,6 @@ public class SectionDB implements Serializable
 			Transaction tx = null;
 			try
 			{
-				hibernateUtil.ensureSectionHasNonNull(section);
 
 				if (secResource == null)
 				{
@@ -1413,8 +1402,6 @@ public class SectionDB implements Serializable
 			findSection.setAudioContent(section.isAudioContent());
 			findSection.setContentType(section.getContentType());
 			findSection.setInstr(section.getInstr());
-			findSection.setModifiedByFname(section.getModifiedByFname());
-			findSection.setModifiedByLname(section.getModifiedByLname());
 			findSection.setOpenWindow(section.isOpenWindow());
 			findSection.setTextualContent(section.isTextualContent());
 			findSection.setTitle(section.getTitle());
@@ -1427,7 +1414,6 @@ public class SectionDB implements Serializable
 			Transaction tx = null;
 			try
 			{
-				hibernateUtil.ensureSectionHasNonNull(findSection);
 
 				// SectionResource secResource = (SectionResource)section.getSectionResource();
 				if (secResource == null)
@@ -1721,7 +1707,6 @@ public class SectionDB implements Serializable
 			Transaction tx = null;
 			try
 			{
-				hibernateUtil.ensureSectionHasNonNull(section);
 
 				// delete SectionResource
 				tx = session.beginTransaction();
@@ -1775,8 +1760,6 @@ public class SectionDB implements Serializable
 			Transaction tx = null;
 			try
 			{
-				hibernateUtil.ensureSectionHasNonNull(section);
-
 				// set secResource fields
 				secResource.setSection(section);
 				secResource.setSectionId(section.getSectionId());
@@ -2202,7 +2185,7 @@ public class SectionDB implements Serializable
 		for (String delRes : delResources)
 		{
 			if (delRes == null) continue;
-			delResourceIds.append("'" + delRes + "',");
+			delResourceIds.append("'" + meleteUtil.escapeQuoted(delRes) + "',");
 			if (removeResourceFlag == true)
 			{
 				try
@@ -2304,6 +2287,33 @@ public class SectionDB implements Serializable
 		}
 	}
 
+	/**
+	 * Get all users who have viewed a section.
+	 * 
+	 * @param sectionId
+	 *        The section id
+	 * @return a Map<userId, ViewDate> for a section
+	 */
+	public Map<String, Date> getSectionUsersFirstViewDate(int sectionId)
+	{
+		Map<String, Date> all = new HashMap<String, Date>();
+		Session session = hibernateUtil.currentSession();
+		Query q = session.getNamedQuery("trackSectionItem");
+		q.setParameter("sectionId", sectionId, Hibernate.INTEGER);
+
+		List<SectionTrackView> sectionUsers = q.list();
+		if (sectionUsers == null || sectionUsers.size() <= 0) return all;
+		for (SectionTrackView s : sectionUsers)
+		{
+			if (s.getFirstViewDate() != null)
+			{
+				all.put(s.getUserId(), s.getFirstViewDate());
+			}
+		}
+		hibernateUtil.closeSession();
+		return all;
+	}
+	
 	/**
 	 * Get all users who have viewed a section.
 	 * 

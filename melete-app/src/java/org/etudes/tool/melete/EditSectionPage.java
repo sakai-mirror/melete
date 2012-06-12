@@ -3,7 +3,7 @@
  * $URL$
  * $Id$
  ***********************************************************************************
- * Copyright (c) 2008,2009, 2010, 2011 Etudes, Inc.
+ * Copyright (c) 2008,2009, 2010, 2011, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -49,6 +49,8 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.tool.cover.ToolManager;
+import org.sakaiproject.user.api.User;
+import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.util.ResourceLoader;
 
 import org.sakaiproject.event.cover.EventTrackingService;
@@ -77,8 +79,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 
 	private String editId;
 	
-	private Date lastSavedAt;
+	private long lastSavedAt;
 
+	private String createdByAuthor;
+	
+	private String modifiedByAuthor;
 	/**
 	 * Default constructor
 	 */
@@ -86,6 +91,8 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		logger.debug("EditSectionPage CONSTRUCTOR CALLED");
 		setFormName("EditSectionForm");
+		createdByAuthor = "";
+		modifiedByAuthor = "";
 	}
 
 	/**
@@ -104,7 +111,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 		setFormName("EditSectionForm");
 		if(editId == null) editId = section1.getSectionId().toString();
 		setSection(sectionService.getSection(section1.getSectionId()));
-		lastSavedAt = this.section.getModificationDate();
+		lastSavedAt = ((Date)this.section.getModificationDate()).getTime();
 		setModule(moduleService.getModule(section1.getModuleId()));
 	//	setSecResource(this.section.getSectionResource());
 		setSecResource(sectionService.getSectionResourcebyId(this.section.getSectionId().toString()));
@@ -278,8 +285,48 @@ public class EditSectionPage extends SectionPage implements Serializable
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "add_section_modality_reqd", errMsg));
 			return "failure";
 		}
+		
+		ValueBinding binding = Util.getBinding("#{authorPreferences}");
+		AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
+		
+		boolean contentEmpty = false;
+		//If editor is sferyx, grab content empty flag value and set section to notype
+		if (section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx())
+		{
+			binding = Util.getBinding("#{addResourcesPage}");
+			AddResourcesPage resourcesPage = (AddResourcesPage) binding.getValue(context);
+			HashMap<String, ArrayList<String>> save_err = resourcesPage.getHm_msgs();
+			logger.debug("hashmap in editsectionpage is " + save_err);
+			String errKey = "content_empty";
+			if (save_err != null && !save_err.isEmpty() && save_err.containsKey(errKey))
+			{
+				ArrayList<String> errs = save_err.get(errKey);
+				for (String err : errs)
+				{
+					//String errMsg = resourcesPage.getMessageText(err);
+					if (err.equals("true")) 
+					{
+						section.setContentType("notype");
+						contentEmpty = true;
+					}
+				}
+				resourcesPage.removeFromHm_Msgs(errKey);
+			}
+			
+		}
+		
+		//If editor is FCK, check contentEditor and set section to notype if blank
+		if (section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderFCK())
+		{
+			if ((contentEditor == null) || (contentEditor.trim().length() == 0))
+			{
+				section.setContentType("notype");
+				contentEmpty = true;
+			}
+		}	
+		
 		Boolean modifyContentResource = false;
-		ValueBinding binding =  Util.getBinding("#{licensePage}");
+		binding =  Util.getBinding("#{licensePage}");
 		 LicensePage lPage = (LicensePage)binding.getValue(context);
 		 lPage.setFormName(formName);
 		try
@@ -297,8 +344,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 			
 			// validation 3: if upload a new file check fileName format -- move to uploadSectionContent()
 			// validation 3-1: if typeEditor and saved by sferyx then check for error messages
-			binding = Util.getBinding("#{authorPreferences}");
-			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(context);
 			Date checkLastWork = sectionService.getLastModifiedDate(section.getSectionId());
 			
 			if (section.getContentType().equals("typeEditor") && preferencePage.isShouldRenderSferyx())
@@ -319,19 +364,38 @@ public class EditSectionPage extends SectionPage implements Serializable
 					resourcesPage.removeFromHm_Msgs(errKey);
 				}
 				if (context.getMessages().hasNext()) return "failure";
-				logger.debug("CHK IN edit page:" + checkLastWork + ", compare:"+checkLastWork.compareTo(lastSavedAt));
+				logger.debug("CHK IN edit page:" + checkLastWork + ", compare:"+(checkLastWork.getTime() > lastSavedAt));
 				modifyContentResource = getIsComposeDataEdited();
 			}
 			
 			// save section
 			if (logger.isDebugEnabled()) logger.debug("EditSectionpage:save section" + section.getContentType());
 		
-			if (checkLastWork != null && checkLastWork.compareTo(lastSavedAt) <= 0)
+			if (checkLastWork != null && checkLastWork.getTime() <= lastSavedAt)
 			{
 				if (section.getContentType().equals("notype"))
 				{
-					meleteResource = null;
-					sectionService.editSection(section, getCurrUserId());
+					//This means content in editor is empty
+					if (contentEmpty)
+					{
+						meleteResource = null;
+						//Clear out Melete resource table and the resource entry in CH
+						if (section.getSectionResource() != null && section.getSectionResource().getResource() != null)
+						{
+							String delResourceId = section.getSectionResource().getResource().getResourceId();
+							sectionService.deleteResourceInUse(delResourceId);
+							meleteCHService.removeResource(delResourceId);
+						}
+						// delete existing record from section_resource table
+						sectionService.deleteSectionResourcebyId(section.getSectionId().toString());
+						// insert just into section table
+						sectionService.editSection(section, getCurrUserId());
+					}
+					else
+					{
+						meleteResource = null;
+						sectionService.editSection(section, getCurrUserId());
+					}
 				}
 				else
 				{
@@ -447,7 +511,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 					contentEditor = new String(cr.getContent());
 				}
 			}
-			lastSavedAt = section.getModificationDate();
+			lastSavedAt = ((Date)section.getModificationDate()).getTime();
 			//Track the event
 			EventTrackingService.post(EventTrackingService.newEvent("melete.section.edit", ToolManager.getCurrentPlacement().getContext(), true));
 
@@ -1238,11 +1302,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			Section s = new Section();
 			s.setContentType("notype");
 			s.setTextualContent(true);
-			// user info from session
-			s.setCreatedByFname(info.getCurrentUser().getFirstName());
-			s.setCreatedByLname(info.getCurrentUser().getLastName());
-			s.setModifiedByFname(info.getCurrentUser().getFirstName());
-			s.setModifiedByLname(info.getCurrentUser().getLastName());
+
 			// reset flags
 			shouldRenderEditor = false;
 			shouldRenderLink = false;
@@ -1251,7 +1311,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			shouldRenderNotype = true;
 			int mId = module.getModuleId().intValue();
 
-			newSectionId = sectionService.insertSection(module, s);
+			newSectionId = sectionService.insertSection(module, s, info.getCurrentUser().getId());
 			s.setSectionId(newSectionId);
 
 			// refresh module and refresh seqxml. It has newly added section id
@@ -1270,11 +1330,11 @@ public class EditSectionPage extends SectionPage implements Serializable
 		return newSectionId;
 	}	
 	
-	public Date getLastSavedAt() {
+	public long getLastSavedAt() {
 		return lastSavedAt;
 	}
 
-	public void setLastSavedAt(Date lastSavedAt) {
+	public void setLastSavedAt(long lastSavedAt) {
 		this.lastSavedAt = lastSavedAt;
 	}
 
@@ -1298,5 +1358,49 @@ public class EditSectionPage extends SectionPage implements Serializable
 			setEditInfo(sec);
 		}
 
+	}
+	
+	/**
+	 * Get the creator name. If user Id is specified get the current name otherwise from our stored fields
+	 * @return
+	 */
+	public String getCreatedByAuthor()
+	{
+		try
+		{
+			if (section.getUserId() != null && section.getUserId().length() > 0)
+			{
+				User user = UserDirectoryService.getUser(section.getUserId());
+				createdByAuthor = user.getFirstName();
+				createdByAuthor = createdByAuthor.concat(" " + user.getLastName());
+			}		
+		}
+		catch (Exception e)
+		{
+			createdByAuthor = "";
+		}
+		return createdByAuthor;
+	}
+
+	/**
+	 * Get the last modified author name.
+	 * @return
+	 */
+	public String getModifiedByAuthor()
+	{
+		try
+		{
+			if (section.getModifyUserId() != null && section.getModifyUserId().length() > 0)
+			{
+				User user = UserDirectoryService.getUser(section.getModifyUserId());
+				modifiedByAuthor = user.getFirstName();
+				modifiedByAuthor = modifiedByAuthor.concat(" " + user.getLastName());
+			}	
+		}
+		catch (Exception e)
+		{
+			modifiedByAuthor = "";
+		}
+		return modifiedByAuthor;
 	}
 }

@@ -225,14 +225,16 @@ public class SpecialAccessDB
 			}
 			else
 			{
+				
 				find_sa.setUsers(sa.getUsers());
 				find_sa.setStartDate(sa.getStartDate());
 				find_sa.setEndDate(sa.getEndDate());
+				find_sa.setAllowUntilDate(sa.getAllowUntilDate());
 				find_sa.setOverrideStart(sa.isOverrideStart());
 				find_sa.setOverrideEnd(sa.isOverrideEnd());
+				find_sa.setOverrideAllowUntil(sa.isOverrideAllowUntil());
 				session.update(find_sa);
 			}
-
 			tx.commit();
 
 		}
