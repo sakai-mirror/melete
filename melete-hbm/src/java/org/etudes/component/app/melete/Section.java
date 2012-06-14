@@ -49,7 +49,7 @@ public class Section implements SectionObjService
 	private Date modificationDate;
 
 	/** persistent field */
-	private String modifyUserId;
+	private String modifyUserId="";
 	
 	/** nullable persistent field */
 	private org.etudes.component.app.melete.Module module;
@@ -73,7 +73,7 @@ public class Section implements SectionObjService
 	private String title = "Untitled section";
 
 	/** persistent field */
-	private String userId;
+	private String userId="";
 	
 	/** nullable persistent field */
 	private int version;
