@@ -336,11 +336,6 @@ public class EditSectionPage extends SectionPage implements Serializable
 			{
 				lPage.validateLicenseLengths();
 			}
-			// validation 2: if content is provided then check for copyright license
-			if (!section.getContentType().equals("notype") && lPage.getLicenseCodes().equals(LicensePage.Copyright_CODE))
-			{
-				lPage.checkForRequiredFields();
-			}
 			
 			// validation 3: if upload a new file check fileName format -- move to uploadSectionContent()
 			// validation 3-1: if typeEditor and saved by sferyx then check for error messages

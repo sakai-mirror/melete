@@ -4,7 +4,7 @@
  * $Id: LicensePage.java 60573 2009-05-19 20:17:20Z mallika@etudes.org $
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -29,6 +29,7 @@ import java.util.List;
 import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.component.UIInput;
@@ -240,13 +241,124 @@ public class LicensePage
 		allowCmrcl = "false";
 		allowMod = "1";
 		reqAttr = "false";
-		copyright_owner = null;
-		copyright_year = null;
+		
+		//Commenting the lines below out as part of fix for ME-1531. 
+		//With these statements, the owner and year would show as being set in the UI
+		//but get set to null in the db
+		
+		//copyright_owner = null;
+		//copyright_year = null;
+		
+		if (!callFromSection)
+		{
+			setLicenseCodes((String)licenseSelect.getValue());
+			if (shouldRenderCC) 
+			{
+				setAllowCmrcl("false");
+				setAllowMod("1");
+			}
+			ValueBinding binding = Util.getBinding("#{authorPreferences}");
+			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
+			try
+			{
+				preferencePage.setChoices();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 
 		/*
 		 * if (!(licenseSelect.getValue().equals("0"))) { if(root.findComponent(this.formName).findComponent("CCLicenseForm") != null) { root.findComponent(this.formName).findComponent("CCLicenseForm").setRendered(Boolean.TRUE.booleanValue()); } }
 		 */
 
+	}
+	
+	public void changeCmrclValue(ValueChangeEvent event) throws AbortProcessingException
+	{
+
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		UIInput cmrclRadio = (UIInput) event.getComponent();
+		if (!callFromSection)
+		{
+			setAllowCmrcl((String)cmrclRadio.getValue());
+			setReqAttr("true");
+			ValueBinding binding = Util.getBinding("#{authorPreferences}");
+			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
+			try
+			{
+				preferencePage.setChoices();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void changeModValue(ValueChangeEvent event) throws AbortProcessingException
+	{
+
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		UIInput modRadio = (UIInput) event.getComponent();
+		if (!callFromSection)
+		{
+			setAllowMod((String)modRadio.getValue());
+			setReqAttr("true");
+			ValueBinding binding = Util.getBinding("#{authorPreferences}");
+			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
+			try
+			{
+				preferencePage.setChoices();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void changeOwnerValue(ValueChangeEvent event) throws AbortProcessingException
+	{
+
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		UIInput ownerText = (UIInput) event.getComponent();
+		if (!callFromSection)
+		{
+			setCopyright_owner((String)ownerText.getValue());
+			ValueBinding binding = Util.getBinding("#{authorPreferences}");
+			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
+			try
+			{
+				preferencePage.setChoices();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void changeYearValue(ValueChangeEvent event) throws AbortProcessingException
+	{
+
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		UIInput yearText = (UIInput) event.getComponent();
+		if (!callFromSection)
+		{
+			setCopyright_year((String)yearText.getValue());
+			ValueBinding binding = Util.getBinding("#{authorPreferences}");
+			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
+			try
+			{
+				preferencePage.setChoices();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -417,18 +529,6 @@ public class LicensePage
 	public String getLicenseCodes()
 	{
 		return licenseCodes;
-	}
-
-	/**
-	 * Looks for the required fields.
-	 *
-	 * @throws UserErrorException
-	 */
-	public void checkForRequiredFields() throws UserErrorException
-	{
-		if (copyright_owner == null || copyright_owner.trim().length() == 0) throw new UserErrorException("copyright_info_required");
-
-		if (copyright_year == null || copyright_year.trim().length() == 0) throw new UserErrorException("copyright_info_required");
 	}
 
 	/**
