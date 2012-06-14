@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -27,7 +27,10 @@ import java.util.ArrayList;
 import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import javax.faces.el.ValueBinding;
@@ -346,11 +349,87 @@ public class AuthorPreferencePage
 	{
 		this.userView = userView;
 	}
+	
+	public void changeEditorValue(ValueChangeEvent event) throws AbortProcessingException
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		UIInput editorSelect = (UIInput) event.getComponent();
+		setUserEditor((String) editorSelect.getValue());
+		try
+		{
+			setChoices();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 
+	public void changeViewValue(ValueChangeEvent event) throws AbortProcessingException
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		UIInput viewSelect = (UIInput) event.getComponent();
+		setUserView((String) viewSelect.getValue());
+		try
+		{
+			setChoices();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public void changeLTIValue(ValueChangeEvent event) throws AbortProcessingException
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		UIInput ltiSelect = (UIInput) event.getComponent();
+		setShowLTI((String) ltiSelect.getValue());
+		try
+		{
+			setChoices();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public void changePrintableValue(ValueChangeEvent event) throws AbortProcessingException
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		UIInput printableSelect = (UIInput) event.getComponent();
+		setMaterialPrintable((String) printableSelect.getValue());
+		try
+		{
+			setChoices();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public void changeAutoNumberValue(ValueChangeEvent event) throws AbortProcessingException
+	{
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		UIInput anSelect = (UIInput) event.getComponent();
+		setMaterialAutonumber((String) anSelect.getValue());
+		try
+		{
+			setChoices();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	
 	/*
 	 * Save user's preferences.
 	 */
-	private void setChoices() throws Exception
+	public void setChoices() throws Exception
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
@@ -365,6 +444,7 @@ public class AuthorPreferencePage
 		{
 			mup.setEditorChoice(userEditor);
 		}
+		
 		if (userView.equals("true"))
 		{
 			mup.setViewExpChoice(true);
