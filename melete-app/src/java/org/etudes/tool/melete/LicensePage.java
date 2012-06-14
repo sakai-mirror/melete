@@ -227,6 +227,7 @@ public class LicensePage
 	 */
 	public void hideLicense(ValueChangeEvent event) throws AbortProcessingException
 	{
+
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		// UIViewRoot root = ctx.getViewRoot();
 		UIInput licenseSelect = (UIInput) event.getComponent();

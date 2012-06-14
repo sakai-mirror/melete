@@ -425,7 +425,6 @@ public class AuthorPreferencePage
 		}
 	}
 
-	
 	/*
 	 * Save user's preferences.
 	 */
@@ -444,7 +443,6 @@ public class AuthorPreferencePage
 		{
 			mup.setEditorChoice(userEditor);
 		}
-		
 		if (userView.equals("true"))
 		{
 			mup.setViewExpChoice(true);

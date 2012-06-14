@@ -38,7 +38,7 @@
 <t:saveState id="autonum" value="#{authorPreferences.materialAutonumber}" />
 
 
- <h:form id="UserPreferenceForm" >
+ <h:form id="UserPreferenceForm">
 <!-- top nav bar -->
 	<f:subview id="top">
 			<jsp:include page="topnavbar.jsp?myMode=Preferences"/> 

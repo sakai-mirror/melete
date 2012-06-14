@@ -264,6 +264,10 @@ public class SectionDB implements Serializable
 				query.setParameter("sectionId", section.getSectionId());
 				Section findSection = (Section) query.uniqueResult();
 			
+				//back-filling data with blank				
+				if (findSection.getUserId() == null) findSection.setUserId("");
+				if (findSection.getModifyUserId() == null) findSection.setModifyUserId("");
+				
 				//compare before saving
 				if(shouldUpdateSectionObject(findSection, section))
 				{
@@ -369,6 +373,10 @@ public class SectionDB implements Serializable
 					if (result_list != null && result_list.size() > 0) findMelResource = (MeleteResource) result_list.get(0);
 				}
 
+				//back-filling data with blank
+				if (findSection.getUserId() == null) findSection.setUserId("");
+				if (findSection.getModifyUserId() == null) findSection.setModifyUserId("");
+				
 				// compare
 				if (!shouldUpdateSectionObject(section, findSection) || (melResource != null && !shouldUpdateMeleteResourceObject(melResource, findMelResource)) || modifyCR)
 				{
