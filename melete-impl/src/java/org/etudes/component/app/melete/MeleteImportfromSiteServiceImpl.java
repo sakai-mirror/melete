@@ -743,6 +743,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			if (toMsp == null)
 			{
 				toMsp = new MeleteSitePreference(fromMsp);
+				toMsp.setPrefSiteId(toContext);
 			}
 			else
 			{
@@ -753,7 +754,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		}
 		catch (Exception e)
 		{
-			logger.warn("Error on importing melete site preferences" + e.getMessage());
+			logger.debug("Error on importing melete site preferences" + e.getMessage());
 			e.printStackTrace();
 		}
 	}
