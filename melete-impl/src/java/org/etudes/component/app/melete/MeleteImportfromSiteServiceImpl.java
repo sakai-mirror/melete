@@ -743,6 +743,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 			if (toMsp == null)
 			{
 				toMsp = new MeleteSitePreference(fromMsp);
+				toMsp.setPrefSiteId(toContext);
 			}
 			else
 			{
