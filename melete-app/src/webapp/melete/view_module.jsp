@@ -94,10 +94,10 @@ if (moduleSeqNo != null)
 			<h:outputText id="title" value="#{viewModulesPage.viewMbean.title}" styleClass="bold" ></h:outputText>
 		</h:column>
 		<h:column rendered="#{viewModulesPage.printable}">
-			<h:outputLink id="printModuleLink" value="view_module" onclick="OpenPrintWindow(#{viewModulesPage.viewMbean.moduleId},'Melete Print Window');" rendered="#{viewModulesPage.printable}">
+			<h:commandLink id="printModuleLink" actionListener="#{viewModulesPage.viewModule}" rendered="#{viewModulesPage.printable}">
 		    	<f:param id="modId" name="modId" value="#{viewModulesPage.viewMbean.moduleId}" />
-	  			<h:graphicImage id="printImgLink" value="/images/printer.png" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
-		 	</h:outputLink>
+	  			<h:graphicImage id="printImgLink" value="/images/printer.png" onclick="OpenPrintWindow(#{viewModulesPage.viewMbean.moduleId},'Melete Print Window');" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
+		 	</h:commandLink>
 		</h:column>
 	</h:panelGrid>
 	<h:panelGrid id="moduleContentGrid1" columns="1" width="97%" border="0" cellpadding="3" rendered="#{viewModulesPage.viewMbean != null }">
