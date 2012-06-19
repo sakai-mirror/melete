@@ -3,7 +3,7 @@
  * $URL$
  *
  ***************************************************************************************
- * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -27,8 +27,11 @@ import java.util.Map;
 import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.logging.Log;
@@ -102,6 +105,41 @@ public class StudentPreferencePage
 		this.mup = mup;
 	}
 
+	public void changeViewValue(ValueChangeEvent event) throws AbortProcessingException
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		UIInput viewSelect = (UIInput) event.getComponent();
+		setUserView((String) viewSelect.getValue());
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		if (mup == null)
+		{
+			mup = new MeleteUserPreference();
+		}
+		try
+		{
+			if (userView.equals("true"))
+			{
+				mup.setViewExpChoice(true);
+			}
+			else
+			{
+				mup.setViewExpChoice(false);
+			}
+			mup.setUserId(mPage.getCurrentUser().getId());
+			authorPref.insertUserChoice(mup);
+		}
+		catch (Exception e)
+		{
+			String errMsg = bundle.getString("Set_prefs_fail");
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Set_prefs_fail", errMsg));
+		}
+
+		String successMsg = bundle.getString("Set_prefs_success");
+		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Set_prefs_success", successMsg));
+	}
+	
 	/**
 	 * Set user preference and save it
 	 * 

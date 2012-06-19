@@ -33,7 +33,6 @@ import javax.faces.el.ValueBinding;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.component.UIInput;
-
 import javax.faces.event.AbortProcessingException;
 
 import org.apache.commons.logging.Log;
@@ -259,14 +258,7 @@ public class LicensePage
 			}
 			ValueBinding binding = Util.getBinding("#{authorPreferences}");
 			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
-			try
-			{
-				preferencePage.setChoices();
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
+			preferencePage.saveChoices(licenseSelect);
 		}
 
 		/*
@@ -275,92 +267,6 @@ public class LicensePage
 
 	}
 	
-	public void changeCmrclValue(ValueChangeEvent event) throws AbortProcessingException
-	{
-
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIInput cmrclRadio = (UIInput) event.getComponent();
-		if (!callFromSection)
-		{
-			setAllowCmrcl((String)cmrclRadio.getValue());
-			setReqAttr("true");
-			ValueBinding binding = Util.getBinding("#{authorPreferences}");
-			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
-			try
-			{
-				preferencePage.setChoices();
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	public void changeModValue(ValueChangeEvent event) throws AbortProcessingException
-	{
-
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIInput modRadio = (UIInput) event.getComponent();
-		if (!callFromSection)
-		{
-			setAllowMod((String)modRadio.getValue());
-			setReqAttr("true");
-			ValueBinding binding = Util.getBinding("#{authorPreferences}");
-			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
-			try
-			{
-				preferencePage.setChoices();
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	public void changeOwnerValue(ValueChangeEvent event) throws AbortProcessingException
-	{
-
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIInput ownerText = (UIInput) event.getComponent();
-		if (!callFromSection)
-		{
-			setCopyright_owner((String)ownerText.getValue());
-			ValueBinding binding = Util.getBinding("#{authorPreferences}");
-			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
-			try
-			{
-				preferencePage.setChoices();
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	public void changeYearValue(ValueChangeEvent event) throws AbortProcessingException
-	{
-
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIInput yearText = (UIInput) event.getComponent();
-		if (!callFromSection)
-		{
-			setCopyright_year((String)yearText.getValue());
-			ValueBinding binding = Util.getBinding("#{authorPreferences}");
-			AuthorPreferencePage preferencePage = (AuthorPreferencePage) binding.getValue(ctx);
-			try
-			{
-				preferencePage.setChoices();
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-
 	/**
 	 * Set values based on license type selected.
 	 *

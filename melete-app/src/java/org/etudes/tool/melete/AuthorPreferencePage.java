@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
@@ -350,78 +351,29 @@ public class AuthorPreferencePage
 		this.userView = userView;
 	}
 	
-	public void changeEditorValue(ValueChangeEvent event) throws AbortProcessingException
+	public void saveChoices(UIInput licenseSelect)
 	{
+		setUserEditor((String)((UIInput)((UIComponent)licenseSelect.findComponent("UserPreferenceForm")).findComponent("editorChoice")).getValue());
+		setUserView((String)((UIInput)((UIComponent)licenseSelect.findComponent("UserPreferenceForm")).findComponent("viewChoice")).getValue());
+		setShowLTI((String)((UIInput)((UIComponent)licenseSelect.findComponent("UserPreferenceForm")).findComponent("ltiChoice")).getValue());
+		setMaterialPrintable((String)((UIInput)((UIComponent)licenseSelect.findComponent("UserPreferenceForm")).findComponent("printChoice")).getValue());
+		setMaterialAutonumber((String)((UIInput)((UIComponent)licenseSelect.findComponent("UserPreferenceForm")).findComponent("numberChoice")).getValue());
+		
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIInput editorSelect = (UIInput) event.getComponent();
-		setUserEditor((String) editorSelect.getValue());
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		try
 		{
 			setChoices();
 		}
-		catch (Exception e)
+		catch (UserErrorException uex)
 		{
-			e.printStackTrace();
-		}
-	}
-
-	public void changeViewValue(ValueChangeEvent event) throws AbortProcessingException
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIInput viewSelect = (UIInput) event.getComponent();
-		setUserView((String) viewSelect.getValue());
-		try
-		{
-			setChoices();
+			String errMsg = bundle.getString(uex.getMessage());
+			ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, uex.getMessage(), errMsg));
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
-		}
-	}
-
-	public void changeLTIValue(ValueChangeEvent event) throws AbortProcessingException
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIInput ltiSelect = (UIInput) event.getComponent();
-		setShowLTI((String) ltiSelect.getValue());
-		try
-		{
-			setChoices();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public void changePrintableValue(ValueChangeEvent event) throws AbortProcessingException
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIInput printableSelect = (UIInput) event.getComponent();
-		setMaterialPrintable((String) printableSelect.getValue());
-		try
-		{
-			setChoices();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public void changeAutoNumberValue(ValueChangeEvent event) throws AbortProcessingException
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIInput anSelect = (UIInput) event.getComponent();
-		setMaterialAutonumber((String) anSelect.getValue());
-		try
-		{
-			setChoices();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
+			String errMsg = bundle.getString("Set_prefs_fail");
+			ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Set_prefs_fail", errMsg));
 		}
 	}
 

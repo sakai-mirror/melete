@@ -62,7 +62,7 @@
                 		<h:outputText id="t1" value="#{msgs.author_preference_editor_select}" styleClass="bold"/>
                 	</h:column>
                 	 <h:column>
-						<h:selectOneRadio value="#{authorPreferences.userEditor}" onclick="this.form.submit();" valueChangeListener="#{authorPreferences.changeEditorValue}" layout="pageDirection">
+						<h:selectOneRadio id="editorChoice" value="#{authorPreferences.userEditor}" layout="pageDirection">
 							<f:selectItems value="#{authorPreferences.availableEditors}" />
 						</h:selectOneRadio>	
 					</h:column>
@@ -72,7 +72,7 @@
 						 	<h:outputText id="t2" value="#{msgs.author_preference_view_select}"  styleClass="bold"/>      
 						 </h:column>
 		               	 <h:column>
-							<h:selectOneRadio value="#{authorPreferences.userView}" onclick="this.form.submit();" valueChangeListener="#{authorPreferences.changeViewValue}" layout="pageDirection">
+							<h:selectOneRadio id="viewChoice" value="#{authorPreferences.userView}" layout="pageDirection">
 								<f:selectItem itemLabel="#{msgs.author_preference_Expanded}" itemValue="true" />
 								<f:selectItem itemLabel="#{msgs.author_preference_Collapsed}" itemValue="false"/>
 							</h:selectOneRadio>	
@@ -83,7 +83,7 @@
 						 	<h:outputText id="LTI1" value="#{msgs.author_preference_LTI_select}"  styleClass="bold"/>      
 						 </h:column>
 		               	 <h:column>
-							<h:selectOneRadio value="#{authorPreferences.showLTI}" onclick="this.form.submit();" valueChangeListener="#{authorPreferences.changeLTIValue}" layout="pageDirection">
+							<h:selectOneRadio id="ltiChoice" value="#{authorPreferences.showLTI}" layout="pageDirection">
 								<f:selectItem itemLabel="#{msgs.author_preference_yes}" itemValue="true" />
 								<f:selectItem itemLabel="#{msgs.author_preference_no}" itemValue="false"/>
 							</h:selectOneRadio>	
@@ -111,7 +111,7 @@
                 		<h:outputText id="t3" value="#{msgs.author_preference_material_printable}"  styleClass="bold"/>
                 	</h:column>
                 	 <h:column>
-						<h:selectOneRadio value="#{authorPreferences.materialPrintable}" onclick="this.form.submit();" valueChangeListener="#{authorPreferences.changePrintableValue}" layout="pageDirection">
+						<h:selectOneRadio id="printChoice" value="#{authorPreferences.materialPrintable}"  layout="pageDirection">
 								<f:selectItem itemLabel="#{msgs.author_preference_yes}" itemValue="true" />
 								<f:selectItem itemLabel="#{msgs.author_preference_no}" itemValue="false"/>
 						</h:selectOneRadio>		
@@ -122,7 +122,7 @@
                 		<h:outputText id="t4" value="#{msgs.author_preference_autonumber}"  styleClass="bold"/>
                 	</h:column>
                 	 <h:column>
-						<h:selectOneRadio value="#{authorPreferences.materialAutonumber}" onclick="this.form.submit();" valueChangeListener="#{authorPreferences.changeAutoNumberValue}" layout="pageDirection">
+						<h:selectOneRadio id="numberChoice" value="#{authorPreferences.materialAutonumber}" layout="pageDirection">
 								<f:selectItem itemLabel="#{msgs.author_preference_yes}" itemValue="true" />
 								<f:selectItem itemLabel="#{msgs.author_preference_no}" itemValue="false"/>
 						</h:selectOneRadio>		
@@ -130,7 +130,10 @@
 				   </h:panelGrid>	
 				  </td>
 				</tr>				       	    
-          	   </table> 		
+          	   </table> 
+          	   <div class="actionBar" align="left">	
+        	        <h:commandButton action="#{authorPreferences.setUserChoice}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSet"/>
+				</div>		
 		   </td>
 	   </tr>		
      </table>
