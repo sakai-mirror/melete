@@ -29,7 +29,7 @@ return newWindow;
 
 
 //Function that opens print window
-function OpenPrintWindow(print_url, print_id, windowName)
+function OpenViewModulePrintWindow(print_url, windowName)
 {
 	
   var _info = navigator.userAgent;

@@ -96,7 +96,7 @@ if (moduleSeqNo != null)
 		<h:column rendered="#{viewModulesPage.printable}">
 			<h:commandLink id="printModuleLink" actionListener="#{viewModulesPage.viewModule}" rendered="#{viewModulesPage.printable}">
 		    	<f:param id="modId" name="modId" value="#{viewModulesPage.viewMbean.moduleId}" />
-	  			<h:graphicImage id="printImgLink" value="/images/printer.png" onclick="OpenPrintWindow('#{viewModulesPage.printUrl}','Melete Print Window');" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
+	  			<h:graphicImage id="printImgLink" value="/images/printer.png" onclick="OpenViewModulePrintWindow('#{viewModulesPage.printUrl}','Melete Print Window');" alt="#{msgs.list_auth_modules_alt_print}" title="#{msgs.list_auth_modules_alt_print}" styleClass="AuthImgClass"/>
 		 	</h:commandLink>
 		</h:column>
 	</h:panelGrid>
