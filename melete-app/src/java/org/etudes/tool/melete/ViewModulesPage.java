@@ -45,6 +45,8 @@ import org.etudes.api.app.melete.ViewModBeanService;
 import org.etudes.api.app.melete.ViewSecBeanService;
 import org.etudes.component.app.melete.CourseModule;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
+import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.sakaiproject.tool.cover.ToolManager;
 
 public class ViewModulesPage implements Serializable
 {
@@ -64,6 +66,8 @@ public class ViewModulesPage implements Serializable
 	private Boolean printable;
 	private SectionService sectionService;
 	private int sectionSize;
+	private String printUrl;
+	
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(ViewModulesPage.class);
 
@@ -710,6 +714,11 @@ public class ViewModulesPage implements Serializable
 			userId = mPage.getCurrentUser().getId();
 		}
 		return userId;
+	}
+
+	public String getPrintUrl() {
+		printUrl = ServerConfigurationService.getServerUrl() + "/portal/tool/" + ToolManager.getCurrentPlacement().getId()+ "/print_module.jsf?printModuleId=" + moduleId; 
+		return printUrl;
 	}
 
 }
