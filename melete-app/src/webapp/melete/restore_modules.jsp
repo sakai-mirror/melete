@@ -88,7 +88,7 @@ function resetCheck()
 			            <table class="maintableCollapseWithNoBorder" id="AutoNumber1">
 						<tr>
               					<td colspan="2" width="100%" valign="top">
-			  						<h:dataTable id="table1"  value="#{manageModulesPage.archiveModulesList}" var="aml" width="100%"  headerClass="tableheader2" columnClasses="ListTitleClass,ListDateClass" summary="#{msgs.restore_modules_summary}">
+			  						<h:dataTable id="table1"  value="#{manageModulesPage.archiveModulesList}" var="aml" width="100%"  headerClass="tableheader2" columnClasses="ListTitleClass,ListDateBigClass" summary="#{msgs.restore_modules_summary}">
 			  							<h:column>
 			  							<f:facet name="header">
 			  							<h:panelGroup>
