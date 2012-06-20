@@ -982,6 +982,57 @@ public class SectionDB implements Serializable
 
 	}
 
+	/**
+	 * Insert /update tracking information for all sections of a module.
+	 * @param moduleId
+	 * @param userId
+	 * @throws Exception
+	 */
+	public void insertSectionTrackforAModule(int moduleId, String userId) throws Exception
+	{
+		Transaction tx = null;
+		try
+		{
+			Session session = hibernateUtil.currentSession();
+			Query query = session.createQuery("from Module mod where mod.moduleId=:moduleId");
+			query.setParameter("moduleId", moduleId);
+			List secModules = query.list();
+
+			if (secModules != null)
+			{
+				Module m = (Module) secModules.get(0);
+				Map sectionMap = m.getSections();
+				if (sectionMap == null || sectionMap.size() == 0) return;
+				tx = session.beginTransaction();	
+				Iterator it = sectionMap.entrySet().iterator();
+				while (it.hasNext())
+				{
+					Map.Entry pairs = (Map.Entry) it.next();
+					Integer secId = (Integer) pairs.getKey();			
+					insertSectionTrack(session, secId, userId);
+				}
+				tx.commit();
+			}
+		}
+		catch (Exception e)
+		{
+			if (tx != null) tx.rollback();
+			logger.error("error in tracking a module:" + e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				hibernateUtil.closeSession();
+			}
+			catch (HibernateException he)
+			{
+				logger.error(he.toString());
+				throw he;
+			}
+		}
+	}
 	
 	/**
 	 * Insert new section tracking info or update section tracking info if it exists already
@@ -1002,35 +1053,7 @@ public class SectionDB implements Serializable
 		{
 			Session session = hibernateUtil.currentSession();
 			tx = session.beginTransaction();
-
-			// Check to see if section tracking info exists for section and user
-			Query q = session.createQuery("select sv from SectionTrackView as sv where sv.sectionId = :sectionId and sv.userId =:userId");
-			q.setParameter("sectionId", sectionId);
-			q.setParameter("userId", userId);
-			SectionTrackView find_sv = (SectionTrackView) q.uniqueResult();
-
-			if (find_sv == null)
-			{
-				// If it doesn't exist, insert it
-				find_sv = new SectionTrackView();
-				find_sv.setSectionId(sectionId);
-				find_sv.setUserId(userId);
-				find_sv.setViewDate(new java.util.Date());
-				find_sv.setFirstViewDate(new java.util.Date());
-				session.save(find_sv);
-			}
-			else
-			{
-				// If it exists, retrieve current tracking info, store it in returnStv object
-				// Then update tracking info with new date
-				returnStv = new SectionTrackView();
-				returnStv.setSectionId(find_sv.getSectionId());
-				returnStv.setUserId(find_sv.getUserId());
-				returnStv.setViewDate(find_sv.getViewDate());
-				returnStv.setFirstViewDate(find_sv.getFirstViewDate());
-				find_sv.setViewDate(new java.util.Date());
-				session.update(find_sv);
-			}
+			insertSectionTrack(session, sectionId, userId);
 			tx.commit();
 		}
 		catch (StaleObjectStateException sose)
@@ -1066,6 +1089,41 @@ public class SectionDB implements Serializable
 		return returnStv;
 	}
 
+	/**
+	 * common method for tracking section
+	 */
+	private SectionTrackView insertSectionTrack(Session session, int sectionId, String userId) throws Exception
+	{
+		Query q = session.createQuery("select sv from SectionTrackView as sv where sv.sectionId = :sectionId and sv.userId =:userId");
+		q.setParameter("sectionId", sectionId);
+		q.setParameter("userId", userId);
+		SectionTrackView find_sv = (SectionTrackView) q.uniqueResult();
+		SectionTrackView returnStv = null;
+		if (find_sv == null)
+		{
+			// If it doesn't exist, insert it
+			find_sv = new SectionTrackView();
+			find_sv.setSectionId(sectionId);
+			find_sv.setUserId(userId);
+			find_sv.setViewDate(new java.util.Date());
+			find_sv.setFirstViewDate(new java.util.Date());
+			session.save(find_sv);
+		}
+		else
+		{
+			// If it exists, retrieve current tracking info, store it in returnStv object
+			// Then update tracking info with new date
+			
+			returnStv = new SectionTrackView();
+			returnStv.setSectionId(find_sv.getSectionId());
+			returnStv.setUserId(find_sv.getUserId());
+			returnStv.setViewDate(find_sv.getViewDate());
+			returnStv.setFirstViewDate(find_sv.getFirstViewDate());
+			find_sv.setViewDate(new java.util.Date());
+			session.update(find_sv);
+		}
+		return returnStv;
+	}
 	
 	/**
 	 * add resource.

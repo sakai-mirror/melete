@@ -71,20 +71,10 @@ public class PrintModulePage
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		ModuleObjService printMod = moduleService.getModule(moduleId.intValue());
-		Map sectionMap = printMod.getSections();
-		if ((sectionMap != null) && (sectionMap.size() > 0))
-		{
-			Iterator it = sectionMap.entrySet().iterator();
-			while (it.hasNext())
-			{
-				Map.Entry pairs = (Map.Entry) it.next();
-				Integer secId = (Integer) pairs.getKey();
-				ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-				MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
-				getSectionService().insertSectionTrack(secId.intValue(), mPage.getCurrentUser().getId());
-
-			}
-		}
+		
+		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
+		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(ctx);
+		getSectionService().insertSectionTrackforAModule(moduleId.intValue(), mPage.getCurrentUser().getId());
 		try
 		{
 			printText = moduleService.printModule(printMod);
