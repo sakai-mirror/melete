@@ -208,11 +208,19 @@ a1:active 			{color : #000080;}
   }
 
 .ListDateClass {
+	font-size: 89%;
+	vertical-align: top;
+    width: 10%;  
+    white-space: nowrap;	
+  }
+  
+.ListDateBigClass {
 	font-size: 92%;
 	vertical-align: top;
     width: 10%;  
     white-space: nowrap;	
   }
+  
 
 .ListActionClass {
 	vertical-align: top;    
