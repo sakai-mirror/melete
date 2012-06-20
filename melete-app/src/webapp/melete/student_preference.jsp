@@ -44,16 +44,13 @@
 				  <tr><td  height="20" class="maintabledata5" ><h:outputText id="t2" value="#{msgs.student_preference_view_select}"  styleClass="bold"/>          </td></tr>
 			    	<tr>
 					 <td>
-							<h:selectOneRadio value="#{studentPreferences.userView}" layout="pageDirection">
+							<h:selectOneRadio value="#{studentPreferences.userView}" onclick="this.form.submit();" valueChangeListener="#{studentPreferences.changeViewValue}" layout="pageDirection">
 										<f:selectItem itemLabel="Expanded" itemValue="true" />
 										<f:selectItem itemLabel="Collapsed" itemValue="false"/>
 								</h:selectOneRadio>	
 					</td>	
 					</tr>		
 					</table>
-					<div class="actionBar" align="left">	
-          		      <h:commandButton action="#{studentPreferences.setUserChoice}" value="#{msgs.im_set}" accesskey="#{msgs.set_access}" title="#{msgs.im_set_text}" styleClass="BottomImgSet"/>
-					</div>
 					</td></tr>           		 
             </table>         
 	</h:form>

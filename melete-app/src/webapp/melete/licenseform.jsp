@@ -83,11 +83,7 @@
 				<h:outputText value="#{msgs.licenseform_cclicense_form_allow_commercial}"/>
 			</h:column>			
 			<h:column>  
-             	<h:selectOneRadio id="allowCmrcl" value="#{licensePage.allowCmrcl}" rendered="#{licensePage.callFromSection}">
-				  	<f:selectItem itemValue="true" itemLabel="#{msgs.licenseform_cclicense_form_allowmod2}"/>
-					<f:selectItem  itemValue="false" itemLabel="#{msgs.licenseform_cclicense_form_allowmod0}"/>
-			  </h:selectOneRadio>
-			  <h:selectOneRadio id="allowCmrcl_pref" value="#{licensePage.allowCmrcl}" onclick="this.form.submit();" valueChangeListener="#{licensePage.changeCmrclValue}" rendered="#{!licensePage.callFromSection}">
+             	<h:selectOneRadio id="allowCmrcl" value="#{licensePage.allowCmrcl}">
 				  	<f:selectItem itemValue="true" itemLabel="#{msgs.licenseform_cclicense_form_allowmod2}"/>
 					<f:selectItem  itemValue="false" itemLabel="#{msgs.licenseform_cclicense_form_allowmod0}"/>
 			  </h:selectOneRadio>
@@ -96,12 +92,7 @@
 				<h:outputText value="#{msgs.licenseform_cclicense_form_allow_modification}"/>
     	 </h:column>
 		 <h:column>          
-			    <h:selectOneRadio id="allowMod" value="#{licensePage.allowMod}" rendered="#{licensePage.callFromSection}">
-				  	<f:selectItem itemValue="2" itemLabel="#{msgs.licenseform_cclicense_form_allowmod2}"/>
-					<f:selectItem itemValue="1" itemLabel="#{msgs.licenseform_cclicense_form_allowmod1}"/>
-					<f:selectItem itemValue="0" itemLabel="#{msgs.licenseform_cclicense_form_allowmod0}"/>
-				  </h:selectOneRadio>
-				  <h:selectOneRadio id="allowMod_pref" value="#{licensePage.allowMod}" onclick="this.form.submit();" valueChangeListener="#{licensePage.changeModValue}" rendered="#{!licensePage.callFromSection}">
+			    <h:selectOneRadio id="allowMod" value="#{licensePage.allowMod}">
 				  	<f:selectItem itemValue="2" itemLabel="#{msgs.licenseform_cclicense_form_allowmod2}"/>
 					<f:selectItem itemValue="1" itemLabel="#{msgs.licenseform_cclicense_form_allowmod1}"/>
 					<f:selectItem itemValue="0" itemLabel="#{msgs.licenseform_cclicense_form_allowmod0}"/>
@@ -127,15 +118,13 @@
 	    </h:column>
 
 	    <h:column>
-	            <h:inputText id="copy_owner1" value="#{licensePage.copyright_owner}" size="45" styleClass="formtext" rendered="#{licensePage.callFromSection}"/>
-				<h:inputText id="copy_owner1_pref" value="#{licensePage.copyright_owner}" size="45" onblur="this.form.submit();" valueChangeListener="#{licensePage.changeOwnerValue}" rendered="#{!licensePage.callFromSection}" styleClass="formtext" />
+	            <h:inputText id="copy_owner1" value="#{licensePage.copyright_owner}" size="45" styleClass="formtext"/>
 	    </h:column>
 	    <h:column>
 		 		<h:outputText value="#{msgs.licenseform_cclicense_form_lic_year2}"/> 
 	    </h:column>
 	 	 <h:column>
-				<h:inputText id="copy_year1" value="#{licensePage.copyright_year}" size="45" styleClass="formtext" rendered="#{licensePage.callFromSection}"/>
-				<h:inputText id="copy_year1_pref" value="#{licensePage.copyright_year}" size="45" onblur="this.form.submit();" valueChangeListener="#{licensePage.changeYearValue}" rendered="#{!licensePage.callFromSection}" styleClass="formtext" />
+				<h:inputText id="copy_year1" value="#{licensePage.copyright_year}" size="45" styleClass="formtext"/>
 	     </h:column>
 	     </h:panelGrid>
   </h:column>

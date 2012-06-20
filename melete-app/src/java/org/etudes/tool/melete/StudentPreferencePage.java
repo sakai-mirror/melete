@@ -3,7 +3,7 @@
  * $URL$
  *
  ***************************************************************************************
- * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2012 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -27,8 +27,11 @@ import java.util.Map;
 import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.logging.Log;
@@ -102,12 +105,27 @@ public class StudentPreferencePage
 		this.mup = mup;
 	}
 
+	public void changeViewValue(ValueChangeEvent event) throws AbortProcessingException
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		UIInput viewSelect = (UIInput) event.getComponent();
+		setUserView((String) viewSelect.getValue());
+		processChoice();
+	}
+	
 	/**
 	 * Set user preference and save it
 	 * 
 	 * @return student_preference page
 	 */
 	public String setUserChoice()
+	{
+		processChoice();
+		return "student_preference";
+	}
+
+	private void processChoice()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
@@ -129,20 +147,15 @@ public class StudentPreferencePage
 			}
 			mup.setUserId(mPage.getCurrentUser().getId());
 			authorPref.insertUserChoice(mup);
+			String successMsg = bundle.getString("Set_prefs_success");
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Set_prefs_success", successMsg));
 		}
 		catch (Exception e)
 		{
 			String errMsg = bundle.getString("Set_prefs_fail");
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Set_prefs_fail", errMsg));
-			return "student_preference";
 		}
-
-		String successMsg = bundle.getString("Set_prefs_success");
-		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Set_prefs_success", successMsg));
-
-		return "student_preference";
 	}
-
 	/**
 	 * @param userView
 	 *        The userView to set.

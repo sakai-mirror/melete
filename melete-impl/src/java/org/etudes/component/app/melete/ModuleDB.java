@@ -4072,6 +4072,8 @@ else
 							endTimestamp = rs.getTimestamp("end_date");
 							auTimestamp = rs.getTimestamp("allowuntil_date");
 						}
+						rs.close();
+						pstmt.close();
 					}
 				}
 				if (ad.overrideStart)
@@ -4096,8 +4098,6 @@ else
 					removeList.add(seq);
 				}
 
-				rs.close();
-				pstmt.close();
 			}
 			catch (Exception e)
 			{

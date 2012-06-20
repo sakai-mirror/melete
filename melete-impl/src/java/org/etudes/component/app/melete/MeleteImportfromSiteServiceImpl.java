@@ -754,7 +754,7 @@ public class MeleteImportfromSiteServiceImpl extends MeleteImportBaseImpl implem
 		}
 		catch (Exception e)
 		{
-			logger.debug("Error on importing melete site preferences" + e.getMessage());
+			logger.warn("Error on importing melete site preferences" + e.getMessage());
 			e.printStackTrace();
 		}
 	}

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import org.sakaiproject.util.ResourceLoader;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
@@ -350,79 +351,15 @@ public class AuthorPreferencePage
 		this.userView = userView;
 	}
 	
-	public void changeEditorValue(ValueChangeEvent event) throws AbortProcessingException
+	public void saveChoices(UIInput licenseSelect)
 	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIInput editorSelect = (UIInput) event.getComponent();
-		setUserEditor((String) editorSelect.getValue());
-		try
-		{
-			setChoices();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public void changeViewValue(ValueChangeEvent event) throws AbortProcessingException
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIInput viewSelect = (UIInput) event.getComponent();
-		setUserView((String) viewSelect.getValue());
-		try
-		{
-			setChoices();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public void changeLTIValue(ValueChangeEvent event) throws AbortProcessingException
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIInput ltiSelect = (UIInput) event.getComponent();
-		setShowLTI((String) ltiSelect.getValue());
-		try
-		{
-			setChoices();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public void changePrintableValue(ValueChangeEvent event) throws AbortProcessingException
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIInput printableSelect = (UIInput) event.getComponent();
-		setMaterialPrintable((String) printableSelect.getValue());
-		try
-		{
-			setChoices();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public void changeAutoNumberValue(ValueChangeEvent event) throws AbortProcessingException
-	{
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		UIInput anSelect = (UIInput) event.getComponent();
-		setMaterialAutonumber((String) anSelect.getValue());
-		try
-		{
-			setChoices();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		setUserEditor((String)((UIInput)((UIComponent)licenseSelect.findComponent("UserPreferenceForm")).findComponent("editorChoice")).getValue());
+		setUserView((String)((UIInput)((UIComponent)licenseSelect.findComponent("UserPreferenceForm")).findComponent("viewChoice")).getValue());
+		setShowLTI((String)((UIInput)((UIComponent)licenseSelect.findComponent("UserPreferenceForm")).findComponent("ltiChoice")).getValue());
+		setMaterialPrintable((String)((UIInput)((UIComponent)licenseSelect.findComponent("UserPreferenceForm")).findComponent("printChoice")).getValue());
+		setMaterialAutonumber((String)((UIInput)((UIComponent)licenseSelect.findComponent("UserPreferenceForm")).findComponent("numberChoice")).getValue());
+		
+		processChoice();
 	}
 
 	/*
@@ -500,29 +437,42 @@ public class AuthorPreferencePage
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		if (processChoice())
+		{	
+			String successMsg = bundle.getString("Set_prefs_success");
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Set_prefs_success", successMsg));
+		}
+		return "author_preference";
+	}
+	
+	public String autoSave()
+	{
+		if (processChoice()) return "#";
+		return "author_preference";
+	}
+	
+	
+	private boolean processChoice()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		try
 		{
 			setChoices();
+			return true;
 		}
 		catch (UserErrorException uex)
 		{
 			String errMsg = bundle.getString(uex.getMessage());
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, uex.getMessage(), errMsg));
-			return "author_preference";
+			return false;
 		}
 		catch (Exception e)
 		{
 			String errMsg = bundle.getString("Set_prefs_fail");
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Set_prefs_fail", errMsg));
-			return "author_preference";
-			// return "pref_editor";
+			return false;
 		}
-
-		String successMsg = bundle.getString("Set_prefs_success");
-		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Set_prefs_success", successMsg));
-
-		return "author_preference";
-		// return "pref_editor";
 	}
 
 	/**
@@ -573,26 +523,7 @@ public class AuthorPreferencePage
 	 */
 	public String changeAllLicense()
 	{
-		FacesContext context = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		// auto-save settings here
-		try
-		{
-			setChoices();
-		}
-		catch (UserErrorException uex)
-		{
-			String errMsg = bundle.getString(uex.getMessage());
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, uex.getMessage(), errMsg));
-			return "author_preference";
-		}
-		catch (Exception e)
-		{
-			String errMsg = bundle.getString("Set_prefs_fail");
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Set_prefs_fail", errMsg));
-			return "author_preference";
-			// return "pref_editor";
-		}
+		if (!processChoice()) return "author_preference";
 		return "confirm_license";
 	}
 
