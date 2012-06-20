@@ -380,6 +380,15 @@ public interface SectionService
 	 */
 	public void insertSectionResource(SectionObjService section, MeleteResourceService melResource) throws Exception;
 
+	/**
+	 * Insert new section tracking info or update section tracking info if it exists already for all sections of a module
+	 *
+	 * @param moduleId
+	 *        Module id
+	 * @param userId
+	 *        User id
+	 */
+	public void insertSectionTrackforAModule(int moduleId, String userId);
 	
 	/**
 	 * Insert new section tracking info or update section tracking info if it exists already

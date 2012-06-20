@@ -717,6 +717,21 @@ public class SectionServiceImpl implements Serializable, SectionService
 	/**
 	 * {@inheritDoc}
 	 */
+	public void insertSectionTrackforAModule(int moduleId, String userId)
+	{		
+		try
+		{
+			sectiondb.insertSectionTrackforAModule(moduleId, userId);
+		}
+		catch (Exception ex)
+		{
+			
+		}		
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public SectionTrackView insertSectionTrack(int sectionId, String userId)
 	{
 		SectionTrackView returnStv = null;
