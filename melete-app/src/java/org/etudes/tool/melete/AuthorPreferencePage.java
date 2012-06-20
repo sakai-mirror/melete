@@ -359,22 +359,7 @@ public class AuthorPreferencePage
 		setMaterialPrintable((String)((UIInput)((UIComponent)licenseSelect.findComponent("UserPreferenceForm")).findComponent("printChoice")).getValue());
 		setMaterialAutonumber((String)((UIInput)((UIComponent)licenseSelect.findComponent("UserPreferenceForm")).findComponent("numberChoice")).getValue());
 		
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		try
-		{
-			setChoices();
-		}
-		catch (UserErrorException uex)
-		{
-			String errMsg = bundle.getString(uex.getMessage());
-			ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, uex.getMessage(), errMsg));
-		}
-		catch (Exception e)
-		{
-			String errMsg = bundle.getString("Set_prefs_fail");
-			ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Set_prefs_fail", errMsg));
-		}
+		processChoice();
 	}
 
 	/*
@@ -452,29 +437,42 @@ public class AuthorPreferencePage
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
+		if (processChoice())
+		{	
+			String successMsg = bundle.getString("Set_prefs_success");
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Set_prefs_success", successMsg));
+		}
+		return "author_preference";
+	}
+	
+	public String autoSave()
+	{
+		if (processChoice()) return "#";
+		return "author_preference";
+	}
+	
+	
+	private boolean processChoice()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		try
 		{
 			setChoices();
+			return true;
 		}
 		catch (UserErrorException uex)
 		{
 			String errMsg = bundle.getString(uex.getMessage());
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, uex.getMessage(), errMsg));
-			return "author_preference";
+			return false;
 		}
 		catch (Exception e)
 		{
 			String errMsg = bundle.getString("Set_prefs_fail");
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Set_prefs_fail", errMsg));
-			return "author_preference";
-			// return "pref_editor";
+			return false;
 		}
-
-		String successMsg = bundle.getString("Set_prefs_success");
-		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Set_prefs_success", successMsg));
-
-		return "author_preference";
-		// return "pref_editor";
 	}
 
 	/**
@@ -525,26 +523,7 @@ public class AuthorPreferencePage
 	 */
 	public String changeAllLicense()
 	{
-		FacesContext context = FacesContext.getCurrentInstance();
-		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		// auto-save settings here
-		try
-		{
-			setChoices();
-		}
-		catch (UserErrorException uex)
-		{
-			String errMsg = bundle.getString(uex.getMessage());
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, uex.getMessage(), errMsg));
-			return "author_preference";
-		}
-		catch (Exception e)
-		{
-			String errMsg = bundle.getString("Set_prefs_fail");
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Set_prefs_fail", errMsg));
-			return "author_preference";
-			// return "pref_editor";
-		}
+		if (!processChoice()) return "author_preference";
 		return "confirm_license";
 	}
 

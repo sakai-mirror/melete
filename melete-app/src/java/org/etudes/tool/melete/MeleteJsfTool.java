@@ -3,7 +3,7 @@
  * $Id$
  **********************************************************************************
  *
- * Copyright (c) 2011 Etudes, Inc.
+ * Copyright (c) 2011, 2012 Etudes, Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you
  * may not use this file except in compliance with the License. You may
@@ -254,6 +254,10 @@ public class MeleteJsfTool extends HttpServlet
 		else if (target.startsWith("/list_auth_modules"))
 		{
 			ThreadLocalManager.set("MELETE_SAVE_FROM", "listAuth");
+		}
+		else if (target.startsWith("/author_preference"))
+		{
+			ThreadLocalManager.set("MELETE_SAVE_FROM", "authPref");
 		}
 
 		// add the configured folder root and extension (if missing)

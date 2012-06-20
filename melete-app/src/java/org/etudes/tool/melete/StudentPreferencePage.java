@@ -108,36 +108,10 @@ public class StudentPreferencePage
 	public void changeViewValue(ValueChangeEvent event) throws AbortProcessingException
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
+		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
 		UIInput viewSelect = (UIInput) event.getComponent();
 		setUserView((String) viewSelect.getValue());
-		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
-		MeleteSiteAndUserInfo mPage = (MeleteSiteAndUserInfo) binding.getValue(context);
-		ResourceLoader bundle = new ResourceLoader("org.etudes.tool.melete.bundle.Messages");
-		if (mup == null)
-		{
-			mup = new MeleteUserPreference();
-		}
-		try
-		{
-			if (userView.equals("true"))
-			{
-				mup.setViewExpChoice(true);
-			}
-			else
-			{
-				mup.setViewExpChoice(false);
-			}
-			mup.setUserId(mPage.getCurrentUser().getId());
-			authorPref.insertUserChoice(mup);
-		}
-		catch (Exception e)
-		{
-			String errMsg = bundle.getString("Set_prefs_fail");
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Set_prefs_fail", errMsg));
-		}
-
-		String successMsg = bundle.getString("Set_prefs_success");
-		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Set_prefs_success", successMsg));
+		processChoice();
 	}
 	
 	/**
@@ -146,6 +120,12 @@ public class StudentPreferencePage
 	 * @return student_preference page
 	 */
 	public String setUserChoice()
+	{
+		processChoice();
+		return "student_preference";
+	}
+
+	private void processChoice()
 	{
 		FacesContext context = FacesContext.getCurrentInstance();
 		ValueBinding binding = Util.getBinding("#{meleteSiteAndUserInfo}");
@@ -167,20 +147,15 @@ public class StudentPreferencePage
 			}
 			mup.setUserId(mPage.getCurrentUser().getId());
 			authorPref.insertUserChoice(mup);
+			String successMsg = bundle.getString("Set_prefs_success");
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Set_prefs_success", successMsg));
 		}
 		catch (Exception e)
 		{
 			String errMsg = bundle.getString("Set_prefs_fail");
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Set_prefs_fail", errMsg));
-			return "student_preference";
 		}
-
-		String successMsg = bundle.getString("Set_prefs_success");
-		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Set_prefs_success", successMsg));
-
-		return "student_preference";
 	}
-
 	/**
 	 * @param userView
 	 *        The userView to set.
