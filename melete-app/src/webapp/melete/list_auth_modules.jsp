@@ -218,7 +218,7 @@ if (msg != null)
           </f:facet> 
 	       <h:panelGrid border="0" cellpadding="2px" width="100%" style="vertical-align:top;white-space:nowrap;">	       
 	       <h:column>
-	            <h:inputText id="startDate" size="20"
+	            <h:inputText id="startDate" size="24" style="font-size:95%;"
 	                           value="#{mdbean.moduleShdate.startDate}" onchange="showInvalid('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':startDate','listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':err_gifst');">
 	            	<o:convertDateTime />
 	            </h:inputText>
@@ -246,7 +246,7 @@ if (msg != null)
           </f:facet> 
         <h:panelGrid border="0" cellpadding="2px" width="100%" style="vertical-align:top;white-space:nowrap;">	       
        <h:column>      
-            <h:inputText id="endDate" size="20" 
+            <h:inputText id="endDate" size="24" style="font-size:95%;"
                            value="#{mdbean.moduleShdate.endDate}" onchange="showInvalid('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':endDate','listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':err_gifen');">
                <o:convertDateTime />
             </h:inputText>
@@ -274,7 +274,7 @@ if (msg != null)
           </f:facet> 
        <h:panelGrid border="0" cellpadding="2px" width="100%" style="vertical-align:top;white-space:nowrap;">	       
        <h:column>
-	        <h:inputText id="allowUntilDate" size="20" 
+	        <h:inputText id="allowUntilDate" size="24" style="font-size:95%;"
 	                       value="#{mdbean.moduleShdate.allowUntilDate}" onchange="showInvalid('listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':allowUntilDate','listauthmodulesform:table:' + #{listAuthModulesPage.table.rowIndex} +':err_gifal');">
 	           <o:convertDateTime />
 	        </h:inputText>
