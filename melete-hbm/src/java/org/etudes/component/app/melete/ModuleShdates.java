@@ -231,7 +231,7 @@ public class ModuleShdates implements Serializable, ModuleShdatesService
 		  }
 		  if ((getEndDate() != null) && (getAllowUntilDate() != null))
 		  {
-			if (getEndDate().compareTo(getAllowUntilDate()) >= 0)
+			if (getEndDate().compareTo(getAllowUntilDate()) > 0)
 			{
 				return true;
 			}
