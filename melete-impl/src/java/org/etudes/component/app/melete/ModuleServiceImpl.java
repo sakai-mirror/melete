@@ -563,7 +563,7 @@ public class ModuleServiceImpl implements ModuleService, Serializable
 		// check invalid
 		if ((startDate != null && endDate != null && startDate.compareTo(endDate) >= 0)
 				|| (startDate != null && allowUntilDate != null && startDate.compareTo(allowUntilDate) >= 0)
-				|| (endDate != null && allowUntilDate != null && endDate.compareTo(allowUntilDate) >= 0))
+				|| (endDate != null && allowUntilDate != null && endDate.compareTo(allowUntilDate) > 0))
 		{
 			return access;
 		}
