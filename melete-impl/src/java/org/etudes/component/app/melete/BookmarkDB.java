@@ -547,7 +547,7 @@ public class BookmarkDB
 	{
 		if ((((startDate != null) && (endDate != null) && (startDate.compareTo(endDate) >= 0)))||
 				(((startDate != null) && (allowUntilDate != null) && (startDate.compareTo(allowUntilDate) >= 0)))||
-				(((endDate != null) && (allowUntilDate != null) && (endDate.compareTo(allowUntilDate) >= 0))))
+				(((endDate != null) && (allowUntilDate != null) && (endDate.compareTo(allowUntilDate) > 0))))
 			return true;
 		
 		return false;
