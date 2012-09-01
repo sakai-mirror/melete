@@ -2478,10 +2478,15 @@ public class ModuleDB implements Serializable
 					// This executes just once for each module
 					if ((prevModId != 0) && (moduleId != prevModId))
 					{
-						if (modSecTrackMap != null) secViewMap = modSecTrackMap.get(prevModId);
-						associateSections(vsBeanMap, prevSeqXml, secViewMap, prevSeqNo, vmBean);
-						secViewMap = null;
-						vsBeanMap = null;
+						//Condition added so we don't try to associate sections for 
+						//invalid modules when they are skipped
+						if (resList.contains(vmBean))
+						{
+							if (modSecTrackMap != null) secViewMap = modSecTrackMap.get(prevModId);
+							associateSections(vsBeanMap, prevSeqXml, secViewMap, prevSeqNo, vmBean);
+							secViewMap = null;
+							vsBeanMap = null;
+						}
 					}// End if ((prevModId != 0)&&(moduleId != prevModId))
 
 					// Populate each vsBean and add to vsBeanMap
@@ -2524,6 +2529,8 @@ public class ModuleDB implements Serializable
 				// The last module will not have had its sections added
 				// so we do it here, only do this for modules that have
 				// been added to resList above
+				//Condition added so we don't try to associate sections for 
+				//invalid modules when they are skipped
 				if (resList.contains(vmBean))
 				{
 					if (modSecTrackMap != null) secViewMap = modSecTrackMap.get(moduleId);
