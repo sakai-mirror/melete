@@ -49,6 +49,7 @@ public class AuthorPreferencePage
 {
 	final static String SFERYX = "Sferyx Editor";
 	final static String FCKEDITOR = "FCK Editor";
+	final static String CKEDITOR = "CK Editor";
 	private String editorChoice;
 	private String userEditor;
 	private String userView = "true";
@@ -110,7 +111,7 @@ public class AuthorPreferencePage
 			shouldRenderSferyx = true;
 			shouldRenderFCK = false;
 		}
-		else if (editorChoice.equals(FCKEDITOR))
+		else if (editorChoice.equals(FCKEDITOR) || editorChoice.equals(CKEDITOR))
 		{
 			shouldRenderSferyx = false;
 			shouldRenderFCK = true;
@@ -208,7 +209,7 @@ public class AuthorPreferencePage
 		{
 			defaultEditor = ServerConfigurationService.getString("wysiwyg.editor", "");
 			if (logger.isDebugEnabled()) logger.debug("default editor ie from wysiwyg.editor is" + defaultEditor);
-			if (defaultEditor.equalsIgnoreCase(FCKEDITOR) || defaultEditor.startsWith("FCK") || defaultEditor.startsWith("fck"))
+			if (defaultEditor.equalsIgnoreCase(FCKEDITOR) || defaultEditor.equalsIgnoreCase(CKEDITOR) ||  defaultEditor.startsWith("FCK") || defaultEditor.startsWith("fck"))
 				defaultEditor = FCKEDITOR;
 		}
 
@@ -233,6 +234,7 @@ public class AuthorPreferencePage
 				String label = ServerConfigurationService.getString("melete.wysiwyg.editor" + i, "");
 				String displayLabel = "";
 				if (label.equalsIgnoreCase(FCKEDITOR)) displayLabel = bundle.getString("FCKEDITOR");
+				if (label.equalsIgnoreCase(CKEDITOR)) displayLabel = bundle.getString("CKEDITOR");
 				if (label.equalsIgnoreCase(SFERYX)) displayLabel = bundle.getString("SFERYX");
 				availableEditors.add(new SelectItem(label, displayLabel));
 			}
