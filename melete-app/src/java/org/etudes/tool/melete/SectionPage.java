@@ -1168,7 +1168,8 @@ public abstract class SectionPage implements Serializable
 	{
 		FCK_CollId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
 		String attrb = "fck.security.advisor." + FCK_CollId;
-
+		
+		SessionManager.getCurrentSession().setAttribute("ck.collectionId",FCK_CollId);
 		SessionManager.getCurrentSession().setAttribute(attrb, new SecurityAdvisor()
 		{
 			public SecurityAdvice isAllowed(String userId, String function, String reference)
