@@ -1167,7 +1167,7 @@ public abstract class SectionPage implements Serializable
 	public void setFCKCollectionAttrib()
 	{
 		FCK_CollId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
-		String attrb = "fck.security.advisor." + FCK_CollId;
+		String attrb = "ck.security.advisor." + FCK_CollId;
 		
 		SessionManager.getCurrentSession().setAttribute("ck.collectionId",FCK_CollId);
 		SessionManager.getCurrentSession().setAttribute(attrb, new SecurityAdvisor()
