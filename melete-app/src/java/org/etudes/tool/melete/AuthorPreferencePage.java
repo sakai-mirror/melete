@@ -113,6 +113,9 @@ public class AuthorPreferencePage
 		}
 		else if (editorChoice.equals(FCKEDITOR) || editorChoice.equals(CKEDITOR))
 		{
+			String defaultEditor = ServerConfigurationService.getString("melete.wysiwyg.editor", "");
+			if (CKEDITOR.equals(defaultEditor) && editorChoice.equals(FCKEDITOR))
+				editorChoice = CKEDITOR;
 			shouldRenderSferyx = false;
 			shouldRenderFCK = true;
 		}
