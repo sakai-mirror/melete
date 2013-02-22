@@ -84,6 +84,7 @@ document.writeln('<PARAM NAME="scriptable" VALUE="true">');
 	
 				document.writeln('<PARAM NAME = "uploadContentAsMultipartFormData" VALUE="true">');
 				document.writeln('<PARAM NAME="saveEntireFile" VALUE="true">');
+				document.writeln('<PARAM NAME="forceSpanGeneration" VALUE="true">');
 				
 				document.writeln('<PARAM NAME="useSaveAsSaveRemote" VALUE="true">');
 				document.writeln('<PARAM NAME ="supressRemoteFileDialog" VALUE="false">');
