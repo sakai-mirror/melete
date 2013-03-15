@@ -37,13 +37,13 @@ String moduleId = (String)request.getParameter("moduleId");
 String secId = (String)request.getParameter("sectionId");
 if ((moduleId != null) &&(secId != null))
 {
-	if (!moduleId.trim().equals("null")) vsPage.setModuleId(Integer.parseInt(moduleId));
-	if (!secId.trim().equals("null")) vsPage.setSectionId(Integer.parseInt(secId));
+	if (!moduleId.trim().equals("null") && moduleId.trim().length() > 0) vsPage.setModuleId(Integer.parseInt(moduleId));
+	if (!secId.trim().equals("null") && secId.trim().length() > 0) vsPage.setSectionId(Integer.parseInt(secId));
 }
 String modSeqNo = (String)request.getParameter("moduleSeqNo");
 if (modSeqNo != null)
 {
-	if (!modSeqNo.trim().equals("null")) vsPage.setModuleSeqNo(Integer.parseInt(modSeqNo));
+	if (!modSeqNo.trim().equals("null") && modSeqNo.trim().length() > 0) vsPage.setModuleSeqNo(Integer.parseInt(modSeqNo));
 }
 %>
 <f:view>
@@ -87,6 +87,7 @@ if (modSeqNo != null)
 		    	<f:param id="moduleId" name="moduleId" value="#{viewSectionsPage.moduleId}" />
 		    	<f:param id="sectionId" name="sectionId" value="#{viewSectionsPage.section.sectionId}" />
 	  			<f:param id="sectionTitle" name="sectionTitle" value="#{viewSectionsPage.section.title}" />
+	  			<f:param id="moduleSeqNo" name="moduleSeqNo" value="#{viewSectionsPage.moduleSeqNo}" />
 	  			<h:graphicImage id="bul_gif" value="/images/bookmark-it.png" alt="" styleClass="AuthImgClass"/>
 				      <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
  	</h:outputLink>		

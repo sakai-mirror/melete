@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-hbm/src/java/org/etudes/component/app/melete/SectionTrackView.java $
- * $Id: SectionTrackView.java 60573 2009-05-19 20:17:20Z mallika@etudes.org $  
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.1forSakai/melete-hbm/src/java/org/etudes/component/app/melete/SectionTrackView.java $
+ * $Id: SectionTrackView.java 3641 2012-12-02 21:43:44Z ggolden $  
  ***********************************************************************************
  *
  * Copyright (c) 2010, 2011 Etudes, Inc.

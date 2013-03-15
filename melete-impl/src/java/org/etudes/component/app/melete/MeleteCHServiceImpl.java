@@ -1328,7 +1328,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				return null;
 			}
 			// remove MSword comments
-			int wordcommentIdx = -1;
+			/*int wordcommentIdx = -1;
 			while (checkforimgs != null && (wordcommentIdx = checkforimgs.indexOf("<!--[if gte vml 1]>")) != -1)
 			{
 				String pre = checkforimgs.substring(0, wordcommentIdx);
@@ -1348,11 +1348,11 @@ public class MeleteCHServiceImpl implements MeleteCHService
 				checkforimgs = checkforimgs.substring(endcommentIdx + 14);
 				checkforimgs = pre + checkforimgs;
 				wordcommentIdx = -1;
-			}
-			// strip all other MS word comments
-			checkforimgs = HtmlHelper.stripComments(checkforimgs);
+			}*/
+			// strip MS comments and bogus links
 			// strip bad link and meta tags
-			checkforimgs = HtmlHelper.stripLinks(checkforimgs);
+			// and does more cleaning
+			checkforimgs = HtmlHelper.clean(checkforimgs, false);
 
 			contentEditor = checkforimgs;
 			// remove word comments code end
@@ -1449,7 +1449,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 						checkforimgs = meleteUtil.replacePath(checkforimgs, patternStr, replaceStr);
 					}
 					// process links and append http:// protocol if not provided
-					else if (!(fileName.startsWith("/") || fileName.startsWith("./") || fileName.startsWith("../") || fileName.startsWith("#"))
+					/*else if (!(fileName.startsWith("/") || fileName.startsWith("./") || fileName.startsWith("../") || fileName.startsWith("#"))
 							&& foundLink != null && foundLink.equals("link")
 							&& !(fileName.startsWith("http://") || fileName.startsWith("https://") || fileName.startsWith("mailto:")))
 					{
@@ -1465,7 +1465,7 @@ public class MeleteCHServiceImpl implements MeleteCHService
 						String replaceStr = fileName.substring(fileName.indexOf("/access/"));
 						contentEditor = meleteUtil.replacePath(contentEditor, fileName, replaceStr);
 						checkforimgs = meleteUtil.replacePath(checkforimgs, fileName, replaceStr);
-					}
+					}*/
 					// convert relative paths to full urls
 					else if (fileName.indexOf("://") == -1 && fileName.indexOf("/") == -1)
 					{

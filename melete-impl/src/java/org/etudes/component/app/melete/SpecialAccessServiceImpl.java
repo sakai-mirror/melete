@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-impl/src/java/org/etudes/component/app/melete/SpecialAccessServiceImpl.java $
- * $Id: SpecialAccessServiceImpl.java 56408 2008-12-19 21:16:52Z rashmi@etudes.org $
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.1forSakai/melete-impl/src/java/org/etudes/component/app/melete/SpecialAccessServiceImpl.java $
+ * $Id: SpecialAccessServiceImpl.java 3641 2012-12-02 21:43:44Z ggolden $
  ***********************************************************************************
  *
  * Copyright (c) 2010,2011 Etudes, Inc.

@@ -2,8 +2,8 @@
 
 <!--
  ***********************************************************************************
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/webapp/melete/confirm_bookmark.jsp $
- * $Id: confirm_bookmark.jsp 64898 2009-11-24 22:26:14Z mallika@etudes.org $  
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.1forSakai/melete-app/src/webapp/melete/confirm_bookmark.jsp $
+ * $Id: confirm_bookmark.jsp 3647 2012-12-02 22:30:41Z ggolden $  
  ***********************************************************************************
  *
  * Copyright (c) 2010 Etudes, Inc.

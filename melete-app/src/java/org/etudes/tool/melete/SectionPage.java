@@ -56,6 +56,7 @@ import org.etudes.component.app.melete.MeleteResource;
 import org.etudes.component.app.melete.MeleteUserPreference;
 import org.etudes.component.app.melete.Module;
 import org.etudes.component.app.melete.SectionResource;
+import org.etudes.util.HtmlHelper;
 import org.imsglobal.basiclti.BasicLTIUtil;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.component.api.ServerConfigurationService;
@@ -668,7 +669,10 @@ public abstract class SectionPage implements Serializable
 			{
 				if (resourceId == null) throw new MeleteException("resource_null");
 				ContentResource cr = getMeleteCHService().getResource(resourceId);
-				if (cr != null) this.contentEditor = new String(cr.getContent());
+				if (cr != null) 
+				{
+					this.contentEditor = HtmlHelper.clean(new String(cr.getContent()), false);
+				}
 			}
 
 			if (resourceId != null
@@ -1167,7 +1171,7 @@ public abstract class SectionPage implements Serializable
 	public void setFCKCollectionAttrib()
 	{
 		FCK_CollId = getMeleteCHService().getUploadCollectionId(getCurrentCourseId());
-		String attrb = "ck.security.advisor." + FCK_CollId;
+		String attrb = "fck.security.advisor." + FCK_CollId;
 		
 		SessionManager.getCurrentSession().setAttribute("ck.collectionId",FCK_CollId);
 		SessionManager.getCurrentSession().setAttribute(attrb, new SecurityAdvisor()

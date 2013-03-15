@@ -1,6 +1,6 @@
 -- *********************************************************************
--- $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.1forSakai/components/src/sql/mysql/melete28m1.sql $
--- $Id: melete28m1.sql 3641 2012-12-02 21:43:44Z ggolden $
+-- $URL: https://source.etudes.org/svn/apps/melete/trunk/components/src/sql/mysql/melete282.sql $
+-- $Id: melete282.sql 3641 2012-12-02 21:43:44Z ggolden $
 -- *********************************************************************
 --  Copyright (c) 2010 Etudes, Inc.  
   
@@ -95,7 +95,7 @@ CREATE TABLE `melete_resource` (
   `ALLOW_CMRCL` tinyint(1) default NULL,
   `ALLOW_MOD` int(11) default NULL,
   `COPYRIGHT_OWNER` varchar(255) default NULL,
-  `COPYRIGHT_YEAR` varchar(25) default NULL,
+  `COPYRIGHT_YEAR` varchar(255) default NULL,
   PRIMARY KEY  (`RESOURCE_ID`)
 );
 CREATE TABLE `melete_section` (
@@ -138,7 +138,7 @@ CREATE TABLE `melete_user_preference` (
   `ALLOW_CMRCL` tinyint(1) default NULL,
   `ALLOW_MOD` int(11) default NULL,
   `COPYRIGHT_OWNER` varchar(255) default NULL,
-  `COPYRIGHT_YEAR` varchar(25) default NULL,
+  `COPYRIGHT_YEAR` varchar(255) default NULL,
   PRIMARY KEY  (`PREF_ID`)
 );
 CREATE INDEX USER_ID_IDX ON melete_user_preference(USER_ID);
@@ -161,3 +161,52 @@ CREATE TABLE `melete_bookmark` (
   PRIMARY KEY  (`BOOKMARK_ID`),
   CONSTRAINT `FK_MB_MS` FOREIGN KEY(`SECTION_ID`) REFERENCES `melete_section`(`SECTION_ID`)
 );
+
+CREATE TABLE `melete_special_access` (
+  `ACCESS_ID` int(11) NOT NULL default '0',
+  `MODULE_ID` int(11) NOT NULL default '0',
+  `USERS` longtext NOT NULL,
+  `START_DATE` datetime default NULL,
+  `END_DATE` datetime default NULL,
+  PRIMARY KEY  (`ACCESS_ID`),
+  CONSTRAINT `FK_MSA_MM` FOREIGN KEY(`MODULE_ID`) REFERENCES `melete_module`(`MODULE_ID`)
+); 
+CREATE TABLE `melete_section_track_view` (
+  `SECTION_ID` int(11) NOT NULL default '0',
+  `USER_ID` varchar(99) default NULL,
+  `VIEW_DATE` datetime default NULL,
+  PRIMARY KEY  (`SECTION_ID`,`USER_ID`),
+  CONSTRAINT `FK_MSTV_MS` FOREIGN KEY(`SECTION_ID`) REFERENCES `melete_section`(`SECTION_ID`)
+);
+
+alter table melete_special_access add column OVERRIDE_START tinyint(1) default '0';
+alter table melete_special_access add column OVERRIDE_END tinyint(1) default '0';
+
+CREATE INDEX USER_ID_IDX ON `melete_section_track_view` (USER_ID);
+
+ALTER TABLE melete_cc_license modify column ALLOW_MOD int(1) not null;
+
+ALTER TABLE melete_special_access add column ALLOWUNTIL_DATE datetime default NULL;
+ALTER TABLE melete_special_access add column OVERRIDE_ALLOWUNTIL tinyint(1) default '0';
+
+
+ALTER TABLE melete_module_shdates add column ALLOWUNTIL_DATE datetime default NULL;
+
+alter table melete_module drop column LEARN_OBJ;
+alter table melete_module drop column INSTITUTE;
+alter table melete_module drop column CREATED_BY_FNAME;
+alter table melete_module drop column CREATED_BY_LNAME;
+alter table melete_module drop column MODIFIED_BY_FNAME;
+alter table melete_module drop column MODIFIED_BY_LNAME;
+
+alter table melete_module add column MODIFY_USER_ID varchar(99) NOT NULL default '';
+
+alter table melete_section add column USER_ID varchar(99) NOT NULL default '';
+alter table melete_section add column MODIFY_USER_ID varchar(99) NOT NULL default '';
+alter table melete_section drop column CREATED_BY_FNAME;
+alter table melete_section drop column CREATED_BY_LNAME;
+alter table melete_section drop column MODIFIED_BY_FNAME;
+alter table melete_section drop column MODIFIED_BY_LNAME;
+
+alter table melete_section_track_view add column FIRST_VIEW_DATE datetime default NULL;
+

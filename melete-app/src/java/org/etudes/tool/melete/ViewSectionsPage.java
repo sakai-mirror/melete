@@ -134,9 +134,13 @@ public class ViewSectionsPage implements Serializable
 			}
 
 			// strip MS comments and bogus links
-			str = HtmlHelper.stripComments(str);
 			// strip bad link and meta tags
-			str = HtmlHelper.stripLinks(str);
+			// and does more cleaning
+			// only for html!
+			if (resource.getContentType().equalsIgnoreCase("text/html"))
+			{
+				str = HtmlHelper.clean(str, false);
+			}
 		}
 		catch (Exception e)
 		{

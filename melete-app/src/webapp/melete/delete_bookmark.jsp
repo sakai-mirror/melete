@@ -1,8 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!--
  ***********************************************************************************
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/webapp/melete/delete_bookmark.jsp $
- * $Id: delete_bookmark.jsp 64898 2009-11-24 22:26:14Z mallika@etudes.org $  
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.1forSakai/melete-app/src/webapp/melete/delete_bookmark.jsp $
+ * $Id: delete_bookmark.jsp 3647 2012-12-02 22:30:41Z ggolden $  
  ***********************************************************************************
  *
  * Copyright (c) 2008,2009, 2010, 2011 Etudes, Inc.

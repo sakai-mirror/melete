@@ -128,7 +128,7 @@ public class ModuleDB implements Serializable
 	}
 	/**
 	 * Delete directory and all its files
-	 * 
+	 *
 	 * @param dir
 	 *        File
 	 * @return true if everything was deleted
@@ -168,7 +168,7 @@ public class ModuleDB implements Serializable
 	}
 	/**
 	 * Rename directory with _del appended to name
-	 * 
+	 *
 	 * @param dir
 	 *        directory to rename
 	 * @return Rename process status
@@ -199,7 +199,7 @@ public class ModuleDB implements Serializable
 
 	/** Dependency (optional, self-injected): AccessAdvisor. */
 	protected transient AccessAdvisor accessAdvisor = null;
-	
+
 	private MeleteUtil meleteUtil = new MeleteUtil();
 
 	public ModuleDB()
@@ -209,7 +209,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Actually inserts a row with module information. adds a row in module , moduleshdates , course module. if a transaction fails , rollback the whole transaction.
-	 * 
+	 *
 	 * @param module
 	 *        Module object
 	 * @param moduleshowdates
@@ -226,7 +226,7 @@ public class ModuleDB implements Serializable
 	}
 
 	/**
-	 * 
+	 *
 	 * @param module
 	 * @param moduleshowdates
 	 * @param seq
@@ -245,7 +245,7 @@ public class ModuleDB implements Serializable
 			{
 				module.setCreationDate(new java.util.Date());
 				module.setUserId(userId);
-				
+
 				module.setModifyUserId(userId);
 				module.setModificationDate(new java.util.Date());
 				User user = UserDirectoryService.getUser(userId);
@@ -255,7 +255,7 @@ public class ModuleDB implements Serializable
 				if (!moduleshowdates.isStartDateValid()) moduleshowdates.setStartDate(null);
 				if (!moduleshowdates.isEndDateValid()) moduleshowdates.setEndDate(null);
 				if (!moduleshowdates.isAllowUntilDateValid()) moduleshowdates.setAllowUntilDate(null);
-				
+
 				moduleshowdates.setModule(module);
 
 				tx = session.beginTransaction();
@@ -313,7 +313,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Apply days difference to all start and end dates
-	 * 
+	 *
 	 * @param course_id
 	 *        Course id
 	 * @param days_diff
@@ -340,7 +340,7 @@ public class ModuleDB implements Serializable
 		fields[i++] = days_diff;
 		fields[i++] = days_diff;
 		fields[i++] = course_id;
-		
+
 		if (!SqlService.dbWrite(sql.toString(), fields))
 		{
 			throw new RuntimeException("applyBaseDate: db write failed");
@@ -349,7 +349,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Archive the selected list of modules and update sequence accordingly
-	 * 
+	 *
 	 * @param selModBeans
 	 *        Selected modules
 	 * @param moduleDateBeans
@@ -456,7 +456,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Bring a section one level up in indentation
-	 * 
+	 *
 	 * @param module
 	 *        Module
 	 * @param secBeans
@@ -540,7 +540,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Check to see if there is author/edit access to course
-	 * 
+	 *
 	 * @param user_id
 	 *        User id - Not in use
 	 * @param course_id
@@ -561,7 +561,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Clean up deleted modules, physically delete all modules with delete flag = 1
-	 * 
+	 *
 	 * @return Number of modules deleted
 	 * @throws Exception
 	 */
@@ -785,7 +785,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Create a copy of this module
-	 * 
+	 *
 	 * @param module
 	 *        Module object
 	 * @param courseId
@@ -802,7 +802,7 @@ public class ModuleDB implements Serializable
 		{
 			// get module and its sections
 			Module copyMod = new Module(module);
-			
+
 			copyMod.setTitle(copyMod.getTitle() + " (" + bundle.getString("Copied") + " " + DateHelper.formatDateForName(new Date(), null) + " )");
 			ModuleShdates CopyModuleshowdates = new ModuleShdates((ModuleShdates) module.getModuleshdate());
 
@@ -873,7 +873,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Indent some sections in a module
-	 * 
+	 *
 	 * @param module
 	 *        Module object
 	 * @param secBeans
@@ -942,9 +942,9 @@ public class ModuleDB implements Serializable
 			throw new MeleteException("indent_right_fail");
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param module
 	 * @param sectionId
 	 * @throws MeleteException
@@ -1004,14 +1004,14 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Creates subsection for a specific parent section.
-	 * 
+	 *
 	 * @param module
 	 *        Module
 	 * @param parentSectionId
 	 *        Id of parent section
 	 * @param sectionId
 	 *        Id of would be subsection
-	 * 
+	 *
 	 * @throws MeleteException
 	 */
 	public void createSubSection(ModuleObjService module, String parentSectionId, String sectionId) throws MeleteException
@@ -1066,10 +1066,10 @@ public class ModuleDB implements Serializable
 			throw new MeleteException("indent_right_fail");
 		}
 	}
-	
+
 	/**
 	 * Create truncated title when string is over 30 chars
-	 * 
+	 *
 	 * @param modTitle
 	 *        string to truncate
 	 * @return truncated string
@@ -1088,7 +1088,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Delete modules of a course
-	 * 
+	 *
 	 * @param delModules
 	 *        Modules to delete
 	 * @param allModules
@@ -1216,7 +1216,7 @@ public class ModuleDB implements Serializable
 					for (int i = 0; i < allSectionIdsArray.size(); i++)
 					{
 						allSectionIds = allSectionIdsArray.get(i);
-			
+
 						try
 						{
 							deletedEntities = session.createQuery(updSectionResourceStr + allSectionIds.toString()).executeUpdate();
@@ -1242,7 +1242,7 @@ public class ModuleDB implements Serializable
 							e.printStackTrace();
 							throw e;
 						}
-					
+
 					}
 				}
 		    	if (delModuleIds != null)
@@ -1425,11 +1425,11 @@ public class ModuleDB implements Serializable
 
 		}
 	}
-	
-	
+
+
 	/**
 	 * Get all active and archived modules
-	 * 
+	 *
 	 * @param courseId
 	 *        Course id
 	 * @return List of active and archived modules
@@ -1438,7 +1438,7 @@ public class ModuleDB implements Serializable
 	public List<? extends  ModuleObjService> getActivenArchiveModules(String courseId) throws HibernateException
 	{
 		List<? extends  ModuleObjService> modList = new ArrayList<ModuleObjService>();
-	
+
 		try
 		{
 			Session session = hibernateUtil.currentSession();
@@ -1471,7 +1471,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get archived modules for this course
-	 * 
+	 *
 	 * @param course_id
 	 *        course id
 	 * @return list of archived modules
@@ -1507,7 +1507,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get course module object for this module and course
-	 * 
+	 *
 	 * @param moduleId
 	 *        Module id
 	 * @param courseId
@@ -1547,7 +1547,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get course modules for this course
-	 * 
+	 *
 	 * @param courseId
 	 *        Course id
 	 * @return List of course modules
@@ -1584,7 +1584,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get a count of all active(unarchived) modules
-	 * 
+	 *
 	 * @param courseId
 	 *        Course id
 	 * @return Number of all active(unarchived) modules
@@ -1628,7 +1628,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get the minimum date of all modules in the course(may be start or end)
-	 * 
+	 *
 	 * @param course_id
 	 *        Course id
 	 * @return Minimum(earliest) start or end date of course
@@ -1693,7 +1693,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get the maximum date of all modules in the course(may be start or end)
-	 * 
+	 *
 	 * @param course_id
 	 *        Course id
 	 * @return Maximum(latest) start or end date of course
@@ -1758,7 +1758,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get module from module id
-	 * 
+	 *
 	 * @param moduleId
 	 *        Module id
 	 * @return module object
@@ -1793,7 +1793,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get moduledatebean object
-	 * 
+	 *
 	 * @param userId
 	 *        User id no longer in use
 	 * @param courseId
@@ -1851,7 +1851,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get module date bean by sequence
-	 * 
+	 *
 	 * @param userId
 	 *        User id no longer in user
 	 * @param courseId
@@ -1908,7 +1908,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Core method to get modules
-	 * 
+	 *
 	 * @param courseId
 	 *        course id
 	 * @return list of modules
@@ -1958,7 +1958,7 @@ public class ModuleDB implements Serializable
 	/**
 	 * Get next sequence number (after this module in the course) This method is invoked for instructors and students
 	 * It skips invalid modules.
-	 * 
+	 *
 	 * @param userId
 	 *        User id
 	 * @param courseId
@@ -2025,7 +2025,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get the number of modules completely read by all users
-	 * 
+	 *
 	 * @param course_id
 	 *        Course id
 	 * @return A map of course id and number of modules read
@@ -2110,7 +2110,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get the number of sections read by a user in a module
-	 * 
+	 *
 	 * @param user_id
 	 *        User id
 	 * @param module_id
@@ -2164,8 +2164,8 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get prev sequence number (before this module in the course) This method is invoked for instructors and students
-	 * It skips invalid modules. 
-	 * 
+	 * It skips invalid modules.
+	 *
 	 * @param userId
 	 * @param courseId
 	 * @param currSeqNo
@@ -2231,7 +2231,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get list of sections for module
-	 * 
+	 *
 	 * @param moduleId
 	 *        Module id
 	 * @return list of sections
@@ -2268,7 +2268,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get moduleshdates object for this module
-	 * 
+	 *
 	 * @param moduleId
 	 *        Module id
 	 * @return Moduleshdates object
@@ -2305,7 +2305,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get list of modules for instructor
-	 * 
+	 *
 	 * @param userId
 	 *        user id
 	 * @param courseId
@@ -2322,7 +2322,7 @@ public class ModuleDB implements Serializable
 		Module mod = null;
 
 		try
-		{			
+		{
 			modList = getModules(courseId);
 			saModList = saDB.getSpecialAccessModuleIds(courseId);
 
@@ -2375,7 +2375,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Get list of modules core method
-	 * 
+	 *
 	 * @param userId
 	 *        User id
 	 * @param courseId
@@ -2428,7 +2428,7 @@ public class ModuleDB implements Serializable
 			int moduleId = 0, seqNo;
 			ViewModBean vmBean = null;
 			String seqXml, prevSeqXml = null;
-			
+
 			//Iterate through Section Tracking result set
 			//Create a modSecTrackMap whose key is the module id and the value is a map of section id and view date
 			if (stvRs != null)
@@ -2472,13 +2472,13 @@ public class ModuleDB implements Serializable
 					moduleId = rs.getInt("module_id");
 					seqNo = rs.getInt("seq_no");
 					seqXml = rs.getString("seq_xml");
-					
+
 					// Associate vsBeans to vmBean
 					// This means its a new module
 					// This executes just once for each module
 					if ((prevModId != 0) && (moduleId != prevModId))
 					{
-						//Condition added so we don't try to associate sections for 
+						//Condition added so we don't try to associate sections for
 						//invalid modules when they are skipped
 						if (resList.contains(vmBean))
 						{
@@ -2509,15 +2509,15 @@ public class ModuleDB implements Serializable
 					if ((prevModId == 0) || (moduleId != prevModId))
 					{
 						vmBean = populateVmBean(rs, accMap, courseId);
-	
+
 						// Add invalid modules if not filtered
 						// If filtered, do not add bad dates and no sections modules (invalid modules)
-						if (filtered && (!vmBean.isDateFlag() || vsBeanMap == null || vsBeanMap.size() <= 0)) 
+						if (filtered && (!vmBean.isDateFlag() || vsBeanMap == null || vsBeanMap.size() <= 0))
 						{
 							continue;
 						}
 						resList.add(vmBean);
-						
+
 					}// end if ((prevModId == 0)||(moduleId != prevModId))
 
 					prevModId = moduleId;
@@ -2529,7 +2529,7 @@ public class ModuleDB implements Serializable
 				// The last module will not have had its sections added
 				// so we do it here, only do this for modules that have
 				// been added to resList above
-				//Condition added so we don't try to associate sections for 
+				//Condition added so we don't try to associate sections for
 				//invalid modules when they are skipped
 				if (resList.contains(vmBean))
 				{
@@ -2563,7 +2563,7 @@ public class ModuleDB implements Serializable
 
 	/**
 	 * Associates sections with vmBean and adds tracking info to each section bean
-	 * 
+	 *
 	 * @param vsBeanMap
 	 *        Map of sections
 	 * @param seqXml
@@ -2622,7 +2622,7 @@ public class ModuleDB implements Serializable
 			}
 		}
 	}
-	
+
 	/*protected void associateSections(Map vsBeanMap, String seqXml, int moduleId, int seqNo, ViewModBean vmBean, String userId, Connection dbConnection)
 	throws SQLException
 {
@@ -2673,7 +2673,7 @@ else
 
 	/**
 	 * Creates new vmBean, sets its properties and determines its visibility
-	 * 
+	 *
 	 * @param rs
 	 *        ResultSet Object
 	 * @param accMap
@@ -2707,7 +2707,7 @@ else
 		java.sql.Timestamp startTimestamp = rs.getTimestamp("start_date");
 		java.sql.Timestamp endTimestamp = rs.getTimestamp("end_date");
 		java.sql.Timestamp auTimestamp = rs.getTimestamp("allowuntil_date");
-		
+
 		// If special access is set up, use those dates; otherwise,
 		// use module dates
 		if ((accMap != null) && (accMap.size() > 0))
@@ -2734,7 +2734,7 @@ else
 			{
 				 String blockDetails = this.accessAdvisor.details("sakai.melete", courseId, String.valueOf(moduleId), SessionManager.getCurrentSessionUserId());
 				 if(blockDetails != null) vmBean.setBlockedDetails(" "+blockDetails);
-				 
+
 				vmBean.setBlockedBy(this.accessAdvisor.message("sakai.melete", courseId, String.valueOf(moduleId), SessionManager
 						.getCurrentSessionUserId()));
 				vmBean.setVisibleFlag(false);
@@ -2763,10 +2763,10 @@ else
 		}
 		return vmBean;
 	}
-	
+
 	/**
 	 * Get list of modules with view status set
-	 * 
+	 *
 	 * @param userId
 	 *        User id
 	 * @param courseId
@@ -2795,7 +2795,7 @@ else
 	}
 
 	/**
-	 * 
+	 *
 	 * @param userId
 	 * @param courseId
 	 * @param modId
@@ -2812,7 +2812,7 @@ else
 			String sql;
 
 			sql = "select m.module_id,c.seq_no,m.title as modTitle,m.description as modDesc,m.whats_next,m.seq_xml,d.start_date,d.end_date,d.allowuntil_date,s.section_id,s.content_type,s.title as secTitle from melete_module m inner join melete_module_shdates d on m.module_id=d.module_id inner join melete_course_module c on m.module_id=c.module_id left outer join melete_section s on m.module_id = s.module_id where m.module_id = ? and (s.delete_flag=0 or s.delete_flag is NULL)";
-			
+
 			PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 			pstmt.setInt(1, modId);
 			rs = pstmt.executeQuery();
@@ -2837,10 +2837,10 @@ else
 		}
 		return vmBean;
 	}
-			
+
 	/**
 	 * Get ViewModBeanService object by sequence number
-	 * 
+	 *
 	 * @param userId
 	 *        The user Id
 	 * @param courseId
@@ -2892,10 +2892,10 @@ else
 		}
 		return vmBean;
 	}
-	
+
 	/**
 	 * Returns a map of <section id,view date> for a module for a user
-	 * 
+	 *
 	 * @param modId
 	 *            The module id
 	 * @param userId
@@ -2996,10 +2996,10 @@ else
 		}
 		return vmBean;
 	}
-	
+
 	/**
 	 * Checks if the module is completely read by the user
-	 * 
+	 *
 	 * @param user_id
 	 *        User id
 	 * @param module_id
@@ -3027,7 +3027,7 @@ else
 
 	/**
 	 * Move section from one module to another, delete section tracking info when section moves
-	 * 
+	 *
 	 * @param section
 	 *        Section object
 	 * @param selectedModule
@@ -3115,7 +3115,7 @@ else
 
 	/**
 	 * Create printable view of sections of a module
-	 * 
+	 *
 	 * @param module
 	 *        module object
 	 * @return Print text
@@ -3249,7 +3249,7 @@ else
 
 	/**
 	 * Restore modules and set dates to null when restored
-	 * 
+	 *
 	 * @param restoreModules
 	 *        List of modules to restore
 	 * @param courseId
@@ -3400,7 +3400,7 @@ else
 
 	/**
 	 * Sort module up or down
-	 * 
+	 *
 	 * @param module
 	 *        Module object
 	 * @param course_id
@@ -3441,7 +3441,7 @@ else
 				}
 				// if to be sorted module not found in db then return
 				if(curr_cm == null) return;
-				
+
 				CourseModule change_cm = null;
 				if (Direction.equals("allUp"))
 				{
@@ -3518,7 +3518,7 @@ else
 				if (tx != null) tx.rollback();
 				logger.error(he.toString());
 				throw he;
-			}			
+			}
 			finally
 			{
 				hibernateUtil.closeSession();
@@ -3534,7 +3534,7 @@ else
 
 	/**
 	 * Sort section within the module
-	 * 
+	 *
 	 * @param module
 	 *        Module object
 	 * @param section_id
@@ -3610,7 +3610,7 @@ else
 
 	/**
 	 * Update module object and use spaces in place of nulls
-	 * 
+	 *
 	 * @param mod
 	 *        Module object
 	 * @throws Exception
@@ -3665,7 +3665,7 @@ else
 
 	/**
 	 * Compare module objects to check if they are different.
-	 * 
+	 *
 	 * @param mod1
 	 *        Module 1
 	 * @param mod2
@@ -3697,7 +3697,7 @@ else
 
 	/**
 	 * Compare moduleshdate objects.
-	 * 
+	 *
 	 * @param obj1
 	 * @param obj2
 	 * @return
@@ -3736,7 +3736,7 @@ else
 		{
 			if (obj1.getStartDate().compareTo(obj2.getStartDate()) != 0) return false;
 		}
-		
+
 		if (obj1.getAllowUntilDate() == null && obj2.getAllowUntilDate() != null)
 			return false;
 		else if (obj1.getAllowUntilDate() != null && obj2.getAllowUntilDate() == null)
@@ -3747,10 +3747,10 @@ else
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Update moduledatebean objects
-	 * 
+	 *
 	 * @param moduleDateBeans
 	 *        List of moduledatebeans to update
 	 * @throws Exception
@@ -3793,7 +3793,7 @@ else
 					if (!checkModuleDates.isEndDateValid()) {
 						checkModuleDates.setEndDate(mDate.getEndDate());
 					}
-					
+
 					if (!checkModuleDates.isAllowUntilDateValid()) {
 						checkModuleDates.setAllowUntilDate(mDate.getAllowUntilDate());
 					}
@@ -3872,7 +3872,7 @@ else
 
 	/**
 	 * Update moduleshdates object
-	 * 
+	 *
 	 * @param modShdates
 	 *        Moduleshdates object
 	 * @throws Exception
@@ -3929,11 +3929,11 @@ else
 
 	/**
 	 * Update next steps.
-	 * 
+	 *
 	 * @param moduleId
 	 *  The module Id
 	 * @param nextSteps
-	 *  What's next 
+	 *  What's next
 	 * @throws Exception
 	 */
 	public void updateModuleNextSteps(Integer moduleId, String nextSteps) throws Exception
@@ -3982,10 +3982,10 @@ else
 			}
 		}
 	}
-	
+
 	/**
 	 * Changes seq number of all modules
-	 * 
+	 *
 	 * @param session
 	 *        Session object
 	 * @param courseModuleBeans
@@ -4009,7 +4009,7 @@ else
 
 	/**
 	 * Assign sequence number to the new module. if no sequence number is found in course module table for given courseId assume that its a first module.
-	 * 
+	 *
 	 * @param session
 	 *        Session object
 	 * @param courseId
@@ -4045,7 +4045,7 @@ else
 
 	/**
 	 * Checks to see how special access blocks apply to modules and returns list of sequences that are blocked
-	 * 
+	 *
 	 * @param accMap
 	 *        Special access map
 	 * @param dbConnection
@@ -4121,7 +4121,7 @@ else
 
 	/**
 	 * Correct sections (make sure sequence xml is in line with number of sections)
-	 * 
+	 *
 	 * @param sectionMap
 	 *        Section map
 	 * @param moduleId
@@ -4251,7 +4251,7 @@ else
 
 	/**
 	 * Create a new calendar event
-	 * 
+	 *
 	 * @param c
 	 *        Reference to calendar api
 	 * @param eventDate
@@ -4281,7 +4281,7 @@ else
 
 	/**
 	 * Delete calendar event
-	 * 
+	 *
 	 * @param c
 	 *        Reference to calendar api
 	 * @param eventId
@@ -4306,7 +4306,7 @@ else
 
 	/**
 	 * Delete everything from Melete tables
-	 * 
+	 *
 	 * @param delCourseId
 	 *        Course id to delete
 	 * @param session
@@ -4357,7 +4357,7 @@ else
 
 	/**
 	 * Get special access records for this user in this course
-	 * 
+	 *
 	 * @param userId
 	 *        User id
 	 * @param courseId
@@ -4405,7 +4405,7 @@ else
 
 	/**
 	 * Get all section ids in a string
-	 * 
+	 *
 	 * @param deletedSections
 	 *        Map of sections
 	 * @return String of section ids that are comma delimited
@@ -4429,7 +4429,7 @@ else
 
 	/**
 	 * Get string of section ids of sections to be deleted
-	 * 
+	 *
 	 * @param session
 	 *        Session object
 	 * @param moduleId
@@ -4458,7 +4458,7 @@ else
 
 	/**
 	 * Get license information
-	 * 
+	 *
 	 * @param melResource
 	 *        Melete resource object
 	 * @return License info as a string
@@ -4496,7 +4496,7 @@ else
 
 	/**
 	 * Determine read date of a module (max read date of all its sections)
-	 * 
+	 *
 	 * @param moduleId
 	 *        Module id
 	 * @param sectionMap
@@ -4539,7 +4539,7 @@ else
 			pstmt.setString(1, userId);
 			pstmt.setInt(2, moduleId);
 			rs = pstmt.executeQuery();
-	
+
 			if (rs != null)
 			{
 				int sectionId;
@@ -4558,7 +4558,7 @@ else
 
 		return viewDate;
 	}
-	
+
 	private Date getReadDate(Map secViewMap) {
 		Date maxViewDate = null;
 		if ((secViewMap == null)||(secViewMap.size() == 0))
@@ -4586,7 +4586,7 @@ else
 	/**
 	 * This method returns next or prev seq number for students depending on how it is invoked. It takes into account blocked modules and special access
 	 * and invalid modules.
-	 * 
+	 *
 	 * @param userId
 	 *        User id
 	 * @param courseId
@@ -4730,7 +4730,7 @@ else
 						navSeqNo = Math.min(((Integer) ((Map.Entry) accMap.entrySet().iterator().next()).getKey()).intValue(), ((Integer) resList
 								.get(0)).intValue());
 					}
-				}	
+				}
 			}
 			rs.close();
 			pstmt.close();
@@ -4755,21 +4755,21 @@ else
 
 	/**
 	 * Determines if this module is currently visible(does not check if the dates are valid)
-	 * 
+	 *
 	 * @param startTimestamp
 	 *        Start date
 	 * @param endTimestamp
 	 *        End date
 	 * @param allowUntilTimestamp
-	 *        Allow Until date        
+	 *        Allow Until date
 	 * @return true if module is visible, false if not
 	 */
 	private boolean isVisible(java.sql.Timestamp startTimestamp, java.sql.Timestamp endTimestamp, java.sql.Timestamp allowUntilTimestamp)
 	{
 		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
-		
+
 		if (allowUntilTimestamp != null) endTimestamp = allowUntilTimestamp;
-		
+
 		if (((startTimestamp == null) || (startTimestamp.before(currentTimestamp)))
 				&& ((endTimestamp == null) || (endTimestamp.after(currentTimestamp))))
 		{
@@ -4780,8 +4780,8 @@ else
 			return false;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Returns true for invalid dates
 	 * @param startTimestamp Start date and time
@@ -4802,10 +4802,10 @@ else
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Check if a module is invalid. If it is, return true. Else, return false
-	 * 
+	 *
 	 * @param moduleId The module id
 	 * @param dbConnection The db connection object
 	 * @return true or false
@@ -4841,7 +4841,7 @@ else
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Checks if module is empty
 	 * @param moduleId The module id
@@ -4853,7 +4853,7 @@ else
 		int count = 0;
 		try
 		{
-			String sql = "select count(s.module_id) as secCount from melete_section where module_id = ?";
+			String sql = "select count(module_id) as secCount from melete_section where module_id = ?";
 			PreparedStatement pstmt = dbConnection.prepareStatement(sql);
 			pstmt.setInt(1, moduleId);
 
@@ -4878,7 +4878,7 @@ else
 
 	/**
 	 * Populate module date bean object
-	 * 
+	 *
 	 * @param mod
 	 *        Module object
 	 * @param mdBean
@@ -4926,7 +4926,7 @@ else
 
 	/**
 	 * Process sections and assign css classes for rows depending on depth
-	 * 
+	 *
 	 * @param vsBeanMap
 	 *        Section map
 	 * @param vsBeanList
@@ -4968,7 +4968,7 @@ else
 
 	/**
 	 * Process sections and assign css classes for rows depending on depth
-	 * 
+	 *
 	 * @param vsBeanMap
 	 *        Section map
 	 * @param vsBeanList
@@ -5009,7 +5009,7 @@ else
 
 	/**
 	 * Update calendar event
-	 * 
+	 *
 	 * @param c
 	 *        Reference to calendar api
 	 * @param eventId
@@ -5048,7 +5048,7 @@ else
 
 	/**
 	 * Get list of resource ids belonging to modules
-	 * 
+	 *
 	 * @param activenArchModules
 	 *        List of modules to check
 	 * @return List of embedded and section associated resources
@@ -5082,7 +5082,7 @@ else
 					else
 					{
 						secEmbed.add(sec.getSectionResource().getResource().getResourceId());
-					}	
+					}
 				}
 			}
 			// logger.debug("before sorting and removing dups" + secEmbed.size());
@@ -5102,7 +5102,7 @@ else
 
 	/**
 	 * Get list of resources in the uploads collection
-	 * 
+	 *
 	 * @param toDelCourseId
 	 *        Course id
 	 * @return list of resources in the uploads collection
@@ -5126,7 +5126,7 @@ else
 
 	/**
 	 * Adds an archived module that sends it archived status via the coursemodule object
-	 * 
+	 *
 	 * @param module
 	 *        module object
 	 * @param moduleshowdates
@@ -5204,7 +5204,7 @@ else
 
 	/**
 	 * Checks to see if calendar tool exists in the current site
-	 * 
+	 *
 	 * @return true if calendar exists, false otherwise
 	 */
 	boolean checkCalendar(String courseId)
@@ -5230,7 +5230,7 @@ else
 
 	/**
 	 * Delete a list of module and calendar events associated with them
-	 * 
+	 *
 	 * @param delModules
 	 *        List of modules to delete
 	 * @param courseId
@@ -5290,7 +5290,7 @@ else
 
 	/**
 	 * Updates the calendar tool. Seggregated from the other updateCalendar method.
-	 * 
+	 *
 	 * @param moduleTitle
 	 * @param moduleshdates1
 	 * @param courseId
@@ -5308,7 +5308,7 @@ else
 			Date allowUntilDate = moduleshdates1.getAllowUntilDate();
 			String startEventId = moduleshdates1.getStartEventId();
 			String endEventId = moduleshdates1.getEndEventId();
-			
+
 			CalendarService cService = org.sakaiproject.calendar.cover.CalendarService.getInstance();
 			String calendarId = cService.calendarReference(courseId, SiteService.MAIN_CONTAINER);
 			try
@@ -5422,10 +5422,10 @@ else
 		}
 		return moduleshdates1;
 	}
-	
+
 	/**
 	 * Update calendar tool with module dates
-	 * 
+	 *
 	 * @param module1
 	 *        Module object
 	 * @param moduleshdates1
@@ -5477,7 +5477,7 @@ class AccessDates
 	{
 		return this.accAllowUntilTimestamp;
 	}
-	
+
 	/**
 	 * @return the access end timestamp
 	 */
@@ -5509,7 +5509,7 @@ class AccessDates
 	{
 		return this.overrideAllowUntil;
 	}
-	
+
 	/**
 	 * @return override end flag value
 	 */
@@ -5534,7 +5534,7 @@ class AccessDates
 	{
 		this.accAllowUntilTimestamp = accAllowUntilTimestamp;
 	}
-	
+
 	/**
 	 * @param accEndTimestamp
 	 *        the access end timestamp
@@ -5570,7 +5570,7 @@ class AccessDates
 	{
 		this.overrideAllowUntil = overrideAllowUntil;
 	}
-	
+
 	/**
 	 * @param overrideEnd
 	 *        override end flag value

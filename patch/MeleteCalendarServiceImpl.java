@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-impl/src/java/org/etudes/component/app/melete/MeleteCalendarServiceImpl.java $
- * $Id: MeleteCalendarServiceImpl.java 64978 2009-12-01 22:28:31Z mallika@etudes.org $
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.1forSakai/patch/MeleteCalendarServiceImpl.java $
+ * $Id: MeleteCalendarServiceImpl.java 3647 2012-12-02 22:30:41Z ggolden $
  ***********************************************************************************
  *
  * Copyright (c) 2009 Etudes, Inc.

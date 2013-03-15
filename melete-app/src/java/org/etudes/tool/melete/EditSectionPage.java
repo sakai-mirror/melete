@@ -34,6 +34,7 @@ import javax.faces.event.*;
 import org.etudes.component.app.melete.MeleteResource;
 import org.etudes.component.app.melete.Section;
 import org.etudes.component.app.melete.SectionResource;
+import org.etudes.util.HtmlHelper;
 
 import org.etudes.api.app.melete.MeleteCHService;
 import org.etudes.api.app.melete.MeleteResourceService;
@@ -211,7 +212,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				if (cr == null) return;
 
 				if (cr.getContentType().equals(MeleteCHService.MIME_TYPE_EDITOR))
-					this.contentEditor = new String(cr.getContent());
+					this.contentEditor = HtmlHelper.clean(new String(cr.getContent()), false);
 				else if (cr.getContentType().equals(MeleteCHService.MIME_TYPE_LINK)) setCurrLinkUrl(new String(cr.getContent()));
 
 				this.secResourceName = cr.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
@@ -503,7 +504,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 				if (refresh_resourceId != null && refresh_resourceId.length() != 0)
 				{
 					ContentResource cr = getMeleteCHService().getResource(refresh_resourceId);
-					contentEditor = new String(cr.getContent());
+					contentEditor = HtmlHelper.clean(new String(cr.getContent()), false);
 				}
 			}
 			lastSavedAt = ((Date)section.getModificationDate()).getTime();

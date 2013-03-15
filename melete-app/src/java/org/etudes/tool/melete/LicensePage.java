@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/java/org/etudes/tool/melete/LicensePage.java $
- * $Id: LicensePage.java 60573 2009-05-19 20:17:20Z mallika@etudes.org $
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.1forSakai/melete-app/src/java/org/etudes/tool/melete/LicensePage.java $
+ * $Id: LicensePage.java 3647 2012-12-02 22:30:41Z ggolden $
  ***********************************************************************************
  *
  * Copyright (c) 2008, 2009, 2012 Etudes, Inc.

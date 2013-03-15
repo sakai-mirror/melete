@@ -3,8 +3,8 @@
 
 <!--
  ***********************************************************************************
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/webapp/melete/list_bookmarks.jsp $
- * $Id: list_bookmarks.jsp 59695 2009-04-06 23:00:53Z mallika@etudes.org $  
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.1forSakai/melete-app/src/webapp/melete/list_bookmarks.jsp $
+ * $Id: list_bookmarks.jsp 3647 2012-12-02 22:30:41Z ggolden $  
  ***********************************************************************************
  *
  * Copyright (c) 2010, 2011 Etudes, Inc.

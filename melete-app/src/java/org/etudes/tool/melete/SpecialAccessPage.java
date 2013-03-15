@@ -1,7 +1,7 @@
 /**********************************************************************************
  *
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/java/org/etudes/tool/melete/SpecialAccessPage.java $
- * $Id: SpecialAccessPage.java 56408 2008-12-19 21:16:52Z mallika@etudes.org $
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.1forSakai/melete-app/src/java/org/etudes/tool/melete/SpecialAccessPage.java $
+ * $Id: SpecialAccessPage.java 3647 2012-12-02 22:30:41Z ggolden $
  ***********************************************************************************
  * Copyright (c) 2010, 2011, 2012 Etudes, Inc.
  *

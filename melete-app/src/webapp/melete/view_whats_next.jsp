@@ -38,19 +38,19 @@ String prevSecId = (String)request.getParameter("prevSecId");
 String prevModId = (String)request.getParameter("prevModId");
 if (nextSeqNo != null)
 {
-	if (!nextSeqNo.trim().equals("null")) vnsPage.setNextSeqNo(Integer.parseInt(nextSeqNo));
+	if (!nextSeqNo.trim().equals("null") && nextSeqNo.trim().length() > 0) vnsPage.setNextSeqNo(Integer.parseInt(nextSeqNo));
 }
 if (moduleSeqNo != null)
 {
-	if (!moduleSeqNo.trim().equals("null")) vnsPage.setModuleSeqNo(Integer.parseInt(moduleSeqNo));
+	if (!moduleSeqNo.trim().equals("null") && moduleSeqNo.trim().length() > 0) vnsPage.setModuleSeqNo(Integer.parseInt(moduleSeqNo));
 }
 if (prevSecId != null)
 {
-	if (!prevSecId.trim().equals("null")) vnsPage.setPrevSecId(Integer.parseInt(prevSecId));
+	if (!prevSecId.trim().equals("null") && prevSecId.trim().length() > 0) vnsPage.setPrevSecId(Integer.parseInt(prevSecId));
 }
 if (prevModId != null)
 {
-	if (!prevModId.trim().equals("null")) vnsPage.setPrevModId(Integer.parseInt(prevModId));
+	if (!prevModId.trim().equals("null") && prevModId.trim().length() > 0) vnsPage.setPrevModId(Integer.parseInt(prevModId));
 }
 %>
 <f:view>

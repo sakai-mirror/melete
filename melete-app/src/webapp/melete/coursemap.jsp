@@ -1,7 +1,7 @@
 <!--
  ***********************************************************************************
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/trunk/melete-app/src/webapp/melete/coursemap.jsp $
- * $Id: coursemap.jsp 73300 2011-03-23 17:44:30Z rashmi@etudes.org $  
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.1forSakai/melete-app/src/webapp/melete/coursemap.jsp $
+ * $Id: coursemap.jsp 3647 2012-12-02 22:30:41Z ggolden $  
  ***********************************************************************************
  *
  * Copyright (c) 2011 Etudes, Inc.

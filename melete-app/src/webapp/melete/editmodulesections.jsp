@@ -55,11 +55,15 @@
 %>
 
 <script type="text/javascript" language="javascript1.2">
-
 var fckEditorInstance = null;
 function FCKeditor_OnComplete( editorInstance )
 {
 	fckEditorInstance = editorInstance;	
+}
+var ckEditorInstance = null;
+function CKeditor_OnComplete( editorInstance )
+{
+	ckEditorInstance = editorInstance;	
 }
 
 function saveEditor()
@@ -100,6 +104,13 @@ function saveEditor()
 		}
 		document.getElementById("EditSectionForm:edited").value = changed;
 	}
+	
+	if (ckEditorInstance != null)
+	{
+		var changed = false;
+		changed = ckEditorInstance.checkDirty();
+		document.getElementById("EditSectionForm:edited").value = changed;
+	}
 
 	return result;	
 }
@@ -129,16 +140,16 @@ function saveEditor()
 		<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText id="captionText" value="#{msgs.editmodulesections_editing_section}" /> </div>
 		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
         <div id="errMsg1" style="color:red"><p> </p></div>
-        <table class="maintableCollapseWithBorder">
+        <table class="maincktableCollapseWithBorder">
      	   <tr>
-            <td class="maintabledata3">
-				  <table class="maintableCollapseWithNoBorder">
+            <td class="maintabledata3" style="padding:3px">
+				  <table class="maincktableCollapseWithNoBorder">
                    <!-- table header -->
                    <tr>
-			            <td width="100%" colspan="2" height="20" class="maintabledata2"> 
+			            <td width="100%" colspan="2" height="20" class="maintabledata2" style="padding:4px"> 
 				            <table  width="100%"> 
 			                   <tr >
-					            <td width="70%" >  
+					            <td width="70%" style="padding:4px">  
 					            	<h:commandButton id="editPrevButton" actionListener="#{editSectionPage.editPrevSectionListener}" disabled="#{!editSectionPage.hasPrev}" value="#{msgs.editmodulesections_edit_prev}" accesskey="#{msgs.prev_access}" title="#{msgs.im_prev_text}" styleClass="BottomImgPrev">
 					 					    
 					       			</h:commandButton>      	   
@@ -152,7 +163,7 @@ function saveEditor()
 																 
 									</h:commandButton>  			
 						        </td>
-						        <td class="right" width="30%" >    
+						        <td class="right" width="30%" style="padding:4px">    
 									 <h:commandButton id="bookmarkSectionLink" action="#{editSectionPage.saveAndAddBookmark}" value="#{msgs.bookmark_text}" 
 										 onclick="var w=OpenBookmarkWindow(#{editSectionPage.section.sectionId},document.getElementById('EditSectionForm:title').value,'','','','Melete Bookmark Window');"
 										  accesskey="#{msgs.bookmark_access}" title="#{msgs.im_bmrk_text}" styleClass="BottomImgBookmarkIt">
@@ -164,62 +175,62 @@ function saveEditor()
 			          </td>
 			          </tr>		
 			          <tr>
-			          	<td colspan="2" class="maintabledata9" >
+			          	<td colspan="2" class="maintabledata9" style="padding:4px" >
 			     			<h:outputText id="text4" value="#{editSectionPage.module.title}" /> &raquo; <h:outputText id="text4_1" value="#{editSectionPage.section.title}" />
 			          	</td>
 			          </tr>	 
 	                   <!-- end table header -->
                                    <tr>
-                                    <td class="col1" align="left" valign="top"><h:outputText id="text7" value="#{msgs.editmodulesections_section_title}" /><span class="required">*</span></td>
-                                    <td class="col2" align="left" valign="top">
+                                    <td class="col1" align="left" valign="top" style="padding:4px"><h:outputText id="text7" value="#{msgs.editmodulesections_section_title}" /><span class="required">*</span></td>
+                                    <td class="col2" align="left" valign="top" style="padding:4px">
 									<h:inputText id="title" value="#{editSectionPage.section.title}" size="45" styleClass="formtext" />
 									</td>
                                   </tr>                           
 								  <tr>
-                                    <td class="col1" align="left" valign="top"><h:outputText id="text9" value="#{msgs.editmodulesections_instructions}" /></td>
-                                    <td class="col2" align="left" valign="top">
+                                    <td class="col1" align="left" valign="top" style="padding:4px"><h:outputText id="text9" value="#{msgs.editmodulesections_instructions}" /></td>
+                                    <td class="col2" align="left" valign="top" style="padding:4px">
 										  <h:inputTextarea id="instr" cols="45" rows="5" value="#{editSectionPage.section.instr}" styleClass="formtext" />
 									</td>
                                   </tr>
                                   <tr>
-                                    <td class="col1" align="left" valign="top"> <h:outputText id="text10" value="#{msgs.editmodulesections_modality}" /><span class="required">*</span></td>
-                                    <td class="col2" align="left" valign="top"><h:outputText id="text11" value="#{msgs.editmodulesections_message1} "/>
+                                    <td class="col1" align="left" valign="top" style="padding:4px"> <h:outputText id="text10" value="#{msgs.editmodulesections_modality}" /><span class="required">*</span></td>
+                                    <td class="col2" align="left" valign="top" style="padding:4px"><h:outputText id="text11" value="#{msgs.editmodulesections_message1} "/>
 									</td>
 									  </tr>	
 								  <tr>
-								  <td class="col1">&nbsp;</td>
-                                    <td class="col2" valign="top">
+								  <td class="col1" style="padding:4px">&nbsp;</td>
+                                    <td class="col2" valign="top" style="padding:4px">
                         			<h:selectBooleanCheckbox id="contentext" title="textualContent" value="#{editSectionPage.section.textualContent}" >
 									</h:selectBooleanCheckbox>
 									<h:outputText  id="text12" value="#{msgs.editmodulesections_textual_content}"/>
 									</td>
 									  </tr>	
 								  <tr>
-								    <td class="col1">&nbsp;</td>
-                                    <td class="col2" valign="top">									
+								    <td class="col1" style="padding:4px">&nbsp;</td>
+                                    <td class="col2" valign="top" style="padding:4px">									
 									<h:selectBooleanCheckbox id="contentvideo" title="videoContent" value="#{editSectionPage.section.videoContent}" >
 									</h:selectBooleanCheckbox>
 									<h:outputText  id="text13" value="#{msgs.editmodulesections_visual_content}"/>
 									</td>
 									  </tr>	
 								  <tr>
-								    <td class="col1">&nbsp;</td>
-                                    <td class="col2" valign="top">
+								    <td class="col1" style="padding:4px">&nbsp;</td>
+                                    <td class="col2" style="padding:4px" valign="top">
 									<h:selectBooleanCheckbox id="contentaudio" title="audioContent" value="#{editSectionPage.section.audioContent}" >
 									</h:selectBooleanCheckbox>
 									<h:outputText id="text14" value="#{msgs.editmodulesections_auditory_content}"/>			
 										</td>
 									  </tr>	
 									  <tr>
-								  	  <td  class="col1" align="left" valign="middle"><h:outputText id="text15" value="#{msgs.editmodulesections_content_type}" rendered="#{editSectionPage.shouldRenderContentTypeSelect}" /></td>
-                                 	  <td class="col2"> 
+								  	  <td  class="col1" align="left" valign="middle" style="padding:4px"><h:outputText id="text15" value="#{msgs.editmodulesections_content_type}" rendered="#{editSectionPage.shouldRenderContentTypeSelect}" /></td>
+                                 	  <td class="col2" style="padding:4px"> 
 										<h:inputHidden id="contentType"  value="#{editSectionPage.section.contentType}"  />	  								  	
 										  <h:selectOneMenu id="contentType1" value="#{editSectionPage.section.contentType}" valueChangeListener="#{editSectionPage.showHideContent}" onchange="this.form.submit();"  rendered="#{editSectionPage.shouldRenderContentTypeSelect}">
 											<f:selectItems value="#{editSectionPage.allContentTypes}" />											
 										 </h:selectOneMenu>
 											 </td>
 											 </tr>
-									<tr><td colspan="2" >
+									<tr><td colspan="2" style="padding:4px" >
 										 <f:subview id="ContentLinkView" rendered="#{editSectionPage.shouldRenderLink}">
 											<jsp:include page="editContentLinkView.jsp"/> 
 										</f:subview>
@@ -231,7 +242,7 @@ function saveEditor()
 										</f:subview>	
 									</td></tr>	
 									<tr> 
-										 <td colspan="2">
+										 <td colspan="2" style="padding:4px">
 						 									
 											 <f:subview id="contentEditorView" rendered="#{editSectionPage.shouldRenderEditor && authorPreferences.shouldRenderSferyx}">
 												<%if (authorPreferencePage.isShouldRenderSferyx() && eSectionPage.getShouldRenderEditor())
@@ -249,7 +260,7 @@ function saveEditor()
 											</td>
 									  </tr>	
 								  <tr>
-								   <td colspan="2">
+								   <td colspan="2" style="padding:4px">
 												<f:subview id="ResourcePropertiesPanel" rendered="#{editSectionPage.meleteResource !=null && !editSectionPage.shouldRenderNotype}">
 													<jsp:include page="edit_sec_resourcePropertiesPanel.jsp"/>
 												</f:subview>
@@ -259,7 +270,7 @@ function saveEditor()
                 </td>
               </tr>
               <tr>
-                <td>
+                <td style="padding:3px">
                   <div class="actionBar" align="left">
                 	<h:commandButton id="FinishButton" action="#{editSectionPage.Finish}" value="#{msgs.im_done}" accesskey="#{msgs.done_access}" title="#{msgs.im_done_text}" styleClass="BottomImgFinish"/>
               		<h:commandButton id="submitsave" actionListener="#{editSectionPage.save}" value="#{msgs.im_save}" accesskey="#{msgs.save_access}" title="#{msgs.im_save_text}" styleClass="BottomImgSave" />

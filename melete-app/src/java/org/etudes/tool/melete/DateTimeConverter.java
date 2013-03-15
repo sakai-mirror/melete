@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- * $URL: https://source.sakaiproject.org/contrib/etudes/melete/branches/allowuntil/melete-app/src/java/org/etudes/tool/melete/Util.java $
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.1forSakai/melete-app/src/java/org/etudes/tool/melete/DateTimeConverter.java $
  *
  * **********************************************************************************
  *

@@ -38,13 +38,13 @@ String moduleId = (String)request.getParameter("modId");
 
 if (moduleId != null)
 {
-	if (!moduleId.trim().equals("null")) vmPage.setModuleId(Integer.parseInt(moduleId));
+	if (!moduleId.trim().equals("null") && moduleId.trim().length() > 0) vmPage.setModuleId(Integer.parseInt(moduleId));
 }
 
 String moduleSeqNo = (String)request.getParameter("modSeqNo");
 if (moduleSeqNo != null)
 {
-	if (!moduleSeqNo.trim().equals("null")) vmPage.setModuleSeqNo(Integer.parseInt(moduleSeqNo));
+	if (!moduleSeqNo.trim().equals("null") && moduleSeqNo.trim().length() > 0) vmPage.setModuleSeqNo(Integer.parseInt(moduleSeqNo));
 }
 %>
 <f:view>

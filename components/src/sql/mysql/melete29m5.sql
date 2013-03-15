@@ -1,6 +1,6 @@
 -- *********************************************************************
--- $URL$
--- $Id$
+-- $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.1forSakai/components/src/sql/mysql/melete29m5.sql $
+-- $Id: melete29m5.sql 3641 2012-12-02 21:43:44Z ggolden $
 -- *********************************************************************
 --  Copyright (c) 2010,2011 Etudes, Inc.  
   

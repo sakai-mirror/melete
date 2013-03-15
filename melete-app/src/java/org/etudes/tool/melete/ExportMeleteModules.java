@@ -119,7 +119,7 @@ public class ExportMeleteModules
 
 	/**
 	 * Creates a list of all active modules to show in the dropdown list. If no active modules then gives out a message.
-	 * 
+	 *
 	 * @return
 	 */
 	public List<SelectItem> getAvailableModules()
@@ -151,7 +151,7 @@ public class ExportMeleteModules
 
 	/**
 	 * Creates a list of modules.
-	 * 
+	 *
 	 * @return
 	 */
 	private List<ModuleObjService> createSelectedList()
@@ -178,7 +178,7 @@ public class ExportMeleteModules
 
 	/**
 	 * Starts Export Action. If "all" modules are selected then adds archived modules in the list. Based on format selected starts IMS or SCORM export.
-	 * 
+	 *
 	 * @return navigation rule
 	 */
 	public String exportModules()
@@ -245,7 +245,7 @@ public class ExportMeleteModules
 
 	/**
 	 * exports the modules according to imsglobal content packaging specs 1.1.4
-	 * 
+	 *
 	 * @param selectList
 	 *        List of modules
 	 * @param allFlag
@@ -357,7 +357,7 @@ public class ExportMeleteModules
 
 	/**
 	 * exports the modules according to ADL SCORM 2004 3rd Edition
-	 * 
+	 *
 	 *@param selectList
 	 *        List of Modules to be exported out
 	 * @param allFlag
@@ -461,7 +461,7 @@ public class ExportMeleteModules
 
 	/**
 	 * imports the modules according to imsglobal content packaging specs 1.1.4
-	 * 
+	 *
 	 * @return navigation page
 	 */
 	public String importModules()
@@ -586,7 +586,7 @@ public class ExportMeleteModules
 
 	/**
 	 * validate manifest with imscp spec version 1.1.4
-	 * 
+	 *
 	 * @param imsmanifest
 	 */
 	private void validatemanifest(File imsmanifest)
@@ -595,7 +595,7 @@ public class ExportMeleteModules
 
 	/**
 	 * writes the file to disk
-	 * 
+	 *
 	 * @param fileItem
 	 *        Fileitem
 	 * @param outputFile
@@ -648,7 +648,7 @@ public class ExportMeleteModules
 
 	/**
 	 * unzip the file and write to disk
-	 * 
+	 *
 	 * @param zipfile
 	 * @param dirpath
 	 * @throws FileNotFoundException
@@ -714,7 +714,7 @@ public class ExportMeleteModules
 
 	/**
 	 * write zip file to disk
-	 * 
+	 *
 	 * @param zis
 	 * @param name
 	 * @throws IOException
@@ -757,7 +757,7 @@ public class ExportMeleteModules
 
 	/**
 	 * creates zip file
-	 * 
+	 *
 	 * @param inputFile
 	 *        - input directory that is to be zipped
 	 * @param outputfile
@@ -773,7 +773,7 @@ public class ExportMeleteModules
 
 	/**
 	 * writes the zip file to browser
-	 * 
+	 *
 	 * @param file
 	 *        - zip file to download
 	 * @throws Exception
@@ -853,7 +853,7 @@ public class ExportMeleteModules
 				// name = filepath.substring(filepath.indexOf(baseFileName)
 				// + baseFileName.length() + 1);
 
-				// fix by Raul Enrique Mengod López
+				// fix by Raul Enrique Mengod Lopez
 				name = filepath.substring(filepath.indexOf(File.separator + baseFileName + File.separator) + baseFileName.length() + 2);
 				zout.putNextEntry(new ZipEntry(name));
 
@@ -876,7 +876,7 @@ public class ExportMeleteModules
 
 	/**
 	 * get MeleteSiteAndUserInfo
-	 * 
+	 *
 	 * @return
 	 */
 	private MeleteSiteAndUserInfo getMeleteSiteAndUserInfo()
@@ -895,7 +895,7 @@ public class ExportMeleteModules
 
 	/**
 	 * creates manifest metadata - course title and description
-	 * 
+	 *
 	 * @param manifestFile
 	 *        - manifest file
 	 * @return - the manifest element

@@ -105,6 +105,14 @@ a1:active 			{color : #000080;}
        padding: 3px;
 }
 
+.maincktableCollapseWithBorder {
+      border: 1px solid #EAEAEA;
+      border-collapse: collapse;
+      width: 100%;
+}
+
+
+
 .maintableCollapseWithBorder0 {
       border: 0px solid #EAEAEA;
       border-collapse: collapse;
@@ -125,6 +133,11 @@ a1:active 			{color : #000080;}
        padding: 4px;
 }
 
+.maincktableCollapseWithNoBorder {
+      border: 0px solid #F5F5F5;
+      border-collapse: collapse;
+      width: 100%;
+}
 .maintableCollapseWithWhiteBorder {
       border: 1px solid #F5F5F5;
       border-collapse: collapse;
@@ -161,7 +174,6 @@ a1:active 			{color : #000080;}
 	padding: 5px;
 }
 .forumline {BORDER-RIGHT: #c8d1d7 2px solid; BORDER-TOP: #c8d1d7 2px solid; BORDER-LEFT: #c8d1d7 2px solid; BORDER-BOTTOM: #c8d1d7 2px solid; BACKGROUND-COLOR: #ffffff}
-.style1 			{color: #FFFFFF; }    /* Course + Instructor name in Header */
 .style2 			{color: #51698D; font-weight: bold;}  /*  */
 .style3 			{font-size: 74%; }    /* "back to Top" and other such text buttons */
 .style4 			{font-size: 100%; }	  /*  */
