@@ -181,6 +181,7 @@ public class BasicLTIUtil {
     public static String postLaunchHTML(Properties newMap, String endpoint, boolean debug) {
         if ( endpoint == null ) return null;
         StringBuffer text = new StringBuffer();
+        boolean addSubmit = false;
         text.append("<div id=\"ltiLaunchFormSubmitArea\">\n");
         text.append("<form action=\""+endpoint+"\" name=\"ltiLaunchForm\" id=\"ltiLaunchForm\" method=\"post\" encType=\"application/x-www-form-urlencoded\">\n" );
         for(Object okey : newMap.keySet() )
@@ -194,8 +195,9 @@ public class BasicLTIUtil {
 		// we will be safe and not generate dangerous HTML
                 key = htmlspecialchars(key);
                 value = htmlspecialchars(value);
+                if ( key.equals("autoSubmit") ) addSubmit = true;
                 if ( key.equals(BASICLTI_SUBMIT) ) {
-                  text.append("<input type=\"submit\" name=\"");
+                  text.append("<input type=\"submit\" id=\"");                  
                 } else { 
                   text.append("<input type=\"hidden\" name=\"");
                 }
@@ -206,40 +208,18 @@ public class BasicLTIUtil {
         }
         text.append("</form>\n" + 
                 "</div>\n");
-        if ( debug ) {
-            text.append("<pre>\n");
-            text.append("<b>BasicLTI Endpoint</b>\n");
-	    text.append(endpoint);
-            text.append("\n\n");
-            text.append("<b>BasicLTI Parameters:</b>\n");
-            for(Object okey : newMap.keySet() )
-            {
-                if ( ! (okey instanceof String) ) continue;
-                String key = (String) okey;
-                if ( key == null ) continue;
-                String value = newMap.getProperty(key);
-                if ( value == null ) continue;
-                text.append(key);
-                text.append("=");
-                text.append(value);
-                text.append("\n");
-            }
-            text.append("</pre>\n");
-        } else {
-            text.append(
+        text.append(
                     " <script language=\"javascript\"> \n" +
 		    "    document.getElementById(\"ltiLaunchFormSubmitArea\").style.display = \"none\";\n" + 
 		    "    nei = document.createElement('input');\n" +
 		    "    nei.setAttribute('type', 'hidden');\n" + 
 		    "    nei.setAttribute('name', '"+BASICLTI_SUBMIT+"');\n" + 
 		    "    nei.setAttribute('value', '"+newMap.getProperty(BASICLTI_SUBMIT)+"');\n" + 
-		    "    document.getElementById(\"ltiLaunchForm\").appendChild(nei);\n" +
-                    "    document.ltiLaunchForm.submit(); \n" + 
-                    " </script> \n");
-	}
-
+		    "    document.getElementById(\"ltiLaunchForm\").appendChild(nei);\n");
+        if (addSubmit) text.append("document.ltiLaunchForm.submit(); \n" );          
+        text.append(" </script> \n");
         String htmltext = text.toString();
-	return htmltext;
+        return htmltext;
     }
 
     public static boolean parseDescriptor(Properties launch_info, Properties postProp, String descriptor)

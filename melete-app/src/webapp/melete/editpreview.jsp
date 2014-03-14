@@ -40,6 +40,7 @@
 
 	<t:saveState id="workId" value="#{editSectionPage.editId}" />	
 	<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/note_view.gif" alt="" width="16" height="16" align="absmiddle"><h:outputText value="#{msgs.edit_preview_previewing_section}" /></div>
+       <h:outputText id="errMsg2" styleClass="alertMessage" value="#{msgs.url_alert}" rendered="#{editSectionPage.httpAddressAlert != null && editSectionPage.httpAddressAlert == true}" />
      <table class="maintableCollapseWithBorder">          
 		  <tr>
 		    <td colspan="2" height="20"> <div  class="maintabledata5">&nbsp;</div>
@@ -61,7 +62,7 @@
 						<h:outputText id="sec2" value="#{editSectionPage.section.instr}" rendered="#{editSectionPage.renderInstr}"></h:outputText>
 			  </td></tr>
 			  <tr><td>
-	            <h:outputLink id="viewSectionLink"  value="#{editSectionPage.previewContentData}" target="_blank" rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLTI) && editSectionPage.section.openWindow}">
+	            <h:outputLink id="viewSectionLink"  value="#{editSectionPage.previewContentData}" target="_blank" rendered="#{(editSectionPage.shouldRenderLink || editSectionPage.shouldRenderUpload || editSectionPage.shouldRenderLTI) && editSectionPage.section.openWindow}" styleClass="toolUiLink">
                 <h:outputText id="sectitleLink" 
                            value="#{editSectionPage.secResourceName}">
                 </h:outputText>

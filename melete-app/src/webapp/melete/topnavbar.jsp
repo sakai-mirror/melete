@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009,2010, 2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2013 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -33,7 +33,7 @@
     <h:commandButton id="AuthorButton" action="#{navPage.authAction}" disabled="#{!navPage.shouldRenderAuthor}" rendered="#{navPage.isInstructor && navPage.shouldRenderAuthor}" value="#{msgs.topnavbar_author}" title="#{msgs.topnavbar_author}" styleClass="TopImgAuthor"/>
      <h:outputLabel value="#{msgs.topnavbar_author}" rendered="#{navPage.isInstructor && !navPage.shouldRenderAuthor}" styleClass="TopImgAuthorText" />
     
-    <h:commandButton id="ManageButton" action="#{navPage.manageAction}" disabled="#{!navPage.shouldRenderManage}" value="#{msgs.topnavbar_manage}" title="#{msgs.topnavbar_manage}" rendered="#{navPage.isInstructor && navPage.shouldRenderManage}" styleClass="TopImgManage"/>
+    <h:commandButton id="ManageButton"  action="#{navPage.manageAction}" disabled="#{!navPage.shouldRenderManage}" value="#{msgs.topnavbar_manage}" title="#{msgs.topnavbar_manage}" rendered="#{navPage.isInstructor && navPage.shouldRenderManage}" styleClass="TopImgManage"/>
      <h:outputLabel value="#{msgs.topnavbar_manage}" rendered="#{navPage.isInstructor && !navPage.shouldRenderManage}" styleClass="TopImgManageText" />
   
     <h:commandButton id="PreferencesButton" action="#{navPage.PreferenceAction}" disabled="#{!navPage.shouldRenderPreferences}" rendered="#{navPage.shouldRenderPreferences}" value="#{msgs.topnavbar_preferences}" title="#{msgs.topnavbar_preferences}" styleClass="TopImgPreference"/>

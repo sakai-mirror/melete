@@ -73,7 +73,7 @@ function cal_popup2 (str_datetime) {
 	var obj_calwindow = window.open(
 		'/etudes-melete-tool/calendar.html?datetime=' + this.dt_current.valueOf()+ '&ampmval=' + this.ampm_val +
 		'&id=' + this.id,
-		'Calendar', 'width=200,height='+(this.time_comp ? 215 : 190)+
+		'Calendar', 'width=250,height='+(this.time_comp ? 250 : 190)+
 		',status=no,resizable=no,top=200,left=200,dependent=yes,alwaysRaised=yes'
 	);
 	obj_calwindow.opener = window;
@@ -136,6 +136,7 @@ function ambrosia_parse_date(displayStr)
 {
 	var displayParts = displayStr.split(" ");
 	var rv = this.gen_now();
+	//var rv = new Date();
 	if (displayParts.length == 3)
 	{
 		var month = -1;
@@ -155,9 +156,10 @@ function ambrosia_parse_date(displayStr)
 		var year = parseInt(displayParts[2], 10);
 		if (isNaN(year)) return rv;
 
-		rv.setYear(year);
-		rv.setMonth(month);
-		rv.setDate(day);
+		//rv.setYear(year);
+		//rv.setMonth(month);
+		//rv.setDate(day);
+		rv.setFullYear(year,month,day);
 	}
 
 	return rv;

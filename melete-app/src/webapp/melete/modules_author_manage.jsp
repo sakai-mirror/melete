@@ -52,7 +52,7 @@
 											<table class="maintableCollapseWithWhiteBorder" >
 											<tr rowspan="5" valign="top">
 							                    	<td class="menu left">
-								                    	<h:commandLink id="contentgoto" action="#{manageModulesPage.goToManageContent}">
+								                    	<h:commandLink id="contentgoto" action="#{manageModulesPage.goToManageContent}" styleClass="toolUiLink">
 															<h:graphicImage id="image0"
 									   							alt=""
 									   							url="/images/manage_content.png"
@@ -64,7 +64,7 @@
 							                  	</tr>
 							                  	<tr rowspan="5" valign="top">
 							                    	<td  class="menu left">
-								                    	<h:commandLink id="restoregoto" action="#{manageModulesPage.goToRestoreModules}">
+								                    	<h:commandLink id="restoregoto" action="#{manageModulesPage.goToRestoreModules}" styleClass="toolUiLink">
 															<h:graphicImage id="image"
 									   							alt=""
 									   							url="/images/folder_into.gif"
@@ -76,7 +76,7 @@
 							                  	</tr>
 							                   	<tr rowspan="5" valign="top">
 							                    	<td class="menu left">
-								                    	<h:commandLink id="goto_impexp" action="#{manageModulesPage.importExportModules}">
+								                    	<h:commandLink id="goto_impexp" action="#{manageModulesPage.importExportModules}" styleClass="toolUiLink">
 															<h:graphicImage id="image_impexp"
 									   							alt=""
 									   							url="/images/import1.gif"

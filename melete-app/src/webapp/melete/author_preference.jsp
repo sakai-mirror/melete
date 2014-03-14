@@ -78,7 +78,7 @@
 							</h:selectOneRadio>	
 						</h:column>
 					 </h:panelGrid>
-					<h:panelGrid id="LTIPrefPanel" columns="1" styleClass="authorPrefTable">
+					<h:panelGrid id="LTIPrefPanel" columns="1" styleClass="authorPrefTable" style="margin-bottom:5px;">
 						<h:column>
 						 	<h:outputText id="LTI1" value="#{msgs.author_preference_LTI_select}"  styleClass="bold"/>      
 						 </h:column>
@@ -91,7 +91,7 @@
 					
 		                <h:column>
 						<jsp:include page="licenseform.jsp?formName=UserPreferenceForm"/>						 						 	
-						  <h:commandLink id="allLicenseButton"  action="#{authorPreferences.changeAllLicense}" >
+						  <h:commandLink id="allLicenseButton"  action="#{authorPreferences.changeAllLicense}" styleClass="toolUiLink">
 							<h:graphicImage id="replaceImg2" value="/images/replace2.gif" styleClass="AuthImgClass"/>
 							<h:outputText value="#{msgs.overwriteLicenseMsg}"/>
 				          </h:commandLink>

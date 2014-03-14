@@ -42,10 +42,10 @@
 				
 %>			
 				<div class="noprint">
-				 <a href="#" onclick="javascript:window.print()">
+				 <a href="#" onclick="javascript:window.print()" class="toolUiLink">
 				 <img src="/etudes-melete-tool/images/printer.png" alt="" width="16" height="16" border="0" align="absmiddle">
 				 <%=printMsg%></a>
-				 | <a value="" href="" onClick="window.close();" ><%=closeMsg%>	</a>				 
+				 | <a class="toolUiLink" value="" href="" onClick="window.close();" ><%=closeMsg%>	</a>				 
 				</div>
 		</td></tr>
 

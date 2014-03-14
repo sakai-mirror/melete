@@ -81,11 +81,11 @@ function newWindow(newContent){
                 <td class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_start_date}" />
 				</td>
                 <td  class="col2" align="left" valign="top">
-					  <a name="startCalender"></a> <h:inputText id="startDate" 
+					  <a name="startCalender" class="toolUiLink"></a> <h:inputText id="startDate" 
                            value="#{addModulePage.moduleShdates.startDate}" size="22" styleClass="formtext" onchange="showInvalid('AddModuleForm:startDate','AddModuleForm:err_gifst');">
 		        	      <o:convertDateTime />
         		    </h:inputText>
-		            <h:outputLink id="viewsdateCal" onclick="showCal('AddModuleForm:startDate','8','0','AM');return false;" value="#startCalender" >
+		            <h:outputLink id="viewsdateCal" onclick="showCal('AddModuleForm:startDate','8','0','AM');return false;" value="#startCalender" styleClass="toolUiLink">
         	    		<h:graphicImage id="sdateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            			</h:outputLink>
            			<h:graphicImage id="err_gifst" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}"  style="visibility:hidden;" onclick="showHideTable('AddModuleForm:invalidMsgSt0','true')"  styleClass="ExpClass"/>
@@ -105,11 +105,11 @@ function newWindow(newContent){
               <tr>
                 <td  class="col1" align="left" valign="top"><h:outputText value="#{msgs.add_module_end_date}" /></td>
                 <td  class="col2" align="left" valign="top">
-				<a name="endCalender"></a><h:inputText id="endDate" 
+				<a name="endCalender" class="toolUiLink"></a><h:inputText id="endDate" 
                            value="#{addModulePage.moduleShdates.endDate}" size="22" styleClass="formtext" onchange="showInvalid('AddModuleForm:endDate','AddModuleForm:err_gifen');">
              			  <o:convertDateTime />
           		 </h:inputText>
-          <h:outputLink id="viewedateCal" onclick="showCal('AddModuleForm:endDate','11','59','PM');return false;" value="#endCalender">
+          <h:outputLink id="viewedateCal" onclick="showCal('AddModuleForm:endDate','11','59','PM');return false;" value="#endCalender" styleClass="toolUiLink">
             <h:graphicImage id="edateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
            </h:outputLink>
                  <h:graphicImage id="err_gifen" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('AddModuleForm:invalidMsgEn0','true')"  styleClass="ExpClass"/>
@@ -133,7 +133,7 @@ function newWindow(newContent){
                            value="#{addModulePage.moduleShdates.allowUntilDate}" size="22" styleClass="formtext" onchange="showInvalid('AddModuleForm:allowUntilDate','AddModuleForm:err_gifal');">
              			  <o:convertDateTime />
           		 </h:inputText>
-          		 <h:outputLink id="viewallowdateCal" onclick="showCal('AddModuleForm:allowUntilDate','11','59','PM');return false;" value="#allowUntilCalender">
+          		 <h:outputLink id="viewallowdateCal" onclick="showCal('AddModuleForm:allowUntilDate','11','59','PM');return false;" value="#allowUntilCalender" styleClass="toolUiLink">
            			 <h:graphicImage id="allowdateCal"  value="/images/date.png" alt="#{msgs.list_auth_modules_alt_popup_cal}" title="#{msgs.list_auth_modules_alt_popup_cal}" styleClass="DatePickerClass"/>
           		 </h:outputLink>
                  <h:graphicImage id="err_gifal" value="/images/warning.png" alt="#{msgs.list_auth_modules_invalid}" title="#{msgs.list_auth_modules_invalid}" style="visibility:hidden;" onclick="showHideTable('AddModuleForm:invalidMsgAllow0','true')"  styleClass="ExpClass"/>

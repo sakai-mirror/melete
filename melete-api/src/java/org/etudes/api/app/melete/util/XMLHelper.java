@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2014 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -49,6 +49,10 @@ public class XMLHelper {
     protected static final String DYNAMIC_VALIDATION_FEATURE_ID = "http://apache.org/xml/features/validation/dynamic";
     /** Namespace prefixes feature id (http://xml.org/sax/features/namespace-prefixes). */
     protected static final String NAMESPACE_PREFIXES_FEATURE_ID = "http://xml.org/sax/features/namespace-prefixes";
+    /** External general entities id (http://xml.org/sax/features/external-general-entities) */ 
+    protected static final String EXTERNAL_GENERAL_ENTITIES_ID = "http://xml.org/sax/features/external-general-entities"; 
+    /** Disallow inline doctype declaration id (http://apache.org/xml/features/disallow-doctype-decl) */ 
+    protected static final String DISALLOW_DOCTYPE_DECL_ID = "http://apache.org/xml/features/disallow-doctype-decl"; 
 
 
 	/**
@@ -110,6 +114,8 @@ public class XMLHelper {
 	//	xmlreader.setFeature(SCHEMA_VALIDATION_FEATURE_ID, true);
 	//	xmlreader.setFeature(VALIDATION_FEATURE_ID, true);
 	//	xmlreader.setFeature(DYNAMIC_VALIDATION_FEATURE_ID, true);
+		xmlreader.setFeature(EXTERNAL_GENERAL_ENTITIES_ID, false); 
+		xmlreader.setFeature(DISALLOW_DOCTYPE_DECL_ID, true); 
 
 		return xmlreader;
 	}

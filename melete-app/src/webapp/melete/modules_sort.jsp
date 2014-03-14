@@ -84,16 +84,16 @@
 								 	 </td>                       
 									
 			                        <td width="3%" align="center">			
-				                        <h:commandLink id="all_up"  action="#{sortModuleSectionPage.MoveItemAllUpAction}">		
+				                        <h:commandLink id="all_up"  action="#{sortModuleSectionPage.MoveItemAllUpAction}" styleClass="toolUiLink">		
 										 <h:graphicImage id="allupImg" value="/images/up_end.gif" alt="#{msgs.sort_all_Up}" title="#{msgs.sort_all_Up}" width="20" height="20" style="border:0" />
 								   		</h:commandLink>	           
-										<h:commandLink id="up_one"  action="#{sortModuleSectionPage.MoveItemUpAction}">		
+										<h:commandLink id="up_one"  action="#{sortModuleSectionPage.MoveItemUpAction}" styleClass="toolUiLink">		
 											 <h:graphicImage id="upImg" value="/images/up.gif" alt="#{msgs.sort_Up}" title="#{msgs.sort_Up}" width="20" height="20" style="border:0" />
 									   </h:commandLink>		 
-										<h:commandLink id="down_one"  action="#{sortModuleSectionPage.MoveItemDownAction}">	 
+										<h:commandLink id="down_one"  action="#{sortModuleSectionPage.MoveItemDownAction}" styleClass="toolUiLink">	 
 											 <h:graphicImage id="downImg" value="/images/down.gif" alt="#{msgs.sort_Down}" title="#{msgs.sort_Down}" width="20" height="20" style="border:0" />
 										</h:commandLink>	
-									   <h:commandLink id="all_down"  action="#{sortModuleSectionPage.MoveItemAllDownAction}">		
+									   <h:commandLink id="all_down"  action="#{sortModuleSectionPage.MoveItemAllDownAction}" styleClass="toolUiLink">		
 										 <h:graphicImage id="downImg1" value="/images/down_end.gif" alt="#{msgs.sort_all_Down}" title="#{msgs.sort_all_Down}" width="20" height="20" style="border:0" />
 								   		</h:commandLink>	    					
 								  </td>

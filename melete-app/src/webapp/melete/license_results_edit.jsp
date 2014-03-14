@@ -28,7 +28,7 @@
 <h:panelGrid id="cclicensetable" columns="1" rendered="#{!editModulePage.copyright}" >
 	<h:column>
 	 <h:outputText value="#{msgs.license_results_edit1}" /> 
-	  <h:outputLink value="#{editModulePage.agreeResultUrl}" target="_blank"> 
+	  <h:outputLink styleClass="toolUiLinkU" value="#{editModulePage.agreeResultUrl}" target="_blank"> 
 		 <f:verbatim></f:verbatim>
 		 <h:outputText value="#{editModulePage.agreeResult}" />
 	 </h:outputLink>

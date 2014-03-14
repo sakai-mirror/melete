@@ -140,6 +140,7 @@ function saveEditor()
 		<div class="meletePortletToolBarMessage"><img src="/etudes-melete-tool/images/document_edit.gif" alt="" width="16" height="16" align="absbottom"><h:outputText id="captionText" value="#{msgs.editmodulesections_editing_section}" /> </div>
 		<h:messages id="editsectionerror"  layout="table" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>
         <div id="errMsg1" style="color:red"><p> </p></div>
+        <h:outputText id="errMsg2" styleClass="alertMessage" value="#{msgs.url_alert}" rendered="#{editSectionPage.httpAddressAlert != null && editSectionPage.httpAddressAlert == true}" /> 
         <table class="maincktableCollapseWithBorder">
      	   <tr>
             <td class="maintabledata3" style="padding:3px">

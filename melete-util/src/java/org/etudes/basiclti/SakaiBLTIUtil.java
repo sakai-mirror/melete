@@ -3,7 +3,7 @@
  * $Id$
  **********************************************************************************
  *
- * Copyright (c) 2008, 2009 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2014 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,15 +76,32 @@ public class SakaiBLTIUtil {
     {
 	Properties config = placement.getConfig();
 	dPrint("Sakai properties=" + config);
-        String launch_url = toNull(config.getProperty("imsti.launch", null));
-        setProperty(info, "launch_url", launch_url);
+        String launch_url = toNull(config.getProperty("imsti.launch", null));       
+        
+        if (config.containsKey("imsti.secret"))
+        	setProperty(info, "secret", config.getProperty("imsti.secret", null) );
+        else if (config.containsKey("secret"))
+        {
+        	setProperty(info, "secret", config.getProperty("secret", null) );
+        	launch_url= config.getProperty("source", null);
+        }
+        
+        if (config.containsKey("imsti.key"))
+        	setProperty(info, "key", config.getProperty("imsti.key", null) );
+        else if (config.containsKey("key"))
+        {
+        	setProperty(info, "key", config.getProperty("key", null) );
+        	launch_url= config.getProperty("source", null);
+        }   
+        
         if ( launch_url == null ) {
             String xml = toNull(config.getProperty("imsti.xml", null));
             if ( xml == null ) return false;
 	    BasicLTIUtil.parseDescriptor(info, launch, xml);
         }
-        setProperty(info, "secret", config.getProperty("imsti.secret", null) );
-        setProperty(info, "key", config.getProperty("imsti.key", null) );
+        else  setProperty(info, "launch_url", launch_url);
+     
+    
         setProperty(info, "debug", config.getProperty("imsti.debug", null) );
         setProperty(info, "frameheight", config.getProperty("imsti.frameheight", null) );
         setProperty(info, "newwindow", config.getProperty("imsti.newwindow", null) );
@@ -161,27 +178,10 @@ public class SakaiBLTIUtil {
 		}
 	}
 
-
-        // Sakai-Unique fields - compatible with LinkTool
-        Session s = SessionManager.getCurrentSession();
-        if (s != null) {
-                String sessionid = s.getId();
-                if (sessionid != null) {
-                        sessionid = LinkToolUtil.encrypt(sessionid);
-                        setProperty(props,"sakai_session",sessionid);
-                }
-        }
-
-	// We pass this along in the Sakai world - it might
-	// might be useful to the external tool
-	String serverId = ServerConfigurationService.getServerId();
-	setProperty(props,"sakai_serverid",serverId);
-        setProperty(props,"sakai_server",getOurServerUrl());
-
 	// Get the organizational information
-	setProperty(props,"tool_consmer_instance_guid", ServerConfigurationService.getString("basiclti.consumer_instance_guid",null));
-	setProperty(props,"tool_consmer_instance_name", ServerConfigurationService.getString("basiclti.consumer_instance_name",null));
-	setProperty(props,"tool_consmer_instance_url", ServerConfigurationService.getString("basiclti.consumer_instance_url",null));
+	setProperty(props,"tool_consumer_instance_guid", ServerConfigurationService.getString("basiclti.consumer_instance_guid",null));
+	setProperty(props,"tool_consumer_instance_name", ServerConfigurationService.getString("basiclti.consumer_instance_name",null));
+	setProperty(props,"tool_consumer_instance_url", ServerConfigurationService.getString("basiclti.consumer_instance_url",null));
 	setProperty(props,"launch_presentation_return_url", ServerConfigurationService.getString("basiclti.consumer_return_url",null));
 	return true;
     } 
@@ -199,7 +199,7 @@ public class SakaiBLTIUtil {
            return postError("<p>" + getRB(rb, "error.info.resource",
                 "Error, cannot load Sakai information for resource=")+resourceId+".</p>");
         }
-
+        launch.setProperty("autoSubmit", "true");
         Properties info = new Properties();
         if ( ! BasicLTIUtil.parseDescriptor(info, launch, descriptor) ) {
            return postError("<p>" + getRB(rb, "error.badxml.resource",
@@ -209,9 +209,14 @@ public class SakaiBLTIUtil {
     	return postLaunchHTML(info, launch, rb);
     }
 
-    // This must return an HTML message as the [0] in the array
-    // If things are successful - the launch URL is in [1]
-    public static String[] postLaunchHTML(String placementId, ResourceLoader rb)
+     /**
+     * 
+     * @param placementId
+     * @param returnUrl
+     * @param rb
+     * @return
+     */
+    public static String[] postLaunchHTML(String placementId, Properties info, ResourceLoader rb, String targetFrame)
     {
         if ( placementId == null ) return postError("<p>" + getRB(rb, "error.missing" ,"Error, missing placementId")+"</p>" );
         ToolConfiguration placement = SiteService.findTool(placementId);
@@ -225,13 +230,23 @@ public class SakaiBLTIUtil {
         }
         
         // Retrieve the launch detail
-        Properties info = new Properties();
-        if ( ! loadFromPlacement(info, launch, placement) ) {
+       if ( ! loadFromPlacement(info, launch, placement) ) {
            return postError("<p>" + getRB(rb, "error.nolaunch" ,"Not Configured.")+"</p>");
-	}
+       }
+       
+        if (targetFrame != null && targetFrame.length() > 0)
+        	setProperty(launch, "launch_presentation_document_target", targetFrame);
+         
     	return postLaunchHTML(info, launch, rb);
     }
 
+    /**
+     * 
+     * @param info
+     * @param launch
+     * @param rb
+     * @return
+     */
     public static String[] postLaunchHTML(Properties info, Properties launch, ResourceLoader rb)
     {
 
@@ -242,25 +257,18 @@ public class SakaiBLTIUtil {
         String org_guid = ServerConfigurationService.getString("basiclti.consumer_instance_guid",null);
         String org_name = ServerConfigurationService.getString("basiclti.consumer_instance_name",null);
         String org_url = ServerConfigurationService.getString("basiclti.consumer_instance_url",null);
-
-        // Look up the LMS-wide secret and key - default key is guid
-        String key = getToolConsumerInfo(launch_url,"key");
-	if ( key == null ) key = org_guid;
-        String secret = getToolConsumerInfo(launch_url,"secret");
-
-        // Demand LMS-wide key/secret to be both or none
-        if ( key == null || secret == null ) {
-                key = null;
-                secret = null;
-        }
-
-        // If we do not have LMS-wide info, use the local key/secret
-        if ( secret == null ) {
-                secret = toNull(info.getProperty("secret"));
-                key = toNull(info.getProperty("key"));
-        }
-
-        // Pull in all of the custom parameters
+        
+        // key - secret
+        // Look up the local secret and key first. changed from site-wide first to local by rashmi
+        String secret = toNull(info.getProperty("secret"));
+        String key = toNull(info.getProperty("key"));
+      
+        // Demand LMS-wide key/secret to be both or none 
+        if ( key == null ) getToolConsumerInfo(launch_url,"key");
+        if ( key == null ) key = org_guid;
+        if ( secret == null ) secret = getToolConsumerInfo(launch_url,"secret");
+ 
+         // Pull in all of the custom parameters
         for(Object okey : info.keySet() ) {
                 String skey = (String) okey;
                 if ( ! skey.startsWith("custom_") ) continue;
@@ -274,7 +282,8 @@ public class SakaiBLTIUtil {
         // Actually since we are using signing-only, there is really not much point 
 	// In OAuth 6.2.3, this is after the user is authorized
 	if ( oauth_callback == null ) oauth_callback = "about:blank";
-        setProperty(launch, "oauth_callback", oauth_callback);
+		if (!launch.containsKey("oauth_callback"))
+			setProperty(launch, "oauth_callback", oauth_callback);
         setProperty(launch, BasicLTIUtil.BASICLTI_SUBMIT, getRB(rb, "launch.button", "Press to Launch External Tool"));
 
         // Sanity checks

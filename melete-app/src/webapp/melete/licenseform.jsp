@@ -1,8 +1,8 @@
 <%@ page import="org.etudes.tool.melete.LicensePage"%>
 <!--
  ***********************************************************************************
- * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.1forSakai/melete-app/src/webapp/melete/licenseform.jsp $
- * $Id: licenseform.jsp 3647 2012-12-02 22:30:41Z ggolden $  
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.5/melete-app/src/webapp/melete/licenseform.jsp $
+ * $Id: licenseform.jsp 5297 2013-06-28 19:20:29Z mallikamt $  
  ***********************************************************************************
  *
  * Copyright (c) 2008,2009,2010,2011,2012 Etudes, Inc.
@@ -44,7 +44,7 @@
 	 <f:selectItems value="#{licensePage.licenseTypes}" />							
  </h:selectOneMenu>
  <h:outputText value="          " styleClass="ExtraPaddingClass" />
-<h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="/images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
+<h:outputLink value="licenses_explained.htm"  target="_blank" styleClass="toolUiLink">  <h:graphicImage value="/images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
  </h:column>
 </h:panelGrid> 
  
@@ -58,7 +58,7 @@
 	 <f:selectItems value="#{licensePage.licenseTypes}" />							
    </h:selectOneMenu>
    <h:outputText value="          " styleClass="ExtraPaddingClass" />
-  <h:outputLink value="licenses_explained.htm"  target="_blank">  <h:graphicImage value="/images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
+  <h:outputLink value="licenses_explained.htm"  target="_blank" styleClass="toolUiLink">  <h:graphicImage value="/images/help.gif" alt="#{msgs.licenseform_options}" title="#{msgs.licenseform_options}" width="16" height="16" styleClass="ExpClass"/></h:outputLink>
  </h:column>  
  <h:column/>
 </h:panelGrid>

@@ -85,6 +85,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 	private String createdByAuthor;
 	
 	private String modifiedByAuthor;
+	
+	private Boolean httpAddressAlert;
+	
 	/**
 	 * Default constructor
 	 */
@@ -974,6 +977,38 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		return "editmodulesections";
 	}
+	
+	/**
+	 * Returns true if the alert message needs to be shown to the instructor.
+	 * @return
+	 */
+	public Boolean getHttpAddressAlert()
+	{
+		httpAddressAlert = null;
+		try
+		{
+			if (section == null) return httpAddressAlert;
+			String checkUrl = "";
+			if (section.getContentType() != null && section.getContentType().equals("typeLink") )
+				checkUrl = currLinkUrl;
+			
+			if (section.getContentType() != null && section.getContentType().equals("typeLTI") )
+				checkUrl = currLTIUrl;
+			
+			if (checkUrl == null || checkUrl.length() == 0) return httpAddressAlert;
+				if (!section.isOpenWindow())
+				{
+					if (checkUrl.startsWith("http://"))	httpAddressAlert = new Boolean(true);
+					else if (checkUrl.startsWith("https://")) httpAddressAlert = new Boolean(false);
+				}			
+		}
+		catch (Exception e)
+		{
+			httpAddressAlert = null;
+		}
+		return httpAddressAlert;
+	}
+
 	/**
 	 * Associate section with LTI resource selected.
 	 * @return

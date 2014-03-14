@@ -7,7 +7,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009,2010,2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2013 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -73,7 +73,7 @@ if (modSeqNo != null)
 <!-- breadcrumbs -->
 <h:panelGrid id="crumbsItem" columns="1"  style=" border-width:medium; border-color: #E2E4E8">
 	<h:column>
-		<h:commandLink id="moduleItem" actionListener="#{viewSectionsPage.goCurrentModule}" immediate="true" >
+		<h:commandLink id="moduleItem" actionListener="#{viewSectionsPage.goCurrentModule}" immediate="true" styleClass="toolUiLinkU">
 			<h:outputText id="modTitle" value="#{viewSectionsPage.module.title}"/>			
      	</h:commandLink>
      <h:outputText id="sep" value=" &raquo; "  escape="false" /> <h:outputText id="secTitle" value="#{viewSectionsPage.section.title}" />
@@ -81,9 +81,10 @@ if (modSeqNo != null)
 </h:panelGrid>
 
 </td>
+</tr>
 <tr>
 <td colspan="2" align="right">										
-  <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','','','','Melete Bookmark Window');">
+  <h:outputLink id="bookmarkSectionLink" value="view_section" onclick="OpenBookmarkWindow(#{viewSectionsPage.section.sectionId},'#{viewSectionsPage.section.title}','','','','Melete Bookmark Window');" styleClass="toolUiLink">
 		    	<f:param id="moduleId" name="moduleId" value="#{viewSectionsPage.moduleId}" />
 		    	<f:param id="sectionId" name="sectionId" value="#{viewSectionsPage.section.sectionId}" />
 	  			<f:param id="sectionTitle" name="sectionTitle" value="#{viewSectionsPage.section.title}" />
@@ -92,7 +93,7 @@ if (modSeqNo != null)
 				      <h:outputText id="bookmarktext" value="#{msgs.bookmark_text}" > </h:outputText>
  	</h:outputLink>		
  <h:outputText value="|"/> 			
- <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}" immediate="true">
+ <h:commandLink id="myBookmarksLink" action="#{bookmarkPage.gotoMyBookmarks}" immediate="true" styleClass="toolUiLink">
 						<h:graphicImage id="mybook_gif" value="/images/my-bookmarks.png" alt="" styleClass="AuthImgClass"/>
 						<h:outputText id="mybks" value="#{msgs.my_bookmarks}" />	
 						<f:param name="fromPage" value="view_section" />	
@@ -100,6 +101,11 @@ if (modSeqNo != null)
                         <f:param name="fromModuleSeqNo" value="#{viewSectionsPage.moduleSeqNo}" />	
                         <f:param name="fromSectionId" value="#{viewSectionsPage.sectionId}" />						
 </h:commandLink>
+</td>
+</tr>
+<tr>
+<td colspan="2" align="center">	
+   <h:outputText id="errMsg2" styleClass="alertMessage" value="#{msgs.url_alert_view}" rendered="#{viewSectionsPage.httpAddressAlert != null && viewSectionsPage.httpAddressAlert == true}" />
 </td>
 </tr>
 <tr>

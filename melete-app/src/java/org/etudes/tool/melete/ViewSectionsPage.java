@@ -96,6 +96,8 @@ public class ViewSectionsPage implements Serializable
 	private String typeLink;
 	private String typeUpload;
 
+	private Boolean httpAddressAlert;
+	
 	/** Dependency: The logging service. */
 	protected Log logger = LogFactory.getLog(ViewSectionsPage.class);
 	/** Dependency: The Melete Security service. */
@@ -525,6 +527,41 @@ public class ViewSectionsPage implements Serializable
 		return "typeUpload";
 	}
 
+	/**
+	 * Show the alert message if not in open window
+	 * @return
+	 */
+	public Boolean getHttpAddressAlert()
+	{
+		httpAddressAlert = null;
+		try
+		{
+			if(isUserStudent()) return httpAddressAlert;
+			if (section == null || section.getSectionResource() == null || section.getSectionResource().getResource() == null)
+				return httpAddressAlert;
+			String checkUrl = "";
+
+			if (section.getContentType() != null && (section.getContentType().equals("typeLink") || section.getContentType().equals("typeLTI")))
+			{
+				ContentResource cr = getMeleteCHService().getResource(section.getSectionResource().getResource().getResourceId());
+				checkUrl = new String(cr.getContent());
+
+				if (checkUrl == null || checkUrl.length() == 0) return httpAddressAlert;
+				if (!section.isOpenWindow())
+				{
+					if (checkUrl.startsWith("http://"))
+						httpAddressAlert = new Boolean(true);
+					else if (checkUrl.startsWith("https://")) httpAddressAlert = new Boolean(false);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			httpAddressAlert = null;
+		}
+		return httpAddressAlert;
+	}
+	
 	/**
 	 * Go to the current module(module that this section belongs to) page
 	 * 

@@ -103,7 +103,7 @@ function fillTitle(idx, idx1)
 				 <h:message for="url" id="errurlmsg" showDetail="true" showSummary="false" infoClass="BlueClass" errorClass="RedClass"/>                
                 <h:inputText id="url" size="40" value="#{ut.url}" onchange="fillTitle('LinkUploadForm:utTable:' +#{addResourcesPage.table.rowIndex} + ':url', 'LinkUploadForm:utTable:' +#{addResourcesPage.table.rowIndex} + ':title' )" />
                 <h:outputText id="spc" escape="false" value="&nbsp;" />
-                 <h:commandLink id="removeLink"   actionListener="#{addResourcesPage.removeLink}" action="#{addResourcesPage.redirectToLinkUpload}" >  
+                 <h:commandLink id="removeLink"   actionListener="#{addResourcesPage.removeLink}" action="#{addResourcesPage.redirectToLinkUpload}" styleClass="toolUiLink">  
                    <h:graphicImage id="remove_gif" alt="" value="/images/remove_item.png" styleClass="ExpClass"/>
                     <h:outputText 	id="remove_text" value="#{msgs.link_upload_remove_item}"/>		
                   </h:commandLink>

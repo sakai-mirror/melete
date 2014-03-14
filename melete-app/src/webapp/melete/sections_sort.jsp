@@ -108,16 +108,16 @@ function resetModuleSelection() {
 										 </h:selectOneListbox>
 									</td>                        
 									<td width="3%" align="center">
-					                        <h:commandLink id="up_end"  action="#{sortModuleSectionPage.MoveSectionItemAllUpAction}">	
+					                        <h:commandLink id="up_end"  action="#{sortModuleSectionPage.MoveSectionItemAllUpAction}" styleClass="toolUiLink">	
 											 <h:graphicImage id="upImg1" value="/images/up_end.gif" alt="#{msgs.sort_all_Up}" title="#{msgs.sort_all_Up}" width="20" height="20" style="border:0" />
 									   </h:commandLink>	
-					                    <h:commandLink id="up_one"  action="#{sortModuleSectionPage.MoveSectionItemUpAction}">	
+					                    <h:commandLink id="up_one"  action="#{sortModuleSectionPage.MoveSectionItemUpAction}" styleClass="toolUiLink">	
 											 <h:graphicImage id="upImg" value="/images/up.gif" alt="#{msgs.sort_Up}" title="#{msgs.sort_Up}" width="20" height="20" style="border:0" />
 									   </h:commandLink>		 
-	 									<h:commandLink id="down_one"  action="#{sortModuleSectionPage.MoveSectionItemDownAction}">		 
+	 									<h:commandLink id="down_one"  action="#{sortModuleSectionPage.MoveSectionItemDownAction}" styleClass="toolUiLink">		 
 											 <h:graphicImage id="downImg" value="/images/down.gif" alt="#{msgs.sort_Down}" title="#{msgs.sort_Down}" width="20" height="20" style="border:0" />
 	 									   </h:commandLink>	  
-	 									   <h:commandLink id="down_end"  action="#{sortModuleSectionPage.MoveSectionItemAllDownAction}">		 
+	 									   <h:commandLink id="down_end"  action="#{sortModuleSectionPage.MoveSectionItemAllDownAction}" styleClass="toolUiLink">		 
 											 <h:graphicImage id="downImg_end" value="/images/down_end.gif" alt="#{msgs.sort_all_Down}" title="#{msgs.sort_all_Down}" width="20" height="20" style="border:0" />
 	 									   </h:commandLink>	 										 
 										  </td>
