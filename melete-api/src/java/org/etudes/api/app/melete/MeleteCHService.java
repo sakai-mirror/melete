@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008,2009,2010,2011 Etudes, Inc.
+ * Copyright (c) 2008,2009,2010,2011, 2014 Etudes, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -146,7 +146,7 @@ public interface MeleteCHService
 	 *        resource description
 	 * @return boolean. null if resource is bad, true if contents have changed.       
 	 */
-	public Boolean editResourceProperties(String selResourceIdFromList, String secResourceName, String secResourceDescription);
+	public Boolean editResourceProperties(String selResourceIdFromList, String secResourceName, String secResourceDescription, byte[] data);
 
 	/**
 	 * Get ResourceProperties for a resource

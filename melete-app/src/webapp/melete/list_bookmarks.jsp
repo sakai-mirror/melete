@@ -3,7 +3,7 @@
 
 <!--
  ***********************************************************************************
- * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.5/melete-app/src/webapp/melete/list_bookmarks.jsp $
+ * $URL: https://source.etudes.org/svn/apps/melete/trunk/melete-app/src/webapp/melete/list_bookmarks.jsp $
  * $Id: list_bookmarks.jsp 5297 2013-06-28 19:20:29Z mallikamt $  
  ***********************************************************************************
  *

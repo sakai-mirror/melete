@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010, 2011, 2012 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2012, 2014 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -160,7 +160,7 @@ function showHideTable(index, show)
           			<h:graphicImage id="pre-req" value="/images/lock.png" alt="#{msgs.list_modules_locked}" title="#{msgs.list_modules_locked}" rendered="#{vmbean.blockedBy != null}" onclick="showHideTable('#{listModulesPage.modTable.rowIndex}','true')" styleClass="ExpClass"/>
              	</h:column>
              	<h:column>
-             		  <h:outputLink value="#" onclick="showHideTable('#{listModulesPage.modTable.rowIndex}','true')">	
+             		  <h:outputLink value="#" onclick="showHideTable('#{listModulesPage.modTable.rowIndex}','true')" styleClass="toolUiLink">	
              			<h:outputText id="pre-req-text" value="#{msgs.list_modules_prereq}" styleClass="style3"/>   
        				</h:outputLink>	      				
    				  </h:column> 	
@@ -194,7 +194,8 @@ function showHideTable(index, show)
            </f:facet>  
 			  <h:outputText id="startDate0" value="-" rendered="#{vmbean.startDate == null}" />
               <h:outputText id="startDate" value="#{vmbean.startDate}" escape="false">
-              <o:convertDateTime multiLine="true"/>
+             	 <f:converter converterId="melete.DateTimeConverter" />
+  				 <f:attribute name="multiLine" value="true" /> 
               </h:outputText>
                
           </h:column>
@@ -206,7 +207,8 @@ function showHideTable(index, show)
         </f:facet>
 			 <h:outputText id="endDate0" value="-" rendered="#{vmbean.endDate == null}" />
               <h:outputText id="endDate" value="#{vmbean.endDate}" escape="false">
-              <o:convertDateTime multiLine="true"/>
+              	 <f:converter converterId="melete.DateTimeConverter" />
+  				 <f:attribute name="multiLine" value="true" /> 
               </h:outputText>            
          </h:column>
        <h:column>
@@ -217,7 +219,8 @@ function showHideTable(index, show)
         </f:facet>
 			 <h:outputText id="auDate0" value="-" rendered="#{vmbean.allowUntilDate == null}" />
               <h:outputText id="auDate" value="#{vmbean.allowUntilDate}" escape="false">
-              <o:convertDateTime  multiLine="true"/>
+              	 <f:converter converterId="melete.DateTimeConverter" />
+  				 <f:attribute name="multiLine" value="true" /> 
               </h:outputText>         
          </h:column>
  		 <h:column>
@@ -225,8 +228,9 @@ function showHideTable(index, show)
                 <h:outputText value="#{msgs.list_modules_stud_viewed_date}" />
               </f:facet>  
                <h:outputText id="viewDate0" value="-" rendered="#{vmbean.readDate == null}" />
-              <h:outputText id="viewDate" value="#{vmbean.readDate}"  escape="false">
-              <o:convertDateTime multiLine="true"/>
+               <h:outputText id="viewDate" value="#{vmbean.readDate}"  escape="false">
+             	  <f:converter converterId="melete.DateTimeConverter" />
+  				  <f:attribute name="multiLine" value="true" /> 
                </h:outputText>      
    	 	</h:column>   
 		 <h:column>  

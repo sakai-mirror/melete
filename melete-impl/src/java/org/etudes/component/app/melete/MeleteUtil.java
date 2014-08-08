@@ -212,7 +212,7 @@ public class MeleteUtil
 		Pattern pd = Pattern.compile(">|\\s[dD][aA][tT][aA]\\s*=");
 		Pattern ps = Pattern.compile("\\S");
 		Pattern pe = Pattern.compile("\\s|>");
-
+		Pattern pEndTag = Pattern.compile("\\s/>");
 		int startSrc = 0;
 		int endSrc = 0;
 		String foundPattern = null;
@@ -259,6 +259,13 @@ public class MeleteUtil
 
 			startSrc = 0;
 			endSrc = 0;
+			
+			if (checkforimgs.startsWith("\"data:image") || checkforimgs.startsWith("\'data:image") || checkforimgs.startsWith("data:image"))
+			{
+				m = pEndTag.matcher(checkforimgs);
+				if (m.find()) checkforimgs = checkforimgs.substring(m.start());
+				continue;
+			}
 
 			// handle either quoted or nonquoted arg
 			if (checkforimgs.startsWith("\"") || checkforimgs.startsWith("\'"))

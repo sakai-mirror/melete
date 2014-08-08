@@ -1,10 +1,10 @@
 <!--
  ***********************************************************************************
- * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.5/melete-app/src/webapp/melete/list_resources.jsp $
- * $Id: list_resources.jsp 5297 2013-06-28 19:20:29Z mallikamt $  
+ * $URL: https://source.etudes.org/svn/apps/melete/trunk/melete-app/src/webapp/melete/list_resources.jsp $
+ * $Id: list_resources.jsp 8031 2014-05-29 19:46:25Z rashmim $  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011,2014 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -33,7 +33,7 @@
 
 <h:panelGrid styleClass="maintableCollapseWithNoBorder" >											
 <h:column>		                    	
-         <h:panelGrid id="selresPanel" columns="1" width="100%" rendered="#{listResourcesPage.callFromSection}" >	
+         <h:panelGrid id="selresPanel" columns="1" width="100%" rendered="#{listResourcesPage.callFromSection}" styleClass="maintabledata2">	
 	      	<h:column>
   				<h:outputText id="Stext3" value="#{msgs.edit_list_resources_select}" styleClass="bold"/> 
 			</h:column>	   									

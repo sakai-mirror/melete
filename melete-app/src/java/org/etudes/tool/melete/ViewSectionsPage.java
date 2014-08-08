@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009,2010,2011, 2012 Etudes, Inc.
+ * Copyright (c) 2008, 2009,2010,2011, 2012, 2014 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -95,7 +95,7 @@ public class ViewSectionsPage implements Serializable
 	private String typeEditor;
 	private String typeLink;
 	private String typeUpload;
-
+	private String altText;
 	private Boolean httpAddressAlert;
 	
 	/** Dependency: The logging service. */
@@ -112,6 +112,15 @@ public class ViewSectionsPage implements Serializable
 		contentLinkUrl = null;
 		contentWithHtml = null;
 	}
+	
+	/**
+	 * Return resource description as alt text
+	 * @return
+	 */
+	public String getAltText()
+	{
+		return altText;
+	}
 
 	/**
 	 * Get editor content for typeEditor sections
@@ -126,6 +135,7 @@ public class ViewSectionsPage implements Serializable
 		String str = null;
 		try
 		{
+			altText = resource.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION);
 			byte[] rsrcArray = resource.getContent();
 			str = new String(rsrcArray);
 
@@ -177,8 +187,12 @@ public class ViewSectionsPage implements Serializable
 				try
 				{
 					resource = getMeleteCHService().getResource(resourceId);
-					setLinkName(resource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME));
-
+					String res_display_name = resource.getProperties().getProperty(ResourceProperties.PROP_DISPLAY_NAME);
+					setLinkName(res_display_name);
+					// for uploads use alt text as anchor title
+					altText = resource.getProperties().getProperty(ResourceProperties.PROP_DESCRIPTION);					
+					if ("typeUpload".equals(this.section.getContentType()) && altText != null && altText.length() > 0) setLinkName(altText);
+					
 					url = getMeleteCHService().getResourceUrl(resourceId);
 					if (logger.isDebugEnabled()) logger.debug("Resource url is " + url);
 					contentLinkUrl = url;

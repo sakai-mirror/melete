@@ -5,7 +5,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010, 2011, 2012 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2012, 2014 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -188,10 +188,12 @@ function showHideTable(index, show)
              </f:facet>
 			  <h:outputText id="startDate0" value="-" rendered="#{vmbean.startDate == null}" />
               <h:outputText id="startDate" value="#{vmbean.startDate}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}" escape="false">
-              <o:convertDateTime  multiLine="true" />
+             	 <f:converter converterId="melete.DateTimeConverter" />
+  				 <f:attribute name="multiLine" value="true" />  
               </h:outputText> 
               <h:outputText id="startDate2" value="#{vmbean.startDate}"  rendered="#{!vmbean.visibleFlag}" styleClass="italics" escape="false">
-             <o:convertDateTime multiLine="true" />
+             	 <f:converter converterId="melete.DateTimeConverter" />
+  				 <f:attribute name="multiLine" value="true" />  
              </h:outputText>           
            </h:column>
             <h:column>
@@ -200,10 +202,12 @@ function showHideTable(index, show)
               </f:facet>  
 			 <h:outputText id="endDate0" value="-" rendered="#{vmbean.endDate == null}" />
               <h:outputText id="endDate"  value="#{vmbean.endDate}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}" escape="false">
-              <o:convertDateTime multiLine="true" />
+             	 <f:converter converterId="melete.DateTimeConverter" />
+  				 <f:attribute name="multiLine" value="true" />  
               </h:outputText> 
               <h:outputText id="endDate2"  value="#{vmbean.endDate}" styleClass="italics" rendered="#{!vmbean.visibleFlag}" escape="false">
-             <o:convertDateTime multiLine="true"  />
+       		      <f:converter converterId="melete.DateTimeConverter" />
+  				  <f:attribute name="multiLine" value="true" />             
               </h:outputText>  
    	 </h:column> 
    	  <h:column>
@@ -212,11 +216,13 @@ function showHideTable(index, show)
               </f:facet>  
 			 <h:outputText id="auDate0" value="-" rendered="#{vmbean.allowUntilDate == null}" />
               <h:outputText id="auDate" value="#{vmbean.allowUntilDate}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}" escape="false">
-              <o:convertDateTime  multiLine="true" />
+              	 <f:converter converterId="melete.DateTimeConverter" />
+  				 <f:attribute name="multiLine" value="true" />  
               </h:outputText> 
           
              <h:outputText id="auDate2" value="#{vmbean.allowUntilDate}" rendered="#{!vmbean.visibleFlag}" styleClass="italics" escape="false">
-             <o:convertDateTime multiLine="true" />
+             	 <f:converter converterId="melete.DateTimeConverter" />
+  				 <f:attribute name="multiLine" value="true" />  
              </h:outputText>
                     
    	 </h:column>   
@@ -227,11 +233,13 @@ function showHideTable(index, show)
                <h:outputText id="viewDate0" value="-" rendered="#{vmbean.readDate == null}" />
               
               <h:outputText id="viewDate" value="#{vmbean.readDate}" rendered="#{vmbean.visibleFlag == listModulesPage.trueFlag}" escape="false">
-              <o:convertDateTime multiLine="true" />
+              	 <f:converter converterId="melete.DateTimeConverter" />
+  				 <f:attribute name="multiLine" value="true" />  
               </h:outputText>
           
              <h:outputText id="viewDate2" value="#{vmbean.readDate}" rendered="#{!vmbean.visibleFlag}" styleClass="italics" escape="false">
-             <o:convertDateTime multiLine="true" />
+            	 <f:converter converterId="melete.DateTimeConverter" />
+  				 <f:attribute name="multiLine" value="true" />  
              </h:outputText>    
    	 </h:column>   
       <h:column> 

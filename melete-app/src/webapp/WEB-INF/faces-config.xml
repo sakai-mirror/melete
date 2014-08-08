@@ -745,6 +745,11 @@
         <to-view-id>/melete/coursemap.jsp</to-view-id>
          <redirect/>
       </navigation-case>   
+       <navigation-case>
+		   <from-outcome>activeUserCheck</from-outcome>
+        <to-view-id>/melete/activeUserCheck.jsp</to-view-id>
+         <redirect/>
+      </navigation-case> 
   </navigation-rule>    
 
 <navigation-rule>

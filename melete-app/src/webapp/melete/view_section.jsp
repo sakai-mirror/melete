@@ -7,7 +7,7 @@
  * $Id$  
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010, 2011, 2013 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2013, 2014 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -132,16 +132,36 @@ if (modSeqNo != null)
 <h:column rendered="#{viewSectionsPage.section.contentType != viewSectionsPage.nullString}">
 	<h:inputHidden id="contentType" value="#{viewSectionsPage.section.contentType}"/>
 	<h:inputHidden id="openWindow" value="#{viewSectionsPage.section.openWindow}"/>
-	<h:outputText escape="false" value="<a target='new_window' href='" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink || viewSectionsPage.section.contentType == viewSectionsPage.typeUpload || viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}"/>
-       <h:outputText value="#{viewSectionsPage.contentLink}" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink || viewSectionsPage.section.contentType == viewSectionsPage.typeUpload || viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}"/>
-       <h:outputText escape="false" value="'>#{viewSectionsPage.linkName}</a>" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink || viewSectionsPage.section.contentType == viewSectionsPage.typeUpload || viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}"/>
     
-    <h:outputText id="contentFrame" value="<iframe id=\"iframe1\" src=\"#{viewSectionsPage.content}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\" border=\"0\" frameborder= \"0\"></iframe>" rendered="#{((viewSectionsPage.section.contentType ==viewSectionsPage.typeLink)&&(viewSectionsPage.linkName !=
-    viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
+    <!-- links in new window -->
+    <h:outputText id="anchorText" rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink || viewSectionsPage.section.contentType == viewSectionsPage.typeUpload || viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}" escape="false">
+		<f:verbatim>
+		<a id="anchorLink" name="anchorLink" target='new_window' href="${viewSectionsPage.contentLink}" title="${viewSectionsPage.linkName}">${viewSectionsPage.linkName}</a>			
+		</f:verbatim>
+	</h:outputText>
+	
+	 <h:outputText rendered="#{((viewSectionsPage.section.contentType == viewSectionsPage.typeLink || viewSectionsPage.section.contentType == viewSectionsPage.typeUpload || viewSectionsPage.section.contentType == viewSectionsPage.typeLTI)&&(viewSectionsPage.contentLink != viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == true))}">
+    	<f:verbatim>
+			<div style="height:150px"></div>
+		</f:verbatim>
+     </h:outputText>
+               
+	<!--  links in same window -->	  
+ 	<h:outputText id="contentFrame" rendered="#{(viewSectionsPage.section.contentType ==viewSectionsPage.typeLink)&&(viewSectionsPage.linkName !=
+    viewSectionsPage.nullString)&&(viewSectionsPage.section.openWindow == false)}" escape="false">
+		<f:verbatim>
+		<iframe id="iframe1" name="iframe1" src="${viewSectionsPage.content}" title="${viewSectionsPage.linkName}" width="100%" height="700px" style="visibility:visible" scrolling= "auto" border="0" frameborder= "0">
+		</iframe>
+		</f:verbatim>
+	</h:outputText>
   
   	<!-- render typeUpload  content in same window --> 
- 	<h:outputText id="contentUploadFrame" value="<iframe id=\"iframe2\" src=\"#{viewSectionsPage.contentLink}\" style=\"visibility:visible\" scrolling= \"auto\" width=\"100%\" height=\"700\"
-    border=\"0\" frameborder= \"0\"></iframe>" rendered="#{((viewSectionsPage.section.contentType ==viewSectionsPage.typeUpload)&&(viewSectionsPage.section.openWindow == false))}" escape="false" />
+	<h:outputText id="contentUploadFrame" rendered="#{(viewSectionsPage.section.contentType ==viewSectionsPage.typeUpload)&&(viewSectionsPage.section.openWindow == false)}" escape="false">
+		<f:verbatim>
+		<iframe id="iframe2" name="iframe2" src="${viewSectionsPage.contentLink}" title="${viewSectionsPage.altText}" width="100%" height="700px" style="visibility:visible" scrolling= "auto" border="0" frameborder= "0">
+		</iframe>
+		</f:verbatim>
+	</h:outputText>
 
 	<!-- render typeEditor content with form tags --> 
 	<h:outputText id="contentTextFrame" rendered="#{(viewSectionsPage.section.contentType == viewSectionsPage.typeEditor)&& (viewSectionsPage.contentWithHtml == true) &&(viewSectionsPage.content != viewSectionsPage.nullString)}" >
@@ -190,7 +210,9 @@ if (modSeqNo != null)
 		    if (oDoc.document) {
 			oDoc = oDoc.document;	
 			oIframe.style.height = oDoc.body.scrollHeight + 40 +"px";				       
-		    } else oIframe.height = oDoc.body.offsetHeight + 40 ; 
+		    } 
+		    else oIframe.height = oDoc.body.offsetHeight + 40 ; 
+		    
 		   	for (i=0; i < document.styleSheets.length; i++)
 			{
 			  var link = document.createElement("link");
@@ -200,11 +222,13 @@ if (modSeqNo != null)
 			   //assign this new link the href of the parent one
 		       link.setAttribute("href", document.styleSheets[i].href);
 			   oDoc.body.appendChild(link); 
-		    }
-		    						
+		    }		    						
 		  }
 
-	  setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');			  
+	  setMainFrameHeight('<h:outputText value="#{meleteSiteAndUserInfo.winEncodeName}"/>');	
+	 $("#iframe1").contents().find("body").prop('title', $("#iframe1").attr('title')); 
+	 $("#iframe2").contents().find("body").prop('title', $("#iframe2").attr('title')); 		 
+	 $("#iframe2").contents().find("img").prop('alt', $("#iframe2").attr('title'));
 	 }
 </script>
 </h:form>

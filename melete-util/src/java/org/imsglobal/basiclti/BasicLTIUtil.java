@@ -222,6 +222,58 @@ public class BasicLTIUtil {
         return htmltext;
     }
 
+    /**
+     * read descriptor and put as properties
+     * @param descriptor
+     * @return
+     */
+	public static Properties parseDescriptor(String descriptor)
+	{
+		Properties info = new Properties();
+		Map<String, Object> tm = null;
+		try
+		{
+			tm = XMLMap.getFullMap(descriptor.trim());
+		}
+		catch (Exception e)
+		{
+			M_log.warning("BasicLTIUtil exception parsing BasicLTI descriptor" + e.getMessage());
+			return info;
+		}
+		if (tm == null)
+		{
+			M_log.warning("Unable to parse XML in parseDescriptor");
+			return info;
+		}
+
+		String launch_url = toNull(XMLMap.getString(tm, "/basic_lti_link/launch_url"));
+		String secure_launch_url = toNull(XMLMap.getString(tm, "/basic_lti_link/secure_launch_url"));
+		if (launch_url != null) setProperty(info, "launch_url", launch_url);
+		if (secure_launch_url != null) setProperty(info, "launch_url", secure_launch_url);
+
+		// Extensions for hand-authored placements - The export process should scrub these
+		setProperty(info, "key", toNull(XMLMap.getString(tm, "/basic_lti_link/x-secure/launch_key")));
+		setProperty(info, "secret", toNull(XMLMap.getString(tm, "/basic_lti_link/x-secure/launch_secret")));
+
+		List<Map<String, Object>> theList = XMLMap.getList(tm, "/basic_lti_link/custom/parameter");
+		for (Map<String, Object> setting : theList)
+		{
+			String key = XMLMap.getString(setting, "/!key"); // Get the key atribute
+			String value = XMLMap.getString(setting, "/"); // Get the value
+			if (key == null || value == null) continue;
+			key = "custom_" + mapKeyName(key);
+			setProperty(info, key, value);
+		}
+		return info;
+	}
+    
+    /**
+     * 
+     * @param launch_info
+     * @param postProp
+     * @param descriptor
+     * @return
+     */
     public static boolean parseDescriptor(Properties launch_info, Properties postProp, String descriptor)
     {
         Map<String,Object> tm = null;

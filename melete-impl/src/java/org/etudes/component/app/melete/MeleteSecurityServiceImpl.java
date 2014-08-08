@@ -328,7 +328,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService, EntityP
 									{
 										popAdvisor();
 										// Leave ResourceBundle off for now
-										String[] retval = SakaiBLTIUtil.postLaunchHTML(str, contextId, ref.getId(), resprops, rb);
+										String[] retval = SakaiBLTIUtil.postLaunchHTML(null, str, contextId, ref.getId(), null, null, true, resprops, rb, null);
 										if (retval != null) postData = retval[0];
 									}
 									catch (Exception e)

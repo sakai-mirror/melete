@@ -70,8 +70,13 @@ public class SakaiBLTIUtil {
         // M_log.warn(str)
     }
 
-    // Look at a Placement and come up with the launch urls, and
-    // other launch parameters to drive the launch.
+    /**
+     * Load url, key etc from placement
+     * @param info
+     * @param launch
+     * @param placement
+     * @return
+     */
     public static boolean loadFromPlacement(Properties info, Properties launch, Placement placement)
     {
 	Properties config = placement.getConfig();
@@ -112,7 +117,7 @@ public class SakaiBLTIUtil {
         }
         return false;
     }
-
+    
    public static boolean sakaiInfo(Properties props, Placement placement)
    {
 	dPrint("placement="+ placement.getId());
@@ -186,31 +191,62 @@ public class SakaiBLTIUtil {
 	return true;
     } 
 
-    // getProperty(String name);
-    // Gnerate HTML from a descriptor and properties from 
-    public static String[] postLaunchHTML(String descriptor, String contextId, String resourceId, ResourceProperties props, ResourceLoader rb)
-    {
-        if ( descriptor == null || contextId == null || resourceId == null ) 
-            return postError("<p>" + getRB(rb, "error.descriptor" ,"Error, missing contextId, resourceid or descriptor")+"</p>" );
+   /**
+    * Generic call to create lti form details
+    * @param placementId 
+    *  for non-melete tools required
+    * @param contextId
+    * @param resourceId
+    * 	for melete resource or later mneme resource
+    * @param info
+    * @param launch
+    * @param autoSubmit
+    *  true when we want to submit automatically just like for Melete
+    * @param props
+    * 	resource properties used for connecting with Melete
+    * @param rb
+    * @param targetFrame
+    * 	to open in window or iframe
+    * @return
+    */
+	public static String[] postLaunchHTML(String placementId, String descriptor, String contextId, String resourceId, Properties info, Properties launch, boolean autoSubmit,
+			ResourceProperties props, ResourceLoader rb, String targetFrame)
+	{
+		if (info == null) info = new Properties();
+		if (launch == null) launch = new Properties();
+		if (autoSubmit) launch.setProperty("autoSubmit", "true");
 
-        // Add user, course, etc to the launch parameters
-        Properties launch = new Properties();
-        if ( ! sakaiInfo(launch, contextId, resourceId) ) {
-           return postError("<p>" + getRB(rb, "error.info.resource",
-                "Error, cannot load Sakai information for resource=")+resourceId+".</p>");
-        }
-        launch.setProperty("autoSubmit", "true");
-        Properties info = new Properties();
-        if ( ! BasicLTIUtil.parseDescriptor(info, launch, descriptor) ) {
-           return postError("<p>" + getRB(rb, "error.badxml.resource",
-                "Error, cannot parse descriptor for resource=")+resourceId+".</p>");
-        }
+		if (resourceId != null && !sakaiInfo(launch, contextId, resourceId))
+		{
+			return postError("<p>" + getRB(rb, "error.info.resource", "Error, cannot load Sakai information for resource=") + resourceId + ".</p>");
+		}
 
-    	return postLaunchHTML(info, launch, rb);
-    }
+		if (placementId != null)
+		{
+			ToolConfiguration placement = SiteService.findTool(placementId);
 
+			// Add user, course, etc to the launch parameters
+			if (!sakaiInfo(launch, placement))
+			{
+				return postError("<p>" + getRB(rb, "error.missing", "Error, cannot load Sakai information for placement=") + placementId + ".</p>");
+			}
+		}
+
+		if (descriptor != null)	BasicLTIUtil.parseDescriptor(info, launch, descriptor);
+		
+		if (info.getProperty("launch_url", null) == null && info.getProperty("secure_launch_url", null) == null)
+		{
+			return postError("<p>" + getRB(rb, "error.nolaunch", "Not Configured.") + "</p>");
+		}
+
+	     if (targetFrame != null && targetFrame.length() > 0)
+	        	setProperty(launch, "launch_presentation_document_target", targetFrame);
+	    
+		return postLaunchHTML(info, launch, rb);
+	}
+   
      /**
-     * 
+     * Called from Web Content tool
      * @param placementId
      * @param returnUrl
      * @param rb
@@ -230,10 +266,14 @@ public class SakaiBLTIUtil {
         }
         
         // Retrieve the launch detail
-       if ( ! loadFromPlacement(info, launch, placement) ) {
+        boolean loadLTIDetails = false;
+        if (info.getProperty("launch_url", null) == null &&  info.getProperty("secure_launch_url", null) == null ) {
+        	loadLTIDetails = loadFromPlacement(info, launch, placement);
+           }
+              
+       if (!loadLTIDetails)
            return postError("<p>" + getRB(rb, "error.nolaunch" ,"Not Configured.")+"</p>");
-       }
-       
+             
         if (targetFrame != null && targetFrame.length() > 0)
         	setProperty(launch, "launch_presentation_document_target", targetFrame);
          
@@ -301,8 +341,7 @@ public class SakaiBLTIUtil {
         dPrint("LAUNCH III="+launch);
 
 	boolean dodebug = toNull(info.getProperty("debug")) != null;
-        String postData = BasicLTIUtil.postLaunchHTML(launch, launch_url, dodebug);
-
+        String postData = BasicLTIUtil.postLaunchHTML(launch, launch_url, dodebug);        
         String [] retval = { postData, launch_url };
         return retval;
     }
