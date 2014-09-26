@@ -315,7 +315,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 						{
 							String value = ltiProps.getProperty(key);
 							key = key.replaceAll("custom_", "");
-							customParams.append(key + "=" + value);
+							customParams.append(key + "=" + value+"\n");
 						}
 					}
 					if (customParams.length() > 0) customParameters = customParams.toString();
