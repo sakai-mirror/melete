@@ -52,17 +52,17 @@
       <artifactId>etudes-melete-impl</artifactId>
       <version>${melete.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.etudes</groupId>
-      <artifactId>etudes-melete-util</artifactId>
-      <version>${melete.version}</version>
-    </dependency>
     
     <dependency>
 	<groupId>org.etudes</groupId>
 	<artifactId>etudes-util-api</artifactId>
 	<version>${etudes.util.version}</version>
     </dependency>
+    <dependency>
+			<groupId>org.etudes</groupId>
+			<artifactId>etudes-lticontact-util</artifactId>
+			<version>${lticontact.version}</version>
+		</dependency>
   </dependencies>
   <build>
     <resources>

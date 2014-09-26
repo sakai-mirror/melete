@@ -49,14 +49,6 @@
 				<war.bundle>true</war.bundle>
 			</properties>
         </dependency>
-        <dependency>
-            <groupId>etudes</groupId>
-            <artifactId>etudes-melete-util</artifactId>
-            <version>${melete.version}</version>
-	    <properties>
-	   	 <war.bundle>true</war.bundle>
-	    </properties>
-        </dependency>
         
       <dependency>
 			<groupId>sakaiproject</groupId>
@@ -88,6 +80,14 @@
 			<groupId>etudes</groupId>
 			<artifactId>etudes-util</artifactId>
 			<version>1.0</version>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties> 
+		</dependency>
+		<dependency>
+			<groupId>etudes</groupId>
+			<artifactId>etudes-lticontact-util</artifactId>
+			<version>${lticontact.version}</version>
 			<properties>
 				<war.bundle>true</war.bundle>
 			</properties> 

@@ -25,6 +25,7 @@
 package org.etudes.tool.melete;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -512,8 +513,16 @@ public abstract class SectionPage implements Serializable
 	 * Set custom options provided by external provider
 	 * @param customParameters
 	 */
-	public void setCustomParameters(String customParameters) {
+	public void setCustomParameters(String customParameters)
+	{
+		try
+		{
+			this.customParameters = new String(customParameters.getBytes("UTF-8"));
+		}
+		catch (UnsupportedEncodingException e)
+		{
 		this.customParameters = customParameters;
+		}
 		fixDescriptor();
 	}
 	

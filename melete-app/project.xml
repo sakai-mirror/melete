@@ -57,8 +57,8 @@
 		</dependency>
 		<dependency>
 			<groupId>etudes</groupId>
-			<artifactId>etudes-melete-util</artifactId>
-			<version>${melete.version}</version>
+			<artifactId>etudes-lticontact-util</artifactId>
+			<version>${lticontact.version}</version>
 			<properties>
 				<war.bundle>true</war.bundle>
 			</properties>   

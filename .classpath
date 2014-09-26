@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="melete-hbm/src/java"/>
-	<classpathentry kind="src" path="melete-util/src/java"/>
 	<classpathentry kind="src" path="melete-admin/src/java"/>
 	<classpathentry kind="src" path="melete-app/src/java"/>
 	<classpathentry kind="src" path="melete-api/src/java"/>
@@ -30,5 +29,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/etudes-util-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/etudes-util"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jspapi/jars/jsp-api-2.0.jar"/>
+	<classpathentry kind="src" path="/lticontact-util"/>
+	<classpathentry kind="var" path="MAVEN_REPO/org/etudes/etudes-lti-contact-util/1.0/etudes-lticontact-util-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

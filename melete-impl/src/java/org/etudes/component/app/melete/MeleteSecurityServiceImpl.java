@@ -4,7 +4,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009,2010, 2011, 2012 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2012, 2013, 2014 Etudes, Inc.
  *
  * Portions completed before September 1, 2008 Copyright (c) 2004, 2005, 2006, 2007, 2008 Foothill College, ETUDES Project
  *
@@ -73,7 +73,7 @@ import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.util.Xml;
 import org.imsglobal.basiclti.BasicLTIUtil;
-import org.etudes.basiclti.SakaiBLTIUtil;
+import org.etudes.basicltiContact.SakaiBLTIUtil;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.util.ResourceLoader;
 
@@ -326,9 +326,13 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService, EntityP
 								{
 									try
 									{
+										Properties info = new Properties();
+										Properties launch = new Properties();										
+										if (str != null) BasicLTIUtil.parseDescriptor(info, launch, str);									
 										popAdvisor();
+										
 										// Leave ResourceBundle off for now
-										String[] retval = SakaiBLTIUtil.postLaunchHTML(null, str, contextId, ref.getId(), null, null, true, resprops, rb, null);
+										String[] retval = SakaiBLTIUtil.postLaunchHTML(null, str, contextId, ref.getId(), info, launch, true, resprops, rb, null);
 										if (retval != null) postData = retval[0];
 									}
 									catch (Exception e)
@@ -352,6 +356,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService, EntityP
 								if (postData != null)
 								{
 									res.setContentType("text/html");
+									res.setCharacterEncoding("UTF-8");
 									ServletOutputStream out = res.getOutputStream();
 									out.println(postData);
 									handled = true;

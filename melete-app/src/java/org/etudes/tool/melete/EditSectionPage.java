@@ -96,6 +96,9 @@ public class EditSectionPage extends SectionPage implements Serializable
 	private String emptyString = "";
 	
 	private String activeCheckUrl = "";
+	
+	private String resourceSectionFile = "";
+	
 	/**
 	 * Default constructor
 	 */
@@ -128,6 +131,7 @@ public class EditSectionPage extends SectionPage implements Serializable
 			setModule(moduleService.getModule(section1.getModuleId()));
 			// setSecResource(this.section.getSectionResource());
 			setSecResource(sectionService.getSectionResourcebyId(this.section.getSectionId().toString()));
+			resourceSectionFile = "Section_" + editId + ".html";
 		}
 		catch (Exception e)
 		{
@@ -1005,6 +1009,16 @@ public class EditSectionPage extends SectionPage implements Serializable
 	{
 		this.m_selected_license = m_selected_license;
 	}*/
+
+	public String getResourceSectionFile()
+	{
+		return resourceSectionFile;
+	}
+
+	public void setResourceSectionFile(String resourceSectionFile)
+	{
+		this.resourceSectionFile = resourceSectionFile;
+	}
 
 	/**
 	 * 

@@ -36,7 +36,6 @@
   <packaging>pom</packaging>
   <modules>
     <module>components</module>
-    <module>melete-util</module>
     <module>melete-api</module>
     <module>melete-app</module>
     <module>melete-hbm</module>
