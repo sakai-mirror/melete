@@ -110,12 +110,12 @@
     <dependency>
       <groupId>org.sakaiproject.jsf</groupId>
       <artifactId>jsf-tool</artifactId>
-      <version>${sakai.jsf.version}</version> 
+      <!--<version>${sakai.jsf.version}</version>-->
     </dependency>
-    <dependency>
+   <dependency>
       <groupId>org.sakaiproject.jsf</groupId>
       <artifactId>jsf-app</artifactId>
-      <version>${sakai.jsf.version}</version>
+      <!--<version>${sakai.jsf.version}</version>-->
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -142,17 +142,21 @@
       </exclusions>
     </dependency>
 -->
-	 <dependency>
+	<dependency>
       <groupId>org.sakaiproject.jsf</groupId>
       <artifactId>jsf-tool-sun</artifactId>
-	<version>${sakai.jsf.version}</version>
+	<!--<version>${sakai.jsf.version}</version>-->
       <type>pom</type>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-      <version>${sakai.servletapi.version}</version>
+      <!--<version>${sakai.servletapi.version}</version>-->
       <scope>provided</scope>
+    </dependency>
+     <dependency>
+          <groupId>javax.servlet.jsp</groupId>
+          <artifactId>jsp-api</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-collections</groupId>
