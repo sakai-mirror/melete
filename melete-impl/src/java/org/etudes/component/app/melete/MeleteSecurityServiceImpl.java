@@ -24,6 +24,7 @@
 package org.etudes.component.app.melete;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -357,7 +358,7 @@ public class MeleteSecurityServiceImpl implements MeleteSecurityService, EntityP
 								{
 									res.setContentType("text/html");
 									res.setCharacterEncoding("UTF-8");
-									ServletOutputStream out = res.getOutputStream();
+									PrintWriter out = res.getWriter();
 									out.println(postData);
 									handled = true;
 								}

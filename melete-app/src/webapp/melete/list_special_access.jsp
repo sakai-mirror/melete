@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%--
  ***********************************************************************************
- * $URL: https://source.etudes.org/svn/apps/melete/trunk/melete-app/src/webapp/melete/list_special_access.jsp $
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.9/melete-app/src/webapp/melete/list_special_access.jsp $
  * $Id: list_special_access.jsp 5297 2013-06-28 19:20:29Z mallikamt $  
  ***********************************************************************************
  *

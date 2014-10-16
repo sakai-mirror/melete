@@ -424,4 +424,12 @@ public interface SectionService
 	 */
 	public void updateSectionResource(SectionObjService section, SectionResourceService secResource) throws Exception;
 
+	/**
+	 * Fix xrefs to refer to current site resources. 
+	 * 
+	 * @param contents
+	 * @param courseId
+	 * @return
+	 */
+	public String fixXrefs(String contents, String courseId);
 }

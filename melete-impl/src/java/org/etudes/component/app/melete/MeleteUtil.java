@@ -567,4 +567,41 @@ public class MeleteUtil
 
 		return s;
 	}
+	
+	/**
+	 * Alternate approach to replace old site resource url with new site's resource url at import from site.
+	 * @param data
+	 * 		section content
+	 * @param one
+	 * 		old site resource item url
+	 * @param another
+	 * 		new site resource item url
+	 * @return
+	 */
+	public String translateContent(String data, String one, String another)
+	{
+		if (data == null) return data;
+
+		Pattern p = Pattern.compile("(src|href)[\\s]*=[\\s]*\"([^#\"]*)([#\"])", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+		Matcher m = p.matcher(data);
+		StringBuffer sb = new StringBuffer();
+
+		// process each "harvested" string (avoiding like strings that are not in src= or href= patterns)
+		while (m.find())
+		{
+			if (m.groupCount() == 3)
+			{
+				String ref = m.group(2);
+				String terminator = m.group(3);
+
+				if (ref != null) ref = ref.trim();
+				if (ref.equalsIgnoreCase(one))
+				{
+					m.appendReplacement(sb, Matcher.quoteReplacement(m.group(1) + "=\"" + another + terminator));
+				}
+			}
+		}
+		m.appendTail(sb);
+		return sb.toString();
+	}
 }

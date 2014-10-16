@@ -1,6 +1,6 @@
 /**********************************************************************************
  *
- * $URL: https://source.etudes.org/svn/apps/melete/trunk/melete-app/src/java/org/etudes/tool/melete/SpecialAccessPage.java $
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.9/melete-app/src/java/org/etudes/tool/melete/SpecialAccessPage.java $
  * $Id: SpecialAccessPage.java 7394 2014-02-12 20:06:02Z mallikamt $
  ***********************************************************************************
  * Copyright (c) 2010, 2011, 2012, 2014 Etudes, Inc.

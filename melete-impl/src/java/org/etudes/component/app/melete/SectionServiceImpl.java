@@ -804,4 +804,12 @@ public class SectionServiceImpl implements Serializable, SectionService
 			throw new MeleteException(ex.toString());
 		}
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public String fixXrefs(String contents, String courseId) 
+	{
+		return sectiondb.fixXrefs(contents, courseId);
+	}
 }

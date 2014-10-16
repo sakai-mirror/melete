@@ -172,7 +172,7 @@ abstract public class MeleteImportBaseImpl
 		}
 
 		// Replace all occurrences of pattern in input
-		contentEditor = meleteUtil.replacePath(contentEditor, imgSrcPath, replacementStr);
+		contentEditor = meleteUtil.translateContent(contentEditor, imgSrcPath, replacementStr);
 
 		return contentEditor;
 	}

@@ -30,6 +30,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/etudes-util"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jspapi/jars/jsp-api-2.0.jar"/>
 	<classpathentry kind="src" path="/lticontact-util"/>
-	<classpathentry kind="var" path="MAVEN_REPO/org/etudes/etudes-lti-contact-util/1.1/etudes-lticontact-util-1.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/org/etudes/etudes-lti-contact-util/1.2/etudes-lticontact-util-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

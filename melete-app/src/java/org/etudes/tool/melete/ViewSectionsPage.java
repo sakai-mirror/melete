@@ -152,6 +152,7 @@ public class ViewSectionsPage implements Serializable
 			if (resource.getContentType().equalsIgnoreCase("text/html"))
 			{
 				str = HtmlHelper.clean(str, false);
+				str = getSectionService().fixXrefs(str, getCourseId());
 			}
 		}
 		catch (Exception e)
@@ -975,7 +976,7 @@ public class ViewSectionsPage implements Serializable
 	public void setSectionId(int sectionId)
 	{
 		this.sectionId = sectionId;
-		logSectionReadEvent(sectionId);
+		logSectionReadEvent(sectionId);	
 	}
 	
 	/**

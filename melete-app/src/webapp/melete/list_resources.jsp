@@ -1,6 +1,6 @@
 <!--
  ***********************************************************************************
- * $URL: https://source.etudes.org/svn/apps/melete/trunk/melete-app/src/webapp/melete/list_resources.jsp $
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.9/melete-app/src/webapp/melete/list_resources.jsp $
  * $Id: list_resources.jsp 8031 2014-05-29 19:46:25Z rashmim $  
  ***********************************************************************************
  *
