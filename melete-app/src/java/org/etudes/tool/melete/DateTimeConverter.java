@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- * $URL: https://source.etudes.org/svn/apps/melete/trunk/melete-app/src/java/org/etudes/tool/melete/DateTimeConverter.java $
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.9/melete-app/src/java/org/etudes/tool/melete/DateTimeConverter.java $
  *
  * **********************************************************************************
  *

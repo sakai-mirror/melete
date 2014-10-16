@@ -1,6 +1,6 @@
 /**********************************************************************************
  *
- * $URL: https://source.etudes.org/svn/apps/melete/trunk/melete-app/src/java/org/etudes/tool/melete/LicensePage.java $
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.9/melete-app/src/java/org/etudes/tool/melete/LicensePage.java $
  * $Id: LicensePage.java 8031 2014-05-29 19:46:25Z rashmim $
  ***********************************************************************************
  *

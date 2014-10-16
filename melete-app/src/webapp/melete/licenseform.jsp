@@ -1,7 +1,7 @@
 <%@ page import="org.etudes.tool.melete.LicensePage"%>
 <!--
  ***********************************************************************************
- * $URL: https://source.etudes.org/svn/apps/melete/trunk/melete-app/src/webapp/melete/licenseform.jsp $
+ * $URL: https://source.etudes.org/svn/apps/melete/tags/2.9.9/melete-app/src/webapp/melete/licenseform.jsp $
  * $Id: licenseform.jsp 8031 2014-05-29 19:46:25Z rashmim $  
  ***********************************************************************************
  *

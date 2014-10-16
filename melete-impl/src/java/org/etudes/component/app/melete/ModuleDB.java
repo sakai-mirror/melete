@@ -3199,7 +3199,12 @@ else
 							if (sec.getContentType().equals("typeEditor"))
 							{
 								byte[] data = resource.getContent();
-								if (data != null && data.length != 0) printText.append("<p>" + new String(data) + "</p>");
+								if (data != null && data.length != 0)
+								{
+									String printData = new String(data);
+									printData = sectionDB.fixXrefs(printData, courseId);
+									printText.append("<p>" + printData + "</p>");
+								}
 							}
 							if (resource != null
 									&& (sec.getContentType().equals("typeLink") || sec.getContentType().equals("typeUpload") || sec.getContentType()

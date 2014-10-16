@@ -292,7 +292,10 @@ public class EditSectionPage extends SectionPage implements Serializable
 				}
 
 				if (cr.getContentType().equals(MeleteCHService.MIME_TYPE_EDITOR))
+				{
 					this.contentEditor = HtmlHelper.clean(new String(cr.getContent()), false);
+					this.contentEditor = getSectionService().fixXrefs(contentEditor, getCurrentCourseId());
+				}
 				else if (rTypeLink)
 				{
 					setCurrLinkUrl(new String(cr.getContent()));

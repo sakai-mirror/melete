@@ -672,6 +672,7 @@ public class MeleteImportServiceImpl extends MeleteImportBaseImpl implements Mel
 			endSrc = 0;
 			checkLink = null;
 		}
+		contentEditor = sectionDB.fixXrefs(contentEditor, courseId);
 		ArrayList<Object> returnData = new ArrayList<Object>();
 		returnData.add(contentEditor);
 		returnData.add(checkEmbedHTMLResources);
